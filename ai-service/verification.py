@@ -49,4 +49,11 @@ def find_quote_offsets(quote: str, original_text: str) -> tuple[int, int]:
     if m:
         return m.start(), m.end()
 
+    # 4. Space-insensitive: allow zero whitespace between words (SSO PDFs
+    #    with missing spaces, e.g. "ThisAct" instead of "This Act")
+    pattern = r"\s*".join(re.escape(p) for p in quote.split())
+    m = re.search(pattern, original_text)
+    if m:
+        return m.start(), m.end()
+
     return (-1, -1)

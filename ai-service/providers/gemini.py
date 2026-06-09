@@ -89,6 +89,22 @@ class GeminiProvider(LLMProvider):
                     pass
         return batch
 
+    def query(self, prompt: str, system: str = "") -> str:
+        """Free-form text completion — used by the RAG query endpoint."""
+        full_prompt = f"{system}\n\n{prompt}" if system else prompt
+        usage = ExtractionUsage()
+        t0 = time.perf_counter()
+        try:
+            resp = self._model.generate_content(full_prompt, generation_config=genai.types.GenerationConfig(temperature=0))
+        except Exception as e:
+            raise ExtractionError(f"Gemini API error: {e}") from e
+        finally:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+        raw_text = getattr(resp, "text", "") or ""
+        usage.raw_response = raw_text
+        self.last_usage = usage
+        return raw_text
+
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         return (
             input_tokens * _INPUT_USD_PER_MTOK / 1_000_000
