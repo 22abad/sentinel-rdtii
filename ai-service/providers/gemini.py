@@ -72,22 +72,27 @@ class GeminiProvider(LLMProvider):
         chunk_text: str,
         indicators: list[tuple[str, dict[str, dict[str, str]]]],
     ) -> dict[str, dict[str, Any]]:
-        import concurrent.futures
-        batch: dict[str, dict[str, Any]] = {}
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
-            fut = {
-                pool.submit(self.extract_features, chunk_text, ind_id, spec): ind_id
-                for ind_id, spec in indicators
-            }
-            for f in concurrent.futures.as_completed(fut):
-                ind_id = fut[f]
-                try:
-                    data = f.result()
-                    if isinstance(data, dict):
-                        batch[ind_id] = data
-                except ExtractionError:
-                    pass
-        return batch
+        from .base import LLMProvider as _Base
+        prompt = _Base.build_batch_prompt(chunk_text, indicators)
+        raw_text, _ = self._call_gemini(prompt)
+        raw = self.parse_json_response(raw_text)
+        result: dict[str, dict[str, Any]] = {}
+        for indicator_id, feature_spec in indicators:
+            extracted = raw.get(indicator_id)
+            if extracted and isinstance(extracted, dict):
+                result[indicator_id] = extracted
+            else:
+                defaults: dict[str, Any] = {"verbatim_quote": ""}
+                for fname, fmeta in feature_spec.items():
+                    ftype = fmeta.get("type", "bool")
+                    if ftype == "bool":
+                        defaults[fname] = False
+                    elif ftype == "float":
+                        defaults[fname] = 0.0
+                    else:
+                        defaults[fname] = ""
+                result[indicator_id] = defaults
+        return result
 
     def query(self, prompt: str, system: str = "") -> str:
         """Free-form text completion — used by the RAG query endpoint."""
