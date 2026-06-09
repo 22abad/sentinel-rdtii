@@ -31,8 +31,8 @@ IndicatorId = Literal[
 
 ScopeKind = Literal["horizontal", "sectoral", "unknown"]
 
-# Feature dict values can be bool / int / str depending on the indicator spec.
-FeatureValue = Union[bool, int, str]
+# Feature dict values can be bool / int / float / str depending on the indicator spec.
+FeatureValue = Union[bool, int, float, str]
 
 
 class IndicatorMapping(BaseModel):
