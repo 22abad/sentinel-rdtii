@@ -14,9 +14,9 @@ type TopBarProps = {
   availableProviders: string[];
   selectedProvider: string;
   setSelectedProvider: (v: string) => void;
-  ollamaModels: string[];
-  selectedOllamaModel: string;
-  setSelectedOllamaModel: (v: string) => void;
+  providerModels: Record<string, string[]>;
+  selectedModels: Record<string, string>;
+  setSelectedModels: (v: Record<string, string> | ((prev: Record<string, string>) => Record<string, string>)) => void;
   onClose: () => void;
 };
 
@@ -115,9 +115,9 @@ export function SideBar({
   availableProviders,
   selectedProvider,
   setSelectedProvider,
-  ollamaModels,
-  selectedOllamaModel,
-  setSelectedOllamaModel,
+  providerModels,
+  selectedModels,
+  setSelectedModels,
   onClose,
 }: TopBarProps) {
   const headerStatus =
@@ -132,6 +132,9 @@ export function SideBar({
     : status === "ready" ? "bg-[#10B981]/20 text-[#10B981] border-[#10B981]/30"
     : status === "loading" ? "bg-yellow-400/20 text-yellow-300 border-yellow-400/30"
     : "bg-white/10 text-white/50 border-white/10";
+
+  const currentProviderModels = providerModels[selectedProvider] ?? [];
+  const currentModel = selectedModels[selectedProvider] ?? "";
 
   return (
     <aside className="w-56 shrink-0 h-full flex flex-col bg-[#0c1210] text-white border-r border-white/10">
@@ -208,28 +211,29 @@ export function SideBar({
                         )}
                       </button>
                     ))}
-                  {/* Ollama model sub-selector */}
-                  {selectedProvider === "ollama" && ollamaModels.length > 0 && (
-                    <div className="mt-1 pl-2 border-l border-white/10">
-                      {ollamaModels.map((m) => (
-                        <button
-                          key={m}
-                          onClick={() => setSelectedOllamaModel(m)}
-                          style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
-                        >
-                          <span className={`text-[11px] ${selectedOllamaModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
-                            {m}
-                          </span>
-                          {selectedOllamaModel === m && (
-                            <span className="text-[#10B981] text-[10px]">⎷</span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
               )}
             </SubSection>
+
+            {/* Model selector — shown for any provider with models */}
+            {currentProviderModels.length > 0 && (
+              <SubSection label="Model" summary={currentModel || "—"}>
+                {currentProviderModels.map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setSelectedModels((prev) => ({ ...prev, [selectedProvider]: m }))}
+                    style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "2px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                  >
+                    <span className={`text-[11px] ${currentModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
+                      {m}
+                    </span>
+                    {currentModel === m && (
+                      <span className="text-[#10B981] text-[10px]">⎷</span>
+                    )}
+                  </button>
+                ))}
+              </SubSection>
+            )}
           </Section>
 
           {/* Status */}

@@ -28,8 +28,17 @@ button, a, input, select, textarea {
 
 body {
   margin: 0;
-  user-select: none;
-  -webkit-user-select: none;
+}
+
+/* Allow text selection on content, disable only on interactive elements */
+body, p, div, span, h1, h2, h3, h4, h5, h6, blockquote, pre, code, li, td, th {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+button, a, input, select, textarea, [role="button"], [tabindex] {
+  user-select: auto;
+  -webkit-user-select: auto;
 }
 
 button,

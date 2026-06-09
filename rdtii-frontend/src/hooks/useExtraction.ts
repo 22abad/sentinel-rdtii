@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { INGEST_API_URL, REVIEW_API_URL, STREAM_API_URL, sampleText } from "../lib/constants";
 import { getStoredToken } from "./useAuth";
 import { mappingKey } from "../lib/utils";
@@ -9,6 +9,33 @@ import type {
   ReviewDecision,
   Status,
 } from "../types";
+
+const STORAGE_KEY = "rdtii_model_prefs";
+
+function loadModelPrefs(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveModelPrefs(prefs: Record<string, string>) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+  } catch { /* quota exceeded — ignore */ }
+}
+
+const PROVIDER_MODEL_ENDPOINTS: Record<string, string> = {
+  gemini: "/providers/gemini-models",
+  deepseek: "/providers/deepseek-models",
+};
+
+const DEFAULT_MODELS: Record<string, string> = {
+  gemini: "gemini-3.1-flash-lite",
+  deepseek: "deepseek-chat",
+  ollama: "gemma4:12b",
+};
 
 export function useExtraction() {
   const [country, setCountry] = useState("CHN");
@@ -24,9 +51,14 @@ export function useExtraction() {
   const [showRejected, setShowRejected] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
   const [selectedProvider, setSelectedProvider] = useState("gemini");
-  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
-  const [selectedOllamaModel, setSelectedOllamaModel] = useState("gemma4:12b");
+  const [providerModels, setProviderModels] = useState<Record<string, string[]>>({});
+  const [selectedModels, setSelectedModels] = useState<Record<string, string>>(loadModelPrefs);
   const [foundPdfs, setFoundPdfs] = useState<string[]>([]);
+
+  // Persist model prefs whenever they change
+  useEffect(() => {
+    saveModelPrefs(selectedModels);
+  }, [selectedModels]);
 
   // ── Country auto-detection ──────────────────────────────────────
   const [detectedCountry, setDetectedCountry] = useState<{ code: string; name: string; detected: boolean } | null>(null);
@@ -54,7 +86,6 @@ export function useExtraction() {
           setDetectedCountry({ code: data.code, name: data.name, detected: true });
           setCountry(data.code);
         } else if (!detectedCountry) {
-          // Only clear if user hasn't manually selected
           setDetectedCountry({ code: "", name: "", detected: false });
         }
       } catch { /* network errors — ignore */ }
@@ -76,17 +107,27 @@ export function useExtraction() {
         if (data.active_provider) setSelectedProvider(data.active_provider);
       })
       .catch(() => {});
-    fetch("/providers/ollama-models")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.models && data.models.length > 0) {
-          setOllamaModels(data.models);
-          if (!data.models.includes("gemma4:12b")) {
-            setSelectedOllamaModel(data.models[0]);
+  }, []);
+
+  // Fetch models for providers that support model listing
+  useEffect(() => {
+    for (const [provider, endpoint] of Object.entries(PROVIDER_MODEL_ENDPOINTS)) {
+      fetch(endpoint)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.models && data.models.length > 0) {
+            setProviderModels((prev) => ({ ...prev, [provider]: data.models }));
+            // Set default model if not already saved
+            setSelectedModels((prev) => {
+              if (!prev[provider]) {
+                return { ...prev, [provider]: data.models[0] };
+              }
+              return prev;
+            });
           }
-        }
-      })
-      .catch(() => {});
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const mappings = response?.mappings ?? [];
@@ -122,7 +163,11 @@ export function useExtraction() {
     };
   }
 
-  async function extract() {
+  const getModelForProvider = useCallback((prov: string): string => {
+    return selectedModels[prov] || DEFAULT_MODELS[prov] || "";
+  }, [selectedModels]);
+
+  function extract() {
     setStatus("loading");
     setError("");
     setWarning("");
@@ -135,97 +180,96 @@ export function useExtraction() {
     form.append("text", text);
     if (sourceUrl.trim()) form.append("source_url", sourceUrl.trim());
     form.append("provider", selectedProvider);
-    if (selectedProvider === "ollama") {
-      form.append("model", selectedOllamaModel);
+
+    const model = getModelForProvider(selectedProvider);
+    if (model) {
+      form.append("model", model);
     }
 
-    try {
-      const res = await fetch(STREAM_API_URL, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${getStoredToken()}` },
-        body: form,
-      });
+    fetch(STREAM_API_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${getStoredToken()}` },
+      body: form,
+    })
+      .then(async (res) => {
+        if (!res.ok || !res.body) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.detail || `Extraction failed with status ${res.status}`);
+        }
 
-      if (!res.ok || !res.body) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Extraction failed with status ${res.status}`);
-      }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buf = "";
+        let currentEvent = "";
+        const collectedMappings: IndicatorMapping[] = [];
+        const collectedRejected: RejectedExtraction[] = [];
+        let sourceText = "";
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = "";
-      let currentEvent = "";
-      const collectedMappings: IndicatorMapping[] = [];
-      const collectedRejected: RejectedExtraction[] = [];
-      let sourceText = "";
+        function flushResponse() {
+          setResponse({
+            mappings: [...collectedMappings],
+            rejected: [...collectedRejected],
+            provider: "",
+            source_text: sourceText,
+          });
+        }
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split("\n");
-        buf = lines.pop() ?? "";
+          buf += decoder.decode(value, { stream: true });
+          const lines = buf.split("\n");
+          buf = lines.pop() ?? "";
 
-        for (const line of lines) {
-          if (line.startsWith("event: ")) {
-            currentEvent = line.slice(7).trim();
-          } else if (line.startsWith("data: ")) {
-            const payload = JSON.parse(line.slice(6));
+          for (const line of lines) {
+            if (line.startsWith("event: ")) {
+              currentEvent = line.slice(7).trim();
+            } else if (line.startsWith("data: ")) {
+              const payload = JSON.parse(line.slice(6));
 
-            if (currentEvent === "error") {
-              throw new Error(payload.detail ?? "Stream error");
-            }
-
-            if (currentEvent === "warning") {
-              setWarning(payload.message ?? "");
-            }
-
-            if (currentEvent === "found_pdfs") {
-              setFoundPdfs(payload.urls ?? []);
-            }
-
-            if (currentEvent === "started") {
-              if (payload.source_text) {
-                sourceText = payload.source_text;
-                setText(payload.source_text);
+              if (currentEvent === "error") {
+                throw new Error(payload.detail ?? "Stream error");
               }
-            }
 
-            if (currentEvent === "mapping") {
-              const m = _fixMapping(payload as IndicatorMapping, sourceUrl);
-              collectedMappings.push(m);
-              // Progressive render — derive state from local arrays, never from prev
-              // (avoids stale-closure bleed when setResponse(null) hasn't flushed yet)
-              setResponse({
-                mappings: [...collectedMappings],
-                rejected: [...collectedRejected],
-                provider: "",
-                source_text: sourceText,
-              });
-            }
+              if (currentEvent === "warning") {
+                setWarning(payload.message ?? "");
+              }
 
-            if (currentEvent === "rejected") {
-              collectedRejected.push(payload as RejectedExtraction);
-              setResponse({
-                mappings: [...collectedMappings],
-                rejected: [...collectedRejected],
-                provider: "",
-                source_text: sourceText,
-              });
-            }
+              if (currentEvent === "found_pdfs") {
+                setFoundPdfs(payload.urls ?? []);
+              }
 
-            if (currentEvent === "done") {
-              setStatus("ready");
+              if (currentEvent === "started") {
+                if (payload.source_text) {
+                  sourceText = payload.source_text;
+                  setText(payload.source_text);
+                }
+              }
+
+              if (currentEvent === "mapping") {
+                const m = _fixMapping(payload as IndicatorMapping, sourceUrl);
+                collectedMappings.push(m);
+                flushResponse();
+              }
+
+              if (currentEvent === "rejected") {
+                collectedRejected.push(payload as RejectedExtraction);
+                flushResponse();
+              }
+
+              if (currentEvent === "done") {
+                setStatus("ready");
+              }
             }
           }
         }
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Extraction failed");
-      setResponse(null);
-      setStatus("error");
-    }
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Extraction failed");
+        setResponse(null);
+        setStatus("error");
+      });
   }
 
   async function ingestFile(file: File) {
@@ -235,8 +279,9 @@ export function useExtraction() {
       const form = new FormData();
       form.append("file", file);
       form.append("provider", selectedProvider);
-      if (selectedProvider === "ollama") {
-        form.append("model", selectedOllamaModel);
+      const model = getModelForProvider(selectedProvider);
+      if (model) {
+        form.append("model", model);
       }
 
       const res = await fetch(INGEST_API_URL, {
@@ -293,8 +338,6 @@ export function useExtraction() {
   function handleSetSourceUrl(v: string) {
     setSourceUrl(v);
     triggerCountryDetect(v, text);
-    // If the user points to a new URL, clear any previously crawled text so the
-    // backend's "crawl if text is empty" path triggers correctly on the next run.
     if (v.trim()) {
       setText("");
       if (response) {
@@ -359,7 +402,8 @@ export function useExtraction() {
     showRejected, setShowRejected,
     availableProviders,
     selectedProvider, setSelectedProvider,
-    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
+    providerModels,
+    selectedModels, setSelectedModels,
     foundPdfs,
     extract,
     ingestFile,
