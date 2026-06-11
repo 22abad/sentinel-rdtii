@@ -333,6 +333,29 @@ def ollama_models():
         return {"models": [], "error": str(exc)}
 
 
+_VERTEX_MODELS = [
+    "gemini-3.5-flash-preview",
+    "gemini-3.5-flash",
+    "gemini-3.1-pro-preview",
+    "gemini-3.1-pro",
+    "gemini-3-flash-preview",
+    "gemini-3-flash",
+    "gemini-3-pro-preview",
+    "gemini-3-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+]
+
+
+@app.get("/providers/vertex-models")
+def vertex_models():
+    """List supported Vertex AI Gemini models."""
+    return {"models": _VERTEX_MODELS, "error": None}
+
+
 @app.post("/embed")
 def embed(req: TextRequest):
     from sklearn.preprocessing import normalize
