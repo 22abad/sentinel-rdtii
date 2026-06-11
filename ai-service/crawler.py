@@ -881,6 +881,11 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
     """
     抓取法律内容（HTML 文本或 PDF）。
     """
+    # Sanitize URL by stripping trailing brackets, punctuation, or full-width parentheses
+    url = url.strip()
+    while url and url[-1] in "()（）[]〔〕<>.,;:?\"'”’\\":
+        url = url[:-1]
+
     if any(re.match(pattern, url) for pattern in INVALID_URL_PATTERNS):
         return {"type": "error", "message": f"URL 无效: {url}"}
 

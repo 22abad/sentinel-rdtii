@@ -72,12 +72,35 @@ _SECTION_HEADER_PATTERNS: list[re.Pattern] = [
 def is_section_header(quote: str) -> bool:
     """Heuristic: a line that looks like a Part / Section heading only."""
     t = quote.strip()
-    if len(t) > 120:
+    if len(t) > 150:
         return False
+        
+    lowered = t.lower()
+    
+    # 1. Matches Schedule, Part, Division, Chapter container headings (never substantive)
+    container_prefixes = (
+        "part", "division", "chapter", "schedule", "annex", "appendix",
+        "first schedule", "second schedule", "third schedule", "fourth schedule",
+        "fifth schedule", "sixth schedule", "seventh schedule", "eighth schedule",
+        "ninth schedule", "tenth schedule", "eleventh schedule", "twelfth schedule"
+    )
+    if any(lowered.startswith(p) for p in container_prefixes):
+        return True
+
+    # 2. Check traditional patterns
     for pat in _SECTION_HEADER_PATTERNS:
         if pat.search(t):
             return True
-    # Single-line all-caps headings
+
+    # 3. Short title-like phrases (no verbs/action, under 8 words, e.g. "Powers of investigation")
+    words = t.split()
+    if len(words) <= 8:
+        # Check if contains any modal/normative verbs
+        normative_verbs = {"shall", "must", "may", "should", "requires", "prohibited", "obligated", "comply", "retained", "provides", "is", "are", "has", "have", "be", "do", "does", "rules", "act", "section", "chapter", "part"}
+        if not any(w.lower().rstrip(".,;:()") in normative_verbs for w in words):
+            return True
+
+    # 4. Single-line all-caps headings
     if t.isupper() and 5 < len(t) < 100 and not t.endswith("."):
         return True
     return False
