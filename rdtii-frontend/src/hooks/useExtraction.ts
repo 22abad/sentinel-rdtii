@@ -23,11 +23,34 @@ export function useExtraction() {
   const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>({});
   const [showRejected, setShowRejected] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
-  const [selectedProvider, setSelectedProvider] = useState("gemini");
-  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
-  const [selectedOllamaModel, setSelectedOllamaModel] = useState("gemma4:12b");
+  
+  // Persistent state using localStorage to remember user's last selection
+  const [selectedProvider, setSelectedProviderState] = useState(() => localStorage.getItem("selectedProvider") || "gemini");
+  const setSelectedProvider = (val: string) => {
+    setSelectedProviderState(val);
+    localStorage.setItem("selectedProvider", val);
+  };
+  
+  const [selectedOllamaModel, setSelectedOllamaModelState] = useState(() => localStorage.getItem("selectedOllamaModel") || "gemma4:12b");
+  const setSelectedOllamaModel = (val: string) => {
+    setSelectedOllamaModelState(val);
+    localStorage.setItem("selectedOllamaModel", val);
+  };
+
+  const [selectedGeminiModel, setSelectedGeminiModelState] = useState(() => localStorage.getItem("selectedGeminiModel") || "gemini-2.0-flash");
+  const setSelectedGeminiModel = (val: string) => {
+    setSelectedGeminiModelState(val);
+    localStorage.setItem("selectedGeminiModel", val);
+  };
+
+  const [selectedDeepSeekModel, setSelectedDeepSeekModelState] = useState(() => localStorage.getItem("selectedDeepSeekModel") || "deepseek-chat");
+  const setSelectedDeepSeekModel = (val: string) => {
+    setSelectedDeepSeekModelState(val);
+    localStorage.setItem("selectedDeepSeekModel", val);
+  };
+
   const [vertexModels, setVertexModels] = useState<string[]>([]);
-  const [selectedVertexModel, setSelectedVertexModel] = useState("gemini-2.5-flash");
+  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
   const [foundPdfs, setFoundPdfs] = useState<string[]>([]);
 
   // ── Country auto-detection ──────────────────────────────────────
@@ -75,7 +98,9 @@ export function useExtraction() {
       .then((res) => res.json())
       .then((data) => {
         if (data.available_providers) setAvailableProviders(data.available_providers);
-        if (data.active_provider) setSelectedProvider(data.active_provider);
+        if (data.active_provider && !localStorage.getItem("selectedProvider")) {
+          setSelectedProvider(data.active_provider);
+        }
       })
       .catch(() => {});
     fetch("/providers/ollama-models")
@@ -83,7 +108,7 @@ export function useExtraction() {
       .then((data) => {
         if (data.models && data.models.length > 0) {
           setOllamaModels(data.models);
-          if (!data.models.includes("gemma4:12b")) {
+          if (!localStorage.getItem("selectedOllamaModel") && !data.models.includes("gemma4:12b")) {
             setSelectedOllamaModel(data.models[0]);
           }
         }
@@ -94,9 +119,6 @@ export function useExtraction() {
       .then((data) => {
         if (data.models && data.models.length > 0) {
           setVertexModels(data.models);
-          if (!data.models.includes("gemini-2.5-flash")) {
-            setSelectedVertexModel(data.models[0]);
-          }
         }
       })
       .catch(() => {});
@@ -147,11 +169,24 @@ export function useExtraction() {
     const form = new FormData();
     form.append("text", text);
     if (sourceUrl.trim()) form.append("source_url", sourceUrl.trim());
-    form.append("provider", selectedProvider);
+    
+    // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
+    let actualProvider = selectedProvider;
+    let actualModel = "";
     if (selectedProvider === "ollama") {
-      form.append("model", selectedOllamaModel);
-    } else if (selectedProvider === "vertex-ai") {
-      form.append("model", selectedVertexModel);
+      actualModel = selectedOllamaModel;
+    } else if (selectedProvider === "gemini") {
+      if (vertexModels.includes(selectedGeminiModel)) {
+        actualProvider = "vertex-ai";
+      }
+      actualModel = selectedGeminiModel;
+    } else if (selectedProvider === "deepseek") {
+      actualModel = selectedDeepSeekModel;
+    }
+
+    form.append("provider", actualProvider);
+    if (actualModel) {
+      form.append("model", actualModel);
     }
 
     try {
@@ -249,11 +284,24 @@ export function useExtraction() {
     try {
       const form = new FormData();
       form.append("file", file);
-      form.append("provider", selectedProvider);
+      
+      // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
+      let actualProvider = selectedProvider;
+      let actualModel = "";
       if (selectedProvider === "ollama") {
-        form.append("model", selectedOllamaModel);
-      } else if (selectedProvider === "vertex-ai") {
-        form.append("model", selectedVertexModel);
+        actualModel = selectedOllamaModel;
+      } else if (selectedProvider === "gemini") {
+        if (vertexModels.includes(selectedGeminiModel)) {
+          actualProvider = "vertex-ai";
+        }
+        actualModel = selectedGeminiModel;
+      } else if (selectedProvider === "deepseek") {
+        actualModel = selectedDeepSeekModel;
+      }
+
+      form.append("provider", actualProvider);
+      if (actualModel) {
+        form.append("model", actualModel);
       }
 
       const res = await fetch(INGEST_API_URL, {
@@ -330,44 +378,6 @@ export function useExtraction() {
     const mapping = mappings.find((m) => mappingKey(m) === key);
     if (!mapping) return;
 
-    // Prompt for review notes/feedback if approving or rejecting (optional)
-    let reviewerNotes = "";
-    if (d === "approved" || d === "rejected") {
-      if (d === "approved") {
-        const notes = window.prompt("Enter optional approval notes or compliance context to save to audit log:");
-        if (notes === null) return; // user cancelled the action
-        reviewerNotes = notes.trim();
-      } else {
-        // Rejection quick-select templates (saves time and standardizes agent fine-tuning feedback)
-        const promptMsg = 
-          "Select a Rejection Reason by typing its NUMBER (1-5), or type your own custom comment:\n\n" +
-          "1. [Catalog/Title] This is just a title, section heading, or table of contents, not a substantive policy.\n" +
-          "2. [Irrelevant] The extracted quote has no relevance to the selected indicator.\n" +
-          "3. [Gov Data] The measure applies only to government/public data, which is excluded under RDTII.\n" +
-          "4. [Hallucination] The quote contains hallucinatory, scrambled, or badly translated text.\n" +
-          "5. [Outdated] The policy is outdated, repealed, or replaced by a newer regulation.\n\n" +
-          "Type number (1-5) or type custom comments:";
-          
-        const notes = window.prompt(promptMsg);
-        if (notes === null) return; // user cancelled the action
-        
-        const trimmed = notes.trim();
-        if (trimmed === "1") {
-          reviewerNotes = "This quote is just a title, section heading, or table of contents, not a substantive policy. Do not extract headers or catalog lists.";
-        } else if (trimmed === "2") {
-          reviewerNotes = "The extracted quote is not relevant to the selected indicator. Only extract provisions directly regulating this specific policy indicator.";
-        } else if (trimmed === "3") {
-          reviewerNotes = "The measure applies only to government or public data, which is excluded under RDTII guidelines. Do not map public sector internal storage or retention.";
-        } else if (trimmed === "4") {
-          reviewerNotes = "The quote contains hallucinatory, scrambled, or badly translated text. Please verify exact wording.";
-        } else if (trimmed === "5") {
-          reviewerNotes = "The policy is outdated, repealed, or has been replaced by a newer regulation. Check for more recent notices.";
-        } else {
-          reviewerNotes = trimmed; // User's custom comments
-        }
-      }
-    }
-
     setDecisions((prev) => ({ ...prev, [key]: d }));
 
     if (d === "pending") return;
@@ -379,7 +389,7 @@ export function useExtraction() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getStoredToken()}`,
         },
-        body: JSON.stringify({ decision: d, country_code: country, mapping, reviewer_notes: reviewerNotes }),
+        body: JSON.stringify({ decision: d, country_code: country, mapping }),
       });
 
       if (!res.ok) {
@@ -415,7 +425,9 @@ export function useExtraction() {
     availableProviders,
     selectedProvider, setSelectedProvider,
     ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
-    vertexModels, selectedVertexModel, setSelectedVertexModel,
+    vertexModels,
+    selectedGeminiModel, setSelectedGeminiModel,
+    selectedDeepSeekModel, setSelectedDeepSeekModel,
     foundPdfs,
     extract,
     ingestFile,

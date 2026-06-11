@@ -326,8 +326,10 @@ export function MapSearchPage() {
                 selectedOllamaModel=""
                 setSelectedOllamaModel={() => {}}
                 vertexModels={[]}
-                selectedVertexModel=""
-                setSelectedVertexModel={() => {}}
+                selectedGeminiModel=""
+                setSelectedGeminiModel={() => {}}
+                selectedDeepSeekModel=""
+                setSelectedDeepSeekModel={() => {}}
                 onClose={() => setSidebarOpen(false)}
               />
             </motion.div>
@@ -341,8 +343,8 @@ export function MapSearchPage() {
           <button
             onClick={() => setSidebarOpen(true)}
             title="Open sidebar"
-            className="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            style={{ width: 48, height: 48, minHeight: 0, borderRadius: "50%", background: "#0c1210", border: "1px solid rgba(255,255,255,0.1)", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
+            className="hidden md:flex opacity-60 hover:opacity-100 hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg"
+            style={{ width: 48, height: 48, minHeight: 0, borderRadius: "50%", background: "#0c1210", border: "1px solid rgba(255,255,255,0.15)", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
           >
             <Plus size={20} color="white" />
           </button>

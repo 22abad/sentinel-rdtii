@@ -97,8 +97,8 @@ def _load_class(name: str) -> Type[LLMProvider]:
     return getattr(module, class_name)
 
 
-def get_provider(name: str) -> LLMProvider:
-    """Return an instance of the named provider.
+def get_provider(name: str, model: str | None = None) -> LLMProvider:
+    """Return an instance of the named provider, optionally overriding the default model.
 
     Names are case-insensitive and tolerant of aliases (e.g. `llama3` and
     `llama-3-local` both resolve to the local Llama 3 provider).
@@ -106,6 +106,13 @@ def get_provider(name: str) -> LLMProvider:
     key for the chosen provider is missing.
     """
     cls = _load_class(name)
+    if model:
+        import inspect
+        sig = inspect.signature(cls.__init__)
+        if "model_name" in sig.parameters:
+            return cls(model_name=model)
+        elif "model" in sig.parameters:
+            return cls(model=model)
     return cls()
 
 
