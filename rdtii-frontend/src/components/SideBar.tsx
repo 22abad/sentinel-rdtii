@@ -17,6 +17,11 @@ type TopBarProps = {
   ollamaModels: string[];
   selectedOllamaModel: string;
   setSelectedOllamaModel: (v: string) => void;
+  vertexModels: string[];
+  selectedGeminiModel: string;
+  setSelectedGeminiModel: (v: string) => void;
+  selectedDeepSeekModel: string;
+  setSelectedDeepSeekModel: (v: string) => void;
   onClose: () => void;
 };
 
@@ -118,6 +123,11 @@ export function SideBar({
   ollamaModels,
   selectedOllamaModel,
   setSelectedOllamaModel,
+  vertexModels,
+  selectedGeminiModel,
+  setSelectedGeminiModel,
+  selectedDeepSeekModel,
+  setSelectedDeepSeekModel,
   onClose,
 }: TopBarProps) {
   const headerStatus =
@@ -173,21 +183,81 @@ export function SideBar({
             >
               {/* Cloud providers */}
               {availableProviders
-                .filter((p) => !LOCAL_PROVIDERS.includes(p))
-                .map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setSelectedProvider(p)}
-                    style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "4px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
-                  >
-                    <span className={`text-xs ${selectedProvider === p ? "text-[#10B981] font-semibold" : "text-white/50"}`}>
-                      {PROVIDER_LABELS[p] ?? p}
-                    </span>
-                    {selectedProvider === p && (
-                      <span className="text-[#10B981] text-xs">⎷</span>
-                    )}
-                  </button>
-                ))}
+                .filter((p) => !LOCAL_PROVIDERS.includes(p) && p !== "vertex-ai")
+                .map((p) => {
+                  const isSelected = selectedProvider === p;
+                  return (
+                    <div key={p} className="flex flex-col">
+                      <button
+                        onClick={() => setSelectedProvider(p)}
+                        style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "4px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                      >
+                        <span className={`text-xs ${isSelected ? "text-[#10B981] font-semibold" : "text-white/50"}`}>
+                          {PROVIDER_LABELS[p] ?? p}
+                        </span>
+                        {isSelected && (
+                          <span className="text-[#10B981] text-xs">⎷</span>
+                        )}
+                      </button>
+
+                      {/* Unified Gemini / Vertex AI model dropdown */}
+                      {p === "gemini" && isSelected && (
+                        <div className="mt-1 pl-2 border-l border-white/10 mb-2 flex flex-col gap-0.5">
+                          {/* Developer API models */}
+                          {["gemini-2.0-flash", "gemini-1.5-flash"].map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setSelectedGeminiModel(m)}
+                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                            >
+                              <span className={`text-[11px] ${selectedGeminiModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
+                                {m}
+                              </span>
+                              {selectedGeminiModel === m && (
+                                <span className="text-[#10B981] text-[10px]">⎷</span>
+                              )}
+                            </button>
+                          ))}
+                          {/* Vertex AI enterprise models (rendered inline under Gemini if configured) */}
+                          {vertexModels.map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setSelectedGeminiModel(m)}
+                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                            >
+                              <span className={`text-[11px] ${selectedGeminiModel === m ? "text-[#10B981] font-semibold" : "text-[#8B5CF6]"}`}>
+                                {m} <span className="text-[9px] text-white/20 font-normal">(vertex)</span>
+                              </span>
+                              {selectedGeminiModel === m && (
+                                <span className="text-[#10B981] text-[10px]">⎷</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* DeepSeek model dropdown */}
+                      {p === "deepseek" && isSelected && (
+                        <div className="mt-1 pl-2 border-l border-white/10 mb-2 flex flex-col gap-0.5">
+                          {["deepseek-chat", "deepseek-reasoner"].map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setSelectedDeepSeekModel(m)}
+                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                            >
+                              <span className={`text-[11px] ${selectedDeepSeekModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
+                                {m === "deepseek-reasoner" ? "deepseek-reasoner (thinking)" : m}
+                              </span>
+                              {selectedDeepSeekModel === m && (
+                                <span className="text-[#10B981] text-[10px]">⎷</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               {/* Local providers — merged under one heading */}
               {availableProviders.filter((p) => LOCAL_PROVIDERS.includes(p)).length > 0 && (
                 <div className="mt-2 pt-2 border-t border-white/10">

@@ -510,11 +510,7 @@ async def extract(text: str = Form(""), source_url: str = Form(""), provider: st
 
     if provider:
         try:
-            if provider == "ollama" and model:
-                from providers.ollama import OllamaProvider
-                llm_provider = OllamaProvider(model=model)
-            else:
-                llm_provider = get_provider(provider)
+            llm_provider = get_provider(provider, model=model)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
         except ExtractionError as e:
@@ -821,11 +817,7 @@ async def extract_stream(text: str = Form(""), source_url: str = Form(""), provi
 
     try:
         if provider:
-            if provider == "ollama" and model:
-                from providers.ollama import OllamaProvider
-                llm_provider = OllamaProvider(model=model)
-            else:
-                llm_provider = get_provider(provider)
+            llm_provider = get_provider(provider, model=model)
         else:
             llm_provider = _get_provider()
     except (ValueError, ExtractionError) as e:
@@ -875,11 +867,7 @@ async def upload(file: UploadFile = File(...), provider: str = Form(None), model
 
     if provider:
         try:
-            if provider == "ollama" and model:
-                from providers.ollama import OllamaProvider
-                llm_provider = OllamaProvider(model=model)
-            else:
-                llm_provider = get_provider(provider)
+            llm_provider = get_provider(provider, model=model)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
         except ExtractionError as e:

@@ -23,9 +23,34 @@ export function useExtraction() {
   const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>({});
   const [showRejected, setShowRejected] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
-  const [selectedProvider, setSelectedProvider] = useState("gemini");
+  
+  // Persistent state using localStorage to remember user's last selection
+  const [selectedProvider, setSelectedProviderState] = useState(() => localStorage.getItem("selectedProvider") || "gemini");
+  const setSelectedProvider = (val: string) => {
+    setSelectedProviderState(val);
+    localStorage.setItem("selectedProvider", val);
+  };
+  
+  const [selectedOllamaModel, setSelectedOllamaModelState] = useState(() => localStorage.getItem("selectedOllamaModel") || "gemma4:12b");
+  const setSelectedOllamaModel = (val: string) => {
+    setSelectedOllamaModelState(val);
+    localStorage.setItem("selectedOllamaModel", val);
+  };
+
+  const [selectedGeminiModel, setSelectedGeminiModelState] = useState(() => localStorage.getItem("selectedGeminiModel") || "gemini-2.0-flash");
+  const setSelectedGeminiModel = (val: string) => {
+    setSelectedGeminiModelState(val);
+    localStorage.setItem("selectedGeminiModel", val);
+  };
+
+  const [selectedDeepSeekModel, setSelectedDeepSeekModelState] = useState(() => localStorage.getItem("selectedDeepSeekModel") || "deepseek-chat");
+  const setSelectedDeepSeekModel = (val: string) => {
+    setSelectedDeepSeekModelState(val);
+    localStorage.setItem("selectedDeepSeekModel", val);
+  };
+
+  const [vertexModels, setVertexModels] = useState<string[]>([]);
   const [ollamaModels, setOllamaModels] = useState<string[]>([]);
-  const [selectedOllamaModel, setSelectedOllamaModel] = useState("gemma4:12b");
   const [foundPdfs, setFoundPdfs] = useState<string[]>([]);
 
   // ── Country auto-detection ──────────────────────────────────────
@@ -73,7 +98,9 @@ export function useExtraction() {
       .then((res) => res.json())
       .then((data) => {
         if (data.available_providers) setAvailableProviders(data.available_providers);
-        if (data.active_provider) setSelectedProvider(data.active_provider);
+        if (data.active_provider && !localStorage.getItem("selectedProvider")) {
+          setSelectedProvider(data.active_provider);
+        }
       })
       .catch(() => {});
     fetch("/providers/ollama-models")
@@ -81,9 +108,17 @@ export function useExtraction() {
       .then((data) => {
         if (data.models && data.models.length > 0) {
           setOllamaModels(data.models);
-          if (!data.models.includes("gemma4:12b")) {
+          if (!localStorage.getItem("selectedOllamaModel") && !data.models.includes("gemma4:12b")) {
             setSelectedOllamaModel(data.models[0]);
           }
+        }
+      })
+      .catch(() => {});
+    fetch("/providers/vertex-models")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.models && data.models.length > 0) {
+          setVertexModels(data.models);
         }
       })
       .catch(() => {});
@@ -134,9 +169,24 @@ export function useExtraction() {
     const form = new FormData();
     form.append("text", text);
     if (sourceUrl.trim()) form.append("source_url", sourceUrl.trim());
-    form.append("provider", selectedProvider);
+    
+    // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
+    let actualProvider = selectedProvider;
+    let actualModel = "";
     if (selectedProvider === "ollama") {
-      form.append("model", selectedOllamaModel);
+      actualModel = selectedOllamaModel;
+    } else if (selectedProvider === "gemini") {
+      if (vertexModels.includes(selectedGeminiModel)) {
+        actualProvider = "vertex-ai";
+      }
+      actualModel = selectedGeminiModel;
+    } else if (selectedProvider === "deepseek") {
+      actualModel = selectedDeepSeekModel;
+    }
+
+    form.append("provider", actualProvider);
+    if (actualModel) {
+      form.append("model", actualModel);
     }
 
     try {
@@ -234,9 +284,24 @@ export function useExtraction() {
     try {
       const form = new FormData();
       form.append("file", file);
-      form.append("provider", selectedProvider);
+      
+      // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
+      let actualProvider = selectedProvider;
+      let actualModel = "";
       if (selectedProvider === "ollama") {
-        form.append("model", selectedOllamaModel);
+        actualModel = selectedOllamaModel;
+      } else if (selectedProvider === "gemini") {
+        if (vertexModels.includes(selectedGeminiModel)) {
+          actualProvider = "vertex-ai";
+        }
+        actualModel = selectedGeminiModel;
+      } else if (selectedProvider === "deepseek") {
+        actualModel = selectedDeepSeekModel;
+      }
+
+      form.append("provider", actualProvider);
+      if (actualModel) {
+        form.append("model", actualModel);
       }
 
       const res = await fetch(INGEST_API_URL, {
@@ -360,6 +425,9 @@ export function useExtraction() {
     availableProviders,
     selectedProvider, setSelectedProvider,
     ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
+    vertexModels,
+    selectedGeminiModel, setSelectedGeminiModel,
+    selectedDeepSeekModel, setSelectedDeepSeekModel,
     foundPdfs,
     extract,
     ingestFile,
