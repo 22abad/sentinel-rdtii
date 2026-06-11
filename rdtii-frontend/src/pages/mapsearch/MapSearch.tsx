@@ -266,8 +266,8 @@ export function MapSearchPage() {
             borderColor="#10B981"
             size={mapSize}
             data={ESCAP_DATA}
-            tooltipTextFunction={({ countryCode }) => countryCode.toUpperCase()}
-            styleFunction={({ countryCode }) => {
+            tooltipTextFunction={({ countryCode }: { countryCode: string }) => countryCode.toUpperCase()}
+            styleFunction={({ countryCode }: { countryCode: string }) => {
               const code = countryCode.toUpperCase();
               const isSelected = selectedCountry?.code === code;
               const isHovered  = hoveredCountry === code;
@@ -279,7 +279,7 @@ export function MapSearchPage() {
                 strokeWidth: isSelected ? 1.2 : isHovered ? 0.8 : 0.3,
               };
             }}
-            onClickFunction={({ countryCode, countryName }) => {
+            onClickFunction={({ countryCode, countryName }: { countryCode: string, countryName: string }) => {
               const code = countryCode.toUpperCase();
               setSelectedCountry((prev) =>
                 prev?.code === code ? null : { code, name: countryName }
