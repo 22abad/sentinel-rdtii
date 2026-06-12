@@ -1,18 +1,31 @@
+from __future__ import annotations
 import asyncio
 import json
 import os
 import re
+import ssl
+import urllib.request
+import uuid
+from pathlib import Path
 from playwright.async_api import async_playwright, Page, BrowserContext
 from typing import Dict, Optional, Any
 from urllib.parse import urljoin, urlparse, quote
-from playwright_stealth import Stealth
 from collections import deque
 
 # ── playwright-stealth 跨版本兼容 ──────────────────────────────────
 # 1.x API:  from playwright_stealth import stealth_async; await stealth_async(page)
 # 2.x API:  from playwright_stealth import Stealth; await Stealth().apply_stealth_async(page)
-_stealth = Stealth()
+try:
+    from playwright_stealth import Stealth
+    _stealth = Stealth()
+except ImportError:
+    from playwright_stealth import stealth_async
+    _stealth = type("_StealthCompat", (), {"stealth_async": staticmethod(stealth_async)})()
 
+# macOS 常有自签名证书问题，统一 SSL context
+_SSL_CTX = ssl.create_default_context()
+_SSL_CTX.check_hostname = False
+_SSL_CTX.verify_mode = ssl.CERT_NONE
 async def _apply_stealth(page: Page) -> None:
     if hasattr(_stealth, 'apply_stealth_async'):
         await _stealth.apply_stealth_async(page)
@@ -174,35 +187,47 @@ async def _wait_for_page_load(page: Page, timeout: int) -> None:
     except Exception:
         pass
 
-async def _download_pdf(page: Page, pdf_url: str, filename: Optional[str] = None) -> Optional[str]:
+async def _download_file(page: Page, file_url: str, filename: Optional[str] = None) -> Optional[str]:
     """
-    下载 PDF 文件。
+    下载文件（PDF / Word / 任意类型）到本地。
     """
     try:
-        parsed_url = urlparse(pdf_url)
-        if not filename:
-            filename = os.path.basename(parsed_url.path) or f"downloaded_pdf_{asyncio.current_task().get_name()}.pdf"
-        local_path = os.path.join(DOWNLOADS_DIR, filename)
+        parsed_url = urlparse(file_url)
+        filename = f"downloaded_{uuid.uuid4().hex}.bin"
+        downloads_root = Path(DOWNLOADS_DIR).resolve()
+        local_path = (downloads_root / filename).resolve()
+        if downloads_root not in local_path.parents:
+            raise ValueError("Invalid download filename")
         
-        # Add headers to mimic browser request | 添加请求头以模拟浏览器
-        # Use the domain as referer for better compatibility | 使用域名作为 referer 以提高兼容性
         domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
         headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
             "Referer": domain,
-            "Accept": "application/pdf,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+            "Accept": "application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9",
         }
         
-        response = await page.request.get(pdf_url, headers=headers, timeout=30000)
+        response = await page.request.get(file_url, headers=headers, timeout=30000)
         if response.ok:
             with open(local_path, "wb") as f:
                 f.write(await response.body())
-            print(f"PDF 已下载到: {local_path}")
-            return local_path
+            print(f"文件已下载到: {local_path}")
+            return str(local_path)
         return None
     except Exception as e:
-        print(f"下载 PDF 时发生错误 {pdf_url}: {e}")
+        print(f"下载文件时发生错误 {file_url}: {e}")
+        return None
+
+
+async def _read_docx(path: str) -> Optional[str]:
+    """用 python-docx 提取 .docx 文本。"""
+    try:
+        from docx import Document
+        doc = Document(path)
+        text = "\n".join(p.text for p in doc.paragraphs if p.text.strip())
+        return text if text.strip() else None
+    except Exception as e:
+        print(f"读取 docx 失败 {path}: {e}")
         return None
 
 async def _extract_html_content(page: Page) -> str:
@@ -210,9 +235,12 @@ async def _extract_html_content(page: Page) -> str:
     提取 HTML 页面正文。
     """
     selectors = [
+        # Site-generic content selectors
         "main", "article", "section[role=main]", "[role=main]",
         ".main-content", ".mainContent", ".content-main",
         "#content", ".content", ".entry-content", ".post-content", ".body-content",
+        # SSO / Singapore legislation selectors
+        ".legis .body", ".legis", ".prov1Txt", ".pTxt", ".def",
         "body"
     ]
     for selector in selectors:
@@ -490,12 +518,481 @@ async def fetch_thai_law_by_keyword(
         },
     }
 
+
+
+# ── Wayback Machine 回溯取证 ────────────────────────────────────────
+# 当源站被 WAF/Cloudflare 阻断时，通过 Internet Archive 获取历史快照。
+# 三层策略：
+#   1. CDX API 查询最近快照
+#   2. 获取快照内容
+#   3. 返回带时间戳的归档元数据
+
+WAYBACK_CDX = "https://web.archive.org/cdx/search/cdx"
+WAYBACK_AVAIL = "https://archive.org/wayback/available"
+WAYBACK_WEB = "https://web.archive.org/web"
+
+
+async def fetch_wayback_closest(url: str, max_retries: int = 2) -> Optional[dict]:
+    """通过 Wayback Machine CDX API 查找最近的可用快照。"""
+    _opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_SSL_CTX))
+    _opener.addheaders = [("User-Agent", "Mozilla/5.0 (compatible; RDTII/1.0)")]
+
+    for attempt in range(max_retries):
+        try:
+            def _fetch_avail():
+                avail_url = f"{WAYBACK_AVAIL}?url={url}"
+                resp = _opener.open(avail_url, timeout=15)
+                return json.loads(resp.read())
+
+            data = await asyncio.to_thread(_fetch_avail)
+            snapshots = data.get("archived_snapshots", {})
+            closest = snapshots.get("closest", {})
+            if closest.get("available") and closest.get("url"):
+                ts = closest.get("timestamp", "")
+                archive_url = closest["url"]
+                print(f"[Wayback] 快照: {ts} → {archive_url}")
+                return {
+                    "timestamp": ts.replace("-", "").replace(":", "").replace(" ", ""),
+                    "archive_url": archive_url,
+                    "statuscode": "200",
+                    "source": "wayback_availability",
+                }
+
+            # CDX fallback
+            def _fetch_cdx():
+                cdx_url = f"{WAYBACK_CDX}?url={url}&output=json&limit=5&fl=timestamp,original,statuscode&sort=reverse"
+                resp = _opener.open(cdx_url, timeout=15)
+                return json.loads(resp.read())
+
+            rows = await asyncio.to_thread(_fetch_cdx)
+            if len(rows) > 1:
+                for row in rows[1:]:
+                    ts, orig, sc = row[0], row[1], row[2] if len(row) > 2 else "200"
+                    if sc in ("200", "302"):
+                        archive_url = f"{WAYBACK_WEB}/{ts}/{orig}"
+                        print(f"[Wayback CDX] 快照: {ts} ({sc})")
+                        return {
+                            "timestamp": ts,
+                            "archive_url": archive_url,
+                            "statuscode": sc,
+                            "source": "wayback_cdx",
+                        }
+        except Exception as e:
+            print(f"[Wayback] 查询失败 (attempt {attempt+1}): {e}")
+            await asyncio.sleep(1)
+
+    return None
+
+
+async def fetch_wayback_content(url: str, timeout: int = 30000) -> Dict[str, Any]:
+    """从 Wayback Machine 获取法律内容。
+
+    三部曲：
+        1. CDX → 找最近快照
+        2. 获取快照 HTML/文本
+        3. 返回内容 + 归档元数据
+
+    Returns:
+        同 fetch_legal_content 格式，附加 archive_timestamp 字段
+    """
+    snapshot = await fetch_wayback_closest(url)
+    if not snapshot:
+        return {"type": "error", "message": "Wayback Machine 中未找到该 URL 的快照"}
+
+    archive_url = snapshot["archive_url"]
+    print(f"[Wayback] 正在获取快照内容: {archive_url}")
+
+    # 尝试直接用 HTTP 获取文本（避免启动 Playwright）
+    import html as html_mod
+
+    _opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_SSL_CTX))
+    _opener.addheaders = [
+        ("User-Agent", "Mozilla/5.0 (compatible; RDTII/1.0; +https://github.com/22abad/UN-DigitalTrade-AI-Mapper)"),
+    ]
+
+    try:
+        def _fetch():
+            resp = _opener.open(archive_url, timeout=int(timeout / 1000))
+            return resp.read().decode("utf-8", errors="replace")
+
+        raw_html = await asyncio.to_thread(_fetch)
+        text = re.sub(r'<[^>]+>', ' ', raw_html)
+        text = html_mod.unescape(text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if len(text) > 200:
+            # Detect garbage (Wayback wrapper JS, block pages)
+            garbage_signals = ["window.addEventListener", "archive_analytics",
+                               "webpackJsonp", "performing security"]
+            if any(s in text[:500].lower() for s in garbage_signals):
+                print(f"[Wayback] HTTP 获取成功但内容为 Wayback 包装页面 ({len(text)} 字符)")
+            else:
+                print(f"[Wayback] HTTP 获取成功: {len(text)} 字符 (归档于 {snapshot['timestamp']})")
+                return {
+                    "type": "text",
+                    "url": archive_url,
+                    "original_url": url,
+                    "text": text,
+                    "metadata": {
+                        "source": "wayback_machine",
+                        "archive_timestamp": snapshot["timestamp"],
+                        "archive_url": archive_url,
+                    },
+                }
+    except Exception as e:
+        print(f"[Wayback] HTTP 获取失败: {e}")
+
+    # HTTP 失败 → 用 Playwright 渲染（JS 站点）
+    print(f"[Wayback] HTTP 不满足，启动 Playwright 渲染快照...")
+    return await _fetch_wayback_with_playwright(archive_url, snapshot)
+
+
+async def _fetch_wayback_with_playwright(archive_url: str, snapshot: dict) -> Dict[str, Any]:
+    """用 Playwright 渲染 Wayback 快照页面。"""
+    async with async_playwright() as p:
+        context = await _initialize_browser_context(p)
+        try:
+            page = await context.new_page()
+            await _apply_stealth(page)
+
+            await page.goto(archive_url, wait_until="domcontentloaded", timeout=30000)
+            await page.wait_for_timeout(3000)
+
+            body = await page.evaluate("document.body?.innerText || ''")
+            if len(body) > 200:
+                print(f"[Wayback Playwright] 成功: {len(body)} 字符")
+                return {
+                    "type": "text",
+                    "url": archive_url,
+                    "original_url": snapshot.get("original", archive_url),
+                    "text": body,
+                    "metadata": {
+                        "source": "wayback_machine",
+                        "archive_timestamp": snapshot["timestamp"],
+                        "archive_url": archive_url,
+                    },
+                }
+            return {"type": "error", "message": f"Wayback 快照无内容 ({len(body)} chars)"}
+        finally:
+            await context.close()
+
+
+async def fetch_google_cache(url: str) -> Optional[str]:
+    """Google Cache 快速取证——轻量级，无需 Playwright。
+
+    注意：Google Cache 可能返回旧版或不可用。
+    """
+    import html as html_mod
+
+    _opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_SSL_CTX))
+    _opener.addheaders = [("User-Agent", "Mozilla/5.0 (compatible; RDTII/1.0)")]
+
+    cache_url = f"https://webcache.googleusercontent.com/search?q=cache:{url}"
+    try:
+        def _fetch():
+            resp = _opener.open(cache_url, timeout=15)
+            return resp.read().decode("utf-8", errors="replace")
+        text = await asyncio.to_thread(_fetch)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        text = html_mod.unescape(text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if len(text) > 200:
+            return text
+    except Exception as e:
+        print(f"[Google Cache] 失败: {e}")
+    return None
+
+
+# ── 法律时间戳核实 ──────────────────────────────────────────────────
+# 三重验证 LLM 声称的 `last_update` 日期：
+#   1. Wayback Machine CDX — 查该 URL 历史变更
+#   2. HTTP Last-Modified 头
+#   3. 多个来源交叉比对
+
+async def verify_law_timeline(
+    url: str,
+    llm_claimed_date: str = "",
+) -> dict:
+    """核实法律文档的版本时间戳。
+
+    Args:
+        url: 法律文档的 URL
+        llm_claimed_date: LLM 提取的 last_update 字符串
+
+    Returns:
+        {
+            "verified": bool,          # 是否通过验证
+            "sources_checked": int,    # 核实的来源数
+            "best_date": str,          # 最佳确认日期
+            "verification_log": str,   # 核验过程描述（用于 audit trail）
+            "source_details": [        # 每个来源的详细结果
+                {"source": str, "date": str, "status": str}
+            ]
+        }
+    """
+    from datetime import datetime
+
+    source_details: list[dict] = []
+
+    # 1. Wayback Machine CDX — 查看历史变更
+    snapshot = await fetch_wayback_closest(url)
+    wb_date = ""
+    if snapshot:
+        ts = snapshot["timestamp"]
+        if len(ts) >= 8:
+            try:
+                wb_date = datetime.strptime(ts[:8], "%Y%m%d").strftime("%Y-%m-%d")
+            except ValueError:
+                wb_date = ts[:8]
+        source_details.append({
+            "source": "wayback_machine",
+            "date": wb_date,
+            "status": "found" if wb_date else "no_date",
+        })
+
+    # 2. HTTP Last-Modified 头
+    http_date = ""
+    _opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_SSL_CTX))
+    try:
+        def _fetch_head():
+            req = urllib.request.Request(url, method="HEAD")
+            resp = _opener.open(req, timeout=10)
+            return resp.headers.get("Last-Modified", "")
+        http_date_str = await asyncio.to_thread(_fetch_head)
+        if http_date_str:
+            try:
+                parsed = datetime.strptime(http_date_str, "%a, %d %b %Y %H:%M:%S %Z")
+                http_date = parsed.strftime("%Y-%m-%d")
+            except ValueError:
+                http_date = http_date_str
+        source_details.append({
+            "source": "http_last_modified",
+            "date": http_date or "unavailable",
+            "status": "found" if http_date else "header_missing",
+        })
+    except Exception as e:
+        source_details.append({
+            "source": "http_last_modified",
+            "date": "",
+            "status": f"error: {str(e)[:60]}",
+        })
+
+    # 3. 交叉比较
+    verified = False
+    best_date = llm_claimed_date
+    verification_log_parts: list[str] = []
+
+    all_dates = [d for d in [llm_claimed_date, wb_date, http_date] if d]
+    unique_dates = set(all_dates)
+
+    if llm_claimed_date:
+        verification_log_parts.append(f"LLM 声称: {llm_claimed_date}")
+    if wb_date:
+        verification_log_parts.append(f"Wayback 归档: {wb_date}")
+    if http_date:
+        verification_log_parts.append(f"HTTP 头: {http_date}")
+
+    if len(unique_dates) == 1 and len(all_dates) >= 2:
+        verified = True
+        verification_log_parts.append("✅ 所有来源日期一致")
+    elif llm_claimed_date and wb_date and llm_claimed_date != wb_date:
+        verification_log_parts.append(f"⚠️ LLM 声称 ({llm_claimed_date}) 与 Wayback ({wb_date}) 不一致")
+        # 偏向信任 Wayback Machine
+        best_date = wb_date
+    elif llm_claimed_date and http_date and llm_claimed_date != http_date:
+        verification_log_parts.append(f"⚠️ LLM 声称 ({llm_claimed_date}) 与 HTTP 头 ({http_date}) 不一致")
+        best_date = http_date
+
+    log_str = "; ".join(verification_log_parts)
+
+    return {
+        "verified": verified,
+        "sources_checked": len(source_details),
+        "best_date": best_date,
+        "verification_log": log_str,
+        "source_details": source_details,
+    }
+
+
+async def _precheck_url(url: str) -> str | None:
+    """Check if a URL is dead before launching Playwright.
+
+    Returns an error description string if the URL is dead
+    (HTTP 404/410, DNS failure), or None if it's alive or uncertain.
+    """
+    import urllib.error
+    _opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_SSL_CTX))
+    _opener.addheaders = [("User-Agent", "Mozilla/5.0 (compatible; RDTII/1.0)")]
+
+    def _check_sync() -> str | None:
+        try:
+            req = urllib.request.Request(url, method="HEAD")
+            with _opener.open(req, timeout=10) as resp:
+                if resp.status in (404, 410):
+                    return f"HTTP {resp.status}"
+        except urllib.error.HTTPError as e:
+            if e.code in (404, 410):
+                return f"HTTP {e.code}"
+            return None
+        except urllib.error.URLError as e:
+            reason = str(e.reason)
+            if any(s in reason for s in [
+                "Name or service not known", "nodename nor servname",
+                "Temporary failure", "No address associated",
+            ]):
+                return f"DNS failure: {reason}"
+            return None
+        except Exception:
+            return None
+        return None
+
+    try:
+        return await asyncio.to_thread(_check_sync)
+    except Exception:
+        return None
+
+
+# ── HTTP(S) direct fetch fallback ───────────────────────────────────────────
+# Some government sites (e.g. sso.agc.gov.sg) use CDN WAFs (CloudFront)
+# that block Playwright while allowing simple HTTP clients like httpx.
+# This fallback tries plain HTTP before giving up.
+
+
+async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
+    """Fetch a URL via plain HTTP(S) — bypasses Playwright for WAF-blocked SSR sites.
+
+    Tries two strategies:
+      1. SSO-specific: look for the .legis container (Singapore legislation)
+      2. Generic: extract <body> content
+
+    Returns the same dict format as fetch_legal_content on success, or None.
+    """
+    import httpx
+
+    print(f"[HTTP Fallback] 直接 HTTP 获取: {url}")
+    try:
+        client = httpx.Client(
+            verify=False,
+            timeout=httpx.Timeout(timeout / 1000),
+            follow_redirects=True,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.5",
+            },
+        )
+        resp = client.get(url)
+        resp.raise_for_status()
+        html = resp.text
+        if len(html) < 1000:
+            print(f"[HTTP Fallback] 内容过短 ({len(html)} 字符)，跳过")
+            return None
+
+        import re as _re
+        import html as _html
+
+        # Strategy 1: SSO-specific .legis container
+        raw = None
+        body_match = _re.search(
+            r'<div\s+class="legis[^"]*"[^>]*>(.*?)</div>\s*</div>\s*</div>',
+            html, _re.DOTALL | _re.IGNORECASE,
+        )
+        if body_match:
+            raw = body_match.group(1)
+
+        # Strategy 2: generic <body> fallback
+        if not raw:
+            body_match = _re.search(r'<body[^>]*>(.*?)</body>', html, _re.DOTALL | _re.IGNORECASE)
+            raw = body_match.group(1) if body_match else html
+
+        text = _re.sub(r'<script[^>]*>.*?</script>', '', raw, flags=_re.DOTALL | _re.IGNORECASE)
+        text = _re.sub(r'<style[^>]*>.*?</style>', '', text, flags=_re.DOTALL | _re.IGNORECASE)
+        text = _re.sub(r'<[^>]+>', ' ', text)
+        text = _html.unescape(text)
+        text = _re.sub(r'\s+', ' ', text).strip()
+
+        if len(text) > 500:
+            print(f"[HTTP Fallback] 成功！{len(text)} 字符")
+            return {
+                "type": "text",
+                "url": url,
+                "text": text,
+                "metadata": {"source": "http_fallback"},
+            }
+
+        # ── SSO-specific: HTML too short (paged content), try PDF version ──
+        pdf_match = _re.search(
+            r'href=\"([^\"]+ViewType=Pdf[^\"]*)\"', html, _re.IGNORECASE
+        )
+        if not pdf_match:
+            # Try appending ViewType=Pdf directly
+            pdf_candidate = url + ("&" if "?" in url else "?") + "ViewType=Pdf"
+        else:
+            pdf_candidate = _re.sub(r'&amp;', '&', pdf_match.group(1))
+            if pdf_candidate.startswith("/"):
+                from urllib.parse import urlparse
+                parsed = urlparse(url)
+                pdf_candidate = f"{parsed.scheme}://{parsed.netloc}{pdf_candidate}"
+
+        print(f"[HTTP Fallback] HTML 文本过短，尝试 PDF 版本: {pdf_candidate}")
+        try:
+            pdf_resp = client.get(pdf_candidate)
+            pdf_resp.raise_for_status()
+            if pdf_resp.headers.get("content-type", "").startswith("application/pdf"):
+                import tempfile, os, uuid
+                tmp = Path(tempfile.gettempdir()) / f"sso_{uuid.uuid4().hex}.pdf"
+                tmp.write_bytes(pdf_resp.content)
+                from pdf_reader import read_pdf
+                pdf_result = read_pdf(str(tmp))
+                pdf_text = "\n".join(pdf_result.pages)
+                os.unlink(str(tmp))
+                if len(pdf_text) > 500:
+                    print(f"[HTTP Fallback PDF] 成功！{len(pdf_text)} 字符")
+                    return {
+                        "type": "text",
+                        "url": url,
+                        "text": pdf_text,
+                        "metadata": {"source": "http_fallback_pdf", "original_format": "pdf"},
+                    }
+        except Exception as pdf_e:
+            print(f"[HTTP Fallback PDF] 失败: {pdf_e}")
+
+        print(f"[HTTP Fallback] 提取文本过短 ({len(text)} 字符)")
+    except Exception as e:
+        print(f"[HTTP Fallback] 失败: {e}")
+    return None
+
+
+async def _try_wayback_fallback(url: str, context: str = "dead link") -> dict | None:
+    """Try Wayback Machine fallback and log the attempt."""
+    print(f"[Dead Link] {url} — {context}，尝试 Internet Archive 归档...")
+    wb_result = await fetch_wayback_content(url)
+    if wb_result["type"] == "text":
+        print(f"[Wayback] 成功！归档于 {wb_result.get('metadata', {}).get('archive_timestamp', '?')}")
+        return wb_result
+    print(f"[Wayback] 未找到 '{url}' 的快照")
+    return None
+
+
 async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int = 3, proxy: Optional[dict] = None) -> Dict[str, Any]:
     """
     抓取法律内容（HTML 文本或 PDF）。
     """
     if any(re.match(pattern, url) for pattern in INVALID_URL_PATTERNS):
         return {"type": "error", "message": f"URL 无效: {url}"}
+
+    # ── Pre-check: dead link detection before launching Playwright ──
+    dead_reason = await _precheck_url(url)
+    if dead_reason:
+        wb = await _try_wayback_fallback(url, dead_reason)
+        if wb:
+            return wb
+        return {"type": "error", "message": f"Dead link ({dead_reason}), no Wayback snapshot"}
+
+    # ── Direct HTTP probe (SSR sites like SSO block Playwright but serve
+    # full content via plain HTTP — try it first to avoid Playwright overhead).
+    http_result = await _try_http_fallback(url, timeout)
+    if http_result:
+        return http_result
 
     for attempt in range(1, max_retries + 1):
         async with async_playwright() as p:
@@ -506,23 +1003,43 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                 await _apply_stealth(page)
                 page.set_default_timeout(timeout)
                 
-                # Task: Check if direct PDF URL to avoid ERR_ABORTED | 任务：检查是否为直接 PDF URL，避免导航中断
-                if url.lower().split('?')[0].endswith(".pdf"):
+                # Task: Check if direct PDF / Word URL to avoid ERR_ABORTED
+                path_lower = url.lower().split('?')[0]
+                if path_lower.endswith(".pdf"):
                     print(f"检测到直接 PDF URL: {url}")
-                    pdf_path = await _download_pdf(page, url)
+                    pdf_path = await _download_file(page, url)
                     if pdf_path:
                         return {"type": "pdf", "url": url, "pdf_path": pdf_path}
+
+                if path_lower.endswith(".docx") or path_lower.endswith(".doc"):
+                    print(f"检测到 Word 文档: {url}")
+                    doc_path = await _download_file(page, url)
+                    if doc_path:
+                        if doc_path.endswith(".docx"):
+                            doc_text = await _read_docx(doc_path)
+                        else:
+                            doc_text = None
+                        if doc_text:
+                            return {"type": "docx", "url": url, "text": doc_text}
+                        return {"type": "error", "message": f"Word 文档解析失败: {url}"}
 
                 print(f"正在访问: {url}")
                 try:
                     # Increase timeout and use wait_until="domcontentloaded" for potentially slow gov sites
-                    await page.goto(url, wait_until="domcontentloaded", timeout=timeout)
+                    response = await page.goto(url, wait_until="domcontentloaded", timeout=timeout)
+                    # Inline dead-link detection — catch 404/410 from Playwright response
+                    if response and response.status in (404, 410):
+                        print(f"[Dead Link] Playwright 返回 HTTP {response.status} — 跳过重试，尝试 Wayback")
+                        wb = await _try_wayback_fallback(url, f"HTTP {response.status}")
+                        if wb:
+                            return wb
+                        return {"type": "error", "message": f"Dead link (HTTP {response.status}), no Wayback snapshot"}
                 except Exception as e:
                     # If aborted but it's a PDF, we might still be able to download it
                     error_str = str(e).lower()
                     if "err_aborted" in error_str or "navigation was aborted" in error_str or "timeout" in error_str:
                         print(f"尝试中断/超时修复，直接尝试下载: {url}")
-                        pdf_path = await _download_pdf(page, url)
+                        pdf_path = await _download_file(page, url)
                         if pdf_path:
                             return {"type": "pdf", "url": url, "pdf_path": pdf_path}
                     raise e
@@ -538,7 +1055,7 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                     except: pass
 
                 if is_pdf:
-                    pdf_path = await _download_pdf(page, page.url)
+                    pdf_path = await _download_file(page, page.url)
                     if pdf_path:
                         return {"type": "pdf", "url": url, "pdf_path": pdf_path}
                 
@@ -550,7 +1067,7 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                 
                 if valid_pdf_links:
                     pdf_url = urljoin(page.url, valid_pdf_links[0])
-                    pdf_path = await _download_pdf(page, pdf_url)
+                    pdf_path = await _download_file(page, pdf_url)
                     if pdf_path:
                         return {"type": "pdf", "url": url, "pdf_path": pdf_path}
 
@@ -564,11 +1081,17 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                         "performing security",
                         "รอสักครู่", "กำลังทำการตรวจสอบความปลอดภัย",
                         "cloudflare ray id", "ddos protection",
+                        "generated by cloudfront", "request could not be satisfied",
+                        "the request could not be satisfied",
                     ]
                     low = content.lower().strip()
                     # Only flag when content is short (< 5KB) AND contains block language
                     if len(content) < 5000 and any(ind in low for ind in block_indicators):
                         print(f"[警告] 检测到反爬拦截 ({content[:60].strip()}...)")
+                        # Try HTTP fallback before raising
+                        http_result = await _try_http_fallback(url, timeout)
+                        if http_result:
+                            return http_result
                         raise Exception(f"Blocked by anti-bot protection")
                     return {"type": "text", "url": url, "text": content}
                 
@@ -613,7 +1136,8 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                                     if result["type"] == "text":
                                         return result
                                 else:
-                                    print("[Fallback] ratchakitcha.soc.go.th 被 Cloudflare 阻断，无法自动推断搜索关键词。")
+                                    print("[Fallback] 无法自动推断 OCS 搜索关键词。")
+                                    print("[Fallback] ratchakitcha.soc.go.th 可能被 Cloudflare 阻断或 URL 信息不足。")
                                     print("建议: 直接使用 fetch_thai_law_by_keyword('ชื่อกฎหมายภาษาไทย') 从 OCS 获取。")
                             elif alt["type"] == "web":
                                 alt_url = f"https://www.{alt['source']}/"
@@ -623,6 +1147,29 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                                 except Exception as alt_e:
                                     print(f"[Fallback] 替代来源失败: {alt_e}")
                                     continue
+
+                    # ── HTTP Fallback (WAF-blocked SSR sites) ───────────
+                    http_result = await _try_http_fallback(url, timeout)
+                    if http_result:
+                        return http_result
+
+                    # ── Wayback Machine 兜底 ──
+                    print(f"[Wayback Fallback] 尝试从 Internet Archive 获取 '{url}' 的快照...")
+                    wb_result = await fetch_wayback_content(url)
+                    if wb_result["type"] == "text":
+                        return wb_result
+
+                    # ── 最后尝试 Google Cache ──
+                    print(f"[Google Cache Fallback] 尝试 Google Cache...")
+                    gc_text = await fetch_google_cache(url)
+                    if gc_text:
+                        return {
+                            "type": "text",
+                            "url": url,
+                            "text": gc_text,
+                            "metadata": {"source": "google_cache"},
+                        }
+
                     return {"type": "error", "message": str(e)}
             finally:
                 if context:
@@ -660,7 +1207,7 @@ async def crawl_for_pdpa_pdf(start_url: str, keyword: str = "Personal Data Prote
                     title = await page.title()
                     print(f"[重新检查标题] {title}")
                 if page.url.lower().endswith('.pdf') and keyword.lower() in page.url.lower():
-                    pdf_path = await _download_pdf(page, page.url)
+                    pdf_path = await _download_file(page, page.url)
                     if pdf_path: return pdf_path
                 
                 # 2. 查找页面内所有链接
@@ -676,7 +1223,7 @@ async def crawl_for_pdpa_pdf(start_url: str, keyword: str = "Personal Data Prote
                     # 如果是 PDF 且包含关键词
                     if href.lower().endswith('.pdf') and (keyword.lower() in href.lower() or keyword.lower() in text.lower()):
                         print(f"[命中] 发现 PDF: {href}")
-                        pdf_path = await _download_pdf(page, href)
+                        pdf_path = await _download_file(page, href)
                         if pdf_path: return pdf_path
                     
                     # 如果是同站链接，加入队列
@@ -707,7 +1254,6 @@ if __name__ == "__main__":
             print(f"✅ 成功！标题: {meta.get('title', 'N/A')}")
             print(f"   长度: {len(text)} 字符")
             print(f"   来源: {meta.get('source', 'N/A')}")
-            # 搜索数据相关关键词
             for kw in ["ข้อมูล", "อิเล็กทรอนิก", "ดิจิทัล", "ระบบสารสนเทศ"]:
                 count = text.count(kw)
                 if count > 0:
@@ -715,34 +1261,63 @@ if __name__ == "__main__":
         else:
             print(f"❌ 失败: {result.get('message', '')[:200]}")
 
-        # Test 2: Fallback 测试 — ratchakitcha URL 应触发阻断检测但不一定能自动补齐
-        print("\n\n>>> 测试 2: ratchakitcha URL → 阻断检测 + Fallback <<<")
+        # Test 2: Wayback Machine 回溯取证
+        print("\n\n>>> 测试 2: Wayback Machine 回溯取证 <<<")
+        try:
+            wb_result = await fetch_wayback_content("https://www.meity.gov.in")
+            wb_type = wb_result.get("type", "?")
+            wb_meta = wb_result.get("metadata", {})
+            wb_ts = wb_meta.get("archive_timestamp", "N/A")
+            wb_len = len(wb_result.get("text", "")) if wb_result.get("text") else 0
+            print(f"   状态: {wb_type}")
+            print(f"   快照时间: {wb_ts}")
+            if wb_len > 0:
+                print(f"   内容长度: {wb_len} 字符 ✅")
+            else:
+                print(f"   ⚠️  无内容 (或被屏蔽)")
+        except Exception as e:
+            print(f"   错误: {type(e).__name__}: {str(e)[:100]}")
+
+        # Test 3: 时间戳核实
+        print("\n\n>>> 测试 3: 时间戳核实 (三重验证) <<<")
+        try:
+            tv = await verify_law_timeline(
+                "https://www.digitalindia.gov.in",
+                llm_claimed_date="2024-01-15",
+            )
+            print(f"   验证: {'✅ 通过' if tv.get('verified') else '⚠️ 未完全一致'}")
+            print(f"   来源数: {tv.get('sources_checked', 0)}")
+            print(f"   最佳日期: {tv.get('best_date', 'N/A')}")
+            print(f"   日志: {tv.get('verification_log', '')[:200]}")
+        except Exception as e:
+            print(f"   错误: {type(e).__name__}: {str(e)[:100]}")
+
+        # Test 4: ratchakitcha URL → 阻断检测 → Wayback Fallback
+        print("\n\n>>> 测试 4: ratchakitcha URL → 阻断检测 + Wayback Fallback <<<")
         fallback_result = await fetch_legal_content(
             "https://ratchakitcha.soc.go.th/search-result",
             timeout=15000,
         )
         status = fallback_result.get("type", "?")
-        msg = fallback_result.get("message", "")
-        if status == "error" and "Blocked" in msg:
-            print("✅ 正确检测到 Cloudflare 阻断 (预期行为)")
-            print(f"   提示: {msg[:150]}")
-        elif status == "text":
-            print(f"⚠️  Fallback 返回了文本 ({len(fallback_result.get('text',''))} chars)")
+        meta = fallback_result.get("metadata", {})
+        if meta.get("source") == "wayback_machine":
+            print(f"✅ Wayback Fallback 成功！(归档于 {meta.get('archive_timestamp', '?')})")
+        elif status == "error" and "Blocked" in str(fallback_result.get("message", "")):
+            print("⚠️ 阻断检测正确触发，Wayback 可能也无此 URL 的快照")
         else:
-            print(f"结果: {status} — {msg[:150]}")
+            print(f"结果: {status} — {str(fallback_result.get('message', ''))[:100]}")
 
-        # Test 3: 已知可访问的站点
-        print("\n\n>>> 测试 3: 已知可访问站点 trai.gov.in (印度电信管理局) <<<")
+        # Test 5: 已知可访问站点
+        print("\n\n>>> 测试 5: trai.gov.in (印度电信管理局) <<<")
         india_result = await fetch_legal_content(
             "https://www.trai.gov.in",
             timeout=30000,
             max_retries=1,
         )
         if india_result.get("type") == "text":
-            text = india_result["text"]
-            print(f"✅ 成功！获取到 {len(text)} 字符")
+            print(f"✅ 成功！获取到 {len(india_result['text'])} 字符")
         else:
-            print(f"结果: {india_result.get('type')} — {india_result.get('message', '')[:100]}")
+            print(f"结果: {india_result.get('type')} — {str(india_result.get('message', ''))[:100]}")
         
         print("\n\n测试完成。")
 

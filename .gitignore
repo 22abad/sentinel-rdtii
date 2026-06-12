@@ -18,6 +18,9 @@ inspect_site.py
 .vscode/
 .idea/
 
+# GCP service account key (never commit)
+gcp-vertex-key.json
+
 # Frontend build artefacts
 node_modules/
 rdtii-frontend/dist/
@@ -29,4 +32,10 @@ rdtii-frontend/public/vids
 
 # Draft ./
 PR_REPORT.md
+
+# Personal notes
+rdtii-frontend/obsidian_vault_rdtii/
+
+# Sidecar build artefacts
+extract_sidecar/target/
 

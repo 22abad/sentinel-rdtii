@@ -24,6 +24,7 @@ type SourcePanelProps = {
   sourceRef: React.RefObject<HTMLDivElement>;
   country: string;
   setCountry: (v: string) => void;
+  detectedCountry?: { code: string; name: string; detected: boolean } | null;
   pillarFilter: string;
   setPillarFilter: (v: string) => void;
   sourceUrl: string;
@@ -35,6 +36,7 @@ type SourcePanelProps = {
   extract: () => void;
   status: Status;
   error: string;
+  warning?: string;
   availableProviders: string[];
   selectedProvider: string;
   setSelectedProvider: (v: string) => void;
@@ -42,10 +44,15 @@ type SourcePanelProps = {
   setOcrMode: (v: "tesseract" | "openai") => void;
 };
 
+function isValidUrl(v: string): boolean {
+  try { return ["http:", "https:"].includes(new URL(v).protocol); } catch { return false; }
+}
+
 export function SourcePanel({
   sourceRef,
   country,
   setCountry,
+  detectedCountry,
   pillarFilter,
   setPillarFilter,
   sourceUrl,
@@ -57,6 +64,7 @@ export function SourcePanel({
   extract,
   status,
   error,
+  warning,
   availableProviders,
   selectedProvider,
   setSelectedProvider,
@@ -112,8 +120,11 @@ export function SourcePanel({
           <p>Legal text awaiting RDTII pre-categorisation</p>
         </div>
         <button
-          onClick={extract}
-          disabled={status === "loading" || (!text.trim() && !sourceUrl.trim())}
+          onClick={() => {
+            if (sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim())) return;
+            extract();
+          }}
+          disabled={status === "loading" || (!text.trim() && !sourceUrl.trim()) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))}
           className="group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-500 bg-[#10B981] text-white"
           style={{ minHeight: 0, border: "none" }}
         >
@@ -135,17 +146,33 @@ export function SourcePanel({
       <div className="control-grid">
         <label>
           Country
-          <Select value={country} onValueChange={setCountry}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="CHN">China</SelectItem>
-              <SelectItem value="IND">India</SelectItem>
-              <SelectItem value="SGP">Singapore</SelectItem>
-              <SelectItem value="THA">Thailand</SelectItem>
-              <SelectItem value="AUS">Australia</SelectItem>
-              <SelectItem value="PHL">Philippines</SelectItem>
-            </SelectContent>
-          </Select>
+          {detectedCountry?.detected ? (
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 text-sm font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                {detectedCountry.name}
+                <span className="text-emerald-400 text-xs">({detectedCountry.code})</span>
+              </span>
+              <small
+                className="text-xs text-gray-400 cursor-pointer hover:text-gray-600 underline underline-offset-2"
+                onClick={() => setCountry("")}
+              >
+                Change
+              </small>
+            </div>
+          ) : (
+            <Select value={country} onValueChange={setCountry}>
+              <SelectTrigger><SelectValue placeholder="Auto-detect…" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="CHN">China</SelectItem>
+                <SelectItem value="IND">India</SelectItem>
+                <SelectItem value="SGP">Singapore</SelectItem>
+                <SelectItem value="THA">Thailand</SelectItem>
+                <SelectItem value="AUS">Australia</SelectItem>
+                <SelectItem value="PHL">Philippines</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
         </label>
         <label>
           Filter
@@ -185,7 +212,7 @@ export function SourcePanel({
                   type="button"
                   onClick={() => setSelectedProvider(p)}
                   className={selectedProvider === p ? "" : "secondary"}
-                  style={{ minHeight: 32, padding: "0 14px", fontSize: "0.82rem" }}
+                  style={{ minHeight: 32, padding: "0 14px", fontSize: "0.82rem", borderRadius: 9999 }}
                 >
                   {PROVIDER_LABELS[p] ?? p}
                 </button>
@@ -298,6 +325,11 @@ export function SourcePanel({
         )}
       </div>
 
+      {warning && (
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
+          ⚠ {warning}
+        </p>
+      )}
       {error ? <p className="error">{error}</p> : null}
     </section>
   );

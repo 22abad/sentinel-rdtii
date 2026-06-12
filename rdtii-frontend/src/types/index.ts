@@ -13,6 +13,12 @@ export type IndicatorMapping = {
   last_update: string;
   source_url: string;
   scope: Scope;
+  coverage: string;
+  cluster: string;
+  region: string;
+  cov_name: string;
+  name: string;
+  policy_description: string;
   features: Record<string, boolean | number | string>;
   impact: string;
   requires_human_review: boolean;
@@ -29,6 +35,7 @@ export type ExtractionResponse = {
   mappings: IndicatorMapping[];
   rejected: RejectedExtraction[];
   provider: string;
+  source_text?: string;
 };
 
 export type ReviewDecision = "pending" | "approved" | "rejected";

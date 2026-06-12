@@ -18,14 +18,21 @@ zero hardcoded LLM logic outside `providers/`.
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
 import tempfile
+
+import httpx
 from pathlib import Path
+from typing import AsyncGenerator
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+from fastapi import Depends
+from openai import OpenAI
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
@@ -36,19 +43,28 @@ logger = logging.getLogger(__name__)
 
 from chunker import regex_legal_chunker
 from classifier import classify_indicator
+from coverage_classifier import classify_coverage
 from features import get_feature_spec
 from providers import canonical_name, get_default_provider, list_providers, get_provider
 from providers.base import ExtractionError
+from country_detector import detect_country
+from source_validator import grade_source, require_primary_source
+from staleness_checker import check_staleness
+from timeframe_extractor import extract_timeframe, build_timeframe_column, format_to_month_year
 
 # crawler.py pulls in playwright; pdf_reader pulls in pymupdf / tesseract.
 # Both are heavy and only needed for the URL-ingestion path, so import
 # them lazily inside the request handler. Keeping main importable
 # without these makes /health, /providers and the unit-test suite work
 # in environments where the crawl/OCR stack isn't installed.
+
+from auth import get_current_user
+
 from providers.base import ExtractionError
 from schemas import (
     ExtractionResponse,
     IndicatorMapping,
+    RAGQueryRequest,
     RejectedExtraction,
     ReviewRequest,
 )
@@ -58,6 +74,118 @@ from verification import find_quote_offsets, verify_quote
 _env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(_env_path)  # prefer root .env regardless of CWD
 load_dotenv(override=True)           # CWD .env overrides root for local dev
+
+
+def format_and_clean_mapping(mapping: IndicatorMapping, raw_data: dict, chunk_text: str):
+    """Post-processing interceptor to clean and format extracted fields to UN standards."""
+    import re
+    # 1. Capture article_clause
+    article_clause = (raw_data.get("article_clause") or "").strip()
+    
+    # Heuristically extract article_clause if empty
+    if not article_clause:
+        # A. Try to extract from source_legislation if it contains Article/Section
+        leg_title = (raw_data.get("source_legislation") or "").strip()
+        m = re.search(
+            r"\b(?:Article|Section|Sec|Clause|Paragraph|Para|Ch|Part)\.?\s*(\d+(?:\s*(?:\([^)]+\)|[a-zA-Z]))?)\b",
+            leg_title,
+            re.IGNORECASE
+        )
+        if m:
+            article_clause = m.group(0).strip()
+        else:
+            # B. Try to extract from the beginning of verbatim_quote
+            quote = (raw_data.get("verbatim_quote") or "").strip()
+            m = re.match(
+                r"^\s*(?:Article|Section|Sec|Clause|Paragraph|Para)\.?\s*(\d+(?:\s*(?:\([^)]+\)|[a-zA-Z]))?)\b",
+                quote,
+                re.IGNORECASE
+            )
+            if m:
+                article_clause = m.group(0).strip()
+            else:
+                # C. Try a loose pattern: "Article/Section \d" in the quote
+                m = re.search(
+                    r"\b(?:Article|Section|Sec|Clause|Paragraph|Para)\.?\s*(\d+(?:\s*(?:\([^)]+\)|[a-zA-Z]))?)\b",
+                    quote,
+                    re.IGNORECASE
+                )
+                if m:
+                    article_clause = m.group(0).strip()
+
+    # Clean double spaces or trailing periods from article_clause
+    if article_clause:
+        article_clause = re.sub(r"\s+", " ", article_clause).strip()
+        article_clause = article_clause.rstrip(".,-:")
+        # Capitalize first letter
+        article_clause = article_clause[0].upper() + article_clause[1:] if len(article_clause) > 1 else article_clause.upper()
+    mapping.article_clause = article_clause
+
+    # 2. Clean and format source_legislation
+    source_leg = (raw_data.get("source_legislation") or "").strip()
+    if source_leg:
+        # Strip out any Article/Section mention from the legislation title
+        source_leg = re.sub(
+            r"(?i)\s*(?:[-–—:|]|\bof\b)?\s*\b(?:Article|Section|Sec|Clause|Paragraph|Para|Part|Ch)\b\.?\s*\d+.*$",
+            "",
+            source_leg
+        ).strip()
+        
+        # Strip trailing hyphens, brackets, colons, spaces
+        source_leg = source_leg.rstrip("-,.:;—– \t")
+        
+        # Detect country
+        cd = detect_country(chunk_text, mapping.source_url, source_leg)
+        country_name = cd.get("name") or ""
+        
+        # Check if country name is in source_legislation
+        has_country = False
+        if country_name:
+            adj_map = {
+                "Thailand": ["thai"],
+                "Malaysia": ["malaysia", "malaysian"],
+                "Singapore": ["singapore", "singaporean"],
+                "China": ["china", "chinese"],
+                "Australia": ["australia", "australian"],
+                "India": ["india", "indian"],
+                "Philippines": ["philippines", "philippine"],
+            }
+            search_terms = [country_name.lower()] + adj_map.get(country_name, [])
+            if any(term in source_leg.lower() for term in search_terms):
+                has_country = True
+                
+        # Format: [Country] [Law Name]
+        if country_name and not has_country:
+            if not any(c.lower() in source_leg.lower() for c in ["thailand", "singapore", "malaysia", "australia", "china", "india"]):
+                source_leg = f"{country_name} {source_leg}"
+                
+        # Ensure correct formatting of comma and year
+        m_year = re.search(r"\b(\d{4})\b", source_leg)
+        if m_year:
+            year = m_year.group(1)
+            idx = source_leg.find(year)
+            if idx > 1:
+                before = source_leg[:idx].rstrip()
+                if not before.endswith(","):
+                    source_leg = f"{before}, {year}" + source_leg[idx+4:]
+        
+        source_leg = re.sub(r"\s+", " ", source_leg).strip()
+        source_leg = source_leg.rstrip("-, \t")
+        
+    mapping.source_legislation = source_leg
+
+    # 3. Prepend article/clause to the impact column if available
+    if mapping.article_clause and mapping.impact:
+        prefix = f"[{mapping.article_clause}] "
+        if not mapping.impact.startswith(prefix):
+            mapping.impact = f"{prefix}{mapping.impact}"
+
+    # 4. Calibrate the last_update date to Month Name YYYY
+    if mapping.last_update:
+        formatted_date = format_to_month_year(mapping.last_update)
+        if formatted_date:
+            mapping.last_update = formatted_date
+
 
 app = FastAPI(title="RDTII AI Mapper", version="0.2.0")
 app.add_middleware(
@@ -110,124 +238,10 @@ class TextRequest(BaseModel):
 # ── Shared extraction pipeline (used by /api/extract and /api/upload) ────
 
 
-async def _run_extraction(text: str, llm_provider) -> ExtractionResponse:
-    import time as _time
-    _t0 = _time.time()
-
-    chunks = regex_legal_chunker(text)
-
-    chunk_groups: list[tuple] = []
-    for chunk in chunks:
-        indicators: list[tuple[str, dict]] = []
-        for indicator_id in classify_indicator(chunk.text):
-            spec = get_feature_spec(indicator_id)
-            if spec:
-                indicators.append((indicator_id, spec))
-        if indicators:
-            chunk_groups.append((chunk, indicators))
-
-    logger.debug("[TIMING] %d chunks, concurrency=5", len(chunk_groups))
-
-    semaphore = asyncio.Semaphore(5)
-
-    async def _extract_chunk(chunk, indicators):
-        _ct = _time.time()
-        async with semaphore:
-            try:
-                batch = await asyncio.to_thread(
-                    llm_provider.extract_batch, chunk.text, indicators,
-                )
-            except ExtractionError as e:
-                logger.warning("batch failed, falling back per-indicator: %s", e)
-                results: list = []
-                for ind_id, spec in indicators:
-                    try:
-                        data = await asyncio.to_thread(
-                            llm_provider.extract_features, chunk.text, ind_id, spec,
-                        )
-                        results.append((ind_id, spec, data))
-                    except ExtractionError:
-                        results.append((ind_id, spec, None))
-            else:
-                results = []
-                for ind_id, spec in indicators:
-                    data = batch.get(ind_id) if isinstance(batch, dict) else None
-                    results.append((ind_id, spec, data))
-
-            mapped: list[tuple] = []
-            for ind_id, spec, data in results:
-                if data is None:
-                    mapped.append((None, RejectedExtraction(
-                        reason="missing indicator in batch/fallback response",
-                        chunk_preview=chunk.text[:200],
-                    )))
-                    continue
-
-                quote = (data.get("verbatim_quote") or "").strip()
-                if not quote or not verify_quote(quote, chunk.text):
-                    mapped.append((None, RejectedExtraction(
-                        reason="verbatim_quote not found in chunk shown to LLM",
-                        chunk_preview=chunk.text[:200],
-                        raw_output=data,
-                    )))
-                    continue
-
-                local_start, local_end = find_quote_offsets(quote, chunk.text)
-                if local_start < 0 or local_end <= local_start:
-                    mapped.append((None, RejectedExtraction(
-                        reason="verbatim_quote matched fuzzily but exact offsets unrecoverable",
-                        chunk_preview=chunk.text[:200],
-                        raw_output=data,
-                    )))
-                    continue
-
-                features = {k: data[k] for k in spec.keys() if k in data}
-                try:
-                    score, justification = score_indicator(ind_id, features)
-                except NotImplementedError:
-                    score, justification = 0.5, "Scoring rules not implemented."
-
-                raw_scope = (data.get("scope") or "").strip().lower()
-                scope_value = raw_scope if raw_scope in {"horizontal", "sectoral"} else "unknown"
-
-                mapped.append((IndicatorMapping(
-                    pillar=int(ind_id.split(".", 1)[0]),
-                    indicator=ind_id,
-                    score=score,
-                    verbatim_quote=data["verbatim_quote"],
-                    quote_start=chunk.start + local_start,
-                    quote_end=chunk.start + local_end,
-                    source_legislation=data.get("source_legislation", ""),
-                    last_update=data.get("last_update", ""),
-                    source_url=data.get("source_url", ""),
-                    scope=scope_value,
-                    features=features,
-                    impact=justification,
-                    requires_human_review=False,
-                    extraction_provider=llm_provider.name,
-                ), None))
-
-            logger.debug("[TIMING] chunk [%s] %.1fs", ','.join(i for i,_ in indicators), _time.time()-_ct)
-            return mapped, _time.time() - _ct
-
-    all_results = await asyncio.gather(*[_extract_chunk(c, inds) for c, inds in chunk_groups])
-
-    logger.debug("[TIMING] total=%.1fs", _time.time()-_t0)
-
-    mappings: list[IndicatorMapping] = []
-    rejected: list[RejectedExtraction] = []
-    for chunk_results, _dur in all_results:
-        for mapping, rej in chunk_results:
-            if mapping:
-                mappings.append(mapping)
-            elif rej:
-                rejected.append(rej)
-
-    return ExtractionResponse(
-        mappings=mappings,
-        rejected=rejected,
-        provider=llm_provider.name,
-    )
+async def _run_extraction(text: str, llm_provider, pdf_metadata: dict | None = None) -> ExtractionResponse:
+    from agents.orchestrator import MASOrchestrator
+    orchestrator = MASOrchestrator(llm_provider)
+    return await orchestrator.run_pipeline(text, pdf_metadata=pdf_metadata)
 
 
 
@@ -383,49 +397,11 @@ def health():
         "available_providers": list_providers(),
     }
 
-
+"""
 @app.get("/providers")
 def providers_info():
-    """List swappable providers and which one is active.
-
-    Contract: when `active` is non-null, it is guaranteed to be a member
-    of `available`. When `RDTII_LLM_PROVIDER` doesn't resolve, `active`
-    is null and `active_alias` carries the raw value so operators can see
-    what was misconfigured.
 
 
-    The `name_recognised` field reports ONLY whether the configured name
-    is in the registry. It is deliberately not called "valid" or "ready"
-    because we don't dry-run instantiation — a recognised name with a
-    missing API key / model file will still 500 on the first extract
-    call. (Doing eager instantiation here would have side effects, e.g.
-    loading multi-GB Llama weights at health-check time.)
-    """
-    raw, canonical = _active_provider_name()
-    if canonical is None:
-        return {
-            "active": None,
-            "active_alias": raw,
-            "name_recognised": False,
-            "available": list_providers(),
-        }
-    return {
-        "active": canonical,
-        "active_alias": raw if raw != canonical else None,
-        "name_recognised": True,
-        "available": list_providers(),
-    }
-
-    while chunks_done < len(chunk_groups):
-        try:
-            kind, payload = await asyncio.wait_for(queue.get(), timeout=25.0)
-        except asyncio.TimeoutError:
-            # Send a heartbeat comment to keep the connection alive
-            yield ": heartbeat\n\n"
-            continue
-
-        if kind == "chunk_done":
-            chunks_done += 1
         elif kind == "mapping":
             total_mapped += 1
             yield _sse("mapping", payload.model_dump())
@@ -440,7 +416,7 @@ def providers_info():
         "total_rejected": total_rejected,
         "elapsed": round(_time.time() - _t0, 2),
     })
-
+"""
 
 @app.post("/api/extract/stream")
 async def extract_stream(
@@ -462,6 +438,33 @@ async def extract_stream(
 
 
 
+import httpx
+
+@app.get("/providers/ollama-models")
+def ollama_models():
+    """List models available on the local Ollama instance.
+
+    Queries the Ollama HTTP API at ``OLLAMA_BASE_URL`` (default
+    http://localhost:11434/v1) and returns model names suitable for
+    ``OLLAMA_MODEL``.
+
+    Returns ``{"models": ["gemma4:12b", ...], "error": null}`` on
+    success, or ``{"models": [], "error": "…"}`` when Ollama is
+    unreachable.
+    """
+    base = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+    api_base = base.rstrip("/v1").rstrip("/")  # Ollama /api/tags is outside /v1
+    url = f"{api_base}/api/tags"
+    try:
+        resp = httpx.get(url, timeout=5.0)
+        resp.raise_for_status()
+        data = resp.json()
+        models = [m["name"] for m in data.get("models", [])]
+        return {"models": sorted(models), "error": None}
+    except Exception as exc:
+        return {"models": [], "error": str(exc)}
+
+
 @app.post("/embed")
 def embed(req: TextRequest):
     from sklearn.preprocessing import normalize
@@ -471,35 +474,175 @@ def embed(req: TextRequest):
     return {"vector": vector[0].tolist()}
 
 
+# ── RAG / Chat with local Ollama ──────────────────────────────────────
+
+_OLLAMA_BASE = os.getenv("OLLAMA_BASE_URL", "http://host.docker.internal:11434/v1")
+_OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3.6")
+
+_RDTII_SYSTEM_PROMPT = """You are a UN ESCAP digital trade policy analyst specializing in the Regional Digital Trade Integration Index (RDTII) 2.1 framework.
+
+Your role is to help researchers and policymakers evaluate a country's digital trade policies using the RDTII 2.1 methodology.
+
+CORE KNOWLEDGE:
+- RDTII covers 12 pillars: Tariffs, Public Procurement, FDI, Intellectual Property Rights, Telecom Regulations, Cross-border Data Policies, Data Protection & Privacy, Intermediary Liability, Content Access, Non-technical NTMs, Standards & Procedures, Online Sales & Transactions.
+- Each pillar contains multiple indicators scored {0, 0.25, 0.5, 0.75, 1.0} where 0 = most open / least restrictive and 1 = most restrictive.
+- Scoring follows deterministic rules (e.g. a comprehensive data protection law → score 0 for indicator 7.1; no law → score 1).
+- The LLM extracts structured features from legal text; scores are computed by deterministic Python code.
+
+RESPONSE GUIDELINES:
+- Be precise and reference specific RDTII pillars/indicators when relevant.
+- Ground your analysis in the legal text provided in the context.
+- Explain which provisions of the law map to which indicators.
+- If asked about scoring, describe the criteria but do NOT output a final score (that is the system's job).
+- Keep answers concise and actionable for a policy audience.
+- If the context includes specific legal text, quote relevant clauses before analyzing them."""
+
+
+@app.post("/api/rag/query")
+async def chat_query(req: RAGQueryRequest):
+    """RAG-style LLM query with streaming SSE response.
+
+    Calls a local Ollama instance (qwen3.6) via the OpenAI-compatible API.
+    Configure via env vars:
+        OLLAMA_BASE_URL  (default: http://host.docker.internal:11434/v1)
+        OLLAMA_MODEL     (default: qwen3.6)
+    """
+    parts = [f"Question: {req.question}"]
+    if req.role:
+        parts.insert(0, f"Your role: {req.role}")
+    if req.context:
+        parts.append(f"Additional context: {req.context}")
+    if req.country_code:
+        parts.append(f"Country / Economy under review: {req.country_code}")
+    if req.source_text:
+        parts.append(f"Legal text being analyzed:\n\"\"\"\n{req.source_text}\n\"\"\"")
+    user_prompt = "\n\n".join(parts)
+
+    client = OpenAI(base_url=_OLLAMA_BASE, api_key="ollama")
+
+    async def _stream():
+        try:
+            stream = client.chat.completions.create(
+                model=_OLLAMA_MODEL,
+                messages=[
+                    {"role": "system", "content": _RDTII_SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                stream=True,
+                temperature=0.3,
+            )
+            full_answer = ""
+            for chunk in stream:
+                content = chunk.choices[0].delta.content or ""
+                if content:
+                    full_answer += content
+                    yield f"event: token\ndata: {json.dumps(content)}\n\n"
+
+            yield (
+                f"event: done\ndata: "
+                f"{json.dumps({'answer': full_answer, 'provider': f'ollama/{_OLLAMA_MODEL}'})}\n\n"
+            )
+        except Exception as e:
+            yield f"event: error\ndata: {json.dumps({'detail': str(e)})}\n\n"
+
+    return StreamingResponse(
+        _stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+def _is_thai_query(t: str) -> bool:
+    """Check if text is a short Thai search query (not a full document)."""
+    import re
+    thai_chars = sum(1 for c in t if '\u0E00' <= c <= '\u0E7F')
+    return thai_chars > 0 and len(t) < 200
+
+
+def _is_garbage_content(t: str) -> bool:
+    """Detect if crawled content is garbage (JS/CSS/block page)."""
+    if len(t) < 500:
+        return True
+    garbage_signals = [
+        "window.addEventListener", "DOMContentLoaded", "archive_analytics",
+        "performing security", "just a moment", "cloudflare ray id",
+        "webpackJsonp", "this.addEventListener",
+    ]
+    return any(s in t.lower()[:2000] for s in garbage_signals)
+
+
 @app.post("/api/extract", response_model=ExtractionResponse)
-async def extract(text: str = Form(""), source_url: str = Form(""), provider: str = Form(None)):
+async def extract(text: str = Form(""), source_url: str = Form(""), provider: str = Form(None), model: str = Form(None)):
     """Extract RDTII indicator mappings from a block of legal text.
 
-    If text is empty but source_url is provided, it crawls the URL first.
+    Priority:
+      1. If source_url is provided → crawl URL (web page / PDF / Word doc).
+         If crawled content is garbage + user has Thai query → try OCS search.
+      2. If only text looks like Thai law name (short, Thai chars) → search OCS.
+      3. Otherwise → score text directly.
     """
-    if not text.strip() and source_url.strip():
-        from crawler import fetch_legal_content
-        from pdf_reader import read_pdf
+    from crawler import fetch_legal_content, fetch_thai_law_by_keyword
+    from pdf_reader import read_pdf
 
+    original_text = text
+    pdf_meta = None
+
+    # ── Path A: URL provided → crawl ──
+    if source_url.strip():
         crawl_result = await fetch_legal_content(source_url)
-        if crawl_result["type"] == "error":
-            raise HTTPException(status_code=400, detail=f"Crawl failed: {crawl_result['message']}")
 
         if crawl_result["type"] == "text":
             text = crawl_result["text"]
+            # If crawled content is garbage AND user has Thai query → try OCS
+            if _is_garbage_content(text) and _is_thai_query(original_text):
+                print(f"[extract] 爬取内容为垃圾内容，尝试 OCS 搜索: {original_text[:60]}")
+                ocs_result = await fetch_thai_law_by_keyword(original_text.strip())
+                if ocs_result["type"] == "text":
+                    text = ocs_result["text"]
         elif crawl_result["type"] == "pdf":
             try:
-                pages = await asyncio.to_thread(read_pdf, crawl_result["pdf_path"])
-                text = "\n".join(pages)
+                pdf_result = await asyncio.to_thread(read_pdf, crawl_result["pdf_path"])
+                text = "\n".join(pdf_result.pages)
+                pdf_meta = {
+                    "_ocr_mean_confidence": round(pdf_result.mean_conf, 3),
+                    "_ocr_ratio": round(pdf_result.ocr_ratio, 3),
+                    "_pdf_type": "scanned" if pdf_result.ocr_ratio > 0.5 else "mixed" if pdf_result.ocr_ratio > 0 else "pure_text",
+                }
             except Exception as e:
                 raise HTTPException(status_code=500, detail=f"PDF parsing failed: {str(e)}")
+        elif crawl_result["type"] == "docx":
+            text = crawl_result["text"]
+        else:
+            # crawl_result["type"] == "error"
+            if _is_thai_query(original_text):
+                print(f"[extract] URL 爬取错误，尝试 OCS 搜索: {original_text[:60]}")
+                ocs_result = await fetch_thai_law_by_keyword(original_text.strip())
+                if ocs_result["type"] == "text":
+                    text = ocs_result["text"]
+                else:
+                    raise HTTPException(status_code=400, detail=f"Crawl failed: {crawl_result['message']}")
+            else:
+                raise HTTPException(status_code=400, detail=f"Crawl failed: {crawl_result['message']}")
+
+    # ── Path B: No URL, just text ──
+    else:
+        if _is_thai_query(text):
+            print(f"[extract] 检测到泰语搜索词，尝试 OCS 搜索: {text[:60]}")
+            ocs_result = await fetch_thai_law_by_keyword(text.strip())
+            if ocs_result["type"] == "text":
+                text = ocs_result["text"]
+            else:
+                print(f"[extract] OCS 搜索未返回结果: {ocs_result.get('message', '')}")
 
     if not text.strip():
         raise HTTPException(status_code=400, detail="No text provided and crawl returned no content.")
 
     if provider:
         try:
-            llm_provider = get_provider(provider)
+            llm_provider = get_provider(provider, model=model)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
         except ExtractionError as e:
@@ -507,7 +650,322 @@ async def extract(text: str = Form(""), source_url: str = Form(""), provider: st
     else:
         llm_provider = _get_provider()
 
-    return await _run_extraction(text, llm_provider)
+    return await _run_extraction(text, llm_provider, pdf_metadata=pdf_meta)
+
+
+# ── SSE streaming extraction (used by frontend) ────────────
+
+
+async def _stream_extraction(text: str, llm_provider, pdf_metadata: dict | None = None) -> AsyncGenerator[str, None]:
+    """Run extraction and yield SSE events progressively.
+
+    Events:
+      event: started  {source_text}
+      event: mapping  {IndicatorMapping}
+      event: rejected {RejectedExtraction}
+      event: warning  {message}
+      event: done     {}
+      event: error    {detail}
+    """
+    from validation import reset_quote_registry
+    reset_quote_registry()
+
+    from chunker import regex_legal_chunker
+    from classifier import classify_indicator
+    from coverage_classifier import classify_coverage
+    from features import get_feature_spec
+    from source_validator import grade_source
+    from timeframe_extractor import extract_timeframe, build_timeframe_column
+    from verification import find_quote_offsets, verify_quote
+
+    import time as _time
+
+    def _sse(event: str, payload: object) -> str:
+        return f"event: {event}\ndata: {json.dumps(payload, default=str)}\n\n"
+
+    yield _sse("started", {"source_text": text})
+
+    chunks = regex_legal_chunker(text)
+    chunk_groups: list[tuple] = []
+    for chunk in chunks:
+        indicators: list[tuple[str, dict]] = []
+        for indicator_id in classify_indicator(chunk.text):
+            spec = get_feature_spec(indicator_id)
+            if spec:
+                indicators.append((indicator_id, spec))
+        if indicators:
+            chunk_groups.append((chunk, indicators))
+
+    mapping_count = 0
+    rejected_count = 0
+
+    for chunk, indicators in chunk_groups:
+        try:
+            batch = await asyncio.to_thread(
+                llm_provider.extract_batch, chunk.text, indicators,
+            )
+        except ExtractionError as e:
+            logger.warning("stream batch failed, per-indicator fallback: %s", e)
+            for ind_id, spec in indicators:
+                try:
+                    data = await asyncio.to_thread(
+                        llm_provider.extract_features, chunk.text, ind_id, spec,
+                    )
+                except ExtractionError:
+                    yield _sse("rejected", RejectedExtraction(
+                        reason="LLM extraction failed",
+                        chunk_preview=chunk.text[:200],
+                    ).model_dump())
+                    rejected_count += 1
+                    continue
+                for _ev in _process_single(chunk, ind_id, spec, data, text, llm_provider.name, pdf_metadata):
+                    yield _ev
+                mapping_count += 1
+        else:
+            for ind_id, spec in indicators:
+                data = batch.get(ind_id) if isinstance(batch, dict) else None
+                if data is None:
+                    yield _sse("rejected", RejectedExtraction(
+                        reason="missing indicator in batch response",
+                        chunk_preview=chunk.text[:200],
+                    ).model_dump())
+                    rejected_count += 1
+                    continue
+                for _ev in _process_single(chunk, ind_id, spec, data, text, llm_provider.name, pdf_metadata):
+                    yield _ev
+                mapping_count += 1
+
+    yield _sse("done", {
+        "mappings_count": mapping_count,
+        "rejected_count": rejected_count,
+        "provider": llm_provider.name,
+    })
+
+
+def _process_single(chunk, ind_id, spec, data, full_text, provider_name="unknown", pdf_metadata=None):
+    """Process one LLM extraction result — yield 0 or 1 SSE events for it."""
+    from coverage_classifier import classify_coverage
+    from source_validator import grade_source
+    from staleness_checker import check_staleness
+    from timeframe_extractor import extract_timeframe, build_timeframe_column
+    from verification import find_quote_offsets, verify_quote
+    from scoring import score_indicator
+    from schemas import IndicatorMapping, RejectedExtraction
+    from validation import validate_mapping
+
+    def _sse(event, payload):
+        return f"event: {event}\ndata: {json.dumps(payload, default=str)}\n\n"
+
+    quote = (data.get("verbatim_quote") or "").strip()
+    if not quote or not verify_quote(quote, chunk.text):
+        yield _sse("rejected", RejectedExtraction(
+            reason="verbatim_quote not found in chunk shown to LLM",
+            chunk_preview=chunk.text[:200],
+            raw_output=data,
+        ).model_dump())
+        return
+
+    local_start, local_end = find_quote_offsets(quote, chunk.text)
+    if local_start < 0 or local_end <= local_start:
+        yield _sse("rejected", RejectedExtraction(
+            reason="verbatim_quote matched fuzzily but exact offsets unrecoverable",
+            chunk_preview=chunk.text[:200],
+            raw_output=data,
+        ).model_dump())
+        return
+
+    features = {k: data[k] for k in spec.keys() if k in data}
+    if pdf_metadata:
+        features.update(pdf_metadata)
+    try:
+        score, justification = score_indicator(ind_id, features)
+    except NotImplementedError:
+        score, justification = 0.5, "Scoring rules not implemented."
+
+    raw_scope = (data.get("scope") or "").strip().lower()
+    scope_value = raw_scope if raw_scope in {"horizontal", "sectoral"} else "unknown"
+
+    src_val = grade_source(
+        url=data.get("source_url", ""),
+        title=data.get("source_legislation", ""),
+        text_snippet=chunk.text[:300],
+    )
+    features["_source_grade"] = src_val.get("grade", "unknown")
+    features["_source_grade_confidence"] = str(round(src_val.get("confidence", 0.0), 2))
+
+    if scope_value == "unknown":
+        cc = classify_coverage(
+            provision_text=data.get("verbatim_quote", ""),
+            source_legislation=data.get("source_legislation", ""),
+            indicator_id=ind_id,
+        )
+        scope_value = cc["scope"]
+        features["_coverage_reasons"] = "; ".join(cc.get("reasons", []))
+
+    source_url_val = data.get("source_url", "")
+    last_update_val = data.get("last_update", "")
+
+    tf = extract_timeframe(
+        text=chunk.text,
+        source_legislation=data.get("source_legislation", ""),
+        source_url=data.get("source_url", ""),
+    )
+    tf_column = build_timeframe_column(
+        status=tf["status"],
+        in_force_date=tf.get("in_force_date") or last_update_val,
+        last_amended_date=tf.get("last_amended_date"),
+        repealed_date=tf.get("repealed_date"),
+    )
+    features["_timeframe_status"] = tf["status"]
+    features["_timeframe_column"] = tf_column
+
+    ts_verification = {}
+
+    # ── Staleness / outdated-law detection ──────────────────────────
+    stale = check_staleness(
+        last_update=last_update_val,
+        timeframe_status=tf["status"],
+        source_url=source_url_val,
+        source_legislation=data.get("source_legislation", ""),
+    )
+    features["_staleness_reasons"] = "; ".join(stale["staleness_reasons"])
+    features["_staleness_severity"] = stale["stale_severity"]
+
+    mapping = IndicatorMapping(
+        pillar=int(ind_id.split(".", 1)[0]),
+        indicator=ind_id,
+        score=score,
+        verbatim_quote=data["verbatim_quote"],
+        quote_start=chunk.start + local_start,
+        quote_end=chunk.start + local_end,
+        source_legislation=data.get("source_legislation", ""),
+        last_update=ts_verification.get("best_date") or last_update_val,
+        source_url=source_url_val,
+        scope=scope_value,
+        coverage=data.get("coverage", ""),
+        cov_name="Cross-cutting" if scope_value == "horizontal" else "Sectoral" if scope_value == "sectoral" else "Sectoral",
+        cluster=data.get("cluster", ""),
+        name=data.get("name", ""),
+        policy_description=data.get("policy_description", ""),
+        features=features,
+        impact=justification,
+        requires_human_review=False,
+        extraction_provider=provider_name,
+        timestamp_verification=ts_verification,
+    )
+
+    format_and_clean_mapping(mapping, data, chunk.text)
+
+    # ── Anti-hallucination validation ──────────────────────────
+    vr = validate_mapping(
+        mapping,
+        quote=mapping.verbatim_quote,
+        chunk_text=chunk.text,
+        indicator_id=ind_id,
+        features=features,
+    )
+    if vr.level == "reject":
+        yield _sse("rejected", RejectedExtraction(
+            reason="; ".join(vr.reasons),
+            chunk_preview=chunk.text[:200],
+        ).model_dump())
+        return
+    if vr.level == "flag":
+        mapping.requires_human_review = True
+        mapping.flag_reasons = vr.reasons
+
+    yield _sse("mapping", mapping.model_dump())
+
+
+@app.post("/api/extract/stream")
+async def extract_stream(text: str = Form(""), source_url: str = Form(""), provider: str = Form(None), model: str = Form(None)):
+    """Stream RDTII extraction results via Server-Sent Events.
+
+    Same pipeline as /api/extract but emits each mapping as an SSE event
+    for progressive rendering in the frontend.
+    """
+    from crawler import fetch_legal_content, fetch_thai_law_by_keyword
+    from pdf_reader import read_pdf
+
+    def _sse(event, payload):
+        return f"event: {event}\ndata: {json.dumps(payload, default=str)}\n\n"
+
+    original_text = text
+    source_text = ""
+    pdf_meta = None
+
+    if source_url.strip():
+        crawl_result = await fetch_legal_content(source_url)
+        if crawl_result["type"] == "text":
+            text = crawl_result["text"]
+            source_text = text
+            if _is_garbage_content(text) and _is_thai_query(original_text):
+                ocs_result = await fetch_thai_law_by_keyword(original_text.strip())
+                if ocs_result["type"] == "text":
+                    text = ocs_result["text"]
+                    source_text = text
+        elif crawl_result["type"] == "pdf":
+            try:
+                pdf_result = await asyncio.to_thread(read_pdf, crawl_result["pdf_path"])
+                text = "\n".join(pdf_result.pages)
+                source_text = text
+                pdf_meta = {
+                    "_ocr_mean_confidence": round(pdf_result.mean_conf, 3),
+                    "_ocr_ratio": round(pdf_result.ocr_ratio, 3),
+                    "_pdf_type": "scanned" if pdf_result.ocr_ratio > 0.5 else "mixed" if pdf_result.ocr_ratio > 0 else "pure_text",
+                }
+            except Exception as e:
+                async def _error():
+                    yield _sse("error", {"detail": f"PDF parsing failed: {str(e)}"})
+                return StreamingResponse(_error(), media_type="text/event-stream")
+        elif crawl_result["type"] == "docx":
+            text = crawl_result["text"]
+            source_text = text
+        else:
+            if _is_thai_query(original_text):
+                ocs_result = await fetch_thai_law_by_keyword(original_text.strip())
+                if ocs_result["type"] == "text":
+                    text = ocs_result["text"]
+                    source_text = text
+                else:
+                    async def _err():
+                        yield _sse("error", {"detail": f"Crawl failed: {crawl_result['message']}"})
+                    return StreamingResponse(_err(), media_type="text/event-stream")
+            else:
+                async def _err():
+                    yield _sse("error", {"detail": f"Crawl failed: {crawl_result['message']}"})
+                return StreamingResponse(_err(), media_type="text/event-stream")
+    else:
+        if _is_thai_query(text):
+            ocs_result = await fetch_thai_law_by_keyword(text.strip())
+            if ocs_result["type"] == "text":
+                text = ocs_result["text"]
+                source_text = text
+
+    if not text.strip():
+        async def _empty():
+            yield _sse("error", {"detail": "No text provided and crawl returned no content."})
+        return StreamingResponse(_empty(), media_type="text/event-stream")
+
+    try:
+        if provider:
+            llm_provider = get_provider(provider, model=model)
+        else:
+            llm_provider = _get_provider()
+    except (ValueError, ExtractionError) as e:
+        async def _bad_provider():
+            yield _sse("error", {"detail": str(e)})
+        return StreamingResponse(_bad_provider(), media_type="text/event-stream")
+
+    stream = _stream_extraction(text, llm_provider, pdf_metadata=pdf_meta)
+    return StreamingResponse(
+        stream,
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @app.post("/api/ingest/document", response_model=ExtractionResponse)
@@ -521,15 +979,26 @@ async def ingest_document(
     """
 
 @app.post("/api/upload", response_model=ExtractionResponse)
-async def upload(file: UploadFile = File(...), provider: str = Form(None)):
+async def upload(file: UploadFile = File(...), provider: str = Form(None), model: str = Form(None)):
     """Upload a PDF file and extract RDTII indicator mappings from it."""
     if not file.filename or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
-    from pdf_reader import read_pdf
+    from pdf_reader import read_pdf, PdfResult
 
-        pages = await asyncio.to_thread(read_pdf, tmp.name)
-        text = "\n".join(pages)
+
+    try:
+        content = await file.read()
+        await asyncio.to_thread(tmp.write, content)
+        tmp.close()
+
+        pdf_result = await asyncio.to_thread(read_pdf, tmp.name)
+        text = "\n".join(pdf_result.pages)
+        pdf_meta = {
+            "_ocr_mean_confidence": round(pdf_result.mean_conf, 3),
+            "_ocr_ratio": round(pdf_result.ocr_ratio, 3),
+            "_pdf_type": "scanned" if pdf_result.ocr_ratio > 0.5 else "mixed" if pdf_result.ocr_ratio > 0 else "pure_text",
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"PDF parsing failed: {str(e)}")
     finally:
@@ -540,7 +1009,7 @@ async def upload(file: UploadFile = File(...), provider: str = Form(None)):
 
     if provider:
         try:
-            llm_provider = get_provider(provider)
+            llm_provider = get_provider(provider, model=model)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
         except ExtractionError as e:
@@ -548,7 +1017,113 @@ async def upload(file: UploadFile = File(...), provider: str = Form(None)):
     else:
         llm_provider = _get_provider()
 
-    return await _run_extraction(text, llm_provider)
+    return await _run_extraction(text, llm_provider, pdf_metadata=pdf_meta)
+
+
+# ── Alias: /api/ingest/document → upload ────────────────
+
+
+@app.post("/api/ingest/document", response_model=ExtractionResponse)
+async def ingest_document(file: UploadFile = File(...), provider: str = Form(None), model: str = Form(None)):
+    """Alias for /api/upload — used by frontend INGEST_API_URL."""
+    return await upload(file, provider, model)
+
+
+# ── /api/fetch-text — crawl a URL and return raw text ────
+
+
+class FetchTextRequest(BaseModel):
+    source_url: str = ""
+
+
+class FetchTextResponse(BaseModel):
+    text: str = ""
+    pdf_metadata: dict | None = None
+
+
+@app.post("/api/fetch-text")
+async def fetch_text(req: FetchTextRequest):
+    """Crawl a URL and return extracted plain text without LLM extraction."""
+    from crawler import fetch_legal_content
+    from pdf_reader import read_pdf
+
+    if not req.source_url.strip():
+        raise HTTPException(status_code=400, detail="source_url is required.")
+
+    crawl_result = await fetch_legal_content(req.source_url)
+    if crawl_result["type"] == "text":
+        return FetchTextResponse(text=crawl_result["text"])
+    elif crawl_result["type"] == "pdf":
+        try:
+            pdf_result = await asyncio.to_thread(read_pdf, crawl_result["pdf_path"])
+            return {
+                "text": "\n".join(pdf_result.pages),
+                "pdf_metadata": {
+                    "mean_confidence": round(pdf_result.mean_conf, 3),
+                    "ocr_ratio": round(pdf_result.ocr_ratio, 3),
+                    "pdf_type": "scanned" if pdf_result.ocr_ratio > 0.5 else "mixed" if pdf_result.ocr_ratio > 0 else "pure_text",
+                    "total_pages": pdf_result.total_pages,
+                    "ocr_pages": pdf_result.ocr_pages,
+                    "text_pages": pdf_result.text_pages,
+                },
+            }
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"PDF parsing failed: {str(e)}")
+    elif crawl_result["type"] == "docx":
+        return FetchTextResponse(text=crawl_result["text"])
+    else:
+        raise HTTPException(status_code=400, detail=f"Crawl failed: {crawl_result.get('message', 'unknown error')}")
+
+
+# ── Auth (register routes from auth.py) ────────────────────
+
+
+from auth import (
+    ForgotPasswordRequest,
+    LoginRequest,
+    RegisterRequest,
+    ResetPasswordRequest,
+    TokenResponse,
+    _bearer,
+    forgot_password,
+    get_current_user,
+    login,
+    register,
+    reset_password,
+)
+
+
+class LoginRequestOut(BaseModel):
+    email: str
+    password: str
+
+
+@app.post("/auth/register")
+async def auth_register(req: RegisterRequest):
+    return await register(req)
+
+
+@app.post("/auth/login")
+async def auth_login(req: LoginRequest):
+    return await login(req)
+
+
+@app.post("/auth/forgot-password")
+async def auth_forgot_password(req: ForgotPasswordRequest):
+    return await forgot_password(req)
+
+
+@app.post("/auth/reset-password")
+async def auth_reset_password(req: ResetPasswordRequest):
+    return await reset_password(req)
+
+
+@app.get("/auth/me")
+async def auth_me(current_user: dict = Depends(get_current_user)):
+    return current_user
+
+
+# ── Database-backed review ──────────────────────────────
 
 @app.post("/api/upload", response_model=ExtractionResponse)
 async def upload(file: UploadFile = File(...), provider: str = Form(None)):
@@ -563,29 +1138,27 @@ async def upload(file: UploadFile = File(...), provider: str = Form(None)):
         content = await file.read()
         await asyncio.to_thread(tmp.write, content)
         tmp.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"File extraction failed: {str(e)}")
+
+
     if _SIDECAR_URL:
-        text, _ = await _extract_via_sidecar(data, filename)
+        text = await _extract_via_sidecar(data, filename)
     elif fmt == "ocr":
         suffix = Path(filename).suffix or ".bin"
         tmp_fd, tmp_path = tempfile.mkstemp(suffix=suffix, prefix="sentinel_ingest_")
-        try:
-            import os as _os
-            with _os.fdopen(tmp_fd, "wb") as fh:
-                fh.write(data)
-            from pdf_reader import read_pdf
-            try:
-                text = "\n".join(read_pdf(tmp_path, ocr_mode=ocr_mode))
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=f"File extraction failed: {str(e)}")
-        finally:
-            Path(tmp_path).unlink(missing_ok=True)
+        import os as _os
+        with _os.fdopen(tmp_fd, "wb") as fh:
+            fh.write(data)
+        from pdf_reader import read_pdf
+        text = "\n".join(read_pdf(tmp_path, ocr_mode=ocr_mode))        
+        Path(tmp_path).unlink(missing_ok=True)
     else:
         try:
             text = data.decode("utf-8")
         except UnicodeDecodeError:
             text = data.decode("latin-1")
-
-
+    
 @app.post("/api/mappings/review")
 def review_mapping(req: ReviewRequest):
     """Task 3: Backend Database Review Interface | 任务 3：后端数据库落盘接口
@@ -679,3 +1252,149 @@ def review_mapping(req: ReviewRequest):
     finally:
         if conn:
             conn.close()
+
+
+# ── Excel export ──────────────────────────────────────────
+
+
+class ExcelExportRequest(BaseModel):
+    """Request for Excel export of indicator mappings."""
+    country: str = "unknown"
+    mappings: list[IndicatorMapping] = []
+    filename: str = "rdtii_mappings.xlsx"
+
+
+@app.post("/api/excel/export")
+async def export_excel(req: ExcelExportRequest):
+    """Export indicator mappings to Excel (.xlsx) format.
+    
+    Returns the Excel file as a download attachment.
+    Follows RDTII 2.1 data collection practice format.
+    """
+    from excel_exporter import create_excel_response, mappings_to_excel
+
+    try:
+        return create_excel_response(
+            mappings=req.mappings,
+            country=req.country,
+            filename=req.filename,
+        )
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=f"Excel export unavailable: {e}. Install openpyxl.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Excel export failed: {str(e)}")
+
+
+# ── Source validation ──────────────────────────────────────
+
+
+class SourceValidationRequest(BaseModel):
+    url: str = ""
+    title: str = ""
+    text_snippet: str = ""
+
+
+class SourceValidationResponse(BaseModel):
+    grade: str
+    confidence: float
+    reasons: list[str]
+    is_primary: bool
+    warning: str = ""
+
+
+@app.post("/api/validate/source")
+def validate_source(req: SourceValidationRequest):
+    """Validate whether a source is a primary/official legal instrument.
+    
+    Primary sources: official legal instruments with legal effect.
+    Secondary sources: news, commentaries, academic publications.
+    """
+    from source_validator import require_primary_source
+
+    result = require_primary_source(
+        url=req.url,
+        title=req.title,
+        text_snippet=req.text_snippet,
+    )
+    return SourceValidationResponse(
+        grade=result["grade"],
+        confidence=result["confidence"],
+        reasons=result["reasons"],
+        is_primary=result["is_primary"],
+        warning=result.get("warning", ""),
+    )
+
+
+# ── Timestamp verification (existing, documented) ────────
+
+
+class TimestampVerificationRequest(BaseModel):
+    url: str = ""
+    last_update: str = ""
+
+
+class TimestampVerificationResponse(BaseModel):
+    verified: bool
+    best_date: str
+    verification_log: str
+    source_details: list = []
+
+
+@app.post("/api/verify/timestamp")
+async def verify_timestamp(req: TimestampVerificationRequest):
+    """Three-source timestamp verification for a legal source URL."""
+    try:
+        from crawler import verify_law_timeline
+        result = await verify_law_timeline(req.url, req.last_update)
+        return TimestampVerificationResponse(
+            verified=result.get("verified", False),
+            best_date=result.get("best_date", ""),
+            verification_log=result.get("verification_log", ""),
+            source_details=result.get("source_details", []),
+        )
+    except ImportError:
+        raise HTTPException(status_code=503, detail="crawler module not available")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Timestamp verification failed: {str(e)}")
+
+
+# ── Coverage classification ─────────────────────────────
+
+
+class CoverageRequest(BaseModel):
+    provision_text: str = ""
+    source_legislation: str = ""
+    indicator_id: str = ""
+
+
+@app.post("/api/classify/coverage")
+def classify_coverage_api(req: CoverageRequest):
+    """Classify a legal measure as horizontal or sectoral."""
+    from coverage_classifier import classify_coverage
+
+    result = classify_coverage(
+        provision_text=req.provision_text,
+        source_legislation=req.source_legislation,
+        indicator_id=req.indicator_id,
+    )
+    return result
+
+
+# ── Country detection ──────────────────────────────────
+
+
+class CountryDetectRequest(BaseModel):
+    text: str = ""
+    source_url: str = ""
+    source_legislation: str = ""
+
+
+@app.post("/api/detect/country")
+def detect_country_api(req: CountryDetectRequest):
+    """Auto-detect the country/jurisdiction from text, URL, or legislation name."""
+    result = detect_country(
+        text=req.text,
+        source_url=req.source_url,
+        source_legislation=req.source_legislation,
+    )
+    return result

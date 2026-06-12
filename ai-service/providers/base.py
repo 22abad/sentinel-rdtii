@@ -48,6 +48,22 @@ class LLMProvider(ABC):
     last_usage: ExtractionUsage | None = None
 
     @abstractmethod
+    def query(self, prompt: str, system: str = "") -> str:
+        """Free-form text completion — used by the RAG query endpoint.
+
+        Args:
+            prompt: The user's full prompt (question + context).
+            system: Optional system instruction override.
+
+        Returns:
+            Raw text response from the LLM.
+
+        Raises:
+            ExtractionError on failure.
+        """
+        ...
+
+    @abstractmethod
     def extract_features(
         self,
         article_text: str,
@@ -97,6 +113,54 @@ class LLMProvider(ABC):
     # ── Shared helpers (used by concrete providers) ──────────────────
 
     @staticmethod
+    def _get_recent_corrections() -> str:
+        """Fetch the latest 5 rejected extractions with reviewer notes to use as negative few-shot examples."""
+        import os
+        import psycopg2
+        db_config = {
+            "dbname": os.getenv("POSTGRES_DB", "rdtii"),
+            "user": os.getenv("POSTGRES_USER", "rdtii_user"),
+            "password": os.getenv("POSTGRES_PASSWORD", "rdtii_password"),
+            "host": os.getenv("POSTGRES_HOST", "postgres"),
+            "port": os.getenv("POSTGRES_PORT", "5432"),
+        }
+        conn = None
+        try:
+            conn = psycopg2.connect(**db_config)
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT ds.raw_text, rm.compliance_status, at.reviewer_notes "
+                "FROM audit_trail at "
+                "JOIN regulation_mappings rm ON at.mapping_id = rm.id "
+                "JOIN document_sections ds ON at.source_section_id = ds.id "
+                "WHERE at.reviewer_notes IS NOT NULL AND at.reviewer_notes != '' AND rm.compliance_status = 'non-compliant' "
+                "ORDER BY at.created_at DESC LIMIT 5"
+            )
+            rows = cur.fetchall()
+            cur.close()
+            conn.close()
+            if not rows:
+                return ""
+                
+            parts = ["\n=== IMPORTANT: RECENT HUMAN AUDITOR CORRECTIONS (DO NOT MAKE THESE ERRORS) ==="]
+            for i, (text, status, notes) in enumerate(rows, 1):
+                text_preview = text.strip().replace("\n", " ")[:200]
+                parts.append(
+                    f"Correction {i}:\n"
+                    f"  - Extracted Text: \"{text_preview}...\"\n"
+                    f"  - Human Feedback: \"{notes}\"\n"
+                    f"  - Action required: Do NOT extract or map this type of content as valid policy."
+                )
+            return "\n".join(parts) + "\n=================================================================\n"
+        except Exception:
+            if conn:
+                try:
+                    conn.close()
+                except Exception:
+                    pass
+            return ""
+
+    @staticmethod
     def build_prompt(
         article_text: str,
         indicator_id: str,
@@ -116,9 +180,14 @@ class LLMProvider(ABC):
 
         schema_keys = list(feature_spec.keys()) + [
             "verbatim_quote",
+            "article_clause",
             "source_legislation",
             "last_update",
             "scope",
+            "coverage",
+            "cluster",
+            "name",
+            "policy_description",
         ]
         schema_lines = ",\n".join(f'  "{k}": ...' for k in schema_keys)
 
@@ -134,14 +203,22 @@ ABSOLUTE RULES:
 - Output ONLY valid JSON. No prose, no markdown fences, no explanations.
 - "verbatim_quote" MUST be an EXACT substring of the input text.
   - FOR NON-ENGLISH TEXTS: Copy the text character-for-character including all spaces and special characters. DO NOT attempt to normalize or reformat.
+- "article_clause" MUST be the specific article, clause, or section number (e.g. "Article 18", "Section 5(2)", "Paragraph 10"). Output an empty string if not explicitly mentioned in the text.
+- "source_legislation" MUST be the official title of the law/regulation, EXCLUDING any article, section, or clause numbers. Format it exactly as: [Country/Economy Name] [Law Name] ([Optional Abbreviation]), [Year], [Law Number] (e.g., "Singapore Personal Data Protection Act (PDPA), 2012, No. 26", "Malaysia Personal Data Protection Act (PDPA), 2010, No. 709").
 - If a feature cannot be determined from the text, set it to its type's default (false / 0 / "").
 - "scope" MUST be one of: "horizontal" / "sectoral" / "unknown".
+- "coverage": detailed description of the measure's coverage (e.g. 'ICT products', 'Telecommunication equipments', 'Cross-cutting').
+- "cluster": high-level policy cluster — one of "Traditional trade policies", "Digital governance policies", or "Other domestic policies".
+- "name": mid-level policy category (e.g. "Tariffs & trade defence", "Non-technical NTMs", "Standards & procedures", "Online sales & transactions", "Public procurement", "Foreign direct investment", "Intellectual property rights").
+- "policy_description": most specific policy type (e.g. "Trade defence measures", "Import bans", "Local content requirements", "Self-certification limitations").
 - Do NOT include a score or any RDTII pillar/indicator number — only features.
 
 JSON schema (all keys required):
 {{
 {schema_lines}
 }}
+
+{LLMProvider._get_recent_corrections()}
 
 Input article:
 \"\"\"
@@ -164,9 +241,15 @@ Input article:
 
             fnames = list(feature_spec.keys())
             fields = [f'    "verbatim_quote": "exact substring",']
+            fields.append('    "article_clause": "specific article, clause, or section number (e.g. Article 18), or empty string",')
             for fname in fnames:
                 fields.append(f'    "{fname}": ...,')
-            fields.append('    "scope": "horizontal|sectoral|unknown"')
+            fields.append('    "source_legislation": "official title of the law/regulation EXCLUDING article/clause numbers, formatted exactly as: [Country/Economy] [Law Name] ([Abbreviation]), [Year], [Law Number] (e.g. Singapore Personal Data Protection Act (PDPA), 2012, No. 26)",')
+            fields.append('    "scope": "horizontal|sectoral|unknown",')
+            fields.append('    "coverage": "detailed coverage description (e.g. ICT products)",')
+            fields.append('    "cluster": "Traditional trade policies|Digital governance policies|Other domestic policies",')
+            fields.append('    "name": "mid-level policy category (e.g. Tariffs & trade defence)",')
+            fields.append('    "policy_description": "specific policy type (e.g. Trade defence measures)"')
             schema_parts.append(f'  "{indicator_id}": {{')
             schema_parts.extend(fields)
             schema_parts.append('  }')
@@ -181,14 +264,22 @@ Evaluate ALL of these indicators from the same article below:
 ABSOLUTE RULES:
 - Output ONLY valid JSON. No prose, no markdown fences, no explanations.
 - Each indicator MUST have a "verbatim_quote" that is an EXACT substring of the input — do NOT paraphrase.
+- "article_clause" MUST be the specific article, clause, or section number (e.g. "Article 18", "Section 5(2)", "Paragraph 10"). Output an empty string if not explicitly mentioned in the text.
+- "source_legislation" MUST be the official title of the law/regulation, EXCLUDING any article, section, or clause numbers. Format it exactly as: [Country/Economy Name] [Law Name] ([Optional Abbreviation]), [Year], [Law Number] (e.g., "Singapore Personal Data Protection Act (PDPA), 2012, No. 26", "Malaysia Personal Data Protection Act (PDPA), 2010, No. 709").
 - If a feature cannot be determined, set to its type default (false / 0 / "").
 - "scope" MUST be one of: "horizontal" / "sectoral" / "unknown".
+- "coverage": detailed coverage description.
+- "cluster": high-level policy cluster — "Traditional trade policies", "Digital governance policies", or "Other domestic policies".
+- "name": mid-level policy category.
+- "policy_description": specific policy type.
 - Do NOT include scores — only features.
 
 Return JSON:
 {{
 {chr(10).join(schema_parts)}
 }}
+
+{LLMProvider._get_recent_corrections()}
 
 Input article:
 \"\"\"

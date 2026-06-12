@@ -4,6 +4,7 @@ import { X, Plus, Minus } from "lucide-react";
 import type { Status } from "../types";
 
 type TopBarProps = {
+  variant?: "workbench" | "mapsearch";
   country: string;
   provider: string;
   status: Status;
@@ -13,6 +14,14 @@ type TopBarProps = {
   availableProviders: string[];
   selectedProvider: string;
   setSelectedProvider: (v: string) => void;
+  ollamaModels: string[];
+  selectedOllamaModel: string;
+  setSelectedOllamaModel: (v: string) => void;
+  vertexModels: string[];
+  selectedGeminiModel: string;
+  setSelectedGeminiModel: (v: string) => void;
+  selectedDeepSeekModel: string;
+  setSelectedDeepSeekModel: (v: string) => void;
   onClose: () => void;
 };
 
@@ -27,6 +36,8 @@ const PROVIDER_LABELS: Record<string, string> = {
   openrouter: "OpenRouter",
   "llama-3-local": "Llama 3 (Local)",
 };
+
+const LOCAL_PROVIDERS = ["ollama", "llama-3-local"];
 
 function SubSection({ label, summary, children }: { label: string; summary?: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -99,6 +110,7 @@ function Section({ label, children, defaultOpen = true }: { label: string; child
 }
 
 export function SideBar({
+  variant = "workbench",
   country,
   provider,
   status,
@@ -108,6 +120,14 @@ export function SideBar({
   availableProviders,
   selectedProvider,
   setSelectedProvider,
+  ollamaModels,
+  selectedOllamaModel,
+  setSelectedOllamaModel,
+  vertexModels,
+  selectedGeminiModel,
+  setSelectedGeminiModel,
+  selectedDeepSeekModel,
+  setSelectedDeepSeekModel,
   onClose,
 }: TopBarProps) {
   const headerStatus =
@@ -141,50 +161,186 @@ export function SideBar({
       {/* Mode */}
       <div className="px-6 py-5 border-b border-white/10">
         <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">Mode</p>
-        <p className="text-sm font-semibold text-white">Evidence Workbench</p>
+        <p className="text-sm font-semibold text-white">{variant === "mapsearch" ? "Map Explorer" : "Evidence Workbench"}</p>
         <p className="text-[11px] text-white/40 mt-0.5">UN ESCAP DTAM</p>
       </div>
 
-      {/* Session */}
-      <Section label="Session">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-white/40">Country</span>
-          <span className="text-xs font-semibold text-white">{country}</span>
-        </div>
-        <SubSection
-          label="Provider"
-          summary={PROVIDER_LABELS[selectedProvider] ?? selectedProvider ?? provider ?? "—"}
-        >
-          {availableProviders.map((p) => (
-            <button
-              key={p}
-              onClick={() => setSelectedProvider(p)}
-              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "4px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+      {variant === "workbench" ? (
+        <>
+          {/* Session */}
+          <Section label="Session">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-white/40">Country</span>
+              <span className="text-xs font-semibold text-white">{country}</span>
+            </div>
+            <SubSection
+              label="Provider"
+              summary={
+                LOCAL_PROVIDERS.includes(selectedProvider)
+                  ? "Local"
+                  : PROVIDER_LABELS[selectedProvider] ?? selectedProvider ?? provider ?? "—"
+              }
             >
-              <span className={`text-xs ${selectedProvider === p ? "text-[#10B981] font-semibold" : "text-white/50"}`}>
-                {PROVIDER_LABELS[p] ?? p}
-              </span>
-              {selectedProvider === p && (
-                <span className="text-[#10B981] text-xs">⎷</span>
+              {/* Cloud providers */}
+              {availableProviders
+                .filter((p) => !LOCAL_PROVIDERS.includes(p) && p !== "vertex-ai")
+                .map((p) => {
+                  const isSelected = selectedProvider === p;
+                  return (
+                    <div key={p} className="flex flex-col">
+                      <button
+                        onClick={() => setSelectedProvider(p)}
+                        style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "4px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                      >
+                        <span className={`text-xs ${isSelected ? "text-[#10B981] font-semibold" : "text-white/50"}`}>
+                          {PROVIDER_LABELS[p] ?? p}
+                        </span>
+                        {isSelected && (
+                          <span className="text-[#10B981] text-xs">⎷</span>
+                        )}
+                      </button>
+
+                      {/* Unified Gemini / Vertex AI model dropdown */}
+                      {p === "gemini" && isSelected && (
+                        <div className="mt-1 pl-2 border-l border-white/10 mb-2 flex flex-col gap-0.5">
+                          {/* Developer API models */}
+                          {["gemini-2.0-flash", "gemini-1.5-flash"].map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setSelectedGeminiModel(m)}
+                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                            >
+                              <span className={`text-[11px] ${selectedGeminiModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
+                                {m}
+                              </span>
+                              {selectedGeminiModel === m && (
+                                <span className="text-[#10B981] text-[10px]">⎷</span>
+                              )}
+                            </button>
+                          ))}
+                          {/* Vertex AI enterprise models (rendered inline under Gemini if configured) */}
+                          {vertexModels.map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setSelectedGeminiModel(m)}
+                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                            >
+                              <span className={`text-[11px] ${selectedGeminiModel === m ? "text-[#10B981] font-semibold" : "text-[#8B5CF6]"}`}>
+                                {m} <span className="text-[9px] text-white/20 font-normal">(vertex)</span>
+                              </span>
+                              {selectedGeminiModel === m && (
+                                <span className="text-[#10B981] text-[10px]">⎷</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* DeepSeek model dropdown */}
+                      {p === "deepseek" && isSelected && (
+                        <div className="mt-1 pl-2 border-l border-white/10 mb-2 flex flex-col gap-0.5">
+                          {["deepseek-chat", "deepseek-reasoner"].map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setSelectedDeepSeekModel(m)}
+                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                            >
+                              <span className={`text-[11px] ${selectedDeepSeekModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
+                                {m === "deepseek-reasoner" ? "deepseek-reasoner (thinking)" : m}
+                              </span>
+                              {selectedDeepSeekModel === m && (
+                                <span className="text-[#10B981] text-[10px]">⎷</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              {/* Local providers — merged under one heading */}
+              {availableProviders.filter((p) => LOCAL_PROVIDERS.includes(p)).length > 0 && (
+                <div className="mt-2 pt-2 border-t border-white/10">
+                  <span className="block text-[10px] text-white/30 uppercase tracking-widest mb-1">Local</span>
+                  {availableProviders
+                    .filter((p) => LOCAL_PROVIDERS.includes(p))
+                    .map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => setSelectedProvider(p)}
+                        style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "2px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                      >
+                        <span className={`text-xs ${selectedProvider === p ? "text-[#10B981] font-semibold" : "text-white/40"}`}>
+                          {PROVIDER_LABELS[p] ?? p}
+                        </span>
+                        {selectedProvider === p && (
+                          <span className="text-[#10B981] text-xs">⎷</span>
+                        )}
+                      </button>
+                    ))}
+                  {/* Ollama model sub-selector */}
+                  {selectedProvider === "ollama" && ollamaModels.length > 0 && (
+                    <div className="mt-1 pl-2 border-l border-white/10">
+                      {ollamaModels.map((m) => (
+                        <button
+                          key={m}
+                          onClick={() => setSelectedOllamaModel(m)}
+                          style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                        >
+                          <span className={`text-[11px] ${selectedOllamaModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
+                            {m}
+                          </span>
+                          {selectedOllamaModel === m && (
+                            <span className="text-[#10B981] text-[10px]">⎷</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
-            </button>
-          ))}
-        </SubSection>
-      </Section>
+            </SubSection>
+          </Section>
 
-      {/* Status */}
-      <Section label="Status">
-        <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full border ${statusChip}`}>
-          {headerStatus}
-        </span>
-      </Section>
+          {/* Status */}
+          <Section label="Status">
+            <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full border ${statusChip}`}>
+              {headerStatus}
+            </span>
+          </Section>
 
-      {/* History */}
-      <Section label="History" defaultOpen={false}>
-        <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full border ${statusChip}`}>
-          {headerStatus}
-        </span>
-      </Section>
+          {/* History */}
+          <Section label="History" defaultOpen={false}>
+            <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full border ${statusChip}`}>
+              {headerStatus}
+            </span>
+          </Section>
+        </>
+      ) : (
+        <>
+          {/* Region */}
+          <Section label="Region">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-white/40">Selected</span>
+              <span className="text-xs font-semibold text-white">{country || "—"}</span>
+            </div>
+          </Section>
+
+          {/* Controls */}
+          <Section label="Controls">
+            <p className="text-xs text-white/40 leading-relaxed">
+              Middle-click to pan · Ctrl+scroll to zoom · Pinch on mobile
+            </p>
+          </Section>
+
+          {/* About */}
+          <Section label="About" defaultOpen={false}>
+            <p className="text-xs text-white/40 leading-relaxed">
+              Explore digital trade and AI policy indicators across the Asia-Pacific region.
+            </p>
+          </Section>
+        </>
+      )}
 
       {/* Spacer */}
       <div className="flex-1" />

@@ -5,12 +5,6 @@ Pure text  → PyMuPDF  (fast, no OCR)
 Scanned    → pdf2pym + Tesseract  (image render → OCR)
 """
 
-import logging
-import os
-import time
-from concurrent.futures import Future, ThreadPoolExecutor
-from pathlib import Path
-
 import fitz
 
 from .non_ocr.pymupdf_extractor import (
@@ -28,8 +22,16 @@ from .ocr_service.tesseract_extractor import (
     _timed_ocr_page,
     extract_sections_ocr,
 )
-from .ocr_service.openai_fallback import ocr_vision
 
+import logging
+import os
+import time
+from concurrent.futures import Future, ThreadPoolExecutor
+
+
+
+
+from .ocr_service.openai_fallback import ocr_vision
 logger = logging.getLogger(__name__)
 
 # Minimum characters from PyMuPDF before a page is considered "has text".
@@ -38,9 +40,10 @@ _PAGE_TEXT_MIN = int(os.getenv("PDF_PAGE_TEXT_MIN", "80"))
 
 
 def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, ocr_mode: str = "tesseract") -> list[str]:
-    """Extract text from a PDF with per-page routing.
-
-    Returns a list of strings, one per page.
+    """Extimport loggin,
+import os,
+import time,ract text from a PDF with per-page routing.
+       Returns a list of strings, one per page.
     """
     path = Path(filepath)
     if not path.exists():
@@ -81,7 +84,7 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, ocr_mode: str = "tess
     # Second pass: OCR only the pages that need it.
     ocr_results: dict[int, str] = {}
     if needs_ocr:
-        pipeline_t0 = time.perf_counter()
+        pThis is a standalone version of the JSON parser used in pydantic-core. The recommendation is to only use this package directly if you do not use pydantic.ipeline_t0 = time.perf_counter()
         if ocr_mode == "openai":
             logger.info("[PDF] OCR mode: openai-vision  pages=%d", len(needs_ocr))
             for i in needs_ocr:
@@ -118,6 +121,7 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, ocr_mode: str = "tess
     elapsed = time.perf_counter() - t0
     logger.info("[PDF] done  pymupdf=%d  ocr=%d  total=%.1fs", text_count, len(needs_ocr), elapsed)
     return _strip_repeated_lines(merged)
+
 
 
 def extract_sections(filepath: str, min_section_chars: int = 100) -> list[dict]:

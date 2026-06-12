@@ -30,8 +30,6 @@ services:
     build:
       context: ./ai-service
       dockerfile: Dockerfile
-    volumes:
-      - ./ai-service:/app
     container_name: rdtii-ai-service
     ports:
       - "8000:8000"
@@ -39,6 +37,23 @@ services:
       - .env
     environment:
       CORS_ALLOW_ORIGINS: http://localhost:5173,http://localhost:3000
+      DATABASE_URL: postgresql://rdtii_user:rdtii_password@postgres:5432/rdtii
+      JWT_SECRET: rdtii-hackathon-secret-change-in-production
+      # Ollama on host — Docker Desktop auto-resolves host.docker.internal
+      # On Linux, the extra_hosts entry provides the same mapping.
+      RDTII_LLM_PROVIDER: ollama
+      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_BASE_URL: http://host.docker.internal:11434/v1
+      # Vertex AI — project + location from .env (gitignored)
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp-vertex-key.json
+    volumes:
+      - ./ai-service:/app
+      - ~/.config/opencode/gcp-vertex-key.json:/etc/gcp-vertex-key.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: on-failure
 
   frontend:
