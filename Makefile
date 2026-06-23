@@ -1,15 +1,17 @@
-.PHONY: dev dev-backend dev-frontend dev-sidecar install install-frontend install-sidecar test db migrate-sidecar image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test db migrate migrate-sidecar image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
 
+setup:
+	@if [ ! -f .env ]; then cp .env.example .env; echo "Created .env from .env.example. Edit API keys before running extraction."; fi
+	$(MAKE) install
+	$(MAKE) install-opencli-bridge
+	$(MAKE) install-frontend
+
+doctor:
+	bash scripts/doctor.sh
+
 dev:
-	@DB_IP=$$(docker inspect rdtii-postgres --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 2>/dev/null); \
-	if [ -n "$$DB_IP" ]; then \
-		sed -i '' "s|DATABASE_URL=.*|DATABASE_URL=postgresql://rdtii_user:rdtii_password@$$DB_IP:5432/rdtii|" .env; \
-		echo "Postgres at $$DB_IP:5432"; \
-	else \
-		echo "Warning: rdtii-postgres not running, run 'make db' first"; \
-	fi
 	@echo "Starting backend, sidecar, and frontend..."
 	@trap 'kill 0' EXIT; \
 		$(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info & \
@@ -39,11 +41,19 @@ migrate-sidecar:
 install-frontend:
 	cd rdtii-frontend && npm install
 
+install-opencli-bridge:
+	cd tools/opencli-browser-mcp && npm install
+
 test:
 	cd ai-service && $(PYTHON) -m pytest
 
 db:
 	docker compose up -d postgres redis
+
+migrate:
+	psql "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_001_auth.sql
+	psql "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_002_reset_tokens.sql
+	psql "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_003_document_ownership.sql
 
 image:
 	docker compose down

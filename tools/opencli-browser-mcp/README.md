@@ -5,15 +5,16 @@ This bridge exposes a small MCP-style JSON-RPC surface over stdio and a
 
 ## Setup
 
-Build OpenCLI first:
+For normal project setup, install this bridge package:
 
 ```bash
-cd ../opencli
 npm install
-npm run build
 ```
 
-Then point this project at that checkout if it is not the sibling directory:
+This installs `@jackwener/opencli` into this bridge directory's
+`node_modules`.
+
+For OpenCLI development, point this project at a local checkout:
 
 ```bash
 export OPENCLI_PACKAGE_DIR=/absolute/path/to/opencli
@@ -21,6 +22,23 @@ export OPENCLI_PACKAGE_DIR=/absolute/path/to/opencli
 
 OpenCLI Browser Bridge also needs Chrome/Chromium with the OpenCLI extension
 connected, as documented in the OpenCLI repo.
+
+## Runtime requirements
+
+This bridge drives OpenCLI through its **CLI** (`opencli browser <session> ...`),
+spawned as a subprocess — it does not import OpenCLI's internal modules. At runtime
+it requires:
+
+- the **OpenCLI daemon running** (default port 19825). The bridge probes the
+  daemon's `/status` over HTTP and **does not auto-start it**, so run the daemon as
+  a persistent service (e.g. `opencli daemon restart` at backend startup, or set
+  `OPENCLI_DAEMON_PORT` if you moved it).
+- the **Chrome/Chromium extension connected** to that daemon.
+
+If either is missing, every tool returns a fast error / empty result (a ~2.5s
+availability probe, never a long hang) so the FastAPI fallback chain
+(HTTP → Playwright → archive) continues uninterrupted. Check with `opencli doctor`
+or the `health` tool.
 
 ## FastAPI Modes
 
@@ -38,4 +56,5 @@ extract text.
 
 - `fetch_url`: render a URL through OpenCLI and return cleaned legal text.
 - `search_gov_law`: search China's National Laws and Regulations Database.
-- `health`: verify that the built OpenCLI package can be loaded.
+- `health`: report the resolved OpenCLI package dir and whether the daemon +
+  extension are connected (`{ ok, packageDir, connected }`).

@@ -1,0 +1,39 @@
+name: tests
+
+# Pre-merge gate: run on pushes to any branch EXCEPT main. main is protected and
+# only updated via merged PRs, so it is not re-tested here.
+on:
+  push:
+    branches-ignore: [main]
+
+jobs:
+  opencli-bridge:
+    name: OpenCLI bridge tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/opencli-browser-mcp
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Installs @jackwener/opencli so the package-detection test verifies REAL
+      # resolution (not the null/null trivial pass). --ignore-scripts is safe: the
+      # published tarball already ships dist/, and the package's postinstall only
+      # writes shell completions, which are irrelevant in CI.
+      - name: Install bridge dependencies
+        run: npm ci --ignore-scripts
+
+      # Node's built-in test runner. These tests need NO OpenCLI daemon or browser:
+      # they spin up a throwaway local HTTP server to impersonate the daemon /status,
+      # so they are fully deterministic in CI.
+      - name: Run bridge tests
+        run: npm test
+
+  # NOTE: ai-service pytest is intentionally NOT wired in yet. As of this change the
+  # suite is 112 passed / 2 failed, where the 2 failures are pre-existing chunker
+  # regressions (tests/test_chunker.py) unrelated to the bridge. Add a `python` job
+  # here once those are green, otherwise this workflow could never gate a merge.
