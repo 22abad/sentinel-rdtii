@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { AUTH_API_URL } from "../lib/constants";
+import { t } from "../lib/i18n";
 
 const TOKEN_KEY = "sentinel_token";
 const DEV_AUTH_BYPASS_USER: AuthUser = {
@@ -53,7 +54,7 @@ export function useAuthProvider(): AuthContextValue {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      if (!res.ok) throw new Error((await res.json()).detail ?? "Login failed");
+      if (!res.ok) throw new Error((await res.json()).detail ?? t("auth.loginFailed"));
       _save(await res.json());
     } finally {
       setIsLoading(false);
@@ -68,7 +69,7 @@ export function useAuthProvider(): AuthContextValue {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
       });
-      if (!res.ok) throw new Error((await res.json()).detail ?? "Registration failed");
+      if (!res.ok) throw new Error((await res.json()).detail ?? t("auth.registrationFailed"));
       _save(await res.json());
     } finally {
       setIsLoading(false);

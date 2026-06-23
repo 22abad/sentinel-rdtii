@@ -30,8 +30,6 @@ type SourcePanelProps = {
   setPillarFilter: (v: string) => void;
   sourceUrl: string;
   setSourceUrl: (v: string) => void;
-  browserMode: string;
-  setBrowserMode: (v: string) => void;
   text: string;
   onTextChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   activeMapping: IndicatorMapping | null;
@@ -58,8 +56,6 @@ export function SourcePanel({
   setPillarFilter,
   sourceUrl,
   setSourceUrl,
-  browserMode,
-  setBrowserMode,
   text,
   onTextChange,
   activeMapping,
@@ -197,17 +193,6 @@ export function SourcePanel({
                 <SelectItem value="11">{t("taxonomy.p11")}</SelectItem>
                 <SelectItem value="12">{t("taxonomy.p12")}</SelectItem>
               </SelectGroup>
-            </SelectContent>
-          </Select>
-        </label>
-        <label>
-          {t("browser.label")}
-          <Select value={browserMode} onValueChange={setBrowserMode}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="auto">{t("browser.auto")}</SelectItem>
-              <SelectItem value="playwright">{t("browser.playwright")}</SelectItem>
-              <SelectItem value="opencli">{t("browser.opencli")}</SelectItem>
             </SelectContent>
           </Select>
         </label>

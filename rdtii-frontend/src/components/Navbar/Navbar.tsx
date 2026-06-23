@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { MobileNav } from "./MobileNav";
+import { t } from "@/lib/i18n";
 
 const navLinks = [
-  { label: "About", href: "/about" },
-  { label: "Tech Memo", href: "/tech_memo" },
-  { label: "Workbench", href: "/workbench" },
-  { label: "Maps", href: "/mapsearch" },
-];
+  { labelKey: "nav.about", href: "/about" },
+  { labelKey: "nav.techMemo", href: "/tech_memo" },
+  { labelKey: "nav.workbench", href: "/workbench" },
+  { labelKey: "nav.maps", href: "/mapsearch" },
+] as const;
 
 export function Navbar() {
   const location = useLocation();
@@ -54,7 +55,7 @@ export function Navbar() {
               href={link.href}
               className={`text-xs font-light px-3 py-2 rounded-full transition-all duration-500 ${pastHero ? "text-[#10B981]/80 hover:text-[#10B981] hover:bg-[#10B981]/10" : "text-white/80 hover:text-white hover:bg-white/10"}`}
             >
-              {link.label}
+              {t(link.labelKey)}
             </a>
           ))}
           {user && (
@@ -73,7 +74,7 @@ export function Navbar() {
             className={`group flex items-center justify-center rounded-full text-xs h-8 px-5 cursor-pointer transition-all duration-500 ${pastHero ? "bg-[#10B981] text-white" : "bg-white text-black"}`}
             onClick={() => { logout(); window.location.href = "/"; }}
           >
-            <span>Log Out</span>
+            <span>{t("nav.logout")}</span>
             <span className="overflow-hidden w-0 group-hover:w-4 transition-all duration-300 flex items-center justify-center">
               <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
@@ -85,7 +86,7 @@ export function Navbar() {
             className={`group flex items-center justify-center rounded-full text-xs h-8 px-5 cursor-pointer transition-all duration-500 ${pastHero ? "bg-[#10B981] text-white" : "bg-white text-black"}`}
             onClick={() => window.location.href = "/login"}
           >
-            <span>Login</span>
+            <span>{t("nav.login")}</span>
             <span className="overflow-hidden w-0 group-hover:w-4 transition-all duration-300 flex items-center justify-center">
               <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
