@@ -14,8 +14,8 @@ class OpenCliBrowserDriver:
 
     The Node side intentionally lives in ``tools/opencli-browser-mcp`` so this
     FastAPI service can keep its Python dependency set unchanged. At runtime the
-    bridge loads a built OpenCLI checkout via ``OPENCLI_PACKAGE_DIR`` or the
-    sibling ``../opencli`` directory.
+    bridge loads the npm OpenCLI package, with ``OPENCLI_PACKAGE_DIR`` available
+    for local OpenCLI development checkouts.
     """
 
     def __init__(self, server_path: str | None = None, node_bin: str | None = None):

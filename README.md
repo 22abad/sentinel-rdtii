@@ -4,6 +4,20 @@
 
 An open-source AI concept prototype built for the **UN Global Hackathon: AI for Digital Trade Regulatory Analysis**.
 
+## Quick Start
+
+For macOS local setup, health checks, database migrations, and common startup
+errors, see [SETUP.md](SETUP.md).
+
+```bash
+cp .env.example .env
+make setup
+make db
+make migrate
+make doctor
+make dev
+```
+
 ## 🎯 The Mission
 Global digital trade is hindered by fragmented data localization and privacy laws. Traditional manual legal review is no longer scalable. **SENTINEL** is a hybrid extraction engine designed to automatically discover, extract, and map complex digital trade regulations against all 12 pillars of the **UNESCAP Regional Digital Trade Integration Index (RDTII 2.1)**.
 
@@ -24,4 +38,3 @@ We are a cross-disciplinary strike team from Maynooth University:
 
 ---
 *Disclaimer: The outputs of this tool are for conceptual demonstration and research purposes only, not formal legal advice.*
-
