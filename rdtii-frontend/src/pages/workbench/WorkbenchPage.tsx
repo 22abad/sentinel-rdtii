@@ -24,7 +24,6 @@ export function WorkbenchPage() {
     detectedCountry,
     pillarFilter, setPillarFilter,
     sourceUrl, setSourceUrl,
-    browserMode, setBrowserMode,
     text, onTextChange,
     status,
     error,
@@ -234,8 +233,6 @@ export function WorkbenchPage() {
               setPillarFilter={setPillarFilter}
               sourceUrl={sourceUrl}
               setSourceUrl={setSourceUrl}
-              browserMode={browserMode}
-              setBrowserMode={setBrowserMode}
               text={text}
               onTextChange={onTextChange}
               activeMapping={activeMapping}

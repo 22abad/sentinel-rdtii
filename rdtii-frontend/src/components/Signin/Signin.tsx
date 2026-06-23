@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { t } from '../../lib/i18n';
 
 // --- HELPER COMPONENTS (ICONS) ---
 
@@ -57,8 +58,8 @@ const TestimonialCard = ({ testimonial, delay }: { testimonial: Testimonial, del
 // --- MAIN COMPONENT ---
 
 export const SignInPage: React.FC<SignInPageProps> = ({
-  title = <span className="font-light text-foreground tracking-tighter">Welcome back to <a href="/" className="text-[#10B981] bg-gradient-to-r from-[#10B981] to-[#10B981] bg-[length:0%_1.5px] hover:bg-[length:100%_1.5px] bg-left-bottom bg-no-repeat transition-all duration-500 cursor-pointer">Sentinel</a></span>,
-  description = "Sign in to access the AI-powered digital trade evidence workbench.",
+  title = <span className="font-light text-foreground tracking-tighter">{t("auth.loginTitle")} <a href="/" className="text-[#10B981] bg-gradient-to-r from-[#10B981] to-[#10B981] bg-[length:0%_1.5px] hover:bg-[length:100%_1.5px] bg-left-bottom bg-no-repeat transition-all duration-500 cursor-pointer">Sentinel</a></span>,
+  description = t("auth.loginDescription"),
   heroImageSrc,
   testimonials = [],
   onSignIn,
@@ -81,17 +82,17 @@ export const SignInPage: React.FC<SignInPageProps> = ({
 
             <form className="space-y-5" onSubmit={onSignIn}>
               <div className="animate-element animate-delay-300 mt-10">
-                <label className="text-sm font-medium text-muted-foreground mb-2">Email Address</label>
+                <label className="text-sm font-medium text-muted-foreground mb-2">{t("auth.email")}</label>
                 <GlassInputWrapper>
-                  <input name="email" type="email" placeholder="Enter your email address" className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
+                  <input name="email" type="email" placeholder={t("auth.emailPlaceholder")} className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
                 </GlassInputWrapper>
               </div>
 
               <div className="animate-element animate-delay-400">
-                <label className="text-sm font-medium text-muted-foreground mb-2">Password</label>
+                <label className="text-sm font-medium text-muted-foreground mb-2">{t("auth.password")}</label>
                 <GlassInputWrapper>
                   <div className="relative">
-                    <input name="password" type={showPassword ? 'text' : 'password'} placeholder="Enter your password" className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none" />
+                    <input name="password" type={showPassword ? 'text' : 'password'} placeholder={t("auth.passwordPlaceholder")} className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-3 flex items-center bg-transparent">
                       {showPassword ? <EyeOff className="w-5 h-5 text-black" /> : <Eye className="w-5 h-5 text-black" />}
                     </button>
@@ -102,29 +103,29 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               <div className="animate-element animate-delay-500 flex items-center justify-between text-sm gap-4">
                 <label className="flex items-center gap-2 cursor-pointer shrink-0">
                   <input type="checkbox" name="rememberMe" className="custom-checkbox" />
-                  <span className="text-foreground/90 whitespace-nowrap">Keep me signed in</span>
+                  <span className="text-foreground/90 whitespace-nowrap">{t("auth.keepSignedIn")}</span>
                 </label>
-                <a href="#" onClick={(e) => { e.preventDefault(); onResetPassword?.(); }} className="hover:underline text-[#10B981] transition-colors whitespace-nowrap">Reset password</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); onResetPassword?.(); }} className="hover:underline text-[#10B981] transition-colors whitespace-nowrap">{t("auth.resetPassword")}</a>
               </div>
 
               {error && <p className="text-sm text-red-500 text-center">{error}</p>}
               <button type="submit" disabled={isLoading} className="animate-element animate-delay-600 w-full rounded-2xl bg-[#10B981] py-4 font-medium text-white hover:bg-[#0da373] disabled:opacity-50 transition-colors">
-                {isLoading ? "Signing in…" : "Sign In"}
+                {isLoading ? t("auth.signingIn") : t("auth.signIn")}
               </button>
             </form>
 
             <div className="animate-element animate-delay-700 relative flex items-center justify-center">
               <span className="w-full border-t border-border"></span>
-              <span className="mt-10 px-5 text-sm text-muted-foreground bg-background absolute">Or continue with</span>
+              <span className="mt-10 px-5 text-sm text-muted-foreground bg-background absolute">{t("auth.orContinueWith")}</span>
             </div>
 
             <button onClick={onGoogleSignIn} className="animate-element animate-delay-800 w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:border-[#10B981] hover:text-[#10B981] hover:bg-[#10B981]/5 transition-colors mt-5">
                 <GoogleIcon />
-                Continue with Google
+                {t("auth.continueWithGoogle")}
             </button>
 
             <p className="animate-element animate-delay-900 text-center text-sm text-muted-foreground">
-              New to our platform? <a href="#" onClick={(e) => { e.preventDefault(); onCreateAccount?.(); }} className="text-[#10B981] hover:underline transition-colors">Create Account</a>
+              {t("auth.newToPlatform")} <a href="#" onClick={(e) => { e.preventDefault(); onCreateAccount?.(); }} className="text-[#10B981] hover:underline transition-colors">{t("auth.createAccount")}</a>
             </p>
           </div>
         </div>

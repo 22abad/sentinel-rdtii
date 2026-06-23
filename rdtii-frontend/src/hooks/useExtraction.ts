@@ -11,7 +11,6 @@ import type {
   Status,
 } from "../types";
 
-const BROWSER_MODES = ["auto", "playwright", "opencli"] as const;
 const DEFAULT_PROVIDER = "deepseek";
 const DEFAULT_PROVIDER_VERSION = "deepseek-v4-default";
 const DEFAULT_DEEPSEEK_MODEL = "deepseek-v4-flash";
@@ -27,10 +26,6 @@ const DEFAULT_PROVIDERS = [
   "together",
   "ollama",
 ];
-
-function normalizeBrowserMode(value: string | null) {
-  return BROWSER_MODES.includes(value as (typeof BROWSER_MODES)[number]) ? value! : "auto";
-}
 
 function initialSelectedProvider() {
   if (localStorage.getItem("providerDefaultVersion") !== DEFAULT_PROVIDER_VERSION) {
@@ -51,12 +46,6 @@ export function useExtraction() {
   const [country, setCountry] = useState("CHN");
   const [pillarFilter, setPillarFilter] = useState("all");
   const [sourceUrl, setSourceUrl] = useState("");
-  const [browserMode, setBrowserModeState] = useState(() => normalizeBrowserMode(localStorage.getItem("browserMode")));
-  const setBrowserMode = (val: string) => {
-    const next = normalizeBrowserMode(val);
-    setBrowserModeState(next);
-    localStorage.setItem("browserMode", next);
-  };
   const [text, setText] = useState(sampleText);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
@@ -213,7 +202,7 @@ export function useExtraction() {
     const form = new FormData();
     form.append("text", text);
     if (sourceUrl.trim()) form.append("source_url", sourceUrl.trim());
-    form.append("browser_mode", browserMode);
+    form.append("browser_mode", "auto");
     
     // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
     let actualProvider = selectedProvider;
@@ -455,7 +444,6 @@ export function useExtraction() {
     warning,
     pillarFilter, setPillarFilter,
     sourceUrl, setSourceUrl: handleSetSourceUrl,
-    browserMode, setBrowserMode,
     text, onTextChange,
     status,
     error,
