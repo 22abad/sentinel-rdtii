@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { mappingKey } from "../../lib/utils";
+import { t } from "../../lib/i18n";
 import type { IndicatorMapping, ReviewDecision, Status } from "../../types";
 import { MappingCard } from "./MappingCard";
 
@@ -25,19 +26,19 @@ export function AuditBody({
   if (status === "idle") {
     return (
       <p className="empty-state">
-        Run extraction on the source text to surface RDTII indicator mappings.
+        {t("audit.empty.idle")}
       </p>
     );
   }
 
   if (status === "loading" && mappings.length === 0) {
-    return <p className="empty-state">Extracting mappings…</p>;
+    return <p className="empty-state">{t("audit.empty.loading")}</p>;
   }
 
   if (status === "error") {
     return (
       <p className="empty-state error-state">
-        Extraction failed. See message in the source panel.
+        {t("audit.empty.error")}
       </p>
     );
   }
@@ -46,8 +47,8 @@ export function AuditBody({
     return (
       <p className="empty-state">
         {totalMappings === 0
-          ? "No mappings produced for this text. Try a different excerpt or check the rejected log below."
-          : "No mappings match the current pillar filter."}
+          ? t("audit.empty.none")
+          : t("audit.empty.filtered")}
       </p>
     );
   }

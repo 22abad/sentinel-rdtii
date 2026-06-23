@@ -10,9 +10,9 @@ Pipeline:
     5. Apply the deterministic scoring rule (scoring.score_indicator).
     6. Return all surviving mappings + the rejection log.
 
-The provider is selected via env var RDTII_LLM_PROVIDER ('gemini' / 'claude'
-/ 'llama3'). Anywhere `provider` is referenced is the swap point — there is
-zero hardcoded LLM logic outside `providers/`.
+The provider is selected via env var RDTII_LLM_PROVIDER ('deepseek' / 'gemini'
+/ 'claude' / 'llama3'). Anywhere `provider` is referenced is the swap point —
+there is zero hardcoded LLM logic outside `providers/`.
 """
 
 from __future__ import annotations
@@ -251,7 +251,7 @@ def _active_provider_name() -> tuple[str, str | None]:
     provider — endpoints surface that as a misconfiguration rather than
     pretending the unknown name is a valid choice.
     """
-    raw = os.getenv("RDTII_LLM_PROVIDER", "gemini")
+    raw = os.getenv("RDTII_LLM_PROVIDER", "deepseek")
     return raw, canonical_name(raw)
 
 
@@ -442,8 +442,28 @@ def _is_garbage_content(t: str) -> bool:
     return any(s in t.lower()[:2000] for s in garbage_signals)
 
 
+async def _fetch_with_browser_mode(fetcher, source_url: str, browser_mode: str):
+    """Call crawler.fetch_legal_content while keeping older test doubles valid."""
+    import inspect
+
+    sig = inspect.signature(fetcher)
+    accepts_mode = "browser_mode" in sig.parameters or any(
+        p.kind == inspect.Parameter.VAR_KEYWORD
+        for p in sig.parameters.values()
+    )
+    if accepts_mode:
+        return await fetcher(source_url, browser_mode=browser_mode)
+    return await fetcher(source_url)
+
+
 @app.post("/api/extract", response_model=ExtractionResponse)
-async def extract(text: str = Form(""), source_url: str = Form(""), provider: str = Form(None), model: str = Form(None)):
+async def extract(
+    text: str = Form(""),
+    source_url: str = Form(""),
+    provider: str = Form(None),
+    model: str = Form(None),
+    browser_mode: str = Form("auto"),
+):
     """Extract RDTII indicator mappings from a block of legal text.
 
     Priority:
@@ -460,7 +480,7 @@ async def extract(text: str = Form(""), source_url: str = Form(""), provider: st
 
     # ── Path A: URL provided → crawl ──
     if source_url.strip():
-        crawl_result = await fetch_legal_content(source_url)
+        crawl_result = await _fetch_with_browser_mode(fetch_legal_content, source_url, browser_mode)
 
         if crawl_result["type"] == "text":
             text = crawl_result["text"]
@@ -746,7 +766,13 @@ def _process_single(chunk, ind_id, spec, data, full_text, provider_name="unknown
 
 
 @app.post("/api/extract/stream")
-async def extract_stream(text: str = Form(""), source_url: str = Form(""), provider: str = Form(None), model: str = Form(None)):
+async def extract_stream(
+    text: str = Form(""),
+    source_url: str = Form(""),
+    provider: str = Form(None),
+    model: str = Form(None),
+    browser_mode: str = Form("auto"),
+):
     """Stream RDTII extraction results via Server-Sent Events.
 
     Same pipeline as /api/extract but emits each mapping as an SSE event
@@ -763,7 +789,7 @@ async def extract_stream(text: str = Form(""), source_url: str = Form(""), provi
     pdf_meta = None
 
     if source_url.strip():
-        crawl_result = await fetch_legal_content(source_url)
+        crawl_result = await _fetch_with_browser_mode(fetch_legal_content, source_url, browser_mode)
         if crawl_result["type"] == "text":
             text = crawl_result["text"]
             source_text = text
@@ -892,6 +918,7 @@ async def ingest_document(file: UploadFile = File(...), provider: str = Form(Non
 
 class FetchTextRequest(BaseModel):
     source_url: str = ""
+    browser_mode: str = "auto"
 
 
 class FetchTextResponse(BaseModel):
@@ -908,7 +935,7 @@ async def fetch_text(req: FetchTextRequest):
     if not req.source_url.strip():
         raise HTTPException(status_code=400, detail="source_url is required.")
 
-    crawl_result = await fetch_legal_content(req.source_url)
+    crawl_result = await fetch_legal_content(req.source_url, browser_mode=req.browser_mode)
     if crawl_result["type"] == "text":
         return FetchTextResponse(text=crawl_result["text"])
     elif crawl_result["type"] == "pdf":
@@ -931,6 +958,42 @@ async def fetch_text(req: FetchTextRequest):
         return FetchTextResponse(text=crawl_result["text"])
     else:
         raise HTTPException(status_code=400, detail=f"Crawl failed: {crawl_result.get('message', 'unknown error')}")
+
+
+class LegalSearchRequest(BaseModel):
+    query: str
+    country_code: str = "CHN"
+    limit: int = 10
+    browser_mode: str = "opencli"
+
+
+@app.post("/api/legal-search")
+async def legal_search(req: LegalSearchRequest):
+    """Search official legal sources.
+
+    MVP coverage starts with China's National Laws and Regulations Database via
+    OpenCLI Browser Bridge. More country adapters can slot behind this route
+    without changing the frontend contract.
+    """
+    if not req.query.strip():
+        raise HTTPException(status_code=400, detail="query is required.")
+    if req.country_code.upper() != "CHN":
+        raise HTTPException(status_code=400, detail="Only CHN legal search is implemented in this MVP.")
+
+    from browser_drivers import BrowserFetchError, OpenCliBrowserDriver
+
+    try:
+        results = await OpenCliBrowserDriver().search_gov_law(
+            req.query,
+            limit=max(1, min(req.limit, 20)),
+        )
+    except BrowserFetchError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+    return {
+        "country_code": "CHN",
+        "source": "flk.npc.gov.cn",
+        "results": results,
+    }
 
 
 # ── Auth (register routes from auth.py) ────────────────────

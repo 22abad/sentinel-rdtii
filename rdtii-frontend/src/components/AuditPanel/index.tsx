@@ -3,6 +3,7 @@ import type { IndicatorMapping, RejectedExtraction, ReviewDecision, Status } fro
 import { AuditBody } from "./AuditBody";
 import { RejectedPanel } from "./RejectedPanel";
 import { downloadCsv, mappingsToCsvRows } from "../../lib/utils";
+import { t } from "../../lib/i18n";
 
 type AuditPanelProps = {
   status: Status;
@@ -37,23 +38,20 @@ export function AuditPanel({
   }, [mappings, country]);
 
   return (
-    <section className="review-panel self-start flex flex-col max-h-[calc(100vh-40px)]" aria-label="Audit view">
+    <section className="review-panel self-start flex flex-col max-h-[calc(100vh-40px)]" aria-label={t("audit.aria")}>
       <div className="panel-header shrink-0">
         <div>
-          <h2>Audit</h2>
-          <p>
-            Indicator mappings extracted from source. Click a card to highlight
-            its quote on the left.
-          </p>
+          <h2>{t("audit.title")}</h2>
+          <p>{t("audit.description")}</p>
         </div>
         {mappings.length > 0 && (
           <button
             type="button"
             className="secondary text-xs"
             onClick={handleDownload}
-            title="Download results as CSV (Legal Inventory format)"
+            title={t("audit.exportCsvTitle")}
           >
-            Export CSV
+            {t("audit.exportCsv")}
           </button>
         )}
       </div>

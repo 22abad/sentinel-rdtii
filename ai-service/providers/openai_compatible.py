@@ -204,12 +204,12 @@ class DeepSeekProvider(OpenAICompatibleProvider):
     """DeepSeek — cheap reasoning-strong Chinese vendor.
 
     Endpoint:  https://api.deepseek.com/v1
-    Models:    deepseek-chat, deepseek-reasoner
+    Models:    deepseek-v4-flash, deepseek-v4-pro
     Set DEEPSEEK_API_KEY (and optionally DEEPSEEK_MODEL).
     """
 
     name = "deepseek"
-    default_model = "deepseek-chat"
+    default_model = "deepseek-v4-flash"
     default_base_url = "https://api.deepseek.com/v1"
     api_key_env = "DEEPSEEK_API_KEY"
     input_price_env = "DEEPSEEK_INPUT_USD_PER_MTOK"

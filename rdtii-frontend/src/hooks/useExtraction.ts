@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { INGEST_API_URL, REVIEW_API_URL, STREAM_API_URL, sampleText } from "../lib/constants";
 import { getStoredToken } from "./useAuth";
+import { t } from "../lib/i18n";
 import { mappingKey } from "../lib/utils";
 import type {
   ExtractionResponse,
@@ -10,10 +11,52 @@ import type {
   Status,
 } from "../types";
 
+const BROWSER_MODES = ["auto", "playwright", "opencli"] as const;
+const DEFAULT_PROVIDER = "deepseek";
+const DEFAULT_PROVIDER_VERSION = "deepseek-v4-default";
+const DEFAULT_DEEPSEEK_MODEL = "deepseek-v4-flash";
+const DEEPSEEK_MODELS = ["deepseek-v4-flash", "deepseek-v4-pro"] as const;
+const DEFAULT_PROVIDERS = [
+  "deepseek",
+  "gemini",
+  "openai",
+  "claude",
+  "groq",
+  "mistral",
+  "openrouter",
+  "together",
+  "ollama",
+];
+
+function normalizeBrowserMode(value: string | null) {
+  return BROWSER_MODES.includes(value as (typeof BROWSER_MODES)[number]) ? value! : "auto";
+}
+
+function initialSelectedProvider() {
+  if (localStorage.getItem("providerDefaultVersion") !== DEFAULT_PROVIDER_VERSION) {
+    localStorage.setItem("providerDefaultVersion", DEFAULT_PROVIDER_VERSION);
+    localStorage.setItem("selectedProvider", DEFAULT_PROVIDER);
+    return DEFAULT_PROVIDER;
+  }
+  return localStorage.getItem("selectedProvider") || DEFAULT_PROVIDER;
+}
+
+function normalizeDeepSeekModel(value: string | null) {
+  return DEEPSEEK_MODELS.includes(value as (typeof DEEPSEEK_MODELS)[number])
+    ? value!
+    : DEFAULT_DEEPSEEK_MODEL;
+}
+
 export function useExtraction() {
   const [country, setCountry] = useState("CHN");
   const [pillarFilter, setPillarFilter] = useState("all");
   const [sourceUrl, setSourceUrl] = useState("");
+  const [browserMode, setBrowserModeState] = useState(() => normalizeBrowserMode(localStorage.getItem("browserMode")));
+  const setBrowserMode = (val: string) => {
+    const next = normalizeBrowserMode(val);
+    setBrowserModeState(next);
+    localStorage.setItem("browserMode", next);
+  };
   const [text, setText] = useState(sampleText);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
@@ -22,10 +65,10 @@ export function useExtraction() {
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>({});
   const [showRejected, setShowRejected] = useState(false);
-  const [availableProviders, setAvailableProviders] = useState<string[]>([]);
+  const [availableProviders, setAvailableProviders] = useState<string[]>(DEFAULT_PROVIDERS);
   
   // Persistent state using localStorage to remember user's last selection
-  const [selectedProvider, setSelectedProviderState] = useState(() => localStorage.getItem("selectedProvider") || "gemini");
+  const [selectedProvider, setSelectedProviderState] = useState(initialSelectedProvider);
   const setSelectedProvider = (val: string) => {
     setSelectedProviderState(val);
     localStorage.setItem("selectedProvider", val);
@@ -43,10 +86,11 @@ export function useExtraction() {
     localStorage.setItem("selectedGeminiModel", val);
   };
 
-  const [selectedDeepSeekModel, setSelectedDeepSeekModelState] = useState(() => localStorage.getItem("selectedDeepSeekModel") || "deepseek-chat");
+  const [selectedDeepSeekModel, setSelectedDeepSeekModelState] = useState(() => normalizeDeepSeekModel(localStorage.getItem("selectedDeepSeekModel")));
   const setSelectedDeepSeekModel = (val: string) => {
-    setSelectedDeepSeekModelState(val);
-    localStorage.setItem("selectedDeepSeekModel", val);
+    const next = normalizeDeepSeekModel(val);
+    setSelectedDeepSeekModelState(next);
+    localStorage.setItem("selectedDeepSeekModel", next);
   };
 
   const [vertexModels, setVertexModels] = useState<string[]>([]);
@@ -97,7 +141,7 @@ export function useExtraction() {
     fetch("/health")
       .then((res) => res.json())
       .then((data) => {
-        if (data.available_providers) setAvailableProviders(data.available_providers);
+        if (data.available_providers?.length) setAvailableProviders(data.available_providers);
         if (data.active_provider && !localStorage.getItem("selectedProvider")) {
           setSelectedProvider(data.active_provider);
         }
@@ -169,6 +213,7 @@ export function useExtraction() {
     const form = new FormData();
     form.append("text", text);
     if (sourceUrl.trim()) form.append("source_url", sourceUrl.trim());
+    form.append("browser_mode", browserMode);
     
     // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
     let actualProvider = selectedProvider;
@@ -198,7 +243,7 @@ export function useExtraction() {
 
       if (!res.ok || !res.body) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Extraction failed with status ${res.status}`);
+        throw new Error(errorData.detail || t("error.extractionFailedStatus", { status: res.status }));
       }
 
       const reader = res.body.getReader();
@@ -224,7 +269,7 @@ export function useExtraction() {
             const payload = JSON.parse(line.slice(6));
 
             if (currentEvent === "error") {
-              throw new Error(payload.detail ?? "Stream error");
+              throw new Error(payload.detail ?? t("error.stream"));
             }
 
             if (currentEvent === "warning") {
@@ -272,7 +317,7 @@ export function useExtraction() {
         }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Extraction failed");
+      setError(err instanceof Error ? err.message : t("error.extractionFailed"));
       setResponse(null);
       setStatus("error");
     }
@@ -312,7 +357,7 @@ export function useExtraction() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.detail || `Ingest failed with status ${res.status}`);
+        throw new Error(errorData.detail || t("error.ingestFailedStatus", { status: res.status }));
       }
 
       const data = (await res.json()) as ExtractionResponse;
@@ -339,7 +384,7 @@ export function useExtraction() {
       setDecisions({});
       setStatus("ready");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "File ingest failed");
+      setError(err instanceof Error ? err.message : t("error.fileIngestFailed"));
       setResponse(null);
       setStatus("error");
     }
@@ -395,12 +440,12 @@ export function useExtraction() {
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(
-          errorData.detail || "Review failed to save to database",
+          errorData.detail || t("error.reviewSaveFailed"),
         );
       }
     } catch (err) {
       console.error("Database sync error:", err);
-      setError(err instanceof Error ? err.message : "Failed to sync to DB");
+      setError(err instanceof Error ? err.message : t("error.syncDbFailed"));
     }
   }
 
@@ -410,6 +455,7 @@ export function useExtraction() {
     warning,
     pillarFilter, setPillarFilter,
     sourceUrl, setSourceUrl: handleSetSourceUrl,
+    browserMode, setBrowserMode,
     text, onTextChange,
     status,
     error,

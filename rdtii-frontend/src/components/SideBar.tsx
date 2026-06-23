@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { X, Plus, Minus } from "lucide-react";
 import type { Status } from "../types";
+import { t } from "../lib/i18n";
 
 type TopBarProps = {
   variant?: "workbench" | "mapsearch";
@@ -50,14 +51,13 @@ function SubSection({ label, summary, children }: { label: string; summary?: str
         <span className="text-xs text-white/40">{label}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           {!open && summary && <span className="text-xs font-semibold text-white">{summary}</span>}
-          {open && (
-            <motion.span
-              initial={{ opacity: 0 }} animate={{ opacity: 0.3 }}
-              style={{ display: "flex" }}
-            >
-              <Minus size={10} color="white" />
-            </motion.span>
-          )}
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: open ? 0.3 : 0.22 }}
+            style={{ display: "flex" }}
+          >
+            {open ? <Minus size={10} color="white" /> : <Plus size={10} color="white" />}
+          </motion.span>
         </div>
       </button>
       <AnimatePresence initial={false}>
@@ -132,10 +132,14 @@ export function SideBar({
 }: TopBarProps) {
   const headerStatus =
     status === "loading"
-      ? sourceUrl ? "Crawling..." : "Extracting…"
-      : status === "error" ? "Error"
-      : status === "ready" ? `${mappingsCount} mapping${mappingsCount === 1 ? "" : "s"} · ${pendingCount} pending`
-      : "Idle";
+      ? sourceUrl ? t("sidebar.status.crawling") : t("sidebar.status.extracting")
+      : status === "error" ? t("sidebar.status.error")
+      : status === "ready" ? t("sidebar.status.ready", {
+        mappingsCount,
+        mappingPlural: mappingsCount === 1 ? "" : "s",
+        pendingCount,
+      })
+      : t("sidebar.status.idle");
 
   const statusChip =
     status === "error" ? "bg-red-500/20 text-red-300 border-red-500/30"
@@ -151,7 +155,7 @@ export function SideBar({
         <img src="/svg.svg" alt="Sentinel" className="h-6 w-auto brightness-0 invert cursor-pointer" onClick={() => window.location.href = "/"} />
         <button
           onClick={onClose}
-          title="Close sidebar"
+          title={t("nav.closeSidebar")}
           style={{ background: "transparent", border: "none", padding: 0, minHeight: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
         >
           <X size={16} strokeWidth={2} color="white" />
@@ -160,24 +164,24 @@ export function SideBar({
 
       {/* Mode */}
       <div className="px-6 py-5 border-b border-white/10">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">Mode</p>
-        <p className="text-sm font-semibold text-white">{variant === "mapsearch" ? "Map Explorer" : "Evidence Workbench"}</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">{t("sidebar.mode")}</p>
+        <p className="text-sm font-semibold text-white">{variant === "mapsearch" ? t("sidebar.mode.map") : t("sidebar.mode.workbench")}</p>
         <p className="text-[11px] text-white/40 mt-0.5">UN ESCAP DTAM</p>
       </div>
 
       {variant === "workbench" ? (
         <>
           {/* Session */}
-          <Section label="Session">
+          <Section label={t("sidebar.session")}>
             <div className="flex justify-between items-center">
-              <span className="text-xs text-white/40">Country</span>
+              <span className="text-xs text-white/40">{t("sidebar.country")}</span>
               <span className="text-xs font-semibold text-white">{country}</span>
             </div>
             <SubSection
-              label="Provider"
+              label={t("sidebar.provider")}
               summary={
                 LOCAL_PROVIDERS.includes(selectedProvider)
-                  ? "Local"
+                  ? t("sidebar.local")
                   : PROVIDER_LABELS[selectedProvider] ?? selectedProvider ?? provider ?? "—"
               }
             >
@@ -239,14 +243,14 @@ export function SideBar({
                       {/* DeepSeek model dropdown */}
                       {p === "deepseek" && isSelected && (
                         <div className="mt-1 pl-2 border-l border-white/10 mb-2 flex flex-col gap-0.5">
-                          {["deepseek-chat", "deepseek-reasoner"].map((m) => (
+                          {["deepseek-v4-flash", "deepseek-v4-pro"].map((m) => (
                             <button
                               key={m}
                               onClick={() => setSelectedDeepSeekModel(m)}
                               style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
                             >
                               <span className={`text-[11px] ${selectedDeepSeekModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
-                                {m === "deepseek-reasoner" ? "deepseek-reasoner (thinking)" : m}
+                                {m}
                               </span>
                               {selectedDeepSeekModel === m && (
                                 <span className="text-[#10B981] text-[10px]">⎷</span>
@@ -261,7 +265,7 @@ export function SideBar({
               {/* Local providers — merged under one heading */}
               {availableProviders.filter((p) => LOCAL_PROVIDERS.includes(p)).length > 0 && (
                 <div className="mt-2 pt-2 border-t border-white/10">
-                  <span className="block text-[10px] text-white/30 uppercase tracking-widest mb-1">Local</span>
+                  <span className="block text-[10px] text-white/30 uppercase tracking-widest mb-1">{t("sidebar.local")}</span>
                   {availableProviders
                     .filter((p) => LOCAL_PROVIDERS.includes(p))
                     .map((p) => (
@@ -303,14 +307,14 @@ export function SideBar({
           </Section>
 
           {/* Status */}
-          <Section label="Status">
+          <Section label={t("sidebar.status")}>
             <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full border ${statusChip}`}>
               {headerStatus}
             </span>
           </Section>
 
           {/* History */}
-          <Section label="History" defaultOpen={false}>
+          <Section label={t("sidebar.history")} defaultOpen={false}>
             <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full border ${statusChip}`}>
               {headerStatus}
             </span>
@@ -319,24 +323,24 @@ export function SideBar({
       ) : (
         <>
           {/* Region */}
-          <Section label="Region">
+          <Section label={t("sidebar.region")}>
             <div className="flex justify-between items-center">
-              <span className="text-xs text-white/40">Selected</span>
+              <span className="text-xs text-white/40">{t("sidebar.selected")}</span>
               <span className="text-xs font-semibold text-white">{country || "—"}</span>
             </div>
           </Section>
 
           {/* Controls */}
-          <Section label="Controls">
+          <Section label={t("sidebar.controls")}>
             <p className="text-xs text-white/40 leading-relaxed">
-              Middle-click to pan · Ctrl+scroll to zoom · Pinch on mobile
+              {t("sidebar.controlsHelp")}
             </p>
           </Section>
 
           {/* About */}
-          <Section label="About" defaultOpen={false}>
+          <Section label={t("sidebar.about")} defaultOpen={false}>
             <p className="text-xs text-white/40 leading-relaxed">
-              Explore digital trade and AI policy indicators across the Asia-Pacific region.
+              {t("sidebar.regionAbout")}
             </p>
           </Section>
         </>
@@ -351,7 +355,7 @@ export function SideBar({
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Back to Home
+          {t("nav.backHome")}
         </a>
       </div>
 

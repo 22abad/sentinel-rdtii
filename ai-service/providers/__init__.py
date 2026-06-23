@@ -117,11 +117,11 @@ def get_provider(name: str, model: str | None = None) -> LLMProvider:
 
 
 def get_default_provider() -> LLMProvider:
-    """Return the provider configured via env var, or fall back to Gemini.
+    """Return the provider configured via env var, or fall back to DeepSeek.
 
-    Read order: RDTII_LLM_PROVIDER -> default 'gemini'.
+    Read order: RDTII_LLM_PROVIDER -> default 'deepseek'.
     """
-    name = os.getenv("RDTII_LLM_PROVIDER", "gemini")
+    name = os.getenv("RDTII_LLM_PROVIDER", "deepseek")
     return get_provider(name)
 
 
