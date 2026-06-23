@@ -11,6 +11,7 @@ import ColorBends from "../../components/ColorBends/ColorBends";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Menu, X, Home, Map, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
+import { t } from "../../lib/i18n";
 
 export function WorkbenchPage() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export function WorkbenchPage() {
     detectedCountry,
     pillarFilter, setPillarFilter,
     sourceUrl, setSourceUrl,
+    browserMode, setBrowserMode,
     text, onTextChange,
     status,
     error,
@@ -127,7 +129,7 @@ export function WorkbenchPage() {
         <div className="fixed left-4 top-4 w-12 h-12 z-50 group">
           <button
             onClick={() => setSidebarOpen(true)}
-            title="Open sidebar"
+            title={t("nav.openSidebar")}
             className="hidden md:flex opacity-60 hover:opacity-100 hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg"
             style={{ width: 48, height: 48, minHeight: 0, borderRadius: "50%", background: "#0c1210", border: "1px solid rgba(255,255,255,0.15)", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
           >
@@ -135,7 +137,7 @@ export function WorkbenchPage() {
           </button>
           <button
             onClick={() => setSidebarOpen(true)}
-            title="Open sidebar"
+            title={t("nav.openSidebar")}
             className="flex md:hidden"
             style={{ width: 48, height: 48, minHeight: 0, background: "transparent", border: "none", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
           >
@@ -232,6 +234,8 @@ export function WorkbenchPage() {
               setPillarFilter={setPillarFilter}
               sourceUrl={sourceUrl}
               setSourceUrl={setSourceUrl}
+              browserMode={browserMode}
+              setBrowserMode={setBrowserMode}
               text={text}
               onTextChange={onTextChange}
               activeMapping={activeMapping}

@@ -2,6 +2,12 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { AUTH_API_URL } from "../lib/constants";
 
 const TOKEN_KEY = "sentinel_token";
+const DEV_AUTH_BYPASS_USER: AuthUser = {
+  id: "dev-bypass",
+  username: "Demo User",
+  email: "demo@sentinel.local",
+  role: "admin",
+};
 
 export type AuthUser = {
   id: string;
@@ -23,11 +29,11 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function useAuthProvider(): AuthContextValue {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(() => isAuthBypassEnabled() ? DEV_AUTH_BYPASS_USER : null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setUser(token ? _parseUser(token) : null);
+    setUser(isAuthBypassEnabled() ? DEV_AUTH_BYPASS_USER : token ? _parseUser(token) : null);
   }, [token]);
 
   const _save = useCallback((data: {
@@ -86,6 +92,10 @@ export function useAuth(): AuthContextValue {
 
 export function getStoredToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
+}
+
+export function isAuthBypassEnabled(): boolean {
+  return import.meta.env.VITE_AUTH_BYPASS === "true";
 }
 
 function _parseUser(token: string): AuthUser | null {

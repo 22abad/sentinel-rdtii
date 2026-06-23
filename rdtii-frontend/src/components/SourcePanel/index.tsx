@@ -7,6 +7,7 @@ import {
   Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
   SelectTrigger, SelectValue, SelectSeparator,
 } from "../ui/Select";
+import { t } from "../../lib/i18n";
 
 const PROVIDER_LABELS: Record<string, string> = {
   gemini: "Gemini",
@@ -29,6 +30,8 @@ type SourcePanelProps = {
   setPillarFilter: (v: string) => void;
   sourceUrl: string;
   setSourceUrl: (v: string) => void;
+  browserMode: string;
+  setBrowserMode: (v: string) => void;
   text: string;
   onTextChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   activeMapping: IndicatorMapping | null;
@@ -55,6 +58,8 @@ export function SourcePanel({
   setPillarFilter,
   sourceUrl,
   setSourceUrl,
+  browserMode,
+  setBrowserMode,
   text,
   onTextChange,
   activeMapping,
@@ -109,11 +114,11 @@ export function SourcePanel({
     el.style.height = `${el.scrollHeight}px`;
   }, []);
   return (
-    <section className="input-panel" aria-label="Source legal text">
+    <section className="input-panel" aria-label={t("source.aria")}>
       <div className="panel-header">
         <div>
-          <h2>Source</h2>
-          <p>Legal text awaiting RDTII pre-categorisation</p>
+          <h2>{t("source.title")}</h2>
+          <p>{t("source.description")}</p>
         </div>
         <button
           onClick={() => {
@@ -126,8 +131,8 @@ export function SourcePanel({
         >
           <span>
             {status === "loading"
-              ? sourceUrl && !text.trim() ? "Crawling..." : "Extracting..."
-              : "Run"}
+              ? sourceUrl && !text.trim() ? t("status.crawling") : t("status.extracting")
+              : t("source.run")}
           </span>
           {status !== "loading" && (
             <span className="overflow-hidden w-0 group-hover:w-4 transition-all duration-300 flex items-center justify-center">
@@ -141,7 +146,7 @@ export function SourcePanel({
 
       <div className="control-grid">
         <label>
-          Country
+          {t("source.country")}
           {detectedCountry?.detected ? (
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 text-sm font-medium">
@@ -153,45 +158,56 @@ export function SourcePanel({
                 className="text-xs text-gray-400 cursor-pointer hover:text-gray-600 underline underline-offset-2"
                 onClick={() => setCountry("")}
               >
-                Change
+                {t("source.change")}
               </small>
             </div>
           ) : (
             <Select value={country} onValueChange={setCountry}>
-              <SelectTrigger><SelectValue placeholder="Auto-detect…" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("source.autoDetect")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="CHN">China</SelectItem>
-                <SelectItem value="IND">India</SelectItem>
-                <SelectItem value="SGP">Singapore</SelectItem>
-                <SelectItem value="THA">Thailand</SelectItem>
-                <SelectItem value="AUS">Australia</SelectItem>
-                <SelectItem value="PHL">Philippines</SelectItem>
+                <SelectItem value="CHN">{t("country.chn")}</SelectItem>
+                <SelectItem value="IND">{t("country.ind")}</SelectItem>
+                <SelectItem value="SGP">{t("country.sgp")}</SelectItem>
+                <SelectItem value="THA">{t("country.tha")}</SelectItem>
+                <SelectItem value="AUS">{t("country.aus")}</SelectItem>
+                <SelectItem value="PHL">{t("country.phl")}</SelectItem>
               </SelectContent>
             </Select>
           )}
         </label>
         <label>
-          Filter
+          {t("source.filter")}
           <Select value={pillarFilter} onValueChange={setPillarFilter}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All pillars</SelectItem>
+              <SelectItem value="all">{t("taxonomy.allPillars")}</SelectItem>
               <SelectSeparator />
               <SelectGroup>
-                <SelectLabel>Pillar</SelectLabel>
-                <SelectItem value="1">P1 · Tariffs and trade defence</SelectItem>
-                <SelectItem value="2">P2 · Public procurement</SelectItem>
-                <SelectItem value="3">P3 · Foreign direct investment</SelectItem>
-                <SelectItem value="4">P4 · Intellectual property rights</SelectItem>
-                <SelectItem value="5">P5 · Telecommunications</SelectItem>
-                <SelectItem value="6">P6 · Cross-border data flows</SelectItem>
-                <SelectItem value="7">P7 · Domestic data protection</SelectItem>
-                <SelectItem value="8">P8 · Internet intermediary liability</SelectItem>
-                <SelectItem value="9">P9 · Online content access</SelectItem>
-                <SelectItem value="10">P10 · Non-technical NTMs</SelectItem>
-                <SelectItem value="11">P11 · Standards and procedures</SelectItem>
-                <SelectItem value="12">P12 · Online sales and transactions</SelectItem>
+                <SelectLabel>{t("taxonomy.pillar")}</SelectLabel>
+                <SelectItem value="1">{t("taxonomy.p1")}</SelectItem>
+                <SelectItem value="2">{t("taxonomy.p2")}</SelectItem>
+                <SelectItem value="3">{t("taxonomy.p3")}</SelectItem>
+                <SelectItem value="4">{t("taxonomy.p4")}</SelectItem>
+                <SelectItem value="5">{t("taxonomy.p5")}</SelectItem>
+                <SelectItem value="6">{t("taxonomy.p6")}</SelectItem>
+                <SelectItem value="7">{t("taxonomy.p7")}</SelectItem>
+                <SelectItem value="8">{t("taxonomy.p8")}</SelectItem>
+                <SelectItem value="9">{t("taxonomy.p9")}</SelectItem>
+                <SelectItem value="10">{t("taxonomy.p10")}</SelectItem>
+                <SelectItem value="11">{t("taxonomy.p11")}</SelectItem>
+                <SelectItem value="12">{t("taxonomy.p12")}</SelectItem>
               </SelectGroup>
+            </SelectContent>
+          </Select>
+        </label>
+        <label>
+          {t("browser.label")}
+          <Select value={browserMode} onValueChange={setBrowserMode}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="auto">{t("browser.auto")}</SelectItem>
+              <SelectItem value="playwright">{t("browser.playwright")}</SelectItem>
+              <SelectItem value="opencli">{t("browser.opencli")}</SelectItem>
             </SelectContent>
           </Select>
         </label>
@@ -200,7 +216,7 @@ export function SourcePanel({
       {availableProviders.length > 0 && (
         <div className="stacked">
           <label style={{ display: "block" }}>
-            AI Provider
+            {t("source.aiProvider")}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
               {availableProviders.map((p) => (
                 <button
@@ -219,7 +235,7 @@ export function SourcePanel({
       )}
 
       <label className="stacked">
-        Source URL
+        {t("source.sourceUrl")}
         <div style={{ position: "relative" }}>
           <input
             value={sourceUrl}
@@ -254,8 +270,8 @@ export function SourcePanel({
         <div className="source-bar">
           <span>
             {activeMapping
-              ? "Audit Highlight (Click to edit text)"
-              : "Source text (Editable)"}
+              ? t("source.auditHighlight")
+              : t("source.sourceText")}
           </span>
         </div>
 
@@ -275,7 +291,7 @@ export function SourcePanel({
               e.target.style.height = `${e.target.scrollHeight}px`;
               onTextChange(e);
             }}
-            placeholder="Paste or crawl legal text to begin..."
+            placeholder={t("source.placeholder")}
           />
         )}
       </div>

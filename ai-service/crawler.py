@@ -11,6 +11,7 @@ from playwright.async_api import async_playwright, Page, BrowserContext
 from typing import Dict, Optional, Any
 from urllib.parse import urljoin, urlparse, quote
 from collections import deque
+from browser_drivers import BrowserFetchError, BrowserMode, OpenCliBrowserDriver, normalize_browser_mode
 
 # ── playwright-stealth 跨版本兼容 ──────────────────────────────────
 # 1.x API:  from playwright_stealth import stealth_async; await stealth_async(page)
@@ -877,12 +878,44 @@ async def _try_wayback_fallback(url: str, context: str = "dead link") -> dict | 
     return None
 
 
-async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int = 3, proxy: Optional[dict] = None) -> Dict[str, Any]:
+async def _try_opencli_fetch(url: str, timeout: int) -> dict | None:
+    try:
+        result = await OpenCliBrowserDriver().fetch_legal_content(url, timeout=timeout)
+        if result.get("type") == "text" and result.get("text"):
+            print(f"[OpenCLI] 成功提取 {len(result['text'])} 字符: {url}")
+            return result
+        return None
+    except BrowserFetchError as e:
+        print(f"[OpenCLI] 不可用或提取失败: {e}")
+        return None
+
+
+async def fetch_legal_content(
+    url: str,
+    timeout: int = 60000,
+    max_retries: int = 3,
+    proxy: Optional[dict] = None,
+    browser_mode: BrowserMode | str = "auto",
+) -> Dict[str, Any]:
     """
     抓取法律内容（HTML 文本或 PDF）。
     """
+    mode = normalize_browser_mode(str(browser_mode))
+
     if any(re.match(pattern, url) for pattern in INVALID_URL_PATTERNS):
         return {"type": "error", "message": f"URL 无效: {url}"}
+
+    path_lower = url.lower().split('?')[0]
+    direct_file_url = path_lower.endswith((".pdf", ".doc", ".docx"))
+
+    # When the user explicitly asks for OpenCLI, prefer the authorized local
+    # browser session before cheap HTTP probes. File URLs still use the existing
+    # downloader/parser path because the OpenCLI text bridge does not parse files.
+    if mode == "opencli" and not direct_file_url:
+        opencli_result = await _try_opencli_fetch(url, timeout)
+        if opencli_result:
+            return opencli_result
+        print("[OpenCLI] 首选路径失败，继续尝试 HTTP/Playwright/归档兜底。")
 
     # ── Pre-check: dead link detection before launching Playwright ──
     dead_reason = await _precheck_url(url)
@@ -908,7 +941,6 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                 page.set_default_timeout(timeout)
                 
                 # Task: Check if direct PDF / Word URL to avoid ERR_ABORTED
-                path_lower = url.lower().split('?')[0]
                 if path_lower.endswith(".pdf"):
                     print(f"检测到直接 PDF URL: {url}")
                     pdf_path = await _download_file(page, url)
@@ -996,13 +1028,26 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                         http_result = await _try_http_fallback(url, timeout)
                         if http_result:
                             return http_result
+                        if mode == "auto":
+                            opencli_result = await _try_opencli_fetch(url, timeout)
+                            if opencli_result:
+                                return opencli_result
                         raise Exception(f"Blocked by anti-bot protection")
                     return {"type": "text", "url": url, "text": content}
                 
+                if mode == "auto":
+                    opencli_result = await _try_opencli_fetch(url, timeout)
+                    if opencli_result:
+                        return opencli_result
                 return {"type": "error", "message": "未找到有效内容"}
             except Exception as e:
                 print(f"[重试 {attempt}/{max_retries}] 错误: {e}")
                 if attempt == max_retries:
+                    if mode == "auto":
+                        opencli_result = await _try_opencli_fetch(url, timeout)
+                        if opencli_result:
+                            return opencli_result
+
                     # ── 所有重试失败 → 尝试 KNOWN_ALTERNATIVES ──────────
                     parsed = urlparse(url)
                     domain = parsed.netloc.replace("www.", "")
@@ -1047,7 +1092,7 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                                 alt_url = f"https://www.{alt['source']}/"
                                 print(f"[Fallback] 尝试替代网站: {alt_url}")
                                 try:
-                                    return await fetch_legal_content(alt_url, timeout=timeout, max_retries=1)
+                                    return await fetch_legal_content(alt_url, timeout=timeout, max_retries=1, browser_mode=mode)
                                 except Exception as alt_e:
                                     print(f"[Fallback] 替代来源失败: {alt_e}")
                                     continue
@@ -1074,6 +1119,11 @@ async def fetch_legal_content(url: str, timeout: int = 60000, max_retries: int =
                             "metadata": {"source": "google_cache"},
                         }
 
+                    if mode == "opencli":
+                        return {
+                            "type": "error",
+                            "message": "OpenCLI browser mode could not extract this page, and the fallback sources also failed. Connect the OpenCLI browser bridge or switch Browser to Auto/Playwright.",
+                        }
                     return {"type": "error", "message": str(e)}
             finally:
                 if context:

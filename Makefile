@@ -1,6 +1,6 @@
 .PHONY: dev dev-backend dev-frontend dev-sidecar install install-frontend install-sidecar test db migrate-sidecar image
 
-PYTHON := /opt/homebrew/bin/python3.11
+PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
 
 dev:
 	@DB_IP=$$(docker inspect rdtii-postgres --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 2>/dev/null); \
@@ -13,18 +13,18 @@ dev:
 	@echo "Starting backend, sidecar, and frontend..."
 	@trap 'kill 0' EXIT; \
 		$(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info & \
-		(export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run) & \
-		(cd rdtii-frontend && npx vite --host 0.0.0.0 --force) & \
+		(export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) SIDECAR_API_KEY=$$(grep '^SIDECAR_API_KEY=' .env | cut -d= -f2-) SIDECAR_ADDR=$$(grep '^SIDECAR_ADDR=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run) & \
+		(export VITE_AUTH_BYPASS=$$(grep '^VITE_AUTH_BYPASS=' .env | cut -d= -f2-) && cd rdtii-frontend && npx vite --host 0.0.0.0 --force) & \
 		wait
 
 dev-backend:
 	$(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info
 
 dev-frontend:
-	cd rdtii-frontend && npx vite --host 0.0.0.0 --force
+	export VITE_AUTH_BYPASS=$$(grep '^VITE_AUTH_BYPASS=' .env | cut -d= -f2-) && cd rdtii-frontend && npx vite --host 0.0.0.0 --force
 
 dev-sidecar:
-	cd extract_sidecar && cargo run
+	export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) SIDECAR_API_KEY=$$(grep '^SIDECAR_API_KEY=' .env | cut -d= -f2-) SIDECAR_ADDR=$$(grep '^SIDECAR_ADDR=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run
 
 install:
 	cd ai-service && $(PYTHON) -m pip install -r requirements.txt && $(PYTHON) -m playwright install webkit
