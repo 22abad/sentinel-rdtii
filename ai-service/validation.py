@@ -267,6 +267,8 @@ def validate_mapping(
     chunk_text: str,
     indicator_id: str,
     features: dict,
+    include_semantic_check: bool = True,
+    track_cross_reference: bool = True,
 ) -> ValidationResult:
     """Run all deterministic checks on one mapping.
 
@@ -308,14 +310,15 @@ def validate_mapping(
         result.reasons.append("Quote lacks normative language (shall/must/prohibition) — may be informational only")
 
     # 4. Cross-reference overmatch → flag
-    xref_reasons = check_cross_reference(quote, indicator_id)
-    if xref_reasons:
-        if result.level == "pass":
-            result.level = "flag"
-        result.reasons.extend(xref_reasons)
+    if track_cross_reference:
+        xref_reasons = check_cross_reference(quote, indicator_id)
+        if xref_reasons:
+            if result.level == "pass":
+                result.level = "flag"
+            result.reasons.extend(xref_reasons)
 
     # 5. Embedding similarity → flag if needed (expensive, run less frequently)
-    if len(quote.split()) > 5:
+    if include_semantic_check and len(quote.split()) > 5:
         sim_reasons = embedding_similarity_check(quote, indicator_id)
         if sim_reasons:
             if result.level == "pass":

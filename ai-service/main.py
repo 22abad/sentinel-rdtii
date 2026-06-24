@@ -606,7 +606,7 @@ async def _stream_extraction(text: str, llm_provider, pdf_metadata: dict | None 
                     ).model_dump())
                     rejected_count += 1
                     continue
-                for _ev in _process_single(chunk, ind_id, spec, data, text, llm_provider.name, pdf_metadata):
+                async for _ev in _process_single(chunk, ind_id, spec, data, text, llm_provider, pdf_metadata):
                     yield _ev
                 mapping_count += 1
         else:
@@ -619,7 +619,7 @@ async def _stream_extraction(text: str, llm_provider, pdf_metadata: dict | None 
                     ).model_dump())
                     rejected_count += 1
                     continue
-                for _ev in _process_single(chunk, ind_id, spec, data, text, llm_provider.name, pdf_metadata):
+                async for _ev in _process_single(chunk, ind_id, spec, data, text, llm_provider, pdf_metadata):
                     yield _ev
                 mapping_count += 1
 
@@ -630,13 +630,13 @@ async def _stream_extraction(text: str, llm_provider, pdf_metadata: dict | None 
     })
 
 
-def _process_single(chunk, ind_id, spec, data, full_text, provider_name="unknown", pdf_metadata=None):
+async def _process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf_metadata=None):
     """Process one LLM extraction result — yield 0 or 1 SSE events for it."""
     from coverage_classifier import classify_coverage
+    from extraction_repair import prepare_extraction_with_repair
     from source_validator import grade_source
     from staleness_checker import check_staleness
     from timeframe_extractor import extract_timeframe, build_timeframe_column
-    from verification import find_quote_offsets, verify_quote
     from scoring import score_indicator
     from schemas import IndicatorMapping, RejectedExtraction
     from validation import validate_mapping
@@ -644,27 +644,31 @@ def _process_single(chunk, ind_id, spec, data, full_text, provider_name="unknown
     def _sse(event, payload):
         return f"event: {event}\ndata: {json.dumps(payload, default=str)}\n\n"
 
-    quote = (data.get("verbatim_quote") or "").strip()
-    if not quote or not verify_quote(quote, chunk.text):
+    prepared = await prepare_extraction_with_repair(
+        provider=llm_provider,
+        chunk=chunk,
+        indicator_id=ind_id,
+        feature_spec=spec,
+        data=data,
+        pdf_metadata=pdf_metadata,
+    )
+    if prepared["status"] == "skip":
+        return
+    if prepared["status"] == "reject":
         yield _sse("rejected", RejectedExtraction(
-            reason="verbatim_quote not found in chunk shown to LLM",
+            reason=prepared["reason"],
             chunk_preview=chunk.text[:200],
-            raw_output=data,
+            raw_output=prepared.get("raw_output", data),
         ).model_dump())
         return
 
-    local_start, local_end = find_quote_offsets(quote, chunk.text)
-    if local_start < 0 or local_end <= local_start:
-        yield _sse("rejected", RejectedExtraction(
-            reason="verbatim_quote matched fuzzily but exact offsets unrecoverable",
-            chunk_preview=chunk.text[:200],
-            raw_output=data,
-        ).model_dump())
-        return
+    data = prepared["data"]
+    quote = prepared["quote"]
+    local_start = prepared["local_start"]
+    local_end = prepared["local_end"]
+    features = prepared["features"]
+    pre_flag_reasons = prepared.get("pre_flag_reasons", [])
 
-    features = {k: data[k] for k in spec.keys() if k in data}
-    if pdf_metadata:
-        features.update(pdf_metadata)
     try:
         score, justification = score_indicator(ind_id, features)
     except NotImplementedError:
@@ -723,7 +727,7 @@ def _process_single(chunk, ind_id, spec, data, full_text, provider_name="unknown
         pillar=int(ind_id.split(".", 1)[0]),
         indicator=ind_id,
         score=score,
-        verbatim_quote=data["verbatim_quote"],
+        verbatim_quote=quote,
         quote_start=chunk.start + local_start,
         quote_end=chunk.start + local_end,
         source_legislation=data.get("source_legislation", ""),
@@ -738,7 +742,7 @@ def _process_single(chunk, ind_id, spec, data, full_text, provider_name="unknown
         features=features,
         impact=justification,
         requires_human_review=False,
-        extraction_provider=provider_name,
+        extraction_provider=llm_provider.name,
         timestamp_verification=ts_verification,
     )
 
@@ -760,7 +764,10 @@ def _process_single(chunk, ind_id, spec, data, full_text, provider_name="unknown
         return
     if vr.level == "flag":
         mapping.requires_human_review = True
-        mapping.flag_reasons = vr.reasons
+        mapping.flag_reasons = list(dict.fromkeys([*pre_flag_reasons, *vr.reasons]))
+    elif pre_flag_reasons:
+        mapping.requires_human_review = True
+        mapping.flag_reasons = pre_flag_reasons
 
     yield _sse("mapping", mapping.model_dump())
 

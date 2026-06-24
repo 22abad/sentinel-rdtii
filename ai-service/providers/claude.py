@@ -98,6 +98,52 @@ class ClaudeProvider(LLMProvider):
 
         return self.parse_json_response(usage.raw_response)
 
+    def repair_extraction(
+        self,
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict[str, dict[str, str]],
+        previous_output: dict[str, Any],
+        validation_errors: list[str],
+    ) -> dict[str, Any]:
+        prompt = self.build_repair_prompt(
+            article_text=article_text,
+            indicator_id=indicator_id,
+            feature_spec=feature_spec,
+            previous_output=previous_output,
+            validation_errors=validation_errors,
+        )
+        usage = ExtractionUsage()
+        t0 = time.perf_counter()
+        try:
+            resp = self._client.messages.create(
+                model=self.model_name,
+                max_tokens=2048,
+                temperature=0,
+                system="Output ONLY valid JSON. No prose, no markdown fences.",
+                messages=[{"role": "user", "content": prompt}],
+            )
+        except Exception as e:
+            raise ExtractionError(f"Claude repair API error: {e}") from e
+        finally:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+
+        text_chunks = []
+        for block in getattr(resp, "content", []) or []:
+            if getattr(block, "type", None) == "text":
+                text_chunks.append(getattr(block, "text", ""))
+        usage.raw_response = "".join(text_chunks)
+
+        meta = getattr(resp, "usage", None)
+        if meta is not None:
+            usage.input_tokens = getattr(meta, "input_tokens", 0) or 0
+            usage.output_tokens = getattr(meta, "output_tokens", 0) or 0
+            usage.cost_usd = self.estimate_cost_usd(
+                usage.input_tokens, usage.output_tokens
+            )
+        self.last_usage = usage
+        return self.parse_json_response(usage.raw_response)
+
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         return (
             input_tokens * _INPUT_USD_PER_MTOK / 1_000_000
