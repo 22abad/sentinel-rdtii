@@ -81,5 +81,49 @@ class OllamaProvider(LLMProvider):
 
         return self.parse_json_response(raw_response)
 
+    def repair_extraction(
+        self,
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict,
+        previous_output: dict,
+        validation_errors: list[str],
+    ) -> dict:
+        from openai import OpenAI
+        from .base import ExtractionError, ExtractionUsage
+
+        client = OpenAI(api_key=self.raw_api_key, base_url=self.base_url)
+        prompt = self.build_repair_prompt(
+            article_text=article_text,
+            indicator_id=indicator_id,
+            feature_spec=feature_spec,
+            previous_output=previous_output,
+            validation_errors=validation_errors,
+        )
+        usage = ExtractionUsage()
+        t0 = time.perf_counter()
+        try:
+            resp = client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "system", "content": "Respond with valid JSON only."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0,
+                max_tokens=2048,
+            )
+        except Exception as e:
+            raise ExtractionError(f"Ollama repair failed (base_url={self.base_url}): {e}") from e
+        finally:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+
+        raw_response = resp.choices[0].message.content
+        usage.raw_response = raw_response or ""
+        usage.input_tokens = resp.usage.prompt_tokens if resp.usage else 0
+        usage.output_tokens = resp.usage.completion_tokens if resp.usage else 0
+        usage.cost_usd = 0.0
+        self.last_usage = usage
+        return self.parse_json_response(raw_response)
+
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         return 0.0

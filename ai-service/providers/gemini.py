@@ -57,6 +57,37 @@ class GeminiProvider(LLMProvider):
         self.last_usage = usage
         return raw_text, usage
 
+    def query(self, prompt: str, system: str = "") -> str:
+        full_prompt = f"{system}\n\n{prompt}" if system else prompt
+        try:
+            resp = self._model.generate_content(
+                full_prompt,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.3,
+                ),
+            )
+        except Exception as e:
+            raise ExtractionError(f"Gemini query failed: {e}") from e
+        return getattr(resp, "text", "") or ""
+
+    def repair_extraction(
+        self,
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict[str, dict[str, str]],
+        previous_output: dict[str, Any],
+        validation_errors: list[str],
+    ) -> dict[str, Any]:
+        prompt = self.build_repair_prompt(
+            article_text=article_text,
+            indicator_id=indicator_id,
+            feature_spec=feature_spec,
+            previous_output=previous_output,
+            validation_errors=validation_errors,
+        )
+        raw_text, _usage = self._call_gemini(prompt)
+        return self.parse_json_response(raw_text)
+
     def extract_features(
         self,
         article_text: str,

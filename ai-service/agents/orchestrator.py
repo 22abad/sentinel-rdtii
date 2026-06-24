@@ -23,6 +23,7 @@ from country_detector import detect_country
 from timeframe_extractor import extract_timeframe, build_timeframe_column, format_to_month_year
 from staleness_checker import check_staleness
 from source_validator import grade_source
+from extraction_repair import prepare_extraction_with_repair, repair_max_attempts_from_env
 from validation import validate_mapping
 
 from schemas import ExtractionResponse, IndicatorMapping, RejectedExtraction
@@ -43,6 +44,7 @@ class MASOrchestrator:
         self.extractor = ExtractorAgent(provider)
         self.analyst = AnalystAgent(provider)
         self.critic = CriticAgent()
+        self.repair_max_attempts = repair_max_attempts_from_env()
 
     async def run_pipeline(
         self,
@@ -98,28 +100,34 @@ class MASOrchestrator:
                         )))
                         continue
 
-                    # 1. Critic Agent — Verbatim quote verification
-                    quote = (data.get("verbatim_quote") or "").strip()
-                    # If the LLM correctly identified that this indicator is not present in the chunk,
-                    # it returns an empty quote or a placeholder. This is a successful "no match"
-                    # filter, not an error or hallucination. We should skip it silently.
-                    if not quote or quote.lower() in {"", "n/a", "none", "null", "not found"}:
+                    # 1. Repair loop — schema, quote verification, and validation preflight.
+                    prepared = await prepare_extraction_with_repair(
+                        provider=self.provider,
+                        chunk=chunk,
+                        indicator_id=ind_id,
+                        feature_spec=spec,
+                        data=data,
+                        pdf_metadata=pdf_metadata,
+                        max_attempts=self.repair_max_attempts,
+                    )
+                    if prepared["status"] == "skip":
                         continue
-
-                    is_valid, local_start, local_end, reject_reason = self.critic.verify(quote, chunk.text)
-                    if not is_valid:
+                    if prepared["status"] == "reject":
                         results_list.append((None, RejectedExtraction(
-                            reason=reject_reason,
+                            reason=prepared["reason"],
                             chunk_preview=chunk.text[:200],
-                            raw_output=data,
+                            raw_output=prepared.get("raw_output", data),
                         )))
                         continue
 
-                    # 2. Critic Agent — Scoring
-                    features = {k: data[k] for k in spec.keys() if k in data}
-                    if pdf_metadata:
-                        features.update(pdf_metadata)
+                    data = prepared["data"]
+                    quote = prepared["quote"]
+                    local_start = prepared["local_start"]
+                    local_end = prepared["local_end"]
+                    features = prepared["features"]
+                    pre_flag_reasons = prepared.get("pre_flag_reasons", [])
 
+                    # 2. Critic Agent — Scoring
                     raw_score, score_justification = self.critic.evaluate_score(ind_id, features)
 
                     # 3. Analyst Agent — Draft rich multi-paragraph comment
@@ -276,7 +284,10 @@ class MASOrchestrator:
                         continue
                     if vr.level == "flag":
                         mapping_obj.requires_human_review = True
-                        mapping_obj.flag_reasons = vr.reasons
+                        mapping_obj.flag_reasons = list(dict.fromkeys([*pre_flag_reasons, *vr.reasons]))
+                    elif pre_flag_reasons:
+                        mapping_obj.requires_human_review = True
+                        mapping_obj.flag_reasons = pre_flag_reasons
 
                     results_list.append((mapping_obj, None))
 

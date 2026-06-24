@@ -106,6 +106,33 @@ class LLMProvider(ABC):
             )
         return result
 
+    def repair_extraction(
+        self,
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict[str, dict[str, str]],
+        previous_output: dict[str, Any],
+        validation_errors: list[str],
+    ) -> dict[str, Any]:
+        """Repair an extraction that failed deterministic validation.
+
+        The repair step is deliberately narrow: it may revise evidence,
+        feature values, and source metadata only. Scoring remains owned by
+        deterministic Python after the repaired JSON returns.
+        """
+        prompt = self.build_repair_prompt(
+            article_text=article_text,
+            indicator_id=indicator_id,
+            feature_spec=feature_spec,
+            previous_output=previous_output,
+            validation_errors=validation_errors,
+        )
+        raw = self.query(
+            prompt,
+            system="Output ONLY valid JSON. No prose, no markdown fences.",
+        )
+        return self.parse_json_response(raw)
+
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         """Subclasses should override with provider-specific pricing."""
         return 0.0
@@ -280,6 +307,65 @@ Return JSON:
 }}
 
 {LLMProvider._get_recent_corrections()}
+
+Input article:
+\"\"\"
+{article_text}
+\"\"\"
+"""
+
+    @staticmethod
+    def build_repair_prompt(
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict[str, dict[str, str]],
+        previous_output: dict[str, Any],
+        validation_errors: list[str],
+    ) -> str:
+        """Construct a bounded prompt for repairing failed extraction JSON."""
+        feature_lines = []
+        for fname, fmeta in feature_spec.items():
+            feature_lines.append(
+                f'  - "{fname}" ({fmeta.get("type", "bool")}): {fmeta.get("description", "")}'
+            )
+        feature_block = "\n".join(feature_lines) if feature_lines else "  (none)"
+
+        schema_keys = list(feature_spec.keys()) + [
+            "verbatim_quote",
+            "article_clause",
+            "source_legislation",
+            "last_update",
+            "scope",
+            "coverage",
+            "cluster",
+            "name",
+            "policy_description",
+        ]
+        schema_lines = ",\n".join(f'  "{k}": ...' for k in schema_keys)
+        previous_json = json.dumps(previous_output, ensure_ascii=False, indent=2, default=str)
+        errors = "\n".join(f"- {err}" for err in validation_errors) or "- Unknown validation failure"
+
+        return f"""You are repairing a failed RDTII 2.1 extraction for ONE indicator: {indicator_id}.
+
+The previous JSON failed deterministic validation:
+{errors}
+
+Allowed feature fields:
+{feature_block}
+
+Repair rules:
+- Output ONLY valid JSON. No prose, no markdown fences, no explanations.
+- Do NOT include a score, pillar, or indicator field.
+- "verbatim_quote" MUST be an exact substring of the input article.
+- If no valid substantive evidence for this indicator exists in the article, set "verbatim_quote" to "" and set feature values to their type defaults.
+- Correct only evidence, feature values, and source metadata.
+- Use only keys in this schema:
+{{
+{schema_lines}
+}}
+
+Previous JSON:
+{previous_json}
 
 Input article:
 \"\"\"
