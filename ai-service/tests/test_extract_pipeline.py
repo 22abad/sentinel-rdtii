@@ -803,3 +803,42 @@ def test_formatting_interceptor_un_compliance(monkeypatch):
     # Rule 3: Timeframe dates calibrated to Month Name YYYY format
     assert m["last_update"] == "May 2012"
     assert "May 2012" in m["features"]["_timeframe_column"]
+
+
+def test_extract_rejects_crawled_website_error_page(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    async def fake_fetch(url):
+        return {
+            "type": "text",
+            "text": "Page Not Found. We are sorry, the page you are looking for may have been removed, had its name changed, or is temporarily unavailable.",
+        }
+
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+
+    client = TestClient(main_module.app)
+    response = client.post("/api/extract", data={"source_url": "https://www.imda.gov.sg/page-not-found"})
+
+    assert response.status_code == 400
+    assert "website error page" in response.json()["detail"]
+
+
+def test_stream_extract_rejects_crawled_website_error_page(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    async def fake_fetch(url):
+        return {
+            "type": "text",
+            "text": "Page Not Found. We are sorry, the page you are looking for may have been removed, had its name changed, or is temporarily unavailable.",
+        }
+
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+
+    client = TestClient(main_module.app)
+    response = client.post("/api/extract/stream", data={"source_url": "https://www.imda.gov.sg/page-not-found"})
+
+    assert response.status_code == 200
+    assert "event: error" in response.text
+    assert "website error page" in response.text

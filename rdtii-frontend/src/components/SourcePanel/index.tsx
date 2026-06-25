@@ -38,6 +38,7 @@ type SourcePanelProps = {
   status: Status;
   error: string;
   warning?: string;
+  extractionProgress?: { current: number; total: number; phase: string };
   availableProviders: string[];
   selectedProvider: string;
   setSelectedProvider: (v: string) => void;
@@ -64,6 +65,7 @@ export function SourcePanel({
   status,
   error,
   warning,
+  extractionProgress,
   availableProviders,
   selectedProvider,
   setSelectedProvider,
@@ -109,6 +111,13 @@ export function SourcePanel({
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
   }, []);
+  const extractionLabel =
+    status === "loading" && extractionProgress?.total
+      ? `${t("status.extracting")} ${extractionProgress.current}/${extractionProgress.total}`
+      : status === "loading"
+        ? sourceUrl && !text.trim() ? t("status.crawling") : t("status.extracting")
+        : t("source.run");
+
   return (
     <section className="input-panel" aria-label={t("source.aria")}>
       <div className="panel-header">
@@ -126,9 +135,7 @@ export function SourcePanel({
           style={{ minHeight: 0, border: "none" }}
         >
           <span>
-            {status === "loading"
-              ? sourceUrl && !text.trim() ? t("status.crawling") : t("status.extracting")
-              : t("source.run")}
+            {extractionLabel}
           </span>
           {status !== "loading" && (
             <span className="overflow-hidden w-0 group-hover:w-4 transition-all duration-300 flex items-center justify-center">

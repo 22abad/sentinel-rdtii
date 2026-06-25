@@ -55,6 +55,16 @@ export function useExtraction() {
   const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>({});
   const [showRejected, setShowRejected] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>(DEFAULT_PROVIDERS);
+  const [extractionProgress, setExtractionProgress] = useState<{ current: number; total: number; phase: string }>({
+    current: 0,
+    total: 0,
+    phase: "",
+  });
+  const [batchProgress, setBatchProgress] = useState<{ current: number; total: number; currentUrl: string }>({
+    current: 0,
+    total: 0,
+    currentUrl: "",
+  });
   
   // Persistent state using localStorage to remember user's last selection
   const [selectedProvider, setSelectedProviderState] = useState(initialSelectedProvider);
@@ -190,18 +200,24 @@ export function useExtraction() {
     };
   }
 
-  async function extract() {
-    setStatus("loading");
-    setError("");
-    setWarning("");
-    setResponse(null);
-    setFoundPdfs([]);
-    setActiveKey(null);
-    setDecisions({});
-
+  async function runExtractionStream({
+    runSourceUrl,
+    requestText,
+    baseMappings = [],
+    baseRejected = [],
+    updateTextFromSource = true,
+    setReadyOnDone = true,
+  }: {
+    runSourceUrl: string;
+    requestText: string;
+    baseMappings?: IndicatorMapping[];
+    baseRejected?: RejectedExtraction[];
+    updateTextFromSource?: boolean;
+    setReadyOnDone?: boolean;
+  }): Promise<ExtractionResponse> {
     const form = new FormData();
-    form.append("text", text);
-    if (sourceUrl.trim()) form.append("source_url", sourceUrl.trim());
+    form.append("text", requestText);
+    if (runSourceUrl) form.append("source_url", runSourceUrl);
     form.append("browser_mode", "auto");
     
     // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
@@ -239,8 +255,10 @@ export function useExtraction() {
       const decoder = new TextDecoder();
       let buf = "";
       let currentEvent = "";
-      const collectedMappings: IndicatorMapping[] = [];
-      const collectedRejected: RejectedExtraction[] = [];
+      const collectedMappings: IndicatorMapping[] = [...baseMappings];
+      const collectedRejected: RejectedExtraction[] = [...baseRejected];
+      const newMappings: IndicatorMapping[] = [];
+      const newRejected: RejectedExtraction[] = [];
       let sourceText = "";
 
       while (true) {
@@ -269,15 +287,24 @@ export function useExtraction() {
               setFoundPdfs(payload.urls ?? []);
             }
 
+            if (currentEvent === "progress") {
+              setExtractionProgress({
+                current: Number(payload.current ?? 0),
+                total: Number(payload.total ?? 0),
+                phase: String(payload.phase ?? ""),
+              });
+            }
+
             if (currentEvent === "started") {
               if (payload.source_text) {
                 sourceText = payload.source_text;
-                setText(payload.source_text);
+                if (updateTextFromSource) setText(payload.source_text);
               }
             }
 
             if (currentEvent === "mapping") {
-              const m = _fixMapping(payload as IndicatorMapping, sourceUrl);
+              const m = _fixMapping(payload as IndicatorMapping, runSourceUrl);
+              newMappings.push(m);
               collectedMappings.push(m);
               // Progressive render — derive state from local arrays, never from prev
               // (avoids stale-closure bleed when setResponse(null) hasn't flushed yet)
@@ -290,7 +317,9 @@ export function useExtraction() {
             }
 
             if (currentEvent === "rejected") {
-              collectedRejected.push(payload as RejectedExtraction);
+              const rejectedItem = payload as RejectedExtraction;
+              newRejected.push(rejectedItem);
+              collectedRejected.push(rejectedItem);
               setResponse({
                 mappings: [...collectedMappings],
                 rejected: [...collectedRejected],
@@ -300,16 +329,127 @@ export function useExtraction() {
             }
 
             if (currentEvent === "done") {
-              setStatus("ready");
+              if (setReadyOnDone) setStatus("ready");
             }
           }
         }
       }
+
+      return {
+        mappings: newMappings,
+        rejected: newRejected,
+        provider: "",
+        source_text: sourceText,
+      };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async function extract(nextSourceUrl?: string) {
+    const runSourceUrl = (nextSourceUrl ?? sourceUrl).trim();
+    if (nextSourceUrl !== undefined) {
+      setSourceUrl(runSourceUrl);
+      setText("");
+      triggerCountryDetect(runSourceUrl, "");
+    }
+
+    setStatus("loading");
+    setError("");
+    setWarning("");
+    setResponse(null);
+    setFoundPdfs([]);
+    setExtractionProgress({ current: 0, total: 0, phase: "" });
+    setActiveKey(null);
+    setDecisions({});
+    setBatchProgress({ current: 0, total: 0, currentUrl: "" });
+
+    try {
+      await runExtractionStream({
+        runSourceUrl,
+        requestText: nextSourceUrl !== undefined ? "" : text,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("error.extractionFailed"));
       setResponse(null);
       setStatus("error");
+    } finally {
+      setExtractionProgress({ current: 0, total: 0, phase: "" });
     }
+  }
+
+  async function extractShortlist(urls: string[]) {
+    const uniqueUrls = Array.from(new Set(urls.map((url) => url.trim()).filter(Boolean)));
+    if (!uniqueUrls.length) return;
+
+    setStatus("loading");
+    setError("");
+    setWarning("");
+    setResponse({ mappings: [], rejected: [], provider: "", source_text: "" });
+    setFoundPdfs([]);
+    setExtractionProgress({ current: 0, total: 0, phase: "" });
+    setActiveKey(null);
+    setDecisions({});
+    setText("");
+    setBatchProgress({ current: 0, total: uniqueUrls.length, currentUrl: uniqueUrls[0] ?? "" });
+
+    let accumulatedMappings: IndicatorMapping[] = [];
+    let accumulatedRejected: RejectedExtraction[] = [];
+    const failedUrls: string[] = [];
+
+    for (const [index, url] of uniqueUrls.entries()) {
+      setBatchProgress({ current: index + 1, total: uniqueUrls.length, currentUrl: url });
+      setSourceUrl(url);
+      triggerCountryDetect(url, "");
+
+      try {
+        const result = await runExtractionStream({
+          runSourceUrl: url,
+          requestText: "",
+          baseMappings: accumulatedMappings,
+          baseRejected: accumulatedRejected,
+          updateTextFromSource: false,
+          setReadyOnDone: false,
+        });
+        accumulatedMappings = [...accumulatedMappings, ...result.mappings];
+        accumulatedRejected = [...accumulatedRejected, ...result.rejected];
+      } catch (err) {
+        const message = err instanceof Error ? err.message : t("error.extractionFailed");
+        failedUrls.push(url);
+        const rejectedItem: RejectedExtraction = {
+          reason: `Shortlist extraction failed: ${message}`,
+          chunk_preview: url,
+          raw_output: { source_url: url },
+        };
+        accumulatedRejected = [...accumulatedRejected, rejectedItem];
+        setWarning(`${failedUrls.length} shortlist URL(s) failed; continuing with the remaining candidates.`);
+        setResponse({
+          mappings: accumulatedMappings,
+          rejected: accumulatedRejected,
+          provider: "",
+          source_text: "",
+        });
+      }
+    }
+
+    setResponse({
+      mappings: accumulatedMappings,
+      rejected: accumulatedRejected,
+      provider: "",
+      source_text: "",
+    });
+
+    if (failedUrls.length === uniqueUrls.length) {
+      setError(`All shortlist extractions failed (${failedUrls.length}/${uniqueUrls.length}).`);
+      setStatus("error");
+    } else {
+      if (failedUrls.length) {
+        setWarning(`${failedUrls.length} of ${uniqueUrls.length} shortlist URL(s) failed; extracted the rest.`);
+      }
+      setStatus("ready");
+    }
+    setBatchProgress({ current: uniqueUrls.length, total: uniqueUrls.length, currentUrl: "" });
+    setExtractionProgress({ current: 0, total: 0, phase: "" });
   }
 
   async function ingestFile(file: File) {
@@ -463,7 +603,10 @@ export function useExtraction() {
     selectedGeminiModel, setSelectedGeminiModel,
     selectedDeepSeekModel, setSelectedDeepSeekModel,
     foundPdfs,
+    extractionProgress,
+    batchProgress,
     extract,
+    extractShortlist,
     ingestFile,
     selectMapping,
     setDecision,
