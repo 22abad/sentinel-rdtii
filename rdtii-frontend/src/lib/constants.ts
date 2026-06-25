@@ -10,6 +10,9 @@ export const INGEST_API_URL =
 export const FETCH_TEXT_API_URL =
   import.meta.env.VITE_FETCH_TEXT_API_URL ?? "/api/fetch-text";
 
+export const DISCOVERY_API_URL =
+  import.meta.env.VITE_DISCOVERY_API_URL ?? "/api/discovery/search";
+
 export const REVIEW_API_URL =
   import.meta.env.VITE_REVIEW_API_URL ?? "/api/mappings/review";
 

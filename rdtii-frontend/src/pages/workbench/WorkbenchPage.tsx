@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FETCH_TEXT_API_URL } from "../../lib/constants";
 import { getStoredToken } from "../../hooks/useAuth";
 import { AuditPanel } from "../../components/AuditPanel";
+import { DiscoveryPanel } from "../../components/Discovery/DiscoveryPanel";
 import { SourcePanel } from "../../components/SourcePanel";
 import { FoundPdfsPanel } from "../../components/SourcePanel/FoundPdfsPanel";
 import { SideBar } from "../../components/SideBar";
@@ -44,7 +45,10 @@ export function WorkbenchPage() {
     selectedGeminiModel, setSelectedGeminiModel,
     selectedDeepSeekModel, setSelectedDeepSeekModel,
     foundPdfs,
+    extractionProgress,
+    batchProgress,
     extract,
+    extractShortlist,
     selectMapping,
     setDecision,
   } = useExtraction();
@@ -224,6 +228,15 @@ export function WorkbenchPage() {
         <section className="workspace h-full">
 
           <div className="flex flex-col gap-4 min-w-0 self-start">
+            <DiscoveryPanel
+              country={country}
+              pillarFilter={pillarFilter}
+              extracting={status === "loading"}
+              batchProgress={batchProgress}
+              onUseCandidate={(candidate) => setSourceUrl(candidate.url)}
+              onExtractCandidate={(candidate) => extract(candidate.url)}
+              onExtractShortlist={(candidates) => extractShortlist(candidates.map((candidate) => candidate.url))}
+            />
             <SourcePanel
               sourceRef={sourceRef}
               country={country}
@@ -241,6 +254,7 @@ export function WorkbenchPage() {
               status={status}
               error={error}
               warning={warning}
+              extractionProgress={extractionProgress}
               availableProviders={availableProviders}
               selectedProvider={selectedProvider}
               setSelectedProvider={setSelectedProvider}

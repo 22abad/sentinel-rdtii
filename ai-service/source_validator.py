@@ -10,6 +10,7 @@ Heuristic scoring based on URL domain, source keywords, and text patterns.
 from __future__ import annotations
 
 from typing import Literal
+from urllib.parse import urlsplit
 
 SourceGrade = Literal["primary", "secondary", "unknown"]
 
@@ -22,6 +23,14 @@ _AUTHORITATIVE_DOMAINS: set[str] = {
     "mas.gov.sg", "www.mas.gov.sg",
     "pdpc.gov.sg", "www.pdpc.gov.sg",
     "egov.gov.sg",
+    # China
+    "flk.npc.gov.cn",
+    "gov.cn", "www.gov.cn",
+    "cac.gov.cn", "www.cac.gov.cn",
+    # Thailand
+    "ocs.go.th", "www.ocs.go.th", "searchlaw.ocs.go.th",
+    "etda.or.th", "www.etda.or.th",
+    "pdpc.or.th", "www.pdpc.or.th",
     # Malaysia
     "www.agc.gov.my", "agc.gov.my",
     "www.kkm.gov.my", "kkm.gov.my",
@@ -78,16 +87,16 @@ def grade_source(url: str = "", title: str = "", text_snippet: str = "") -> dict
     target = (url + " " + title + " " + text_snippet).lower()
 
     # ── Check URL domain for authoritative sources ──
-    url_lower = url.lower()
-    for domain in _AUTHORITATIVE_DOMAINS:
-        if domain in url_lower:
+    host = _url_host(url)
+    for domain in _domains_by_specificity(_AUTHORITATIVE_DOMAINS):
+        if _domain_matches(host, domain):
             reasons.append(f"URL domain '{domain}' is an authoritative/official source")
             confidence = max(confidence, 0.95)
             break
 
     # ── Check for secondary source domains ──
-    for domain in _SECONDARY_DOMAINS:
-        if domain in url_lower:
+    for domain in _domains_by_specificity(_SECONDARY_DOMAINS):
+        if _domain_matches(host, domain):
             reasons.append(f"URL domain '{domain}' is a secondary/non-official source")
             grade = "secondary"
             confidence = max(confidence, 0.8)
@@ -143,6 +152,24 @@ def grade_source(url: str = "", title: str = "", text_snippet: str = "") -> dict
         "reasons": reasons,
         "is_primary": grade == "primary",
     }
+
+
+def _url_host(url: str) -> str:
+    parsed = urlsplit(url.lower())
+    if parsed.netloc:
+        return parsed.netloc.split("@")[-1].split(":")[0]
+    return url.lower().split("/", 1)[0].split(":")[0]
+
+
+def _domains_by_specificity(domains: set[str]) -> list[str]:
+    return sorted(domains, key=lambda domain: (domain.startswith("."), -len(domain), domain))
+
+
+def _domain_matches(host: str, domain: str) -> bool:
+    domain = domain.lower()
+    if domain.startswith("."):
+        return host.endswith(domain)
+    return host == domain or host.endswith(f".{domain}")
 
 
 def require_primary_source(url: str = "", title: str = "", text_snippet: str = "") -> dict:

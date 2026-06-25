@@ -154,6 +154,7 @@ h3 {
 }
 
 .input-panel,
+.discovery-panel,
 .review-panel {
   min-width: 0;
   border: 1px solid #d8e0e5;
@@ -182,6 +183,321 @@ h3 {
   margin-top: 3px;
   color: #667085;
   font-size: 0.88rem;
+}
+
+.discovery-header {
+  align-items: center;
+}
+
+.discovery-controls {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.9fr) minmax(140px, 1fr) minmax(120px, 0.9fr) minmax(180px, 1.4fr);
+  gap: 12px;
+  align-items: end;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e4eaee;
+}
+
+.discovery-keywords {
+  min-width: 0;
+}
+
+.discovery-pillars {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  grid-column: 1 / -1;
+  justify-content: flex-start;
+  min-height: 42px;
+}
+
+.discovery-toggle {
+  min-height: 36px;
+  min-width: 48px;
+  border: 1px solid #c7d0d6;
+  border-radius: 999px;
+  padding: 0 12px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.discovery-toggle.active {
+  border-color: #0f766e;
+  background: #e8faf2;
+  color: #116149;
+}
+
+@media (max-width: 1280px) {
+  .discovery-controls {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+
+  .discovery-keywords {
+    grid-column: 1 / -1;
+  }
+}
+
+.discovery-results {
+  display: grid;
+  gap: 10px;
+  padding: 14px 18px 18px;
+}
+
+.discovery-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #667085;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.discovery-diagnostics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.discovery-diagnostics span {
+  border: 1px solid #d5dde2;
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: #f8fafb;
+  color: #475467;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.shortlist-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  border: 1px solid #d8e0e5;
+  border-radius: 12px;
+  padding: 8px;
+  background: #fbfcfc;
+}
+
+.shortlist-tray span {
+  margin-right: auto;
+  color: #475467;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.shortlist-tray button {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+}
+
+.shortlist-tray button.secondary {
+  background: #ffffff;
+}
+
+.shortlist-progress {
+  display: grid;
+  gap: 5px;
+  color: #475467;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.shortlist-progress div {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e4eaee;
+}
+
+.shortlist-progress div span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #10b981;
+  transition: width 0.2s ease;
+}
+
+.shortlist-progress p {
+  overflow-wrap: anywhere;
+}
+
+.discovery-warning,
+.discovery-error {
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+}
+
+.discovery-warning {
+  border: 1px solid #f0c36a;
+  background: #fff8e6;
+  color: #7a4d00;
+}
+
+.discovery-error {
+  margin: 0 18px 18px;
+  border: 1px solid #efb0a8;
+  background: #fff0ee;
+  color: #9f2d20;
+}
+
+.candidate-list {
+  display: grid;
+  gap: 10px;
+}
+
+.candidate-card {
+  display: grid;
+  gap: 9px;
+  border: 1px solid #d8e0e5;
+  border-radius: 12px;
+  padding: 12px;
+  background: #ffffff;
+}
+
+.candidate-card.selected {
+  border-color: #0f766e;
+  box-shadow: 0 1px 6px rgba(15, 118, 110, 0.14);
+}
+
+.candidate-topline {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.candidate-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  border: 1px solid #c7d0d6;
+  border-radius: 8px;
+  padding: 0;
+  background: #ffffff;
+  color: #0f766e;
+}
+
+.candidate-select:hover {
+  border-color: #0f766e;
+  background: #e8faf2;
+}
+
+.candidate-title-group {
+  min-width: 0;
+}
+
+.candidate-title-group h3 {
+  color: #1f2933;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.candidate-title-group p {
+  margin-top: 2px;
+  color: #667085;
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.candidate-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 30px;
+  border: 1px solid #8fd7bd;
+  border-radius: 999px;
+  background: #e8faf2;
+  color: #116149;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.candidate-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.candidate-badges span {
+  border: 1px solid #d5dde2;
+  border-radius: 8px;
+  padding: 2px 8px;
+  background: #f8fafb;
+  color: #334155;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.candidate-snippet {
+  color: #334155;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.candidate-reasons {
+  color: #667085;
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.candidate-warnings {
+  display: grid;
+  gap: 5px;
+}
+
+.candidate-warnings span {
+  border: 1px solid #f0c36a;
+  border-radius: 8px;
+  padding: 5px 8px;
+  background: #fff8e6;
+  color: #7a4d00;
+  font-size: 0.76rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.candidate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.candidate-actions a,
+.candidate-actions button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  border-radius: 999px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.candidate-actions a {
+  border: 1px solid #c7d0d6;
+  background: #ffffff;
+  color: #0f766e;
 }
 
 .control-grid {
@@ -241,6 +557,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-bottom: 6px;
   color: #475467;
   font-size: 0.85rem;
@@ -662,6 +979,24 @@ textarea {
 
   .control-grid {
     grid-template-columns: 1fr;
+  }
+
+  .discovery-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .discovery-pillars {
+    align-items: stretch;
+  }
+
+  .discovery-toggle {
+    flex: 1;
+  }
+
+  .discovery-summary,
+  .candidate-actions {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .panel-header {

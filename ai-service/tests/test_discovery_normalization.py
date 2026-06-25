@@ -1,0 +1,130 @@
+from __future__ import annotations
+
+from discovery.metadata import canonicalize_url, infer_document_type, normalize_hit
+from discovery.registry import get_sources
+from discovery.schemas import RawSearchHit
+
+
+def test_canonicalize_url_strips_tracking_params():
+    url = canonicalize_url("HTTPS://SSO.AGC.GOV.SG/Act/PDPA2012/?utm_source=x&section=1&fbclid=y")
+
+    assert url == "https://sso.agc.gov.sg/Act/PDPA2012?section=1"
+
+
+def test_canonicalize_url_preserves_opaque_query_encoding():
+    url = canonicalize_url("https://flk.npc.gov.cn/detail2.html?token=abc%3D&utm_source=x")
+
+    assert url == "https://flk.npc.gov.cn/detail2.html?token=abc%3D"
+
+
+def test_canonicalize_url_preserves_spa_fragment():
+    url = canonicalize_url("https://searchlaw.ocs.go.th/council-of-state/#/public/doc/12345")
+
+    assert url == "https://searchlaw.ocs.go.th/council-of-state/#/public/doc/12345"
+
+
+def test_infer_document_type_uses_token_boundaries():
+    assert infer_document_type(
+        "Cross-border Personal Data Transfer Requirements",
+        "https://example.test/practice-note",
+        "Official law on personal data.",
+    ) == "act"
+
+
+def test_candidate_with_dpo_maps_to_indicator_7_4():
+    source = get_sources("SGP")[1]
+    hit = RawSearchHit(
+        title="Advisory Guidelines on Data Protection Officer Requirement",
+        url="https://www.pdpc.gov.sg/guidelines",
+        snippet="Organisations must appoint a data protection officer and conduct impact assessment where required.",
+    )
+
+    candidate = normalize_hit("SGP", source, hit)
+
+    assert "7.4" in candidate.matched_indicators
+    assert 7 in candidate.matched_pillars
+    assert candidate.source_grade == "primary"
+
+
+def test_candidate_with_standard_contract_maps_to_indicator_6_4():
+    source = get_sources("CHN")[0]
+    hit = RawSearchHit(
+        title="个人信息出境 标准合同",
+        url="https://flk.npc.gov.cn/detail2.html?id=1",
+        snippet="个人信息处理者通过标准合同向境外提供个人信息。",
+    )
+
+    candidate = normalize_hit("CHN", source, hit)
+
+    assert "6.4" in candidate.matched_indicators
+    assert 6 in candidate.matched_pillars
+
+
+def test_candidate_extracts_last_update_from_raw_metadata():
+    source = get_sources("CHN")[0]
+    hit = RawSearchHit(
+        title="中华人民共和国个人信息保护法",
+        url="https://flk.npc.gov.cn/detail2.html?id=pipl",
+        snippet="现行有效",
+        raw={"publish_date": "2021-08-20", "status": "现行有效"},
+    )
+
+    candidate = normalize_hit("CHN", source, hit)
+
+    assert candidate.last_update == "2021-08-20"
+    assert not candidate.warnings
+
+
+def test_candidate_does_not_treat_act_title_year_as_last_update():
+    source = get_sources("SGP")[0]
+    hit = RawSearchHit(
+        title="Personal Data Protection Act 2012",
+        url="https://sso.agc.gov.sg/Act/PDPA2012",
+        snippet="An Act to govern the collection, use and disclosure of personal data.",
+    )
+
+    candidate = normalize_hit("SGP", source, hit)
+
+    assert candidate.last_update == ""
+    assert not candidate.warnings
+
+
+def test_candidate_does_not_treat_url_path_year_as_last_update():
+    source = get_sources("SGP")[1]
+    hit = RawSearchHit(
+        title="Advisory Guidelines on Key Concepts",
+        url="https://www.pdpc.gov.sg/guidelines-and-consultation/2020/03/key-concepts",
+        snippet="Guidance on personal data protection.",
+    )
+
+    candidate = normalize_hit("SGP", source, hit)
+
+    assert candidate.last_update == ""
+
+
+def test_candidate_extracts_thai_buddhist_era_year():
+    source = get_sources("THA")[0]
+    hit = RawSearchHit(
+        title="Personal Data Protection Act B.E. 2562",
+        url="https://searchlaw.ocs.go.th/council-of-state/#/public/doc/pdpa-2562",
+        snippet="Personal Data Protection Act B.E. 2562 is in force.",
+    )
+
+    candidate = normalize_hit("THA", source, hit)
+
+    assert candidate.last_update == "01/2019"
+
+
+def test_candidate_flags_repealed_or_draft_status():
+    source = get_sources("SGP")[0]
+    hit = RawSearchHit(
+        title="Old Privacy Rules",
+        url="https://sso.agc.gov.sg/SL/OLD",
+        snippet="This instrument has been repealed and is no longer in force.",
+        raw={"publish_date": "2010-01-01", "status": "repealed"},
+    )
+
+    candidate = normalize_hit("SGP", source, hit)
+
+    assert candidate.last_update == "2010-01-01"
+    assert any("repealed" in warning.lower() for warning in candidate.warnings)

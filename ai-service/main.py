@@ -67,6 +67,8 @@ from schemas import (
 )
 from scoring import score_indicator
 from verification import find_quote_offsets, verify_quote
+from discovery import DiscoverySearchRequest, DiscoveryService
+from discovery.registry import get_sources
 
 _env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(_env_path)  # prefer root .env regardless of CWD
@@ -442,6 +444,25 @@ def _is_garbage_content(t: str) -> bool:
     return any(s in t.lower()[:2000] for s in garbage_signals)
 
 
+def _is_error_page_content(t: str) -> bool:
+    """Detect crawled website error pages that should not be sent to the LLM."""
+    if not t or not t.strip():
+        return True
+    lowered = " ".join(t.lower().split())
+    error_signals = [
+        "page not found",
+        "404 not found",
+        "404 error",
+        "the page you are looking for may have been removed",
+        "had its name changed",
+        "temporarily unavailable",
+        "website address displayed in the address bar",
+        "this page could not be found",
+        "the requested url was not found",
+    ]
+    return any(signal in lowered[:3000] for signal in error_signals)
+
+
 async def _fetch_with_browser_mode(fetcher, source_url: str, browser_mode: str):
     """Call crawler.fetch_legal_content while keeping older test doubles valid."""
     import inspect
@@ -484,6 +505,8 @@ async def extract(
 
         if crawl_result["type"] == "text":
             text = crawl_result["text"]
+            if _is_error_page_content(text):
+                raise HTTPException(status_code=400, detail="Crawl returned a website error page; choose another candidate URL.")
             # If crawled content is garbage AND user has Thai query → try OCS
             if _is_garbage_content(text) and _is_thai_query(original_text):
                 print(f"[extract] 爬取内容为垃圾内容，尝试 OCS 搜索: {original_text[:60]}")
@@ -549,6 +572,7 @@ async def _stream_extraction(text: str, llm_provider, pdf_metadata: dict | None 
 
     Events:
       event: started  {source_text}
+      event: progress {current, total, phase}
       event: mapping  {IndicatorMapping}
       event: rejected {RejectedExtraction}
       event: warning  {message}
@@ -586,19 +610,47 @@ async def _stream_extraction(text: str, llm_provider, pdf_metadata: dict | None 
 
     mapping_count = 0
     rejected_count = 0
+    total_groups = len(chunk_groups)
+    chunk_timeout = float(os.getenv("RDTII_EXTRACT_CHUNK_TIMEOUT_SECONDS", "90"))
 
-    for chunk, indicators in chunk_groups:
+    if not chunk_groups:
+        yield _sse("warning", {"message": "No indicator-relevant chunks were found in this text."})
+
+    for index, (chunk, indicators) in enumerate(chunk_groups, start=1):
+        yield _sse("progress", {
+            "current": index,
+            "total": total_groups,
+            "phase": "extracting",
+            "indicators": [indicator_id for indicator_id, _spec in indicators],
+        })
         try:
-            batch = await asyncio.to_thread(
-                llm_provider.extract_batch, chunk.text, indicators,
+            batch = await asyncio.wait_for(
+                asyncio.to_thread(llm_provider.extract_batch, chunk.text, indicators),
+                timeout=chunk_timeout,
             )
+        except asyncio.TimeoutError:
+            logger.warning("stream batch timed out after %.1fs", chunk_timeout)
+            yield _sse("rejected", RejectedExtraction(
+                reason=f"LLM extraction timed out after {chunk_timeout:.0f}s",
+                chunk_preview=chunk.text[:200],
+            ).model_dump())
+            rejected_count += 1
+            continue
         except ExtractionError as e:
             logger.warning("stream batch failed, per-indicator fallback: %s", e)
             for ind_id, spec in indicators:
                 try:
-                    data = await asyncio.to_thread(
-                        llm_provider.extract_features, chunk.text, ind_id, spec,
+                    data = await asyncio.wait_for(
+                        asyncio.to_thread(llm_provider.extract_features, chunk.text, ind_id, spec),
+                        timeout=chunk_timeout,
                     )
+                except asyncio.TimeoutError:
+                    yield _sse("rejected", RejectedExtraction(
+                        reason=f"LLM extraction timed out after {chunk_timeout:.0f}s",
+                        chunk_preview=chunk.text[:200],
+                    ).model_dump())
+                    rejected_count += 1
+                    continue
                 except ExtractionError:
                     yield _sse("rejected", RejectedExtraction(
                         reason="LLM extraction failed",
@@ -800,6 +852,10 @@ async def extract_stream(
         if crawl_result["type"] == "text":
             text = crawl_result["text"]
             source_text = text
+            if _is_error_page_content(text):
+                async def _error_page():
+                    yield _sse("error", {"detail": "Crawl returned a website error page; choose another candidate URL."})
+                return StreamingResponse(_error_page(), media_type="text/event-stream")
             if _is_garbage_content(text) and _is_thai_query(original_text):
                 ocs_result = await fetch_thai_law_by_keyword(original_text.strip())
                 if ocs_result["type"] == "text":
@@ -1000,6 +1056,32 @@ async def legal_search(req: LegalSearchRequest):
         "country_code": "CHN",
         "source": "flk.npc.gov.cn",
         "results": results,
+    }
+
+
+_discovery_service = DiscoveryService()
+
+
+@app.post("/api/discovery/search")
+async def discovery_search(req: DiscoverySearchRequest):
+    """Search official legal sources and return ranked candidate instruments."""
+    try:
+        return await _discovery_service.search(req)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"No discovery sources configured for {req.country_code}.")
+
+
+@app.get("/api/discovery/sources/{country_code}")
+async def discovery_sources(country_code: str):
+    """Return configured official discovery sources for one country/economy."""
+    normalized = country_code.strip().upper()
+    try:
+        sources = get_sources(normalized)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"No discovery sources configured for {normalized}.")
+    return {
+        "country_code": normalized,
+        "sources": [source.model_dump() for source in sources],
     }
 
 
