@@ -193,55 +193,19 @@ export function SideBar({
                         )}
                       </button>
 
-                      {/* Unified Gemini / Vertex AI model dropdown */}
-                      {p === "gemini" && isSelected && (
+                      {/* Generic model dropdown for selected provider */}
+                      {isSelected && currentProviderModels.length > 0 && (
                         <div className="mt-1 pl-2 border-l border-white/10 mb-2 flex flex-col gap-0.5">
-                          {/* Developer API models */}
-                          {["gemini-2.0-flash", "gemini-1.5-flash"].map((m) => (
+                          {currentProviderModels.map((m) => (
                             <button
                               key={m}
-                              onClick={() => setSelectedGeminiModel(m)}
+                              onClick={() => setSelectedModels((prev) => ({ ...prev, [selectedProvider]: m }))}
                               style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
                             >
-                              <span className={`text-[11px] ${selectedGeminiModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
+                              <span className={`text-[11px] ${(selectedModels[selectedProvider] ?? "") === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
                                 {m}
                               </span>
-                              {selectedGeminiModel === m && (
-                                <span className="text-[#10B981] text-[10px]">⎷</span>
-                              )}
-                            </button>
-                          ))}
-                          {/* Vertex AI enterprise models (rendered inline under Gemini if configured) */}
-                          {vertexModels.map((m) => (
-                            <button
-                              key={m}
-                              onClick={() => setSelectedGeminiModel(m)}
-                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
-                            >
-                              <span className={`text-[11px] ${selectedGeminiModel === m ? "text-[#10B981] font-semibold" : "text-[#8B5CF6]"}`}>
-                                {m} <span className="text-[9px] text-white/20 font-normal">(vertex)</span>
-                              </span>
-                              {selectedGeminiModel === m && (
-                                <span className="text-[#10B981] text-[10px]">⎷</span>
-                              )}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* DeepSeek model dropdown */}
-                      {p === "deepseek" && isSelected && (
-                        <div className="mt-1 pl-2 border-l border-white/10 mb-2 flex flex-col gap-0.5">
-                          {["deepseek-chat", "deepseek-reasoner"].map((m) => (
-                            <button
-                              key={m}
-                              onClick={() => setSelectedDeepSeekModel(m)}
-                              style={{ background: "transparent", border: "none", minHeight: 0, cursor: "pointer", width: "100%", padding: "1px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}
-                            >
-                              <span className={`text-[11px] ${selectedDeepSeekModel === m ? "text-[#10B981] font-semibold" : "text-white/30"}`}>
-                                {m === "deepseek-reasoner" ? "deepseek-reasoner (thinking)" : m}
-                              </span>
-                              {selectedDeepSeekModel === m && (
+                              {(selectedModels[selectedProvider] ?? "") === m && (
                                 <span className="text-[#10B981] text-[10px]">⎷</span>
                               )}
                             </button>
