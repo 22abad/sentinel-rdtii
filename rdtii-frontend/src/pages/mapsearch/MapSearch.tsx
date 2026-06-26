@@ -322,14 +322,9 @@ export function MapSearchPage() {
                 availableProviders={[]}
                 selectedProvider=""
                 setSelectedProvider={() => {}}
-                ollamaModels={[]}
-                selectedOllamaModel=""
-                setSelectedOllamaModel={() => {}}
-                vertexModels={[]}
-                selectedGeminiModel=""
-                setSelectedGeminiModel={() => {}}
-                selectedDeepSeekModel=""
-                setSelectedDeepSeekModel={() => {}}
+                providerModels={{}}
+                selectedModels={{}}
+                setSelectedModels={() => {}}
                 onClose={() => setSidebarOpen(false)}
               />
             </motion.div>

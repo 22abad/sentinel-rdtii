@@ -58,7 +58,7 @@ def _extract_page_filtered(page: fitz.Page) -> str:
                 line_parts.append(text)
                 last_text = text
             if line_parts:
-                parts.append("".join(line_parts))
+                parts.append(" ".join(line_parts))
     return "\n".join(parts)
 
 

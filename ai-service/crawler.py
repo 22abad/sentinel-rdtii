@@ -786,6 +786,19 @@ async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
         )
         resp = client.get(url)
         resp.raise_for_status()
+
+        # ── Detect PDF by URL or content-type ──
+        path_lower = url.lower().split("?")[0]
+        ct = (resp.headers.get("content-type") or "").lower()
+        if path_lower.endswith(".pdf") or "application/pdf" in ct:
+            import tempfile
+            tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+            tmp.write(resp.content)
+            pdf_path = tmp.name
+            tmp.close()
+            print(f"[HTTP Fallback] PDF 检测到并下载: {pdf_path}")
+            return {"type": "pdf", "url": url, "pdf_path": pdf_path}
+
         html = resp.text
         if len(html) < 1000:
             print(f"[HTTP Fallback] 内容过短 ({len(html)} 字符)，跳过")

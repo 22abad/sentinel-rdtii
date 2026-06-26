@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import time
 from typing import Any
 
 import google.generativeai as genai
+from google.api_core import exceptions as google_exceptions
 
 from .base import ExtractionError, ExtractionUsage, LLMProvider
 
@@ -15,6 +17,13 @@ from .base import ExtractionError, ExtractionUsage, LLMProvider
 # Override via env if you use a different model.
 _INPUT_USD_PER_MTOK = float(os.getenv("GEMINI_INPUT_USD_PER_MTOK", "0.075"))
 _OUTPUT_USD_PER_MTOK = float(os.getenv("GEMINI_OUTPUT_USD_PER_MTOK", "0.30"))
+
+_MAX_RETRIES = int(os.getenv("GEMINI_MAX_RETRIES", "3"))
+_BASE_DELAY = float(os.getenv("GEMINI_RETRY_BASE_DELAY", "2.0"))
+
+logger = logging.getLogger(__name__)
+
+
 class GeminiProvider(LLMProvider):
     name = "gemini"
 
@@ -25,37 +34,52 @@ class GeminiProvider(LLMProvider):
                 "GEMINI_API_KEY is not set. Set it in env or .env file."
             )
         genai.configure(api_key=api_key)
-        self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
+        self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
         self.name = self.model_name
         self._model = genai.GenerativeModel(self.model_name)
 
     def _call_gemini(self, prompt: str) -> tuple[str, ExtractionUsage]:
         usage = ExtractionUsage()
         t0 = time.perf_counter()
-        try:
-            resp = self._model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(
-                    temperature=0,
-                    response_mime_type="application/json",
-                ),
-            )
-        except Exception as e:
-            raise ExtractionError(f"Gemini API error: {e}") from e
-        finally:
-            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
-
-        raw_text = getattr(resp, "text", "") or ""
-        meta = getattr(resp, "usage_metadata", None)
-        if meta is not None:
-            usage.input_tokens = getattr(meta, "prompt_token_count", 0) or 0
-            usage.output_tokens = getattr(meta, "candidates_token_count", 0) or 0
-            usage.cost_usd = self.estimate_cost_usd(
-                usage.input_tokens, usage.output_tokens
-            )
-        usage.raw_response = raw_text
-        self.last_usage = usage
-        return raw_text, usage
+        last_exc: Exception | None = None
+        for attempt in range(_MAX_RETRIES):
+            try:
+                resp = self._model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=0,
+                        response_mime_type="application/json",
+                    ),
+                )
+                usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+                raw_text = getattr(resp, "text", "") or ""
+                meta = getattr(resp, "usage_metadata", None)
+                if meta is not None:
+                    usage.input_tokens = getattr(meta, "prompt_token_count", 0) or 0
+                    usage.output_tokens = getattr(meta, "candidates_token_count", 0) or 0
+                    usage.cost_usd = self.estimate_cost_usd(
+                        usage.input_tokens, usage.output_tokens
+                    )
+                usage.raw_response = raw_text
+                self.last_usage = usage
+                return raw_text, usage
+            except google_exceptions.ResourceExhausted as e:
+                last_exc = e
+                delay = _BASE_DELAY * (2 ** attempt)
+                logger.warning(
+                    "Gemini quota exceeded (attempt %d/%d), retrying in %.0fs: %s",
+                    attempt + 1, _MAX_RETRIES, delay,
+                    e.message[:200] if hasattr(e, "message") else str(e)[:200],
+                )
+                time.sleep(delay)
+            except Exception as e:
+                raise ExtractionError(f"Gemini API error: {e}") from e
+        msg = str(last_exc) if last_exc else "unknown error"
+        raise ExtractionError(
+            f"Gemini API quota exhausted after {_MAX_RETRIES} retries. "
+            f"Try a different model/provider or upgrade your API plan. "
+            f"Detail: {msg[:300]}"
+        ) from last_exc
 
     def extract_features(
         self,
@@ -72,22 +96,43 @@ class GeminiProvider(LLMProvider):
         chunk_text: str,
         indicators: list[tuple[str, dict[str, dict[str, str]]]],
     ) -> dict[str, dict[str, Any]]:
-        import concurrent.futures
-        batch: dict[str, dict[str, Any]] = {}
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
-            fut = {
-                pool.submit(self.extract_features, chunk_text, ind_id, spec): ind_id
-                for ind_id, spec in indicators
-            }
-            for f in concurrent.futures.as_completed(fut):
-                ind_id = fut[f]
-                try:
-                    data = f.result()
-                    if isinstance(data, dict):
-                        batch[ind_id] = data
-                except ExtractionError:
-                    pass
-        return batch
+        from .base import LLMProvider as _Base
+        prompt = _Base.build_batch_prompt(chunk_text, indicators)
+        raw_text, _ = self._call_gemini(prompt)
+        raw = self.parse_json_response(raw_text)
+        result: dict[str, dict[str, Any]] = {}
+        for indicator_id, feature_spec in indicators:
+            extracted = raw.get(indicator_id)
+            if extracted and isinstance(extracted, dict):
+                result[indicator_id] = extracted
+            else:
+                defaults: dict[str, Any] = {"verbatim_quote": ""}
+                for fname, fmeta in feature_spec.items():
+                    ftype = fmeta.get("type", "bool")
+                    if ftype == "bool":
+                        defaults[fname] = False
+                    elif ftype == "float":
+                        defaults[fname] = 0.0
+                    else:
+                        defaults[fname] = ""
+                result[indicator_id] = defaults
+        return result
+
+    def query(self, prompt: str, system: str = "") -> str:
+        """Free-form text completion — used by the RAG query endpoint."""
+        full_prompt = f"{system}\n\n{prompt}" if system else prompt
+        usage = ExtractionUsage()
+        t0 = time.perf_counter()
+        try:
+            resp = self._model.generate_content(full_prompt, generation_config=genai.types.GenerationConfig(temperature=0))
+        except Exception as e:
+            raise ExtractionError(f"Gemini API error: {e}") from e
+        finally:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+        raw_text = getattr(resp, "text", "") or ""
+        usage.raw_response = raw_text
+        self.last_usage = usage
+        return raw_text
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         return (

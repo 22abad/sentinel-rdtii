@@ -24,7 +24,8 @@ pytesseract>=0.3.13
 opencv-python-headless>=4.9.0
 
 # LLM providers (swappable)
-google-genai                 # gemini (replaces deprecated google-generativeai)
+google-genai                 # gemini (new SDK, provides google.genai)
+google-generativeai          # gemini (old SDK, provides google.generativeai — gemini.py uses this)
 anthropic>=0.40.0            # claude
 openai>=1.40.0               # openai + deepseek/groq/together/openrouter/mistral via base_url
 # llama-cpp-python>=0.3.0    # uncomment for local Llama 3 (needs build tools)

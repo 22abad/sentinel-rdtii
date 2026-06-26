@@ -333,27 +333,49 @@ def ollama_models():
         return {"models": [], "error": str(exc)}
 
 
-_VERTEX_MODELS = [
-    "gemini-3.5-flash-preview",
-    "gemini-3.5-flash",
-    "gemini-3.1-pro-preview",
-    "gemini-3.1-pro",
-    "gemini-3-flash-preview",
-    "gemini-3-flash",
-    "gemini-3-pro-preview",
-    "gemini-3-pro",
+_GEMINI_KNOWN_MODELS = [
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite",
     "gemini-2.5-flash",
     "gemini-2.5-pro",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-pro",
+    "gemini-3-flash-preview",
+    "gemini-3.5-flash",
+    "gemini-3.1-flash-lite",
+    "gemini-3.1-pro-preview",
 ]
 
 
-@app.get("/providers/vertex-models")
-def vertex_models():
-    """List supported Vertex AI Gemini models."""
-    return {"models": _VERTEX_MODELS, "error": None}
+@app.get("/providers/gemini-models")
+def gemini_models():
+    """List models available via the Gemini API.
+
+    Returns known models merged with live discovery from the Gemini SDK.
+    Falls back to known list when the SDK or API key is unavailable.
+    """
+    discovered = []
+    try:
+        import google.generativeai as genai
+
+        api_key = os.getenv("GEMINI_API_KEY")
+        if api_key:
+            genai.configure(api_key=api_key)
+            for m in genai.list_models():
+                name = m.name.replace("models/", "", 1)
+                if "flash" in name.lower() or "pro" in name.lower():
+                    discovered.append(name)
+    except Exception:
+        pass
+
+    merged = list(dict.fromkeys(_GEMINI_KNOWN_MODELS + discovered))
+    return {"models": sorted(merged), "error": None, "discovered": len(discovered) > 0}
+
+
+@app.get("/providers/deepseek-models")
+def deepseek_models():
+    """List known DeepSeek models (no live API for model listing)."""
+    return {"models": ["deepseek-chat", "deepseek-reasoner"], "error": None}
+
+
 
 
 @app.post("/embed")

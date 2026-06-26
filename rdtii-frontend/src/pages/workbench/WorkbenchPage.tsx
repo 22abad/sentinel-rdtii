@@ -38,10 +38,7 @@ export function WorkbenchPage() {
     showRejected, setShowRejected,
     availableProviders,
     selectedProvider, setSelectedProvider,
-    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
-    vertexModels,
-    selectedGeminiModel, setSelectedGeminiModel,
-    selectedDeepSeekModel, setSelectedDeepSeekModel,
+    providerModels, selectedModels, setSelectedModels,
     foundPdfs,
     extract,
     selectMapping,
@@ -107,14 +104,9 @@ export function WorkbenchPage() {
                 availableProviders={availableProviders}
                 selectedProvider={selectedProvider}
                 setSelectedProvider={setSelectedProvider}
-                ollamaModels={ollamaModels}
-                selectedOllamaModel={selectedOllamaModel}
-                setSelectedOllamaModel={setSelectedOllamaModel}
-                vertexModels={vertexModels}
-                selectedGeminiModel={selectedGeminiModel}
-                setSelectedGeminiModel={setSelectedGeminiModel}
-                selectedDeepSeekModel={selectedDeepSeekModel}
-                setSelectedDeepSeekModel={setSelectedDeepSeekModel}
+                providerModels={providerModels}
+                selectedModels={selectedModels}
+                setSelectedModels={setSelectedModels}
                 onClose={() => setSidebarOpen(false)}
               />
             </motion.div>

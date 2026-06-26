@@ -139,9 +139,24 @@ class OpenAICompatibleProvider(LLMProvider):
         raw = self._call_llm(prompt, max_tokens=8192)
         # raw is {"6.1": {...}, "6.4": {...}, ...}
         result: dict[str, dict[str, Any]] = {}
-        for indicator_id, _spec in indicators:
-            if indicator_id in raw:
-                result[indicator_id] = raw[indicator_id]
+        for indicator_id, feature_spec in indicators:
+            extracted = raw.get(indicator_id)
+            if extracted and isinstance(extracted, dict):
+                result[indicator_id] = extracted
+            else:
+                # LLM omitted this indicator (e.g. returned {} for irrelevant text).
+                # Fill defaults so downstream validation can handle it gracefully
+                # instead of opaque "missing indicator in batch response".
+                defaults: dict[str, Any] = {"verbatim_quote": ""}
+                for fname, fmeta in feature_spec.items():
+                    ftype = fmeta.get("type", "bool")
+                    if ftype == "bool":
+                        defaults[fname] = False
+                    elif ftype == "float":
+                        defaults[fname] = 0.0
+                    else:
+                        defaults[fname] = ""
+                result[indicator_id] = defaults
         return result
 
     def _call_llm(self, prompt: str, max_tokens: int = 4096) -> dict[str, Any]:
