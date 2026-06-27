@@ -842,3 +842,58 @@ def test_stream_extract_rejects_crawled_website_error_page(monkeypatch):
     assert response.status_code == 200
     assert "event: error" in response.text
     assert "website error page" in response.text
+
+
+def test_null_optional_text_fields_do_not_crash_extraction(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    source = "Article 1. Personal data shall not be transferred abroad."
+    quote = "Personal data shall not be transferred abroad"
+    response = {
+        "verbatim_quote": quote,
+        "personal_data": True,
+        "has_ban": True,
+        "scope": "horizontal",
+        "source_legislation": None,
+        "last_update": None,
+        "source_url": None,
+        "coverage": None,
+        "cluster": None,
+        "name": None,
+        "policy_description": None,
+    }
+
+    _patch_provider(monkeypatch, response)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    result = client.post("/api/extract", data={"text": source})
+
+    assert result.status_code == 200
+    mapping = result.json()["mappings"][0]
+    assert isinstance(mapping["coverage"], str)
+    assert mapping["cluster"] == ""
+    assert mapping["name"] == ""
+    assert mapping["policy_description"] == ""
+
+
+def test_stream_pdf_parse_error_returns_sse_error(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    async def fake_fetch(url):
+        return {"type": "pdf", "pdf_path": "/tmp/missing.pdf"}
+
+    def fake_read_pdf(path):
+        raise RuntimeError("cannot parse pdf")
+
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+    monkeypatch.setattr("pdf_reader.read_pdf", fake_read_pdf)
+
+    client = TestClient(main_module.app)
+    response = client.post("/api/extract/stream", data={"source_url": "https://example.test/law.pdf"})
+
+    assert response.status_code == 200
+    assert "event: error" in response.text
+    assert "PDF parsing failed: cannot parse pdf" in response.text
