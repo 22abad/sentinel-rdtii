@@ -141,13 +141,15 @@ class MASOrchestrator:
 
                     # Post-processing / cleaning metadata
                     source_url_val = data.get("source_url", "")
-                    last_update_val = data.get("last_update", "")
+                    source_legislation_val = data.get("source_legislation") or ""
+                    source_url_val = source_url_val or ""
+                    last_update_val = data.get("last_update") or ""
                     raw_scope = (data.get("scope") or "").strip().lower()
                     scope_value = raw_scope if raw_scope in {"horizontal", "sectoral"} else "unknown"
 
                     # Source grade audit
                     src_grade, src_requires_review, src_reasons = self.critic.audit_source(
-                        source_url_val, data.get("source_legislation", "")
+                        source_url_val, source_legislation_val
                     )
                     features["_source_grade"] = src_grade
 
@@ -155,7 +157,7 @@ class MASOrchestrator:
                     if scope_value == "unknown":
                         cc = main_module.classify_coverage(
                             provision_text=quote,
-                            source_legislation=data.get("source_legislation", ""),
+                            source_legislation=source_legislation_val,
                             indicator_id=ind_id,
                         )
                         scope_value = cc["scope"]
@@ -164,7 +166,7 @@ class MASOrchestrator:
                     # Timeframe extraction
                     tf = main_module.extract_timeframe(
                         text=chunk.text,
-                        source_legislation=data.get("source_legislation", ""),
+                        source_legislation=source_legislation_val,
                         source_url=source_url_val,
                     )
                     tf_column = main_module.build_timeframe_column(
@@ -192,7 +194,7 @@ class MASOrchestrator:
                         last_update=last_update_val,
                         timeframe_status=tf["status"],
                         source_url=source_url_val,
-                        source_legislation=data.get("source_legislation", ""),
+                        source_legislation=source_legislation_val,
                     )
                     features["_staleness_reasons"] = "; ".join(stale["staleness_reasons"])
                     features["_staleness_severity"] = stale["stale_severity"]
@@ -208,15 +210,15 @@ class MASOrchestrator:
                         verbatim_quote=quote,
                         quote_start=chunk.start + local_start,
                         quote_end=chunk.start + local_end,
-                        source_legislation=data.get("source_legislation", ""),
+                        source_legislation=source_legislation_val,
                         last_update=ts_verification.get("best_date") or last_update_val,
                         source_url=source_url_val,
                         scope=scope_value,
-                        coverage=data.get("coverage", ""),
+                        coverage=data.get("coverage") or "",
                         cov_name="Cross-cutting" if scope_value == "horizontal" else "Sectoral",
-                        cluster=data.get("cluster", ""),
-                        name=data.get("name", ""),
-                        policy_description=data.get("policy_description", ""),
+                        cluster=data.get("cluster") or "",
+                        name=data.get("name") or "",
+                        policy_description=data.get("policy_description") or "",
                         features=features,
                         impact=impact_comments_val,
                         requires_human_review=src_requires_review,
