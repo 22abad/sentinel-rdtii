@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import urllib.request
 from pathlib import Path
 
 from browser_drivers import BrowserFetchError, OpenCliBrowserDriver
@@ -178,4 +177,3 @@ async def _try_opencli_fetch(url: str, timeout: int) -> dict | None:
     except BrowserFetchError as e:
         print(f"[OpenCLI] 不可用或提取失败: {e}")
         return None
-

@@ -9,6 +9,9 @@ from legal_crawler import wayback as _wayback
 from legal_crawler.constants import DOWNLOADS_DIR, INVALID_URL_PATTERNS, KNOWN_ALTERNATIVES
 
 async_playwright = _browser.async_playwright
+_ORIGINAL_FETCH_WAYBACK_CLOSEST = _wayback.fetch_wayback_closest
+_ORIGINAL_FETCH_WAYBACK_CONTENT = _wayback.fetch_wayback_content
+_ORIGINAL_FETCH_GOOGLE_CACHE = _wayback.fetch_google_cache
 
 _apply_stealth = _browser._apply_stealth
 _initialize_browser_context = _browser._initialize_browser_context
@@ -22,9 +25,9 @@ _try_http_fallback = _fallbacks._try_http_fallback
 _try_wayback_fallback = _fallbacks._try_wayback_fallback
 _try_opencli_fetch = _fallbacks._try_opencli_fetch
 
-fetch_wayback_closest = _wayback.fetch_wayback_closest
-fetch_wayback_content = _wayback.fetch_wayback_content
-fetch_google_cache = _wayback.fetch_google_cache
+
+def _patched_or_original(current, facade, original):
+    return original if current is facade else current
 
 
 def _sync_patch_points() -> None:
@@ -45,15 +48,27 @@ def _sync_patch_points() -> None:
 
     _wayback._apply_stealth = _apply_stealth
     _wayback._initialize_browser_context = _initialize_browser_context
-    _wayback.fetch_wayback_closest = fetch_wayback_closest
+    _wayback.fetch_wayback_closest = _patched_or_original(
+        fetch_wayback_closest,
+        _fetch_wayback_closest_facade,
+        _ORIGINAL_FETCH_WAYBACK_CLOSEST,
+    )
 
-    _timeline.fetch_wayback_closest = fetch_wayback_closest
+    _timeline.fetch_wayback_closest = _patched_or_original(
+        fetch_wayback_closest,
+        _fetch_wayback_closest_facade,
+        _ORIGINAL_FETCH_WAYBACK_CLOSEST,
+    )
 
     _fallbacks._precheck_url = _precheck_url
     _fallbacks._try_http_fallback = _try_http_fallback
     _fallbacks._try_wayback_fallback = _try_wayback_fallback
     _fallbacks._try_opencli_fetch = _try_opencli_fetch
-    _fallbacks.fetch_wayback_content = fetch_wayback_content
+    _fallbacks.fetch_wayback_content = _patched_or_original(
+        fetch_wayback_content,
+        _fetch_wayback_content_facade,
+        _ORIGINAL_FETCH_WAYBACK_CONTENT,
+    )
 
     _fetcher._apply_stealth = _apply_stealth
     _fetcher._initialize_browser_context = _initialize_browser_context
@@ -66,8 +81,16 @@ def _sync_patch_points() -> None:
     _fetcher._try_wayback_fallback = _try_wayback_fallback
     _fetcher._try_opencli_fetch = _try_opencli_fetch
     _fetcher.fetch_thai_law_by_keyword = fetch_thai_law_by_keyword
-    _fetcher.fetch_wayback_content = fetch_wayback_content
-    _fetcher.fetch_google_cache = fetch_google_cache
+    _fetcher.fetch_wayback_content = _patched_or_original(
+        fetch_wayback_content,
+        _fetch_wayback_content_facade,
+        _ORIGINAL_FETCH_WAYBACK_CONTENT,
+    )
+    _fetcher.fetch_google_cache = _patched_or_original(
+        fetch_google_cache,
+        _fetch_google_cache_facade,
+        _ORIGINAL_FETCH_GOOGLE_CACHE,
+    )
 
 
 async def search_ocs_law(*args, **kwargs):
@@ -83,6 +106,26 @@ async def fetch_ocs_law_document(*args, **kwargs):
 async def fetch_thai_law_by_keyword(*args, **kwargs):
     _sync_patch_points()
     return await _ocs.fetch_thai_law_by_keyword(*args, **kwargs)
+
+
+async def fetch_wayback_closest(*args, **kwargs):
+    _sync_patch_points()
+    return await _ORIGINAL_FETCH_WAYBACK_CLOSEST(*args, **kwargs)
+
+
+async def fetch_wayback_content(*args, **kwargs):
+    _sync_patch_points()
+    return await _ORIGINAL_FETCH_WAYBACK_CONTENT(*args, **kwargs)
+
+
+async def fetch_google_cache(*args, **kwargs):
+    _sync_patch_points()
+    return await _ORIGINAL_FETCH_GOOGLE_CACHE(*args, **kwargs)
+
+
+_fetch_wayback_closest_facade = fetch_wayback_closest
+_fetch_wayback_content_facade = fetch_wayback_content
+_fetch_google_cache_facade = fetch_google_cache
 
 
 async def verify_law_timeline(*args, **kwargs):
