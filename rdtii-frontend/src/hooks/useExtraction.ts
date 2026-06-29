@@ -1,8 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { INGEST_API_URL, REVIEW_API_URL, STREAM_API_URL, sampleText } from "../lib/constants";
+import { INGEST_API_URL, REVIEW_API_URL, sampleText } from "../lib/constants";
 import { getStoredToken } from "./useAuth";
 import { t } from "../lib/i18n";
 import { mappingKey } from "../lib/utils";
+import {
+  formatWorkflowErrorPayload,
+  streamExtractMappingsNode,
+  type NodeResult,
+  type WorkflowRunEvent,
+} from "../services/workflowNodes";
 import type {
   ExtractionResponse,
   IndicatorMapping,
@@ -41,6 +47,14 @@ function normalizeDeepSeekModel(value: string | null) {
     ? value!
     : DEFAULT_DEEPSEEK_MODEL;
 }
+
+type ExtractionStreamPayload =
+  | Record<string, unknown>
+  | IndicatorMapping
+  | RejectedExtraction
+  | NodeResult<ExtractionResponse>
+  | string
+  | null;
 
 export function useExtraction() {
   const [country, setCountry] = useState("CHN");
@@ -215,11 +229,6 @@ export function useExtraction() {
     updateTextFromSource?: boolean;
     setReadyOnDone?: boolean;
   }): Promise<ExtractionResponse> {
-    const form = new FormData();
-    form.append("text", requestText);
-    if (runSourceUrl) form.append("source_url", runSourceUrl);
-    form.append("browser_mode", "auto");
-    
     // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
     let actualProvider = selectedProvider;
     let actualModel = "";
@@ -234,116 +243,117 @@ export function useExtraction() {
       actualModel = selectedDeepSeekModel;
     }
 
-    form.append("provider", actualProvider);
-    if (actualModel) {
-      form.append("model", actualModel);
-    }
+    const collectedMappings: IndicatorMapping[] = [...baseMappings];
+    const collectedRejected: RejectedExtraction[] = [...baseRejected];
+    const newMappings: IndicatorMapping[] = [];
+    const newRejected: RejectedExtraction[] = [];
+    let sourceText = "";
+    let providerName = "";
 
-    try {
-      const res = await fetch(STREAM_API_URL, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${getStoredToken()}` },
-        body: form,
-      });
+    for await (const event of streamExtractMappingsNode({
+      text: runSourceUrl ? "" : requestText,
+      sourceUrl: runSourceUrl,
+      provider: actualProvider,
+      model: actualModel || undefined,
+      browserMode: "auto",
+    }) as AsyncIterable<WorkflowRunEvent<ExtractionStreamPayload>>) {
+      const payload = event.payload;
 
-      if (!res.ok || !res.body) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.detail || t("error.extractionFailedStatus", { status: res.status }));
+      if (event.event === "error" || event.status === "failed") {
+        throw new Error(extractionStreamError(payload));
       }
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = "";
-      let currentEvent = "";
-      const collectedMappings: IndicatorMapping[] = [...baseMappings];
-      const collectedRejected: RejectedExtraction[] = [...baseRejected];
-      const newMappings: IndicatorMapping[] = [];
-      const newRejected: RejectedExtraction[] = [];
-      let sourceText = "";
+      if (event.event === "warning" && isRecord(payload)) {
+        const data = payload as Record<string, unknown>;
+        setWarning(String(data.message ?? ""));
+      }
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      if (event.event === "progress" && isRecord(payload)) {
+        const data = payload as Record<string, unknown>;
+        setExtractionProgress({
+          current: Number(data.current ?? 0),
+          total: Number(data.total ?? 0),
+          phase: String(data.phase ?? ""),
+        });
+      }
 
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split("\n");
-        buf = lines.pop() ?? "";
-
-        for (const line of lines) {
-          if (line.startsWith("event: ")) {
-            currentEvent = line.slice(7).trim();
-          } else if (line.startsWith("data: ")) {
-            const payload = JSON.parse(line.slice(6));
-
-            if (currentEvent === "error") {
-              throw new Error(payload.detail ?? t("error.stream"));
-            }
-
-            if (currentEvent === "warning") {
-              setWarning(payload.message ?? "");
-            }
-
-            if (currentEvent === "found_pdfs") {
-              setFoundPdfs(payload.urls ?? []);
-            }
-
-            if (currentEvent === "progress") {
-              setExtractionProgress({
-                current: Number(payload.current ?? 0),
-                total: Number(payload.total ?? 0),
-                phase: String(payload.phase ?? ""),
-              });
-            }
-
-            if (currentEvent === "started") {
-              if (payload.source_text) {
-                sourceText = payload.source_text;
-                if (updateTextFromSource) setText(payload.source_text);
-              }
-            }
-
-            if (currentEvent === "mapping") {
-              const m = _fixMapping(payload as IndicatorMapping, runSourceUrl);
-              newMappings.push(m);
-              collectedMappings.push(m);
-              // Progressive render — derive state from local arrays, never from prev
-              // (avoids stale-closure bleed when setResponse(null) hasn't flushed yet)
-              setResponse({
-                mappings: [...collectedMappings],
-                rejected: [...collectedRejected],
-                provider: "",
-                source_text: sourceText,
-              });
-            }
-
-            if (currentEvent === "rejected") {
-              const rejectedItem = payload as RejectedExtraction;
-              newRejected.push(rejectedItem);
-              collectedRejected.push(rejectedItem);
-              setResponse({
-                mappings: [...collectedMappings],
-                rejected: [...collectedRejected],
-                provider: "",
-                source_text: sourceText,
-              });
-            }
-
-            if (currentEvent === "done") {
-              if (setReadyOnDone) setStatus("ready");
-            }
-          }
+      if (event.event === "started" && isRecord(payload)) {
+        const data = payload as Record<string, unknown>;
+        const nextSourceText = typeof data.source_text === "string" ? data.source_text : "";
+        if (nextSourceText) {
+          sourceText = nextSourceText;
+          if (updateTextFromSource) setText(nextSourceText);
         }
       }
 
-      return {
-        mappings: newMappings,
-        rejected: newRejected,
-        provider: "",
-        source_text: sourceText,
-      };
-    } catch (err) {
-      throw err;
+      if (event.event === "mapping" && isRecord(payload)) {
+        const m = _fixMapping(payload as IndicatorMapping, runSourceUrl);
+        newMappings.push(m);
+        collectedMappings.push(m);
+        // Progressive render — derive state from local arrays, never from prev
+        // (avoids stale-closure bleed when setResponse(null) hasn't flushed yet)
+        setResponse({
+          mappings: [...collectedMappings],
+          rejected: [...collectedRejected],
+          provider: providerName,
+          source_text: sourceText,
+        });
+      }
+
+      if (event.event === "rejected" && isRecord(payload)) {
+        const rejectedItem = payload as RejectedExtraction;
+        newRejected.push(rejectedItem);
+        collectedRejected.push(rejectedItem);
+        setResponse({
+          mappings: [...collectedMappings],
+          rejected: [...collectedRejected],
+          provider: providerName,
+          source_text: sourceText,
+        });
+      }
+
+      if (event.event === "done" && isRecord(payload)) {
+        const data = payload as Record<string, unknown>;
+        providerName = String(data.provider ?? providerName);
+        if (setReadyOnDone) setStatus("ready");
+      }
+
+      if (event.event === "node_output" && isNodeResult(payload)) {
+        if (payload.status !== "success") {
+          throw new Error(payload.error || t("error.stream"));
+        }
+        providerName = String(payload.outputs.provider ?? providerName);
+        sourceText = String(payload.outputs.source_text ?? sourceText);
+        setResponse({
+          mappings: [...collectedMappings],
+          rejected: [...collectedRejected],
+          provider: providerName,
+          source_text: sourceText,
+        });
+      }
     }
+
+    return {
+      mappings: newMappings,
+      rejected: newRejected,
+      provider: providerName,
+      source_text: sourceText,
+    };
+  }
+
+  function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null;
+  }
+
+  function isNodeResult(value: unknown): value is NodeResult<ExtractionResponse> {
+    return isRecord(value) && typeof value.status === "string" && isRecord(value.outputs);
+  }
+
+  function extractionStreamError(payload: unknown): string {
+    if (isNodeResult(payload)) {
+      return payload.error || t("error.stream");
+    }
+    return formatWorkflowErrorPayload(payload, t("error.stream"));
   }
 
   async function extract(nextSourceUrl?: string) {
@@ -395,6 +405,7 @@ export function useExtraction() {
 
     let accumulatedMappings: IndicatorMapping[] = [];
     let accumulatedRejected: RejectedExtraction[] = [];
+    let accumulatedProvider = "";
     const failedUrls: string[] = [];
 
     for (const [index, url] of uniqueUrls.entries()) {
@@ -413,6 +424,7 @@ export function useExtraction() {
         });
         accumulatedMappings = [...accumulatedMappings, ...result.mappings];
         accumulatedRejected = [...accumulatedRejected, ...result.rejected];
+        accumulatedProvider = result.provider || accumulatedProvider;
       } catch (err) {
         const message = err instanceof Error ? err.message : t("error.extractionFailed");
         failedUrls.push(url);
@@ -426,7 +438,7 @@ export function useExtraction() {
         setResponse({
           mappings: accumulatedMappings,
           rejected: accumulatedRejected,
-          provider: "",
+          provider: accumulatedProvider,
           source_text: "",
         });
       }
@@ -435,7 +447,7 @@ export function useExtraction() {
     setResponse({
       mappings: accumulatedMappings,
       rejected: accumulatedRejected,
-      provider: "",
+      provider: accumulatedProvider,
       source_text: "",
     });
 
