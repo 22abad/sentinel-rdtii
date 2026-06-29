@@ -19,9 +19,10 @@ interface Props {
   urls: string[];
   onSelect?: (url: string) => void;
   loading?: boolean;
+  error?: string;
 }
 
-export function FoundPdfsPanel({ urls, onSelect, loading = false }: Props) {
+export function FoundPdfsPanel({ urls, onSelect, loading = false, error = "" }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   if (urls.length === 0) return null;
@@ -43,6 +44,11 @@ export function FoundPdfsPanel({ urls, onSelect, loading = false }: Props) {
       <p className="text-xs text-gray-400 px-1">
         {t("pdf.found", { count: n, plural: n !== 1 ? "s" : "" })}
       </p>
+      {error && (
+        <p className="text-xs text-red-500 px-1">
+          {error}
+        </p>
+      )}
 
       {/* Stacked cards */}
       <div style={{ position: "relative", height: containerH, transition: "height 0.35s cubic-bezier(0.4,0,0.2,1)" }}>

@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FETCH_TEXT_API_URL } from "../../lib/constants";
-import { getStoredToken } from "../../hooks/useAuth";
 import { AuditPanel } from "../../components/AuditPanel";
 import { DiscoveryPanel } from "../../components/Discovery/DiscoveryPanel";
 import { SourcePanel } from "../../components/SourcePanel";
@@ -13,6 +11,7 @@ import { Plus, Menu, X, Home, Map, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
 import { WorkbenchCanvas, type CanvasPanel } from "./WorkbenchCanvas";
+import { fetchSourceTextNode } from "../../services/workflowNodes";
 
 export function WorkbenchPage() {
   const navigate = useNavigate();
@@ -20,6 +19,7 @@ export function WorkbenchPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [fetchingPdf, setFetchingPdf] = useState(false);
+  const [fetchPdfError, setFetchPdfError] = useState("");
   const {
     country, setCountry,
     detectedCountry,
@@ -101,21 +101,18 @@ export function WorkbenchPage() {
       <FoundPdfsPanel
         urls={foundPdfs}
         loading={fetchingPdf}
+        error={fetchPdfError}
         onSelect={async (url) => {
           setFetchingPdf(true);
+          setFetchPdfError("");
           try {
-            const form = new FormData();
-            form.append("source_url", url);
-            const res = await fetch(FETCH_TEXT_API_URL, {
-              method: "POST",
-              headers: { Authorization: `Bearer ${getStoredToken()}` },
-              body: form,
-            });
-            const data = await res.json();
-            if (data.text) {
+            const fetchedDocument = await fetchSourceTextNode(url);
+            if (fetchedDocument.text) {
               setSourceUrl(url);
-              onTextChange({ target: { value: data.text } } as React.ChangeEvent<HTMLTextAreaElement>);
+              onTextChange({ target: { value: fetchedDocument.text } } as React.ChangeEvent<HTMLTextAreaElement>);
             }
+          } catch (err) {
+            setFetchPdfError(err instanceof Error ? err.message : "Failed to fetch PDF text.");
           } finally {
             setFetchingPdf(false);
           }
