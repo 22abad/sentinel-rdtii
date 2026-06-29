@@ -88,6 +88,24 @@ def test_workflow_discovery_node_validation_error_returns_422():
     assert response.status_code == 422
 
 
+def test_workflow_discovery_node_unknown_country_returns_404():
+    client = TestClient(main_module.app)
+
+    response = client.post(
+        "/api/workflows/nodes/discovery.search/run",
+        json={
+            "config": {
+                "country_code": "ZZZ",
+                "pillars": [6],
+                "browser_mode": "mock",
+            },
+        },
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "No discovery sources configured for ZZZ."
+
+
 def test_workflow_fetch_text_node_uses_document_fetch_helper(monkeypatch):
     from services.document_fetch import DocumentText
     from workflows.nodes import fetch_text as fetch_node
