@@ -12,6 +12,8 @@ import {
   type EdgeChange,
   type Connection,
   type XYPosition,
+  type ReactFlowInstance,
+  type Viewport,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {
@@ -23,6 +25,11 @@ import {
   type SpawnType,
   type PanelNodeData,
   type NoteNodeData,
+  type WorkbenchCanvasEdge,
+  type WorkbenchCanvasLayout,
+  type WorkbenchCanvasNode,
+  type WorkbenchCanvasNodeKind,
+  type WorkbenchCanvasViewport,
 } from "../../components/Canvas";
 import { AIChatInput } from "../../components/Workbench/ChatInput";
 
@@ -52,6 +59,287 @@ const INITIAL_EDGES: Edge[] = [
   { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" },
 ];
 
+const CANVAS_LAYOUT_STORAGE_KEY = "rdtii.workbench.canvas.v1";
+const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material"]);
+const PANEL_FALLBACKS: Record<string, { id: string; title: string; width?: number }> = {
+  discovery: { id: "discovery", title: "Discovery", width: 800 },
+  source: { id: "source", title: "Source", width: 460 },
+  foundPdfs: { id: "foundPdfs", title: "Found PDFs", width: 420 },
+  audit: { id: "audit", title: "Audit", width: 520 },
+};
+
+type CanvasNote = { id: string; title: string; text: string };
+type SpawnedPanel = { id: string; panelId: string };
+type PanelMeta = { id: string; title: string; width?: number };
+
+type RestoredCanvasState = {
+  positions: Record<string, XYPosition>;
+  removed: Record<string, boolean>;
+  edges: Edge[];
+  customNotes: CanvasNote[];
+  spawned: SpawnedPanel[];
+  chatIds: string[];
+  viewport?: Viewport;
+  noteCounter: number;
+  spawnCounter: number;
+  chatCounter: number;
+};
+
+function readSavedCanvasLayout(): WorkbenchCanvasLayout | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(CANVAS_LAYOUT_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<WorkbenchCanvasLayout>;
+    if (parsed.version !== 1 || !Array.isArray(parsed.nodes) || !Array.isArray(parsed.edges)) {
+      return null;
+    }
+    return {
+      version: 1,
+      nodes: parsed.nodes.map(normalizeSavedNode).filter((node): node is WorkbenchCanvasNode => !!node),
+      edges: parsed.edges.map(normalizeSavedEdge).filter((edge): edge is WorkbenchCanvasEdge => !!edge),
+      viewport: normalizeSavedViewport(parsed.viewport),
+      updatedAt: typeof parsed.updatedAt === "string" ? parsed.updatedAt : undefined,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function isCanvasPosition(value: unknown): value is XYPosition {
+  return isRecord(value) && isFiniteNumber(value.x) && isFiniteNumber(value.y);
+}
+
+function isCanvasNodeKind(value: unknown): value is WorkbenchCanvasNodeKind {
+  return typeof value === "string" && CANVAS_NODE_KINDS.has(value as WorkbenchCanvasNodeKind);
+}
+
+function normalizeSavedNode(value: unknown): WorkbenchCanvasNode | null {
+  if (!isRecord(value)) return null;
+  if (typeof value.id !== "string" || !value.id || !isCanvasNodeKind(value.kind) || !isCanvasPosition(value.position)) {
+    return null;
+  }
+  const node: WorkbenchCanvasNode = {
+    id: value.id,
+    kind: value.kind,
+    position: { x: value.position.x, y: value.position.y },
+  };
+  if (typeof value.panelId === "string") node.panelId = value.panelId;
+  if (typeof value.title === "string") node.title = value.title;
+  if (typeof value.text === "string") node.text = value.text;
+  if (isFiniteNumber(value.width)) node.width = value.width;
+  if (isFiniteNumber(value.height)) node.height = value.height;
+  if (typeof value.removed === "boolean") node.removed = value.removed;
+  if (isRecord(value.config)) node.config = value.config;
+  return node;
+}
+
+function normalizeSavedEdge(value: unknown): WorkbenchCanvasEdge | null {
+  if (!isRecord(value)) return null;
+  if (typeof value.id !== "string" || !value.id) return null;
+  if (typeof value.source !== "string" || !value.source) return null;
+  if (typeof value.target !== "string" || !value.target) return null;
+  return {
+    id: value.id,
+    source: value.source,
+    target: value.target,
+    kind: "visual",
+    label: typeof value.label === "string" ? value.label : undefined,
+    animated: typeof value.animated === "boolean" ? value.animated : undefined,
+  };
+}
+
+function normalizeSavedViewport(value: unknown): WorkbenchCanvasViewport | undefined {
+  if (!isRecord(value) || !isFiniteNumber(value.x) || !isFiniteNumber(value.y) || !isFiniteNumber(value.zoom)) {
+    return undefined;
+  }
+  return { x: value.x, y: value.y, zoom: value.zoom };
+}
+
+function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanvasState {
+  if (!layout) {
+    return {
+      positions: DEFAULT_POSITIONS,
+      removed: {},
+      edges: INITIAL_EDGES,
+      customNotes: [],
+      spawned: [],
+      chatIds: [],
+      noteCounter: 0,
+      spawnCounter: 0,
+      chatCounter: 0,
+    };
+  }
+
+  const positions: Record<string, XYPosition> = { ...DEFAULT_POSITIONS };
+  const removed: Record<string, boolean> = {};
+  const customNotes: CanvasNote[] = [];
+  const spawned: SpawnedPanel[] = [];
+  const chatIds: string[] = [];
+  let noteCounter = 0;
+  let spawnCounter = 0;
+  let chatCounter = 0;
+
+  for (const node of layout.nodes) {
+    positions[node.id] = node.position;
+    if (node.removed) removed[node.id] = true;
+
+    if (node.kind === "note") {
+      customNotes.push({ id: node.id, title: node.title ?? "", text: node.text ?? "" });
+      noteCounter = Math.max(noteCounter, numericSuffix(node.id, "note-"));
+    } else if (node.kind === "rag") {
+      chatIds.push(node.id);
+      chatCounter = Math.max(chatCounter, numericSuffix(node.id, "chat-"));
+    } else if (node.kind === "panel" && node.panelId && node.id !== node.panelId) {
+      spawned.push({ id: node.id, panelId: node.panelId });
+      spawnCounter = Math.max(spawnCounter, numericSuffix(node.id, `${node.panelId}-copy-`));
+    }
+  }
+
+  return {
+    positions,
+    removed,
+    edges: layout.edges.map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      animated: edge.animated,
+      label: edge.label,
+    })),
+    customNotes,
+    spawned,
+    chatIds,
+    viewport: layout.viewport,
+    noteCounter,
+    spawnCounter,
+    chatCounter,
+  };
+}
+
+function numericSuffix(id: string, prefix: string): number {
+  if (!id.startsWith(prefix)) return 0;
+  const suffix = id.slice(prefix.length);
+  if (!/^\d+$/.test(suffix)) return 0;
+  return Number(suffix);
+}
+
+function toCanvasLayout({
+  panelMeta,
+  positions,
+  removed,
+  edges,
+  customNotes,
+  spawned,
+  chatIds,
+  viewport,
+}: {
+  panelMeta: Record<string, PanelMeta>;
+  positions: Record<string, XYPosition>;
+  removed: Record<string, boolean>;
+  edges: Edge[];
+  customNotes: CanvasNote[];
+  spawned: SpawnedPanel[];
+  chatIds: string[];
+  viewport?: Viewport;
+}): WorkbenchCanvasLayout {
+  const nodes: WorkbenchCanvasNode[] = [];
+  const panelIds = new Set<string>([...Object.keys(PANEL_FALLBACKS), ...Object.keys(panelMeta)]);
+
+  for (const id of [...Object.keys(positions), ...Object.keys(removed)]) {
+    if (PANEL_FALLBACKS[id] || panelMeta[id]) panelIds.add(id);
+  }
+
+  for (const id of panelIds) {
+    const panel = panelMeta[id] ?? PANEL_FALLBACKS[id];
+    if (!panel) continue;
+    nodes.push({
+      id,
+      kind: "panel",
+      panelId: id,
+      title: panel.title,
+      position: positions[id] ?? DEFAULT_POSITIONS[id] ?? { x: 40, y: 40 },
+      width: panel.width,
+      removed: !!removed[id],
+    });
+  }
+
+  for (const item of spawned.filter((entry) => !removed[entry.id])) {
+    const source = panelMeta[item.panelId] ?? PANEL_FALLBACKS[item.panelId];
+    nodes.push({
+      id: item.id,
+      kind: "panel",
+      panelId: item.panelId,
+      title: source?.title,
+      position: positions[item.id] ?? { x: 160, y: 160 },
+      width: source?.width,
+      removed: !!removed[item.id],
+    });
+  }
+
+  for (const note of customNotes.filter((entry) => !removed[entry.id])) {
+    nodes.push({
+      id: note.id,
+      kind: "note",
+      title: note.title,
+      text: note.text,
+      position: positions[note.id] ?? { x: 120, y: 120 },
+      width: 240,
+      removed: !!removed[note.id],
+    });
+  }
+
+  for (const id of chatIds.filter((entry) => !removed[entry])) {
+    nodes.push({
+      id,
+      kind: "rag",
+      title: "RAG Chat",
+      position: positions[id] ?? { x: 200, y: 200 },
+      width: 460,
+      removed: !!removed[id],
+    });
+  }
+
+  const activeNodeIds = new Set(nodes.filter((node) => !node.removed).map((node) => node.id));
+
+  return {
+    version: 1,
+    nodes,
+    edges: edges
+      .filter((edge) => activeNodeIds.has(edge.source) && activeNodeIds.has(edge.target))
+      .map((edge) => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        kind: "visual",
+        label: typeof edge.label === "string" ? edge.label : undefined,
+        animated: edge.animated,
+      })),
+    viewport: viewport ? toCanvasViewport(viewport) : undefined,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+function saveCanvasLayout(layout: WorkbenchCanvasLayout) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CANVAS_LAYOUT_STORAGE_KEY, JSON.stringify(layout));
+  } catch {
+    // Persistence is best-effort; the workbench remains usable if storage is full or blocked.
+  }
+}
+
+function toCanvasViewport(viewport: Viewport): WorkbenchCanvasViewport {
+  return { x: viewport.x, y: viewport.y, zoom: viewport.zoom };
+}
+
 export function WorkbenchCanvas({
   panels,
   onExit,
@@ -59,17 +347,20 @@ export function WorkbenchCanvas({
   panels: CanvasPanel[];
   onExit: () => void;
 }) {
-  const [positions, setPositions] = useState<Record<string, XYPosition>>(DEFAULT_POSITIONS);
-  const [removed, setRemoved] = useState<Record<string, boolean>>({});
-  const [edges, setEdges] = useState<Edge[]>(INITIAL_EDGES);
-  const [customNotes, setCustomNotes] = useState<{ id: string; title: string; text: string }[]>([]);
-  const [spawned, setSpawned] = useState<{ id: string; panelId: string }[]>([]);
-  const [chatIds, setChatIds] = useState<string[]>([]);
+  const restoredState = useMemo(() => restoreCanvasState(readSavedCanvasLayout()), []);
+  const flowRef = useRef<ReactFlowInstance | null>(null);
+  const [positions, setPositions] = useState<Record<string, XYPosition>>(restoredState.positions);
+  const [removed, setRemoved] = useState<Record<string, boolean>>(restoredState.removed);
+  const [edges, setEdges] = useState<Edge[]>(restoredState.edges);
+  const [customNotes, setCustomNotes] = useState<CanvasNote[]>(restoredState.customNotes);
+  const [spawned, setSpawned] = useState<SpawnedPanel[]>(restoredState.spawned);
+  const [chatIds, setChatIds] = useState<string[]>(restoredState.chatIds);
+  const [viewport, setViewport] = useState<Viewport | undefined>(restoredState.viewport);
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [mode, setMode] = useState<CanvasMode>("select");
-  const noteCounter = useRef(0);
-  const spawnCounter = useRef(0);
-  const chatCounter = useRef(0);
+  const noteCounter = useRef(restoredState.noteCounter);
+  const spawnCounter = useRef(restoredState.spawnCounter);
+  const chatCounter = useRef(restoredState.chatCounter);
 
   // FigJam-style V / H tool shortcuts (ignored while typing in a field).
   useEffect(() => {
@@ -87,6 +378,33 @@ export function WorkbenchCanvas({
     () => Object.fromEntries(panels.map((p) => [p.id, p])),
     [panels],
   );
+  const panelMeta = useMemo(
+    () => Object.fromEntries(panels.map((p) => [p.id, { id: p.id, title: p.title, width: p.width }])),
+    [panels],
+  );
+  const panelMetaRef = useRef<Record<string, PanelMeta>>(panelMeta);
+
+  useEffect(() => {
+    panelMetaRef.current = panelMeta;
+  }, [panelMeta]);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      saveCanvasLayout(
+        toCanvasLayout({
+          panelMeta: panelMetaRef.current,
+          positions,
+          removed,
+          edges,
+          customNotes,
+          spawned,
+          chatIds,
+          viewport,
+        }),
+      );
+    }, 250);
+    return () => window.clearTimeout(timeout);
+  }, [positions, removed, edges, customNotes, spawned, chatIds, viewport]);
 
   const spawnPanel = useCallback((panelId: string, position: XYPosition) => {
     const n = (spawnCounter.current += 1);
@@ -114,6 +432,37 @@ export function WorkbenchCanvas({
     setPositions((p) => ({ ...p, [id]: position }));
   }, []);
 
+  const removeNode = useCallback((id: string) => {
+    const persistentPanel = !!(PANEL_FALLBACKS[id] || panelMetaRef.current[id]);
+    setEdges((prev) => prev.filter((edge) => edge.source !== id && edge.target !== id));
+    setSelectedIds((prev) => {
+      if (!prev[id]) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+
+    if (persistentPanel) {
+      setRemoved((prev) => ({ ...prev, [id]: true }));
+      return;
+    }
+
+    setCustomNotes((prev) => prev.filter((note) => note.id !== id));
+    setSpawned((prev) => prev.filter((item) => item.id !== id));
+    setChatIds((prev) => prev.filter((chatId) => chatId !== id));
+    setPositions((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setRemoved((prev) => {
+      if (!prev[id]) return prev;
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }, []);
+
   const nodes = useMemo<Node[]>(
     () =>
       [
@@ -127,7 +476,7 @@ export function WorkbenchCanvas({
               title: p.title,
               element: p.element,
               width: p.width,
-              onDelete: () => setRemoved((r) => ({ ...r, [p.id]: true })),
+              onDelete: () => removeNode(p.id),
             } satisfies PanelNodeData,
           })),
         ...spawned
@@ -142,7 +491,7 @@ export function WorkbenchCanvas({
                 title: src.title,
                 element: src.element,
                 width: src.width,
-                onDelete: () => setRemoved((r) => ({ ...r, [s.id]: true })),
+                onDelete: () => removeNode(s.id),
               } satisfies PanelNodeData,
             };
           }),
@@ -156,7 +505,7 @@ export function WorkbenchCanvas({
               title: n.title,
               text: n.text,
               onChange: (patch: Partial<{ title: string; text: string }>) => updateNote(n.id, patch),
-              onDelete: () => setRemoved((r) => ({ ...r, [n.id]: true })),
+              onDelete: () => removeNode(n.id),
             } satisfies NoteNodeData,
           })),
         ...chatIds
@@ -170,12 +519,17 @@ export function WorkbenchCanvas({
               element: <AIChatInput />,
               width: 460,
               transparent: true,
-              onDelete: () => setRemoved((r) => ({ ...r, [id]: true })),
+              onDelete: () => removeNode(id),
             } satisfies PanelNodeData,
           })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, positions, removed, updateNote, selectedIds],
+    [panels, spawned, panelById, customNotes, chatIds, positions, removed, updateNote, removeNode, selectedIds],
   );
+
+  const renderedEdges = useMemo(() => {
+    const visibleNodeIds = new Set(nodes.map((node) => node.id));
+    return edges.filter((edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target));
+  }, [edges, nodes]);
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     setPositions((prev) => {
@@ -197,11 +551,9 @@ export function WorkbenchCanvas({
       return next;
     });
     for (const c of changes) {
-      if (c.type === "remove") {
-        setRemoved((r) => ({ ...r, [c.id]: true }));
-      }
+      if (c.type === "remove") removeNode(c.id);
     }
-  }, []);
+  }, [removeNode]);
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => setEdges((es) => applyEdgeChanges(changes, es)),
@@ -220,6 +572,25 @@ export function WorkbenchCanvas({
     setCustomNotes([]);
     setSpawned([]);
     setChatIds([]);
+    setSelectedIds({});
+    setViewport(undefined);
+    noteCounter.current = 0;
+    spawnCounter.current = 0;
+    chatCounter.current = 0;
+    saveCanvasLayout(
+      toCanvasLayout({
+        panelMeta: panelMetaRef.current,
+        positions: DEFAULT_POSITIONS,
+        removed: {},
+        edges: INITIAL_EDGES,
+        customNotes: [],
+        spawned: [],
+        chatIds: [],
+      }),
+    );
+    window.requestAnimationFrame(() => {
+      flowRef.current?.fitView({ maxZoom: 1, padding: 0.2 });
+    });
   }, []);
 
   const handMode = mode === "hand";
@@ -233,14 +604,19 @@ export function WorkbenchCanvas({
       `}</style>
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={renderedEdges}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onInit={(instance: ReactFlowInstance) => {
+          flowRef.current = instance;
+        }}
+        onMoveEnd={(_event: MouseEvent | TouchEvent | null, nextViewport: Viewport) => setViewport(nextViewport)}
         deleteKeyCode={["Delete", "Backspace"]}
         minZoom={0.2}
-        fitView
+        fitView={!restoredState.viewport}
+        defaultViewport={restoredState.viewport}
         fitViewOptions={{ maxZoom: 1, padding: 0.2 }}
         style={{ background: "#ffffff" }}
         nodesDraggable={!handMode}

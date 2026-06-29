@@ -1,8 +1,16 @@
-# Workflow Backend Implementation Design
+# Workbench Canvas Implementation Design
 
-本文档说明如何把当前 RDTII AI Mapper 后端拆成 workflow 节点模块，以对接 PR #19 中的 React Flow 画布式前端。
+本文档说明如何把 RDTII AI Mapper 的 Workbench 做成可保存的自由画布，用来组织研究材料、面板位置、notes、RAG chat 和视觉连线。
 
-核心原则：前端画布负责布局和交互，后端 workflow 负责能力注册、节点执行、数据传递、审计记录。不要让 React Flow 的 UI 状态污染后端执行协议。
+核心原则：**业务流程保持不变，画布只提供自由摆放和材料组织能力。**
+
+This is closer to Figma/FigJam than n8n. React Flow is used as an infinite workbench canvas, not as the source of truth for execution order.
+
+The existing executor wrapper layer remains useful, but its role is narrower:
+
+- Canvas layout = where panels, notes, chats, and materials live.
+- Executor wrapper = how a panel button calls backend capabilities.
+- Visual edges = research/storytelling aids, not data-flow dependencies.
 
 ## 1. 背景和目标
 
@@ -12,7 +20,7 @@ PR #19 把 Workbench 改成了自由画布：
 - 可复制面板：Discovery / Source / Audit copy
 - 用户 note：本地可编辑便签
 - RAG chat：临时聊天面板
-- React Flow edges：目前只是前端展示连线，没有后端执行语义
+- React Flow edges：视觉组织连线，帮助用户解释材料关系，不决定执行顺序
 
 现有后端已经有可复用能力：
 
@@ -24,48 +32,78 @@ PR #19 把 Workbench 改成了自由画布：
 - Validation: source、timestamp、coverage
 - Export: Excel export
 
-目标是增加一层 workflow backend，而不是重写这些能力。
+目标不是把产品做成 n8n-style automation workflow，而是：
+
+1. 保持现有核心研究流程稳定：`Discovery -> Source -> Extract -> Audit`。
+2. 允许用户在无限画布上自由摆放和保存研究材料。
+3. 让面板按钮可以通过 executor wrapper 调用后端能力。
+4. 后续可选地增加 backend persistence，让画布跨设备/跨会话保存。
 
 ## 2. Implementation Strategy
 
-建议先做 executor wrapper，再做真正的 graph workflow engine。
+建议把实现分成两条互补但独立的线：
 
-原因：
+### A. Executor-Backed Panels
 
-- PR #19 当前是 component-driven canvas：节点里放的是 `React.ReactNode`，还不是可序列化的 `type + config + ui` workflow node。
-- 现有后端能力已经能跑，先包装成统一 executor 可以最快获得用户可见价值。
-- executor wrapper 是后续 n8n-style workflow engine 的地基；engine 后面只负责排序、连线、传参，不直接掺业务逻辑。
+This is already implemented by the Phase 0 backend PR.
+
+It provides:
+
+- `GET /api/workflows/node-types`
+- `POST /api/workflows/nodes/{node_type}/run`
+- `POST /api/workflows/nodes/{node_type}/run/stream`
+
+These endpoints are useful when a canvas panel needs to trigger backend work, but they do not imply that edges define execution.
+
+### B. Canvas Layout Persistence
+
+This is the next product-aligned direction.
+
+It saves:
+
+- panel positions
+- note contents
+- visual edges
+- spawned RAG chats
+- panel visibility/removal
+- viewport position/zoom
+
+It does not save:
+
+- React component instances
+- execution state as graph truth
+- data-flow dependencies
+- LLM run history
 
 Recommended build order:
 
 ```text
-Phase 0: Node executor wrappers
-  -> each backend capability has one uniform run/stream interface
+Phase 0: Executor wrappers
+  -> already done; panels can call backend capabilities through a uniform interface
 
-Phase 1: Node registry API
-  -> frontend can discover executable node types
+Phase 1: Local canvas persistence
+  -> save/restore WorkbenchCanvas layout in localStorage
 
-Phase 2: Frontend data-driven node model + optional layout persistence
-  -> React Flow nodes become serializable workflow nodes
+Phase 2: Backend canvas persistence
+  -> save/restore layout through DB-backed API
 
-Phase 3: Graph workflow engine
-  -> edges become real data flow
+Phase 3: Canvas material model
+  -> support notes, evidence/material cards, pinned source snippets, screenshots
 
-Phase 4: Run history and artifacts
-  -> audit, replay, rerun, export trace
+Optional Future: Graph execution
+  -> only if the product later chooses automation semantics
 ```
 
-This means the first backend PR should not depend on the frontend already being a real workflow editor. It should make `Discovery`, `Fetch Text`, `Extract`, `Review`, and `RAG` executable through one consistent backend abstraction.
+The immediate next PR should be local canvas persistence, not graph execution.
 
 ## 3. Scope
 
 ### In Scope
 
-- 定义后端节点类型和节点输入输出契约
-- 提供节点类型注册表 API，供前端动态生成 toolbar/palette
-- 支持单节点运行和单节点 streaming run
-- 保存 canvas layout，包括节点位置、连线、note 内容。This depends on frontend data-driven nodes.
-- 支持后续 DAG workflow 串流运行
+- 保存和恢复 Workbench canvas layout
+- 保存用户添加的 notes、RAG chat nodes、visual edges、viewport
+- 保持核心业务流程和现有面板行为不变
+- 允许面板按钮继续调用 existing APIs 或 executor wrapper APIs
 - 保留现有 REST/SSE API 兼容性
 
 ### Out of Scope for MVP
@@ -74,11 +112,13 @@ This means the first backend PR should not depend on the frontend already being 
 - 分布式任务队列
 - 可视化版本 diff
 - 任意 Python 代码节点
+- graph/DAG execution engine
+- 让 React Flow edges 决定执行顺序
 - 对所有旧 API 的一次性迁移
 
-## 4. Frontend Dependency
+## 4. Frontend Model
 
-True workflow persistence requires a frontend node model change.
+Canvas persistence requires a serializable canvas model.
 
 Current PR #19 shape:
 
@@ -91,53 +131,55 @@ type CanvasPanel = {
 };
 ```
 
-This is good for a canvas UI MVP, but it cannot be persisted as workflow execution data because `element` is a live React object.
+This is good for rendering existing panels, but `element` is a live React object and cannot be persisted.
 
 Target shape:
 
 ```ts
-type WorkflowCanvasNode = {
+type WorkbenchCanvasNode = {
   id: string;
-  type: string;
-  label?: string;
-  config: Record<string, unknown>;
-  ui: {
-    position: { x: number; y: number };
-    width?: number;
-    height?: number;
-  };
+  kind: "panel" | "note" | "rag" | "material";
+  panelId?: "discovery" | "source" | "audit" | "foundPdfs";
+  title?: string;
+  text?: string;
+  config?: Record<string, unknown>;
+  position: { x: number; y: number };
+  width?: number;
+  height?: number;
+  removed?: boolean;
 };
 ```
 
-Until this frontend conversion exists:
+Notes:
 
-- backend executor wrappers can still be implemented and exposed
-- existing panel buttons can call executor endpoints
-- full layout persistence should be treated as a contract, not as an end-to-end working feature
-- graph execution cannot rely on frontend edges as data flow yet
+- `kind` describes what the canvas item is.
+- `panelId` maps a persisted node back to an existing Workbench panel.
+- `config` is optional panel UI/configuration state, not an execution graph contract.
+- visual edges can be persisted, but they should be treated as annotation/organization aids.
 
 ## 5. Design Principles
 
 1. UI state 和 execution state 分离。
    - UI state: position、selected、width、panel chrome、minimap、zoom
-   - Execution state: node type、config、inputs、outputs、run status
+   - Execution state: existing hooks/API state such as extraction progress and audit mappings
 
-2. 节点类型由后端注册表定义。
-   - 前端不 hardcode 后端可执行能力。
-   - 后端返回 display metadata，前端可以决定如何渲染。
+2. 核心工作流保持不变。
+   - Discovery、Source、Extract、Audit 的业务顺序不由 edges 决定。
+   - Canvas layout only changes how users arrange and inspect materials.
 
-3. 现有 API 先被 wrapper 复用。
-   - 第一阶段不要重写 extraction/discovery/review。
-   - 节点 executor 直接调用现有 service 函数。
+3. Executor wrapper 是面板能力层，不是自动化引擎。
+   - Panels may call executor endpoints.
+   - The canvas does not need to run a whole graph.
 
-4. Edges 表示数据流，不表示 UI 连线。
-   - 后端只消费有效 edge。
-   - 无效 edge 应在运行前校验并返回清晰错误。
+4. Edges are visual.
+   - They may express "this note explains this source" or "this evidence supports this mapping".
+   - They do not route data unless a future product decision explicitly changes that.
 
-5. 所有节点输出都作为 artifact 保存。
-   - 便于审计、回放、debug、导出。
+5. Persistence starts with layout, not run history.
+   - LocalStorage is enough for the first frontend validation.
+   - Backend DB persistence can follow once the layout shape is stable.
 
-## 6. Proposed Backend Directory Structure
+## 6. Current Backend Boundary
 
 ```text
 ai-service/
@@ -148,21 +190,13 @@ ai-service/
     __init__.py
     schemas.py
     registry.py
-    engine.py
-    store.py
-    events.py
-    errors.py
     nodes/
       __init__.py
       base.py
       discovery.py
       fetch_text.py
       extract.py
-      review.py
       rag.py
-      validation.py
-      export.py
-      note.py
 ```
 
 ### Responsibilities
@@ -170,90 +204,94 @@ ai-service/
 `api/workflows.py`
 
 - FastAPI router
-- Exposes node type, workflow layout, node run, workflow run endpoints
-- Converts HTTP exceptions and SSE responses
+- exposes executor-backed node run endpoints
+- converts HTTP exceptions and SSE responses
+- does not persist canvas layout
+- does not execute a graph
 
 `workflows/schemas.py`
 
-- Pydantic request/response models
-- Shared contract between frontend and backend
+- Pydantic request/response models for executor-backed panel actions
+- shared response envelope for streaming node runs
 
 `workflows/registry.py`
 
-- Static node registry
-- Maps `node.type` to executor class
-- Provides metadata for frontend palette
-
-`workflows/engine.py`
-
-- Validates graph
-- Builds execution plan
-- Runs nodes in topological order
-- Routes upstream outputs into downstream inputs
-- Emits run events
-
-`workflows/store.py`
-
-- Persistence interface
-- MVP can use Postgres JSONB
-- Development fallback may be file or in-memory, but production should use DB
+- static executor registry
+- maps `node.type` to executor class
+- provides metadata for panel/action discovery
 
 `workflows/nodes/base.py`
 
 - Base executor interface
 - Standardizes `run(context, config, inputs) -> NodeResult`
 
+### Future Canvas Persistence Boundary
+
+For backend layout persistence, add a separate module later:
+
+```text
+ai-service/
+  api/
+    workbench_canvas.py
+  workbench_canvas/
+    schemas.py
+    store.py
+```
+
+This should stay separate from `workflows/` because canvas layout is not workflow execution.
+
 ## 7. Core Data Model
 
-### Canvas Workflow
+### Workbench Canvas Layout
 
-```python
-class Workflow(BaseModel):
-    id: str
-    name: str
-    owner_id: str | None = None
-    nodes: list[WorkflowNode]
-    edges: list[WorkflowEdge]
-    viewport: WorkflowViewport | None = None
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+```ts
+type WorkbenchCanvasLayout = {
+  version: 1;
+  nodes: WorkbenchCanvasNode[];
+  edges: WorkbenchCanvasEdge[];
+  viewport?: {
+    x: number;
+    y: number;
+    zoom: number;
+  };
+  updatedAt?: string;
+};
 ```
 
-### Workflow Node
+### Workbench Canvas Node
 
-```python
-class WorkflowNode(BaseModel):
-    id: str
-    type: str
-    label: str | None = None
-    config: dict[str, Any] = Field(default_factory=dict)
-    ui: NodeUiState = Field(default_factory=NodeUiState)
+```ts
+type WorkbenchCanvasNode = {
+  id: string;
+  kind: "panel" | "note" | "rag" | "material";
+  panelId?: "discovery" | "source" | "audit" | "foundPdfs";
+  title?: string;
+  text?: string;
+  config?: Record<string, unknown>;
+  position: { x: number; y: number };
+  width?: number;
+  height?: number;
+  removed?: boolean;
+};
 ```
 
-`ui` is persisted for the frontend, but ignored by executors.
+### Workbench Canvas Edge
 
-```python
-class NodeUiState(BaseModel):
-    position: dict[str, float] = Field(default_factory=dict)
-    width: int | None = None
-    height: int | None = None
-    collapsed: bool = False
+```ts
+type WorkbenchCanvasEdge = {
+  id: string;
+  source: string;
+  target: string;
+  kind: "visual";
+  label?: string;
+};
 ```
 
-### Workflow Edge
+Edges deliberately do not include `source_output`, `target_input`, or port mapping in the product's current direction.
 
-```python
-class WorkflowEdge(BaseModel):
-    id: str
-    source: str
-    target: str
-    source_output: str | None = None
-    target_input: str | None = None
-```
+### Executor Node Type Definition
 
-If `source_output` or `target_input` is omitted, the engine can use node type defaults.
-
-### Node Type Definition
+The `inputs` and `outputs` fields are descriptive metadata for palettes, docs, and panel adapters. They are not typed route validation, and they do not imply edge/port routing.
 
 ```python
 class NodeTypeDefinition(BaseModel):
@@ -276,8 +314,7 @@ Example:
   "category": "ai",
   "description": "Extract RDTII indicator mappings from document text.",
   "inputs": {
-    "document": { "type": "DocumentText", "required": true },
-    "provider": { "type": "ProviderConfig", "required": false }
+    "document": { "type": "DocumentText", "required": false }
   },
   "outputs": {
     "mappings": { "type": "IndicatorMapping[]" },
@@ -287,7 +324,7 @@ Example:
 }
 ```
 
-### Node Result
+### Executor Node Result
 
 ```python
 class NodeResult(BaseModel):
@@ -298,9 +335,9 @@ class NodeResult(BaseModel):
     error: str | None = None
 ```
 
-### Run Event
+### Executor Run Event
 
-All streaming workflow events should use one envelope:
+All streaming executor events use one envelope:
 
 ```json
 {
@@ -312,118 +349,21 @@ All streaming workflow events should use one envelope:
 }
 ```
 
-This lets the frontend update a node by `node_id`, even while the extraction service streams internal events.
+This lets a panel update by `node_id`, even while extraction streams internal events. It is not a graph-run contract.
 
 ## 8. API Design
 
-### 8.1 List Node Types
+### 8.1 Executor API Already Available
 
 ```http
 GET /api/workflows/node-types
-```
-
-Response:
-
-```json
-{
-  "node_types": [
-    {
-      "type": "discovery.search",
-      "label": "Discovery",
-      "category": "source",
-      "description": "Find candidate legal sources for country and RDTII indicators.",
-      "inputs": {},
-      "outputs": {
-        "candidates": { "type": "LegalCandidate[]" }
-      }
-    }
-  ]
-}
-```
-
-Frontend use:
-
-- Build toolbar/palette dynamically
-- Display node config forms
-- Validate allowed connections before sending to backend
-
-### 8.2 Create Workflow
-
-```http
-POST /api/workflows
-```
-
-Request:
-
-```json
-{
-  "name": "Singapore pillar 6 research"
-}
-```
-
-Response:
-
-```json
-{
-  "id": "wf_123",
-  "name": "Singapore pillar 6 research",
-  "nodes": [],
-  "edges": []
-}
-```
-
-### 8.3 Get Workflow
-
-```http
-GET /api/workflows/{workflow_id}
-```
-
-Returns saved graph layout and optional latest run summary.
-
-### 8.4 Save Workflow Layout
-
-```http
-PUT /api/workflows/{workflow_id}/layout
-```
-
-Request:
-
-```json
-{
-  "nodes": [
-    {
-      "id": "discovery-1",
-      "type": "discovery.search",
-      "label": "Discovery",
-      "config": {
-        "country_code": "SGP",
-        "pillars": [6, 7],
-        "source_mode": "official_first"
-      },
-      "ui": {
-        "position": { "x": 40, "y": 40 },
-        "width": 800
-      }
-    }
-  ],
-  "edges": [],
-  "viewport": {
-    "x": 0,
-    "y": 0,
-    "zoom": 1
-  }
-}
-```
-
-Important: this endpoint stores UI state but does not execute anything.
-
-### 8.5 Run Single Node
-
-```http
 POST /api/workflows/nodes/{node_type}/run
+POST /api/workflows/nodes/{node_type}/run/stream
 ```
 
-Request:
+Use this when a panel wants to run backend work through the executor wrapper.
+
+Example discovery request:
 
 ```json
 {
@@ -431,72 +371,56 @@ Request:
   "config": {
     "country_code": "SGP",
     "pillars": [6, 7],
-    "source_mode": "official_first"
-  },
-  "inputs": {}
-}
-```
-
-Response:
-
-```json
-{
-  "node_id": "discovery-1",
-  "status": "success",
-  "outputs": {
-    "candidates": []
+    "browser_mode": "mock",
+    "limit": 5
   }
 }
 ```
 
-This is the recommended MVP execution endpoint for non-streaming nodes.
+### 8.2 Local Canvas Persistence
 
-For streaming nodes such as `extract.mappings`, use:
+Recommended next PR: save `WorkbenchCanvasLayout` to browser storage first.
 
-```http
-POST /api/workflows/nodes/{node_type}/run/stream
+```ts
+const STORAGE_KEY = "rdtii.workbench.canvas.v1";
+localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
 ```
 
-The streaming endpoint returns the same workflow event envelope used by full workflow runs, with `run_id` optional for standalone node execution.
+This validates the product behavior without adding database or ownership complexity.
 
-### 8.6 Run Workflow Stream
+### 8.3 Future Backend Canvas API
+
+Only after the local layout shape is stable:
 
 ```http
-POST /api/workflows/{workflow_id}/runs/stream
+GET /api/workbench-canvas
+PUT /api/workbench-canvas
 ```
 
-Request:
+or, if multiple boards are needed:
+
+```http
+GET /api/workbench-canvases
+POST /api/workbench-canvases
+GET /api/workbench-canvases/{id}
+PUT /api/workbench-canvases/{id}
+```
+
+Request body:
 
 ```json
 {
-  "start_node_ids": ["discovery-1"],
-  "target_node_ids": ["audit-1"],
-  "runtime": {
-    "provider": "deepseek",
-    "model": "deepseek-v4-flash"
+  "name": "Singapore pillar 6 research",
+  "layout": {
+    "version": 1,
+    "nodes": [],
+    "edges": [],
+    "viewport": { "x": 0, "y": 0, "zoom": 1 }
   }
 }
 ```
 
-Response:
-
-```text
-Content-Type: text/event-stream
-
-event: node_started
-data: {"run_id":"run_123","node_id":"discovery-1","event":"node_started","payload":{}}
-
-event: node_output
-data: {"run_id":"run_123","node_id":"discovery-1","event":"node_output","payload":{"candidates":[]}}
-
-event: mapping
-data: {"run_id":"run_123","node_id":"extract-1","event":"mapping","payload":{}}
-
-event: workflow_done
-data: {"run_id":"run_123","event":"workflow_done","payload":{"status":"success"}}
-```
-
-## 9. Node Types for MVP
+## 9. Implemented Executor Types
 
 ### 9.1 `discovery.search`
 
@@ -511,7 +435,7 @@ Implementation:
 
 Inputs:
 
-- none for graph mode, or optional `country_code`, `pillars`, `indicators`
+- none required; all search parameters can come from node config or panel state
 
 Config:
 
@@ -601,33 +525,7 @@ Streaming behavior:
 - Wrap existing extraction events inside workflow event envelope.
 - Preserve `mapping`, `rejected`, `progress`, `warning`, `done`.
 
-### 9.4 `review.persist_mapping`
-
-Purpose:
-
-- Persist approved or rejected mappings to Postgres.
-
-Implementation:
-
-- Move core DB transaction logic from `/api/mappings/review` into service function
-- API and node executor both call that service
-
-Inputs:
-
-- `mapping: IndicatorMapping`
-- `decision: approved | rejected`
-
-Config:
-
-- `country_code`
-- `reviewer_notes`
-
-Outputs:
-
-- `mapping_id`
-- `status`
-
-### 9.5 `rag.query`
+### 9.4 `rag.query`
 
 Purpose:
 
@@ -640,101 +538,30 @@ Implementation:
 Inputs:
 
 - `source_text`
-- `mappings`
-- `note`
+- `document`
 
 Config:
 
 - `question`
 - `role`
-- `output_format`
-- `provider`
+- `context`
 - `country_code`
 
 Outputs:
 
 - `answer`
-- `retrieved_chunks`
-- `retrieval_count`
+- `provider`
 
-### 9.6 `validation.source`
+### Existing endpoints not wrapped as executors
 
-Purpose:
+These capabilities already exist and should stay outside the executor registry unless a concrete panel integration needs them:
 
-- Grade source authority and reliability.
+- `review.persist_mapping`: covered by `/api/mappings/review`
+- `validation.source`: covered by validation/source helper APIs
+- `validation.timestamp`: covered by timestamp verification APIs
+- `export.excel`: covered by `/api/excel/export`
 
-Implementation:
-
-- Reuse validation API/service
-- Reuse `source_validator.grade_source`
-
-Inputs:
-
-- `source_url`
-- `title`
-- `text_snippet`
-
-Outputs:
-
-- `grade`
-- `confidence`
-- `reasons`
-
-### 9.7 `validation.timestamp`
-
-Purpose:
-
-- Verify last update / promulgation / amendment date.
-
-Inputs:
-
-- `source_url`
-- `last_update`
-
-Outputs:
-
-- `verified`
-- `best_date`
-- `verification_log`
-
-### 9.8 `export.excel`
-
-Purpose:
-
-- Export mappings to RDTII spreadsheet format.
-
-Implementation:
-
-- Reuse `/api/excel/export`
-
-Inputs:
-
-- `mappings`
-
-Config:
-
-- `country_code`
-- `filename`
-
-Outputs:
-
-- `download_url`
-- `file_path`
-
-### 9.9 `note.manual`
-
-Purpose:
-
-- Persist user notes from canvas.
-
-Execution:
-
-- Does not auto-run by default.
-- Can provide `note.text` as input to `rag.query` or analyst nodes later.
-
-Outputs:
-
-- `note`
+`note.manual` is not an executor. In the canvas model it is `kind: "note"` and belongs to layout persistence.
 
 ## 10. Executor Interface
 
@@ -767,110 +594,74 @@ class NodeExecutor(ABC):
         inputs: dict[str, Any],
         context: WorkflowContext,
     ) -> AsyncIterator[WorkflowRunEvent]:
+        yield WorkflowRunEvent(
+            run_id=context.run_id,
+            node_id=node.id,
+            event="node_started",
+            payload={"node_type": node.type},
+        )
         result = await self.run(node=node, inputs=inputs, context=context)
-        yield WorkflowRunEvent.node_output(context.run_id, node.id, result.outputs)
+        yield WorkflowRunEvent(
+            run_id=context.run_id,
+            node_id=node.id,
+            event="node_output",
+            status=result.status,
+            payload=result.model_dump(),
+        )
 ```
 
-Most nodes implement `run`. Extraction should implement `stream` to preserve progressive mapping updates.
+Most nodes implement `run` and inherit this default stream behavior. `extract.mappings` and `rag.query` override `stream` to preserve progressive mapping/token updates, then emit a terminal `node_output`.
 
-## 11. Graph Execution Algorithm
+## 11. Persistence Model
 
-MVP workflow run should support DAG only.
+### LocalStorage First
 
-Steps:
-
-1. Load workflow by id.
-2. Validate all `node.type` values exist in registry.
-3. Validate all edges point to known nodes.
-4. Validate edge port compatibility.
-5. Reject cycles.
-6. Build topological order.
-7. For each node:
-   - gather inputs from upstream node outputs
-   - merge explicit runtime inputs
-   - execute node
-   - save outputs as artifacts
-   - emit node events
-8. Emit final workflow status.
-
-Cycle error example:
-
-```json
-{
-  "detail": {
-    "code": "workflow_cycle",
-    "message": "Workflow graph contains a cycle.",
-    "nodes": ["extract-1", "rag-1"]
-  }
-}
-```
-
-## 12. Persistence Model
-
-### Migration Strategy
-
-Use the repository's existing SQL migration style. Do not introduce Alembic or SQLAlchemy just for workflow tables.
-
-Add a new migration file:
+The recommended next step is local canvas persistence:
 
 ```text
-rdtii-database/db/migrate_004_workflows.sql
+rdtii.workbench.canvas.v1
 ```
 
-This keeps workflow persistence aligned with the current raw `psycopg2` style used by auth and review endpoints. Service code should still hide SQL details behind `workflows/store.py`, so a later migration to SQLAlchemy or another persistence layer remains possible.
+Store the serialized `WorkbenchCanvasLayout` after:
 
-### Tables
+- moving nodes
+- creating/deleting notes
+- spawning/removing panels
+- connecting/removing visual edges
+- changing viewport
+
+Use a debounce so drag operations do not write on every pointer movement.
+
+### Backend Persistence Later
+
+Once the local shape is stable, use the repository's existing SQL migration style. Do not introduce Alembic or SQLAlchemy just for canvas layout tables.
+
+Add a migration such as:
+
+```text
+rdtii-database/db/migrate_004_workbench_canvases.sql
+```
+
+Suggested table:
 
 ```sql
-CREATE TABLE workflows (
+CREATE TABLE workbench_canvases (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   owner_id UUID NULL REFERENCES users(id),
-  name TEXT NOT NULL,
-  graph JSONB NOT NULL DEFAULT '{"nodes":[],"edges":[]}',
+  name TEXT NOT NULL DEFAULT 'Default workbench',
+  layout JSONB NOT NULL DEFAULT '{"version":1,"nodes":[],"edges":[]}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
-CREATE TABLE workflow_runs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  workflow_id UUID NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
-  owner_id UUID NULL REFERENCES users(id),
-  status TEXT NOT NULL,
-  started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  finished_at TIMESTAMPTZ NULL,
-  error TEXT NULL
-);
-
-CREATE TABLE workflow_node_runs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  run_id UUID NOT NULL REFERENCES workflow_runs(id) ON DELETE CASCADE,
-  node_id TEXT NOT NULL,
-  node_type TEXT NOT NULL,
-  status TEXT NOT NULL,
-  inputs JSONB NOT NULL DEFAULT '{}',
-  outputs JSONB NOT NULL DEFAULT '{}',
-  error TEXT NULL,
-  started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  finished_at TIMESTAMPTZ NULL
-);
-
-CREATE TABLE workflow_artifacts (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  run_id UUID NOT NULL REFERENCES workflow_runs(id) ON DELETE CASCADE,
-  node_id TEXT NOT NULL,
-  artifact_type TEXT NOT NULL,
-  payload JSONB NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
 ```
 
-Executor-wrapper MVP does not require these tables. Layout persistence can start with only `workflows`. Add run tables when full workflow execution lands.
+No `workflow_runs`, `workflow_node_runs`, or run artifact tables are needed for the current product direction.
 
-## 13. Frontend Integration Contract
+## 12. Frontend Integration Contract
 
 ### React Flow Node Mapping
 
-Frontend React Flow node:
+React Flow can still render custom `panel` and `note` node components. The serializable layer should sit next to rendering state:
 
 ```ts
 type RFNode = {
@@ -878,254 +669,208 @@ type RFNode = {
   type: "panel" | "note";
   position: { x: number; y: number };
   data: {
-    workflowType: string;
-    label: string;
-    config: Record<string, unknown>;
+    kind: "panel" | "note" | "rag" | "material";
+    panelId?: "discovery" | "source" | "audit" | "foundPdfs";
+    title?: string;
+    text?: string;
+    config?: Record<string, unknown>;
   };
 };
 ```
 
-Backend workflow node:
+Persisted layout node:
 
 ```json
 {
-  "id": "discovery-1",
-  "type": "discovery.search",
-  "label": "Discovery",
-  "config": {},
-  "ui": {
-    "position": { "x": 40, "y": 40 },
-    "width": 800
-  }
+  "id": "source",
+  "kind": "panel",
+  "panelId": "source",
+  "position": { "x": 40, "y": 360 },
+  "width": 460
 }
 ```
 
-Frontend should convert React Flow shape to backend shape before saving.
+Note node:
 
-### What Frontend Should Not Send as Execution Data
+```json
+{
+  "id": "note-1",
+  "kind": "note",
+  "title": "Evidence note",
+  "text": "Check official gazette date.",
+  "position": { "x": 720, "y": 280 },
+  "width": 240
+}
+```
+
+### What Frontend Should Not Persist
 
 - `element`
 - `selected`
 - `dragging`
-- `zIndex`
-- React component names
+- transient hover state
+- raw React component names
 - toolbar mode
-- minimap state
+- minimap mask state
+- LLM stream buffers
 
-These can exist in layout if needed, but executors must ignore them.
+### What Frontend Should Persist
 
-## 14. Suggested Implementation Phases
+- node id
+- node kind
+- panel id
+- note title/text
+- position
+- width/height when user-controlled
+- removed/visible state
+- visual edges
+- viewport
+
+## 13. Suggested Implementation Phases
 
 ### Phase 0: Executor Wrappers
 
-Deliverables:
+Status: done.
 
-- `workflows/schemas.py`
-- `workflows/nodes/base.py`
-- `workflows/nodes/discovery.py`
-- `workflows/nodes/fetch_text.py`
-- `workflows/nodes/extract.py`
-- `workflows/nodes/rag.py`
-- `workflows/registry.py`
-- `api/workflows.py`
-- `POST /api/workflows/nodes/{node_type}/run`
-- `POST /api/workflows/nodes/{node_type}/run/stream` for streaming nodes
-- Include router in `api/app.py`
-- Unit tests with mocked services
+Backend provides executor-backed panel actions:
 
-This phase gives the existing Workbench panels a consistent backend node execution layer without requiring graph execution or layout persistence.
+- `discovery.search`
+- `source.fetch_text`
+- `extract.mappings`
+- `rag.query`
 
-### Phase 1: Node Registry API
+This stays useful even though the product is not becoming n8n.
+
+### Phase 1: Local Canvas Persistence
 
 Deliverables:
 
-- `GET /api/workflows/node-types`
-- Static node definitions for executor-backed nodes
-- Tests for registry response shape
+- `WorkbenchCanvas` serializes nodes, visual edges, and viewport.
+- Layout saves to localStorage.
+- Layout restores on reload.
+- Notes persist across reload.
+- Reset button can clear saved layout and restore defaults.
+- No backend API or database changes.
 
-Frontend can discover backend-supported nodes and gradually replace hardcoded toolbar options.
+This is the recommended next PR.
 
-### Phase 2: Data-Driven Frontend Nodes and Layout Persistence
-
-Deliverables:
-
-- frontend nodes converted from `element: React.ReactNode` to `type + config + ui`
-- `POST /api/workflows`
-- `GET /api/workflows/{id}`
-- `PUT /api/workflows/{id}/layout`
-- `rdtii-database/db/migrate_004_workflows.sql`
-- tests for saving and loading workflow layout
-
-Frontend can save and reload a serializable canvas. Edges may still be visual-only in this phase.
-
-### Phase 3: Workflow Streaming Execution
+### Phase 2: Backend Canvas Persistence
 
 Deliverables:
 
-- `workflows/engine.py`
-- `POST /api/workflows/{id}/runs/stream`
-- Topological sort
-- Edge port validation
-- SSE event envelope
-- Extraction streaming wrapped by node id
+- `workbench_canvases` DB table.
+- `GET /api/workbench-canvas`
+- `PUT /api/workbench-canvas`
+- Auth-aware owner id when auth is enabled, nullable owner for dev bypass.
+- Frontend replaces localStorage save/load with backend save/load, keeping localStorage fallback.
 
-Frontend can run `Discovery -> FetchText -> Extract -> Audit`.
-
-### Phase 4: Run History and Audit Artifacts
+### Phase 3: Material Cards
 
 Deliverables:
 
-- `workflow_runs`
-- `workflow_node_runs`
-- `workflow_artifacts`
-- run detail endpoint
-- rerun from node
-- compare current layout to previous run
+- Evidence/source snippet card
+- Saved candidate URL card
+- PDF/material card
+- Optional screenshot/card attachment placeholder
 
-This phase is important for UN auditability, but should not block MVP.
+This turns the canvas into a richer research board without changing the core extraction flow.
 
-## 15. Reusing Existing Code
+### Optional Future: Graph Execution
 
-Current code should be refactored gently:
+Only consider this if the product later chooses automation semantics.
 
-1. Extract shared provider selection helper from `api/extraction.py`.
-2. Extract shared fetch text service from `/api/fetch-text`.
-3. Extract review persistence transaction from `api/review.py`.
-4. Keep old endpoints working by calling the new service functions.
-5. Add workflow nodes as wrappers around service functions.
+For now:
 
-Recommended service additions:
+- no topological sort
+- no typed edge ports
+- no `source_output` / `target_input`
+- no workflow run tables
+- no edge-driven execution
 
-```text
-ai-service/services/
-  document_fetch.py
-  provider_config.py
-  review_persistence.py
-```
+## 14. Reusing Existing Code
 
-Example:
+Current code should stay conservative:
 
-```python
-async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> DocumentText:
-    ...
-```
+1. Keep old endpoints working.
+2. Let existing panels continue using `useDiscovery`, `useExtraction`, and existing hooks.
+3. Use executor endpoints where they reduce duplication or make panel actions cleaner.
+4. Do not replace the extraction/audit state model just to satisfy the canvas.
+5. Keep layout persistence separate from execution code.
 
-Then both `/api/fetch-text` and `source.fetch_text` use it.
+## 15. Error Handling
 
-## 16. Error Handling
+Canvas persistence errors should not break the core Workbench flow.
 
-Use stable error codes:
+Recommended behavior:
 
-```text
-unknown_node_type
-invalid_node_config
-missing_required_input
-invalid_edge
-port_type_mismatch
-workflow_cycle
-node_execution_failed
-artifact_not_found
-```
+- If localStorage save fails, show a small non-blocking warning or silently degrade.
+- If backend save fails later, keep local copy and retry.
+- If layout load fails, fall back to default panel positions.
+- If a persisted panel kind is unknown, skip it and preserve the rest of the layout.
 
-Error response:
+## 16. Testing Strategy
 
-```json
-{
-  "detail": {
-    "code": "missing_required_input",
-    "message": "Node extract-1 requires input document.",
-    "node_id": "extract-1",
-    "input": "document"
-  }
-}
-```
+### Frontend Unit Tests
 
-## 17. Testing Strategy
+- serialize default canvas layout
+- restore panel positions
+- restore note title/text
+- reset saved layout
+- ignore unknown node kinds
 
-### Unit Tests
+### Frontend Interaction Tests
 
-- registry contains expected node types
-- schemas reject invalid nodes/edges
-- graph validation rejects missing target node
-- graph validation rejects cycle
-- single node execution calls expected service
-- extract node streaming wraps `mapping`, `rejected`, and `progress` events
-
-### Integration Tests
-
-- save workflow layout and load it back
-- run discovery node with fixture adapters
-- run fetch text node with mocked crawler result
-- run extract node with mocked provider
-- stream workflow emits node events in order
+- drag panel, reload, position remains
+- add note, reload, note remains
+- delete panel, reload, panel stays removed
+- reset layout restores default panels
 
 ### Backward Compatibility Tests
 
-- `/api/discovery/search` still works
-- `/api/fetch-text` still works
-- `/api/extract/stream` still works
-- `/api/mappings/review` still works
+- existing Discovery panel still searches
+- existing Source panel still extracts/fetches
+- existing Audit panel still displays mappings
+- executor API tests still pass
 
-## 18. MVP Acceptance Criteria
-
-Phase 0 is done when:
-
-- backend has uniform executors for Discovery, Fetch Text, Extract, RAG
-- non-streaming node run endpoint works
-- extract streaming node run endpoint preserves progressive mappings
-- old Workbench APIs still work
+## 17. MVP Acceptance Criteria
 
 Phase 1 is done when:
 
-- frontend can fetch node type definitions from backend
-- old Workbench APIs still work
+- user can move panels and refresh without losing positions
+- user can add/edit notes and refresh without losing notes
+- visual edges can be saved/restored if enabled
+- reset returns the board to default layout
+- extraction/audit behavior is unchanged
 
 Phase 2 is done when:
 
-- frontend nodes are serializable as `type + config + ui`
-- frontend can save and reload a canvas
-- saved layout includes nodes, edges, positions, notes
-- user can run Discovery node from canvas
-- user can run Fetch Text node from canvas
-- user can run Extract node from canvas
-- node output appears in the corresponding panel
+- same layout persists across browser sessions through backend storage
+- authenticated users get their own saved canvas
+- localStorage can still serve as fallback
 
-Phase 3 is done when:
+## 18. Open Questions
 
-- user can connect Discovery -> Fetch Text -> Extract
-- one click starts a workflow run
-- extraction progress and mappings stream into the Extract/Audit node
-- failed nodes show local error state without crashing the canvas
+1. Should there be one default board per user or multiple named boards?
+   - Recommended: one default board first.
 
-## 19. Open Questions
+2. Should visual edges be saved in Phase 1?
+   - Recommended: yes if already available in React Flow state, but keep `kind: "visual"`.
 
-1. Should workflows be user-owned from day one?
-   - Recommended: yes if auth is enabled, nullable owner for dev bypass.
+3. Should notes be included in exported audit outputs?
+   - Recommended: not in MVP. Treat notes as workspace context.
 
-2. Should note nodes be executable?
-   - Recommended: not by default. They become context providers only when connected to RAG or Analyst nodes.
+4. Should backend canvas layout store current extraction results?
+   - Recommended: no. Store layout only; extraction results remain existing app state/database responsibility.
 
-3. Should edges allow multiple candidates to fan out into multiple fetch/extract runs?
-   - Recommended: not in MVP. Start with selected candidate, then add batch fan-out later.
+## 19. Recommended Next PR
 
-4. Should workflow execution be synchronous SSE or background job?
-   - Recommended: SSE for MVP, background queue later.
+Build local canvas persistence only:
 
-5. Should React Flow edge handles map to typed ports?
-   - Recommended: yes in Phase 3. Phase 2 can store plain source/target edges.
+1. Add a serializable `WorkbenchCanvasLayout` type.
+2. Convert current canvas state to/from that layout shape.
+3. Save layout to localStorage with debounce.
+4. Restore layout on Workbench load.
+5. Persist custom notes and removed/spawned panels.
+6. Add/reset saved layout behavior.
 
-## 20. Recommended First PR
-
-The first PR should be small:
-
-1. Add `workflows/schemas.py`.
-2. Add `workflows/nodes/base.py`.
-3. Add executor wrappers for `discovery.search`, `source.fetch_text`, `extract.mappings`, and `rag.query`.
-4. Add `workflows/registry.py` mapping node type to executor.
-5. Add `api/workflows.py` with single-node run endpoints.
-6. Include router in `api/app.py`.
-7. Add tests for executor wrappers and endpoint response shape.
-
-Do not modify extraction behavior in the first PR. Wrap existing behavior and keep old endpoints alive.
-
-That keeps integration safe, gives the frontend user-visible node execution early, and leaves full graph execution for a later PR.
+Do not modify the core extraction workflow. Do not add graph execution.
