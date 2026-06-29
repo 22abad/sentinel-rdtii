@@ -1,9 +1,6 @@
 export const API_URL =
   import.meta.env.VITE_EXTRACT_API_URL ?? "/api/extract";
 
-export const STREAM_API_URL =
-  import.meta.env.VITE_STREAM_API_URL ?? "/api/extract/stream";
-
 export const INGEST_API_URL =
   import.meta.env.VITE_INGEST_API_URL ?? "/api/ingest/document";
 

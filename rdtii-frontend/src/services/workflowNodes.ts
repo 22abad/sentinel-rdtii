@@ -289,13 +289,17 @@ function safeJsonParse(value: string): unknown {
 }
 
 function extractErrorMessage(payload: unknown, rawPayload: string, status: number): string {
+  return formatWorkflowErrorPayload(payload, rawPayload || `Workflow node API failed with status ${status}.`);
+}
+
+export function formatWorkflowErrorPayload(payload: unknown, fallback: string): string {
   if (isRecord(payload)) {
     const detail = payload.detail;
     if (typeof detail === "string") return detail;
     if (Array.isArray(detail)) return formatValidationErrors(detail);
     if (isRecord(detail) && typeof detail.message === "string") return detail.message;
   }
-  return rawPayload || `Workflow node API failed with status ${status}.`;
+  return typeof payload === "string" ? payload : fallback;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
