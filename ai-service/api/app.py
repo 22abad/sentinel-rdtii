@@ -5,7 +5,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import auth, discovery, excel, extraction, review, system, validation, workflows
+from api import auth, discovery, excel, extraction, review, system, validation, workbench_canvas, workflows
 
 
 def create_app() -> FastAPI:
@@ -32,5 +32,6 @@ def create_app() -> FastAPI:
     app.include_router(review.router)
     app.include_router(excel.router)
     app.include_router(validation.router)
+    app.include_router(workbench_canvas.router)
     app.include_router(workflows.router)
     return app
