@@ -8,11 +8,11 @@ import { SourcePanel } from "../../components/SourcePanel";
 import { FoundPdfsPanel } from "../../components/SourcePanel/FoundPdfsPanel";
 import { SideBar } from "../../components/SideBar";
 import { useExtraction } from "../../hooks/useExtraction";
-import ColorBends from "../../components/ColorBends/ColorBends";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Menu, X, Home, Map, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
+import { WorkbenchCanvas, type CanvasPanel } from "./WorkbenchCanvas";
 
 export function WorkbenchPage() {
   const navigate = useNavigate();
@@ -59,26 +59,101 @@ export function WorkbenchPage() {
     if (mark) mark.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [activeKey, activeMapping]);
 
+  const discoveryPanel = (
+    <DiscoveryPanel
+      country={country}
+      pillarFilter={pillarFilter}
+      extracting={status === "loading"}
+      batchProgress={batchProgress}
+      onUseCandidate={(candidate) => setSourceUrl(candidate.url)}
+      onExtractCandidate={(candidate) => extract(candidate.url)}
+      onExtractShortlist={(candidates) => extractShortlist(candidates.map((candidate) => candidate.url))}
+    />
+  );
+
+  const sourcePanel = (
+    <SourcePanel
+      sourceRef={sourceRef}
+      country={country}
+      setCountry={setCountry}
+      detectedCountry={detectedCountry}
+      pillarFilter={pillarFilter}
+      setPillarFilter={setPillarFilter}
+      sourceUrl={sourceUrl}
+      setSourceUrl={setSourceUrl}
+      text={text}
+      onTextChange={onTextChange}
+      activeMapping={activeMapping}
+      setActiveKey={setActiveKey}
+      extract={extract}
+      status={status}
+      error={error}
+      warning={warning}
+      extractionProgress={extractionProgress}
+      availableProviders={availableProviders}
+      selectedProvider={selectedProvider}
+      setSelectedProvider={setSelectedProvider}
+    />
+  );
+
+  const foundPdfsPanel =
+    foundPdfs.length > 0 ? (
+      <FoundPdfsPanel
+        urls={foundPdfs}
+        loading={fetchingPdf}
+        onSelect={async (url) => {
+          setFetchingPdf(true);
+          try {
+            const form = new FormData();
+            form.append("source_url", url);
+            const res = await fetch(FETCH_TEXT_API_URL, {
+              method: "POST",
+              headers: { Authorization: `Bearer ${getStoredToken()}` },
+              body: form,
+            });
+            const data = await res.json();
+            if (data.text) {
+              setSourceUrl(url);
+              onTextChange({ target: { value: data.text } } as React.ChangeEvent<HTMLTextAreaElement>);
+            }
+          } finally {
+            setFetchingPdf(false);
+          }
+        }}
+      />
+    ) : null;
+
+  const auditPanel = (
+    <AuditPanel
+      status={status}
+      mappings={visibleMappings}
+      totalMappings={mappings.length}
+      activeKey={activeKey}
+      decisions={decisions}
+      selectMapping={selectMapping}
+      setDecision={setDecision}
+      rejected={rejected}
+      showRejected={showRejected}
+      setShowRejected={setShowRejected}
+      country={country}
+    />
+  );
+
+  const canvasPanels: CanvasPanel[] = [
+    { id: "discovery", title: "Discovery", element: discoveryPanel, width: 800},
+    { id: "source", title: "Source", element: sourcePanel, width: 460 },
+    ...(foundPdfsPanel ? [{ id: "foundPdfs", title: "Found PDFs", element: foundPdfsPanel, width: 420 }] : []),
+    { id: "audit", title: "Audit", element: auditPanel, width: 520 },
+  ];
+
   return (
     <div className="flex overflow-hidden" style={{ height: "100dvh" }}>
 
-      {/* Full-page background */}
-      <div className="fixed inset-0 -z-10" style={{ height: "100dvh" }}>
-        <ColorBends colors={["#0d3326", "#072418"]} speed={0.15} intensity={1.2} noise={0.1} frequency={0.8} />
-      </div>
-
-      <div className="fixed inset-0 -z-10 bg-black/20" style={{ height: "100dvh" }} />
-
       <div
-        className="fixed inset-0 -z-10 pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(0, 80, 63, 0.20) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 80, 63, 0.20) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
+        className="fixed inset-0 -z-10"
+        style={{ height: "100dvh", background: "linear-gradient(160deg, #0d3326, #072418)" }}
       />
-
-       
+      <div className="fixed inset-0 -z-10 bg-black/20" style={{ height: "100dvh" }} />
 
       {/* Left sidebar — overlay drawer */}
       <AnimatePresence>
@@ -223,87 +298,8 @@ export function WorkbenchPage() {
         </motion.button>
       </div>
 
-      {/* Main workspace */}
-      <main className="flex-1 overflow-auto px-5 pb-8 pt-12">
-        <section className="workspace h-full">
-
-          <div className="flex flex-col gap-4 min-w-0 self-start">
-            <DiscoveryPanel
-              country={country}
-              pillarFilter={pillarFilter}
-              extracting={status === "loading"}
-              batchProgress={batchProgress}
-              onUseCandidate={(candidate) => setSourceUrl(candidate.url)}
-              onExtractCandidate={(candidate) => extract(candidate.url)}
-              onExtractShortlist={(candidates) => extractShortlist(candidates.map((candidate) => candidate.url))}
-            />
-            <SourcePanel
-              sourceRef={sourceRef}
-              country={country}
-              setCountry={setCountry}
-              detectedCountry={detectedCountry}
-              pillarFilter={pillarFilter}
-              setPillarFilter={setPillarFilter}
-              sourceUrl={sourceUrl}
-              setSourceUrl={setSourceUrl}
-              text={text}
-              onTextChange={onTextChange}
-              activeMapping={activeMapping}
-              setActiveKey={setActiveKey}
-              extract={extract}
-              status={status}
-              error={error}
-              warning={warning}
-              extractionProgress={extractionProgress}
-              availableProviders={availableProviders}
-              selectedProvider={selectedProvider}
-              setSelectedProvider={setSelectedProvider}
-            />
-            <AnimatePresence>
-              {foundPdfs.length > 0 && (
-                <FoundPdfsPanel
-                  urls={foundPdfs}
-                  loading={fetchingPdf}
-                  onSelect={async (url) => {
-                    setFetchingPdf(true);
-                    try {
-                      const form = new FormData();
-                      form.append("source_url", url);
-                      const res = await fetch(FETCH_TEXT_API_URL, {
-                        method: "POST",
-                        headers: { Authorization: `Bearer ${getStoredToken()}` },
-                        body: form,
-                      });
-                      const data = await res.json();
-                      if (data.text) {
-                        setSourceUrl(url);
-                        onTextChange({ target: { value: data.text } } as React.ChangeEvent<HTMLTextAreaElement>);
-                      }
-                    } finally {
-                      setFetchingPdf(false);
-                    }
-                  }}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-
-          <AuditPanel
-            status={status}
-            mappings={visibleMappings}
-            totalMappings={mappings.length}
-            activeKey={activeKey}
-            decisions={decisions}
-            selectMapping={selectMapping}
-            setDecision={setDecision}
-            rejected={rejected}
-            showRejected={showRejected}
-            setShowRejected={setShowRejected}
-            country={country}
-          />
-
-        </section>
-      </main>
+      {/* The workbench is now the free-canvas — the classic stacked layout is retired */}
+      <WorkbenchCanvas panels={canvasPanels} onExit={() => navigate("/")} />
 
     </div>
   );
