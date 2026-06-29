@@ -16,6 +16,9 @@ export const REVIEW_API_URL =
 export const WORKFLOW_API_URL =
   import.meta.env.VITE_WORKFLOW_API_URL ?? "/api/workflows";
 
+export const WORKBENCH_CANVAS_API_URL =
+  import.meta.env.VITE_WORKBENCH_CANVAS_API_URL ?? "/api/workbench-canvas";
+
 export const AUTH_API_URL =
   import.meta.env.VITE_AUTH_API_URL ?? "/auth";
 
