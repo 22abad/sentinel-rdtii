@@ -29,7 +29,7 @@ export function Label() {
           </h2>
           <p className="opacity-70 leading-relaxed text-lg max-w-2xl">
             Sentinel is an automated workflow engine designed for UN ESCAP researchers to map legal evidence 
-            against all 12 Pillars of RDTII 2.1, transforming raw legislation into structured evidence in minutes.
+            against the MVP RDTII 2.1 scoring pillars, transforming raw legislation into structured evidence in minutes.
           </p>
         </div>
 

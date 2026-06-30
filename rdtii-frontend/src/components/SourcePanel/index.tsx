@@ -169,11 +169,9 @@ export function SourcePanel({
               <SelectTrigger><SelectValue placeholder={t("source.autoDetect")} /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="CHN">{t("country.chn")}</SelectItem>
-                <SelectItem value="IND">{t("country.ind")}</SelectItem>
                 <SelectItem value="SGP">{t("country.sgp")}</SelectItem>
+                <SelectItem value="MYS">{t("country.mys")}</SelectItem>
                 <SelectItem value="THA">{t("country.tha")}</SelectItem>
-                <SelectItem value="AUS">{t("country.aus")}</SelectItem>
-                <SelectItem value="PHL">{t("country.phl")}</SelectItem>
               </SelectContent>
             </Select>
           )}

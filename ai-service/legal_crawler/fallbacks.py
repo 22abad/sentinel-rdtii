@@ -136,9 +136,11 @@ async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
                 tmp = Path(tempfile.gettempdir()) / f"sso_{uuid.uuid4().hex}.pdf"
                 tmp.write_bytes(pdf_resp.content)
                 from pdf_reader import read_pdf
-                pdf_result = read_pdf(str(tmp))
-                pdf_text = "\n".join(pdf_result.pages)
-                os.unlink(str(tmp))
+                try:
+                    pdf_result = await asyncio.to_thread(read_pdf, str(tmp), source_url=pdf_candidate)
+                    pdf_text = "\n".join(pdf_result.pages)
+                finally:
+                    os.unlink(str(tmp))
                 if len(pdf_text) > 500:
                     print(f"[HTTP Fallback PDF] 成功！{len(pdf_text)} 字符")
                     return {

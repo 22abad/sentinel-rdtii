@@ -28,7 +28,7 @@ export function Placeholder() {
         <h1 className="text-2xl md:text-4xl font-semibold mb-6">
             Search laws from Map
         </h1>
-        <p className="text-[#065f46]/60 text-center max-w-md text-sm -mt-5">Automated RDTII grading system for UN ESCAP researchers to map legal evidence across all 12 pillars.</p>
+        <p className="text-[#065f46]/60 text-center max-w-md text-sm -mt-5">Automated RDTII research system focused on Pillars 6 and 7, with an extensible path to the full framework.</p>
         <a
           href="/mapsearch"
           className="group mt-2 px-8 py-3 rounded-full bg-[#10B981] text-white font-medium hover:bg-[#10B981]/80 transition inline-flex items-center"

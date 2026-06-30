@@ -159,6 +159,23 @@ def _fixture_hits(country_code: str, source: LegalSourceConfig, adapter_name: st
                 )
             ],
         },
+        "MYS": {
+            "lom.agc.gov.my": [
+                RawSearchHit(
+                    title="Personal Data Protection Act 2010",
+                    url="https://lom.agc.gov.my/act-detail.php?type=principal&lang=BI&act=709",
+                    snippet="Principal Malaysian personal data protection legislation covering processing, disclosure, and cross-border transfer controls.",
+                    external_id="act-709",
+                )
+            ],
+            "pdp.gov.my": [
+                RawSearchHit(
+                    title="Personal Data Protection Codes of Practice",
+                    url="https://www.pdp.gov.my/ppdpv1/en/akta/",
+                    snippet="Official sectoral codes and guidance issued under Malaysia's personal data protection framework.",
+                )
+            ],
+        },
     }
 
     return fixtures.get(country_code, {}).get(domain, [

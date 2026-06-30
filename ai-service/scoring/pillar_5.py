@@ -14,7 +14,7 @@ Score = Literal[0.0, 0.25, 0.5, 1.0]
 
 # ── 5.1 Telecom competition ────────────────────────────────
 def score_5_1(features: dict) -> tuple[Score, str]:
-    if bool(features.get("has_competition")):
+    if bool(features.get("has_competition")) or bool(features.get("telecom_competition")):
         return 0.0, "Score 0: Competitive telecom market exists."
     if bool(features.get("has_market_barrier")):
         return 1.0, "Score 1: Barriers to entry in telecom market identified."

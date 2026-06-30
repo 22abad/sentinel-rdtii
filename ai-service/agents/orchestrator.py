@@ -129,6 +129,11 @@ class MASOrchestrator:
 
                     # 2. Critic Agent — Scoring
                     raw_score, score_justification = self.critic.evaluate_score(ind_id, features)
+                    score_not_implemented = score_justification == "Scoring rules not implemented."
+                    if score_not_implemented:
+                        pre_flag_reasons.append(
+                            f"Deterministic scoring for indicator {ind_id} is not implemented."
+                        )
 
                     # 3. Analyst Agent — Draft rich multi-paragraph comment
                     impact_comments_val = await self.analyst.run(
@@ -221,7 +226,7 @@ class MASOrchestrator:
                         policy_description=data.get("policy_description") or "",
                         features=features,
                         impact=impact_comments_val,
-                        requires_human_review=src_requires_review,
+                        requires_human_review=src_requires_review or score_not_implemented,
                         extraction_provider=self.provider.name,
                         timestamp_verification=ts_verification,
                     )

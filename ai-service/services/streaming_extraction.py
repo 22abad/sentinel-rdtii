@@ -188,8 +188,11 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
 
     try:
         score, justification = score_indicator(ind_id, features)
+        score_not_implemented = False
     except NotImplementedError:
         score, justification = 0.5, "Scoring rules not implemented."
+        score_not_implemented = True
+        pre_flag_reasons.append(f"Deterministic scoring for indicator {ind_id} is not implemented.")
 
     raw_scope = (data.get("scope") or "").strip().lower()
     scope_value = raw_scope if raw_scope in {"horizontal", "sectoral"} else "unknown"
@@ -257,7 +260,7 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
         policy_description=_text_field("policy_description"),
         features=features,
         impact=justification,
-        requires_human_review=False,
+        requires_human_review=score_not_implemented,
         extraction_provider=llm_provider.name,
         timestamp_verification=ts_verification,
     )

@@ -16,7 +16,7 @@ from fastapi import HTTPException
 
 _env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(_env_path)
-load_dotenv(override=True)
+load_dotenv(override=False)
 
 from api.app import create_app
 from api.extraction import (

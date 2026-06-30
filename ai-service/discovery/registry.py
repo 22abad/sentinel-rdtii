@@ -103,6 +103,29 @@ DISCOVERY_REGISTRY: dict[str, dict] = {
             },
         ],
     },
+    "MYS": {
+        "languages": ["en", "ms"],
+        "sources": [
+            {
+                "name": "Attorney General's Chambers of Malaysia",
+                "base_url": "https://lom.agc.gov.my",
+                "domains": ["lom.agc.gov.my"],
+                "adapter": "search_engine",
+                "source_grade": "primary",
+                "languages": ["en", "ms"],
+                "priority": 100,
+            },
+            {
+                "name": "Personal Data Protection Department",
+                "base_url": "https://www.pdp.gov.my",
+                "domains": ["pdp.gov.my", "www.pdp.gov.my"],
+                "adapter": "search_engine",
+                "source_grade": "primary",
+                "languages": ["en", "ms"],
+                "priority": 90,
+            },
+        ],
+    },
 }
 
 

@@ -14,7 +14,7 @@ doctor:
 dev:
 	@echo "Starting backend, sidecar, and frontend..."
 	@trap 'kill 0' EXIT; \
-		$(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info & \
+		(export EXTRACT_SIDECAR_URL=$$(grep '^EXTRACT_SIDECAR_URL=' .env | cut -d= -f2-); if [ -z "$$EXTRACT_SIDECAR_URL" ]; then export EXTRACT_SIDECAR_URL=http://localhost:4000; fi; $(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info) & \
 		(export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) SIDECAR_API_KEY=$$(grep '^SIDECAR_API_KEY=' .env | cut -d= -f2-) SIDECAR_ADDR=$$(grep '^SIDECAR_ADDR=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run) & \
 		(export VITE_AUTH_BYPASS=$$(grep '^VITE_AUTH_BYPASS=' .env | cut -d= -f2-) && cd rdtii-frontend && npx vite --host 0.0.0.0 --force) & \
 		wait
@@ -35,7 +35,7 @@ install-sidecar:
 	cd extract_sidecar && cargo build --release
 
 migrate-sidecar:
-	psql "$$DATABASE_URL" -f extract_sidecar/migrations/001_extracted_documents.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f extract_sidecar/migrations/001_extracted_documents.sql
 
 
 install-frontend:
@@ -51,9 +51,11 @@ db:
 	docker compose up -d postgres redis
 
 migrate:
-	psql "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_001_auth.sql
-	psql "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_002_reset_tokens.sql
-	psql "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_003_document_ownership.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_001_auth.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_002_reset_tokens.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_003_document_ownership.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_004_workbench_canvases.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f extract_sidecar/migrations/001_extracted_documents.sql
 
 image:
 	docker compose down

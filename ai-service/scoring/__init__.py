@@ -29,17 +29,12 @@ def score_indicator(indicator_id: str, features: dict) -> tuple[Score, str]:
         
     Raises NotImplementedError for unsupported indicators.
     """
-    # Imported lazily so subagent can fill in pillar_6.py / pillar_7.py without
-    # breaking imports.
+    # Imported lazily so partial pillar modules do not make package import fail.
     try:
-        if indicator_id.startswith("1."):
-            return 0.5, "Pillar 1 logic stub."
         if indicator_id.startswith("2."):
-            return 0.5, "Pillar 2 logic stub."
-        if indicator_id.startswith("3."):
-            return 0.5, "Pillar 3 logic stub."
-        if indicator_id.startswith("4."):
-            return 0.5, "Pillar 4 logic stub."
+            from . import pillar_2 as _p2
+
+            return _p2.score(indicator_id, features)
         if indicator_id.startswith("5."):
             from . import pillar_5 as _p5
 
@@ -52,22 +47,12 @@ def score_indicator(indicator_id: str, features: dict) -> tuple[Score, str]:
             from . import pillar_7 as _p7
 
             return _p7.score(indicator_id, features)
-        if indicator_id.startswith("8."):
-            return 0.5, "Pillar 8 logic stub."
-        if indicator_id.startswith("9."):
-            return 0.5, "Pillar 9 logic stub."
-        if indicator_id.startswith("10."):
-            return 0.5, "Pillar 10 logic stub."
-        if indicator_id.startswith("11."):
-            return 0.5, "Pillar 11 logic stub."
-        if indicator_id.startswith("12."):
-            return 0.5, "Pillar 12 logic stub."
     except (ImportError, AttributeError):
         pass
 
     raise NotImplementedError(
         f"Scoring for indicator {indicator_id} not yet implemented. "
-        f"See scoring/pillar_6.py or scoring/pillar_7.py."
+        f"Add an explicit scorer before treating this indicator as automated."
     )
 
 

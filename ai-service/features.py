@@ -22,7 +22,20 @@ INDICATOR_FEATURES: dict[str, dict[str, dict[str, str]]] = {
     "2.1": {"procurement_preference": {"type": "bool", "description": "Local preference in procurement?"}},
     "3.1": {"foreign_equity_limit": {"type": "float", "description": "FDI equity limit"}},
     "4.1": {"ip_protection_level": {"type": "str", "description": "IP protection level"}},
-    "5.1": {"telecom_competition": {"type": "bool", "description": "Telecom market competition"}},
+    "5.1": {
+        "has_competition": {
+            "type": "bool",
+            "description": "Does the provision show that competitive telecom market entry is allowed?",
+        },
+        "has_market_barrier": {
+            "type": "bool",
+            "description": "Does the provision impose telecom market entry barriers, exclusivity, or restrictive licensing?",
+        },
+        "no_license_needed": {
+            "type": "bool",
+            "description": "Does the provision state that no telecom service licence is required?",
+        },
+    },
     "5.3": {
         "government_equity_percentage": {
             "type": "float",

@@ -40,7 +40,7 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
         pdf_path = crawl_result.get("pdf_path")
         if not pdf_path:
             raise ValueError("Crawler returned a PDF result without pdf_path.")
-        pdf_result = await asyncio.to_thread(read_pdf, pdf_path)
+        pdf_result = await asyncio.to_thread(read_pdf, pdf_path, source_url=source_url)
         return DocumentText(
             source_url=source_url,
             text="\n".join(pdf_result.pages),

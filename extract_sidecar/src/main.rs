@@ -92,6 +92,7 @@ fn classify_format(filename: &str) -> &'static str {
 /// Multipart fields:
 ///   file            — document to extract (pdf, jpg, jpeg, png, txt, md)
 ///   expires_in_days — optional TTL integer; omit for permanent storage
+///   source_url      — optional canonical URL for audit/cache metadata
 ///
 /// Flow:
 ///   1. SHA-256 hash the raw bytes.
@@ -104,6 +105,7 @@ async fn extract_text_handler(
 ) -> Result<Json<ExtractTextResponse>, (StatusCode, Json<serde_json::Value>)> {
     let mut file_data: Option<(String, Vec<u8>)> = None;
     let mut expires_in_days: Option<i64> = None;
+    let mut source_url: Option<String> = None;
 
     while let Some(field) = multipart
         .next_field()
@@ -115,6 +117,14 @@ async fn extract_text_handler(
                 let s = field.text().await
                     .map_err(|e| err(StatusCode::BAD_REQUEST, e.to_string()))?;
                 expires_in_days = s.trim().parse::<i64>().ok();
+            }
+            Some("source_url") => {
+                let s = field.text().await
+                    .map_err(|e| err(StatusCode::BAD_REQUEST, e.to_string()))?;
+                let trimmed = s.trim();
+                if !trimmed.is_empty() {
+                    source_url = Some(trimmed.to_string());
+                }
             }
             _ => {
                 let filename = field.file_name().unwrap_or("upload").to_string();
@@ -208,12 +218,12 @@ async fn extract_text_handler(
     sqlx::query(
         r#"
         INSERT INTO extracted_documents
-            (id, content_hash, filename, source_type, ocr_provider, extracted_text, expires_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+            (id, content_hash, source_url, filename, source_type, ocr_provider, extracted_text, expires_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         ON CONFLICT (content_hash) DO NOTHING
         "#,
     )
-    .bind(&doc_id).bind(&hash).bind(&filename)
+    .bind(&doc_id).bind(&hash).bind(&source_url).bind(&filename)
     .bind(&src_type).bind(&ocr_provider).bind(&text).bind(expires_at)
     .execute(&state.db)
     .await

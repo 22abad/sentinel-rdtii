@@ -72,6 +72,29 @@ def test_workflow_discovery_node_runs_with_mock_browser_mode():
     assert data["outputs"]["candidates"]
 
 
+def test_workflow_discovery_node_supports_demo_training_countries():
+    client = TestClient(main_module.app)
+
+    for country_code in ("MYS",):
+        response = client.post(
+            "/api/workflows/nodes/discovery.search/run",
+            json={
+                "node_id": f"discovery-{country_code}",
+                "config": {
+                    "country_code": country_code,
+                    "pillars": [6, 7],
+                    "browser_mode": "mock",
+                    "limit": 5,
+                },
+            },
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["outputs"]["country_code"] == country_code
+        assert data["outputs"]["candidates"]
+
+
 def test_workflow_discovery_node_validation_error_returns_422():
     client = TestClient(main_module.app)
 
