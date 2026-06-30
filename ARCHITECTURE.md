@@ -2,7 +2,7 @@
 
 ## What This System Does
 
-UN ESCAP RDTII 2.1 AI Mapper — extracts structured policy indicator mappings from legal texts (PDFs, URLs) and scores them against the Regional Digital Trade Integration Index 2.1 framework (12 pillars, ~50+ indicators).
+UN ESCAP RDTII 2.1 AI Mapper — extracts structured policy indicator mappings from legal texts (PDFs, URLs). The current automated scoring MVP focuses on Pillars 6 and 7, with partial Pillar 2/5 coverage and extension points for the full Regional Digital Trade Integration Index 2.1 framework (12 pillars, ~50+ indicators).
 
 ---
 

@@ -24,6 +24,7 @@ const COUNTRY_OPTIONS = [
   { code: "CHN", label: "China" },
   { code: "SGP", label: "Singapore" },
   { code: "THA", label: "Thailand" },
+  { code: "MYS", label: "Malaysia" },
 ];
 
 const SOURCE_MODE_OPTIONS: Array<{ value: DiscoverySourceMode; label: string }> = [
@@ -40,6 +41,7 @@ const LOCAL_LANGUAGE_BY_COUNTRY: Record<string, string> = {
   CHN: "zh",
   SGP: "en",
   THA: "th",
+  MYS: "ms",
 };
 
 function initialPillars(pillarFilter: string) {

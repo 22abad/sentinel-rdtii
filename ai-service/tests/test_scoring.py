@@ -450,6 +450,8 @@ class TestDispatcher:
         "indicator_id,features,expected",
         [
             ("6.1", {"personal_data": True, "has_ban": True}, 1.0),
+            ("2.1", {"procurement_preference": True}, 1.0),
+            ("5.1", {"has_competition": True}, 0.0),
             ("6.2", {"has_local_storage": True, "personal_data": True}, 1.0),
             ("6.3", {"has_infrastructure_req": True}, 1.0),
             ("6.4", {"has_conditional_flow": True, "horizontal_scope": True}, 1.0),
@@ -475,3 +477,7 @@ class TestDispatcher:
     def test_unsupported_indicator_raises(self):
         with pytest.raises(NotImplementedError):
             score_indicator("99.9", {})
+
+    def test_known_but_unimplemented_indicator_raises(self):
+        with pytest.raises(NotImplementedError):
+            score_indicator("1.1", {"tariff_rate": 5})

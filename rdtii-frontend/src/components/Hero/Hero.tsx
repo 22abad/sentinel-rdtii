@@ -23,7 +23,7 @@ export function Hero() {
           SENTINEL
         </h1>
         <p className="mt-6 text-lg md:text-xl text-white max-w-2xl drop-shadow">
-          Automated RDTII grading system for UN ESCAP researchers to map legal evidence across all 12 pillars.
+          Automated RDTII research system for UN ESCAP researchers, focused on Pillars 6 and 7 with an extensible path to the full framework.
         </p>
         <a
           href="/workbench"

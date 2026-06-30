@@ -70,6 +70,19 @@ async def _fetch_with_browser_mode(fetcher, source_url: str, browser_mode: str):
     return await fetcher(source_url)
 
 
+def _read_pdf_with_optional_source(read_pdf_func, pdf_path: str, source_url: str = ""):
+    import inspect
+
+    sig = inspect.signature(read_pdf_func)
+    accepts_source_url = "source_url" in sig.parameters or any(
+        param.kind == inspect.Parameter.VAR_KEYWORD
+        for param in sig.parameters.values()
+    )
+    if accepts_source_url:
+        return read_pdf_func(pdf_path, source_url=source_url)
+    return read_pdf_func(pdf_path)
+
+
 def _configured_provider(provider: str | None, model: str | None):
     if provider:
         return get_provider(provider, model=model)
@@ -107,7 +120,7 @@ async def extract(
                     text = ocs_result["text"]
         elif crawl_result["type"] == "pdf":
             try:
-                pdf_result = await asyncio.to_thread(read_pdf, crawl_result["pdf_path"])
+                pdf_result = await asyncio.to_thread(_read_pdf_with_optional_source, read_pdf, crawl_result["pdf_path"], source_url)
                 text = "\n".join(pdf_result.pages)
                 pdf_meta = {
                     "_ocr_mean_confidence": round(pdf_result.mean_conf, 3),
@@ -181,7 +194,7 @@ async def extract_stream(
                     text = ocs_result["text"]
         elif crawl_result["type"] == "pdf":
             try:
-                pdf_result = await asyncio.to_thread(read_pdf, crawl_result["pdf_path"])
+                pdf_result = await asyncio.to_thread(_read_pdf_with_optional_source, read_pdf, crawl_result["pdf_path"], source_url)
                 text = "\n".join(pdf_result.pages)
                 pdf_meta = {
                     "_ocr_mean_confidence": round(pdf_result.mean_conf, 3),
@@ -256,7 +269,7 @@ async def upload(file: UploadFile = File(...), provider: str = Form(None), model
         await asyncio.to_thread(tmp.write, content)
         tmp.close()
 
-        pdf_result = await asyncio.to_thread(read_pdf, tmp.name)
+        pdf_result = await asyncio.to_thread(_read_pdf_with_optional_source, read_pdf, tmp.name)
         text = "\n".join(pdf_result.pages)
         pdf_meta = {
             "_ocr_mean_confidence": round(pdf_result.mean_conf, 3),
@@ -309,7 +322,7 @@ async def fetch_text(req: FetchTextRequest):
         return FetchTextResponse(text=crawl_result["text"])
     if crawl_result["type"] == "pdf":
         try:
-            pdf_result = await asyncio.to_thread(read_pdf, crawl_result["pdf_path"])
+            pdf_result = await asyncio.to_thread(_read_pdf_with_optional_source, read_pdf, crawl_result["pdf_path"], req.source_url)
             return {
                 "text": "\n".join(pdf_result.pages),
                 "pdf_metadata": {

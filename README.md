@@ -19,7 +19,7 @@ make dev
 ```
 
 ## 🎯 The Mission
-Global digital trade is hindered by fragmented data localization and privacy laws. Traditional manual legal review is no longer scalable. **SENTINEL** is a hybrid extraction engine designed to automatically discover, extract, and map complex digital trade regulations against all 12 pillars of the **UNESCAP Regional Digital Trade Integration Index (RDTII 2.1)**.
+Global digital trade is hindered by fragmented data localization and privacy laws. Traditional manual legal review is no longer scalable. **SENTINEL** is a hybrid extraction engine designed to automatically discover, extract, and map complex digital trade regulations. The current MVP focuses on RDTII Pillars 6 and 7, with extension points for the full **UNESCAP Regional Digital Trade Integration Index (RDTII 2.1)** framework.
 
 ## ⚙️ Hybrid Architecture (The Engine)
 To eliminate LLM "hallucinations" in legal contexts, we employ a deterministic + probabilistic hybrid approach:

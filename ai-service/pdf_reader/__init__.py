@@ -61,7 +61,7 @@ class PdfResult:
     page_confs: list[float]
 
 
-def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS) -> PdfResult:
+def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "") -> PdfResult:
     """Extract text from a PDF with per-page routing and confidence tracking.
 
     Each page is checked individually:
@@ -70,6 +70,10 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS) -> PdfResult:
 
     Returns a PdfResult with per-page confidence scores.
     """
+    sidecar_result = _read_pdf_via_sidecar(filepath, source_url=source_url)
+    if sidecar_result is not None:
+        return sidecar_result
+
     import time
     from concurrent.futures import ThreadPoolExecutor, Future
 
@@ -160,6 +164,106 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS) -> PdfResult:
         text_pages=text_count,
         page_confs=page_confs,
     )
+
+
+def _read_pdf_via_sidecar(filepath: str, source_url: str = "") -> PdfResult | None:
+    """Use the Rust extraction sidecar when configured, falling back locally on error."""
+    sidecar_url = os.getenv("EXTRACT_SIDECAR_URL", "").rstrip("/")
+    if not sidecar_url:
+        return None
+
+    api_key = os.getenv("SIDECAR_API_KEY", "")
+    if not api_key:
+        logger.warning("[PDF] EXTRACT_SIDECAR_URL is set but SIDECAR_API_KEY is missing; using local reader")
+        return None
+
+    path = Path(filepath)
+    if not path.exists():
+        raise FileNotFoundError(f"PDF not found: {filepath}")
+
+    try:
+        preflight = _inspect_pdf_for_sidecar(path)
+        force_sidecar = os.getenv("EXTRACT_SIDECAR_FORCE", "").lower() in {"1", "true", "yes"}
+        if preflight["ocr_pages"] == 0 and not force_sidecar:
+            logger.info("[PDF] pure text PDF detected; using local PyMuPDF fast path for %s", path.name)
+            return None
+
+        import httpx
+
+        timeout = float(os.getenv("EXTRACT_SIDECAR_TIMEOUT_SECONDS", "180"))
+        with path.open("rb") as fh:
+            response = httpx.post(
+                f"{sidecar_url}/extract-text",
+                headers={"Authorization": f"Bearer {api_key}"},
+                data={"source_url": source_url} if source_url else None,
+                files={"file": (path.name, fh, "application/pdf")},
+                timeout=timeout,
+            )
+        response.raise_for_status()
+        payload = response.json()
+        text = str(payload.get("text") or "")
+        if not text.strip():
+            logger.warning("[PDF] sidecar returned empty text for %s; using local reader", path.name)
+            return None
+        logger.info(
+            "[PDF] sidecar extracted %s  cache_hit=%s  provider=%s",
+            path.name,
+            payload.get("cache_hit"),
+            payload.get("ocr_provider"),
+        )
+        return PdfResult(
+            pages=[text],
+            ocr_ratio=preflight["ocr_ratio"],
+            mean_conf=preflight["known_mean_conf"],
+            total_pages=preflight["total_pages"],
+            ocr_pages=preflight["ocr_pages"],
+            text_pages=preflight["text_pages"],
+            page_confs=preflight["page_confs"],
+        )
+    except Exception as exc:
+        logger.warning("[PDF] sidecar extraction failed for %s: %s; using local reader", path.name, exc)
+        return None
+
+
+def _inspect_pdf_for_sidecar(path: Path) -> dict:
+    """Return cheap per-page metadata before deciding whether to use sidecar."""
+    doc = fitz.open(str(path))
+    try:
+        n_pages = len(doc)
+        pymupdf_pages: list[str] = []
+        has_images: list[bool] = []
+        for page in doc:
+            text = _extract_page_filtered(page)
+            pymupdf_pages.append(text)
+            blocks = page.get_text("dict")["blocks"]
+            has_images.append(any(b["type"] == 1 for b in blocks))
+
+        needs_ocr = [
+            i for i in range(n_pages)
+            if has_images[i]
+            or len(pymupdf_pages[i].strip()) < _PAGE_TEXT_MIN
+            or is_garbled(pymupdf_pages[i])
+        ]
+        text_page_confs = {
+            i: text_confidence(pymupdf_pages[i])
+            for i in range(n_pages)
+            if i not in needs_ocr
+        }
+        page_confs = [
+            text_page_confs.get(i, 0.0)
+            for i in range(n_pages)
+        ]
+        known_mean_conf = sum(page_confs) / n_pages if n_pages else 0.0
+        return {
+            "total_pages": n_pages,
+            "ocr_pages": len(needs_ocr),
+            "text_pages": n_pages - len(needs_ocr),
+            "ocr_ratio": len(needs_ocr) / n_pages if n_pages else 0.0,
+            "known_mean_conf": known_mean_conf,
+            "page_confs": page_confs,
+        }
+    finally:
+        doc.close()
 
 
 def extract_sections(filepath: str, min_section_chars: int = 100) -> list[dict]:
