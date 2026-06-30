@@ -20,7 +20,7 @@ use uuid::Uuid;
 
 #[derive(Clone)]
 struct AppState {
-    db:      PgPool,
+    db: PgPool,
     api_key: String,
 }
 
@@ -47,22 +47,22 @@ async fn require_api_key(
 #[derive(Serialize)]
 struct ExtractTextResponse {
     /// Stable document ID — pass to FastAPI to reference the source doc.
-    doc_id:       String,
-    filename:     String,
+    doc_id: String,
+    filename: String,
     /// Full extracted text, all pages joined with \n\n.
-    text:         String,
+    text: String,
     /// true = served from DB cache; false = freshly OCR'd.
-    cache_hit:    bool,
+    cache_hit: bool,
     /// "tesseract" | "openai_vision" | "none" (plain-text files)
     ocr_provider: String,
 }
 
 #[derive(FromRow)]
 struct CachedDoc {
-    id:             String,
+    id: String,
     extracted_text: String,
-    ocr_provider:   String,
-    filename:       String,
+    ocr_provider: String,
+    filename: String,
 }
 
 fn err(status: StatusCode, msg: impl Into<String>) -> (StatusCode, Json<serde_json::Value>) {
@@ -80,8 +80,28 @@ fn classify_format(filename: &str) -> &'static str {
         .as_str()
     {
         "pdf" | "jpg" | "jpeg" | "png" => "ocr",
-        "txt" | "md"                   => "text",
-        _                              => "unsupported",
+        "txt" | "md" => "text",
+        _ => "unsupported",
+    }
+}
+
+fn content_hash(bytes: &[u8]) -> String {
+    hex_encode(Sha256::digest(bytes))
+}
+
+fn expires_at_from_days(now: DateTime<Utc>, expires_in_days: Option<i64>) -> Option<DateTime<Utc>> {
+    expires_in_days.map(|d| now + Duration::days(d))
+}
+
+impl From<CachedDoc> for ExtractTextResponse {
+    fn from(doc: CachedDoc) -> Self {
+        Self {
+            doc_id: doc.id,
+            filename: doc.filename,
+            text: doc.extracted_text,
+            cache_hit: true,
+            ocr_provider: doc.ocr_provider,
+        }
     }
 }
 
@@ -114,12 +134,16 @@ async fn extract_text_handler(
     {
         match field.name() {
             Some("expires_in_days") => {
-                let s = field.text().await
+                let s = field
+                    .text()
+                    .await
                     .map_err(|e| err(StatusCode::BAD_REQUEST, e.to_string()))?;
                 expires_in_days = s.trim().parse::<i64>().ok();
             }
             Some("source_url") => {
-                let s = field.text().await
+                let s = field
+                    .text()
+                    .await
                     .map_err(|e| err(StatusCode::BAD_REQUEST, e.to_string()))?;
                 let trimmed = s.trim();
                 if !trimmed.is_empty() {
@@ -128,7 +152,9 @@ async fn extract_text_handler(
             }
             _ => {
                 let filename = field.file_name().unwrap_or("upload").to_string();
-                let bytes = field.bytes().await
+                let bytes = field
+                    .bytes()
+                    .await
                     .map_err(|e| err(StatusCode::BAD_REQUEST, e.to_string()))?
                     .to_vec();
                 file_data = Some((filename, bytes));
@@ -136,13 +162,15 @@ async fn extract_text_handler(
         }
     }
 
-    let (filename, bytes) = file_data
-        .ok_or_else(|| err(StatusCode::BAD_REQUEST, "No file uploaded"))?;
+    let (filename, bytes) =
+        file_data.ok_or_else(|| err(StatusCode::BAD_REQUEST, "No file uploaded"))?;
 
     let fmt = classify_format(&filename);
     if fmt == "unsupported" {
-        let ext = Path::new(&filename).extension()
-            .and_then(|e| e.to_str()).unwrap_or("(none)");
+        let ext = Path::new(&filename)
+            .extension()
+            .and_then(|e| e.to_str())
+            .unwrap_or("(none)");
         return Err(err(
             StatusCode::BAD_REQUEST,
             format!("Unsupported file type '.{ext}'. Accepted: pdf, jpg, jpeg, png, txt, md."),
@@ -150,7 +178,7 @@ async fn extract_text_handler(
     }
 
     // --- 1. Hash ---
-    let hash = hex_encode(Sha256::digest(&bytes));
+    let hash = content_hash(&bytes);
 
     // --- 2. Cache check ---
     let cached = sqlx::query_as::<_, CachedDoc>(
@@ -168,18 +196,13 @@ async fn extract_text_handler(
     .map_err(|e| err(StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
 
     if let Some(doc) = cached {
-        return Ok(Json(ExtractTextResponse {
-            doc_id:       doc.id,
-            filename:     doc.filename,
-            text:         doc.extracted_text,
-            cache_hit:    true,
-            ocr_provider: doc.ocr_provider,
-        }));
+        return Ok(Json(doc.into()));
     }
 
     // --- 3. Extract ---
     let (text, ocr_provider) = if fmt == "ocr" {
-        let suffix = Path::new(&filename).extension()
+        let suffix = Path::new(&filename)
+            .extension()
             .and_then(|e| e.to_str())
             .map(|e| format!(".{e}"))
             .unwrap_or_default();
@@ -191,11 +214,18 @@ async fn extract_text_handler(
             .tempfile()
             .map_err(|e| err(StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
 
-        tokio::fs::write(tmp.path(), &bytes).await
+        tokio::fs::write(tmp.path(), &bytes)
+            .await
             .map_err(|e| err(StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
 
-        let (t, p) = ocr::extract_text_with_provider(tmp.path()).await
-            .map_err(|e| err(StatusCode::INTERNAL_SERVER_ERROR, format!("OCR failed: {e:#}")))?;
+        let (t, p) = ocr::extract_text_with_provider(tmp.path())
+            .await
+            .map_err(|e| {
+                err(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("OCR failed: {e:#}"),
+                )
+            })?;
 
         (t, p.to_string())
     } else {
@@ -205,15 +235,20 @@ async fn extract_text_handler(
     };
 
     if text.trim().is_empty() {
-        return Err(err(StatusCode::UNPROCESSABLE_ENTITY, "File produced no extractable text."));
+        return Err(err(
+            StatusCode::UNPROCESSABLE_ENTITY,
+            "File produced no extractable text.",
+        ));
     }
 
     // --- 4. Store ---
-    let doc_id   = Uuid::new_v4().to_string();
-    let src_type = Path::new(&filename).extension()
-        .and_then(|e| e.to_str()).unwrap_or("unknown").to_string();
-    let expires_at: Option<DateTime<Utc>> =
-        expires_in_days.map(|d| Utc::now() + Duration::days(d));
+    let doc_id = Uuid::new_v4().to_string();
+    let src_type = Path::new(&filename)
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("unknown")
+        .to_string();
+    let expires_at = expires_at_from_days(Utc::now(), expires_in_days);
 
     sqlx::query(
         r#"
@@ -239,15 +274,38 @@ async fn extract_text_handler(
     .map_err(|e| err(StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
 
     Ok(Json(ExtractTextResponse {
-        doc_id:       actual_id,
+        doc_id: actual_id,
         filename,
         text,
-        cache_hit:    false,
+        cache_hit: false,
         ocr_provider,
     }))
 }
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
+
+fn build_app(state: AppState) -> Router {
+    let cors = CorsLayer::new()
+        .allow_origin(AllowOrigin::list(["http://localhost:8000"
+            .parse::<HeaderValue>()
+            .unwrap()]))
+        .allow_methods(AllowMethods::any())
+        .allow_headers(AllowHeaders::any());
+
+    let protected = Router::new()
+        .route("/extract-text", post(extract_text_handler))
+        .layer(axum::extract::DefaultBodyLimit::max(50 * 1024 * 1024))
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            require_api_key,
+        ));
+
+    Router::new()
+        .route("/health", axum::routing::get(|| async { "OK" }))
+        .merge(protected)
+        .layer(cors)
+        .with_state(state)
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -260,12 +318,9 @@ async fn main() -> Result<()> {
 
     dotenvy::dotenv().ok();
 
-    let database_url = std::env::var("DATABASE_URL")
-        .context("DATABASE_URL must be set")?;
-    let api_key = std::env::var("SIDECAR_API_KEY")
-        .context("SIDECAR_API_KEY must be set")?;
-    let addr = std::env::var("SIDECAR_ADDR")
-        .unwrap_or_else(|_| "0.0.0.0:4000".to_string());
+    let database_url = std::env::var("DATABASE_URL").context("DATABASE_URL must be set")?;
+    let api_key = std::env::var("SIDECAR_API_KEY").context("SIDECAR_API_KEY must be set")?;
+    let addr = std::env::var("SIDECAR_ADDR").unwrap_or_else(|_| "0.0.0.0:4000".to_string());
 
     let db = PgPoolOptions::new()
         .max_connections(10)
@@ -274,30 +329,403 @@ async fn main() -> Result<()> {
         .context("Failed to connect to database")?;
 
     let state = AppState { db, api_key };
-
-    let cors = CorsLayer::new()
-        .allow_origin(AllowOrigin::list([
-            "http://localhost:8000".parse::<HeaderValue>().unwrap(),
-        ]))
-        .allow_methods(AllowMethods::any())
-        .allow_headers(AllowHeaders::any());
-
-    let protected = Router::new()
-        .route("/extract-text", post(extract_text_handler))
-        .layer(axum::extract::DefaultBodyLimit::max(50 * 1024 * 1024))
-        .layer(axum::middleware::from_fn_with_state(
-            state.clone(),
-            require_api_key,
-        ));
-
-    let app = Router::new()
-        .route("/health", axum::routing::get(|| async { "OK" }))
-        .merge(protected)
-        .layer(cors)
-        .with_state(state);
+    let app = build_app(state);
 
     tracing::info!("extract-sidecar listening on http://{}", addr);
     let listener = tokio::net::TcpListener::bind(&addr).await?;
     axum::serve(listener, app).await?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{
+        body::{to_bytes, Body},
+        http::{header, Method, Request},
+    };
+    use serde_json::Value;
+    use tower::ServiceExt;
+
+    const TEST_API_KEY: &str = "test-sidecar-key";
+
+    fn lazy_test_state() -> AppState {
+        let db = PgPoolOptions::new()
+            .connect_lazy("postgres://unused:unused@127.0.0.1:1/unused")
+            .expect("test database URL should be syntactically valid");
+        AppState {
+            db,
+            api_key: TEST_API_KEY.to_string(),
+        }
+    }
+
+    fn multipart_txt_body(filename: &str, text: &str) -> (String, String) {
+        let boundary = "sidecar-test-boundary";
+        let body = format!(
+            "--{boundary}\r\n\
+             Content-Disposition: form-data; name=\"file\"; filename=\"{filename}\"\r\n\
+             Content-Type: text/plain\r\n\
+             \r\n\
+             {text}\r\n\
+             --{boundary}--\r\n"
+        );
+        (format!("multipart/form-data; boundary={boundary}"), body)
+    }
+
+    fn multipart_no_file_body() -> (String, String) {
+        let boundary = "sidecar-test-boundary";
+        let body = format!(
+            "--{boundary}\r\n\
+             Content-Disposition: form-data; name=\"expires_in_days\"\r\n\
+             \r\n\
+             7\r\n\
+             --{boundary}--\r\n"
+        );
+        (format!("multipart/form-data; boundary={boundary}"), body)
+    }
+
+    fn multipart_file_without_filename_body(text: &str) -> (String, String) {
+        let boundary = "sidecar-test-boundary";
+        let body = format!(
+            "--{boundary}\r\n\
+             Content-Disposition: form-data; name=\"file\"\r\n\
+             Content-Type: application/octet-stream\r\n\
+             \r\n\
+             {text}\r\n\
+             --{boundary}--\r\n"
+        );
+        (format!("multipart/form-data; boundary={boundary}"), body)
+    }
+
+    fn malformed_multipart_body() -> (String, String) {
+        let boundary = "sidecar-test-boundary";
+        let body = format!(
+            "--{boundary}\r\n\
+             this-is-not-a-valid-header\r\n\
+             \r\n"
+        );
+        (format!("multipart/form-data; boundary={boundary}"), body)
+    }
+
+    async fn response_json(response: axum::response::Response) -> Value {
+        let bytes = to_bytes(response.into_body(), usize::MAX)
+            .await
+            .expect("response body should be readable");
+        serde_json::from_slice(&bytes).expect("response should be JSON")
+    }
+
+    async fn assert_json_error_contains(
+        response: axum::response::Response,
+        status: StatusCode,
+        expected: &str,
+    ) {
+        let actual_status = response.status();
+        let json = response_json(response).await;
+        let error = json["error"]
+            .as_str()
+            .expect("error response should include an error string");
+
+        assert_eq!(actual_status, status);
+        assert!(
+            error.contains(expected),
+            "expected error containing {expected:?}, got {error:?}"
+        );
+    }
+
+    #[test]
+    fn classifies_supported_and_unsupported_formats() {
+        assert_eq!(classify_format("trade.pdf"), "ocr");
+        assert_eq!(classify_format("scan.JPG"), "ocr");
+        assert_eq!(classify_format("photo.jpeg"), "ocr");
+        assert_eq!(classify_format("page.PNG"), "ocr");
+        assert_eq!(classify_format("notes.txt"), "text");
+        assert_eq!(classify_format("README.MD"), "text");
+        assert_eq!(classify_format("archive.zip"), "unsupported");
+        assert_eq!(classify_format("no-extension"), "unsupported");
+    }
+
+    #[test]
+    fn content_hash_is_stable_and_content_sensitive() {
+        let first = content_hash(b"same legal text");
+        let second = content_hash(b"same legal text");
+        let different = content_hash(b"different legal text");
+
+        assert_eq!(first, second);
+        assert_ne!(first, different);
+        assert_eq!(first.len(), 64);
+    }
+
+    #[test]
+    fn expiry_is_optional_and_day_based() {
+        let now = DateTime::parse_from_rfc3339("2026-06-30T12:00:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
+
+        assert_eq!(expires_at_from_days(now, None), None);
+        assert_eq!(
+            expires_at_from_days(now, Some(7)),
+            Some(
+                DateTime::parse_from_rfc3339("2026-07-07T12:00:00Z")
+                    .unwrap()
+                    .with_timezone(&Utc)
+            )
+        );
+    }
+
+    #[test]
+    fn cached_doc_maps_to_cache_hit_response() {
+        let response = ExtractTextResponse::from(CachedDoc {
+            id: "doc-123".to_string(),
+            extracted_text: "cached text".to_string(),
+            ocr_provider: "none".to_string(),
+            filename: "fixture.txt".to_string(),
+        });
+
+        assert_eq!(response.doc_id, "doc-123");
+        assert_eq!(response.filename, "fixture.txt");
+        assert_eq!(response.text, "cached text");
+        assert!(response.cache_hit);
+        assert_eq!(response.ocr_provider, "none");
+    }
+
+    #[tokio::test]
+    async fn extract_text_requires_bearer_token() {
+        let app = build_app(lazy_test_state());
+        let (content_type, body) = multipart_txt_body("fixture.txt", "hello sidecar");
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(Method::POST)
+                    .uri("/extract-text")
+                    .header(header::CONTENT_TYPE, content_type)
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+    }
+
+    #[tokio::test]
+    async fn extract_text_rejects_wrong_bearer_token() {
+        let app = build_app(lazy_test_state());
+        let (content_type, body) = multipart_txt_body("fixture.txt", "hello sidecar");
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(Method::POST)
+                    .uri("/extract-text")
+                    .header(header::CONTENT_TYPE, content_type)
+                    .header(header::AUTHORIZATION, "Bearer wrong-token")
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+    }
+
+    #[tokio::test]
+    async fn extract_text_rejects_non_bearer_authorization() {
+        let app = build_app(lazy_test_state());
+        let (content_type, body) = multipart_txt_body("fixture.txt", "hello sidecar");
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(Method::POST)
+                    .uri("/extract-text")
+                    .header(header::CONTENT_TYPE, content_type)
+                    .header(header::AUTHORIZATION, TEST_API_KEY)
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+    }
+
+    #[tokio::test]
+    async fn extract_text_accepts_correct_bearer_token_before_validation() {
+        let app = build_app(lazy_test_state());
+        let (content_type, body) = multipart_txt_body("unsupported.docx", "hello sidecar");
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(Method::POST)
+                    .uri("/extract-text")
+                    .header(header::CONTENT_TYPE, content_type)
+                    .header(header::AUTHORIZATION, format!("Bearer {TEST_API_KEY}"))
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_json_error_contains(response, StatusCode::BAD_REQUEST, "Unsupported file type")
+            .await;
+    }
+
+    #[tokio::test]
+    async fn extract_text_rejects_missing_file_before_db_lookup() {
+        let app = build_app(lazy_test_state());
+        let (content_type, body) = multipart_no_file_body();
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(Method::POST)
+                    .uri("/extract-text")
+                    .header(header::CONTENT_TYPE, content_type)
+                    .header(header::AUTHORIZATION, format!("Bearer {TEST_API_KEY}"))
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_json_error_contains(response, StatusCode::BAD_REQUEST, "No file uploaded").await;
+    }
+
+    #[tokio::test]
+    async fn extract_text_rejects_file_without_filename_as_unsupported() {
+        let app = build_app(lazy_test_state());
+        let (content_type, body) = multipart_file_without_filename_body("hello sidecar");
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(Method::POST)
+                    .uri("/extract-text")
+                    .header(header::CONTENT_TYPE, content_type)
+                    .header(header::AUTHORIZATION, format!("Bearer {TEST_API_KEY}"))
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_json_error_contains(
+            response,
+            StatusCode::BAD_REQUEST,
+            "Unsupported file type '.(none)'",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn extract_text_rejects_malformed_multipart_before_db_lookup() {
+        let app = build_app(lazy_test_state());
+        let (content_type, body) = malformed_multipart_body();
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(Method::POST)
+                    .uri("/extract-text")
+                    .header(header::CONTENT_TYPE, content_type)
+                    .header(header::AUTHORIZATION, format!("Bearer {TEST_API_KEY}"))
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+        let json = response_json(response).await;
+        assert!(
+            json["error"]
+                .as_str()
+                .is_some_and(|error| !error.is_empty()),
+            "malformed multipart should return a non-empty error body"
+        );
+    }
+
+    #[tokio::test]
+    async fn txt_upload_smoke_returns_200_then_cache_hit_when_test_db_is_configured() {
+        let database_url = match std::env::var("TEST_DATABASE_URL") {
+            Ok(url) => url,
+            Err(_) => {
+                eprintln!("skipping Postgres smoke test; set TEST_DATABASE_URL to run it");
+                return;
+            }
+        };
+
+        let db = PgPoolOptions::new()
+            .max_connections(2)
+            .connect(&database_url)
+            .await
+            .expect("TEST_DATABASE_URL should point to a reachable Postgres database");
+
+        sqlx::query("CREATE TABLE IF NOT EXISTS documents ()")
+            .execute(&db)
+            .await
+            .expect("documents stub table should be creatable when absent");
+        sqlx::query("CREATE TABLE IF NOT EXISTS document_chunks ()")
+            .execute(&db)
+            .await
+            .expect("document_chunks stub table should be creatable when absent");
+        sqlx::raw_sql(include_str!("../migrations/001_extracted_documents.sql"))
+            .execute(&db)
+            .await
+            .expect("sidecar migration should run against the test database");
+
+        let fixture_text = format!("sidecar smoke fixture {}", Uuid::new_v4());
+        let fixture_hash = content_hash(fixture_text.as_bytes());
+        sqlx::query("DELETE FROM extracted_documents WHERE content_hash = $1")
+            .bind(&fixture_hash)
+            .execute(&db)
+            .await
+            .expect("fixture cleanup before test should succeed");
+
+        let state = AppState {
+            db: db.clone(),
+            api_key: TEST_API_KEY.to_string(),
+        };
+
+        let first = post_txt_fixture(build_app(state.clone()), &fixture_text).await;
+        assert_eq!(first.status(), StatusCode::OK);
+        let first_json = response_json(first).await;
+        assert_eq!(first_json["filename"], "fixture.txt");
+        assert_eq!(first_json["text"], fixture_text);
+        assert_eq!(first_json["cache_hit"], false);
+        assert_eq!(first_json["ocr_provider"], "none");
+        let doc_id = first_json["doc_id"]
+            .as_str()
+            .expect("doc_id should be a string")
+            .to_string();
+
+        let second = post_txt_fixture(build_app(state), &fixture_text).await;
+        assert_eq!(second.status(), StatusCode::OK);
+        let second_json = response_json(second).await;
+        assert_eq!(second_json["cache_hit"], true);
+        assert_eq!(second_json["doc_id"], doc_id);
+
+        sqlx::query("DELETE FROM extracted_documents WHERE content_hash = $1")
+            .bind(&fixture_hash)
+            .execute(&db)
+            .await
+            .expect("fixture cleanup after test should succeed");
+    }
+
+    async fn post_txt_fixture(app: Router, text: &str) -> axum::response::Response {
+        let (content_type, body) = multipart_txt_body("fixture.txt", text);
+        app.oneshot(
+            Request::builder()
+                .method(Method::POST)
+                .uri("/extract-text")
+                .header(header::CONTENT_TYPE, content_type)
+                .header(header::AUTHORIZATION, format!("Bearer {TEST_API_KEY}"))
+                .body(Body::from(body))
+                .unwrap(),
+        )
+        .await
+        .unwrap()
+    }
 }
