@@ -16,4 +16,4 @@ _AI_SERVICE = Path(__file__).resolve().parent
 if str(_AI_SERVICE) not in sys.path:
     sys.path.insert(0, str(_AI_SERVICE))
 
-os.environ.setdefault("DISCOVERY_REGISTRY_BACKEND", "file")
+os.environ["DISCOVERY_REGISTRY_BACKEND"] = "file"

@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckSquare, Download, ExternalLink, FileInput, Loader2, Search, Square } from "lucide-react";
+import { createPortal } from "react-dom";
+import { CheckSquare, Download, ExternalLink, FileInput, Loader2, Search, Settings2, Square, X } from "lucide-react";
 import { useDiscovery } from "../../hooks/useDiscovery";
 import { listDiscoveryCountries } from "../../services/workflowNodes";
 import type { DiscoveryCountry, DiscoverySourceMode, LegalCandidate } from "../../types";
+import { DiscoverySourceManager } from "./DiscoverySourceManager";
 import {
   Select,
   SelectContent,
@@ -63,6 +65,7 @@ export function DiscoveryPanel({
   const [sourceMode, setSourceMode] = useState<DiscoverySourceMode>("official_first");
   const [languageMode, setLanguageMode] = useState("auto");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [sourceManagerOpen, setSourceManagerOpen] = useState(false);
   const { data, error, loading, search } = useDiscovery();
 
   useEffect(() => {
@@ -72,8 +75,8 @@ export function DiscoveryPanel({
         if (cancelled || !items.length) return;
         setCountries(items);
         setCountryCode((current) => {
-          if (items.some((item) => item.country_code === country)) return country;
           if (items.some((item) => item.country_code === current)) return current;
+          if (items.some((item) => item.country_code === country)) return country;
           return items[0].country_code;
         });
       })
@@ -100,6 +103,15 @@ export function DiscoveryPanel({
       setLanguageMode("auto");
     }
   }, [languageMode, localLanguage]);
+
+  useEffect(() => {
+    if (!sourceManagerOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSourceManagerOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [sourceManagerOpen]);
 
   const diagnosticsText = useMemo(() => {
     if (!data) return "";
@@ -175,19 +187,32 @@ export function DiscoveryPanel({
           <h2>Discovery</h2>
           <p>Search official legal sources before extraction.</p>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            setSelectedIds([]);
-            search({ countryCode, pillars, keywords, sourceMode, languages: requestLanguages() });
-          }}
-          disabled={loading || pillars.length === 0}
-          className="group flex items-center justify-center rounded-full text-md h-10 px-5 cursor-pointer transition-all duration-500 bg-[#0f766e] text-white"
-          style={{ minHeight: 0, border: "none" }}
-        >
-          {loading ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Search size={16} className="mr-2" />}
-          <span>{loading ? "Searching" : "Discover"}</span>
-        </button>
+        <div className="discovery-header-actions">
+          <button
+            type="button"
+            className="secondary discovery-source-menu-button"
+            onClick={() => setSourceManagerOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={sourceManagerOpen}
+            title="Source manager"
+          >
+            <Settings2 size={16} />
+            <span>Sources</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedIds([]);
+              search({ countryCode, pillars, keywords, sourceMode, languages: requestLanguages() });
+            }}
+            disabled={loading || pillars.length === 0}
+            className="group flex items-center justify-center rounded-full text-md h-10 px-5 cursor-pointer transition-all duration-500 bg-[#0f766e] text-white"
+            style={{ minHeight: 0, border: "none" }}
+          >
+            {loading ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Search size={16} className="mr-2" />}
+            <span>{loading ? "Searching" : "Discover"}</span>
+          </button>
+        </div>
       </div>
 
       <div className="discovery-controls">
@@ -339,6 +364,30 @@ export function DiscoveryPanel({
           </div>
         </div>
       )}
+
+      {sourceManagerOpen &&
+        createPortal(
+          <div className="source-manager-drawer-root" role="presentation">
+            <button
+              type="button"
+              className="source-manager-drawer-backdrop"
+              aria-label="Close source manager"
+              onClick={() => setSourceManagerOpen(false)}
+            />
+            <aside className="source-manager-drawer" role="dialog" aria-modal="true" aria-label="Source manager">
+              <button
+                type="button"
+                className="source-manager-drawer-close"
+                aria-label="Close source manager"
+                onClick={() => setSourceManagerOpen(false)}
+              >
+                <X size={18} />
+              </button>
+              <DiscoverySourceManager />
+            </aside>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }

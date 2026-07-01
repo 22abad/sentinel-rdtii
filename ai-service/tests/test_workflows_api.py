@@ -129,6 +129,31 @@ def test_workflow_discovery_node_unknown_country_returns_404():
     assert response.json()["detail"] == "No discovery sources configured for ZZZ."
 
 
+def test_workflow_discovery_node_database_unavailable_returns_503(monkeypatch):
+    from services.discovery_source_persistence import DiscoverySourcePersistenceError
+    from workflows.nodes import discovery as discovery_node
+
+    async def unavailable_search(_self, _request):
+        raise DiscoverySourcePersistenceError("missing table")
+
+    monkeypatch.setattr(discovery_node.DiscoveryService, "search", unavailable_search)
+    client = TestClient(main_module.app)
+
+    response = client.post(
+        "/api/workflows/nodes/discovery.search/run",
+        json={
+            "config": {
+                "country_code": "SGP",
+                "pillars": [6],
+                "browser_mode": "mock",
+            },
+        },
+    )
+
+    assert response.status_code == 503
+    assert "missing table" in response.json()["detail"]
+
+
 def test_workflow_fetch_text_node_uses_document_fetch_helper(monkeypatch):
     from services.document_fetch import DocumentText
     from workflows.nodes import fetch_text as fetch_node

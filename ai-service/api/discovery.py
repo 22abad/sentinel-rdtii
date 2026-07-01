@@ -41,6 +41,8 @@ async def discovery_search(req: DiscoverySearchRequest):
         raise HTTPException(status_code=404, detail=f"No discovery sources configured for {req.country_code}.")
     except discovery_source_persistence.DiscoverySourcePersistenceError as exc:
         raise HTTPException(status_code=503, detail=f"Discovery source database unavailable: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=f"Discovery source configuration invalid: {exc}") from exc
 
 
 @router.get("/api/discovery/sources/{country_code}")
@@ -52,6 +54,8 @@ async def discovery_sources(country_code: str):
         raise HTTPException(status_code=404, detail=f"No discovery sources configured for {normalized}.")
     except discovery_source_persistence.DiscoverySourcePersistenceError as exc:
         raise HTTPException(status_code=503, detail=f"Discovery source database unavailable: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=f"Discovery source configuration invalid: {exc}") from exc
     return {
         "country_code": normalized,
         "sources": [source.model_dump() for source in sources],
@@ -66,6 +70,8 @@ async def discovery_countries():
         }
     except discovery_source_persistence.DiscoverySourcePersistenceError as exc:
         raise HTTPException(status_code=503, detail=f"Discovery source database unavailable: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=f"Discovery source configuration invalid: {exc}") from exc
 
 
 @router.get("/api/discovery/config")
@@ -74,6 +80,8 @@ async def discovery_config():
         return {"registry": get_registry()}
     except discovery_source_persistence.DiscoverySourcePersistenceError as exc:
         raise HTTPException(status_code=503, detail=f"Discovery source database unavailable: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=f"Discovery source configuration invalid: {exc}") from exc
 
 
 @router.put("/api/discovery/config")

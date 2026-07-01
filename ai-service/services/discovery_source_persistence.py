@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
+from functools import lru_cache
 from typing import Any
 
 from auth import _db_connect
@@ -12,6 +14,15 @@ class DiscoverySourcePersistenceError(RuntimeError):
 
 
 def get_registry() -> dict[str, dict[str, Any]]:
+    return deepcopy(_get_registry_cached())
+
+
+def clear_registry_cache() -> None:
+    _get_registry_cached.cache_clear()
+
+
+@lru_cache(maxsize=1)
+def _get_registry_cached() -> dict[str, dict[str, Any]]:
     try:
         with _db_connect() as conn:
             with conn.cursor() as cur:
@@ -31,55 +42,55 @@ def get_registry() -> dict[str, dict[str, Any]]:
                     "ORDER BY country_code, position, name"
                 )
                 source_rows = cur.fetchall()
+
+        registry: dict[str, dict[str, Any]] = {}
+        for country_code, label, languages in country_rows:
+            registry[str(country_code).upper()] = {
+                "label": label,
+                "languages": _json_list(languages),
+                "sources": [],
+            }
+
+        for row in source_rows:
+            (
+                country_code,
+                name,
+                base_url,
+                domains,
+                source_grade,
+                adapter,
+                source_type,
+                languages,
+                pillars,
+                indicators,
+                search_paths,
+                include_patterns,
+                exclude_patterns,
+                priority,
+                notes,
+            ) = row
+            country = registry.get(str(country_code).upper())
+            if country is None:
+                continue
+            country["sources"].append({
+                "name": name,
+                "base_url": base_url,
+                "domains": _json_list(domains),
+                "source_grade": source_grade,
+                "adapter": adapter,
+                "source_type": source_type,
+                "languages": _json_list(languages),
+                "pillars": _json_list(pillars),
+                "indicators": _json_list(indicators),
+                "search_paths": _json_list(search_paths),
+                "include_patterns": _json_list(include_patterns),
+                "exclude_patterns": _json_list(exclude_patterns),
+                "priority": priority,
+                "notes": notes,
+            })
+        return normalize_registry(registry)
     except Exception as exc:
         raise DiscoverySourcePersistenceError(str(exc)) from exc
-
-    registry: dict[str, dict[str, Any]] = {}
-    for country_code, label, languages in country_rows:
-        registry[str(country_code).upper()] = {
-            "label": label,
-            "languages": _json_list(languages),
-            "sources": [],
-        }
-
-    for row in source_rows:
-        (
-            country_code,
-            name,
-            base_url,
-            domains,
-            source_grade,
-            adapter,
-            source_type,
-            languages,
-            pillars,
-            indicators,
-            search_paths,
-            include_patterns,
-            exclude_patterns,
-            priority,
-            notes,
-        ) = row
-        country = registry.get(str(country_code).upper())
-        if country is None:
-            continue
-        country["sources"].append({
-            "name": name,
-            "base_url": base_url,
-            "domains": _json_list(domains),
-            "source_grade": source_grade,
-            "adapter": adapter,
-            "source_type": source_type,
-            "languages": _json_list(languages),
-            "pillars": _json_list(pillars),
-            "indicators": _json_list(indicators),
-            "search_paths": _json_list(search_paths),
-            "include_patterns": _json_list(include_patterns),
-            "exclude_patterns": _json_list(exclude_patterns),
-            "priority": priority,
-            "notes": notes,
-        })
-    return normalize_registry(registry)
 
 
 def save_registry(
@@ -153,6 +164,7 @@ def save_registry(
                 conn.commit()
     except Exception as exc:
         raise DiscoverySourcePersistenceError(str(exc)) from exc
+    clear_registry_cache()
     return normalized
 
 

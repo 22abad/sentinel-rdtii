@@ -40,6 +40,7 @@ class _FakeConnection:
 
 
 def test_get_registry_reads_discovery_source_tables(monkeypatch):
+    persistence.clear_registry_cache()
     cursor = _FakeCursor(rows=[
         [("TST", "Testland", '["en"]')],
         [
@@ -75,6 +76,7 @@ def test_get_registry_reads_discovery_source_tables(monkeypatch):
 
 
 def test_save_registry_writes_discovery_tables_and_audit(monkeypatch):
+    persistence.clear_registry_cache()
     cursor = _FakeCursor()
     connection = _FakeConnection(cursor)
     monkeypatch.setattr(persistence, "_db_connect", lambda: connection)
@@ -111,6 +113,43 @@ def test_save_registry_writes_discovery_tables_and_audit(monkeypatch):
     assert "INSERT INTO discovery_source_audit_events" in executed
     assert connection.committed is True
     assert registry["TST"]["sources"][0]["name"] == "Test Statutes"
+
+
+def test_get_registry_wraps_invalid_stored_data(monkeypatch):
+    persistence.clear_registry_cache()
+    cursor = _FakeCursor(rows=[
+        [("TST", "Testland", '["en"]')],
+        [
+            (
+                "TST",
+                "Bad Statutes",
+                "https://laws.example",
+                '["laws.example"]',
+                "primary",
+                "search_engine",
+                "statute_portal",
+                '["en"]',
+                "[99]",
+                "[]",
+                "[]",
+                "[]",
+                "[]",
+                100,
+                "Invalid pillar",
+            )
+        ],
+    ])
+    connection = _FakeConnection(cursor)
+    monkeypatch.setattr(persistence, "_db_connect", lambda: connection)
+
+    try:
+        persistence.get_registry()
+    except persistence.DiscoverySourcePersistenceError as exc:
+        assert "unsupported source pillar" in str(exc)
+    else:
+        raise AssertionError("Expected invalid stored data to be wrapped")
+    finally:
+        persistence.clear_registry_cache()
 
 
 def test_registry_database_backend_preserves_empty_database(monkeypatch):

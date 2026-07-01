@@ -79,6 +79,7 @@ export function DiscoverySourceManager() {
   function replaceRegistry(next: DiscoveryRegistry) {
     setRegistry(next);
     setDirty(true);
+    setError("");
     setMessage("");
   }
 

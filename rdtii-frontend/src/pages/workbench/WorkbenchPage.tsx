@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuditPanel } from "../../components/AuditPanel";
 import { DiscoveryPanel } from "../../components/Discovery/DiscoveryPanel";
-import { DiscoverySourceManager } from "../../components/Discovery/DiscoverySourceManager";
 import { SourcePanel } from "../../components/SourcePanel";
 import { FoundPdfsPanel } from "../../components/SourcePanel/FoundPdfsPanel";
 import { SideBar } from "../../components/SideBar";
@@ -72,8 +71,6 @@ export function WorkbenchPage() {
     />
   );
 
-  const sourceManagerPanel = <DiscoverySourceManager />;
-
   const sourcePanel = (
     <SourcePanel
       sourceRef={sourceRef}
@@ -141,7 +138,6 @@ export function WorkbenchPage() {
 
   const canvasPanels: CanvasPanel[] = [
     { id: "discovery", title: "Discovery", element: discoveryPanel, width: 800},
-    { id: "sourceManager", title: "Source Manager", element: sourceManagerPanel, width: 760 },
     { id: "source", title: "Source", element: sourcePanel, width: 460 },
     ...(foundPdfsPanel ? [{ id: "foundPdfs", title: "Found PDFs", element: foundPdfsPanel, width: 420 }] : []),
     { id: "audit", title: "Audit", element: auditPanel, width: 520 },

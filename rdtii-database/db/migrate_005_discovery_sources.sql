@@ -36,6 +36,24 @@ CREATE TABLE IF NOT EXISTS discovery_sources (
 CREATE INDEX IF NOT EXISTS idx_discovery_sources_country_position
     ON discovery_sources(country_code, position);
 
+WITH duplicate_sources AS (
+    SELECT id,
+           ROW_NUMBER() OVER (
+               PARTITION BY country_code, name, base_url
+               ORDER BY created_at, id
+           ) AS duplicate_rank
+    FROM discovery_sources
+)
+DELETE FROM discovery_sources
+WHERE id IN (
+    SELECT id
+    FROM duplicate_sources
+    WHERE duplicate_rank > 1
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_discovery_sources_country_name_url
+    ON discovery_sources(country_code, name, base_url);
+
 CREATE TABLE IF NOT EXISTS discovery_source_versions (
     id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     registry    JSONB       NOT NULL,
@@ -84,4 +102,14 @@ VALUES
     ('THA', 'Office of the Council of State', 'https://www.ocs.go.th', '["ocs.go.th","searchlaw.ocs.go.th"]'::jsonb, 'primary', 'thailand_ocs', 'statute_portal', '["th","en"]'::jsonb, '[6,7]'::jsonb, 100, '', 0),
     ('THA', 'Electronic Transactions Development Agency', 'https://www.etda.or.th', '["etda.or.th","www.etda.or.th"]'::jsonb, 'primary', 'search_engine', 'regulator', '["th","en"]'::jsonb, '[6,7]'::jsonb, 85, '', 1),
     ('THA', 'Personal Data Protection Committee', 'https://www.pdpc.or.th', '["pdpc.or.th","www.pdpc.or.th"]'::jsonb, 'primary', 'search_engine', 'regulator', '["th","en"]'::jsonb, '[6,7]'::jsonb, 85, '', 2)
-ON CONFLICT DO NOTHING;
+ON CONFLICT (country_code, name, base_url) DO UPDATE SET
+    domains = EXCLUDED.domains,
+    source_grade = EXCLUDED.source_grade,
+    adapter = EXCLUDED.adapter,
+    source_type = EXCLUDED.source_type,
+    languages = EXCLUDED.languages,
+    pillars = EXCLUDED.pillars,
+    priority = EXCLUDED.priority,
+    notes = EXCLUDED.notes,
+    position = EXCLUDED.position,
+    updated_at = NOW();

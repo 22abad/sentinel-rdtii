@@ -116,10 +116,15 @@ class DiscoveryService:
                 int(indicator.split(".", 1)[0])
                 for indicator in requested_indicators
             }
-            return (
+            matches_requested_indicators = (
                 bool(source_indicators.intersection(requested_indicators))
                 or bool(source_pillars.intersection(requested_indicator_pillars))
             )
+            matches_requested_pillars = (
+                bool(source_pillars.intersection(requested_pillars))
+                or bool(source_indicator_pillars.intersection(requested_pillars))
+            )
+            return matches_requested_indicators and matches_requested_pillars
 
         return bool(source_pillars.intersection(requested_pillars)) or bool(
             source_indicator_pillars.intersection(requested_pillars)
@@ -136,7 +141,7 @@ class DiscoveryService:
             matched_indicators = [
                 indicator
                 for indicator in candidate.matched_indicators
-                if indicator in allowed_indicators
+                if indicator in allowed_indicators and int(indicator.split(".", 1)[0]) in allowed_pillars
             ]
         else:
             matched_indicators = [

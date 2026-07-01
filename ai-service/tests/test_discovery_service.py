@@ -125,6 +125,38 @@ def test_select_sources_allows_pillar_scope_when_source_also_has_indicators():
     assert skipped == []
 
 
+def test_select_sources_with_indicators_still_respects_requested_pillars():
+    service = DiscoveryService()
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[6], indicators=["7.4"])
+    sources = [
+        LegalSourceConfig(
+            name="Pillar Seven Indicator Source",
+            base_url="https://p7.example",
+            domains=["p7.example"],
+            adapter="search_engine",
+            source_grade="primary",
+            languages=["en"],
+            pillars=[7],
+            indicators=["7.4"],
+        ),
+        LegalSourceConfig(
+            name="Pillar Six Indicator Source",
+            base_url="https://p6.example",
+            domains=["p6.example"],
+            adapter="search_engine",
+            source_grade="primary",
+            languages=["en"],
+            pillars=[6],
+            indicators=["7.4"],
+        ),
+    ]
+
+    selected, skipped = service._select_sources(request, sources, ["en"])
+
+    assert [source.name for source in selected] == ["Pillar Six Indicator Source"]
+    assert skipped == ["Pillar Seven Indicator Source (pillar/indicator mismatch)"]
+
+
 def test_filter_candidate_matches_respects_requested_pillar():
     service = DiscoveryService()
     request = DiscoverySearchRequest(country_code="CHN", pillars=[6])
@@ -159,3 +191,21 @@ def test_filter_candidate_matches_respects_explicit_indicators():
 
     assert filtered.matched_indicators == ["7.4"]
     assert filtered.matched_pillars == [7]
+
+
+def test_filter_candidate_matches_with_indicators_still_respects_requested_pillars():
+    service = DiscoveryService()
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[6], indicators=["7.4"])
+    candidate = LegalCandidate(
+        id="mixed",
+        country_code="SGP",
+        title="PDPA and DPO",
+        url="https://sso.agc.gov.sg/Act/PDPA2012",
+        matched_pillars=[7],
+        matched_indicators=["7.4"],
+    )
+
+    filtered = service._filter_candidate_matches(candidate, request)
+
+    assert filtered.matched_indicators == []
+    assert filtered.matched_pillars == []
