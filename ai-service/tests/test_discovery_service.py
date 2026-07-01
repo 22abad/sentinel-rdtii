@@ -73,6 +73,58 @@ def test_select_sources_respects_official_only_secondary_filter():
     assert skipped == ["Secondary Source (secondary source)"]
 
 
+def test_select_sources_respects_configured_pillar_scope():
+    service = DiscoveryService()
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[6])
+    sources = [
+        LegalSourceConfig(
+            name="Pillar Six Source",
+            base_url="https://p6.example",
+            domains=["p6.example"],
+            adapter="search_engine",
+            source_grade="primary",
+            languages=["en"],
+            pillars=[6],
+        ),
+        LegalSourceConfig(
+            name="Pillar Seven Source",
+            base_url="https://p7.example",
+            domains=["p7.example"],
+            adapter="search_engine",
+            source_grade="primary",
+            languages=["en"],
+            pillars=[7],
+        ),
+    ]
+
+    selected, skipped = service._select_sources(request, sources, ["en"])
+
+    assert [source.name for source in selected] == ["Pillar Six Source"]
+    assert skipped == ["Pillar Seven Source (pillar/indicator mismatch)"]
+
+
+def test_select_sources_allows_pillar_scope_when_source_also_has_indicators():
+    service = DiscoveryService()
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[6])
+    sources = [
+        LegalSourceConfig(
+            name="Broad Pillar Source",
+            base_url="https://broad.example",
+            domains=["broad.example"],
+            adapter="search_engine",
+            source_grade="primary",
+            languages=["en"],
+            pillars=[6],
+            indicators=["7.4"],
+        ),
+    ]
+
+    selected, skipped = service._select_sources(request, sources, ["en"])
+
+    assert [source.name for source in selected] == ["Broad Pillar Source"]
+    assert skipped == []
+
+
 def test_filter_candidate_matches_respects_requested_pillar():
     service = DiscoveryService()
     request = DiscoverySearchRequest(country_code="CHN", pillars=[6])

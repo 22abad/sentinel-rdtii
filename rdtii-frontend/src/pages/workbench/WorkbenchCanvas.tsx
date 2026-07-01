@@ -53,6 +53,7 @@ const SPAWN_TYPES: SpawnType[] = [
 /** Default landing positions; anything not listed falls back to a cascade. */
 const DEFAULT_POSITIONS: Record<string, XYPosition> = {
   discovery: { x: 40, y: 40 },
+  sourceManager: { x: 880, y: 40 },
   source: { x: 40, y: 360 },
   foundPdfs: { x: 540, y: 560 },
   audit: { x: 560, y: 40 },
@@ -60,6 +61,7 @@ const DEFAULT_POSITIONS: Record<string, XYPosition> = {
 
 /** Example flow wiring the panels together — endpoints that don't exist are ignored. */
 const INITIAL_EDGES: Edge[] = [
+  { id: "e-source-manager-discovery", source: "sourceManager", target: "discovery" },
   { id: "e-discovery-source", source: "discovery", target: "source", animated: true },
   { id: "e-source-audit", source: "source", target: "audit", animated: true },
   { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" },
@@ -68,6 +70,7 @@ const INITIAL_EDGES: Edge[] = [
 const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material"]);
 const PANEL_FALLBACKS: Record<string, { id: string; title: string; width?: number }> = {
   discovery: { id: "discovery", title: "Discovery", width: 800 },
+  sourceManager: { id: "sourceManager", title: "Source Manager", width: 760 },
   source: { id: "source", title: "Source", width: 460 },
   foundPdfs: { id: "foundPdfs", title: "Found PDFs", width: 420 },
   audit: { id: "audit", title: "Audit", width: 520 },

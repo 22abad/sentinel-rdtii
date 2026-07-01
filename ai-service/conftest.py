@@ -9,8 +9,11 @@ pytest config, but plays nicer with editors that don't read pytest.ini.
 from __future__ import annotations
 
 import sys
+import os
 from pathlib import Path
 
 _AI_SERVICE = Path(__file__).resolve().parent
 if str(_AI_SERVICE) not in sys.path:
     sys.path.insert(0, str(_AI_SERVICE))
+
+os.environ.setdefault("DISCOVERY_REGISTRY_BACKEND", "file")

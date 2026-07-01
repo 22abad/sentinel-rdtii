@@ -62,9 +62,54 @@ class LegalSourceConfig(BaseModel):
     domains: list[str]
     source_grade: SourceGrade = "primary"
     adapter: str = "search_engine"
+    country_code: str = ""
+    source_type: str = "official_website"
     languages: list[str] = Field(default_factory=list)
+    pillars: list[int] = Field(default_factory=list)
+    indicators: list[str] = Field(default_factory=list)
+    search_paths: list[str] = Field(default_factory=list)
+    include_patterns: list[str] = Field(default_factory=list)
+    exclude_patterns: list[str] = Field(default_factory=list)
     priority: int = 50
     notes: str = ""
+
+    @field_validator("domains")
+    @classmethod
+    def normalize_domains(cls, value: list[str]) -> list[str]:
+        domains = [domain.strip().lower() for domain in value if domain.strip()]
+        if not domains:
+            raise ValueError("source domains cannot be empty")
+        return domains
+
+    @field_validator("pillars")
+    @classmethod
+    def validate_source_pillars(cls, value: list[int]) -> list[int]:
+        invalid = [pillar for pillar in value if pillar not in SUPPORTED_PILLARS]
+        if invalid:
+            raise ValueError(f"unsupported source pillar id(s): {invalid}")
+        return value
+
+    @field_validator("indicators")
+    @classmethod
+    def normalize_source_indicators(cls, value: list[str]) -> list[str]:
+        indicators = [indicator.strip() for indicator in value if indicator.strip()]
+        invalid = [indicator for indicator in indicators if indicator not in SUPPORTED_INDICATORS]
+        if invalid:
+            raise ValueError(f"unsupported source indicator id(s): {invalid}")
+        return indicators
+
+    @field_validator("languages")
+    @classmethod
+    def normalize_source_languages(cls, value: list[str]) -> list[str]:
+        return [language.strip().lower() for language in value if language.strip()]
+
+
+class DiscoveryCountryConfig(BaseModel):
+    country_code: str
+    label: str
+    languages: list[str] = Field(default_factory=list)
+    source_count: int = 0
+    supported_pillars: list[int] = Field(default_factory=list)
 
 
 class RawSearchHit(BaseModel):

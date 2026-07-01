@@ -44,6 +44,39 @@ export type Status = "idle" | "loading" | "ready" | "error";
 
 export type DiscoverySourceMode = "official_first" | "official_only" | "broad_web";
 
+export type DiscoveryCountry = {
+  country_code: string;
+  label: string;
+  languages: string[];
+  source_count: number;
+  supported_pillars: number[];
+};
+
+export type DiscoverySourceConfig = {
+  name: string;
+  base_url: string;
+  domains: string[];
+  source_grade: "primary" | "secondary" | "unknown";
+  adapter: string;
+  source_type?: string;
+  languages?: string[];
+  pillars?: number[];
+  indicators?: string[];
+  search_paths?: string[];
+  include_patterns?: string[];
+  exclude_patterns?: string[];
+  priority?: number;
+  notes?: string;
+};
+
+export type DiscoveryCountryRegistry = {
+  label: string;
+  languages: string[];
+  sources: DiscoverySourceConfig[];
+};
+
+export type DiscoveryRegistry = Record<string, DiscoveryCountryRegistry>;
+
 export type LegalCandidate = {
   id: string;
   country_code: string;

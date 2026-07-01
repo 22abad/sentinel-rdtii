@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CheckSquare, Download, ExternalLink, FileInput, Loader2, Search, Square } from "lucide-react";
 import { useDiscovery } from "../../hooks/useDiscovery";
-import type { DiscoverySourceMode, LegalCandidate } from "../../types";
+import { listDiscoveryCountries } from "../../services/workflowNodes";
+import type { DiscoveryCountry, DiscoverySourceMode, LegalCandidate } from "../../types";
 import {
   Select,
   SelectContent,
@@ -20,11 +21,12 @@ type DiscoveryPanelProps = {
   onExtractShortlist: (candidates: LegalCandidate[]) => void;
 };
 
-const COUNTRY_OPTIONS = [
-  { code: "CHN", label: "China" },
-  { code: "SGP", label: "Singapore" },
-  { code: "THA", label: "Thailand" },
-  { code: "MYS", label: "Malaysia" },
+const DEFAULT_COUNTRY_OPTIONS: DiscoveryCountry[] = [
+  { country_code: "AUS", label: "Australia", languages: ["en"], source_count: 1, supported_pillars: [6, 7] },
+  { country_code: "CHN", label: "China", languages: ["zh", "en"], source_count: 3, supported_pillars: [6, 7] },
+  { country_code: "SGP", label: "Singapore", languages: ["en"], source_count: 4, supported_pillars: [6, 7] },
+  { country_code: "THA", label: "Thailand", languages: ["th", "en"], source_count: 3, supported_pillars: [6, 7] },
+  { country_code: "MYS", label: "Malaysia", languages: ["en", "ms"], source_count: 3, supported_pillars: [6, 7] },
 ];
 
 const SOURCE_MODE_OPTIONS: Array<{ value: DiscoverySourceMode; label: string }> = [
@@ -35,13 +37,6 @@ const SOURCE_MODE_OPTIONS: Array<{ value: DiscoverySourceMode; label: string }> 
 const SOURCE_MODE_LABELS: Partial<Record<DiscoverySourceMode, string>> = {
   official_first: "Official first",
   official_only: "Official only",
-};
-
-const LOCAL_LANGUAGE_BY_COUNTRY: Record<string, string> = {
-  CHN: "zh",
-  SGP: "en",
-  THA: "th",
-  MYS: "ms",
 };
 
 function initialPillars(pillarFilter: string) {
@@ -59,8 +54,9 @@ export function DiscoveryPanel({
   onExtractCandidate,
   onExtractShortlist,
 }: DiscoveryPanelProps) {
+  const [countries, setCountries] = useState<DiscoveryCountry[]>(DEFAULT_COUNTRY_OPTIONS);
   const [countryCode, setCountryCode] = useState(() =>
-    COUNTRY_OPTIONS.some((item) => item.code === country) ? country : "SGP",
+    DEFAULT_COUNTRY_OPTIONS.some((item) => item.country_code === country) ? country : "SGP",
   );
   const [pillars, setPillars] = useState<number[]>(() => initialPillars(pillarFilter));
   const [keywords, setKeywords] = useState("");
@@ -68,6 +64,42 @@ export function DiscoveryPanel({
   const [languageMode, setLanguageMode] = useState("auto");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { data, error, loading, search } = useDiscovery();
+
+  useEffect(() => {
+    let cancelled = false;
+    listDiscoveryCountries()
+      .then((items) => {
+        if (cancelled || !items.length) return;
+        setCountries(items);
+        setCountryCode((current) => {
+          if (items.some((item) => item.country_code === country)) return country;
+          if (items.some((item) => item.country_code === current)) return current;
+          return items[0].country_code;
+        });
+      })
+      .catch(() => {
+        // Keep the bundled defaults so the panel remains usable offline.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [country]);
+
+  const selectedCountry = useMemo(
+    () => countries.find((item) => item.country_code === countryCode),
+    [countries, countryCode],
+  );
+
+  const localLanguage = useMemo(() => {
+    const languages = selectedCountry?.languages ?? [];
+    return languages.find((language) => language !== "en") ?? "en";
+  }, [selectedCountry]);
+
+  useEffect(() => {
+    if (languageMode === "local" && localLanguage === "en") {
+      setLanguageMode("auto");
+    }
+  }, [languageMode, localLanguage]);
 
   const diagnosticsText = useMemo(() => {
     if (!data) return "";
@@ -102,7 +134,7 @@ export function DiscoveryPanel({
   function requestLanguages() {
     if (languageMode === "auto") return [];
     if (languageMode === "en") return ["en"];
-    return [LOCAL_LANGUAGE_BY_COUNTRY[countryCode] ?? "en"];
+    return [localLanguage];
   }
 
   function exportSelectedCsv() {
@@ -164,8 +196,8 @@ export function DiscoveryPanel({
           <Select value={countryCode} onValueChange={setCountryCode}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              {COUNTRY_OPTIONS.map((item) => (
-                <SelectItem key={item.code} value={item.code}>{item.label}</SelectItem>
+              {countries.map((item) => (
+                <SelectItem key={item.country_code} value={item.country_code}>{item.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -190,8 +222,8 @@ export function DiscoveryPanel({
             <SelectContent>
               <SelectItem value="auto">Auto</SelectItem>
               <SelectItem value="en">English</SelectItem>
-              {LOCAL_LANGUAGE_BY_COUNTRY[countryCode] !== "en" && (
-                <SelectItem value="local">Local ({LOCAL_LANGUAGE_BY_COUNTRY[countryCode]})</SelectItem>
+              {localLanguage !== "en" && (
+                <SelectItem value="local">Local ({localLanguage})</SelectItem>
               )}
             </SelectContent>
           </Select>
