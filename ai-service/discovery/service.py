@@ -10,15 +10,19 @@ from .dedupe import dedupe_candidates
 from .metadata import normalize_hit
 from .query_builder import build_queries
 from .ranker import rank_candidates
-from .registry import get_languages, get_sources
+from .registry import get_country_registry
 from .schemas import DiscoverySearchRequest, DiscoverySearchResponse, LegalCandidate, LegalSourceConfig
 
 
 class DiscoveryService:
     async def search(self, request: DiscoverySearchRequest) -> DiscoverySearchResponse:
         started = time.perf_counter()
-        all_sources = get_sources(request.country_code)
-        default_languages = get_languages(request.country_code)
+        country_registry = get_country_registry(request.country_code)
+        default_languages = list(country_registry.get("languages", []))
+        all_sources = [
+            LegalSourceConfig(**{**dict(source), "country_code": request.country_code})
+            for source in country_registry.get("sources", [])
+        ]
         active_languages = request.languages or default_languages
         sources, skipped_sources = self._select_sources(request, all_sources, default_languages)
         source_queries = build_queries(request, sources)
@@ -75,6 +79,10 @@ class DiscoveryService:
                 skipped.append(f"{source.name} (language mismatch)")
                 continue
 
+            if not self._source_matches_request_scope(source, request):
+                skipped.append(f"{source.name} (pillar/indicator mismatch)")
+                continue
+
             is_secondary = source.source_grade == "secondary"
             if request.source_mode == "official_only" and is_secondary:
                 skipped.append(f"{source.name} (secondary source)")
@@ -85,6 +93,42 @@ class DiscoveryService:
             selected.append(source)
 
         return selected, skipped
+
+    def _source_matches_request_scope(
+        self,
+        source: LegalSourceConfig,
+        request: DiscoverySearchRequest,
+    ) -> bool:
+        if not source.pillars and not source.indicators:
+            return True
+
+        requested_pillars = set(request.pillars)
+        requested_indicators = set(request.indicators)
+        source_pillars = set(source.pillars)
+        source_indicators = set(source.indicators)
+        source_indicator_pillars = {
+            int(indicator.split(".", 1)[0])
+            for indicator in source_indicators
+        }
+
+        if requested_indicators:
+            requested_indicator_pillars = {
+                int(indicator.split(".", 1)[0])
+                for indicator in requested_indicators
+            }
+            matches_requested_indicators = (
+                bool(source_indicators.intersection(requested_indicators))
+                or bool(source_pillars.intersection(requested_indicator_pillars))
+            )
+            matches_requested_pillars = (
+                bool(source_pillars.intersection(requested_pillars))
+                or bool(source_indicator_pillars.intersection(requested_pillars))
+            )
+            return matches_requested_indicators and matches_requested_pillars
+
+        return bool(source_pillars.intersection(requested_pillars)) or bool(
+            source_indicator_pillars.intersection(requested_pillars)
+        )
 
     def _filter_candidate_matches(
         self,
@@ -97,7 +141,7 @@ class DiscoveryService:
             matched_indicators = [
                 indicator
                 for indicator in candidate.matched_indicators
-                if indicator in allowed_indicators
+                if indicator in allowed_indicators and int(indicator.split(".", 1)[0]) in allowed_pillars
             ]
         else:
             matched_indicators = [

@@ -1,6 +1,13 @@
-import { WORKFLOW_API_URL } from "../lib/constants";
+import { DISCOVERY_BASE_URL, WORKFLOW_API_URL } from "../lib/constants";
 import { getStoredToken } from "../hooks/useAuth";
-import type { DiscoverySearchResponse, DiscoverySourceMode, ExtractionResponse, LegalCandidate } from "../types";
+import type {
+  DiscoveryCountry,
+  DiscoveryRegistry,
+  DiscoverySearchResponse,
+  DiscoverySourceMode,
+  ExtractionResponse,
+  LegalCandidate,
+} from "../types";
 
 export type WorkflowNodeType =
   | "discovery.search"
@@ -107,6 +114,35 @@ export async function listWorkflowNodeTypes(): Promise<NodeTypeDefinition[]> {
   });
   const payload = await readJsonResponse<{ node_types: NodeTypeDefinition[] }>(res);
   return payload.node_types;
+}
+
+export async function listDiscoveryCountries(): Promise<DiscoveryCountry[]> {
+  const res = await fetch(`${DISCOVERY_BASE_URL}/countries`, {
+    headers: authHeaders(),
+  });
+  const payload = await readJsonResponse<{ countries: DiscoveryCountry[] }>(res);
+  return payload.countries;
+}
+
+export async function getDiscoveryConfig(): Promise<DiscoveryRegistry> {
+  const res = await fetch(`${DISCOVERY_BASE_URL}/config`, {
+    headers: authHeaders(),
+  });
+  const payload = await readJsonResponse<{ registry: DiscoveryRegistry }>(res);
+  return payload.registry;
+}
+
+export async function saveDiscoveryConfig(registry: DiscoveryRegistry): Promise<DiscoveryRegistry> {
+  const res = await fetch(`${DISCOVERY_BASE_URL}/config`, {
+    method: "PUT",
+    headers: {
+      ...authHeaders(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ registry }),
+  });
+  const payload = await readJsonResponse<{ registry: DiscoveryRegistry }>(res);
+  return payload.registry;
 }
 
 export async function runWorkflowNode<TOutputs>(

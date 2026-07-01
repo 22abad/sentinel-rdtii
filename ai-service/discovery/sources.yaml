@@ -1,0 +1,165 @@
+AUS:
+  label: Australia
+  languages: [en]
+  sources:
+    - name: Federal Register of Legislation
+      base_url: https://www.legislation.gov.au
+      domains: [legislation.gov.au, www.legislation.gov.au]
+      adapter: search_engine
+      source_grade: primary
+      source_type: statute_portal
+      languages: [en]
+      pillars: [6, 7]
+      priority: 100
+      notes: Official Australian legislation register; verified for Privacy Act 1988 and Telecommunications (Interception and Access) Act 1979.
+
+CHN:
+  label: China
+  languages: [zh, en]
+  sources:
+    - name: National Laws and Regulations Database
+      base_url: https://flk.npc.gov.cn
+      domains: [flk.npc.gov.cn]
+      adapter: china_flk
+      source_grade: primary
+      source_type: statute_portal
+      languages: [zh]
+      pillars: [6, 7]
+      priority: 100
+      notes: Official national laws and regulations database
+
+    - name: State Council
+      base_url: https://www.gov.cn
+      domains: [gov.cn, www.gov.cn]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [zh, en]
+      pillars: [6, 7]
+      priority: 90
+
+    - name: Cyberspace Administration of China
+      base_url: https://www.cac.gov.cn
+      domains: [cac.gov.cn, www.cac.gov.cn]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [zh]
+      pillars: [6, 7]
+      priority: 90
+
+SGP:
+  label: Singapore
+  languages: [en]
+  sources:
+    - name: Singapore Statutes Online
+      base_url: https://sso.agc.gov.sg
+      domains: [sso.agc.gov.sg]
+      adapter: singapore_sso
+      source_grade: primary
+      source_type: statute_portal
+      languages: [en]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Personal Data Protection Commission
+      base_url: https://www.pdpc.gov.sg
+      domains: [pdpc.gov.sg, www.pdpc.gov.sg]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en]
+      pillars: [6, 7]
+      priority: 85
+      notes: Official PDPC source; verified for DPIA guide.
+
+    - name: Ministry of Trade and Industry
+      base_url: https://www.mti.gov.sg
+      domains: [mti.gov.sg, www.mti.gov.sg]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [6]
+      priority: 85
+      notes: Official MTI treaty pages; verified for DEPA and SADEA digital economy agreements.
+
+    - name: Infocomm Media Development Authority
+      base_url: https://www.imda.gov.sg
+      domains: [imda.gov.sg, www.imda.gov.sg]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en]
+      pillars: [7]
+      priority: 80
+
+THA:
+  label: Thailand
+  languages: [th, en]
+  sources:
+    - name: Office of the Council of State
+      base_url: https://www.ocs.go.th
+      domains: [ocs.go.th, searchlaw.ocs.go.th]
+      adapter: thailand_ocs
+      source_grade: primary
+      source_type: statute_portal
+      languages: [th, en]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Electronic Transactions Development Agency
+      base_url: https://www.etda.or.th
+      domains: [etda.or.th, www.etda.or.th]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [th, en]
+      pillars: [6, 7]
+      priority: 85
+
+    - name: Personal Data Protection Committee
+      base_url: https://www.pdpc.or.th
+      domains: [pdpc.or.th, www.pdpc.or.th]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [th, en]
+      pillars: [6, 7]
+      priority: 85
+
+MYS:
+  label: Malaysia
+  languages: [en, ms]
+  sources:
+    - name: Attorney General's Chambers of Malaysia
+      base_url: https://lom.agc.gov.my
+      domains: [lom.agc.gov.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: statute_portal
+      languages: [en, ms]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Personal Data Protection Department
+      base_url: https://www.pdp.gov.my
+      domains: [pdp.gov.my, www.pdp.gov.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en, ms]
+      pillars: [6, 7]
+      priority: 90
+      notes: Official Commissioner source; verified for PDPA 2010 and PDPA Amendment Act 2024 pages.
+
+    - name: National Cyber Security Agency
+      base_url: https://www.nacsa.gov.my
+      domains: [nacsa.gov.my, www.nacsa.gov.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en, ms]
+      pillars: [7]
+      priority: 85
+      notes: Official NACSA legal page and gazette PDFs for Cyber Security Act 2024 commencement and incident notification regulations.
