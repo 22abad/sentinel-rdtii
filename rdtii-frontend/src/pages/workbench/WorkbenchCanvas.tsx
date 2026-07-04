@@ -19,12 +19,14 @@ import "@xyflow/react/dist/style.css";
 import {
   PanelNode,
   NoteNode,
+  FileNode,
   CanvasToolbar,
   type CanvasMode,
   type CanvasPanel,
   type SpawnType,
   type PanelNodeData,
   type NoteNodeData,
+  type FileNodeData,
   type WorkbenchCanvasEdge,
   type WorkbenchCanvasLayout,
   type WorkbenchCanvasNode,
@@ -41,13 +43,14 @@ import {
 
 export type { CanvasPanel } from "../../components/Canvas";
 
-const nodeTypes = { panel: PanelNode, note: NoteNode };
+const nodeTypes = { panel: PanelNode, note: NoteNode, file: FileNode };
 
 /** Panel types offered in the toolbar palette. */
 const SPAWN_TYPES: SpawnType[] = [
   { id: "discovery", label: "Discovery" },
   { id: "source", label: "Source" },
   { id: "audit", label: "Audit" },
+  { id: "documents", label: "Documents"},
 ];
 
 /** Default landing positions; anything not listed falls back to a cascade. */
@@ -56,13 +59,14 @@ const DEFAULT_POSITIONS: Record<string, XYPosition> = {
   source: { x: 40, y: 360 },
   foundPdfs: { x: 540, y: 560 },
   audit: { x: 560, y: 40 },
+  documents: { x: 360, y: 40 },
 };
 
 /** Example flow wiring the panels together — endpoints that don't exist are ignored. */
 const INITIAL_EDGES: Edge[] = [
   { id: "e-discovery-source", source: "discovery", target: "source", animated: true },
   { id: "e-source-audit", source: "source", target: "audit", animated: true },
-  { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" },
+  { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" }, 
 ];
 
 const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material"]);
@@ -355,6 +359,38 @@ export function WorkbenchCanvas({
   const noteCounter = useRef(restoredState.noteCounter);
   const spawnCounter = useRef(restoredState.spawnCounter);
   const chatCounter = useRef(restoredState.chatCounter);
+  const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string }[]>([]);
+  const fileCounter = useRef(0);
+
+
+  const handleFile = useCallback(async (id: string, file: File) => {
+    setFiles((prev) => prev.map((f) => f.id === id ? { ...f,
+      fileName: file.name, fileSize: file.size
+    } : f));
+    //    const form = new FormData(); form.append("file", file);
+    //    await fetch(`${API_BASE}/api/workflows/...`, {
+    //    method: "POST", body: form, header: { Authorization: `Bearer ${getStoredToken()}`}});
+    // })
+  }, []);
+
+  const onCanvasDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  }, []);
+
+  const onCanvasDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    if(!flowRef.current) return;
+    const position = flowRef.current.screenToFlowPosition({ x: e.clientX, y: e.clientY });
+    for(const file of Array.from(e.dataTransfer.files)) {
+      const id = `file-${(fileCounter.current += 1)}`;
+      const previewUrl = URL.createObjectURL(file);
+      setFiles((prev) => [...prev, {id, fileName: file.name, fileSize: file.size, previewUrl }]);
+      setPositions((p) => ({...p, [id]: { x: position.x, y: position.y}}));
+      handleFile(id, file);
+    }
+  }, [handleFile]);
+
 
   const markCanvasDirty = useCallback(() => {
     backendDirtyRef.current = true;
@@ -503,6 +539,11 @@ export function WorkbenchCanvas({
     setCustomNotes((prev) => prev.filter((note) => note.id !== id));
     setSpawned((prev) => prev.filter((item) => item.id !== id));
     setChatIds((prev) => prev.filter((chatId) => chatId !== id));
+    setFiles((prev) => {
+      const gone = prev.find((f) => f.id === id);
+      if (gone?.previewUrl) URL.revokeObjectURL(gone.previewUrl);
+      return prev.filter((f) => f.id !== id);
+    });
     setPositions((prev) => {
       const next = { ...prev };
       delete next[id];
@@ -575,8 +616,22 @@ export function WorkbenchCanvas({
               onDelete: () => removeNode(id),
             } satisfies PanelNodeData,
           })),
+        ...files
+        .filter((f) => !removed[f.id])
+        .map((f) => ({
+          id: f.id,
+          type: "file",
+          position: positions[f.id] ?? { x: 240, y: 240 },
+          data: {
+            fileName: f.fileName,
+            fileSize: f.fileSize,
+            previewUrl: f.previewUrl,
+            fileType: f.fileType,
+            onDelete: () => removeNode(f.id),
+          } satisfies FileNodeData,
+        })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, positions, removed, updateNote, removeNode, selectedIds],
+    [panels, spawned, panelById, customNotes, chatIds, files, positions, removed, updateNote, removeNode, selectedIds],
   );
 
   const renderedEdges = useMemo(() => {
@@ -648,7 +703,13 @@ export function WorkbenchCanvas({
   const handMode = mode === "hand";
 
   return (
-    <div className={`fixed inset-0 z-30 wb-canvas ${handMode ? "wb-hand" : "wb-select"}`} style={{ height: "100dvh" }}>
+    <div className={`fixed inset-0 z-30 wb-canvas ${handMode ? "wb-hand" : "wb-select"}`} 
+      style={{ 
+        height: "100dvh"
+      }}
+      onDragOver={onCanvasDragOver}
+      onDrop={onCanvasDrop}
+    >
       {/* Cursor feedback for the active tool, scoped to this canvas */}
       <style>{`
         .wb-hand .react-flow__pane { cursor: grab; }
