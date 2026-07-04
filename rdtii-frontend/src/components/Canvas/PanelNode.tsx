@@ -6,7 +6,6 @@ export type PanelNodeData = {
   title: string;
   element: React.ReactNode;
   width?: number;
-  /** Render without the white card chrome (transparent bg, no drop shadow). */
   transparent?: boolean;
   onDelete: () => void;
 };
@@ -62,9 +61,8 @@ export function PanelNode({ data, selected }: { data: PanelNodeData; selected?: 
           overflow: bare ? "visible" : "hidden",
           background: bare ? "transparent" : "#ffffff",
           boxShadow: bare ? "none" : selected ? "0 18px 50px rgba(0,0,0,0.3)" : "0 18px 50px rgba(0,0,0,0.25)",
-          // Selection ring sits OFF the content by `outlineOffset` px — change this to tune the margin.
           outline: selected ? "2px solid #10B981" : "none",
-          outlineOffset: 6,
+          outlineOffset: 6, // Margin on selection
           transition: "box-shadow 0.12s ease, outline-offset 0.12s ease",
         }}
       >
