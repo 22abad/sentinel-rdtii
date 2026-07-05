@@ -49,6 +49,7 @@ export function WorkbenchPage() {
     batchProgress,
     extract,
     extractShortlist,
+    loadDemoAuditData,
     selectMapping,
     setDecision,
   } = useExtraction();
@@ -124,6 +125,7 @@ export function WorkbenchPage() {
     <AuditPanel
       status={status}
       mappings={visibleMappings}
+      exportMappings={mappings}
       totalMappings={mappings.length}
       activeKey={activeKey}
       decisions={decisions}
@@ -133,6 +135,7 @@ export function WorkbenchPage() {
       showRejected={showRejected}
       setShowRejected={setShowRejected}
       country={country}
+      onLoadDemoData={loadDemoAuditData}
     />
   );
 

@@ -1,9 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
-import { CheckSquare, Download, ExternalLink, FileInput, Loader2, Search, Settings2, Square, X } from "lucide-react";
+import {
+  CheckSquare,
+  Download,
+  ExternalLink,
+  FileInput,
+  Loader2,
+  Search,
+  Settings2,
+  Square,
+} from "lucide-react";
 import { useDiscovery } from "../../hooks/useDiscovery";
 import { listDiscoveryCountries } from "../../services/workflowNodes";
-import type { DiscoveryCountry, DiscoverySourceMode, LegalCandidate } from "../../types";
+import type {
+  DiscoveryCountry,
+  DiscoverySourceMode,
+  LegalCandidate,
+} from "../../types";
 import { DiscoverySourceManager } from "./DiscoverySourceManager";
 import {
   Select,
@@ -12,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/Select";
+import { RightDrawer } from "../ui/RightDrawer";
 
 type DiscoveryPanelProps = {
   country: string;
@@ -24,14 +37,47 @@ type DiscoveryPanelProps = {
 };
 
 const DEFAULT_COUNTRY_OPTIONS: DiscoveryCountry[] = [
-  { country_code: "AUS", label: "Australia", languages: ["en"], source_count: 1, supported_pillars: [6, 7] },
-  { country_code: "CHN", label: "China", languages: ["zh", "en"], source_count: 3, supported_pillars: [6, 7] },
-  { country_code: "SGP", label: "Singapore", languages: ["en"], source_count: 4, supported_pillars: [6, 7] },
-  { country_code: "THA", label: "Thailand", languages: ["th", "en"], source_count: 3, supported_pillars: [6, 7] },
-  { country_code: "MYS", label: "Malaysia", languages: ["en", "ms"], source_count: 3, supported_pillars: [6, 7] },
+  {
+    country_code: "AUS",
+    label: "Australia",
+    languages: ["en"],
+    source_count: 1,
+    supported_pillars: [6, 7],
+  },
+  {
+    country_code: "CHN",
+    label: "China",
+    languages: ["zh", "en"],
+    source_count: 3,
+    supported_pillars: [6, 7],
+  },
+  {
+    country_code: "SGP",
+    label: "Singapore",
+    languages: ["en"],
+    source_count: 4,
+    supported_pillars: [6, 7],
+  },
+  {
+    country_code: "THA",
+    label: "Thailand",
+    languages: ["th", "en"],
+    source_count: 3,
+    supported_pillars: [6, 7],
+  },
+  {
+    country_code: "MYS",
+    label: "Malaysia",
+    languages: ["en", "ms"],
+    source_count: 3,
+    supported_pillars: [6, 7],
+  },
 ];
 
-const SOURCE_MODE_OPTIONS: Array<{ value: DiscoverySourceMode; label: string }> = [
+const SOURCE_MODE_OPTIONS: Array<{
+  value: DiscoverySourceMode;
+  label: string;
+}> = [
   { value: "official_first", label: "Official first" },
   { value: "official_only", label: "Official only" },
 ];
@@ -56,13 +102,20 @@ export function DiscoveryPanel({
   onExtractCandidate,
   onExtractShortlist,
 }: DiscoveryPanelProps) {
-  const [countries, setCountries] = useState<DiscoveryCountry[]>(DEFAULT_COUNTRY_OPTIONS);
-  const [countryCode, setCountryCode] = useState(() =>
-    DEFAULT_COUNTRY_OPTIONS.some((item) => item.country_code === country) ? country : "SGP",
+  const [countries, setCountries] = useState<DiscoveryCountry[]>(
+    DEFAULT_COUNTRY_OPTIONS,
   );
-  const [pillars, setPillars] = useState<number[]>(() => initialPillars(pillarFilter));
+  const [countryCode, setCountryCode] = useState(() =>
+    DEFAULT_COUNTRY_OPTIONS.some((item) => item.country_code === country)
+      ? country
+      : "SGP",
+  );
+  const [pillars, setPillars] = useState<number[]>(() =>
+    initialPillars(pillarFilter),
+  );
   const [keywords, setKeywords] = useState("");
-  const [sourceMode, setSourceMode] = useState<DiscoverySourceMode>("official_first");
+  const [sourceMode, setSourceMode] =
+    useState<DiscoverySourceMode>("official_first");
   const [languageMode, setLanguageMode] = useState("auto");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sourceManagerOpen, setSourceManagerOpen] = useState(false);
@@ -75,8 +128,10 @@ export function DiscoveryPanel({
         if (cancelled || !items.length) return;
         setCountries(items);
         setCountryCode((current) => {
-          if (items.some((item) => item.country_code === current)) return current;
-          if (items.some((item) => item.country_code === country)) return country;
+          if (items.some((item) => item.country_code === current))
+            return current;
+          if (items.some((item) => item.country_code === country))
+            return country;
           return items[0].country_code;
         });
       })
@@ -103,15 +158,6 @@ export function DiscoveryPanel({
       setLanguageMode("auto");
     }
   }, [languageMode, localLanguage]);
-
-  useEffect(() => {
-    if (!sourceManagerOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSourceManagerOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [sourceManagerOpen]);
 
   const diagnosticsText = useMemo(() => {
     if (!data) return "";
@@ -140,7 +186,11 @@ export function DiscoveryPanel({
   }
 
   function selectedCandidates() {
-    return data?.candidates.filter((candidate) => selectedIds.includes(candidate.id)) ?? [];
+    return (
+      data?.candidates.filter((candidate) =>
+        selectedIds.includes(candidate.id),
+      ) ?? []
+    );
   }
 
   function requestLanguages() {
@@ -169,7 +219,9 @@ export function DiscoveryPanel({
     ];
     const csv = [
       headers.join(","),
-      ...rows.map((candidate) => headers.map((header) => csvCell(candidate, header)).join(",")),
+      ...rows.map((candidate) =>
+        headers.map((header) => csvCell(candidate, header)).join(","),
+      ),
     ].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -177,7 +229,7 @@ export function DiscoveryPanel({
     link.href = url;
     link.download = `discovery-shortlist-${countryCode.toLowerCase()}.csv`;
     link.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 100);
   }
 
   return (
@@ -203,13 +255,23 @@ export function DiscoveryPanel({
             type="button"
             onClick={() => {
               setSelectedIds([]);
-              search({ countryCode, pillars, keywords, sourceMode, languages: requestLanguages() });
+              search({
+                countryCode,
+                pillars,
+                keywords,
+                sourceMode,
+                languages: requestLanguages(),
+              });
             }}
             disabled={loading || pillars.length === 0}
             className="group flex items-center justify-center rounded-full text-md h-10 px-5 cursor-pointer transition-all duration-500 bg-[#0f766e] text-white"
             style={{ minHeight: 0, border: "none" }}
           >
-            {loading ? <Loader2 size={16} className="mr-2 animate-spin" /> : <Search size={16} className="mr-2" />}
+            {loading ? (
+              <Loader2 size={16} className="mr-2 animate-spin" />
+            ) : (
+              <Search size={16} className="mr-2" />
+            )}
             <span>{loading ? "Searching" : "Discover"}</span>
           </button>
         </div>
@@ -219,10 +281,14 @@ export function DiscoveryPanel({
         <label>
           Country
           <Select value={countryCode} onValueChange={setCountryCode}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {countries.map((item) => (
-                <SelectItem key={item.country_code} value={item.country_code}>{item.label}</SelectItem>
+                <SelectItem key={item.country_code} value={item.country_code}>
+                  {item.label}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -230,11 +296,20 @@ export function DiscoveryPanel({
 
         <label>
           Source mode
-          <Select value={sourceMode} onValueChange={(value) => setSourceMode(value as DiscoverySourceMode)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+          <Select
+            value={sourceMode}
+            onValueChange={(value) =>
+              setSourceMode(value as DiscoverySourceMode)
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {SOURCE_MODE_OPTIONS.map(({ value, label }) => (
-                <SelectItem key={value} value={value}>{label}</SelectItem>
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -243,7 +318,9 @@ export function DiscoveryPanel({
         <label>
           Language
           <Select value={languageMode} onValueChange={setLanguageMode}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="auto">Auto</SelectItem>
               <SelectItem value="en">English</SelectItem>
@@ -268,7 +345,11 @@ export function DiscoveryPanel({
             <button
               key={pillar}
               type="button"
-              className={pillars.includes(pillar) ? "discovery-toggle active" : "discovery-toggle"}
+              className={
+                pillars.includes(pillar)
+                  ? "discovery-toggle active"
+                  : "discovery-toggle"
+              }
               onClick={() => togglePillar(pillar)}
             >
               P{pillar}
@@ -287,8 +368,15 @@ export function DiscoveryPanel({
           </div>
 
           <div className="discovery-diagnostics">
-            <span>{SOURCE_MODE_LABELS[data.diagnostics.source_mode ?? sourceMode] ?? data.diagnostics.source_mode ?? sourceMode}</span>
-            <span>{(data.diagnostics.languages ?? requestLanguages()).join("/") || "auto"}</span>
+            <span>
+              {SOURCE_MODE_LABELS[data.diagnostics.source_mode ?? sourceMode] ??
+                data.diagnostics.source_mode ??
+                sourceMode}
+            </span>
+            <span>
+              {(data.diagnostics.languages ?? requestLanguages()).join("/") ||
+                "auto"}
+            </span>
             <span>{data.diagnostics.sources_considered ?? 0} sources</span>
             <span>{data.diagnostics.filtered_low_relevance ?? 0} filtered</span>
           </div>
@@ -299,7 +387,11 @@ export function DiscoveryPanel({
               type="button"
               className="secondary"
               disabled={extracting}
-              onClick={() => setSelectedIds(data.candidates.slice(0, 5).map((candidate) => candidate.id))}
+              onClick={() =>
+                setSelectedIds(
+                  data.candidates.slice(0, 5).map((candidate) => candidate.id),
+                )
+              }
             >
               Top 5
             </button>
@@ -332,22 +424,34 @@ export function DiscoveryPanel({
           {batchProgress.total > 0 && extracting && (
             <div className="shortlist-progress">
               <div>
-                <span style={{ width: `${Math.min(100, (batchProgress.current / batchProgress.total) * 100)}%` }} />
+                <span
+                  style={{
+                    width: `${Math.min(100, (batchProgress.current / batchProgress.total) * 100)}%`,
+                  }}
+                />
               </div>
               <p>
                 {batchProgress.current} / {batchProgress.total}
-                {batchProgress.currentUrl ? ` · ${batchProgress.currentUrl}` : ""}
+                {batchProgress.currentUrl
+                  ? ` · ${batchProgress.currentUrl}`
+                  : ""}
               </p>
             </div>
           )}
 
           {(data.diagnostics.warnings ?? []).slice(0, 2).map((warning) => (
-            <p className="discovery-warning" key={warning}>{warning}</p>
+            <p className="discovery-warning" key={warning}>
+              {warning}
+            </p>
           ))}
 
-          {(data.diagnostics.sources_skipped ?? []).slice(0, 3).map((source) => (
-            <p className="discovery-warning" key={source}>{source}</p>
-          ))}
+          {(data.diagnostics.sources_skipped ?? [])
+            .slice(0, 3)
+            .map((source) => (
+              <p className="discovery-warning" key={source}>
+                {source}
+              </p>
+            ))}
 
           <div className="candidate-list">
             {data.candidates.map((candidate) => (
@@ -365,29 +469,15 @@ export function DiscoveryPanel({
         </div>
       )}
 
-      {sourceManagerOpen &&
-        createPortal(
-          <div className="source-manager-drawer-root" role="presentation">
-            <button
-              type="button"
-              className="source-manager-drawer-backdrop"
-              aria-label="Close source manager"
-              onClick={() => setSourceManagerOpen(false)}
-            />
-            <aside className="source-manager-drawer" role="dialog" aria-modal="true" aria-label="Source manager">
-              <button
-                type="button"
-                className="source-manager-drawer-close"
-                aria-label="Close source manager"
-                onClick={() => setSourceManagerOpen(false)}
-              >
-                <X size={18} />
-              </button>
-              <DiscoverySourceManager />
-            </aside>
-          </div>,
-          document.body,
-        )}
+      <RightDrawer
+        open={sourceManagerOpen}
+        onOpenChange={setSourceManagerOpen}
+        title="Source manager"
+        closeLabel="Close source manager"
+        className="source-manager-drawer"
+      >
+        <DiscoverySourceManager />
+      </RightDrawer>
     </section>
   );
 }
@@ -426,7 +516,9 @@ function CandidateCard({
   onExtract: () => void;
 }) {
   return (
-    <article className={selected ? "candidate-card selected" : "candidate-card"}>
+    <article
+      className={selected ? "candidate-card selected" : "candidate-card"}
+    >
       <div className="candidate-topline">
         <button
           type="button"
@@ -441,7 +533,9 @@ function CandidateCard({
           <h3>{candidate.title}</h3>
           <p>{candidate.source_domain}</p>
         </div>
-        <span className="candidate-score">{Math.round(candidate.rank_score)}</span>
+        <span className="candidate-score">
+          {Math.round(candidate.rank_score)}
+        </span>
       </div>
 
       <div className="candidate-badges">
@@ -452,10 +546,14 @@ function CandidateCard({
         ))}
       </div>
 
-      {candidate.snippet && <p className="candidate-snippet">{candidate.snippet}</p>}
+      {candidate.snippet && (
+        <p className="candidate-snippet">{candidate.snippet}</p>
+      )}
 
       {candidate.reasons.length > 0 && (
-        <p className="candidate-reasons">{candidate.reasons.slice(0, 3).join(" · ")}</p>
+        <p className="candidate-reasons">
+          {candidate.reasons.slice(0, 3).join(" · ")}
+        </p>
       )}
 
       {candidate.warnings.length > 0 && (
@@ -471,7 +569,12 @@ function CandidateCard({
           <ExternalLink size={14} />
           Open
         </a>
-        <button type="button" className="secondary" onClick={onUse} disabled={extracting}>
+        <button
+          type="button"
+          className="secondary"
+          onClick={onUse}
+          disabled={extracting}
+        >
           <FileInput size={14} />
           Use URL
         </button>

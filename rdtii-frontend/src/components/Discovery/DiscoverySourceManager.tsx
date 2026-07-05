@@ -1,7 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { Copy, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
-import { getDiscoveryConfig, saveDiscoveryConfig } from "../../services/workflowNodes";
+import {
+  getDiscoveryConfig,
+  saveDiscoveryConfig,
+} from "../../services/workflowNodes";
 import type { DiscoveryRegistry, DiscoverySourceConfig } from "../../types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/Select";
 
 const DEFAULT_SOURCE: DiscoverySourceConfig = {
   name: "New official source",
@@ -16,9 +26,24 @@ const DEFAULT_SOURCE: DiscoverySourceConfig = {
   notes: "",
 };
 
-const SOURCE_GRADES: DiscoverySourceConfig["source_grade"][] = ["primary", "secondary", "unknown"];
-const ADAPTER_OPTIONS = ["search_engine", "china_flk", "singapore_sso", "thailand_ocs"];
-const SOURCE_TYPES = ["statute_portal", "regulator", "government_portal", "official_website", "secondary_source"];
+const SOURCE_GRADES: DiscoverySourceConfig["source_grade"][] = [
+  "primary",
+  "secondary",
+  "unknown",
+];
+const ADAPTER_OPTIONS = [
+  "search_engine",
+  "china_flk",
+  "singapore_sso",
+  "thailand_ocs",
+];
+const SOURCE_TYPES = [
+  "statute_portal",
+  "regulator",
+  "government_portal",
+  "official_website",
+  "secondary_source",
+];
 
 export function DiscoverySourceManager() {
   const [registry, setRegistry] = useState<DiscoveryRegistry>({});
@@ -50,11 +75,17 @@ export function DiscoverySourceManager() {
       const config = await getDiscoveryConfig();
       const codes = Object.keys(config).sort();
       setRegistry(config);
-      setSelectedCountry((current) => current && config[current] ? current : codes[0] ?? "");
+      setSelectedCountry((current) =>
+        current && config[current] ? current : (codes[0] ?? ""),
+      );
       setSelectedSourceIndex(0);
       setDirty(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load discovery source config.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to load discovery source config.",
+      );
     } finally {
       setLoading(false);
     }
@@ -70,7 +101,11 @@ export function DiscoverySourceManager() {
       setDirty(false);
       setMessage("Saved");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save discovery source config.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to save discovery source config.",
+      );
     } finally {
       setSaving(false);
     }
@@ -106,7 +141,9 @@ export function DiscoverySourceManager() {
 
   function deleteCountry() {
     if (!selectedCountry) return;
-    const confirmed = window.confirm(`Delete ${selectedCountry} and all configured sources?`);
+    const confirmed = window.confirm(
+      `Delete ${selectedCountry} and all configured sources?`,
+    );
     if (!confirmed) return;
     const next = { ...registry };
     delete next[selectedCountry];
@@ -116,7 +153,10 @@ export function DiscoverySourceManager() {
     setSelectedSourceIndex(0);
   }
 
-  function updateCountryField(field: "label" | "languages", value: string | string[]) {
+  function updateCountryField(
+    field: "label" | "languages",
+    value: string | string[],
+  ) {
     if (!selectedCountry || !country) return;
     replaceRegistry({
       ...registry,
@@ -148,7 +188,11 @@ export function DiscoverySourceManager() {
       ...registry,
       [selectedCountry]: {
         ...country,
-        sources: [...sources.slice(0, selectedSourceIndex + 1), copy, ...sources.slice(selectedSourceIndex + 1)],
+        sources: [
+          ...sources.slice(0, selectedSourceIndex + 1),
+          copy,
+          ...sources.slice(selectedSourceIndex + 1),
+        ],
       },
     });
     setSelectedSourceIndex(selectedSourceIndex + 1);
@@ -158,7 +202,9 @@ export function DiscoverySourceManager() {
     if (!selectedCountry || !country || !selectedSource) return;
     const confirmed = window.confirm(`Delete source "${selectedSource.name}"?`);
     if (!confirmed) return;
-    const nextSources = sources.filter((_source, index) => index !== selectedSourceIndex);
+    const nextSources = sources.filter(
+      (_source, index) => index !== selectedSourceIndex,
+    );
     replaceRegistry({
       ...registry,
       [selectedCountry]: {
@@ -166,10 +212,15 @@ export function DiscoverySourceManager() {
         sources: nextSources,
       },
     });
-    setSelectedSourceIndex(Math.max(0, Math.min(selectedSourceIndex, nextSources.length - 1)));
+    setSelectedSourceIndex(
+      Math.max(0, Math.min(selectedSourceIndex, nextSources.length - 1)),
+    );
   }
 
-  function updateSourceField<K extends keyof DiscoverySourceConfig>(field: K, value: DiscoverySourceConfig[K]) {
+  function updateSourceField<K extends keyof DiscoverySourceConfig>(
+    field: K,
+    value: DiscoverySourceConfig[K],
+  ) {
     if (!selectedCountry || !country || !selectedSource) return;
     const nextSources = sources.map((source, index) =>
       index === selectedSourceIndex ? { ...source, [field]: value } : source,
@@ -184,18 +235,32 @@ export function DiscoverySourceManager() {
   }
 
   return (
-    <section className="source-manager-panel" aria-label="Discovery source manager">
+    <section
+      className="source-manager-panel"
+      aria-label="Discovery source manager"
+    >
       <div className="panel-header source-manager-header">
         <div>
           <h2>Source Manager</h2>
-          <p>Maintain the configured official and secondary discovery sources.</p>
+          <p>
+            Maintain the configured official and secondary discovery sources.
+          </p>
         </div>
         <div className="source-manager-actions">
-          <button type="button" className="secondary" onClick={loadConfig} disabled={loading || saving}>
+          <button
+            type="button"
+            className="secondary"
+            onClick={loadConfig}
+            disabled={loading || saving}
+          >
             <RefreshCw size={15} />
             Reload
           </button>
-          <button type="button" onClick={saveConfig} disabled={loading || saving || !dirty}>
+          <button
+            type="button"
+            onClick={saveConfig}
+            disabled={loading || saving || !dirty}
+          >
             <Save size={15} />
             {saving ? "Saving" : "Save"}
           </button>
@@ -250,7 +315,9 @@ export function DiscoverySourceManager() {
                   Label
                   <input
                     value={country.label}
-                    onChange={(event) => updateCountryField("label", event.target.value)}
+                    onChange={(event) =>
+                      updateCountryField("label", event.target.value)
+                    }
                   />
                 </label>
                 <label>
@@ -261,7 +328,11 @@ export function DiscoverySourceManager() {
                     placeholder="en, zh"
                   />
                 </label>
-                <button type="button" className="danger" onClick={deleteCountry}>
+                <button
+                  type="button"
+                  className="danger"
+                  onClick={deleteCountry}
+                >
                   <Trash2 size={15} />
                   Country
                 </button>
@@ -284,10 +355,16 @@ export function DiscoverySourceManager() {
                       onClick={() => setSelectedSourceIndex(index)}
                     >
                       <span>{source.name || "Untitled source"}</span>
-                      <small>{source.source_grade} · {source.adapter}</small>
+                      <small>
+                        {source.source_grade} · {source.adapter}
+                      </small>
                     </button>
                   ))}
-                  {sources.length === 0 && <p className="source-manager-muted">No sources for this country.</p>}
+                  {sources.length === 0 && (
+                    <p className="source-manager-muted">
+                      No sources for this country.
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -299,11 +376,15 @@ export function DiscoverySourceManager() {
                   onDelete={deleteSource}
                 />
               ) : (
-                <div className="empty-state">Add a source to start configuring discovery for this country.</div>
+                <div className="empty-state">
+                  Add a source to start configuring discovery for this country.
+                </div>
               )}
             </>
           ) : (
-            <div className="empty-state">Add a country to start managing discovery sources.</div>
+            <div className="empty-state">
+              Add a country to start managing discovery sources.
+            </div>
           )}
         </div>
       </div>
@@ -318,7 +399,10 @@ function SourceEditor({
   onDelete,
 }: {
   source: DiscoverySourceConfig;
-  onChange: <K extends keyof DiscoverySourceConfig>(field: K, value: DiscoverySourceConfig[K]) => void;
+  onChange: <K extends keyof DiscoverySourceConfig>(
+    field: K,
+    value: DiscoverySourceConfig[K],
+  ) => void;
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
@@ -341,11 +425,17 @@ function SourceEditor({
       <div className="source-manager-form-grid">
         <label>
           Name
-          <input value={source.name} onChange={(event) => onChange("name", event.target.value)} />
+          <input
+            value={source.name}
+            onChange={(event) => onChange("name", event.target.value)}
+          />
         </label>
         <label>
           Base URL
-          <input value={source.base_url} onChange={(event) => onChange("base_url", event.target.value)} />
+          <input
+            value={source.base_url}
+            onChange={(event) => onChange("base_url", event.target.value)}
+          />
         </label>
         <label>
           Domains
@@ -357,33 +447,32 @@ function SourceEditor({
         </label>
         <label>
           Adapter
-          <select value={source.adapter} onChange={(event) => onChange("adapter", event.target.value)}>
-            {ADAPTER_OPTIONS.map((adapter) => (
-              <option key={adapter} value={adapter}>{adapter}</option>
-            ))}
-          </select>
+          <SourceSelect
+            value={source.adapter}
+            options={ADAPTER_OPTIONS}
+            onChange={(value) => onChange("adapter", value)}
+          />
         </label>
         <label>
           Source grade
-          <select
+          <SourceSelect
             value={source.source_grade}
-            onChange={(event) => onChange("source_grade", event.target.value as DiscoverySourceConfig["source_grade"])}
-          >
-            {SOURCE_GRADES.map((grade) => (
-              <option key={grade} value={grade}>{grade}</option>
-            ))}
-          </select>
+            options={SOURCE_GRADES}
+            onChange={(value) =>
+              onChange(
+                "source_grade",
+                value as DiscoverySourceConfig["source_grade"],
+              )
+            }
+          />
         </label>
         <label>
           Source type
-          <select
+          <SourceSelect
             value={source.source_type ?? "official_website"}
-            onChange={(event) => onChange("source_type", event.target.value)}
-          >
-            {SOURCE_TYPES.map((type) => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
+            options={SOURCE_TYPES}
+            onChange={(value) => onChange("source_type", value)}
+          />
         </label>
         <label>
           Languages
@@ -400,7 +489,9 @@ function SourceEditor({
             min={0}
             max={100}
             value={source.priority ?? 50}
-            onChange={(event) => onChange("priority", Number(event.target.value))}
+            onChange={(event) =>
+              onChange("priority", Number(event.target.value))
+            }
           />
         </label>
         <label>
@@ -445,10 +536,38 @@ function SourceEditor({
         </label>
         <label className="source-manager-notes">
           Notes
-          <textarea value={source.notes ?? ""} onChange={(event) => onChange("notes", event.target.value)} />
+          <textarea
+            value={source.notes ?? ""}
+            onChange={(event) => onChange("notes", event.target.value)}
+          />
         </label>
       </div>
     </div>
+  );
+}
+
+function SourceSelect({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: readonly string[];
+  onChange: (value: string) => void;
+}) {
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={option} value={option}>
+            {option}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { INGEST_API_URL, REVIEW_API_URL, sampleText } from "../lib/constants";
-import { getStoredToken } from "./useAuth";
+import { demoAuditExtraction } from "../data/demoAuditMappings";
+import { authHeaders, readErrorMessage } from "../lib/http";
 import { t } from "../lib/i18n";
 import { mappingKey } from "../lib/utils";
 import {
@@ -34,7 +35,9 @@ const DEFAULT_PROVIDERS = [
 ];
 
 function initialSelectedProvider() {
-  if (localStorage.getItem("providerDefaultVersion") !== DEFAULT_PROVIDER_VERSION) {
+  if (
+    localStorage.getItem("providerDefaultVersion") !== DEFAULT_PROVIDER_VERSION
+  ) {
     localStorage.setItem("providerDefaultVersion", DEFAULT_PROVIDER_VERSION);
     localStorage.setItem("selectedProvider", DEFAULT_PROVIDER);
     return DEFAULT_PROVIDER;
@@ -66,40 +69,59 @@ export function useExtraction() {
   const [warning, setWarning] = useState("");
   const [response, setResponse] = useState<ExtractionResponse | null>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
-  const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>({});
+  const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>(
+    {},
+  );
   const [showRejected, setShowRejected] = useState(false);
-  const [availableProviders, setAvailableProviders] = useState<string[]>(DEFAULT_PROVIDERS);
-  const [extractionProgress, setExtractionProgress] = useState<{ current: number; total: number; phase: string }>({
+  const [availableProviders, setAvailableProviders] =
+    useState<string[]>(DEFAULT_PROVIDERS);
+  const [extractionProgress, setExtractionProgress] = useState<{
+    current: number;
+    total: number;
+    phase: string;
+  }>({
     current: 0,
     total: 0,
     phase: "",
   });
-  const [batchProgress, setBatchProgress] = useState<{ current: number; total: number; currentUrl: string }>({
+  const [batchProgress, setBatchProgress] = useState<{
+    current: number;
+    total: number;
+    currentUrl: string;
+  }>({
     current: 0,
     total: 0,
     currentUrl: "",
   });
-  
+
   // Persistent state using localStorage to remember user's last selection
-  const [selectedProvider, setSelectedProviderState] = useState(initialSelectedProvider);
+  const [selectedProvider, setSelectedProviderState] = useState(
+    initialSelectedProvider,
+  );
   const setSelectedProvider = (val: string) => {
     setSelectedProviderState(val);
     localStorage.setItem("selectedProvider", val);
   };
-  
-  const [selectedOllamaModel, setSelectedOllamaModelState] = useState(() => localStorage.getItem("selectedOllamaModel") || "gemma4:12b");
+
+  const [selectedOllamaModel, setSelectedOllamaModelState] = useState(
+    () => localStorage.getItem("selectedOllamaModel") || "gemma4:12b",
+  );
   const setSelectedOllamaModel = (val: string) => {
     setSelectedOllamaModelState(val);
     localStorage.setItem("selectedOllamaModel", val);
   };
 
-  const [selectedGeminiModel, setSelectedGeminiModelState] = useState(() => localStorage.getItem("selectedGeminiModel") || "gemini-2.0-flash");
+  const [selectedGeminiModel, setSelectedGeminiModelState] = useState(
+    () => localStorage.getItem("selectedGeminiModel") || "gemini-2.0-flash",
+  );
   const setSelectedGeminiModel = (val: string) => {
     setSelectedGeminiModelState(val);
     localStorage.setItem("selectedGeminiModel", val);
   };
 
-  const [selectedDeepSeekModel, setSelectedDeepSeekModelState] = useState(() => normalizeDeepSeekModel(localStorage.getItem("selectedDeepSeekModel")));
+  const [selectedDeepSeekModel, setSelectedDeepSeekModelState] = useState(() =>
+    normalizeDeepSeekModel(localStorage.getItem("selectedDeepSeekModel")),
+  );
   const setSelectedDeepSeekModel = (val: string) => {
     const next = normalizeDeepSeekModel(val);
     setSelectedDeepSeekModelState(next);
@@ -111,7 +133,11 @@ export function useExtraction() {
   const [foundPdfs, setFoundPdfs] = useState<string[]>([]);
 
   // ── Country auto-detection ──────────────────────────────────────
-  const [detectedCountry, setDetectedCountry] = useState<{ code: string; name: string; detected: boolean } | null>(null);
+  const [detectedCountry, setDetectedCountry] = useState<{
+    code: string;
+    name: string;
+    detected: boolean;
+  } | null>(null);
   const detectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function triggerCountryDetect(srcUrl: string, srcText: string) {
@@ -120,27 +146,39 @@ export function useExtraction() {
     const hasText = srcText.trim().length > 80;
     if (!hasUrl && !hasText) return;
 
-    detectTimer.current = setTimeout(async () => {
-      try {
-        const body = hasUrl
-          ? JSON.stringify({ source_url: srcUrl, text: srcText.slice(0, 500) })
-          : JSON.stringify({ text: srcText.slice(0, 500) });
-        const res = await fetch("/api/detect/country", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body,
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data.detected && data.code) {
-          setDetectedCountry({ code: data.code, name: data.name, detected: true });
-          setCountry(data.code);
-        } else if (!detectedCountry) {
-          // Only clear if user hasn't manually selected
-          setDetectedCountry({ code: "", name: "", detected: false });
+    detectTimer.current = setTimeout(
+      async () => {
+        try {
+          const body = hasUrl
+            ? JSON.stringify({
+                source_url: srcUrl,
+                text: srcText.slice(0, 500),
+              })
+            : JSON.stringify({ text: srcText.slice(0, 500) });
+          const res = await fetch("/api/detect/country", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body,
+          });
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data.detected && data.code) {
+            setDetectedCountry({
+              code: data.code,
+              name: data.name,
+              detected: true,
+            });
+            setCountry(data.code);
+          } else if (!detectedCountry) {
+            // Only clear if user hasn't manually selected
+            setDetectedCountry({ code: "", name: "", detected: false });
+          }
+        } catch {
+          /* network errors — ignore */
         }
-      } catch { /* network errors — ignore */ }
-    }, hasUrl ? 300 : 800);
+      },
+      hasUrl ? 300 : 800,
+    );
   }
 
   // Trigger on initial text
@@ -154,7 +192,8 @@ export function useExtraction() {
     fetch("/health")
       .then((res) => res.json())
       .then((data) => {
-        if (data.available_providers?.length) setAvailableProviders(data.available_providers);
+        if (data.available_providers?.length)
+          setAvailableProviders(data.available_providers);
         if (data.active_provider && !localStorage.getItem("selectedProvider")) {
           setSelectedProvider(data.active_provider);
         }
@@ -165,7 +204,10 @@ export function useExtraction() {
       .then((data) => {
         if (data.models && data.models.length > 0) {
           setOllamaModels(data.models);
-          if (!localStorage.getItem("selectedOllamaModel") && !data.models.includes("gemma4:12b")) {
+          if (
+            !localStorage.getItem("selectedOllamaModel") &&
+            !data.models.includes("gemma4:12b")
+          ) {
             setSelectedOllamaModel(data.models[0]);
           }
         }
@@ -184,7 +226,8 @@ export function useExtraction() {
   const mappings = response?.mappings ?? [];
   const rejected = response?.rejected ?? [];
   const provider = response?.provider ?? "—";
-  const activeMapping = mappings.find((m) => mappingKey(m) === activeKey) ?? null;
+  const activeMapping =
+    mappings.find((m) => mappingKey(m) === activeKey) ?? null;
 
   const visibleMappings = mappings.filter((m) =>
     pillarFilter === "all" ? true : String(m.pillar) === pillarFilter,
@@ -194,7 +237,10 @@ export function useExtraction() {
     (m) => (decisions[mappingKey(m)] ?? "pending") === "pending",
   ).length;
 
-  function _fixMapping(m: IndicatorMapping, fallbackUrl: string): IndicatorMapping {
+  function _fixMapping(
+    m: IndicatorMapping,
+    fallbackUrl: string,
+  ): IndicatorMapping {
     const isHallucinatedUrl =
       !m.source_url ||
       m.source_url.toLowerCase().includes("n/a") ||
@@ -209,7 +255,9 @@ export function useExtraction() {
     return {
       ...m,
       source_url: isHallucinatedUrl ? fallbackUrl : m.source_url,
-      last_update: isHallucinatedDate ? new Date().toISOString().split("T")[0] : m.last_update,
+      last_update: isHallucinatedDate
+        ? new Date().toISOString().split("T")[0]
+        : m.last_update,
       source_legislation: isLegislationUrl ? "" : m.source_legislation,
     };
   }
@@ -279,7 +327,8 @@ export function useExtraction() {
 
       if (event.event === "started" && isRecord(payload)) {
         const data = payload as Record<string, unknown>;
-        const nextSourceText = typeof data.source_text === "string" ? data.source_text : "";
+        const nextSourceText =
+          typeof data.source_text === "string" ? data.source_text : "";
         if (nextSourceText) {
           sourceText = nextSourceText;
           if (updateTextFromSource) setText(nextSourceText);
@@ -345,8 +394,14 @@ export function useExtraction() {
     return typeof value === "object" && value !== null;
   }
 
-  function isNodeResult(value: unknown): value is NodeResult<ExtractionResponse> {
-    return isRecord(value) && typeof value.status === "string" && isRecord(value.outputs);
+  function isNodeResult(
+    value: unknown,
+  ): value is NodeResult<ExtractionResponse> {
+    return (
+      isRecord(value) &&
+      typeof value.status === "string" &&
+      isRecord(value.outputs)
+    );
   }
 
   function extractionStreamError(payload: unknown): string {
@@ -380,7 +435,9 @@ export function useExtraction() {
         requestText: nextSourceUrl !== undefined ? "" : text,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("error.extractionFailed"));
+      setError(
+        err instanceof Error ? err.message : t("error.extractionFailed"),
+      );
       setResponse(null);
       setStatus("error");
     } finally {
@@ -389,7 +446,9 @@ export function useExtraction() {
   }
 
   async function extractShortlist(urls: string[]) {
-    const uniqueUrls = Array.from(new Set(urls.map((url) => url.trim()).filter(Boolean)));
+    const uniqueUrls = Array.from(
+      new Set(urls.map((url) => url.trim()).filter(Boolean)),
+    );
     if (!uniqueUrls.length) return;
 
     setStatus("loading");
@@ -401,7 +460,11 @@ export function useExtraction() {
     setActiveKey(null);
     setDecisions({});
     setText("");
-    setBatchProgress({ current: 0, total: uniqueUrls.length, currentUrl: uniqueUrls[0] ?? "" });
+    setBatchProgress({
+      current: 0,
+      total: uniqueUrls.length,
+      currentUrl: uniqueUrls[0] ?? "",
+    });
 
     let accumulatedMappings: IndicatorMapping[] = [];
     let accumulatedRejected: RejectedExtraction[] = [];
@@ -409,7 +472,11 @@ export function useExtraction() {
     const failedUrls: string[] = [];
 
     for (const [index, url] of uniqueUrls.entries()) {
-      setBatchProgress({ current: index + 1, total: uniqueUrls.length, currentUrl: url });
+      setBatchProgress({
+        current: index + 1,
+        total: uniqueUrls.length,
+        currentUrl: url,
+      });
       setSourceUrl(url);
       triggerCountryDetect(url, "");
 
@@ -426,7 +493,8 @@ export function useExtraction() {
         accumulatedRejected = [...accumulatedRejected, ...result.rejected];
         accumulatedProvider = result.provider || accumulatedProvider;
       } catch (err) {
-        const message = err instanceof Error ? err.message : t("error.extractionFailed");
+        const message =
+          err instanceof Error ? err.message : t("error.extractionFailed");
         failedUrls.push(url);
         const rejectedItem: RejectedExtraction = {
           reason: `Shortlist extraction failed: ${message}`,
@@ -434,7 +502,9 @@ export function useExtraction() {
           raw_output: { source_url: url },
         };
         accumulatedRejected = [...accumulatedRejected, rejectedItem];
-        setWarning(`${failedUrls.length} shortlist URL(s) failed; continuing with the remaining candidates.`);
+        setWarning(
+          `${failedUrls.length} shortlist URL(s) failed; continuing with the remaining candidates.`,
+        );
         setResponse({
           mappings: accumulatedMappings,
           rejected: accumulatedRejected,
@@ -452,15 +522,23 @@ export function useExtraction() {
     });
 
     if (failedUrls.length === uniqueUrls.length) {
-      setError(`All shortlist extractions failed (${failedUrls.length}/${uniqueUrls.length}).`);
+      setError(
+        `All shortlist extractions failed (${failedUrls.length}/${uniqueUrls.length}).`,
+      );
       setStatus("error");
     } else {
       if (failedUrls.length) {
-        setWarning(`${failedUrls.length} of ${uniqueUrls.length} shortlist URL(s) failed; extracted the rest.`);
+        setWarning(
+          `${failedUrls.length} of ${uniqueUrls.length} shortlist URL(s) failed; extracted the rest.`,
+        );
       }
       setStatus("ready");
     }
-    setBatchProgress({ current: uniqueUrls.length, total: uniqueUrls.length, currentUrl: "" });
+    setBatchProgress({
+      current: uniqueUrls.length,
+      total: uniqueUrls.length,
+      currentUrl: "",
+    });
     setExtractionProgress({ current: 0, total: 0, phase: "" });
   }
 
@@ -470,7 +548,7 @@ export function useExtraction() {
     try {
       const form = new FormData();
       form.append("file", file);
-      
+
       // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
       let actualProvider = selectedProvider;
       let actualModel = "";
@@ -492,13 +570,17 @@ export function useExtraction() {
 
       const res = await fetch(INGEST_API_URL, {
         method: "POST",
-        headers: { Authorization: `Bearer ${getStoredToken()}` },
+        headers: authHeaders(),
         body: form,
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.detail || t("error.ingestFailedStatus", { status: res.status }));
+        throw new Error(
+          await readErrorMessage(
+            res,
+            t("error.ingestFailedStatus", { status: res.status }),
+          ),
+        );
       }
 
       const data = (await res.json()) as ExtractionResponse;
@@ -515,7 +597,9 @@ export function useExtraction() {
         return {
           ...m,
           source_url: isHallucinatedUrl ? "" : m.source_url,
-          last_update: isHallucinatedDate ? new Date().toISOString().split("T")[0] : m.last_update,
+          last_update: isHallucinatedDate
+            ? new Date().toISOString().split("T")[0]
+            : m.last_update,
         };
       });
 
@@ -525,7 +609,9 @@ export function useExtraction() {
       setDecisions({});
       setStatus("ready");
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("error.fileIngestFailed"));
+      setError(
+        err instanceof Error ? err.message : t("error.fileIngestFailed"),
+      );
       setResponse(null);
       setStatus("error");
     }
@@ -560,6 +646,25 @@ export function useExtraction() {
     setActiveKey((prev) => (prev === key ? null : key));
   }
 
+  function loadDemoAuditData() {
+    const nextResponse = {
+      ...demoAuditExtraction,
+      mappings: demoAuditExtraction.mappings.map((mapping) => ({ ...mapping })),
+      rejected: demoAuditExtraction.rejected.map((item) => ({ ...item })),
+    };
+    setCountry("SGP");
+    setSourceUrl("https://sso.agc.gov.sg/Act/PDPA2012");
+    setText(demoAuditExtraction.source_text ?? "");
+    setResponse(nextResponse);
+    setActiveKey(null);
+    setDecisions({});
+    setWarning("");
+    setError("");
+    setStatus("ready");
+    setPillarFilter("all");
+    setShowRejected(false);
+  }
+
   async function setDecision(key: string, d: ReviewDecision) {
     const mapping = mappings.find((m) => mappingKey(m) === key);
     if (!mapping) return;
@@ -573,15 +678,14 @@ export function useExtraction() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getStoredToken()}`,
+          ...authHeaders(),
         },
         body: JSON.stringify({ decision: d, country_code: country, mapping }),
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
         throw new Error(
-          errorData.detail || t("error.reviewSaveFailed"),
+          await readErrorMessage(res, t("error.reviewSaveFailed")),
         );
       }
     } catch (err) {
@@ -591,35 +695,47 @@ export function useExtraction() {
   }
 
   return {
-    country, setCountry,
+    country,
+    setCountry,
     detectedCountry,
     warning,
-    pillarFilter, setPillarFilter,
-    sourceUrl, setSourceUrl: handleSetSourceUrl,
-    text, onTextChange,
+    pillarFilter,
+    setPillarFilter,
+    sourceUrl,
+    setSourceUrl: handleSetSourceUrl,
+    text,
+    onTextChange,
     status,
     error,
     provider,
     mappings,
     visibleMappings,
     rejected,
-    activeKey, setActiveKey,
+    activeKey,
+    setActiveKey,
     activeMapping,
     decisions,
     pendingCount,
-    showRejected, setShowRejected,
+    showRejected,
+    setShowRejected,
     availableProviders,
-    selectedProvider, setSelectedProvider,
-    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
+    selectedProvider,
+    setSelectedProvider,
+    ollamaModels,
+    selectedOllamaModel,
+    setSelectedOllamaModel,
     vertexModels,
-    selectedGeminiModel, setSelectedGeminiModel,
-    selectedDeepSeekModel, setSelectedDeepSeekModel,
+    selectedGeminiModel,
+    setSelectedGeminiModel,
+    selectedDeepSeekModel,
+    setSelectedDeepSeekModel,
     foundPdfs,
     extractionProgress,
     batchProgress,
     extract,
     extractShortlist,
     ingestFile,
+    loadDemoAuditData,
     selectMapping,
     setDecision,
   };
