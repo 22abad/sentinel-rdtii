@@ -1,8 +1,9 @@
-import React from "react"";
-import { Trash2 } from "lucide-react";
+import type React from "react";
+
+import type { FileNodeData } from "./FileNode";
 
 export type Wardrobe = {
-  files: FileNode;
+  files: FileNodeData;
   element: React.ReactNode;
   width?: number;
   transparent?: boolean;

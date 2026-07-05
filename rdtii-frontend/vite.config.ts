@@ -12,6 +12,17 @@ export default defineConfig({
   define: {
     __BUNDLED_DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("/node_modules/three/")) {
+            return "three-vendor";
+          }
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     host: true,

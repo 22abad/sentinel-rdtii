@@ -165,6 +165,36 @@ def test_discovery_config_read_reports_database_unavailable(monkeypatch):
     assert "missing table" in response.json()["detail"]
 
 
+def test_discovery_config_save_rejects_unknown_backend(monkeypatch):
+    from api import discovery as discovery_api
+
+    monkeypatch.setenv("DISCOVERY_REGISTRY_BACKEND", "redis")
+    calls = {"save_registry": 0}
+
+    def fake_save_registry(*args, **kwargs):
+        calls["save_registry"] += 1
+        return {}
+
+    monkeypatch.setattr(discovery_api.discovery_source_persistence, "save_registry", fake_save_registry)
+    main_module.app.dependency_overrides[get_current_user] = lambda: {
+        "user_id": "11111111-1111-1111-1111-111111111111",
+        "role": "admin",
+    }
+    client = TestClient(main_module.app)
+
+    try:
+        response = client.put(
+            "/api/discovery/config",
+            json={"registry": {"TST": {"label": "Testland", "sources": []}}},
+        )
+
+        assert response.status_code == 503
+        assert "Unsupported DISCOVERY_REGISTRY_BACKEND: redis" in response.json()["detail"]
+        assert calls["save_registry"] == 0
+    finally:
+        main_module.app.dependency_overrides.pop(get_current_user, None)
+
+
 def test_discovery_config_save_rejects_invalid_config_indicator(monkeypatch):
     monkeypatch.setenv("DISCOVERY_REGISTRY_BACKEND", "database")
     main_module.app.dependency_overrides[get_current_user] = lambda: {
@@ -218,7 +248,19 @@ def test_discovery_config_save_rejects_too_long_country_code(monkeypatch):
         main_module.app.dependency_overrides.pop(get_current_user, None)
 
 
-def test_discovery_config_save_rejects_viewer_role():
+def test_discovery_config_can_be_saved_by_viewer_role(monkeypatch):
+    from api import discovery as discovery_api
+
+    monkeypatch.setenv("DISCOVERY_REGISTRY_BACKEND", "database")
+    calls = {}
+
+    def fake_save_registry(registry, *, changed_by=None, change_note=""):
+        calls["registry"] = registry
+        calls["changed_by"] = changed_by
+        calls["change_note"] = change_note
+        return registry
+
+    monkeypatch.setattr(discovery_api.discovery_source_persistence, "save_registry", fake_save_registry)
     main_module.app.dependency_overrides[get_current_user] = lambda: {
         "user_id": "test-viewer",
         "role": "viewer",
@@ -230,7 +272,9 @@ def test_discovery_config_save_rejects_viewer_role():
             "/api/discovery/config",
             json={"registry": {"TST": {"label": "Testland", "sources": []}}},
         )
-        assert response.status_code == 403
+        assert response.status_code == 200
+        assert response.json()["registry"]["TST"]["label"] == "Testland"
+        assert calls["changed_by"] == "test-viewer"
     finally:
         main_module.app.dependency_overrides.pop(get_current_user, None)
 
