@@ -7,18 +7,26 @@ import tempfile
 from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 
 from .schemas import DiscoveryCountryConfig, LegalSourceConfig
 
 DEFAULT_REGISTRY_PATH = Path(__file__).with_name("sources.yaml")
+DiscoveryRegistryBackend = Literal["file", "database"]
 
 
 def _registry_path() -> Path:
     override = os.getenv("DISCOVERY_SOURCES_FILE", "").strip()
     return Path(override) if override else DEFAULT_REGISTRY_PATH
+
+
+def get_registry_backend() -> DiscoveryRegistryBackend:
+    backend = os.getenv("DISCOVERY_REGISTRY_BACKEND", "database").strip().lower()
+    if backend in {"file", "database"}:
+        return backend
+    raise ValueError(f"Unsupported DISCOVERY_REGISTRY_BACKEND: {backend}")
 
 
 @lru_cache(maxsize=4)
@@ -32,7 +40,7 @@ def _load_registry(path: str) -> dict[str, dict[str, Any]]:
 
 
 def get_registry() -> dict[str, dict[str, Any]]:
-    backend = os.getenv("DISCOVERY_REGISTRY_BACKEND", "database").strip().lower()
+    backend = get_registry_backend()
     if backend == "file":
         return deepcopy(_load_registry(str(_registry_path())))
 
@@ -46,7 +54,7 @@ def get_registry() -> dict[str, dict[str, Any]]:
                 return deepcopy(_load_registry(str(_registry_path())))
             raise
 
-    raise ValueError(f"Unsupported DISCOVERY_REGISTRY_BACKEND: {backend}")
+    raise AssertionError(f"Unhandled DISCOVERY_REGISTRY_BACKEND: {backend}")
 
 
 def clear_registry_cache() -> None:
