@@ -9,6 +9,7 @@ export type IndicatorMapping = {
   verbatim_quote: string;
   quote_start: number;
   quote_end: number;
+  article_clause?: string;
   source_legislation: string;
   last_update: string;
   source_url: string;
@@ -22,7 +23,9 @@ export type IndicatorMapping = {
   features: Record<string, boolean | number | string>;
   impact: string;
   requires_human_review: boolean;
+  flag_reasons?: string[];
   extraction_provider: string;
+  timestamp_verification?: Record<string, unknown>;
 };
 
 export type RejectedExtraction = {

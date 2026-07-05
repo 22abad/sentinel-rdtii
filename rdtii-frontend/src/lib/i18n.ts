@@ -6,14 +6,29 @@ export const LOCALE_CHANGE_EVENT = "sentinel:locale-change";
 const messages = {
   en: {
     "audit.aria": "Audit view",
-    "audit.description": "Indicator mappings extracted from source. Click a card to highlight its quote on the left.",
+    "audit.description":
+      "Indicator mappings extracted from source. Click a card to highlight its quote on the left.",
     "audit.empty.error": "Extraction failed. See message in the source panel.",
     "audit.empty.filtered": "No mappings match the current pillar filter.",
-    "audit.empty.idle": "Run extraction on the source text to surface RDTII indicator mappings.",
+    "audit.empty.idle":
+      "Run extraction on the source text to surface RDTII indicator mappings.",
     "audit.empty.loading": "Extracting mappings...",
-    "audit.empty.none": "No mappings produced for this text. Try a different excerpt or check the rejected log below.",
-    "audit.exportCsv": "Export CSV",
-    "audit.exportCsvTitle": "Download results as CSV (Legal Inventory format)",
+    "audit.empty.none":
+      "No mappings produced for this text. Try a different excerpt or check the rejected log below.",
+    "audit.exportExcel": "Export Excel",
+    "audit.exportExcelFailed": "Excel export failed.",
+    "audit.exportExcelLoading": "Exporting...",
+    "audit.exportExcelTimeout": "Excel export timed out. Please try again.",
+    "audit.exportExcelTitle": "Download RDTII 2.1 workbook",
+    "audit.exportPreviewCancel": "Cancel",
+    "audit.exportPreviewButton": "Preview",
+    "audit.exportPreviewConfirm": "Download Excel",
+    "audit.exportPreviewDescription":
+      "{count} mapping(s) will be exported in the RDTII 2.1 workbook schema.",
+    "audit.exportPreviewTitle": "Preview export",
+    "audit.exportPreviewTruncated": "Showing {shown} of {total} rows.",
+    "audit.loadDemo": "Load demo",
+    "audit.loadDemoTitle": "Load sample RDTII mappings into Audit",
     "audit.title": "Audit",
     "auth.alreadyHaveAccount": "Already have an account?",
     "auth.continueWithGoogle": "Continue with Google",
@@ -26,14 +41,16 @@ const messages = {
     "auth.fullNamePlaceholder": "Enter your full name",
     "auth.join": "Join",
     "auth.keepSignedIn": "Keep me signed in",
-    "auth.loginDescription": "Sign in to access the AI-powered digital trade evidence workbench.",
+    "auth.loginDescription":
+      "Sign in to access the AI-powered digital trade evidence workbench.",
     "auth.loginFailed": "Login failed",
     "auth.loginTitle": "Welcome back to",
     "auth.newToPlatform": "New to our platform?",
     "auth.orContinueWith": "Or continue with",
     "auth.password": "Password",
     "auth.passwordPlaceholder": "Enter your password",
-    "auth.registerDescription": "Create your account to access the digital trade evidence workbench.",
+    "auth.registerDescription":
+      "Create your account to access the digital trade evidence workbench.",
     "auth.registrationFailed": "Registration failed",
     "auth.resetPassword": "Reset password",
     "auth.signIn": "Sign In",
@@ -82,7 +99,8 @@ const messages = {
     "pdf.showAll": "Show all {count} PDFs",
     "sidebar.about": "About",
     "sidebar.controls": "Controls",
-    "sidebar.controlsHelp": "Middle-click to pan · Ctrl+scroll to zoom · Pinch on mobile",
+    "sidebar.controlsHelp":
+      "Middle-click to pan · Ctrl+scroll to zoom · Pinch on mobile",
     "sidebar.country": "Country",
     "sidebar.history": "History",
     "sidebar.local": "Local",
@@ -91,7 +109,8 @@ const messages = {
     "sidebar.mode.workbench": "Evidence Workbench",
     "sidebar.provider": "Provider",
     "sidebar.region": "Region",
-    "sidebar.regionAbout": "Explore digital trade and AI policy indicators across the Asia-Pacific region.",
+    "sidebar.regionAbout":
+      "Explore digital trade and AI policy indicators across the Asia-Pacific region.",
     "sidebar.selected": "Selected",
     "sidebar.session": "Session",
     "sidebar.status": "Status",
@@ -99,7 +118,8 @@ const messages = {
     "sidebar.status.error": "Error",
     "sidebar.status.extracting": "Extracting...",
     "sidebar.status.idle": "Idle",
-    "sidebar.status.ready": "{mappingsCount} mapping{mappingPlural} · {pendingCount} pending",
+    "sidebar.status.ready":
+      "{mappingsCount} mapping{mappingPlural} · {pendingCount} pending",
     "source.aiProvider": "AI Provider",
     "source.aria": "Source legal text",
     "source.auditHighlight": "Audit Highlight (Click to edit text)",
@@ -134,14 +154,28 @@ const messages = {
   },
   zh: {
     "audit.aria": "审核视图",
-    "audit.description": "从来源文本中提取的指标映射。点击卡片可在左侧高亮对应引用。",
+    "audit.description":
+      "从来源文本中提取的指标映射。点击卡片可在左侧高亮对应引用。",
     "audit.empty.error": "提取失败。请查看来源面板中的错误信息。",
     "audit.empty.filtered": "当前支柱筛选下没有匹配的映射。",
     "audit.empty.idle": "对来源文本运行提取，以生成 RDTII 指标映射。",
     "audit.empty.loading": "正在提取映射...",
-    "audit.empty.none": "这段文本没有生成映射。可以换一段文本，或查看下方 rejected 记录。",
-    "audit.exportCsv": "导出 CSV",
-    "audit.exportCsvTitle": "下载 Legal Inventory 格式的 CSV 结果",
+    "audit.empty.none":
+      "这段文本没有生成映射。可以换一段文本，或查看下方 rejected 记录。",
+    "audit.exportExcel": "导出 Excel",
+    "audit.exportExcelFailed": "Excel 导出失败。",
+    "audit.exportExcelLoading": "导出中...",
+    "audit.exportExcelTimeout": "Excel 导出超时，请重试。",
+    "audit.exportExcelTitle": "下载 RDTII 2.1 工作簿",
+    "audit.exportPreviewCancel": "取消",
+    "audit.exportPreviewButton": "预览",
+    "audit.exportPreviewConfirm": "下载 Excel",
+    "audit.exportPreviewDescription":
+      "将按 RDTII 2.1 工作簿格式导出 {count} 条映射。",
+    "audit.exportPreviewTitle": "导出预览",
+    "audit.exportPreviewTruncated": "当前显示 {shown} / {total} 行。",
+    "audit.loadDemo": "载入示例",
+    "audit.loadDemoTitle": "将 RDTII 示例映射载入审核面板",
     "audit.title": "审核",
     "auth.alreadyHaveAccount": "已有账号？",
     "auth.continueWithGoogle": "使用 Google 继续",
@@ -281,7 +315,9 @@ export function getLocale(): Locale {
 export function setLocale(locale: Locale) {
   if (typeof window !== "undefined") {
     window.localStorage.setItem("uiLocale", locale);
-    window.dispatchEvent(new CustomEvent(LOCALE_CHANGE_EVENT, { detail: locale }));
+    window.dispatchEvent(
+      new CustomEvent(LOCALE_CHANGE_EVENT, { detail: locale }),
+    );
   }
 }
 

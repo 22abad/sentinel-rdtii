@@ -16,6 +16,9 @@ export const DISCOVERY_BASE_URL =
 export const REVIEW_API_URL =
   import.meta.env.VITE_REVIEW_API_URL ?? "/api/mappings/review";
 
+export const EXCEL_EXPORT_API_URL =
+  import.meta.env.VITE_EXCEL_EXPORT_API_URL ?? "/api/excel/export";
+
 export const WORKFLOW_API_URL =
   import.meta.env.VITE_WORKFLOW_API_URL ?? "/api/workflows";
 
