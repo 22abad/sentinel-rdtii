@@ -25,7 +25,9 @@ async def export_excel(req: ExcelExportRequest):
             filename=req.filename,
         )
     except ImportError as exc:
-        raise HTTPException(status_code=500, detail=f"Excel export unavailable: {exc}. Install openpyxl.")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Excel export unavailable: {exc}. Install openpyxl.",
+        )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Excel export failed: {str(exc)}")
-
