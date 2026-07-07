@@ -1,12 +1,16 @@
 import React from "react";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, NodeResizer, Position } from "@xyflow/react";
 import { Trash2 } from "lucide-react";
+import { PANEL_MIN_SIZE, RESIZER_HANDLE_STYLE, RESIZER_LINE_STYLE } from "./resize";
+import type { WorkbenchCanvasSize } from "./types";
 
 export type PanelNodeData = {
   title: string;
   element: React.ReactNode;
   width?: number;
+  height?: number;
   transparent?: boolean;
+  onResize?: (size: WorkbenchCanvasSize) => void;
   onDelete: () => void;
 };
 
@@ -14,11 +18,24 @@ export type PanelNodeData = {
  * A draggable card wrapping an existing workbench panel.
  * The body carries `nowheel` so scrolling the panel doesn't zoom the canvas.
  */
-export function PanelNode({ data, selected }: { data: PanelNodeData; selected?: boolean }) {
+export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeData; selected?: boolean }) {
   const bare = !!data.transparent;
+  const nodeWidth = data.width ?? 460;
+  const nodeHeight = data.height;
   return (
     // Wrapper is overflow-visible so the floating Delete button (above the card) isn't clipped.
-    <div style={{ position: "relative", width: data.width ?? 460 }}>
+    <div style={{ position: "relative", width: nodeWidth, height: nodeHeight }}>
+      <NodeResizer
+        nodeId={id}
+        isVisible={selected}
+        minWidth={PANEL_MIN_SIZE.width}
+        minHeight={PANEL_MIN_SIZE.height}
+        color="#10B981"
+        handleStyle={RESIZER_HANDLE_STYLE}
+        lineStyle={RESIZER_LINE_STYLE}
+        onResize={(_event, params) => data.onResize?.({ width: params.width, height: params.height })}
+      />
+
       {selected && (
         <button
           className="nodrag"
@@ -32,7 +49,7 @@ export function PanelNode({ data, selected }: { data: PanelNodeData; selected?: 
             bottom: "100%",            // sit above the card…
             left: "50%",
             transform: "translateX(-50%)",
-            marginBottom: 12,          // …clearing the outlineOffset (6px) selection ring
+            marginBottom: 12,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -57,18 +74,24 @@ export function PanelNode({ data, selected }: { data: PanelNodeData; selected?: 
       {/* Inner card keeps overflow:hidden to clip content to the rounded corners */}
       <div
         style={{
+          height: nodeHeight ? "100%" : undefined,
           borderRadius: 36,
           overflow: bare ? "visible" : "hidden",
           background: bare ? "transparent" : "#ffffff",
           boxShadow: bare ? "none" : selected ? "0 18px 50px rgba(0,0,0,0.3)" : "0 18px 50px rgba(0,0,0,0.25)",
-          outline: selected ? "2px solid #10B981" : "none",
-          outlineOffset: 6, // Margin on selection
-          transition: "box-shadow 0.12s ease, outline-offset 0.12s ease",
+          transition: "box-shadow 0.12s ease",
         }}
       >
         <Handle type="target" position={Position.Top} style={{ background: "#10B981" }} />
 
-        <div className="nowheel" style={bare ? { overflow: "visible" } : { maxHeight: "72vh", overflow: "auto" }}>
+        <div
+          className="nowheel"
+          style={
+            bare
+              ? { height: nodeHeight ? "100%" : undefined, overflow: "visible" }
+              : { height: nodeHeight ? "100%" : undefined, maxHeight: nodeHeight ? undefined : "72vh", overflow: "auto" }
+          }
+        >
           {data.element}
         </div>
 

@@ -1,13 +1,19 @@
 import { useState } from "react"
-import { Handle, Position } from "@xyflow/react";
+import { Handle, NodeResizer, Position } from "@xyflow/react";
 import { motion, AnimatePresence } from "motion/react"
 import { Trash2, FileText, ChevronDown } from "lucide-react";
+import { FILE_MIN_SIZE, RESIZER_HANDLE_STYLE, RESIZER_LINE_STYLE } from "./resize";
+import type { WorkbenchCanvasSize } from "./types";
 
 export type FileNodeData = {
   fileName?: string;
   fileSize?: number;
   previewUrl?: string,
   fileType?: string,
+  width?: number;
+  height?: number;
+  onResize?: (size: WorkbenchCanvasSize) => void;
+  onResetSize?: () => void;
   onDelete: () => void;
 };
 
@@ -49,24 +55,42 @@ function Preview({ url, type, name }: { url?: string; type?: string; name?: stri
   )
 }
 
-export function FileNode({ data, selected }: { data: FileNodeData; selected?: boolean }) {
+export function FileNode({ id, data, selected }: { id: string; data: FileNodeData; selected?: boolean }) {
   const [open, setOpen] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const nodeWidth = data.width ?? (open ? 1080 : 260);
+  const nodeHeight = data.height ?? (open ? 1280 : 120);
   
   return (
     <div
       style= {{ 
-        width: open ? 1080 : 260,
-        height: open ? 1280 : 120, 
+        position: "relative",
+        width: nodeWidth,
+        height: nodeHeight,
         borderRadius: 13,
-        overflow:"hidden",
+        overflow: selected ? "visible" : "hidden",
         background: "#ffffff",
         border: "1px solid #d8dee6",
         boxShadow: selected ? "0 10px 30px rgba(0,0,0,0.22)" : "0 10px 30px rgba(0,0,0,0.12)",
-        outline: selected ? "2px solid #10B981" : "none", 
-        outlineOffset: 6,
-        transition: "width 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: isResizing ? "none" : "width 0.28s cubic-bezier(0.4, 0, 0.2, 1), height 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
       }}
     >
+      <NodeResizer
+        nodeId={id}
+        isVisible={selected}
+        minWidth={FILE_MIN_SIZE.width}
+        minHeight={FILE_MIN_SIZE.height}
+        color="#10B981"
+        handleStyle={RESIZER_HANDLE_STYLE}
+        lineStyle={RESIZER_LINE_STYLE}
+        onResizeStart={() => setIsResizing(true)}
+        onResize={(_event, params) => data.onResize?.({ width: params.width, height: params.height })}
+        onResizeEnd={(_event, params) => {
+          setIsResizing(false);
+          data.onResize?.({ width: params.width, height: params.height });
+        }}
+      />
+
       <Handle type="source" position={Position.Right} style = {{ background: "#10B981" }} />
       <div style={{
         display: "flex",
@@ -90,6 +114,7 @@ export function FileNode({ data, selected }: { data: FileNodeData; selected?: bo
           title={open? "Collapse preview" : "Expand preview"}
           onClick={(e) => {
             e.stopPropagation();
+            data.onResetSize?.();
             setOpen((o) => !o); 
           }}
           style={{
