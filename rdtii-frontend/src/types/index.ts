@@ -46,6 +46,7 @@ export type ReviewDecision = "pending" | "approved" | "rejected";
 export type Status = "idle" | "loading" | "ready" | "error";
 
 export type DiscoverySourceMode = "official_first" | "official_only" | "broad_web";
+export type DiscoveryRetrievalMode = "live" | "fixture" | "fallback";
 
 export type DiscoveryCountry = {
   country_code: string;
@@ -101,6 +102,7 @@ export type LegalCandidate = {
   external_id: string;
   source_adapter: string;
   query: string;
+  retrieval_mode: DiscoveryRetrievalMode;
 };
 
 export type DiscoverySearchResponse = {
@@ -114,6 +116,12 @@ export type DiscoverySearchResponse = {
     filtered_low_relevance?: number;
     duration_ms?: number;
     mode?: string;
+    retrieval_modes?: Partial<Record<DiscoveryRetrievalMode, number>>;
+    live_hits?: number;
+    fixture_hits?: number;
+    fallback_hits?: number;
+    live_search?: boolean;
+    source_retrieval_modes?: Record<string, DiscoveryRetrievalMode[]>;
     source_mode?: DiscoverySourceMode;
     warnings?: string[];
     languages?: string[];

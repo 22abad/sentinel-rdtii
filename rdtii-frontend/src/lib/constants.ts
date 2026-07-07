@@ -22,6 +22,11 @@ export const EXCEL_EXPORT_API_URL =
 export const WORKFLOW_API_URL =
   import.meta.env.VITE_WORKFLOW_API_URL ?? "/api/workflows";
 
+export const DISCOVERY_SEARCH_TIMEOUT_MS = envNumber(
+  import.meta.env.VITE_DISCOVERY_SEARCH_TIMEOUT_MS,
+  60_000,
+);
+
 export const WORKBENCH_CANVAS_API_URL =
   import.meta.env.VITE_WORKBENCH_CANVAS_API_URL ?? "/api/workbench-canvas";
 
@@ -31,3 +36,9 @@ export const AUTH_API_URL =
 export const QUOTE_TRUNCATE = 280;
 
 export const sampleText = "";
+
+function envNumber(value: unknown, fallback: number): number {
+  if (typeof value !== "string" || value.trim() === "") return fallback;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}

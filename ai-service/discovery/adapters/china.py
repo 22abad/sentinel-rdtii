@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-import re
 from typing import Any
 from urllib.parse import urlsplit
 
 from discovery.schemas import LegalSourceConfig, RawSearchHit
 
 from .base import DiscoveryAdapter
-from .search_engine import FixtureSearchAdapter
+from .search_engine import FixtureSearchAdapter, strip_site_filter
 
 
 class ChinaFlkAdapter(DiscoveryAdapter):
@@ -44,7 +43,7 @@ class ChinaFlkAdapter(DiscoveryAdapter):
         except Exception as exc:
             warning = f"china_flk live search failed: {exc}; returned fixture fallback."
 
-        fallback = await FixtureSearchAdapter(name=self.name).search(
+        fallback = await FixtureSearchAdapter(name=self.name, retrieval_mode="fallback").search(
             country_code=country_code,
             source=source,
             queries=queries,
@@ -61,7 +60,7 @@ class ChinaFlkAdapter(DiscoveryAdapter):
         seen_urls: set[str] = set()
 
         for query in queries:
-            search_term = _strip_site_filter(query)
+            search_term = strip_site_filter(query)
             rows = await driver.search_gov_law(search_term, limit=max(1, min(limit, 20)))
             for row in rows:
                 url = str(row.get("url") or "").strip()
@@ -88,11 +87,6 @@ class ChinaFlkAdapter(DiscoveryAdapter):
                 if len(hits) >= limit:
                     return hits
         return hits
-
-
-def _strip_site_filter(query: str) -> str:
-    return re.sub(r"\bsite:\S+\s*", "", query).strip()
-
 
 def _external_id_from_url(url: str) -> str:
     parsed = urlsplit(url)

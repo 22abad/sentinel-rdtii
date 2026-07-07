@@ -6,7 +6,9 @@ from auth import get_current_user
 import main as main_module
 
 
-def test_discovery_search_returns_ranked_candidates():
+def test_discovery_search_returns_ranked_candidates(monkeypatch):
+    monkeypatch.delenv("DISCOVERY_SEARCH_BACKEND", raising=False)
+    monkeypatch.delenv("DISCOVERY_USE_FIXTURES", raising=False)
     client = TestClient(main_module.app)
 
     response = client.post(
@@ -25,7 +27,10 @@ def test_discovery_search_returns_ranked_candidates():
     assert data["diagnostics"]["mode"] == "auto_with_adapter_fallbacks"
     assert data["diagnostics"]["raw_hits"] >= len(data["candidates"])
     assert "filtered_low_relevance" in data["diagnostics"]
+    assert data["diagnostics"]["fallback_hits"] >= 1
+    assert data["diagnostics"]["live_search"] is False
     assert data["candidates"]
+    assert all(candidate["retrieval_mode"] in {"live", "fixture", "fallback"} for candidate in data["candidates"])
     scores = [candidate["rank_score"] for candidate in data["candidates"]]
     assert scores == sorted(scores, reverse=True)
     assert all(candidate["url"] for candidate in data["candidates"])

@@ -236,4 +236,5 @@ def normalize_hit(country_code: str, source: LegalSourceConfig, hit: RawSearchHi
         external_id=hit.external_id,
         source_adapter=hit.source_adapter,
         query=hit.query,
+        retrieval_mode=hit.retrieval_mode,
     )

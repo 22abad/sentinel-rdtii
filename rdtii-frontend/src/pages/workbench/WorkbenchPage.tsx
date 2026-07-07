@@ -111,6 +111,14 @@ export function WorkbenchPage() {
             if (fetchedDocument.text) {
               setSourceUrl(url);
               onTextChange({ target: { value: fetchedDocument.text } } as React.ChangeEvent<HTMLTextAreaElement>);
+              if (fetchedDocument.quality && !fetchedDocument.quality.should_extract) {
+                setFetchPdfError(
+                  [
+                    `Crawl quality: ${fetchedDocument.quality.status}`,
+                    ...fetchedDocument.quality.warnings,
+                  ].join(" · "),
+                );
+              }
             }
           } catch (err) {
             setFetchPdfError(err instanceof Error ? err.message : "Failed to fetch PDF text.");
