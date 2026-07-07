@@ -31,6 +31,7 @@ import {
   type WorkbenchCanvasLayout,
   type WorkbenchCanvasNode,
   type WorkbenchCanvasNodeKind,
+  type WorkbenchCanvasSize,
   type WorkbenchCanvasViewport,
 } from "../../components/Canvas";
 import { AIChatInput } from "../../components/Workbench/ChatInput";
@@ -40,6 +41,7 @@ import {
   saveLocalWorkbenchCanvasLayout,
   syncWorkbenchCanvasLayout,
 } from "../../services/workbenchCanvasStorage";
+import { clampSize, hasCustomSize, minSizeForNode } from "../../components/Canvas/resize";
 
 export type { CanvasPanel } from "../../components/Canvas";
 
@@ -83,6 +85,7 @@ type PanelMeta = { id: string; title: string; width?: number };
 
 type RestoredCanvasState = {
   positions: Record<string, XYPosition>;
+  sizes: Record<string, WorkbenchCanvasSize>;
   removed: Record<string, boolean>;
   edges: Edge[];
   customNotes: CanvasNote[];
@@ -174,6 +177,7 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
   if (!layout) {
     return {
       positions: DEFAULT_POSITIONS,
+      sizes: {},
       removed: {},
       edges: INITIAL_EDGES,
       customNotes: [],
@@ -186,6 +190,7 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
   }
 
   const positions: Record<string, XYPosition> = { ...DEFAULT_POSITIONS };
+  const sizes: Record<string, WorkbenchCanvasSize> = {};
   const removed: Record<string, boolean> = {};
   const customNotes: CanvasNote[] = [];
   const spawned: SpawnedPanel[] = [];
@@ -196,6 +201,10 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
 
   for (const node of layout.nodes) {
     positions[node.id] = node.position;
+    const savedSize = normalizeRestoredSize(node);
+    if (savedSize) {
+      sizes[node.id] = savedSize;
+    }
     if (node.removed) removed[node.id] = true;
 
     if (node.kind === "note") {
@@ -212,6 +221,7 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
 
   return {
     positions,
+    sizes,
     removed,
     edges: layout.edges.map((edge) => ({
       id: edge.id,
@@ -230,6 +240,27 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
   };
 }
 
+function normalizeRestoredSize(node: WorkbenchCanvasNode): WorkbenchCanvasSize | undefined {
+  const size = { width: node.width, height: node.height };
+  if (!hasCustomSize(size)) return undefined;
+
+  const defaultWidth =
+    node.kind === "panel"
+      ? PANEL_FALLBACKS[node.id]?.width ?? (node.panelId ? PANEL_FALLBACKS[node.panelId]?.width : undefined)
+      : node.kind === "note"
+        ? 240
+        : node.kind === "rag"
+          ? 460
+          : undefined;
+
+  if (size.height == null && size.width === defaultWidth) {
+    return undefined;
+  }
+
+  const clamped = clampSize(size, minSizeForNode(node.kind));
+  return hasCustomSize(clamped) ? clamped : undefined;
+}
+
 function numericSuffix(id: string, prefix: string): number {
   if (!id.startsWith(prefix)) return 0;
   const suffix = id.slice(prefix.length);
@@ -240,6 +271,7 @@ function numericSuffix(id: string, prefix: string): number {
 function toCanvasLayout({
   panelMeta,
   positions,
+  sizes,
   removed,
   edges,
   customNotes,
@@ -249,6 +281,7 @@ function toCanvasLayout({
 }: {
   panelMeta: Record<string, PanelMeta>;
   positions: Record<string, XYPosition>;
+  sizes: Record<string, WorkbenchCanvasSize>;
   removed: Record<string, boolean>;
   edges: Edge[];
   customNotes: CanvasNote[];
@@ -272,20 +305,23 @@ function toCanvasLayout({
       panelId: id,
       title: panel.title,
       position: positions[id] ?? DEFAULT_POSITIONS[id] ?? { x: 40, y: 40 },
-      width: panel.width,
+      width: sizes[id]?.width,
+      height: sizes[id]?.height,
       removed: !!removed[id],
     });
   }
 
   for (const item of spawned.filter((entry) => !removed[entry.id])) {
     const source = panelMeta[item.panelId] ?? PANEL_FALLBACKS[item.panelId];
+    if (!source) continue;
     nodes.push({
       id: item.id,
       kind: "panel",
       panelId: item.panelId,
       title: source?.title,
       position: positions[item.id] ?? { x: 160, y: 160 },
-      width: source?.width,
+      width: sizes[item.id]?.width,
+      height: sizes[item.id]?.height,
       removed: !!removed[item.id],
     });
   }
@@ -297,7 +333,8 @@ function toCanvasLayout({
       title: note.title,
       text: note.text,
       position: positions[note.id] ?? { x: 120, y: 120 },
-      width: 240,
+      width: sizes[note.id]?.width,
+      height: sizes[note.id]?.height,
       removed: !!removed[note.id],
     });
   }
@@ -308,7 +345,8 @@ function toCanvasLayout({
       kind: "rag",
       title: "RAG Chat",
       position: positions[id] ?? { x: 200, y: 200 },
-      width: 460,
+      width: sizes[id]?.width,
+      height: sizes[id]?.height,
       removed: !!removed[id],
     });
   }
@@ -347,6 +385,7 @@ export function WorkbenchCanvas({
   const restoredState = useMemo(() => restoreCanvasState(readSavedCanvasLayout()), []);
   const flowRef = useRef<ReactFlowInstance | null>(null);
   const [positions, setPositions] = useState<Record<string, XYPosition>>(restoredState.positions);
+  const [sizes, setSizes] = useState<Record<string, WorkbenchCanvasSize>>(restoredState.sizes);
   const [removed, setRemoved] = useState<Record<string, boolean>>(restoredState.removed);
   const [edges, setEdges] = useState<Edge[]>(restoredState.edges);
   const [customNotes, setCustomNotes] = useState<CanvasNote[]>(restoredState.customNotes);
@@ -398,6 +437,7 @@ export function WorkbenchCanvas({
 
   const applyCanvasState = useCallback((state: RestoredCanvasState) => {
     setPositions(state.positions);
+    setSizes(state.sizes);
     setRemoved(state.removed);
     setEdges(state.edges);
     setCustomNotes(state.customNotes);
@@ -453,41 +493,46 @@ export function WorkbenchCanvas({
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
-      saveLocalWorkbenchCanvasLayout(
-        toCanvasLayout({
-          panelMeta: panelMetaRef.current,
-          positions,
-          removed,
-          edges,
-          customNotes,
-          spawned,
-          chatIds,
-          viewport,
-        }),
-      );
+      const layout = toCanvasLayout({
+        panelMeta: panelMetaRef.current,
+        positions,
+        sizes,
+        removed,
+        edges,
+        customNotes,
+        spawned,
+        chatIds,
+        viewport,
+      });
+      saveLocalWorkbenchCanvasLayout(layout);
+      if (backendDirtyRef.current) {
+        backendDirtyRef.current = false;
+        void syncWorkbenchCanvasLayout(layout);
+      }
     }, 250);
     return () => window.clearTimeout(timeout);
-  }, [positions, removed, edges, customNotes, spawned, chatIds, viewport]);
+  }, [positions, sizes, removed, edges, customNotes, spawned, chatIds, viewport]);
 
-  useEffect(() => {
-    if (!backendDirtyRef.current) return;
-    const timeout = window.setTimeout(() => {
-      backendDirtyRef.current = false;
-      void syncWorkbenchCanvasLayout(
-        toCanvasLayout({
-          panelMeta: panelMetaRef.current,
-          positions,
-          removed,
-          edges,
-          customNotes,
-          spawned,
-          chatIds,
-          viewport,
-        }),
-      );
-    }, 250);
-    return () => window.clearTimeout(timeout);
-  }, [positions, removed, edges, customNotes, spawned, chatIds, viewport]);
+  const resizeNode = useCallback(
+    (id: string, size: WorkbenchCanvasSize) => {
+      markCanvasDirty();
+      setSizes((prev) => ({ ...prev, [id]: size }));
+    },
+    [markCanvasDirty],
+  );
+
+  const resetNodeSize = useCallback(
+    (id: string) => {
+      markCanvasDirty();
+      setSizes((prev) => {
+        if (!prev[id]) return prev;
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+    },
+    [markCanvasDirty],
+  );
 
   const spawnPanel = useCallback((panelId: string, position: XYPosition) => {
     markCanvasDirty();
@@ -549,6 +594,11 @@ export function WorkbenchCanvas({
       delete next[id];
       return next;
     });
+    setSizes((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
     setRemoved((prev) => {
       if (!prev[id]) return prev;
       const next = { ...prev };
@@ -569,7 +619,9 @@ export function WorkbenchCanvas({
             data: {
               title: p.title,
               element: p.element,
-              width: p.width,
+              width: sizes[p.id]?.width ?? p.width,
+              height: sizes[p.id]?.height,
+              onResize: (size: WorkbenchCanvasSize) => resizeNode(p.id, size),
               onDelete: () => removeNode(p.id),
             } satisfies PanelNodeData,
           })),
@@ -584,7 +636,9 @@ export function WorkbenchCanvas({
               data: {
                 title: src.title,
                 element: src.element,
-                width: src.width,
+                width: sizes[s.id]?.width ?? src.width,
+                height: sizes[s.id]?.height,
+                onResize: (size: WorkbenchCanvasSize) => resizeNode(s.id, size),
                 onDelete: () => removeNode(s.id),
               } satisfies PanelNodeData,
             };
@@ -599,6 +653,9 @@ export function WorkbenchCanvas({
               title: n.title,
               text: n.text,
               onChange: (patch: Partial<{ title: string; text: string }>) => updateNote(n.id, patch),
+              width: sizes[n.id]?.width,
+              height: sizes[n.id]?.height,
+              onResize: (size: WorkbenchCanvasSize) => resizeNode(n.id, size),
               onDelete: () => removeNode(n.id),
             } satisfies NoteNodeData,
           })),
@@ -611,8 +668,10 @@ export function WorkbenchCanvas({
             data: {
               title: "RAG Chat",
               element: <AIChatInput />,
-              width: 460,
+              width: sizes[id]?.width ?? 460,
+              height: sizes[id]?.height,
               transparent: true,
+              onResize: (size: WorkbenchCanvasSize) => resizeNode(id, size),
               onDelete: () => removeNode(id),
             } satisfies PanelNodeData,
           })),
@@ -627,11 +686,15 @@ export function WorkbenchCanvas({
             fileSize: f.fileSize,
             previewUrl: f.previewUrl,
             fileType: f.fileType,
+            width: sizes[f.id]?.width,
+            height: sizes[f.id]?.height,
+            onResize: (size: WorkbenchCanvasSize) => resizeNode(f.id, size),
+            onResetSize: () => resetNodeSize(f.id),
             onDelete: () => removeNode(f.id),
           } satisfies FileNodeData,
         })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, files, positions, removed, updateNote, removeNode, selectedIds],
+    [panels, spawned, panelById, customNotes, chatIds, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds],
   );
 
   const renderedEdges = useMemo(() => {
@@ -685,6 +748,7 @@ export function WorkbenchCanvas({
   const handleReset = useCallback(() => {
     markCanvasDirty();
     setPositions(DEFAULT_POSITIONS);
+    setSizes({});
     setRemoved({});
     setEdges(INITIAL_EDGES);
     setCustomNotes([]);

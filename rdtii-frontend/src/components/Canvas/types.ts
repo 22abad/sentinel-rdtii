@@ -21,6 +21,11 @@ export type WorkbenchCanvasPosition = {
   y: number;
 };
 
+export type WorkbenchCanvasSize = {
+  width?: number;
+  height?: number;
+};
+
 export type WorkbenchCanvasViewport = WorkbenchCanvasPosition & {
   zoom: number;
 };

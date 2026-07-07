@@ -1,31 +1,50 @@
 import React from "react";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, NodeResizer, Position } from "@xyflow/react";
 import { Trash2 } from "lucide-react";
+import { NOTE_MIN_SIZE, RESIZER_HANDLE_STYLE, RESIZER_LINE_STYLE } from "./resize";
+import type { WorkbenchCanvasSize } from "./types";
 
 export type NoteNodeData = {
   title: string;
   text: string;
   onChange: (patch: Partial<{ title: string; text: string }>) => void;
+  width?: number;
+  height?: number;
+  onResize?: (size: WorkbenchCanvasSize) => void;
   onDelete: () => void;
 };
 
 /** A blank, user-created panel (sticky-note style) that can be edited inline. */
-export function NoteNode({ data, selected }: { data: NoteNodeData; selected?: boolean }) {
+export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeData; selected?: boolean }) {
+  const nodeWidth = data.width ?? 240;
+  const nodeHeight = data.height;
   return (
     <div
       style={{
-        width: 240,
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        width: nodeWidth,
+        height: nodeHeight,
         borderRadius: 14,
-        overflow: "hidden",
+        overflow: selected ? "visible" : "hidden",
         background: "#fff7d6",
         border: "1px solid #e6d98a",
         boxShadow: selected ? "0 10px 30px rgba(0,0,0,0.22)" : "0 10px 30px rgba(0,0,0,0.18)",
-        // Selection ring sits OFF the content by `outlineOffset` px — change this to tune the margin.
-        outline: selected ? "2px solid #10B981" : "none",
-        outlineOffset: 6,
-        transition: "box-shadow 0.12s ease, outline-offset 0.12s ease",
+        transition: "box-shadow 0.12s ease",
       }}
     >
+      <NodeResizer
+        nodeId={id}
+        isVisible={selected}
+        minWidth={NOTE_MIN_SIZE.width}
+        minHeight={NOTE_MIN_SIZE.height}
+        color="#10B981"
+        handleStyle={RESIZER_HANDLE_STYLE}
+        lineStyle={RESIZER_LINE_STYLE}
+        onResize={(_event, params) => data.onResize?.({ width: params.width, height: params.height })}
+      />
+
       <Handle type="target" position={Position.Top} style={{ background: "#d4b106" }} />
 
       <div
@@ -91,6 +110,7 @@ export function NoteNode({ data, selected }: { data: NoteNodeData; selected?: bo
         style={{
           display: "block",
           width: "100%",
+          flex: nodeHeight ? 1 : undefined,
           minHeight: 120,
           border: "none",
           resize: "none",
