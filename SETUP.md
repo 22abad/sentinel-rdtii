@@ -55,6 +55,15 @@ For local demos, this keeps the login code but skips the frontend route guard:
 VITE_AUTH_BYPASS=true
 ```
 
+Discovery can run without a search API key; generic official sources will be
+marked as fixture fallback. To enable live generic web discovery, configure a
+search backend:
+
+```env
+DISCOVERY_SEARCH_BACKEND=serpapi
+SERPAPI_API_KEY=...
+```
+
 ## 2. Install Dependencies
 
 ```bash

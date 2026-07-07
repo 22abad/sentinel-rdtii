@@ -296,6 +296,18 @@ h3 {
   font-weight: 800;
 }
 
+.discovery-diagnostics span.discovery-mode-live {
+  border-color: #8fd7bd;
+  background: #e8faf2;
+  color: #116149;
+}
+
+.discovery-diagnostics span.discovery-mode-fallback {
+  border-color: #f0c36a;
+  background: #fff8e6;
+  color: #7a4d00;
+}
+
 .shortlist-tray {
   display: flex;
   flex-wrap: wrap;
@@ -467,6 +479,19 @@ h3 {
   color: #334155;
   font-size: 0.74rem;
   font-weight: 700;
+}
+
+.candidate-badges span.candidate-retrieval.live {
+  border-color: #8fd7bd;
+  background: #e8faf2;
+  color: #116149;
+}
+
+.candidate-badges span.candidate-retrieval.fixture,
+.candidate-badges span.candidate-retrieval.fallback {
+  border-color: #f0c36a;
+  background: #fff8e6;
+  color: #7a4d00;
 }
 
 .candidate-snippet {

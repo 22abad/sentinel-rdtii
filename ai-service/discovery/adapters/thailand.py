@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-import re
 from typing import Any
 
 from discovery.schemas import LegalSourceConfig, RawSearchHit
 
 from .base import DiscoveryAdapter
-from .search_engine import FixtureSearchAdapter
+from .search_engine import FixtureSearchAdapter, strip_site_filter
 
 
 class ThailandOcsAdapter(DiscoveryAdapter):
@@ -42,7 +41,7 @@ class ThailandOcsAdapter(DiscoveryAdapter):
         except Exception as exc:
             warning = f"thailand_ocs live search failed: {exc}; returned fixture fallback."
 
-        fallback = await FixtureSearchAdapter(name=self.name).search(
+        fallback = await FixtureSearchAdapter(name=self.name, retrieval_mode="fallback").search(
             country_code=country_code,
             source=source,
             queries=queries,
@@ -59,7 +58,7 @@ class ThailandOcsAdapter(DiscoveryAdapter):
         seen_doc_ids: set[str] = set()
 
         for query in queries:
-            search_term = _strip_site_filter(query)
+            search_term = strip_site_filter(query)
             rows = await search_ocs_law(search_term, max_results=max(1, min(limit, 20)))
             for row in rows:
                 doc_id = str(row.get("doc_id") or "").strip()
@@ -86,7 +85,3 @@ class ThailandOcsAdapter(DiscoveryAdapter):
                 if len(hits) >= limit:
                     return hits
         return hits
-
-
-def _strip_site_filter(query: str) -> str:
-    return re.sub(r"\bsite:\S+\s*", "", query).strip()

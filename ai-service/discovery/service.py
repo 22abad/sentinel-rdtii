@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+from collections import Counter
 
 from .adapters import get_adapter
 from .dedupe import dedupe_candidates
@@ -31,10 +32,16 @@ class DiscoveryService:
         candidates: list[LegalCandidate] = []
         adapter_warnings: list[str] = []
         raw_hit_count = 0
+        retrieval_modes: Counter[str] = Counter()
+        source_retrieval_modes: dict[str, list[str]] = {}
         for source in sources:
             raw_hits = raw_hits_by_source.get(source.name, [])
             raw_hit_count += len(raw_hits)
+            source_modes = sorted({hit.retrieval_mode for hit in raw_hits})
+            if source_modes:
+                source_retrieval_modes[source.name] = source_modes
             for hit in raw_hits:
+                retrieval_modes[hit.retrieval_mode] += 1
                 adapter_warnings.extend(hit.warnings)
                 candidates.append(self._filter_candidate_matches(normalize_hit(request.country_code, source, hit), request))
 
@@ -55,6 +62,12 @@ class DiscoveryService:
                 "filtered_low_relevance": filtered_low_relevance,
                 "duration_ms": round((time.perf_counter() - started) * 1000),
                 "mode": mode,
+                "retrieval_modes": dict(sorted(retrieval_modes.items())),
+                "live_hits": retrieval_modes.get("live", 0),
+                "fixture_hits": retrieval_modes.get("fixture", 0),
+                "fallback_hits": retrieval_modes.get("fallback", 0),
+                "live_search": retrieval_modes.get("live", 0) > 0 and retrieval_modes.get("fixture", 0) == 0 and retrieval_modes.get("fallback", 0) == 0,
+                "source_retrieval_modes": source_retrieval_modes,
                 "source_mode": request.source_mode,
                 "warnings": sorted(set(adapter_warnings + adapter_failures)),
                 "languages": active_languages,

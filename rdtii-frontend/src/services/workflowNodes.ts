@@ -1,4 +1,8 @@
-import { DISCOVERY_BASE_URL, WORKFLOW_API_URL } from "../lib/constants";
+import {
+  DISCOVERY_BASE_URL,
+  DISCOVERY_SEARCH_TIMEOUT_MS,
+  WORKFLOW_API_URL,
+} from "../lib/constants";
 import { authHeaders, safeJsonParse } from "../lib/http";
 import type {
   DiscoveryCountry,
@@ -82,6 +86,15 @@ export type DocumentText = {
   content_type?: string;
   title?: string;
   pdf_metadata?: Record<string, unknown> | null;
+  crawl_metadata?: Record<string, unknown>;
+  quality?: {
+    status: string;
+    should_extract: boolean;
+    char_count: number;
+    word_count: number;
+    legal_signal_score: number;
+    warnings: string[];
+  };
 };
 
 export type RagQueryRequest = {
@@ -154,33 +167,45 @@ export async function saveDiscoveryConfig(
 export async function runWorkflowNode<TOutputs>(
   nodeType: WorkflowNodeType | string,
   request: NodeRunRequest = {},
-  options: { signal?: AbortSignal } = {},
+  options: { signal?: AbortSignal; timeoutMs?: number } = {},
 ): Promise<NodeResult<TOutputs>> {
-  const res = await fetch(
-    `${WORKFLOW_API_URL}/nodes/${encodeURIComponent(nodeType)}/run`,
-    {
-      method: "POST",
-      headers: {
-        ...authHeaders(),
-        "Content-Type": "application/json",
+  const timeout = withRequestTimeout(options);
+  try {
+    const res = await fetch(
+      `${WORKFLOW_API_URL}/nodes/${encodeURIComponent(nodeType)}/run`,
+      {
+        method: "POST",
+        headers: {
+          ...authHeaders(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          config: {},
+          inputs: {},
+          runtime: {},
+          ...request,
+        }),
+        signal: timeout.signal,
       },
-      body: JSON.stringify({
-        config: {},
-        inputs: {},
-        runtime: {},
-        ...request,
-      }),
-      signal: options.signal,
-    },
-  );
-  const result = await readJsonResponse<NodeResult<TOutputs>>(res);
-  if (result.status !== "success") {
-    throw new Error(
-      result.error ||
-        `Workflow node ${nodeType} finished with status ${result.status}.`,
     );
+    const result = await readJsonResponse<NodeResult<TOutputs>>(res);
+    if (result.status !== "success") {
+      throw new Error(
+        result.error ||
+          `Workflow node ${nodeType} finished with status ${result.status}.`,
+      );
+    }
+    return result;
+  } catch (err) {
+    if (timeout.didTimeout()) {
+      throw new Error(
+        `Workflow node ${nodeType} timed out after ${timeout.timeoutMs} ms.`,
+      );
+    }
+    throw err;
+  } finally {
+    timeout.cleanup();
   }
-  return result;
 }
 
 export async function* streamWorkflowNode<TPayload = unknown>(
@@ -235,20 +260,29 @@ export async function* streamWorkflowNode<TPayload = unknown>(
 export async function runDiscoverySearchNode(
   request: DiscoveryNodeRequest,
 ): Promise<DiscoverySearchResponse> {
+  const nodeRequest = {
+    node_id: "discovery",
+    inputs: {
+      country_code: request.countryCode,
+      pillars: request.pillars,
+      keywords: request.keywords,
+      source_mode: request.sourceMode,
+      languages: request.languages,
+      limit: 12,
+      browser_mode: "auto",
+    },
+  };
+  if (import.meta.env.DEV) {
+    console.info(
+      "[Discovery] POST",
+      `${WORKFLOW_API_URL}/nodes/discovery.search/run`,
+      nodeRequest.inputs,
+    );
+  }
   const result = await runWorkflowNode<DiscoverySearchResponse>(
     "discovery.search",
-    {
-      node_id: "discovery",
-      inputs: {
-        country_code: request.countryCode,
-        pillars: request.pillars,
-        keywords: request.keywords,
-        source_mode: request.sourceMode,
-        languages: request.languages,
-        limit: 12,
-        browser_mode: "auto",
-      },
-    },
+    nodeRequest,
+    { timeoutMs: DISCOVERY_SEARCH_TIMEOUT_MS },
   );
   return result.outputs;
 }
@@ -387,4 +421,50 @@ function formatValidationErrors(detail: unknown[]): string {
   return messages.length
     ? messages.join("; ")
     : "Workflow node request validation failed.";
+}
+
+function withRequestTimeout(options: {
+  signal?: AbortSignal;
+  timeoutMs?: number;
+}): {
+  signal?: AbortSignal;
+  timeoutMs: number;
+  didTimeout: () => boolean;
+  cleanup: () => void;
+} {
+  const timeoutMs = options.timeoutMs ?? 0;
+  if (!timeoutMs) {
+    return {
+      signal: options.signal,
+      timeoutMs,
+      didTimeout: () => false,
+      cleanup: () => {},
+    };
+  }
+
+  const controller = new AbortController();
+  let timedOut = false;
+  const abortFromParent = () => controller.abort(options.signal?.reason);
+  const timeoutId = window.setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+
+  if (options.signal) {
+    if (options.signal.aborted) {
+      abortFromParent();
+    } else {
+      options.signal.addEventListener("abort", abortFromParent, { once: true });
+    }
+  }
+
+  return {
+    signal: controller.signal,
+    timeoutMs,
+    didTimeout: () => timedOut,
+    cleanup: () => {
+      window.clearTimeout(timeoutId);
+      options.signal?.removeEventListener("abort", abortFromParent);
+    },
+  };
 }

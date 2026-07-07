@@ -167,6 +167,19 @@ export function DiscoveryPanel({
     return `${raw} raw, ${deduped} deduped, ${duration} ms`;
   }, [data]);
 
+  const retrievalStatusText = useMemo(() => {
+    if (!data) return "";
+    const live = data.diagnostics.live_hits ?? 0;
+    const fixture = data.diagnostics.fixture_hits ?? 0;
+    const fallback = data.diagnostics.fallback_hits ?? 0;
+    const parts = [
+      live ? `${live} live` : "",
+      fallback ? `${fallback} fallback` : "",
+      fixture ? `${fixture} fixture` : "",
+    ].filter(Boolean);
+    return parts.join(", ") || "no hits";
+  }, [data]);
+
   function togglePillar(pillar: number) {
     setPillars((current) => {
       if (current.includes(pillar)) {
@@ -379,6 +392,15 @@ export function DiscoveryPanel({
             </span>
             <span>{data.diagnostics.sources_considered ?? 0} sources</span>
             <span>{data.diagnostics.filtered_low_relevance ?? 0} filtered</span>
+            <span
+              className={
+                data.diagnostics.live_search
+                  ? "discovery-mode-live"
+                  : "discovery-mode-fallback"
+              }
+            >
+              {retrievalStatusText}
+            </span>
           </div>
 
           <div className="shortlist-tray">
@@ -541,6 +563,9 @@ function CandidateCard({
       <div className="candidate-badges">
         <span>{candidate.source_grade}</span>
         <span>{candidate.document_type}</span>
+        <span className={`candidate-retrieval ${candidate.retrieval_mode}`}>
+          {retrievalModeLabel(candidate.retrieval_mode)}
+        </span>
         {candidate.matched_indicators.slice(0, 4).map((indicator) => (
           <span key={indicator}>{indicator}</span>
         ))}
@@ -585,4 +610,10 @@ function CandidateCard({
       </div>
     </article>
   );
+}
+
+function retrievalModeLabel(mode: LegalCandidate["retrieval_mode"]) {
+  if (mode === "live") return "Live";
+  if (mode === "fallback") return "Fixture fallback";
+  return "Fixture";
 }

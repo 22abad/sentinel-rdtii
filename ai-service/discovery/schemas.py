@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, field_validator
 
 SourceMode = Literal["official_first", "official_only", "broad_web"]
 SourceGrade = Literal["primary", "secondary", "unknown"]
+RetrievalMode = Literal["live", "fixture", "fallback"]
 SUPPORTED_PILLARS = {6, 7}
 SUPPORTED_INDICATORS = {"6.1", "6.2", "6.3", "6.4", "6.5", "7.1", "7.2", "7.3", "7.4", "7.5"}
 
@@ -123,6 +124,7 @@ class RawSearchHit(BaseModel):
     external_id: str = ""
     raw: dict = Field(default_factory=dict)
     warnings: list[str] = Field(default_factory=list)
+    retrieval_mode: RetrievalMode = "live"
 
 
 class LegalCandidate(BaseModel):
@@ -146,6 +148,7 @@ class LegalCandidate(BaseModel):
     external_id: str = ""
     source_adapter: str = ""
     query: str = ""
+    retrieval_mode: RetrievalMode = "live"
 
 
 class DiscoverySearchResponse(BaseModel):
