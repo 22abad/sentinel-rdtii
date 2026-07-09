@@ -49,6 +49,21 @@ def test_discovery_sources_returns_registry_entries():
     assert any(source["source_type"] == "statute_portal" for source in data["sources"])
 
 
+def test_discovery_sources_use_specialized_demo_country_adapters():
+    client = TestClient(main_module.app)
+
+    expected = {
+        "AUS": "australia_legislation",
+        "MYS": "malaysia_lom",
+    }
+    for country_code, adapter in expected.items():
+        response = client.get(f"/api/discovery/sources/{country_code}")
+
+        assert response.status_code == 200
+        sources = response.json()["sources"]
+        assert any(source["adapter"] == adapter for source in sources)
+
+
 def test_discovery_countries_returns_configured_country_metadata():
     client = TestClient(main_module.app)
 

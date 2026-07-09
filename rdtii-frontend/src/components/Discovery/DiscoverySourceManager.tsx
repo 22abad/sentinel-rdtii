@@ -32,8 +32,10 @@ const SOURCE_GRADES: DiscoverySourceConfig["source_grade"][] = [
   "unknown",
 ];
 const ADAPTER_OPTIONS = [
+  "australia_legislation",
   "search_engine",
   "china_flk",
+  "malaysia_lom",
   "singapore_sso",
   "thailand_ocs",
 ];

@@ -84,13 +84,13 @@ INSERT INTO discovery_sources (
     languages, pillars, priority, notes, position
 )
 VALUES
-    ('AUS', 'Federal Register of Legislation', 'https://www.legislation.gov.au', '["legislation.gov.au","www.legislation.gov.au"]'::jsonb, 'primary', 'search_engine', 'statute_portal', '["en"]'::jsonb, '[6,7]'::jsonb, 100, 'Official Australian legislation register; verified for Privacy Act 1988 and Telecommunications (Interception and Access) Act 1979.', 0),
+    ('AUS', 'Federal Register of Legislation', 'https://www.legislation.gov.au', '["legislation.gov.au","www.legislation.gov.au"]'::jsonb, 'primary', 'australia_legislation', 'statute_portal', '["en"]'::jsonb, '[6,7]'::jsonb, 100, 'Official Australian legislation register; verified for Privacy Act 1988 and Telecommunications (Interception and Access) Act 1979.', 0),
 
     ('CHN', 'National Laws and Regulations Database', 'https://flk.npc.gov.cn', '["flk.npc.gov.cn"]'::jsonb, 'primary', 'china_flk', 'statute_portal', '["zh"]'::jsonb, '[6,7]'::jsonb, 100, 'Official national laws and regulations database', 0),
     ('CHN', 'State Council', 'https://www.gov.cn', '["gov.cn","www.gov.cn"]'::jsonb, 'primary', 'search_engine', 'government_portal', '["zh","en"]'::jsonb, '[6,7]'::jsonb, 90, '', 1),
     ('CHN', 'Cyberspace Administration of China', 'https://www.cac.gov.cn', '["cac.gov.cn","www.cac.gov.cn"]'::jsonb, 'primary', 'search_engine', 'regulator', '["zh"]'::jsonb, '[6,7]'::jsonb, 90, '', 2),
 
-    ('MYS', 'Attorney General''s Chambers of Malaysia', 'https://lom.agc.gov.my', '["lom.agc.gov.my"]'::jsonb, 'primary', 'search_engine', 'statute_portal', '["en","ms"]'::jsonb, '[6,7]'::jsonb, 100, 'Official AGC legislation portal; verified for Cyber Security Act 2024 Act 854 record.', 0),
+    ('MYS', 'Attorney General''s Chambers of Malaysia', 'https://lom.agc.gov.my', '["lom.agc.gov.my"]'::jsonb, 'primary', 'malaysia_lom', 'statute_portal', '["en","ms"]'::jsonb, '[6,7]'::jsonb, 100, 'Official AGC legislation portal; verified for Cyber Security Act 2024 Act 854 record.', 0),
     ('MYS', 'Personal Data Protection Department', 'https://www.pdp.gov.my', '["pdp.gov.my","www.pdp.gov.my"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en","ms"]'::jsonb, '[6,7]'::jsonb, 90, 'Official Commissioner source; verified for PDPA 2010 and PDPA Amendment Act 2024 pages.', 1),
     ('MYS', 'National Cyber Security Agency', 'https://www.nacsa.gov.my', '["nacsa.gov.my","www.nacsa.gov.my"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en","ms"]'::jsonb, '[7]'::jsonb, 85, 'Official NACSA legal page and gazette PDFs for Cyber Security Act 2024 commencement and incident notification regulations.', 2),
 

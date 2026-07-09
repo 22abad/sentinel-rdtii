@@ -314,6 +314,22 @@ def _fixture_hits(
                 )
             ],
         },
+        "AUS": {
+            "legislation.gov.au": [
+                RawSearchHit(
+                    title="Privacy Act 1988",
+                    url="https://www.legislation.gov.au/Latest/C2004A03712",
+                    snippet="Official compilation of Australia's Privacy Act 1988, including privacy principles and personal information obligations.",
+                    external_id="C2004A03712",
+                ),
+                RawSearchHit(
+                    title="Security of Critical Infrastructure Act 2018",
+                    url="https://www.legislation.gov.au/Latest/C2018A00029",
+                    snippet="Official compilation of Australia's critical infrastructure security framework, including cyber incident obligations.",
+                    external_id="C2018A00029",
+                ),
+            ],
+        },
         "MYS": {
             "lom.agc.gov.my": [
                 RawSearchHit(
@@ -321,6 +337,12 @@ def _fixture_hits(
                     url="https://lom.agc.gov.my/act-detail.php?type=principal&lang=BI&act=709",
                     snippet="Principal Malaysian personal data protection legislation covering processing, disclosure, and cross-border transfer controls.",
                     external_id="act-709",
+                ),
+                RawSearchHit(
+                    title="Cyber Security Act 2024",
+                    url="https://lom.agc.gov.my/act-detail.php?type=principal&lang=BI&act=854",
+                    snippet="Principal Malaysian cyber security legislation covering national cyber security duties and incident management.",
+                    external_id="act-854",
                 )
             ],
             "pdp.gov.my": [
