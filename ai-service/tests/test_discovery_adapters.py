@@ -12,7 +12,12 @@ from discovery.adapters.australia import (
     _known_instrument_hits,
     _parse_legislation_search_results,
 )
-from discovery.adapters.china import ChinaFlkAdapter, _external_id_from_url
+from discovery.adapters.china import (
+    ChinaFlkAdapter,
+    _external_id_from_url,
+    _extract_flk_title,
+    _known_law_hits as _china_known_law_hits,
+)
 from discovery.adapters.malaysia import (
     MalaysiaLomAdapter,
     _external_id_from_url as _malaysia_external_id_from_url,
@@ -27,7 +32,11 @@ from discovery.adapters.singapore import (
     _known_law_hits,
     _parse_sso_search_results,
 )
-from discovery.adapters.thailand import ThailandOcsAdapter
+from discovery.adapters.thailand import (
+    ThailandOcsAdapter,
+    _expanded_ocs_queries,
+    _external_id_from_url as _thailand_external_id_from_url,
+)
 from discovery.registry import get_sources
 
 
@@ -231,6 +240,125 @@ def test_china_flk_external_id_uses_query_token():
     assert _external_id_from_url("https://flk.npc.gov.cn/detail2.html?abc%3D") == "abc%3D"
 
 
+def test_china_flk_title_extraction_finds_known_law_title_in_body():
+    title = _extract_flk_title(
+        "<html><title>国家法律法规数据库</title><body>中华人民共和国个人信息保护法 目录 正文</body></html>"
+    )
+
+    assert title == "中华人民共和国个人信息保护法"
+
+
+@pytest.mark.anyio
+async def test_china_flk_known_law_marks_live_when_verified():
+    rows = await _china_known_law_hits(
+        FakeUrlClient({
+            "https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3YjY4M2JhYjAxN2I5MTYxYzQyMjA4M2I%3D": (
+                "<html><body>中华人民共和国个人信息保护法</body></html>"
+            ),
+        }),
+        "personal information protection",
+    )
+
+    assert rows
+    assert rows[0]["title"] == "中华人民共和国个人信息保护法"
+    assert rows[0]["retrieval_mode"] == "live"
+    assert rows[0]["warnings"] == []
+
+
+@pytest.mark.anyio
+async def test_china_flk_known_law_keeps_fallback_when_live_verification_fails():
+    rows = await _china_known_law_hits(FailingClient(), "cybersecurity law")
+
+    assert rows
+    assert rows[0]["title"] == "中华人民共和国网络安全法"
+    assert rows[0]["retrieval_mode"] == "fallback"
+    assert "could not be verified live" in rows[0]["warnings"][0]
+
+
+@pytest.mark.anyio
+async def test_china_flk_known_law_rejects_generic_database_title():
+    rows = await _china_known_law_hits(
+        FakeUrlClient({
+            "https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3YjY4M2JhYjAxN2I5MTYxYzQyMjA4M2I%3D": (
+                "<html><title>国家法律法规数据库</title><body></body></html>"
+            ),
+        }),
+        "personal information protection",
+    )
+
+    assert rows[0]["title"] == "中华人民共和国个人信息保护法"
+    assert rows[0]["retrieval_mode"] == "fallback"
+    assert "expected law title" in rows[0]["warnings"][-1]
+
+
+@pytest.mark.anyio
+async def test_china_flk_live_driver_result_replaces_pending_known_law_fallback():
+    known_url = (
+        "https://flk.npc.gov.cn/detail2.html?"
+        "ZmY4MDgxODE3YjY4M2JhYjAxN2I5MTYxYzQyMjA4M2I%3D"
+    )
+
+    class LiveDriver:
+        async def search_gov_law(self, query: str, limit: int = 10):
+            return [{
+                "title": "中华人民共和国个人信息保护法",
+                "url": known_url,
+                "status": "现行有效",
+            }]
+
+    adapter = ChinaFlkAdapter()
+    rows = await adapter._search_queries(
+        LiveDriver(),
+        ["site:flk.npc.gov.cn 个人信息保护法"],
+        limit=1,
+        client=FailingClient(),
+    )
+
+    assert len(rows) == 1
+    assert rows[0].retrieval_mode == "live"
+    assert rows[0].url == known_url
+    assert rows[0].warnings == []
+
+
+@pytest.mark.anyio
+async def test_china_flk_keeps_known_law_fallback_when_driver_fills_limit_with_other_hits():
+    class UnrelatedDriver:
+        async def search_gov_law(self, query: str, limit: int = 10):
+            return [{
+                "title": "中华人民共和国电子商务法",
+                "url": "https://flk.npc.gov.cn/detail2.html?id=ecommerce",
+                "status": "现行有效",
+            }]
+
+    rows = await ChinaFlkAdapter()._search_queries(
+        UnrelatedDriver(),
+        ["site:flk.npc.gov.cn 个人信息保护法"],
+        limit=1,
+        client=FailingClient(),
+    )
+
+    assert len(rows) == 1
+    assert rows[0].title == "中华人民共和国个人信息保护法"
+    assert rows[0].retrieval_mode == "fallback"
+
+
+@pytest.mark.anyio
+async def test_china_flk_does_not_verify_title_found_only_in_script():
+    rows = await _china_known_law_hits(
+        FakeUrlClient({
+            "https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3YjY4M2JhYjAxN2I5MTYxYzQyMjA4M2I%3D": (
+                "<html><title>国家法律法规数据库</title>"
+                "<script>window.lawTitle = '中华人民共和国个人信息保护法';</script>"
+                "<body></body></html>"
+            ),
+        }),
+        "personal information protection",
+    )
+
+    assert rows[0]["retrieval_mode"] == "fallback"
+    assert "expected law title" in rows[0]["warnings"][-1]
+
+
 @pytest.mark.anyio
 async def test_china_flk_adapter_mock_mode_uses_fixture():
     source = get_sources("CHN")[0]
@@ -251,7 +379,7 @@ async def test_china_flk_adapter_mock_mode_uses_fixture():
 async def test_china_flk_live_failure_marks_fixture_fallback(monkeypatch):
     adapter = ChinaFlkAdapter()
 
-    async def fail_search(_driver, _queries, _limit):
+    async def fail_search(_driver, _queries, _limit, client=None):
         raise RuntimeError("driver down")
 
     monkeypatch.setattr(adapter, "_search_queries", fail_search)
@@ -562,6 +690,19 @@ async def test_thailand_ocs_live_failure_marks_fixture_fallback(monkeypatch):
     assert any("ocs down" in warning for warning in rows[0].warnings)
 
 
+def test_thailand_expands_english_pdpa_query_to_thai_ocs_title():
+    queries = _expanded_ocs_queries("personal data protection law")
+
+    assert queries[0] == "พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล"
+    assert queries[-1] == "personal data protection law"
+
+
+def test_thailand_external_id_extracts_spa_doc_fragment():
+    assert _thailand_external_id_from_url(
+        "https://searchlaw.ocs.go.th/council-of-state/#/public/doc/pdpa-2562"
+    ) == "pdpa-2562"
+
+
 async def fake_ocs_search(query: str, max_results: int = 10):
     assert "site:" not in query
     return [
@@ -588,3 +729,33 @@ async def test_thailand_ocs_adapter_maps_search_results():
     assert rows[0].title == "Personal Data Protection Act B.E. 2562"
     assert rows[0].external_id == "pdpa-2562"
     assert rows[0].source_adapter == "thailand_ocs"
+
+
+@pytest.mark.anyio
+async def test_thailand_ocs_runs_original_query_after_expanded_title_hit():
+    calls: list[str] = []
+
+    async def search(query: str, max_results: int = 10):
+        calls.append(query)
+        if query == "พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล":
+            return [{
+                "title": "Personal Data Protection Act B.E. 2562",
+                "doc_id": "pdpa-2562",
+                "doc_url": "https://searchlaw.ocs.go.th/council-of-state/#/public/doc/pdpa-2562",
+            }]
+        if query == "cross-border transfer":
+            return [{
+                "title": "Notification on Cross-Border Personal Data Transfers",
+                "doc_id": "cross-border-notification",
+                "doc_url": "https://searchlaw.ocs.go.th/council-of-state/#/public/doc/cross-border-notification",
+            }]
+        return []
+
+    rows = await ThailandOcsAdapter()._search_queries(
+        search,
+        ["site:ocs.go.th cross-border transfer"],
+        limit=5,
+    )
+
+    assert calls[-1] == "cross-border transfer"
+    assert [row.external_id for row in rows] == ["pdpa-2562", "cross-border-notification"]
