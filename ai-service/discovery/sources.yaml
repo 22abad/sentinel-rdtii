@@ -100,7 +100,7 @@ THA:
   sources:
     - name: Office of the Council of State
       base_url: https://www.ocs.go.th
-      domains: [ocs.go.th, searchlaw.ocs.go.th]
+      domains: [ocs.go.th, www.ocs.go.th, searchlaw.ocs.go.th]
       adapter: thailand_ocs
       source_grade: primary
       source_type: statute_portal

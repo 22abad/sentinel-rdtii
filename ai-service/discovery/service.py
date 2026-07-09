@@ -8,11 +8,11 @@ from collections import Counter
 
 from .adapters import get_adapter
 from .dedupe import dedupe_candidates
-from .metadata import normalize_hit
+from .metadata import normalize_hit, source_allows_url
 from .query_builder import build_queries
 from .ranker import rank_candidates
 from .registry import get_country_registry
-from .schemas import DiscoverySearchRequest, DiscoverySearchResponse, LegalCandidate, LegalSourceConfig
+from .schemas import DiscoverySearchRequest, DiscoverySearchResponse, LegalCandidate, LegalSourceConfig, RawSearchHit
 from .validator import CandidateValidator
 
 
@@ -36,11 +36,15 @@ class DiscoveryService:
         candidates: list[LegalCandidate] = []
         adapter_warnings: list[str] = []
         raw_hit_count = 0
+        filtered_off_domain = 0
         retrieval_modes: Counter[str] = Counter()
         source_retrieval_modes: dict[str, list[str]] = {}
         for source in sources:
             raw_hits = raw_hits_by_source.get(source.name, [])
             raw_hit_count += len(raw_hits)
+            raw_hits, rejected_count, domain_warnings = self._filter_source_hits(source, raw_hits)
+            filtered_off_domain += rejected_count
+            adapter_warnings.extend(domain_warnings)
             source_modes = sorted({hit.retrieval_mode for hit in raw_hits})
             if source_modes:
                 source_retrieval_modes[source.name] = source_modes
@@ -68,6 +72,7 @@ class DiscoveryService:
                 "adapters_used": sorted({source.adapter for source in sources}),
                 "raw_hits": raw_hit_count,
                 "deduped_hits": len(deduped),
+                "filtered_off_domain": filtered_off_domain,
                 "filtered_low_relevance": filtered_low_relevance,
                 "duration_ms": round((time.perf_counter() - started) * 1000),
                 "mode": mode,
@@ -116,6 +121,25 @@ class DiscoveryService:
             selected.append(source)
 
         return selected, skipped
+
+    def _filter_source_hits(
+        self,
+        source: LegalSourceConfig,
+        hits: list[RawSearchHit],
+    ) -> tuple[list[RawSearchHit], int, list[str]]:
+        accepted: list[RawSearchHit] = []
+        rejected_count = 0
+        for hit in hits:
+            if source_allows_url(source, hit.url):
+                accepted.append(hit)
+                continue
+            rejected_count += 1
+        warnings = []
+        if rejected_count:
+            warnings.append(
+                f"Discarded {rejected_count} result(s) outside configured domains for {source.name}."
+            )
+        return accepted, rejected_count, warnings
 
     def _source_matches_request_scope(
         self,

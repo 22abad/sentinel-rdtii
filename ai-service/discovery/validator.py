@@ -80,9 +80,12 @@ class CandidateValidator:
             quality_warnings = list(getattr(quality, "warnings", []) or [])
             quality_char_count = int(getattr(quality, "char_count", len(sample)) or 0)
 
+            # Validation must be based on fetched evidence alone. Reusing the
+            # search title/URL here can incorrectly verify a navigation or error
+            # page merely because the candidate title contains a legal keyword.
             _matched_pillars, raw_matched_indicators, raw_match_reasons = infer_indicator_matches(
-                candidate.title,
-                candidate.url,
+                "",
+                "",
                 sample,
             )
             matched_indicators, match_reasons = _filter_indicator_matches(
@@ -158,11 +161,10 @@ def _filter_indicator_matches(
 ) -> tuple[list[str], list[str]]:
     allowed_pillars = set(request.pillars)
     allowed_indicators = set(request.indicators)
-    paired_reasons = dict(zip(indicators, reasons))
     kept_indicators: list[str] = []
     kept_reasons: list[str] = []
 
-    for indicator in indicators:
+    for index, indicator in enumerate(indicators):
         pillar = _indicator_pillar(indicator)
         if pillar is None:
             continue
@@ -171,7 +173,7 @@ def _filter_indicator_matches(
         if allowed_indicators and indicator not in allowed_indicators:
             continue
         kept_indicators.append(indicator)
-        reason = paired_reasons.get(indicator)
+        reason = reasons[index] if index < len(reasons) else ""
         if reason:
             kept_reasons.append(reason)
 

@@ -155,6 +155,30 @@ async def test_candidate_validator_weak_path_keeps_candidate_without_penalty_rea
 
 
 @pytest.mark.anyio
+async def test_candidate_validator_does_not_verify_from_search_title_alone():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document("Home About Contact Search Menu", status="weak")
+
+    candidate = LegalCandidate(
+        id="title-only-match",
+        country_code="SGP",
+        title="Personal Data Protection Act 2012",
+        url="https://official.example/act",
+        source_grade="primary",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[7], indicators=["7.1"])
+    validator = CandidateValidator(fetch_document_text=fake_fetch)
+
+    validated, diagnostics = await validator.validate([candidate], request)
+
+    assert diagnostics["validation_verified"] == 0
+    assert diagnostics["validation_weak"] == 1
+    assert validated[0].validation_status == "weak"
+    assert validated[0].matched_indicators == []
+
+
+@pytest.mark.anyio
 async def test_candidate_validator_skips_fixture_and_fallback_candidates():
     calls = {"fetch": 0}
 
@@ -246,3 +270,40 @@ async def test_candidate_validator_ignores_malformed_indicator_matches(monkeypat
     assert validated[0].matched_indicators == ["7.4"]
     assert "valid" in validated[0].reasons
     assert "bad" not in validated[0].reasons
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_tolerates_missing_match_reason(monkeypatch):
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document("personal data protection")
+
+    def indicator_without_reason(*_args, **_kwargs):
+        return [7], ["7.1"], []
+
+    import discovery.validator as validator_module
+
+    monkeypatch.setattr(
+        validator_module,
+        "infer_indicator_matches",
+        indicator_without_reason,
+    )
+    candidate = LegalCandidate(
+        id="live-missing-reason",
+        country_code="SGP",
+        title="Official privacy act",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(
+        country_code="SGP",
+        pillars=[7],
+        indicators=["7.1"],
+    )
+
+    validated, diagnostics = await CandidateValidator(
+        fetch_document_text=fake_fetch
+    ).validate([candidate], request)
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].matched_indicators == ["7.1"]
+    assert validated[0].validation_status == "verified"

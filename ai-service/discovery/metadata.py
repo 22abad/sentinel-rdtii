@@ -11,7 +11,7 @@ from staleness_checker import check_staleness
 from timeframe_extractor import extract_timeframe
 
 from .query_builder import LOCAL_TERMS, PILLAR_QUERY_TERMS
-from .schemas import LegalCandidate, LegalSourceConfig, RawSearchHit
+from .schemas import LegalCandidate, LegalSourceConfig, RawSearchHit, normalize_hostname
 
 TRACKING_PREFIXES = ("utm_",)
 TRACKING_PARAMS = {"fbclid", "gclid"}
@@ -73,9 +73,36 @@ def _strip_tracking_query(query: str) -> str:
 
 
 def source_domain(url: str) -> str:
-    return urlsplit(url).netloc.lower()
+    try:
+        return normalize_hostname(urlsplit(url).hostname or "")
+    except (TypeError, ValueError):
+        return ""
 
 
+def source_allows_url(source: LegalSourceConfig, url: str) -> bool:
+    """Return whether an HTTP(S) URL belongs to a configured source domain."""
+    try:
+        parsed = urlsplit(url.strip())
+        if parsed.scheme.casefold() not in {"http", "https"}:
+            return False
+        if parsed.username is not None or parsed.password is not None:
+            return False
+        # Accessing .port validates malformed values such as ':not-a-port'.
+        parsed.port
+        host = normalize_hostname(parsed.hostname or "")
+    except (TypeError, ValueError):
+        return False
+    if not host:
+        return False
+
+    for configured_domain in source.domains:
+        try:
+            domain = normalize_hostname(configured_domain)
+        except ValueError:
+            continue
+        if domain and host == domain:
+            return True
+    return False
 def stable_candidate_id(url: str, title: str = "") -> str:
     digest = hashlib.sha256(f"{canonicalize_url(url)}\n{title.strip()}".encode("utf-8")).hexdigest()
     return f"sha256:{digest}"
@@ -195,7 +222,12 @@ def infer_indicator_matches(title: str, url: str, snippet: str) -> tuple[list[in
                 reasons.append(f"matches indicator {indicator} local-language terms")
 
     matched_pillars = sorted({int(indicator.split(".", 1)[0]) for indicator in matched_indicators})
-    return matched_pillars, sorted(matched_indicators), reasons
+    matches = sorted(zip(matched_indicators, reasons), key=lambda match: match[0])
+    return (
+        matched_pillars,
+        [indicator for indicator, _reason in matches],
+        [reason for _indicator, reason in matches],
+    )
 
 
 def normalize_hit(country_code: str, source: LegalSourceConfig, hit: RawSearchHit) -> LegalCandidate:
@@ -205,16 +237,25 @@ def normalize_hit(country_code: str, source: LegalSourceConfig, hit: RawSearchHi
     grade_info = grade_source(url, title, snippet)
     matched_pillars, matched_indicators, match_reasons = infer_indicator_matches(title, url, snippet)
     inferred_grade = grade_info.get("grade")
-    source_grade = (
-        "secondary"
-        if source.source_grade == "secondary"
-        else inferred_grade if inferred_grade in {"primary", "secondary"} else source.source_grade
-    )
+    # DiscoveryService filters off-domain results before normalization, but
+    # normalize_hit is also called directly by tests and reusable pipelines.
+    # Keep this check as an independent trust-boundary safety net.
+    belongs_to_source = source_allows_url(source, url)
+    if not belongs_to_source:
+        source_grade = "unknown"
+    elif source.source_grade == "secondary":
+        source_grade = "secondary"
+    elif inferred_grade in {"primary", "secondary"}:
+        source_grade = inferred_grade
+    else:
+        source_grade = source.source_grade
     reasons = list(grade_info.get("reasons", [])) + match_reasons
-    if source.priority >= 100:
+    if source.priority >= 100 and belongs_to_source:
         reasons.append("high-priority official source")
     last_update = infer_last_update(title, url, snippet, hit.raw)
     warnings = list(hit.warnings) + infer_metadata_warnings(title, url, snippet, hit.raw, last_update)
+    if not belongs_to_source:
+        warnings.append("Candidate URL is outside the configured source domains.")
 
     return LegalCandidate(
         id=stable_candidate_id(url, title),

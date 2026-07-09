@@ -106,15 +106,12 @@ def test_claude_repair_extraction_parses_text_blocks():
 def test_gemini_repair_extraction_parses_json_response():
     from providers.gemini import GeminiProvider
 
-    class FakeGeminiModel:
+    class FakeGeminiModels:
         def __init__(self):
             self.calls: list[dict[str, Any]] = []
 
-        def generate_content(self, prompt, generation_config):
-            self.calls.append({
-                "prompt": prompt,
-                "generation_config": generation_config,
-            })
+        def generate_content(self, **kwargs):
+            self.calls.append(kwargs)
             return SimpleNamespace(
                 text=json.dumps(REPAIRED),
                 usage_metadata=SimpleNamespace(
@@ -125,10 +122,16 @@ def test_gemini_repair_extraction_parses_json_response():
 
     provider = GeminiProvider.__new__(GeminiProvider)
     provider.model_name = "fake-gemini"
-    provider._model = FakeGeminiModel()
+    provider._client = SimpleNamespace(models=FakeGeminiModels())
 
     assert _repair(provider) == REPAIRED
-    assert len(provider._model.calls) == 1
+    assert len(provider._client.models.calls) == 1
+    call = provider._client.models.calls[0]
+    assert call["model"] == "fake-gemini"
+    assert call["config"] == {
+        "temperature": 0,
+        "response_mime_type": "application/json",
+    }
     assert provider.last_usage.raw_response == json.dumps(REPAIRED)
 
 

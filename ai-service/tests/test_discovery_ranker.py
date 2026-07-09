@@ -108,3 +108,41 @@ def test_local_language_known_title_gets_exact_title_boost():
     ranked = rank_candidates([candidate], sources)
 
     assert "title matches known legal instrument" in ranked[0].reasons
+
+
+def test_validation_scoring_rewards_evidence_and_keeps_fetch_errors_neutral():
+    sources = get_sources("SGP")
+    base = LegalCandidate(
+        id="base",
+        country_code="SGP",
+        title="Official result",
+        url="https://www.pdpc.gov.sg/result",
+        source_domain="www.pdpc.gov.sg",
+        source_name="Personal Data Protection Commission",
+        source_grade="primary",
+        matched_pillars=[7],
+        matched_indicators=["7.1"],
+    )
+    verified = base.model_copy(update={"id": "verified", "validation_status": "verified"})
+    weak = base.model_copy(update={"id": "weak", "validation_status": "weak"})
+    content_failed = base.model_copy(update={
+        "id": "content-failed",
+        "validation_status": "failed",
+        "validation_metadata": {"quality_status": "error_page", "error": ""},
+    })
+    fetch_failed = base.model_copy(update={
+        "id": "fetch-failed",
+        "validation_status": "failed",
+        "validation_metadata": {"error": "Validation fetch failed: timeout"},
+    })
+
+    ranked = rank_candidates([weak, fetch_failed, content_failed, base, verified], sources)
+    scores = {candidate.id: candidate.rank_score for candidate in ranked}
+
+    assert scores["verified"] == scores["base"] + 6
+    assert scores["fetch-failed"] == scores["base"]
+    assert scores["weak"] == scores["base"] - 4
+    assert scores["content-failed"] == scores["base"] - 4
+    assert "fetched text relevance penalty" in weak.reasons
+    assert "fetched content validation penalty" in content_failed.reasons
+    assert not any("penalty" in reason for reason in fetch_failed.reasons)

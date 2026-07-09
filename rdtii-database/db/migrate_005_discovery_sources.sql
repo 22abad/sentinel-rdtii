@@ -99,7 +99,7 @@ VALUES
     ('SGP', 'Ministry of Trade and Industry', 'https://www.mti.gov.sg', '["mti.gov.sg","www.mti.gov.sg"]'::jsonb, 'primary', 'search_engine', 'government_portal', '["en"]'::jsonb, '[6]'::jsonb, 85, 'Official MTI treaty pages; verified for DEPA and SADEA digital economy agreements.', 2),
     ('SGP', 'Infocomm Media Development Authority', 'https://www.imda.gov.sg', '["imda.gov.sg","www.imda.gov.sg"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en"]'::jsonb, '[7]'::jsonb, 80, '', 3),
 
-    ('THA', 'Office of the Council of State', 'https://www.ocs.go.th', '["ocs.go.th","searchlaw.ocs.go.th"]'::jsonb, 'primary', 'thailand_ocs', 'statute_portal', '["th","en"]'::jsonb, '[6,7]'::jsonb, 100, '', 0),
+    ('THA', 'Office of the Council of State', 'https://www.ocs.go.th', '["ocs.go.th","www.ocs.go.th","searchlaw.ocs.go.th"]'::jsonb, 'primary', 'thailand_ocs', 'statute_portal', '["th","en"]'::jsonb, '[6,7]'::jsonb, 100, '', 0),
     ('THA', 'Electronic Transactions Development Agency', 'https://www.etda.or.th', '["etda.or.th","www.etda.or.th"]'::jsonb, 'primary', 'search_engine', 'regulator', '["th","en"]'::jsonb, '[6,7]'::jsonb, 85, '', 1),
     ('THA', 'Personal Data Protection Committee', 'https://www.pdpc.or.th', '["pdpc.or.th","www.pdpc.or.th"]'::jsonb, 'primary', 'search_engine', 'regulator', '["th","en"]'::jsonb, '[6,7]'::jsonb, 85, '', 2)
 ON CONFLICT (country_code, name, base_url) DO UPDATE SET
