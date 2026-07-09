@@ -13,9 +13,13 @@ from .query_builder import build_queries
 from .ranker import rank_candidates
 from .registry import get_country_registry
 from .schemas import DiscoverySearchRequest, DiscoverySearchResponse, LegalCandidate, LegalSourceConfig
+from .validator import CandidateValidator
 
 
 class DiscoveryService:
+    def __init__(self, validator: CandidateValidator | None = None) -> None:
+        self.validator = validator or CandidateValidator()
+
     async def search(self, request: DiscoverySearchRequest) -> DiscoverySearchResponse:
         started = time.perf_counter()
         country_registry = get_country_registry(request.country_code)
@@ -47,7 +51,12 @@ class DiscoveryService:
 
         deduped = dedupe_candidates(candidates)
         relevant_candidates, filtered_low_relevance = self._filter_relevant_candidates(deduped, sources)
-        ranked = rank_candidates(relevant_candidates, sources)[: request.limit]
+        preranked = rank_candidates(relevant_candidates, sources)
+        validated_candidates, validation_diagnostics = await self.validator.validate(
+            preranked[: request.limit],
+            request,
+        )
+        ranked = rank_candidates(validated_candidates, sources)[: request.limit]
         all_queries = [query for queries in source_queries.values() for query in queries]
 
         mode = "mock_no_network" if request.browser_mode == "mock" else "auto_with_adapter_fallbacks"
@@ -73,6 +82,7 @@ class DiscoveryService:
                 "languages": active_languages,
                 "sources_considered": len(sources),
                 "sources_skipped": skipped_sources,
+                **validation_diagnostics,
             },
         )
 

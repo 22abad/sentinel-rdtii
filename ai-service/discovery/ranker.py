@@ -93,6 +93,10 @@ def score_candidate(candidate: LegalCandidate, source: LegalSourceConfig | None 
         score -= 15
         reasons.append("secondary source penalty")
 
+    if candidate.validation_status == "verified":
+        score += 2
+        reasons.append("fetched text validation boost")
+
     stale_warnings = [
         warning
         for warning in candidate.warnings

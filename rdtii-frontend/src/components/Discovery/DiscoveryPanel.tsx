@@ -392,6 +392,12 @@ export function DiscoveryPanel({
             </span>
             <span>{data.diagnostics.sources_considered ?? 0} sources</span>
             <span>{data.diagnostics.filtered_low_relevance ?? 0} filtered</span>
+            {(data.diagnostics.validation_attempted ?? 0) > 0 && (
+              <span>
+                {data.diagnostics.validation_verified ?? 0}/
+                {data.diagnostics.validation_attempted} validated
+              </span>
+            )}
             <span
               className={
                 data.diagnostics.live_search
@@ -566,6 +572,10 @@ function CandidateCard({
         <span className={`candidate-retrieval ${candidate.retrieval_mode}`}>
           {retrievalModeLabel(candidate.retrieval_mode)}
         </span>
+        {candidate.validation_status &&
+          candidate.validation_status !== "unverified" && (
+            <span>{validationStatusLabel(candidate.validation_status)}</span>
+          )}
         {candidate.matched_indicators.slice(0, 4).map((indicator) => (
           <span key={indicator}>{indicator}</span>
         ))}
@@ -616,4 +626,11 @@ function retrievalModeLabel(mode: LegalCandidate["retrieval_mode"]) {
   if (mode === "live") return "Live";
   if (mode === "fallback") return "Fixture fallback";
   return "Fixture";
+}
+
+function validationStatusLabel(status: string) {
+  if (status === "verified") return "Validated";
+  if (status === "weak") return "Weak validation";
+  if (status === "failed") return "Validation failed";
+  return status;
 }
