@@ -5,7 +5,21 @@ import types
 
 import pytest
 
+from discovery.adapters.australia import (
+    AustraliaLegislationAdapter,
+    _external_id_from_url as _australia_external_id_from_url,
+    _extract_page_title as _extract_australia_page_title,
+    _known_instrument_hits,
+    _parse_legislation_search_results,
+)
 from discovery.adapters.china import ChinaFlkAdapter, _external_id_from_url
+from discovery.adapters.malaysia import (
+    MalaysiaLomAdapter,
+    _external_id_from_url as _malaysia_external_id_from_url,
+    _extract_lom_title,
+    _known_act_hits,
+    _parse_lom_search_results,
+)
 from discovery.adapters.search_engine import SearchEngineAdapter, strip_site_filter
 from discovery.adapters.singapore import (
     SingaporeSsoAdapter,
@@ -36,9 +50,28 @@ class FailingSearchBackend:
         raise RuntimeError("backend down")
 
 
-class FakeSsoClient:
+class FailingClient:
     async def get(self, _url: str):
         raise RuntimeError("temporary outage")
+
+
+class FakeLivePageResponse:
+    def __init__(self, text: str, url: str = "https://example.test") -> None:
+        self.text = text
+        self.url = url
+
+    def raise_for_status(self) -> None:
+        return None
+
+
+class FakeUrlClient:
+    def __init__(self, pages: dict[str, str]) -> None:
+        self.pages = pages
+
+    async def get(self, url: str):
+        if url not in self.pages:
+            raise RuntimeError(f"unexpected url: {url}")
+        return FakeLivePageResponse(self.pages[url], url)
 
 
 class FakeChinaDriver:
@@ -55,6 +88,126 @@ class FakeChinaDriver:
                 "department": "全国人民代表大会常务委员会",
             }
         ][:limit]
+
+
+def test_australia_legislation_parser_extracts_official_links():
+    rows = _parse_legislation_search_results(
+        """
+        <html>
+          <body>
+            <a href="/Latest/C2004A03712">Privacy Act 1988</a>
+            <a href="https://www.legislation.gov.au/Details/C2018A00029">Security of Critical Infrastructure Act 2018</a>
+            <a href="https://example.com/not-official">Ignore this</a>
+          </body>
+        </html>
+        """
+    )
+
+    assert [row["title"] for row in rows] == [
+        "Privacy Act 1988",
+        "Security of Critical Infrastructure Act 2018",
+    ]
+    assert rows[0]["url"] == "https://www.legislation.gov.au/Latest/C2004A03712"
+    assert rows[0]["external_id"] == "C2004A03712"
+
+
+def test_australia_title_extraction_strips_inner_html():
+    title = _extract_australia_page_title(
+        "<title>Privacy <em>Act</em> 1988 - Federal Register of Legislation</title>"
+    )
+
+    assert title == "Privacy Act 1988"
+
+
+def test_australia_external_id_extracts_compilation_id():
+    assert _australia_external_id_from_url("https://www.legislation.gov.au/Latest/C2018A00029") == "C2018A00029"
+
+
+@pytest.mark.anyio
+async def test_australia_known_instrument_marks_live_when_verified():
+    rows = await _known_instrument_hits(
+        FakeUrlClient({
+            "https://www.legislation.gov.au/Latest/C2004A03712": (
+                "<title>Privacy Act 1988 - Federal Register of Legislation</title>"
+            ),
+        }),
+        "privacy act",
+    )
+
+    assert rows
+    assert rows[0]["title"] == "Privacy Act 1988"
+    assert rows[0]["retrieval_mode"] == "live"
+    assert rows[0]["warnings"] == []
+
+
+@pytest.mark.anyio
+async def test_australia_known_instrument_keeps_fallback_when_live_verification_fails():
+    rows = await _known_instrument_hits(FailingClient(), "privacy act")
+
+    assert rows
+    assert rows[0]["title"] == "Privacy Act 1988"
+    assert rows[0]["retrieval_mode"] == "fallback"
+    assert "could not be verified live" in rows[0]["warnings"][0]
+
+
+@pytest.mark.anyio
+async def test_australia_adapter_mock_mode_uses_fixture():
+    source = get_sources("AUS")[0]
+    rows = await AustraliaLegislationAdapter().search(
+        country_code="AUS",
+        source=source,
+        queries=["site:legislation.gov.au privacy act"],
+        limit=2,
+        browser_mode="mock",
+    )
+
+    assert rows
+    assert rows[0].source_adapter == "australia_legislation"
+    assert rows[0].retrieval_mode == "fixture"
+
+
+@pytest.mark.anyio
+async def test_australia_adapter_live_failure_marks_fixture_fallback(monkeypatch):
+    adapter = AustraliaLegislationAdapter()
+
+    async def fail_search(_queries, _limit):
+        raise RuntimeError("legislation down")
+
+    monkeypatch.setattr(adapter, "_search_queries", fail_search)
+    source = get_sources("AUS")[0]
+    rows = await adapter.search(
+        country_code="AUS",
+        source=source,
+        queries=["site:legislation.gov.au privacy act"],
+        limit=2,
+        browser_mode="auto",
+    )
+
+    assert rows
+    assert rows[0].retrieval_mode == "fallback"
+    assert any("legislation down" in warning for warning in rows[0].warnings)
+
+
+@pytest.mark.anyio
+async def test_australia_adapter_empty_live_results_falls_back(monkeypatch):
+    adapter = AustraliaLegislationAdapter()
+
+    async def empty_search(_queries, _limit):
+        return []
+
+    monkeypatch.setattr(adapter, "_search_queries", empty_search)
+    source = get_sources("AUS")[0]
+    rows = await adapter.search(
+        country_code="AUS",
+        source=source,
+        queries=["site:legislation.gov.au privacy act"],
+        limit=2,
+        browser_mode="auto",
+    )
+
+    assert rows
+    assert rows[0].retrieval_mode == "fallback"
+    assert any("returned no results" in warning for warning in rows[0].warnings)
 
 
 @pytest.mark.anyio
@@ -196,6 +349,143 @@ def test_strip_site_filter_handles_cjk_prefix_without_space():
     assert strip_site_filter("site:sso.agc.gov.sg personal data") == "personal data"
 
 
+def test_malaysia_lom_parser_extracts_official_act_links():
+    rows = _parse_lom_search_results(
+        """
+        <html>
+          <body>
+            <a href="/act-detail.php?act=709&lang=BI&type=principal">Personal Data Protection Act 2010</a>
+            <a href="https://lom.agc.gov.my/act-detail.php?act=854&lang=BI&type=principal">Cyber Security Act 2024</a>
+            <a href="https://example.com/not-official">Ignore this</a>
+          </body>
+        </html>
+        """
+    )
+
+    assert [row["title"] for row in rows] == [
+        "Personal Data Protection Act 2010",
+        "Cyber Security Act 2024",
+    ]
+    assert rows[0]["url"] == "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI&type=principal"
+    assert rows[0]["external_id"] == "act-709"
+
+
+def test_malaysia_title_extraction_skips_site_header_and_accepts_mixed_case():
+    title = _extract_lom_title(
+        """
+        <html>
+          <body>
+            <h1>Laws of Malaysia</h1>
+            <h2>Personal Data Protection Act 2010</h2>
+          </body>
+        </html>
+        """
+    )
+
+    assert title == "Personal Data Protection Act 2010"
+
+
+def test_malaysia_title_extraction_finds_mixed_case_title_text():
+    title = _extract_lom_title(
+        "<html><body><main>Cyber Security Act 2024 principal text</main></body></html>"
+    )
+
+    assert title == "Cyber Security Act 2024"
+
+
+def test_malaysia_external_id_extracts_act_number():
+    assert _malaysia_external_id_from_url(
+        "https://lom.agc.gov.my/act-detail.php?act=854&lang=BI&type=principal"
+    ) == "act-854"
+
+
+@pytest.mark.anyio
+async def test_malaysia_known_act_marks_live_when_verified():
+    rows = await _known_act_hits(
+        FakeUrlClient({
+            "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI&type=principal": (
+                "<h1>Laws of Malaysia</h1><h2>Personal Data Protection Act 2010</h2>"
+            ),
+        }),
+        "personal data protection",
+    )
+
+    assert rows
+    assert rows[0]["title"] == "Personal Data Protection Act 2010"
+    assert rows[0]["retrieval_mode"] == "live"
+    assert rows[0]["warnings"] == []
+
+
+@pytest.mark.anyio
+async def test_malaysia_known_act_keeps_fallback_when_live_verification_fails():
+    rows = await _known_act_hits(FailingClient(), "personal data protection")
+
+    assert rows
+    assert rows[0]["title"] == "Personal Data Protection Act 2010"
+    assert rows[0]["retrieval_mode"] == "fallback"
+    assert "could not be verified live" in rows[0]["warnings"][0]
+
+
+@pytest.mark.anyio
+async def test_malaysia_lom_adapter_mock_mode_uses_fixture():
+    source = get_sources("MYS")[0]
+    rows = await MalaysiaLomAdapter().search(
+        country_code="MYS",
+        source=source,
+        queries=["site:lom.agc.gov.my personal data protection"],
+        limit=2,
+        browser_mode="mock",
+    )
+
+    assert rows
+    assert rows[0].source_adapter == "malaysia_lom"
+    assert rows[0].retrieval_mode == "fixture"
+
+
+@pytest.mark.anyio
+async def test_malaysia_lom_live_failure_marks_fixture_fallback(monkeypatch):
+    adapter = MalaysiaLomAdapter()
+
+    async def fail_search(_queries, _limit):
+        raise RuntimeError("lom down")
+
+    monkeypatch.setattr(adapter, "_search_queries", fail_search)
+    source = get_sources("MYS")[0]
+    rows = await adapter.search(
+        country_code="MYS",
+        source=source,
+        queries=["site:lom.agc.gov.my cyber security act"],
+        limit=2,
+        browser_mode="auto",
+    )
+
+    assert rows
+    assert rows[0].retrieval_mode == "fallback"
+    assert any("lom down" in warning for warning in rows[0].warnings)
+
+
+@pytest.mark.anyio
+async def test_malaysia_lom_empty_live_results_falls_back(monkeypatch):
+    adapter = MalaysiaLomAdapter()
+
+    async def empty_search(_queries, _limit):
+        return []
+
+    monkeypatch.setattr(adapter, "_search_queries", empty_search)
+    source = get_sources("MYS")[0]
+    rows = await adapter.search(
+        country_code="MYS",
+        source=source,
+        queries=["site:lom.agc.gov.my cyber security act"],
+        limit=2,
+        browser_mode="auto",
+    )
+
+    assert rows
+    assert rows[0].retrieval_mode == "fallback"
+    assert any("returned no results" in warning for warning in rows[0].warnings)
+
+
 def test_singapore_sso_parser_extracts_official_law_links():
     rows = _parse_sso_search_results(
         """
@@ -226,7 +516,7 @@ def test_singapore_sso_title_extraction_removes_site_suffix():
 
 @pytest.mark.anyio
 async def test_singapore_known_law_keeps_fallback_when_live_verification_fails():
-    rows = await _known_law_hits(FakeSsoClient(), "personal data protection")
+    rows = await _known_law_hits(FailingClient(), "personal data protection")
 
     assert rows
     assert rows[0]["title"] == "Personal Data Protection Act 2012"

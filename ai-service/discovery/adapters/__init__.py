@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from .australia import AustraliaLegislationAdapter
 from .base import DiscoveryAdapter
 from .china import ChinaFlkAdapter
+from .malaysia import MalaysiaLomAdapter
 from .search_engine import FixtureSearchAdapter, SearchEngineAdapter
 from .singapore import SingaporeSsoAdapter
 from .thailand import ThailandOcsAdapter
@@ -11,7 +13,9 @@ from .thailand import ThailandOcsAdapter
 
 def get_adapter(name: str) -> DiscoveryAdapter:
     adapters: dict[str, DiscoveryAdapter] = {
+        "australia_legislation": AustraliaLegislationAdapter(),
         "china_flk": ChinaFlkAdapter(),
+        "malaysia_lom": MalaysiaLomAdapter(),
         "search_engine": SearchEngineAdapter(),
         "singapore_sso": SingaporeSsoAdapter(),
         "thailand_ocs": ThailandOcsAdapter(),
@@ -20,9 +24,11 @@ def get_adapter(name: str) -> DiscoveryAdapter:
 
 
 __all__ = [
+    "AustraliaLegislationAdapter",
     "ChinaFlkAdapter",
     "DiscoveryAdapter",
     "FixtureSearchAdapter",
+    "MalaysiaLomAdapter",
     "SearchEngineAdapter",
     "SingaporeSsoAdapter",
     "ThailandOcsAdapter",

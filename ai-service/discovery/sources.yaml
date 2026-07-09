@@ -5,7 +5,7 @@ AUS:
     - name: Federal Register of Legislation
       base_url: https://www.legislation.gov.au
       domains: [legislation.gov.au, www.legislation.gov.au]
-      adapter: search_engine
+      adapter: australia_legislation
       source_grade: primary
       source_type: statute_portal
       languages: [en]
@@ -135,7 +135,7 @@ MYS:
     - name: Attorney General's Chambers of Malaysia
       base_url: https://lom.agc.gov.my
       domains: [lom.agc.gov.my]
-      adapter: search_engine
+      adapter: malaysia_lom
       source_grade: primary
       source_type: statute_portal
       languages: [en, ms]
