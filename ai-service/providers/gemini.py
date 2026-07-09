@@ -6,8 +6,6 @@ import os
 import time
 from typing import Any
 
-import google.generativeai as genai
-
 from .base import ExtractionError, ExtractionUsage, LLMProvider
 
 
@@ -15,6 +13,8 @@ from .base import ExtractionError, ExtractionUsage, LLMProvider
 # Override via env if you use a different model.
 _INPUT_USD_PER_MTOK = float(os.getenv("GEMINI_INPUT_USD_PER_MTOK", "0.075"))
 _OUTPUT_USD_PER_MTOK = float(os.getenv("GEMINI_OUTPUT_USD_PER_MTOK", "0.30"))
+
+
 class GeminiProvider(LLMProvider):
     name = "gemini"
 
@@ -24,21 +24,28 @@ class GeminiProvider(LLMProvider):
             raise ExtractionError(
                 "GEMINI_API_KEY is not set. Set it in env or .env file."
             )
-        genai.configure(api_key=api_key)
+        try:
+            from google import genai
+        except ImportError as exc:
+            raise ExtractionError(
+                "google-genai is not installed. Install ai-service requirements."
+            ) from exc
+
         self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
         self.name = self.model_name
-        self._model = genai.GenerativeModel(self.model_name)
+        self._client = genai.Client(api_key=api_key)
 
     def _call_gemini(self, prompt: str) -> tuple[str, ExtractionUsage]:
         usage = ExtractionUsage()
         t0 = time.perf_counter()
         try:
-            resp = self._model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(
-                    temperature=0,
-                    response_mime_type="application/json",
-                ),
+            resp = self._client.models.generate_content(
+                model=self.model_name,
+                contents=prompt,
+                config={
+                    "temperature": 0,
+                    "response_mime_type": "application/json",
+                },
             )
         except Exception as e:
             raise ExtractionError(f"Gemini API error: {e}") from e
@@ -60,11 +67,10 @@ class GeminiProvider(LLMProvider):
     def query(self, prompt: str, system: str = "") -> str:
         full_prompt = f"{system}\n\n{prompt}" if system else prompt
         try:
-            resp = self._model.generate_content(
-                full_prompt,
-                generation_config=genai.types.GenerationConfig(
-                    temperature=0.3,
-                ),
+            resp = self._client.models.generate_content(
+                model=self.model_name,
+                contents=full_prompt,
+                config={"temperature": 0.3},
             )
         except Exception as e:
             raise ExtractionError(f"Gemini query failed: {e}") from e

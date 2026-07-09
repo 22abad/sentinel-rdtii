@@ -1,6 +1,13 @@
 from __future__ import annotations
 
-from discovery.metadata import canonicalize_url, infer_document_type, normalize_hit
+from discovery.metadata import (
+    canonicalize_url,
+    infer_document_type,
+    infer_indicator_matches,
+    normalize_hit,
+    source_allows_url,
+    source_domain,
+)
 from discovery.registry import get_sources
 from discovery.schemas import RawSearchHit
 
@@ -21,6 +28,53 @@ def test_canonicalize_url_preserves_spa_fragment():
     url = canonicalize_url("https://searchlaw.ocs.go.th/council-of-state/#/public/doc/12345")
 
     assert url == "https://searchlaw.ocs.go.th/council-of-state/#/public/doc/12345"
+
+
+def test_source_url_matching_uses_exact_configured_hostnames():
+    source = get_sources("CHN")[1]
+
+    assert source_allows_url(source, "https://gov.cn/policy")
+    assert source_allows_url(source, "https://www.gov.cn/policy")
+    assert not source_allows_url(source, "https://subdomain.gov.cn/policy")
+    assert not source_allows_url(source, "https://gov.cn.evil.example/policy")
+    assert not source_allows_url(source, "https://evil.example/?next=gov.cn")
+    assert not source_allows_url(source, "file://gov.cn/policy")
+    assert not source_allows_url(source, "https://user:password@gov.cn/policy")
+    assert not source_allows_url(source, "https://gov.cn:not-a-port/policy")
+
+
+def test_source_domain_uses_same_idna_normalization_as_source_config():
+    assert source_domain("https://例子.测试/path") == "xn--fsqu00a.xn--0zwm56d"
+
+
+def test_off_domain_candidate_is_not_inherited_as_primary_source():
+    source = get_sources("SGP")[1]
+    hit = RawSearchHit(
+        title="Personal Data Protection Act commentary",
+        url="https://unrelated.example/pdpa",
+        snippet="Personal data protection law.",
+    )
+
+    candidate = normalize_hit("SGP", source, hit)
+
+    assert candidate.source_grade == "unknown"
+    assert candidate.source_domain == "unrelated.example"
+    assert "outside the configured source domains" in candidate.warnings[-1]
+    assert "high-priority official source" not in candidate.reasons
+
+
+def test_indicator_match_reasons_stay_aligned_after_sorting():
+    _pillars, indicators, reasons = infer_indicator_matches(
+        "",
+        "",
+        "Personal Data Protection Act with a data localization requirement.",
+    )
+
+    assert indicators == ["6.1", "7.1"]
+    assert reasons == [
+        "matches indicator 6.1 terms",
+        "matches indicator 7.1 terms",
+    ]
 
 
 def test_infer_document_type_uses_token_boundaries():

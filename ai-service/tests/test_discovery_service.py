@@ -1,8 +1,21 @@
 from __future__ import annotations
 
+import pytest
+
 from discovery.registry import get_sources
-from discovery.schemas import DiscoverySearchRequest, LegalCandidate, LegalSourceConfig
+from discovery.schemas import DiscoverySearchRequest, LegalCandidate, LegalSourceConfig, RawSearchHit
 from discovery.service import DiscoveryService
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("country_code", ["AUS", "CHN", "MYS", "SGP", "THA"])
+async def test_mock_discovery_fixtures_use_configured_exact_domains(country_code):
+    response = await DiscoveryService().search(
+        DiscoverySearchRequest(country_code=country_code, browser_mode="mock")
+    )
+
+    assert response.diagnostics["filtered_off_domain"] == 0
+    assert response.candidates
 
 
 def test_filter_relevant_candidates_keeps_known_law_database_without_match():
@@ -43,6 +56,30 @@ def test_filter_relevant_candidates_drops_non_database_without_match():
 
     assert relevant == []
     assert filtered == 1
+
+
+def test_filter_source_hits_drops_off_domain_and_non_http_results():
+    service = DiscoveryService()
+    source = LegalSourceConfig(
+        name="Official Source",
+        base_url="https://official.example",
+        domains=["official.example"],
+    )
+    hits = [
+        RawSearchHit(url="https://official.example/law"),
+        RawSearchHit(url="https://archive.official.example/law"),
+        RawSearchHit(url="https://official.example.evil.test/law"),
+        RawSearchHit(url="file://official.example/private"),
+    ]
+
+    accepted, rejected_count, warnings = service._filter_source_hits(source, hits)
+
+    assert [hit.url for hit in accepted] == ["https://official.example/law"]
+    assert rejected_count == 3
+    assert warnings == [
+        "Discarded 3 result(s) outside configured domains for Official Source."
+    ]
+    assert not any("evil.test" in warning for warning in warnings)
 
 
 def test_select_sources_respects_official_only_secondary_filter():
@@ -115,7 +152,7 @@ def test_select_sources_allows_pillar_scope_when_source_also_has_indicators():
             source_grade="primary",
             languages=["en"],
             pillars=[6],
-            indicators=["7.4"],
+            indicators=["6.4"],
         ),
     ]
 
@@ -127,7 +164,7 @@ def test_select_sources_allows_pillar_scope_when_source_also_has_indicators():
 
 def test_select_sources_with_indicators_still_respects_requested_pillars():
     service = DiscoveryService()
-    request = DiscoverySearchRequest(country_code="SGP", pillars=[6], indicators=["7.4"])
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[6], indicators=["6.4"])
     sources = [
         LegalSourceConfig(
             name="Pillar Seven Indicator Source",
@@ -147,7 +184,7 @@ def test_select_sources_with_indicators_still_respects_requested_pillars():
             source_grade="primary",
             languages=["en"],
             pillars=[6],
-            indicators=["7.4"],
+            indicators=["6.4"],
         ),
     ]
 
@@ -155,6 +192,58 @@ def test_select_sources_with_indicators_still_respects_requested_pillars():
 
     assert [source.name for source in selected] == ["Pillar Six Indicator Source"]
     assert skipped == ["Pillar Seven Indicator Source (pillar/indicator mismatch)"]
+
+
+def test_request_rejects_indicator_outside_requested_pillars():
+    with pytest.raises(ValueError, match=r"7\.4.*\[7\]"):
+        DiscoverySearchRequest(
+            country_code="SGP",
+            pillars=[6],
+            indicators=["7.4"],
+        )
+
+
+def test_source_config_rejects_indicator_outside_configured_pillars():
+    with pytest.raises(ValueError, match=r"6\.4.*\[7\]"):
+        LegalSourceConfig(
+            name="Inconsistent Source",
+            base_url="https://source.example",
+            domains=["source.example"],
+            pillars=[7],
+            indicators=["6.4"],
+        )
+
+
+def test_source_config_requires_base_hostname_in_exact_domains():
+    with pytest.raises(ValueError, match="must be listed in domains"):
+        LegalSourceConfig(
+            name="Misconfigured Source",
+            base_url="https://www.official.example",
+            domains=["official.example"],
+        )
+
+
+def test_source_config_rejects_domain_urls_and_base_url_credentials():
+    with pytest.raises(ValueError, match="must be a hostname"):
+        LegalSourceConfig(
+            name="Bad Domain",
+            base_url="https://official.example",
+            domains=["https://official.example"],
+        )
+
+    with pytest.raises(ValueError, match="invalid source domain"):
+        LegalSourceConfig(
+            name="Wildcard-like Domain",
+            base_url="https://ocs.go.th",
+            domains=[".ocs.go.th"],
+        )
+
+    with pytest.raises(ValueError, match="cannot include credentials"):
+        LegalSourceConfig(
+            name="Credential URL",
+            base_url="https://user:password@official.example",
+            domains=["official.example"],
+        )
 
 
 def test_filter_candidate_matches_respects_requested_pillar():
@@ -193,19 +282,19 @@ def test_filter_candidate_matches_respects_explicit_indicators():
     assert filtered.matched_pillars == [7]
 
 
-def test_filter_candidate_matches_with_indicators_still_respects_requested_pillars():
+def test_filter_candidate_matches_keeps_only_requested_indicator_and_pillar():
     service = DiscoveryService()
-    request = DiscoverySearchRequest(country_code="SGP", pillars=[6], indicators=["7.4"])
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[6], indicators=["6.4"])
     candidate = LegalCandidate(
         id="mixed",
         country_code="SGP",
         title="PDPA and DPO",
         url="https://sso.agc.gov.sg/Act/PDPA2012",
-        matched_pillars=[7],
-        matched_indicators=["7.4"],
+        matched_pillars=[6, 7],
+        matched_indicators=["6.4", "7.4"],
     )
 
     filtered = service._filter_candidate_matches(candidate, request)
 
-    assert filtered.matched_indicators == []
-    assert filtered.matched_pillars == []
+    assert filtered.matched_indicators == ["6.4"]
+    assert filtered.matched_pillars == [6]

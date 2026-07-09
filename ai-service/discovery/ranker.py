@@ -28,6 +28,11 @@ MATCHING = {
     "snippet_match": 4,
 }
 
+VALIDATION = {
+    "verified": 6,
+    "content_mismatch": -4,
+}
+
 STALE_WARNING_TERMS = (
     "stale",
     "staleness",
@@ -94,8 +99,17 @@ def score_candidate(candidate: LegalCandidate, source: LegalSourceConfig | None 
         reasons.append("secondary source penalty")
 
     if candidate.validation_status == "verified":
-        score += 2
+        score += VALIDATION["verified"]
         reasons.append("fetched text validation boost")
+    elif candidate.validation_status == "weak":
+        score += VALIDATION["content_mismatch"]
+        reasons.append("fetched text relevance penalty")
+    elif (
+        candidate.validation_status == "failed"
+        and not candidate.validation_metadata.get("error")
+    ):
+        score += VALIDATION["content_mismatch"]
+        reasons.append("fetched content validation penalty")
 
     stale_warnings = [
         warning

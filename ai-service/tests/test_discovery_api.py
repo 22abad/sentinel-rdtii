@@ -37,6 +37,22 @@ def test_discovery_search_returns_ranked_candidates(monkeypatch):
     assert all(candidate["source_grade"] for candidate in data["candidates"])
 
 
+def test_discovery_search_rejects_indicator_outside_requested_pillars():
+    client = TestClient(main_module.app)
+
+    response = client.post(
+        "/api/discovery/search",
+        json={
+            "country_code": "SGP",
+            "pillars": [6],
+            "indicators": ["7.4"],
+        },
+    )
+
+    assert response.status_code == 422
+    assert "require requested pillar" in response.text
+
+
 def test_discovery_sources_returns_registry_entries():
     client = TestClient(main_module.app)
 
