@@ -47,6 +47,11 @@ export type Status = "idle" | "loading" | "ready" | "error";
 
 export type DiscoverySourceMode = "official_first" | "official_only" | "broad_web";
 export type DiscoveryRetrievalMode = "live" | "fixture" | "fallback";
+export type DiscoveryValidationStatus =
+  | "unverified"
+  | "verified"
+  | "weak"
+  | "failed";
 
 export type DiscoveryCountry = {
   country_code: string;
@@ -103,6 +108,8 @@ export type LegalCandidate = {
   source_adapter: string;
   query: string;
   retrieval_mode: DiscoveryRetrievalMode;
+  validation_status: DiscoveryValidationStatus;
+  validation_metadata?: Record<string, unknown>;
 };
 
 export type DiscoverySearchResponse = {
@@ -127,5 +134,9 @@ export type DiscoverySearchResponse = {
     languages?: string[];
     sources_considered?: number;
     sources_skipped?: string[];
+    validation_attempted?: number;
+    validation_verified?: number;
+    validation_failed?: number;
+    validation_weak?: number;
   };
 };
