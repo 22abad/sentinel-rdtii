@@ -77,6 +77,18 @@ def test_indicator_match_reasons_stay_aligned_after_sorting():
     ]
 
 
+def test_indicator_matches_real_australian_act_title_wording():
+    _pillars, privacy_indicators, _reasons = infer_indicator_matches(
+        "", "", "Privacy Act 1988"
+    )
+    _pillars, cyber_indicators, _reasons = infer_indicator_matches(
+        "", "", "Cyber Security Act 2024"
+    )
+
+    assert "7.1" in privacy_indicators
+    assert "7.2" in cyber_indicators
+
+
 def test_infer_document_type_uses_token_boundaries():
     assert infer_document_type(
         "Cross-border Personal Data Transfer Requirements",

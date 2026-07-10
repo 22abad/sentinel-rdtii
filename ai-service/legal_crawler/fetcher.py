@@ -90,6 +90,7 @@ async def fetch_legal_content(
                         return {"type": "error", "message": f"Word 文档解析失败: {url}"}
 
                 print(f"正在访问: {url}")
+                response = None
                 try:
                     # Increase timeout and use wait_until="domcontentloaded" for potentially slow gov sites
                     response = await page.goto(url, wait_until="domcontentloaded", timeout=timeout)
@@ -163,7 +164,16 @@ async def fetch_legal_content(
                             if opencli_result:
                                 return opencli_result
                         raise Exception(f"Blocked by anti-bot protection")
-                    return {"type": "text", "url": url, "text": content}
+                    return {
+                        "type": "text",
+                        "url": page.url,
+                        "text": content,
+                        "metadata": {
+                            "source": "playwright",
+                            "http_status": response.status if response else None,
+                            "tls_verified": page.url.casefold().startswith("https://"),
+                        },
+                    }
                 
                 if mode == "auto":
                     opencli_result = await _try_opencli_fetch(url, timeout)

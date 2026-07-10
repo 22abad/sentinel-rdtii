@@ -10,6 +10,7 @@ from discovery.adapters.australia import (
     _external_id_from_url as _australia_external_id_from_url,
     _extract_page_title as _extract_australia_page_title,
     _known_instrument_hits,
+    _parse_legislation_api_results,
     _parse_legislation_search_results,
 )
 from discovery.adapters.china import (
@@ -23,6 +24,7 @@ from discovery.adapters.malaysia import (
     _external_id_from_url as _malaysia_external_id_from_url,
     _extract_lom_title,
     _known_act_hits,
+    _parse_lom_api_results,
     _parse_lom_search_results,
 )
 from discovery.adapters.search_engine import SearchEngineAdapter, strip_site_filter
@@ -60,27 +62,39 @@ class FailingSearchBackend:
 
 
 class FailingClient:
-    async def get(self, _url: str):
+    async def get(self, _url: str, **_kwargs):
         raise RuntimeError("temporary outage")
 
 
 class FakeLivePageResponse:
-    def __init__(self, text: str, url: str = "https://example.test") -> None:
-        self.text = text
+    def __init__(self, value, url: str = "https://example.test") -> None:
+        self.text = value if isinstance(value, str) else ""
+        self._payload = value if isinstance(value, dict) else None
         self.url = url
 
     def raise_for_status(self) -> None:
         return None
 
+    def json(self):
+        if self._payload is None:
+            raise ValueError("response is not JSON")
+        return self._payload
+
 
 class FakeUrlClient:
-    def __init__(self, pages: dict[str, str]) -> None:
+    def __init__(self, pages: dict[str, object]) -> None:
         self.pages = pages
 
-    async def get(self, url: str):
+    async def get(self, url: str, **_kwargs):
         if url not in self.pages:
             raise RuntimeError(f"unexpected url: {url}")
         return FakeLivePageResponse(self.pages[url], url)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *_args):
+        return None
 
 
 class FakeChinaDriver:
@@ -120,6 +134,39 @@ def test_australia_legislation_parser_extracts_official_links():
     assert rows[0]["external_id"] == "C2004A03712"
 
 
+def test_australia_official_api_parser_extracts_title():
+    rows = _parse_legislation_api_results({
+        "value": [{
+            "id": "C2004A03712",
+            "name": "Privacy Act 1988",
+            "collection": "Act",
+            "isInForce": True,
+        }],
+    })
+
+    assert rows[0]["title"] == "Privacy Act 1988"
+    assert rows[0]["url"] == "https://www.legislation.gov.au/C2004A03712/latest/text"
+
+
+@pytest.mark.anyio
+async def test_australia_official_api_result_is_live(monkeypatch):
+    api_url = (
+        "https://api.prod.legislation.gov.au/v1/titles/"
+        "search(criteria='text(%22privacy%20act%22,nameAndText,contains)')"
+    )
+    monkeypatch.setattr(
+        "httpx.AsyncClient",
+        lambda **_kwargs: FakeUrlClient({api_url: {
+            "value": [{"id": "C2004A03712", "name": "Privacy Act 1988"}],
+        }}),
+    )
+
+    rows = await AustraliaLegislationAdapter()._search_queries(["privacy act"], 5)
+
+    assert rows[0].retrieval_mode == "live"
+    assert rows[0].discovery_method == "official_search"
+
+
 def test_australia_title_extraction_strips_inner_html():
     title = _extract_australia_page_title(
         "<title>Privacy <em>Act</em> 1988 - Federal Register of Legislation</title>"
@@ -133,7 +180,7 @@ def test_australia_external_id_extracts_compilation_id():
 
 
 @pytest.mark.anyio
-async def test_australia_known_instrument_marks_live_when_verified():
+async def test_australia_known_instrument_stays_fallback_when_verified():
     rows = await _known_instrument_hits(
         FakeUrlClient({
             "https://www.legislation.gov.au/Latest/C2004A03712": (
@@ -145,8 +192,8 @@ async def test_australia_known_instrument_marks_live_when_verified():
 
     assert rows
     assert rows[0]["title"] == "Privacy Act 1988"
-    assert rows[0]["retrieval_mode"] == "live"
-    assert rows[0]["warnings"] == []
+    assert rows[0]["retrieval_mode"] == "fallback"
+    assert "not returned by the official search" in rows[0]["warnings"][0]
 
 
 @pytest.mark.anyio
@@ -498,6 +545,40 @@ def test_malaysia_lom_parser_extracts_official_act_links():
     assert rows[0]["external_id"] == "act-709"
 
 
+def test_malaysia_official_api_parser_extracts_act():
+    rows = _parse_lom_api_results({
+        "response": {"docs": [{
+            "nombor_akta": "709",
+            "attr_titlebi": "PERSONAL DATA PROTECTION ACT 2010",
+            "_os_url": "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI",
+        }]},
+    })
+
+    assert rows[0]["title"] == "PERSONAL DATA PROTECTION ACT 2010"
+    assert rows[0]["external_id"] == "act-709"
+
+
+@pytest.mark.anyio
+async def test_malaysia_official_api_result_is_live(monkeypatch):
+    monkeypatch.setattr(
+        "httpx.AsyncClient",
+        lambda **_kwargs: FakeUrlClient({
+            "https://lom.agc.gov.my/fess-proxy.php": {
+                "response": {"docs": [{
+                    "nombor_akta": "709",
+                    "attr_titlebi": "PERSONAL DATA PROTECTION ACT 2010",
+                    "_os_url": "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI",
+                }]},
+            },
+        }),
+    )
+
+    rows = await MalaysiaLomAdapter()._search_queries(["personal data protection"], 5)
+
+    assert rows[0].retrieval_mode == "live"
+    assert rows[0].discovery_method == "official_search"
+
+
 def test_malaysia_title_extraction_skips_site_header_and_accepts_mixed_case():
     title = _extract_lom_title(
         """
@@ -528,7 +609,7 @@ def test_malaysia_external_id_extracts_act_number():
 
 
 @pytest.mark.anyio
-async def test_malaysia_known_act_marks_live_when_verified():
+async def test_malaysia_known_act_stays_fallback_when_verified():
     rows = await _known_act_hits(
         FakeUrlClient({
             "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI&type=principal": (
@@ -540,8 +621,8 @@ async def test_malaysia_known_act_marks_live_when_verified():
 
     assert rows
     assert rows[0]["title"] == "Personal Data Protection Act 2010"
-    assert rows[0]["retrieval_mode"] == "live"
-    assert rows[0]["warnings"] == []
+    assert rows[0]["retrieval_mode"] == "fallback"
+    assert "not returned by the official search" in rows[0]["warnings"][0]
 
 
 @pytest.mark.anyio
@@ -634,6 +715,15 @@ def test_singapore_sso_parser_extracts_official_law_links():
     assert rows[0]["url"] == "https://sso.agc.gov.sg/Act/PDPA2012"
 
 
+def test_singapore_sso_parser_deduplicates_view_variants():
+    rows = _parse_sso_search_results(
+        '<a href="/Act/PDPA2012?ViewType=Advance">Personal Data Protection Act 2012</a>'
+        '<a href="/Act/PDPA2012?ViewType=Pdf">Personal Data Protection Act 2012</a>'
+    )
+
+    assert [row["url"] for row in rows] == ["https://sso.agc.gov.sg/Act/PDPA2012"]
+
+
 def test_singapore_sso_title_extraction_removes_site_suffix():
     title = _extract_page_title(
         "<title lang='en'>Personal Data Protection Act 2012 - Singapore Statutes Online</title>"
@@ -649,7 +739,29 @@ async def test_singapore_known_law_keeps_fallback_when_live_verification_fails()
     assert rows
     assert rows[0]["title"] == "Personal Data Protection Act 2012"
     assert rows[0]["retrieval_mode"] == "fallback"
-    assert "could not be verified live" in rows[0]["warnings"]
+    assert any("could not be verified live" in warning for warning in rows[0]["warnings"])
+
+
+@pytest.mark.anyio
+async def test_singapore_later_official_query_beats_known_fallback(monkeypatch):
+    first = "https://sso.agc.gov.sg/Search/Content?Phrase=Cybersecurity+Act"
+    second = "https://sso.agc.gov.sg/Search/Content?Phrase=cybersecurity+law"
+    monkeypatch.setattr(
+        "httpx.AsyncClient",
+        lambda **_kwargs: FakeUrlClient({
+            first: '<a href="/Act/CMA1993">Computer Misuse Act 1993</a>',
+            second: '<a href="/Act/CA2018">Cybersecurity Act 2018</a>',
+        }),
+    )
+
+    rows = await SingaporeSsoAdapter()._search_queries(
+        ["Cybersecurity Act", "cybersecurity law"],
+        limit=2,
+    )
+
+    assert rows[0].title == "Cybersecurity Act 2018"
+    assert rows[0].retrieval_mode == "live"
+    assert rows[0].discovery_method == "official_search"
 
 
 @pytest.mark.anyio

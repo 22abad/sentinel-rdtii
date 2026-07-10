@@ -52,6 +52,7 @@ class FixtureSearchAdapter(DiscoveryAdapter):
                 "query": query,
                 "position": idx + 1,
                 "retrieval_mode": self.retrieval_mode,
+                "discovery_method": "fixture",
             })
             for idx, hit in enumerate(hits[:limit])
         ]
@@ -138,6 +139,7 @@ class SearchEngineAdapter(DiscoveryAdapter):
                     "query": query,
                     "position": len(hits) + 1,
                     "retrieval_mode": "live",
+                    "discovery_method": "web_search",
                 }))
                 if len(hits) >= limit:
                     return hits
@@ -206,6 +208,7 @@ class SerpApiSearchBackend:
                 position=idx,
                 raw=dict(item),
                 retrieval_mode="live",
+                discovery_method="web_search",
             ))
             if len(hits) >= limit:
                 break
@@ -264,15 +267,15 @@ def _fixture_hits(
             "flk.npc.gov.cn": [
                 RawSearchHit(
                     title="中华人民共和国个人信息保护法",
-                    url="https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3YjY4M2JhYjAxN2I5MTYxYzQyMjA4M2I%3D",
+                    url="https://flk.npc.gov.cn/detail?id=ff8081817b6472a3017b656cc2040044&title=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E4%BF%9D%E6%8A%A4%E6%B3%95&type=",
                     snippet="个人信息处理者向境外提供个人信息，应当具备个人信息保护认证、标准合同或者安全评估等条件。",
-                    external_id="pipl",
+                    external_id="ff8081817b6472a3017b656cc2040044",
                 ),
                 RawSearchHit(
                     title="中华人民共和国网络安全法",
-                    url="https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE1YmI3OTY2YTAxNWJiZGMwM2U2YjA0M2I%3D",
+                    url="https://flk.npc.gov.cn/detail?id=021e7d7684474107b8f3febbb1c4f8b5&title=%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B3%95&type=",
                     snippet="网络运营者应当按照网络安全等级保护制度要求履行安全保护义务。",
-                    external_id="cybersecurity-law",
+                    external_id="021e7d7684474107b8f3febbb1c4f8b5",
                 ),
             ],
             "gov.cn": [
@@ -323,10 +326,10 @@ def _fixture_hits(
                     external_id="C2004A03712",
                 ),
                 RawSearchHit(
-                    title="Security of Critical Infrastructure Act 2018",
-                    url="https://www.legislation.gov.au/Latest/C2018A00029",
-                    snippet="Official compilation of Australia's critical infrastructure security framework, including cyber incident obligations.",
-                    external_id="C2018A00029",
+                    title="Cyber Security Act 2024",
+                    url="https://www.legislation.gov.au/C2024A00098/latest/text",
+                    snippet="Official compilation of Australia's cyber security framework, including smart-device security and ransomware reporting obligations.",
+                    external_id="C2024A00098",
                 ),
             ],
         },

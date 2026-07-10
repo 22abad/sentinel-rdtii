@@ -6,7 +6,7 @@ import html
 import re
 from html.parser import HTMLParser
 from typing import Any
-from urllib.parse import quote_plus, urljoin, urlsplit
+from urllib.parse import urljoin, urlsplit
 
 from discovery.schemas import LegalSourceConfig, RawSearchHit
 
@@ -62,10 +62,10 @@ class MalaysiaLomAdapter(DiscoveryAdapter):
         import httpx
 
         hits: list[RawSearchHit] = []
-        seen_urls: set[str] = set()
+        seen_keys: set[str] = set()
         timeout = httpx.Timeout(10.0, connect=4.0)
         headers = {
-            "Accept": "text/html,application/xhtml+xml",
+            "Accept": "application/json",
             "User-Agent": (
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -78,24 +78,49 @@ class MalaysiaLomAdapter(DiscoveryAdapter):
                 if not search_term:
                     continue
 
-                for row in await _known_act_hits(client, search_term):
-                    if row["url"] in seen_urls:
+                search_url = _search_url(search_term)
+                try:
+                    response = await client.get(
+                        search_url,
+                        params={
+                            "q": f'"{search_term}"',
+                            "fq": "",
+                            "start": 0,
+                            "rows": max(10, min(limit * 3, 50)),
+                            "sort": "publicationDate desc",
+                            "lookup": "title",
+                            "kategori": _PRINCIPAL_ACT_CATEGORIES,
+                            "draw": 1,
+                        },
+                    )
+                    response.raise_for_status()
+                except Exception:
+                    search_rows: list[dict[str, Any]] = []
+                else:
+                    search_url = str(response.url)
+                    search_rows = _parse_lom_api_results(response.json())
+                for row in search_rows:
+                    key = str(row.get("external_id") or _external_id_from_url(row["url"]))
+                    if key in seen_keys:
                         continue
-                    seen_urls.add(row["url"])
+                    seen_keys.add(key)
+                    row.setdefault("raw", {})["search_url"] = search_url
                     hits.append(_raw_hit_from_row(self.name, search_term, len(hits) + 1, row))
                     if len(hits) >= limit:
                         return hits
 
-                try:
-                    response = await client.get(_search_url(search_term))
-                    response.raise_for_status()
-                except Exception:
+                missing_known = [
+                    act
+                    for act in _known_acts_for_query(search_term)
+                    if str(act["external_id"]) not in seen_keys
+                ]
+                if not missing_known:
                     continue
-                for row in _parse_lom_search_results(response.text):
-                    if row["url"] in seen_urls:
+                for row in await _known_act_hits(client, search_term):
+                    key = str(row.get("external_id") or _external_id_from_url(row["url"]))
+                    if key in seen_keys:
                         continue
-                    seen_urls.add(row["url"])
-                    row.setdefault("raw", {})["search_url"] = str(response.url)
+                    seen_keys.add(key)
                     hits.append(_raw_hit_from_row(self.name, search_term, len(hits) + 1, row))
                     if len(hits) >= limit:
                         return hits
@@ -139,11 +164,8 @@ KNOWN_ACTS: tuple[dict[str, Any], ...] = (
 
 
 async def _known_act_hits(client: Any, query: str) -> list[dict[str, Any]]:
-    query_text = query.casefold()
     rows: list[dict[str, Any]] = []
-    for act in KNOWN_ACTS:
-        if not any(term in query_text for term in act["terms"]):
-            continue
+    for act in _known_acts_for_query(query):
         row = {
             "title": act["title"],
             "url": act["url"],
@@ -167,15 +189,82 @@ async def _known_act_hits(client: Any, query: str) -> list[dict[str, Any]]:
             row["warnings"] = row["warnings"] + [f"Could not extract verified live title: {exc}"]
             rows.append(row)
             continue
-        row["title"] = live_title or act["title"]
-        row["retrieval_mode"] = "live"
-        row["warnings"] = []
+        if live_title.casefold() != str(act["title"]).casefold():
+            row["warnings"] = row["warnings"] + [
+                "Could not verify the expected act title from the Laws of Malaysia page."
+            ]
+            rows.append(row)
+            continue
+        row["title"] = live_title
+        row["warnings"] = [
+            "Configured known act page was reachable, but it was not returned by "
+            "the official search result parser; kept as fallback."
+        ]
         rows.append(row)
     return rows
 
 
-def _search_url(query: str) -> str:
-    return f"https://lom.agc.gov.my/search?query={quote_plus(query)}"
+def _known_acts_for_query(query: str) -> list[dict[str, Any]]:
+    query_text = query.casefold()
+    return [
+        act
+        for act in KNOWN_ACTS
+        if any(term in query_text for term in act["terms"])
+    ]
+
+
+_PRINCIPAL_ACT_CATEGORIES = (
+    "iagcact,iagcact_repealed,iagcact_revised,"
+    "iagcact_translated,iagcact_updated"
+)
+
+
+def _search_url(_query: str) -> str:
+    return "https://lom.agc.gov.my/fess-proxy.php"
+
+
+def _parse_lom_api_results(payload: Any) -> list[dict[str, Any]]:
+    """Map the Laws of Malaysia public search response into discovery rows."""
+    response = payload.get("response") if isinstance(payload, dict) else None
+    documents = response.get("docs") if isinstance(response, dict) else None
+    if not isinstance(documents, list):
+        return []
+
+    rows: list[dict[str, Any]] = []
+    for document in documents:
+        if not isinstance(document, dict):
+            continue
+        act_number = str(
+            document.get("nombor_akta")
+            or document.get("actNo")
+            or document.get("attr_legislationno")
+            or document.get("id")
+            or ""
+        ).strip()
+        title = str(
+            document.get("attr_titlebi")
+            or document.get("titleBI")
+            or document.get("LEGISLATIONTITLEBI")
+            or document.get("attr_titlebm")
+            or document.get("titleBM")
+            or ""
+        ).strip()
+        url = str(document.get("_os_url") or "").strip()
+        if not act_number or not title or not _is_lom_act_href(url):
+            continue
+        rows.append({
+            "title": _clean_text(title),
+            "url": url,
+            "snippet": "Laws of Malaysia official legislation search result.",
+            "external_id": f"act-{act_number}",
+            "raw": {
+                "status": str(document.get("attr_status") or document.get("legislationStatus") or ""),
+                "publication_date": str(document.get("dateCreated") or ""),
+                "source_collection": str(document.get("data_source_name") or document.get("_os_label") or ""),
+                "official_api": "fess-proxy.php",
+            },
+        })
+    return rows
 
 
 class _LomSearchParser(HTMLParser):
@@ -230,13 +319,14 @@ def _is_lom_act_href(href: str) -> bool:
 
 def _extract_lom_title(markup: str) -> str:
     for raw_heading in re.findall(
-        r"<h[1-3]\b[^>]*>\s*(.*?)\s*</h[1-3]>",
+        r"<(?:h[1-3]|span)\b[^>]*>\s*(.*?)\s*</(?:h[1-3]|span)>",
         markup,
         flags=re.IGNORECASE | re.DOTALL,
     ):
         heading = _clean_text(_strip_tags(raw_heading))
-        if _looks_like_act_title(heading):
-            return heading
+        act_title = _extract_act_title(heading)
+        if act_title:
+            return act_title
 
     title_match = re.search(r"<title\b[^>]*>\s*(.*?)\s*</title>", markup, flags=re.IGNORECASE | re.DOTALL)
     if title_match:
@@ -266,6 +356,11 @@ def _raw_hit_from_row(adapter_name: str, query: str, position: int, row: dict[st
         raw=dict(row.get("raw") or {}),
         warnings=list(row.get("warnings") or []),
         retrieval_mode=row.get("retrieval_mode") or "live",
+        discovery_method=(
+            "known_mapping"
+            if (row.get("raw") or {}).get("match_strategy")
+            else "official_search"
+        ),
     )
 
 
