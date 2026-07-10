@@ -171,6 +171,18 @@ KNOWN_LAWS: tuple[tuple[tuple[str, ...], str, str, str], ...] = (
         "https://sso.agc.gov.sg/Act/CA2018",
         "Official text for Singapore cybersecurity duties and critical information infrastructure.",
     ),
+    (
+        ("companies act", "minimum retention", "retain records", "accounting records"),
+        "Companies Act 1967",
+        "https://sso.agc.gov.sg/Act/CoA1967",
+        "Official text for company accounting records, including a minimum five-year retention period.",
+    ),
+    (
+        ("criminal procedure code", "government access", "law enforcement access", "police access"),
+        "Criminal Procedure Code 2010",
+        "https://sso.agc.gov.sg/Act/CPC2010",
+        "Official text for police investigation powers, including access to computers and data.",
+    ),
 )
 
 

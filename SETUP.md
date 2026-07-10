@@ -70,7 +70,8 @@ The live smoke runner calls the production `DiscoveryService.search()` flow
 against the configured official government sites. It is intentionally manual:
 normal pull-request CI continues to use deterministic mocks and fixtures.
 
-Run all ten known-law checks:
+Run all current positive-evidence checks for the required countries (AUS, MYS,
+and SGP):
 
 ```bash
 make smoke-discovery
@@ -81,8 +82,14 @@ Run countries incrementally while diagnosing a site or adapter:
 ```bash
 make smoke-discovery SMOKE_ARGS='--countries SGP'
 make smoke-discovery SMOKE_ARGS='--countries AUS MYS'
-make smoke-discovery SMOKE_ARGS='--countries CHN THA'
 ```
+
+CHN and THA adapters remain future/optional work and are not part of the
+required-country live smoke suite.
+
+The broader AUS/MYS/SGP Pillar 6/7 research status is tracked in
+`ai-service/discovery/required_country_coverage.yaml`. Regenerate its readable
+matrix with `make discovery-coverage`.
 
 The command writes timestamped JSON and Markdown files under `reports/` and
 returns a non-zero status when a live acceptance check fails. Those generated

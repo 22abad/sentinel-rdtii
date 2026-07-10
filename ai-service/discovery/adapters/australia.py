@@ -125,6 +125,22 @@ class AustraliaLegislationAdapter(DiscoveryAdapter):
 KNOWN_INSTRUMENTS: tuple[dict[str, Any], ...] = (
     {
         "terms": (
+            "my health records act",
+            "local processing",
+            "local storage",
+            "hold records outside australia",
+            "process records outside australia",
+        ),
+        "title": "My Health Records Act 2012",
+        "url": "https://www.legislation.gov.au/Latest/C2012A00063",
+        "snippet": (
+            "Official compilation of the My Health Records Act 2012, including "
+            "limits on holding and processing My Health Record system data outside Australia."
+        ),
+        "external_id": "C2012A00063",
+    },
+    {
+        "terms": (
             "privacy act",
             "personal information",
             "data protection",
@@ -156,6 +172,22 @@ KNOWN_INSTRUMENTS: tuple[dict[str, Any], ...] = (
             "including smart-device security and ransomware reporting obligations."
         ),
         "external_id": "C2024A00098",
+    },
+    {
+        "terms": (
+            "telecommunications interception and access act",
+            "minimum retention",
+            "data retention period",
+            "law enforcement access",
+            "government access",
+        ),
+        "title": "Telecommunications (Interception and Access) Act 1979",
+        "url": "https://www.legislation.gov.au/Latest/C2004A02124",
+        "snippet": (
+            "Official compilation of the Telecommunications (Interception and Access) Act 1979, "
+            "including minimum telecommunications-data retention periods and access powers."
+        ),
+        "external_id": "C2004A02124",
     },
 )
 

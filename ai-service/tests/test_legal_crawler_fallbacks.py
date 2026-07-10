@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import ssl
 from types import SimpleNamespace
 
@@ -8,6 +9,7 @@ import pytest
 from legal_crawler.fallbacks import (
     _embedded_document_urls,
     _http_pdf_response_result,
+    _try_embedded_document,
     _try_http_fallback,
 )
 from legal_crawler.constants import _SSL_CTX
@@ -35,6 +37,21 @@ def test_embedded_document_urls_extracts_same_origin_pdf_viewer_file():
     ]
 
 
+def test_embedded_document_urls_prefer_lom_consolidated_reprint():
+    markup = """
+    <iframe data-src="pdfjs/web/viewer.html?file=../../../laws/Act%20562%20Original.pdf"></iframe>
+    <iframe data-src="pdfjs/web/viewer.html?file=../../../laws/Act%20A1121.pdf"></iframe>
+    <iframe data-src="pdfjs/web/viewer.html?file=../../../laws/Act%20562%20Reprint%202006.pdf"></iframe>
+    """
+
+    urls = _embedded_document_urls(
+        markup,
+        "https://lom.agc.gov.my/act-detail.php?act=562&lang=BI",
+    )
+
+    assert urls[0].endswith("Act 562 Reprint 2006.pdf")
+
+
 def test_embedded_document_urls_extracts_australian_epub_iframe():
     document_url = (
         "https://www.legislation.gov.au/C2024A00098/asmade/2024-11-29/"
@@ -46,6 +63,123 @@ def test_embedded_document_urls_extracts_australian_epub_iframe():
         markup,
         "https://www.legislation.gov.au/C2024A00098/latest/text",
     ) == [document_url]
+
+
+def test_embedded_document_urls_extracts_all_australian_epub_volumes():
+    base = (
+        "https://www.legislation.gov.au/C2004A02124/2026-06-04/2026-06-04/"
+        "text/original/epub/OEBPS"
+    )
+    volume_1 = f"{base}/document_1/document_1.html"
+    volume_2 = f"{base}/document_2/document_2.html"
+    markup = f"""
+    <iframe title="Document" src="{volume_1}#active-section"></iframe>
+    <a href="{volume_1}#section-1" target="epubFrame">Volume 1</a>
+    <a target="epubFrame" href="{volume_2}">Volume 2</a>
+    """
+
+    assert _embedded_document_urls(
+        markup,
+        "https://www.legislation.gov.au/C2004A02124/latest/text",
+    ) == [volume_1, volume_2]
+
+
+@pytest.mark.anyio
+async def test_embedded_document_fetch_combines_multiple_html_volumes():
+    base = "https://official.example/text/epub/OEBPS"
+    volume_1 = f"{base}/document_1/document_1.html"
+    volume_2 = f"{base}/document_2/document_2.html"
+    markup = f"""
+    <iframe src="{volume_1}"></iframe>
+    <a href="{volume_1}" target="epubFrame">Volume 1</a>
+    <a href="{volume_2}" target="epubFrame">Volume 2</a>
+    """
+
+    class Response:
+        headers = {"content-type": "text/html"}
+        content = b""
+        status_code = 200
+
+        def __init__(self, url: str, text: str):
+            self.url = url
+            self.text = text
+
+        def raise_for_status(self):
+            return None
+
+    class Client:
+        active = 0
+        max_active = 0
+
+        async def get(self, url: str):
+            self.active += 1
+            self.max_active = max(self.max_active, self.active)
+            await asyncio.sleep(0)
+            try:
+                label = "Volume One" if "document_1" in url else "Volume Two"
+                return Response(
+                    url,
+                    f"<html><body>{label} Act section personal data law "
+                    + ("provision " * 100)
+                    + "</body></html>",
+                )
+            finally:
+                self.active -= 1
+
+    client = Client()
+    result = await _try_embedded_document(
+        client,
+        markup=markup,
+        container_url="https://official.example/act",
+    )
+
+    assert result is not None
+    assert "Volume One" in result["text"]
+    assert "Volume Two" in result["text"]
+    assert result["metadata"]["embedded_document_count"] == 2
+    assert result["metadata"]["embedded_document_urls"] == [volume_1, volume_2]
+    assert result["metadata"]["embedded_document_http_statuses"] == [200, 200]
+    assert result["metadata"]["embedded_document_origin_domains"] == ["official.example"]
+    assert client.max_active == 2
+
+
+@pytest.mark.anyio
+async def test_embedded_document_fetch_does_not_merge_unrelated_iframes():
+    first = "https://official.example/first-law.html"
+    second = "https://official.example/second-law.html"
+    markup = f'<iframe src="{first}"></iframe><iframe src="{second}"></iframe>'
+    requested: list[str] = []
+
+    class Response:
+        headers = {"content-type": "text/html"}
+        content = b""
+        status_code = 200
+
+        def __init__(self, url: str):
+            self.url = url
+            self.text = (
+                "<html><body>First Act section personal data law "
+                + ("provision " * 100)
+                + "</body></html>"
+            )
+
+        def raise_for_status(self):
+            return None
+
+    class Client:
+        async def get(self, url: str):
+            requested.append(url)
+            return Response(url)
+
+    result = await _try_embedded_document(
+        Client(),
+        markup=markup,
+        container_url="https://official.example/act",
+    )
+
+    assert result is not None
+    assert requested == [first]
+    assert result["metadata"]["embedded_document_count"] == 1
 
 
 def test_embedded_document_urls_rejects_cross_origin_iframe():

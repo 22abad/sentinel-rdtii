@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import re
+import string
 from collections.abc import Awaitable, Callable
 from typing import Any
 from urllib.parse import urlsplit
@@ -14,8 +15,10 @@ from .schemas import DiscoverySearchRequest, LegalCandidate
 FetchDocumentText = Callable[[str, str], Awaitable[Any]]
 
 DEFAULT_VALIDATION_LIMIT = 5
-MAX_VALIDATION_TEXT_CHARS = 200000
-DEFAULT_VALIDATION_TIMEOUT_SECONDS = 30.0
+# Large consolidated statutes routinely exceed 200k characters, and operative
+# provisions can appear near the end (for example Singapore Companies Act s 199).
+MAX_VALIDATION_TEXT_CHARS = 1_500_000
+DEFAULT_VALIDATION_TIMEOUT_SECONDS = 60.0
 FALLBACK_FETCH_METHOD_PREFIXES = ("wayback",)
 FALLBACK_FETCH_METHODS = {"google_cache"}
 LIVE_FETCH_METHODS = {
@@ -24,6 +27,7 @@ LIVE_FETCH_METHODS = {
     "flk_official_api_pdf",
     "http_fallback",
     "http_fallback_embedded_html",
+    "http_fallback_embedded_mixed",
     "http_fallback_embedded_pdf",
     "http_fallback_pdf",
     "ocs.go.th",
@@ -38,6 +42,85 @@ BLOCKING_QUALITY_WARNING_TERMS = (
     "page not found",
     "access denied",
 )
+FRAMEWORK_INDICATORS_REQUIRING_TITLE_MATCH = {"7.1", "7.2"}
+TITLE_TOPIC_ALIASES: dict[str, tuple[str, ...]] = {
+    "7.1": ("pdpa", "privacy act", "data protection act", "personal information protection law"),
+    "7.2": ("cybersecurity act", "cyber security act", "cybercrime act", "network security law"),
+}
+# These rules are deliberately narrower than metadata.direct_rules: metadata
+# maximizes candidate recall, while this second layer decides whether fetched
+# body text is strong enough to mark a candidate verified.
+STRONG_BODY_TOPIC_RULES: dict[str, tuple[tuple[str, ...], ...]] = {
+    "6.1": (
+        ("shall not transfer", "abroad"),
+        ("must not", "process", "outside"),
+        ("must not", "hold", "outside"),
+        ("local processing requirement",),
+        ("data localisation",),
+        ("data localization",),
+    ),
+    "6.2": (
+        ("local storage requirement",),
+        ("must not", "hold", "outside"),
+        ("shall be stored", "within"),
+        ("must be stored", "within"),
+        ("accounting and other records", "kept", "place in malaysia"),
+    ),
+    "6.3": (
+        ("local data centre",),
+        ("local data center",),
+        ("local server requirement",),
+    ),
+    "6.4": (
+        ("standard contractual clause",),
+        ("标准合同",),
+        ("adequacy decision",),
+        ("cross-border", "consent"),
+        ("cross-border", "personal data"),
+        ("transfer", "outside singapore"),
+        ("transfer", "personal data", "outside"),
+        ("overseas", "personal information"),
+        ("data export", "security assessment"),
+        ("数据出境", "安全评估"),
+    ),
+    "6.5": (
+        ("free flow of data",),
+        ("cross-border transfer of information", "agreement"),
+        ("digital economy agreement", "data flow"),
+    ),
+    "7.3": (
+        ("minimum retention period",),
+        ("not less than", "retain"),
+        ("at least", "retain"),
+        ("retain", "at least", "years"),
+        ("period for keeping", "years"),
+        ("shall keep", "years"),
+        ("shall retain", "years"),
+        ("must keep", "years"),
+        ("must retain", "years"),
+        ("至少保存",),
+        ("保留期限",),
+    ),
+    "7.4": (
+        ("data protection officer",),
+        ("data protection impact assessment",),
+        ("privacy impact assessment",),
+        ("designate", "one or more individuals", "responsible", "complies with this act"),
+        ("个人信息", "影响评估"),
+        ("个人信息保护负责人",),
+    ),
+    "7.5": (
+        ("law enforcement", "access", "data"),
+        ("police", "access", "data"),
+        ("government", "access", "personal data"),
+        ("national security", "access", "personal data"),
+        ("production", "personal data", "police"),
+        ("without warrant", "access", "computerized data"),
+    ),
+}
+TOPIC_EVIDENCE_WINDOW_CHARS = 600
+ASCII_WORD_CHARS = frozenset(string.ascii_letters + string.digits + "_")
+ASCII_WORD_PATTERN = r"[A-Za-z0-9_]"
 
 
 class CandidateValidator:
@@ -142,6 +225,25 @@ class CandidateValidator:
                 raw_match_reasons,
                 request,
             )
+            keyword_matched_indicators = list(matched_indicators)
+            title_matched_indicators = _title_indicator_matches(candidate, request)
+            normalized_sample = _normalize_topic_text(sample)
+            topic_matched_indicators = [
+                indicator
+                for indicator in matched_indicators
+                if _indicator_has_document_topic_evidence(
+                    indicator,
+                    normalized_sample,
+                    title_matched_indicators,
+                )
+            ]
+            topic_match_reasons = [
+                reason
+                for indicator, reason in zip(matched_indicators, match_reasons, strict=True)
+                if indicator in topic_matched_indicators and reason
+            ]
+            matched_indicators = topic_matched_indicators
+            match_reasons = topic_match_reasons
             matched_pillars = sorted({
                 int(indicator.split(".", 1)[0])
                 for indicator in matched_indicators
@@ -163,6 +265,8 @@ class CandidateValidator:
                 document_origin_domain=document_origin_domain,
                 document_origin_trusted=document_origin_trusted,
                 document_identity_match=document_identity_match,
+                title_matched_indicators=title_matched_indicators,
+                topic_matched_indicators=topic_matched_indicators,
             )
 
             warnings = list(candidate.warnings)
@@ -248,6 +352,12 @@ class CandidateValidator:
                     "warnings": warnings,
                 })
 
+            if keyword_matched_indicators:
+                warnings = _append_unique(
+                    warnings,
+                    "Fetched text contained requested keywords only incidentally; the law title or nearby provision did not match the requested topic.",
+                )
+
             warnings = _append_many_unique(
                 warnings,
                 ["Fetched text did not match requested discovery indicator terms."] + quality_warnings[:2],
@@ -304,8 +414,7 @@ def _filter_indicator_matches(
             continue
         kept_indicators.append(indicator)
         reason = reasons[index] if index < len(reasons) else ""
-        if reason:
-            kept_reasons.append(reason)
+        kept_reasons.append(reason)
 
     return kept_indicators, kept_reasons
 
@@ -315,6 +424,75 @@ def _indicator_pillar(indicator: str) -> int | None:
         return int(indicator.split(".", 1)[0])
     except (TypeError, ValueError):
         return None
+
+
+def _title_indicator_matches(
+    candidate: LegalCandidate,
+    request: DiscoverySearchRequest,
+) -> list[str]:
+    _pillars, indicators, reasons = infer_indicator_matches(candidate.title, "", "")
+    matched, _reasons = _filter_indicator_matches(indicators, reasons, request)
+    normalized_title = _normalize_topic_text(candidate.title)
+    requested_indicators = set(request.indicators)
+    for indicator, aliases in TITLE_TOPIC_ALIASES.items():
+        if requested_indicators and indicator not in requested_indicators:
+            continue
+        if _indicator_pillar(indicator) not in set(request.pillars):
+            continue
+        if any(_contains_bounded_term(normalized_title, alias) for alias in aliases):
+            matched.append(indicator)
+    return sorted(set(matched))
+
+
+def _indicator_has_document_topic_evidence(
+    indicator: str,
+    normalized_text: str,
+    title_matched_indicators: list[str],
+) -> bool:
+    if indicator in title_matched_indicators:
+        return True
+    if indicator in FRAMEWORK_INDICATORS_REQUIRING_TITLE_MATCH:
+        return False
+
+    for rule in STRONG_BODY_TOPIC_RULES.get(indicator, ()):
+        if _terms_appear_nearby(normalized_text, rule):
+            return True
+    return False
+
+
+def _normalize_topic_text(value: str) -> str:
+    return re.sub(r"\s+", " ", value.casefold()).strip()
+
+
+def _terms_appear_nearby(text: str, terms: tuple[str, ...]) -> bool:
+    if not terms:
+        return False
+    positions: list[list[int]] = []
+    for term in terms:
+        term_positions = [match.start() for match in re.finditer(_bounded_term_pattern(term), text)]
+        if not term_positions:
+            return False
+        positions.append(term_positions)
+
+    for anchor in positions[0]:
+        window_start = max(0, anchor - TOPIC_EVIDENCE_WINDOW_CHARS)
+        window_end = min(len(text), anchor + TOPIC_EVIDENCE_WINDOW_CHARS)
+        if all(any(window_start <= position <= window_end for position in values) for values in positions[1:]):
+            return True
+    return False
+
+
+def _contains_bounded_term(text: str, term: str) -> bool:
+    return bool(term and re.search(_bounded_term_pattern(term), text))
+
+
+def _bounded_term_pattern(term: str) -> str:
+    """Use token boundaries for ASCII terms without breaking CJK substrings."""
+    if not term:
+        return r"(?!)"
+    left = rf"(?<!{ASCII_WORD_PATTERN})" if term[0] in ASCII_WORD_CHARS else ""
+    right = rf"(?!{ASCII_WORD_PATTERN})" if term[-1] in ASCII_WORD_CHARS else ""
+    return f"{left}{re.escape(term)}{right}"
 
 
 def _validation_metadata(
@@ -333,6 +511,8 @@ def _validation_metadata(
     document_origin_domain: str = "",
     document_origin_trusted: bool = False,
     document_identity_match: bool = False,
+    title_matched_indicators: list[str] | None = None,
+    topic_matched_indicators: list[str] | None = None,
     error: str = "",
 ) -> dict[str, Any]:
     return {
@@ -350,6 +530,8 @@ def _validation_metadata(
         "document_origin_domain": document_origin_domain,
         "document_origin_trusted": document_origin_trusted,
         "document_identity_match": document_identity_match,
+        "title_matched_indicators": title_matched_indicators or [],
+        "topic_matched_indicators": topic_matched_indicators or [],
         "error": error,
     }
 

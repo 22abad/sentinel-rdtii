@@ -254,6 +254,18 @@ def _fixture_hits(
                     snippet="An Act to require cybersecurity duties for critical information infrastructure.",
                     external_id="CA2018",
                 ),
+                RawSearchHit(
+                    title="Companies Act 1967",
+                    url="https://sso.agc.gov.sg/Act/CoA1967",
+                    snippet="Official text requiring specified accounting records to be retained for not less than five years.",
+                    external_id="CoA1967",
+                ),
+                RawSearchHit(
+                    title="Criminal Procedure Code 2010",
+                    url="https://sso.agc.gov.sg/Act/CPC2010",
+                    snippet="Official text containing police powers to access computers and data for investigations.",
+                    external_id="CPC2010",
+                ),
             ],
             "pdpc.gov.sg": [
                 RawSearchHit(
@@ -320,6 +332,12 @@ def _fixture_hits(
         "AUS": {
             "legislation.gov.au": [
                 RawSearchHit(
+                    title="My Health Records Act 2012",
+                    url="https://www.legislation.gov.au/Latest/C2012A00063",
+                    snippet="Official compilation including requirements not to hold or process My Health Record system data outside Australia.",
+                    external_id="C2012A00063",
+                ),
+                RawSearchHit(
                     title="Privacy Act 1988",
                     url="https://www.legislation.gov.au/Latest/C2004A03712",
                     snippet="Official compilation of Australia's Privacy Act 1988, including privacy principles and personal information obligations.",
@@ -331,10 +349,36 @@ def _fixture_hits(
                     snippet="Official compilation of Australia's cyber security framework, including smart-device security and ransomware reporting obligations.",
                     external_id="C2024A00098",
                 ),
+                RawSearchHit(
+                    title="Telecommunications (Interception and Access) Act 1979",
+                    url="https://www.legislation.gov.au/Latest/C2004A02124",
+                    snippet="Official compilation including a two-year telecommunications-data retention period and law-enforcement access powers.",
+                    external_id="C2004A02124",
+                ),
+            ],
+            "dfat.gov.au": [
+                RawSearchHit(
+                    title="Australia-Singapore Digital Economy Agreement",
+                    url="https://www.dfat.gov.au/trade/services-and-digital-trade/australia-and-singapore-digital-economy-agreement",
+                    snippet="Official agreement page describing binding cross-border data-flow and data-centre commitments.",
+                )
+            ],
+            "oaic.gov.au": [
+                RawSearchHit(
+                    title="Privacy (Australian Government Agencies — Governance) APP Code 2017",
+                    url="https://www.oaic.gov.au/privacy/privacy-guidance-for-organisations-and-government-agencies/government-agencies/australian-government-agencies-privacy-code/privacy-australian-government-agencies-governance-app-code-2017",
+                    snippet="Binding APP code requiring agencies to conduct privacy impact assessments for high privacy risk projects.",
+                )
             ],
         },
         "MYS": {
             "lom.agc.gov.my": [
+                RawSearchHit(
+                    title="Companies Act 2016",
+                    url="https://lom.agc.gov.my/act-detail.php?type=principal&lang=BI&act=777",
+                    snippet="Principal Malaysian companies legislation requiring specified accounting records to be kept in Malaysia.",
+                    external_id="act-777",
+                ),
                 RawSearchHit(
                     title="Personal Data Protection Act 2010",
                     url="https://lom.agc.gov.my/act-detail.php?type=principal&lang=BI&act=709",
@@ -346,13 +390,34 @@ def _fixture_hits(
                     url="https://lom.agc.gov.my/act-detail.php?type=principal&lang=BI&act=854",
                     snippet="Principal Malaysian cyber security legislation covering national cyber security duties and incident management.",
                     external_id="act-854",
-                )
+                ),
+                RawSearchHit(
+                    title="Digital Signature Act 1997",
+                    url="https://lom.agc.gov.my/act-detail.php?type=principal&lang=BI&act=562",
+                    snippet="Principal Malaysian legislation containing search-without-warrant and computerized-data access powers.",
+                    external_id="act-562",
+                ),
             ],
             "pdp.gov.my": [
                 RawSearchHit(
                     title="Personal Data Protection Codes of Practice",
                     url="https://www.pdp.gov.my/ppdpv1/en/akta/",
                     snippet="Official sectoral codes and guidance issued under Malaysia's personal data protection framework.",
+                )
+            ],
+            "ssm.com.my": [
+                RawSearchHit(
+                    title="Companies Act 2016",
+                    url="https://www.ssm.com.my/Pages/Legal_Framework/Companies-Act-2016.aspx",
+                    snippet="Official Companies Commission source for accounting-record retention requirements.",
+                    external_id="act-777",
+                )
+            ],
+            "fta.miti.gov.my": [
+                RawSearchHit(
+                    title="CPTPP / TPP Text Agreement",
+                    url="https://fta.miti.gov.my/index.php/pages/view/tpp_cptpp",
+                    snippet="Official agreement text portal including electronic-commerce commitments on cross-border data flows.",
                 )
             ],
         },

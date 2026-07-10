@@ -1,4 +1,4 @@
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery db migrate migrate-sidecar image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage db migrate migrate-sidecar image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
 SMOKE_ARGS ?=
@@ -50,6 +50,9 @@ test:
 
 smoke-discovery:
 	cd ai-service && DISCOVERY_REGISTRY_BACKEND=file PYTHONPATH=. $(PYTHON) ../scripts/discovery_smoke.py $(SMOKE_ARGS)
+
+discovery-coverage:
+	$(PYTHON) scripts/discovery_coverage.py --write
 
 db:
 	docker compose up -d postgres redis

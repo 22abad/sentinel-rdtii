@@ -13,6 +13,30 @@ AUS:
       priority: 100
       notes: Official Australian legislation register; verified for Privacy Act 1988 and Telecommunications (Interception and Access) Act 1979.
 
+    - name: Department of Foreign Affairs and Trade
+      base_url: https://www.dfat.gov.au
+      domains: [dfat.gov.au, www.dfat.gov.au]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [6]
+      indicators: ["6.5"]
+      priority: 90
+      notes: Official treaty texts and digital economy agreement pages for binding data-flow commitments.
+
+    - name: Office of the Australian Information Commissioner
+      base_url: https://www.oaic.gov.au
+      domains: [oaic.gov.au, www.oaic.gov.au]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en]
+      pillars: [7]
+      indicators: ["7.4"]
+      priority: 90
+      notes: Official privacy impact assessment rules and guidance.
+
 CHN:
   label: China
   languages: [zh, en]
@@ -163,3 +187,27 @@ MYS:
       pillars: [7]
       priority: 85
       notes: Official NACSA legal page and gazette PDFs for Cyber Security Act 2024 commencement and incident notification regulations.
+
+    - name: Companies Commission of Malaysia
+      base_url: https://www.ssm.com.my
+      domains: [ssm.com.my, www.ssm.com.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en, ms]
+      pillars: [7]
+      indicators: ["7.3"]
+      priority: 85
+      notes: Official Companies Act 2016 text and company-record retention materials.
+
+    - name: Ministry of Investment Trade and Industry
+      base_url: https://fta.miti.gov.my
+      domains: [fta.miti.gov.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [en, ms]
+      pillars: [6]
+      indicators: ["6.5"]
+      priority: 85
+      notes: Official CPTPP text and electronic-commerce commitment pages.

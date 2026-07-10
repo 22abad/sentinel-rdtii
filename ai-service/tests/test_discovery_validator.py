@@ -6,7 +6,13 @@ import pytest
 
 from discovery.ranker import rank_candidates
 from discovery.schemas import DiscoverySearchRequest, LegalCandidate, LegalSourceConfig
-from discovery.validator import CandidateValidator
+from discovery.validator import (
+    CandidateValidator,
+    _contains_bounded_term,
+    _document_retrieval_mode,
+    _filter_indicator_matches,
+    _terms_appear_nearby,
+)
 
 
 def document(
@@ -33,6 +39,92 @@ def document(
             "document_origin_domain": "official.example",
         },
     )
+
+
+def test_topic_terms_require_ascii_word_boundaries_without_breaking_cjk():
+    assert _terms_appear_nearby("must retain records", ("retain",))
+    assert not _terms_appear_nearby("retainer retaining", ("retain",))
+    assert _terms_appear_nearby("应签署标准合同", ("标准合同",))
+    assert _terms_appear_nearby("根据dpo要求", ("dpo",))
+
+
+def test_topic_terms_reject_empty_rule():
+    assert not _terms_appear_nearby("anything", ())
+
+
+def test_title_term_boundary_accepts_leading_punctuation_alias():
+    assert _contains_bounded_term("draft (privacy act) regulations", "(privacy act")
+
+
+def test_filter_indicator_matches_preserves_reason_alignment():
+    request = DiscoverySearchRequest(
+        country_code="SGP",
+        pillars=[7],
+        indicators=["7.3", "7.4"],
+    )
+
+    indicators, reasons = _filter_indicator_matches(
+        ["7.3", "7.4"],
+        ["", "data protection officer"],
+        request,
+    )
+
+    assert indicators == ["7.3", "7.4"]
+    assert reasons == ["", "data protection officer"]
+
+
+def test_mixed_embedded_fetch_method_is_live():
+    assert _document_retrieval_mode("http_fallback_embedded_mixed") == "live"
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    ("indicator", "title", "body"),
+    [
+        (
+            "6.4",
+            "数据跨境流动规定",
+            "个人信息处理者应当签署标准合同，并依法完成数据出境安全评估。",
+        ),
+        (
+            "7.3",
+            "电子交易记录规定",
+            "电子交易记录应当至少保存五年，并遵守法定保留期限。",
+        ),
+        (
+            "7.4",
+            "个人信息保护规定",
+            "处理者应当开展个人信息保护影响评估，并指定个人信息保护负责人。",
+        ),
+    ],
+)
+async def test_candidate_validator_accepts_chinese_topic_evidence(
+    indicator: str,
+    title: str,
+    body: str,
+):
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(f"{title}。{body}")
+
+    candidate = LegalCandidate(
+        id=f"chinese-{indicator}",
+        country_code="CHN",
+        title=title,
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(
+        country_code="CHN",
+        pillars=[int(indicator.split(".", 1)[0])],
+        indicators=[indicator],
+    )
+
+    validated, diagnostics = await CandidateValidator(
+        fetch_document_text=fake_fetch
+    ).validate([candidate], request)
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].matched_indicators == [indicator]
 
 
 @pytest.mark.anyio
@@ -100,6 +192,8 @@ async def test_candidate_validator_failure_does_not_drop_candidate():
             "document_origin_domain",
             "document_origin_trusted",
             "document_identity_match",
+            "title_matched_indicators",
+            "topic_matched_indicators",
             "error",
     }
 
@@ -415,9 +509,9 @@ async def test_candidate_validator_does_not_verify_navigation_heavy_page():
 
 
 @pytest.mark.anyio
-async def test_candidate_validator_finds_indicator_evidence_after_old_twelve_k_limit():
-    prefix = "general provision " * 900
-    assert len(prefix) > 12000
+async def test_candidate_validator_finds_indicator_evidence_after_large_front_matter():
+    prefix = "general provision " * 14000
+    assert len(prefix) > 200000
 
     async def fake_fetch(_url: str, _browser_mode: str):
         return document(prefix + " Cyber Security Act 2024 cybersecurity incident reporting.")
@@ -437,7 +531,193 @@ async def test_candidate_validator_finds_indicator_evidence_after_old_twelve_k_l
 
     assert diagnostics["validation_verified"] == 1
     assert validated[0].validation_status == "verified"
-    assert validated[0].validation_metadata["char_count"] > 12000
+    assert validated[0].validation_metadata["char_count"] > 200000
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_marks_incidental_privacy_reference_as_weak():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(
+            "Pasture Seeds Levy Collection Agreement 2025. "
+            "Administrative arrangements, levy collection, reporting and payment terms. "
+            "The parties must handle contact details consistently with the Privacy Act 1988 "
+            "and general personal data protection obligations."
+        )
+
+    candidate = LegalCandidate(
+        id="pasture-seeds",
+        country_code="AUS",
+        title="Pasture Seeds Levy Collection Agreement 2025",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="AUS", pillars=[7], indicators=["7.1"])
+
+    validated, diagnostics = await CandidateValidator(fetch_document_text=fake_fetch).validate(
+        [candidate], request
+    )
+
+    assert diagnostics["validation_verified"] == 0
+    assert diagnostics["validation_weak"] == 1
+    assert validated[0].validation_status == "weak"
+    assert validated[0].validation_metadata["title_matched_indicators"] == []
+    assert validated[0].validation_metadata["topic_matched_indicators"] == []
+    assert any("only incidentally" in warning for warning in validated[0].warnings)
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_allows_generic_title_with_strong_nearby_provision():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(
+            "Criminal Procedure Code 2010. A police officer conducting an investigation "
+            "may access personal data held on a computer under the powers in this Part."
+        )
+
+    candidate = LegalCandidate(
+        id="criminal-procedure-code",
+        country_code="SGP",
+        title="Criminal Procedure Code 2010",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[7], indicators=["7.5"])
+
+    validated, diagnostics = await CandidateValidator(fetch_document_text=fake_fetch).validate(
+        [candidate], request
+    )
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].validation_status == "verified"
+    assert validated[0].validation_metadata["title_matched_indicators"] == []
+    assert validated[0].validation_metadata["topic_matched_indicators"] == ["7.5"]
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_accepts_numeric_minimum_keep_period():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(
+            "Telecommunications (Interception and Access) Act 1979. "
+            "A service provider must keep the information starting when it came into "
+            "existence and ending 2 years after it came into existence."
+        )
+
+    candidate = LegalCandidate(
+        id="telecommunications-access",
+        country_code="AUS",
+        title="Telecommunications (Interception and Access) Act 1979",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="AUS", pillars=[7], indicators=["7.3"])
+
+    validated, diagnostics = await CandidateValidator(fetch_document_text=fake_fetch).validate(
+        [candidate], request
+    )
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].validation_metadata["topic_matched_indicators"] == ["7.3"]
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_accepts_statutory_dpo_wording_without_acronym():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(
+            "Personal Data Protection Act 2012. An organisation must designate one or "
+            "more individuals to be responsible for ensuring that the organisation "
+            "complies with this Act."
+        )
+
+    candidate = LegalCandidate(
+        id="pdpa-dpo",
+        country_code="SGP",
+        title="Personal Data Protection Act 2012",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="SGP", pillars=[7], indicators=["7.4"])
+
+    validated, diagnostics = await CandidateValidator(fetch_document_text=fake_fetch).validate(
+        [candidate], request
+    )
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].validation_metadata["topic_matched_indicators"] == ["7.4"]
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_accepts_malaysia_company_record_location_rule():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(
+            "Companies Act 2016. The accounting and other records shall be kept at the registered "
+            "office of the company or at such other place in Malaysia as the directors "
+            "think fit."
+        )
+
+    candidate = LegalCandidate(
+        id="companies-act-malaysia",
+        country_code="MYS",
+        title="Companies Act 2016",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="MYS", pillars=[6], indicators=["6.2"])
+
+    validated, diagnostics = await CandidateValidator(fetch_document_text=fake_fetch).validate(
+        [candidate], request
+    )
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].validation_metadata["topic_matched_indicators"] == ["6.2"]
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_accepts_access_to_data_after_warrant_exception():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(
+            "Digital Signature Act 1997. Search and seizure without warrant. A police "
+            "officer conducting that search shall be given access to computerized data."
+        )
+
+    candidate = LegalCandidate(
+        id="digital-signature-act",
+        country_code="MYS",
+        title="Digital Signature Act 1997",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="MYS", pillars=[7], indicators=["7.5"])
+
+    validated, diagnostics = await CandidateValidator(fetch_document_text=fake_fetch).validate(
+        [candidate], request
+    )
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].validation_metadata["topic_matched_indicators"] == ["7.5"]
+
+
+@pytest.mark.anyio
+async def test_candidate_validator_accepts_seven_year_company_retention_rule():
+    async def fake_fetch(_url: str, _browser_mode: str):
+        return document(
+            "Companies Act 2016. The company shall retain the accounting and other "
+            "records for seven years after completion of the transactions."
+        )
+
+    candidate = LegalCandidate(
+        id="companies-act-retention",
+        country_code="MYS",
+        title="Companies Act 2016",
+        url="https://official.example/act",
+        retrieval_mode="live",
+    )
+    request = DiscoverySearchRequest(country_code="MYS", pillars=[7], indicators=["7.3"])
+
+    validated, diagnostics = await CandidateValidator(fetch_document_text=fake_fetch).validate(
+        [candidate], request
+    )
+
+    assert diagnostics["validation_verified"] == 1
+    assert validated[0].validation_metadata["topic_matched_indicators"] == ["7.3"]
 
 
 @pytest.mark.anyio
@@ -538,7 +818,9 @@ def test_ranker_boosts_verified_candidate_over_unverified_peer():
 @pytest.mark.anyio
 async def test_candidate_validator_ignores_malformed_indicator_matches(monkeypatch):
     async def fake_fetch(_url: str, _browser_mode: str):
-        return document("Official privacy act personal data protection")
+        return document(
+            "Official privacy act. The controller shall appoint a data protection officer."
+        )
 
     def malformed_indicator_match(*_args, **_kwargs):
         return [], ["", "oops", "7.4"], ["empty", "bad", "valid"]

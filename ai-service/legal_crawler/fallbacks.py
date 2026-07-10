@@ -10,6 +10,13 @@ from browser_drivers import BrowserFetchError, OpenCliBrowserDriver
 from legal_crawler.constants import _SSL_CTX
 from legal_crawler.wayback import fetch_wayback_content
 
+
+_EPUB_VOLUME_PATH_PATTERN = re.compile(
+    r"/epub/OEBPS/document_\d+/document_\d+\.html$",
+    flags=re.IGNORECASE,
+)
+
+
 async def _precheck_url(url: str) -> str | None:
     """Check if a URL is dead before launching Playwright.
 
@@ -247,12 +254,32 @@ def _response_tls_verified(response) -> bool:
 
 async def _try_embedded_document(client, *, markup: str, container_url: str) -> dict | None:
     """Extract same-origin law text embedded in an iframe or PDF viewer."""
-    for document_url in _embedded_document_urls(markup, container_url)[:5]:
-        try:
-            response = await client.get(document_url)
-            response.raise_for_status()
-        except Exception as exc:
-            print(f"[HTTP Embedded Document] 获取失败: {document_url} ({exc})")
+    document_urls = _embedded_document_urls(markup, container_url)[:5]
+    combine_documents = _is_numbered_epub_volume_set(document_urls)
+    document_parts: list[str] = []
+    fetched_urls: list[str] = []
+    formats: set[str] = set()
+    http_statuses: list[int] = []
+    tls_verified = True
+    prefetched_responses: dict[str, object] = {}
+
+    if combine_documents:
+        rows = await asyncio.gather(
+            *(_fetch_embedded_response(client, document_url) for document_url in document_urls)
+        )
+        prefetched_responses = {
+            document_url: response
+            for document_url, response in zip(document_urls, rows, strict=True)
+            if response is not None
+        }
+
+    for document_url in document_urls:
+        response = (
+            prefetched_responses.get(document_url)
+            if combine_documents
+            else await _fetch_embedded_response(client, document_url)
+        )
+        if response is None:
             continue
 
         content_type = response.headers.get("content-type", "").casefold()
@@ -278,39 +305,74 @@ async def _try_embedded_document(client, *, markup: str, container_url: str) -> 
             finally:
                 tmp_path.unlink(missing_ok=True)
             if len(document_text) > 500:
-                print(f"[HTTP Embedded PDF] 成功！{len(document_text)} 字符")
-                return {
-                    "type": "text",
-                    "url": str(response.url),
-                    "text": document_text,
-                    "metadata": {
-                        "source": "http_fallback_embedded_pdf",
-                        "original_format": "pdf",
-                        "http_status": response.status_code,
-                        "container_url": container_url,
-                        "tls_verified": _response_tls_verified(response),
-                        "document_origin_domain": (urlsplit(str(response.url)).hostname or "").casefold(),
-                    },
-                }
+                document_parts.append(document_text)
+                fetched_urls.append(str(response.url))
+                formats.add("pdf")
+                http_statuses.append(response.status_code)
+                tls_verified = tls_verified and _response_tls_verified(response)
+                if not combine_documents:
+                    break
             continue
 
         embedded_text = _html_text(response.text)
         if len(embedded_text) > 500 and _has_legal_signal(embedded_text):
-            print(f"[HTTP Embedded HTML] 成功！{len(embedded_text)} 字符")
-            return {
-                "type": "text",
-                "url": str(response.url),
-                "text": embedded_text,
-                "metadata": {
-                    "source": "http_fallback_embedded_html",
-                    "original_format": "html",
-                    "http_status": response.status_code,
-                    "container_url": container_url,
-                    "tls_verified": _response_tls_verified(response),
-                    "document_origin_domain": (urlsplit(str(response.url)).hostname or "").casefold(),
-                },
-            }
-    return None
+            document_parts.append(embedded_text)
+            fetched_urls.append(str(response.url))
+            formats.add("html")
+            http_statuses.append(response.status_code)
+            tls_verified = tls_verified and _response_tls_verified(response)
+            if not combine_documents:
+                break
+
+    if not document_parts:
+        return None
+
+    original_format = next(iter(formats)) if len(formats) == 1 else "mixed"
+    fetch_method = f"http_fallback_embedded_{original_format}"
+    document_text = "\n\n".join(document_parts)
+    print(
+        f"[HTTP Embedded {original_format.upper()}] 成功！"
+        f"{len(document_text)} 字符，{len(document_parts)} 个文档部分"
+    )
+    return {
+        "type": "text",
+        "url": fetched_urls[0],
+        "text": document_text,
+        "metadata": {
+            "source": fetch_method,
+            "original_format": original_format,
+            "http_status": http_statuses[0],
+            "container_url": container_url,
+            "embedded_document_urls": fetched_urls,
+            "embedded_document_count": len(fetched_urls),
+            "embedded_document_http_statuses": http_statuses,
+            "embedded_document_origin_domains": sorted({
+                (urlsplit(url).hostname or "").casefold()
+                for url in fetched_urls
+            }),
+            "tls_verified": tls_verified,
+            "document_origin_domain": (urlsplit(fetched_urls[0]).hostname or "").casefold(),
+        },
+    }
+
+
+async def _fetch_embedded_response(client, document_url: str):
+    try:
+        response = await client.get(document_url)
+        response.raise_for_status()
+        return response
+    except Exception as exc:
+        print(f"[HTTP Embedded Document] 获取失败: {document_url} ({exc})")
+        return None
+
+
+def _is_numbered_epub_volume_set(urls: list[str]) -> bool:
+    if len(urls) < 2:
+        return False
+    return all(
+        _EPUB_VOLUME_PATH_PATTERN.search(urlsplit(url).path)
+        for url in urls
+    )
 
 
 def _embedded_document_urls(markup: str, container_url: str) -> list[str]:
@@ -331,12 +393,52 @@ def _embedded_document_urls(markup: str, container_url: str) -> list[str]:
         if not candidates and _looks_like_embedded_legal_document(iframe_url):
             candidates = [iframe_url]
         for candidate in candidates:
+            candidate = _strip_url_fragment(candidate)
             parsed = urlsplit(candidate)
             if _url_origin(candidate) != container_origin:
                 continue
             if candidate not in urls:
                 urls.append(candidate)
+
+    # The Australian Federal Register renders multi-volume legislation with
+    # one iframe for the active volume and sibling links targeting that frame.
+    volume_links = re.findall(
+        r"<a\b(?=[^>]*\btarget\s*=\s*(['\"])epubFrame\1)[^>]*?"
+        r"\bhref\s*=\s*(['\"])(.*?)\2",
+        markup,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    for _target_quote, _href_quote, raw_value in volume_links:
+        candidate = _strip_url_fragment(
+            urljoin(container_url, html_module.unescape(raw_value).strip())
+        )
+        parsed = urlsplit(candidate)
+        if _url_origin(candidate) != container_origin:
+            continue
+        if not _EPUB_VOLUME_PATH_PATTERN.search(parsed.path):
+            continue
+        if candidate not in urls:
+            urls.append(candidate)
+    if (urlsplit(container_url).hostname or "").casefold() == "lom.agc.gov.my":
+        # LOM pages often list the as-made Act, amendments, subsidiary
+        # instruments, and a much smaller consolidated reprint. Prefer the
+        # reprint so validation does not accidentally stop on an amendment.
+        urls = [
+            url
+            for _index, url in sorted(
+                enumerate(urls),
+                key=lambda item: (
+                    0 if "reprint" in item[1].casefold() else 1,
+                    item[0],
+                ),
+            )
+        ]
     return urls
+
+
+def _strip_url_fragment(url: str) -> str:
+    parsed = urlsplit(url)
+    return parsed._replace(fragment="").geturl()
 
 
 def _looks_like_embedded_legal_document(url: str) -> bool:
