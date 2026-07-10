@@ -65,6 +65,7 @@ migrate:
 	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_005_discovery_sources.sql
 	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_006_embedding_dim.sql
 	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_007_discovery_specialized_adapters.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_008_required_country_discovery_sources.sql
 	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f extract_sidecar/migrations/001_extracted_documents.sql
 
 image:
