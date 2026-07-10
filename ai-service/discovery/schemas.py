@@ -211,6 +211,7 @@ class RawSearchHit(BaseModel):
     raw: dict = Field(default_factory=dict)
     warnings: list[str] = Field(default_factory=list)
     retrieval_mode: RetrievalMode = "live"
+    discovery_method: str = "unknown"
 
 
 class LegalCandidate(BaseModel):
@@ -219,6 +220,7 @@ class LegalCandidate(BaseModel):
     title: str
     url: str
     source_domain: str = ""
+    official_domains: list[str] = Field(default_factory=list)
     source_name: str = ""
     source_grade: SourceGrade = "unknown"
     document_type: str = "unknown"
@@ -235,6 +237,7 @@ class LegalCandidate(BaseModel):
     source_adapter: str = ""
     query: str = ""
     retrieval_mode: RetrievalMode = "live"
+    discovery_method: str = "unknown"
     validation_status: ValidationStatus = "unverified"
     validation_metadata: dict = Field(default_factory=dict)
 

@@ -64,3 +64,15 @@ def test_assess_crawl_quality_flags_short_non_legal_text():
     assert quality.should_extract is False
     assert quality.char_count > 0
     assert quality.legal_signal_score < 2
+
+
+def test_assess_crawl_quality_recognizes_chinese_statute_text():
+    quality = assess_crawl_quality(
+        "中华人民共和国个人信息保护法 第一条 为了保护个人信息权益，规范个人信息处理活动。"
+        "个人信息处理者应当遵守法律规定。" * 30,
+        source_url="https://flk.npc.gov.cn/detail?id=law",
+    )
+
+    assert quality.status == "good"
+    assert quality.should_extract is True
+    assert quality.legal_signal_score >= 2

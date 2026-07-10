@@ -109,6 +109,9 @@ LEGAL_SIGNAL_TERMS = (
     "个人信息",
     "网络安全",
     "数据出境",
+    "法律",
+    "第一条",
+    "应当",
     "มาตรา",
     "พระราชบัญญัติ",
 )
@@ -204,11 +207,20 @@ def _crawl_metadata(crawl_result: dict[str, Any], source_url: str, browser_mode:
     metadata = dict(metadata) if isinstance(metadata, dict) else {}
     final_url = str(crawl_result.get("url") or source_url)
     fetch_method = str(metadata.get("source") or _default_fetch_method(crawl_result.get("type")))
+    document_origin_domain = str(
+        metadata.get("document_origin_domain")
+        or urlparse(final_url).hostname
+        or ""
+    ).casefold()
     return {
         "requested_url": source_url,
         "final_url": final_url,
         "fetch_method": fetch_method,
         "browser_mode": browser_mode,
+        "http_status": metadata.get("http_status"),
+        "tls_verified": metadata.get("tls_verified"),
+        "document_origin_domain": document_origin_domain,
+        "document_origin_trusted": metadata.get("document_origin_trusted"),
         "title": metadata.get("title") or "",
         "selector": metadata.get("selector") or "",
         "source_metadata": metadata,

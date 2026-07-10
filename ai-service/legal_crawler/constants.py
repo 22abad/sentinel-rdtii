@@ -3,11 +3,9 @@ from __future__ import annotations
 import os
 import ssl
 
-# macOS often has local certificate-chain issues; keep the crawler's historical
-# permissive context for direct fallback probes.
+# Live Discovery evidence must retain normal TLS certificate and hostname
+# verification. A certificate failure is a retrieval failure, not a live hit.
 _SSL_CTX = ssl.create_default_context()
-_SSL_CTX.check_hostname = False
-_SSL_CTX.verify_mode = ssl.CERT_NONE
 
 # Download directory for crawler-managed temporary files.
 DOWNLOADS_DIR = "./downloads"

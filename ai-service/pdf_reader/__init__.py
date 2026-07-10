@@ -94,14 +94,12 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "")
         blocks = page.get_text("dict")["blocks"]
         has_images.append(any(b["type"] == 1 for b in blocks))
 
-    # A page needs OCR if it has image blocks (scanned content) OR if its
-    # text layer yields less than the minimum threshold. Pages that are
-    # purely text-layer (no images, enough chars) skip OCR entirely.
+    # A page needs OCR when its text layer is missing, too short, or garbled.
+    # The presence of an image alone is not enough: official legal PDFs often
+    # include a coat of arms or seal on an otherwise complete text page.
     needs_ocr: list[int] = [
         i for i in range(n_pages)
-        if has_images[i]
-        or len(pymupdf_pages[i].strip()) < _PAGE_TEXT_MIN
-        or is_garbled(pymupdf_pages[i])
+        if _page_needs_ocr(pymupdf_pages[i], has_images=has_images[i])
     ]
     text_count = n_pages - len(needs_ocr)
     logger.info("[PDF] pymupdf_only=%d  needs_ocr=%d  (image_pages=%d  garbled_pages=%d)",
@@ -240,9 +238,7 @@ def _inspect_pdf_for_sidecar(path: Path) -> dict:
 
         needs_ocr = [
             i for i in range(n_pages)
-            if has_images[i]
-            or len(pymupdf_pages[i].strip()) < _PAGE_TEXT_MIN
-            or is_garbled(pymupdf_pages[i])
+            if _page_needs_ocr(pymupdf_pages[i], has_images=has_images[i])
         ]
         text_page_confs = {
             i: text_confidence(pymupdf_pages[i])
@@ -264,6 +260,12 @@ def _inspect_pdf_for_sidecar(path: Path) -> dict:
         }
     finally:
         doc.close()
+
+
+def _page_needs_ocr(text: str, *, has_images: bool) -> bool:
+    """Return whether a page needs OCR; decorative images do not force it."""
+    del has_images
+    return len(text.strip()) < _PAGE_TEXT_MIN or is_garbled(text)
 
 
 def extract_sections(filepath: str, min_section_chars: int = 100) -> list[dict]:

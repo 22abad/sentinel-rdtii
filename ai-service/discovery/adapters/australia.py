@@ -6,7 +6,7 @@ import html
 import re
 from html.parser import HTMLParser
 from typing import Any
-from urllib.parse import quote_plus, urljoin, urlsplit
+from urllib.parse import quote, urljoin, urlsplit
 
 from discovery.schemas import LegalSourceConfig, RawSearchHit
 
@@ -62,10 +62,10 @@ class AustraliaLegislationAdapter(DiscoveryAdapter):
         import httpx
 
         hits: list[RawSearchHit] = []
-        seen_urls: set[str] = set()
+        seen_keys: set[str] = set()
         timeout = httpx.Timeout(10.0, connect=4.0)
         headers = {
-            "Accept": "text/html,application/xhtml+xml",
+            "Accept": "application/json",
             "User-Agent": (
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -78,24 +78,44 @@ class AustraliaLegislationAdapter(DiscoveryAdapter):
                 if not search_term:
                     continue
 
-                for row in await _known_instrument_hits(client, search_term):
-                    if row["url"] in seen_urls:
+                search_url = _search_url(search_term)
+                try:
+                    response = await client.get(
+                        search_url,
+                        params={
+                            "$select": "id,name,collection,isInForce",
+                            "$top": max(10, min(limit * 3, 50)),
+                            "$count": "true",
+                        },
+                    )
+                    response.raise_for_status()
+                except Exception:
+                    search_rows: list[dict[str, Any]] = []
+                else:
+                    search_url = str(response.url)
+                    search_rows = _parse_legislation_api_results(response.json())
+                for row in search_rows:
+                    key = str(row.get("external_id") or _external_id_from_url(row["url"]))
+                    if key in seen_keys:
                         continue
-                    seen_urls.add(row["url"])
+                    seen_keys.add(key)
+                    row.setdefault("raw", {})["search_url"] = search_url
                     hits.append(_raw_hit_from_row(self.name, search_term, len(hits) + 1, row))
                     if len(hits) >= limit:
                         return hits
 
-                try:
-                    response = await client.get(_search_url(search_term))
-                    response.raise_for_status()
-                except Exception:
+                missing_known = [
+                    instrument
+                    for instrument in _known_instruments_for_query(search_term)
+                    if str(instrument["external_id"]) not in seen_keys
+                ]
+                if not missing_known:
                     continue
-                for row in _parse_legislation_search_results(response.text):
-                    if row["url"] in seen_urls:
+                for row in await _known_instrument_hits(client, search_term):
+                    key = str(row.get("external_id") or _external_id_from_url(row["url"]))
+                    if key in seen_keys:
                         continue
-                    seen_urls.add(row["url"])
-                    row.setdefault("raw", {})["search_url"] = str(response.url)
+                    seen_keys.add(key)
                     hits.append(_raw_hit_from_row(self.name, search_term, len(hits) + 1, row))
                     if len(hits) >= limit:
                         return hits
@@ -121,29 +141,28 @@ KNOWN_INSTRUMENTS: tuple[dict[str, Any], ...] = (
     },
     {
         "terms": (
-            "security of critical infrastructure",
-            "critical infrastructure",
+            "cyber security act",
+            "cybersecurity act",
+            "cyber security law",
+            "cybersecurity law",
             "cyber security",
             "cybersecurity",
-            "incident reporting",
+            "ransomware payment reporting",
         ),
-        "title": "Security of Critical Infrastructure Act 2018",
-        "url": "https://www.legislation.gov.au/Latest/C2018A00029",
+        "title": "Cyber Security Act 2024",
+        "url": "https://www.legislation.gov.au/C2024A00098/latest/text",
         "snippet": (
-            "Official compilation of Australia's critical infrastructure "
-            "security framework, including cyber incident obligations."
+            "Official compilation of Australia's Cyber Security Act 2024, "
+            "including smart-device security and ransomware reporting obligations."
         ),
-        "external_id": "C2018A00029",
+        "external_id": "C2024A00098",
     },
 )
 
 
 async def _known_instrument_hits(client: Any, query: str) -> list[dict[str, Any]]:
-    query_text = query.casefold()
     rows: list[dict[str, Any]] = []
-    for instrument in KNOWN_INSTRUMENTS:
-        if not any(term in query_text for term in instrument["terms"]):
-            continue
+    for instrument in _known_instruments_for_query(query):
         row = {
             "title": instrument["title"],
             "url": instrument["url"],
@@ -167,15 +186,68 @@ async def _known_instrument_hits(client: Any, query: str) -> list[dict[str, Any]
             row["warnings"] = row["warnings"] + [f"Could not extract verified live title: {exc}"]
             rows.append(row)
             continue
-        row["title"] = live_title or instrument["title"]
-        row["retrieval_mode"] = "live"
-        row["warnings"] = []
+        if live_title.casefold() != str(instrument["title"]).casefold():
+            row["warnings"] = row["warnings"] + [
+                "Could not verify the expected instrument title from the Federal Register page."
+            ]
+            rows.append(row)
+            continue
+        row["title"] = live_title
+        row["warnings"] = [
+            "Configured known instrument page was reachable, but it was not returned "
+            "by the official search result parser; kept as fallback."
+        ]
         rows.append(row)
     return rows
 
 
+def _known_instruments_for_query(query: str) -> list[dict[str, Any]]:
+    query_text = query.casefold()
+    return [
+        instrument
+        for instrument in KNOWN_INSTRUMENTS
+        if any(term in query_text for term in instrument["terms"])
+    ]
+
+
 def _search_url(query: str) -> str:
-    return f"https://www.legislation.gov.au/search?searchTerm={quote_plus(query)}"
+    criteria = f'text("{query}",nameAndText,contains)'
+    encoded_criteria = quote(criteria, safe="(),")
+    return (
+        "https://api.prod.legislation.gov.au/v1/titles/"
+        f"search(criteria='{encoded_criteria}')"
+    )
+
+
+def _parse_legislation_api_results(payload: Any) -> list[dict[str, Any]]:
+    """Map the Federal Register's public title-search API into discovery rows."""
+    values = payload.get("value") if isinstance(payload, dict) else None
+    if not isinstance(values, list):
+        return []
+
+    rows: list[dict[str, Any]] = []
+    for value in values:
+        if not isinstance(value, dict):
+            continue
+        instrument_id = str(value.get("id") or "").strip()
+        title = str(value.get("name") or "").strip()
+        if not instrument_id or not title or not re.fullmatch(r"C20\d{2}[A-Z]\d{5}", instrument_id):
+            continue
+        collection = str(value.get("collection") or "").strip()
+        in_force = value.get("isInForce")
+        status = "in force" if in_force is True else "not in force" if in_force is False else ""
+        rows.append({
+            "title": title,
+            "url": f"https://www.legislation.gov.au/{instrument_id}/latest/text",
+            "snippet": "Federal Register of Legislation official title search result.",
+            "external_id": instrument_id,
+            "raw": {
+                "collection": collection,
+                "status": status,
+                "official_api": "titles/search",
+            },
+        })
+    return rows
 
 
 class _LegislationSearchParser(HTMLParser):
@@ -256,6 +328,11 @@ def _raw_hit_from_row(adapter_name: str, query: str, position: int, row: dict[st
         raw=dict(row.get("raw") or {}),
         warnings=list(row.get("warnings") or []),
         retrieval_mode=row.get("retrieval_mode") or "live",
+        discovery_method=(
+            "known_mapping"
+            if (row.get("raw") or {}).get("match_strategy")
+            else "official_search"
+        ),
     )
 
 

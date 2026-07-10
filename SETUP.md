@@ -64,6 +64,39 @@ DISCOVERY_SEARCH_BACKEND=serpapi
 SERPAPI_API_KEY=...
 ```
 
+## Discovery Live Smoke Test
+
+The live smoke runner calls the production `DiscoveryService.search()` flow
+against the configured official government sites. It is intentionally manual:
+normal pull-request CI continues to use deterministic mocks and fixtures.
+
+Run all ten known-law checks:
+
+```bash
+make smoke-discovery
+```
+
+Run countries incrementally while diagnosing a site or adapter:
+
+```bash
+make smoke-discovery SMOKE_ARGS='--countries SGP'
+make smoke-discovery SMOKE_ARGS='--countries AUS MYS'
+make smoke-discovery SMOKE_ARGS='--countries CHN THA'
+```
+
+The command writes timestamped JSON and Markdown files under `reports/` and
+returns a non-zero status when a live acceptance check fails. Those generated
+files are ignored by Git. Reports contain candidate metadata, URLs, validation
+quality, durations, and warnings; they do not contain fetched legal text,
+headers, cookies, or API keys.
+
+A case passes only when the expected law comes from the official site's search
+results (a configured known-law mapping is not enough), both candidate and final
+URLs stay on configured official domains, the document fetch reports a valid
+HTTP status and verified TLS transport, and the fetched text has `good` quality,
+contains the law title, and matches the requested indicator. Archive/fixture
+retrieval remains visible as fallback and must carry an explanatory warning.
+
 ## 2. Install Dependencies
 
 ```bash

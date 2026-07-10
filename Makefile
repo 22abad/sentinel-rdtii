@@ -1,6 +1,7 @@
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test db migrate migrate-sidecar image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery db migrate migrate-sidecar image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
+SMOKE_ARGS ?=
 
 setup:
 	@if [ ! -f .env ]; then cp .env.example .env; echo "Created .env from .env.example. Edit API keys before running extraction."; fi
@@ -46,6 +47,9 @@ install-opencli-bridge:
 
 test:
 	cd ai-service && $(PYTHON) -m pytest
+
+smoke-discovery:
+	cd ai-service && DISCOVERY_REGISTRY_BACKEND=file PYTHONPATH=. $(PYTHON) ../scripts/discovery_smoke.py $(SMOKE_ARGS)
 
 db:
 	docker compose up -d postgres redis

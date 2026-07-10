@@ -38,6 +38,7 @@ class DiscoveryService:
         raw_hit_count = 0
         filtered_off_domain = 0
         retrieval_modes: Counter[str] = Counter()
+        discovery_methods: Counter[str] = Counter()
         source_retrieval_modes: dict[str, list[str]] = {}
         for source in sources:
             raw_hits = raw_hits_by_source.get(source.name, [])
@@ -50,6 +51,7 @@ class DiscoveryService:
                 source_retrieval_modes[source.name] = source_modes
             for hit in raw_hits:
                 retrieval_modes[hit.retrieval_mode] += 1
+                discovery_methods[hit.discovery_method or "unknown"] += 1
                 adapter_warnings.extend(hit.warnings)
                 candidates.append(self._filter_candidate_matches(normalize_hit(request.country_code, source, hit), request))
 
@@ -77,6 +79,7 @@ class DiscoveryService:
                 "duration_ms": round((time.perf_counter() - started) * 1000),
                 "mode": mode,
                 "retrieval_modes": dict(sorted(retrieval_modes.items())),
+                "discovery_methods": dict(sorted(discovery_methods.items())),
                 "live_hits": retrieval_modes.get("live", 0),
                 "fixture_hits": retrieval_modes.get("fixture", 0),
                 "fallback_hits": retrieval_modes.get("fallback", 0),

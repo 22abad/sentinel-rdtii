@@ -298,3 +298,72 @@ def test_filter_candidate_matches_keeps_only_requested_indicator_and_pillar():
 
     assert filtered.matched_indicators == ["6.4"]
     assert filtered.matched_pillars == [6]
+
+
+@pytest.mark.anyio
+async def test_source_adapter_failure_does_not_fail_whole_country_search(monkeypatch):
+    registry = {
+        "languages": ["en"],
+        "sources": [
+            {
+                "name": "Unavailable Official Source",
+                "base_url": "https://down.example",
+                "domains": ["down.example"],
+                "adapter": "failing_adapter",
+                "source_grade": "primary",
+                "pillars": [7],
+                "priority": 100,
+            },
+            {
+                "name": "Working Official Source",
+                "base_url": "https://working.example",
+                "domains": ["working.example"],
+                "adapter": "working_adapter",
+                "source_grade": "primary",
+                "pillars": [7],
+                "priority": 100,
+            },
+        ],
+    }
+
+    class FailingAdapter:
+        async def search(self, **_kwargs):
+            raise RuntimeError("source temporarily unavailable")
+
+    class WorkingAdapter:
+        async def search(self, **_kwargs):
+            return [
+                RawSearchHit(
+                    title="Personal Data Protection Act",
+                    url="https://working.example/privacy-act",
+                    snippet="Official personal data protection law.",
+                    source_adapter="working_adapter",
+                    retrieval_mode="fallback",
+                    warnings=["Live source search was unavailable; returned configured fallback."],
+                )
+            ]
+
+    monkeypatch.setattr("discovery.service.get_country_registry", lambda _country: registry)
+    monkeypatch.setattr(
+        "discovery.service.get_adapter",
+        lambda name: FailingAdapter() if name == "failing_adapter" else WorkingAdapter(),
+    )
+
+    response = await DiscoveryService().search(
+        DiscoverySearchRequest(
+            country_code="SGP",
+            pillars=[7],
+            indicators=["7.1"],
+            source_mode="official_only",
+            browser_mode="auto",
+            limit=5,
+        )
+    )
+
+    assert [candidate.title for candidate in response.candidates] == [
+        "Personal Data Protection Act"
+    ]
+    assert any(
+        "failing_adapter failed" in warning
+        for warning in response.diagnostics["warnings"]
+    )
