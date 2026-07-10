@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import importlib.util
 import sys
 from pathlib import Path
+
+import pytest
+
+from discovery.smoke_cases import SMOKE_CASES
 
 
 SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "discovery_coverage.py"
@@ -42,6 +47,38 @@ def test_smoke_verified_cells_name_passing_discovery_and_fetch_checks():
         assert all(instrument["live_discovery"] == "passed" for instrument in cell["instruments"])
         assert all(instrument["text_fetch"] == "passed" for instrument in cell["instruments"])
         assert all(instrument["smoke_case"] for instrument in cell["instruments"])
+
+
+def test_coverage_contract_references_every_real_smoke_case_with_matching_scope():
+    payload = coverage.load_contract()
+    references = {
+        instrument["smoke_case"]: (country, indicator)
+        for country, cells in payload["countries"].items()
+        for indicator, cell in cells.items()
+        for instrument in cell["instruments"]
+        if instrument.get("smoke_case")
+    }
+
+    assert references == {
+        case.case_id: (case.country, case.indicator)
+        for case in SMOKE_CASES
+    }
+
+
+def test_coverage_contract_rejects_unknown_smoke_case():
+    payload = deepcopy(coverage.load_contract())
+    payload["countries"]["AUS"]["6.1"]["instruments"][0]["smoke_case"] = "missing-case"
+
+    with pytest.raises(ValueError, match="unknown smoke_case missing-case"):
+        coverage.validate_contract(payload)
+
+
+def test_coverage_contract_rejects_smoke_case_for_wrong_indicator():
+    payload = deepcopy(coverage.load_contract())
+    payload["countries"]["AUS"]["6.1"]["instruments"][0]["smoke_case"] = "aus-privacy-7.1"
+
+    with pytest.raises(ValueError, match="maps to AUS 7.1"):
+        coverage.validate_contract(payload)
 
 
 def test_rendered_coverage_report_is_current():

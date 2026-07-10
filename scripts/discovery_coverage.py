@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,12 @@ import yaml
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+AI_SERVICE_ROOT = REPO_ROOT / "ai-service"
+sys.path.insert(0, str(AI_SERVICE_ROOT))
+
+from discovery.smoke_cases import SMOKE_CASES  # noqa: E402
+
+
 DEFAULT_INPUT = REPO_ROOT / "ai-service" / "discovery" / "required_country_coverage.yaml"
 DEFAULT_OUTPUT = REPO_ROOT / "docs" / "discovery-required-country-coverage.md"
 VALID_STATUSES = {
@@ -38,6 +45,7 @@ def validate_contract(payload: dict[str, Any]) -> None:
     expected_indicators = [str(value) for value in scope.get("indicators") or []]
     countries = payload.get("countries") or {}
     errors: list[str] = []
+    smoke_references: list[tuple[str, str, str]] = []
 
     if set(countries) != set(expected_countries):
         errors.append("country keys must exactly match scope.countries")
@@ -70,6 +78,39 @@ def validate_contract(payload: dict[str, Any]) -> None:
                         errors.append(f"{instrument_label} has invalid {field}")
                 if cell.get("status") == "smoke_verified" and not instrument.get("smoke_case"):
                     errors.append(f"{instrument_label} must name its smoke_case")
+                smoke_case = str(instrument.get("smoke_case") or "").strip()
+                if smoke_case:
+                    smoke_references.append((smoke_case, country, indicator))
+                    if cell.get("status") != "smoke_verified":
+                        errors.append(
+                            f"{instrument_label} names smoke_case {smoke_case} "
+                            "but is not smoke_verified"
+                        )
+
+    smoke_cases_by_id = {case.case_id: case for case in SMOKE_CASES}
+    smoke_reference_ids = [case_id for case_id, _country, _indicator in smoke_references]
+    if len(smoke_cases_by_id) != len(SMOKE_CASES):
+        errors.append("SMOKE_CASES contains duplicate case ids")
+    if len(smoke_reference_ids) != len(set(smoke_reference_ids)):
+        errors.append("coverage contract references a smoke_case more than once")
+
+    for case_id, country, indicator in smoke_references:
+        smoke_case = smoke_cases_by_id.get(case_id)
+        if smoke_case is None:
+            errors.append(f"{country} {indicator} references unknown smoke_case {case_id}")
+            continue
+        if smoke_case.country != country or smoke_case.indicator != indicator:
+            errors.append(
+                f"{country} {indicator} smoke_case {case_id} maps to "
+                f"{smoke_case.country} {smoke_case.indicator}"
+            )
+
+    missing_smoke_cases = sorted(set(smoke_cases_by_id) - set(smoke_reference_ids))
+    if missing_smoke_cases:
+        errors.append(
+            "coverage contract does not reference smoke case(s): "
+            + ", ".join(missing_smoke_cases)
+        )
 
     if errors:
         raise ValueError("invalid coverage contract:\n- " + "\n- ".join(errors))
