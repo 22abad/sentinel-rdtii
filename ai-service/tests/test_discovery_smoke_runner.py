@@ -23,6 +23,24 @@ def test_smoke_case_filters_support_country_and_indicator():
     assert [case.case_id for case in cases] == ["mys-cyber-7.2", "sgp-cyber-7.2"]
 
 
+def test_smoke_case_ids_are_unique_and_match_coverage_contract():
+    import yaml
+
+    coverage_path = SCRIPT_PATH.parents[1] / "ai-service" / "discovery" / "required_country_coverage.yaml"
+    payload = yaml.safe_load(coverage_path.read_text(encoding="utf-8"))
+    configured = {
+        instrument["smoke_case"]
+        for cells in payload["countries"].values()
+        for cell in cells.values()
+        for instrument in cell["instruments"]
+        if instrument.get("smoke_case")
+    }
+    case_ids = [case.case_id for case in smoke.SMOKE_CASES]
+
+    assert len(case_ids) == len(set(case_ids))
+    assert configured == set(case_ids)
+
+
 def test_smoke_candidate_acceptance_requires_live_verified_official_document():
     case = next(case for case in smoke.SMOKE_CASES if case.case_id == "sgp-privacy-7.1")
     source = LegalSourceConfig(

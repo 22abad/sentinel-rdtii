@@ -63,14 +63,28 @@ class SmokeCase:
     expected_ids: tuple[str, ...]
 
 
-# First-round scope: Australia, Malaysia, and Singapore only.
+# Required-country positive-evidence scope. Negative conclusions remain manual.
 SMOKE_CASES = (
+    SmokeCase("aus-local-processing-6.1", "AUS", "My Health Records Act", "6.1", ("My Health Records Act 2012",), ("C2012A00063",)),
+    SmokeCase("aus-local-storage-6.2", "AUS", "My Health Records Act", "6.2", ("My Health Records Act 2012",), ("C2012A00063",)),
+    SmokeCase("aus-conditional-flow-6.4", "AUS", "Privacy Act", "6.4", ("Privacy Act 1988",), ("C2004A03712",)),
     SmokeCase("aus-privacy-7.1", "AUS", "Privacy Act", "7.1", ("Privacy Act 1988",), ("C2004A03712",)),
     SmokeCase("aus-cyber-7.2", "AUS", "Cyber Security Act", "7.2", ("Cyber Security Act 2024",), ("C2024A00098",)),
+    SmokeCase("aus-retention-7.3", "AUS", "Telecommunications (Interception and Access) Act", "7.3", ("Telecommunications (Interception and Access) Act 1979",), ("C2004A02124",)),
+    SmokeCase("aus-pia-7.4", "AUS", "Privacy Act", "7.4", ("Privacy Act 1988",), ("C2004A03712",)),
+    SmokeCase("aus-government-access-7.5", "AUS", "Telecommunications (Interception and Access) Act", "7.5", ("Telecommunications (Interception and Access) Act 1979",), ("C2004A02124",)),
+    SmokeCase("mys-local-storage-6.2", "MYS", "Companies Act", "6.2", ("Companies Act 2016",), ("act-777",)),
+    SmokeCase("mys-conditional-flow-6.4", "MYS", "Personal Data Protection Act", "6.4", ("Personal Data Protection Act 2010",), ("act-709",)),
     SmokeCase("mys-privacy-7.1", "MYS", "Personal Data Protection Act", "7.1", ("Personal Data Protection Act 2010",), ("act-709",)),
     SmokeCase("mys-cyber-7.2", "MYS", "Cyber Security Act", "7.2", ("Cyber Security Act 2024",), ("act-854",)),
+    SmokeCase("mys-retention-7.3", "MYS", "Companies Act", "7.3", ("Companies Act 2016",), ("act-777",)),
+    SmokeCase("mys-government-access-7.5", "MYS", "Digital Signature Act", "7.5", ("Digital Signature Act 1997",), ("act-562",)),
+    SmokeCase("sgp-conditional-flow-6.4", "SGP", "Personal Data Protection Act", "6.4", ("Personal Data Protection Act 2012",), ("PDPA2012",)),
     SmokeCase("sgp-privacy-7.1", "SGP", "Personal Data Protection Act", "7.1", ("Personal Data Protection Act 2012",), ("PDPA2012",)),
     SmokeCase("sgp-cyber-7.2", "SGP", "Cybersecurity Act", "7.2", ("Cybersecurity Act 2018", "Cyber Security Act 2018"), ("CA2018",)),
+    SmokeCase("sgp-retention-7.3", "SGP", "Companies Act", "7.3", ("Companies Act 1967",), ("CoA1967",)),
+    SmokeCase("sgp-dpo-7.4", "SGP", "Personal Data Protection Act", "7.4", ("Personal Data Protection Act 2012",), ("PDPA2012",)),
+    SmokeCase("sgp-government-access-7.5", "SGP", "Criminal Procedure Code", "7.5", ("Criminal Procedure Code 2010",), ("CPC2010",)),
 )
 
 

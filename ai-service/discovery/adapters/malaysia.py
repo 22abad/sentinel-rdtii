@@ -130,6 +130,21 @@ class MalaysiaLomAdapter(DiscoveryAdapter):
 KNOWN_ACTS: tuple[dict[str, Any], ...] = (
     {
         "terms": (
+            "companies act",
+            "local storage",
+            "accounting records",
+            "records kept in malaysia",
+        ),
+        "title": "Companies Act 2016",
+        "url": "https://lom.agc.gov.my/act-detail.php?act=777&lang=BI&type=principal",
+        "snippet": (
+            "Official Laws of Malaysia record for Act 777, including requirements "
+            "on where company accounting records must be kept."
+        ),
+        "external_id": "act-777",
+    },
+    {
+        "terms": (
             "personal data protection",
             "pdpa",
             "data protection",
@@ -159,6 +174,22 @@ KNOWN_ACTS: tuple[dict[str, Any], ...] = (
             "Cyber Security Act 2024."
         ),
         "external_id": "act-854",
+    },
+    {
+        "terms": (
+            "digital signature act",
+            "government access",
+            "law enforcement access",
+            "police access",
+            "access computerized data",
+        ),
+        "title": "Digital Signature Act 1997",
+        "url": "https://lom.agc.gov.my/act-detail.php?act=562&lang=BI&type=principal",
+        "snippet": (
+            "Official Laws of Malaysia record for Act 562, including search without "
+            "warrant and police access to computerized data."
+        ),
+        "external_id": "act-562",
     },
 )
 

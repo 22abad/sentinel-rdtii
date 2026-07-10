@@ -187,6 +187,24 @@ def infer_indicator_matches(title: str, url: str, snippet: str) -> tuple[list[in
     reasons: list[str] = []
 
     direct_rules = {
+        "6.1": [
+            ("must not", "process", "outside"),
+            ("must not", "hold", "outside"),
+            ("local processing requirement",),
+            ("data localization",),
+            ("data localisation",),
+        ],
+        "6.2": [
+            ("must not", "hold", "outside"),
+            ("local storage requirement",),
+            ("stored", "within the country"),
+            ("accounting and other records", "kept", "place in malaysia"),
+        ],
+        "6.3": [
+            ("local data centre",),
+            ("local data center",),
+            ("local server requirement",),
+        ],
         "6.4": [
             ("cross-border", "personal data"),
             ("standard contract",),
@@ -194,6 +212,8 @@ def infer_indicator_matches(title: str, url: str, snippet: str) -> tuple[list[in
             ("data export", "security assessment"),
             ("数据出境", "安全评估"),
             ("transfer", "outside singapore"),
+            ("transfer", "personal data", "outside"),
+            ("overseas", "personal information"),
         ],
         "7.1": [
             ("personal data protection",),
@@ -208,9 +228,27 @@ def infer_indicator_matches(title: str, url: str, snippet: str) -> tuple[list[in
             ("cybercrime",),
             ("network security",),
         ],
-        "7.3": [("retention",), ("retain records",), ("保存",)],
-        "7.4": [("data protection officer",), ("dpo",), ("impact assessment",), ("影响评估",)],
-        "7.5": [("government access",), ("law enforcement access",), ("national security",)],
+        "7.3": [
+            ("retention",),
+            ("retain records",),
+            ("must keep", "years"),
+            ("shall retain", "years"),
+            ("not less than", "years"),
+            ("保存",),
+        ],
+        "7.4": [
+            ("data protection officer",),
+            ("dpo",),
+            ("impact assessment",),
+            ("designate", "one or more individuals", "responsible", "complies with this act"),
+            ("影响评估",),
+        ],
+        "7.5": [
+            ("government access",),
+            ("law enforcement access",),
+            ("police", "access", "data"),
+            ("national security",),
+        ],
     }
     for indicator, rules in direct_rules.items():
         if any(all(part in text for part in rule) for rule in rules):
