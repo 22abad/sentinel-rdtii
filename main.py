@@ -1,123 +1,132 @@
-from dotenv import load_dotenv
-load_dotenv()
+#!/usr/bin/env python3
+"""SENTINEL — UN Digital Trade AI Mapper (judges' CLI entrypoint).
 
-from typing import Optional
-import os
-import json
+Round 1 contract (see requirements/README_template.md):
 
-from fastapi import FastAPI
-from pydantic import BaseModel, ValidationError
+    python main.py --economy Singapore --pillar 6
 
-import google.generativeai as genai
+Writes ``outputs/<Economy>_P<pillar>_<timestamp>.csv`` and ``.json`` with the
+frozen 13-field schema. The same engine that powers the web app is reused here;
+this file only wires the CLI to the submission adapter.
 
-from utils.chunker import regex_legal_chunker
+The LLM provider is selected from the environment (No Vendor Lock-in):
 
-# ---------------------------------------------------------
-# 1. 物理模具定义 (The Schema)
-# ---------------------------------------------------------
-class RDTII_Extraction(BaseModel):
-    title: str
-    last_update: str
-    url: str
-    scope: str
-    provisions: str
-    impact: str
-    requires_human_review: bool = True
-
-class TextRequest(BaseModel):
-    text: Optional[str] = None
-
-app = FastAPI()
-
-# ---------------------------------------------------------
-# 2. 弹药装载 (API Key Configuration)
-# ---------------------------------------------------------
-_GEMINI_KEY = os.getenv("GEMINI_API_KEY")
-if _GEMINI_KEY:
-    genai.configure(api_key=_GEMINI_KEY)
-else:
-    print("🚨 致命警告：未检测到 GEMINI_API_KEY，请检查项目根目录的 .env 文件！")
-
-# ---------------------------------------------------------
-# 3. 核动力榨汁机 (Gemini Extraction Engine)
-# ---------------------------------------------------------
-def call_gemini_for_chunk(chunk: str) -> Optional[dict]:
-    # 典狱长级别的全英文 Prompt 锁死大模型输出，防幻觉第一道防线
-    prompt = f"""You are an expert UN digital trade policy analyst. Your task is to extract cross-border data provisions and map them to the RDTII 2.1 framework.
-
-CRITICAL RULES (ABSOLUTE COMPLIANCE REQUIRED):
-1. STRICT JSON SCHEMA: You MUST output a valid JSON object strictly matching this exact structure. Do NOT omit any keys:
-{{
-    "title": "String. If not provided in text, output 'Not Provided'.",
-    "last_update": "String. If not provided, output 'Not Provided'.",
-    "url": "String. If not provided, output 'Not Provided'.",
-    "scope": "String. If not provided, output 'Not Provided'.",
-    "provisions": "String. MUST be an exact, character-for-character quote from the input.",
-    "impact": "String. Explicitly state the RDTII Pillar (e.g., Pillar 6.4) and explain the policy impact.",
-    "requires_human_review": true
-}}
-2. NO HALLUCINATION: Do not invent missing metadata.
-
-Input text:
-{chunk}
+    RDTII_LLM_PROVIDER=ollama   # or openai, deepseek, mistral, gemini, claude
+    OLLAMA_MODEL=qwen2.5:14b
 """
 
-    try:
-        # 使用 Gemini 1.5 最新的正确调用语法
-        model = genai.GenerativeModel('gemini-3-flash-preview')
-        resp = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=0, # 剥夺创造力，强迫绝对理性
-                response_mime_type="application/json", # 强迫物理输出 JSON
-            )
-        )
-        return json.loads(resp.text)
-    except Exception as e:
-        print(f"🚨 赛博引擎报错 (Gemini API Error): {e}")
-        return None
+from __future__ import annotations
 
-# ---------------------------------------------------------
-# 4. API 路由与装配线 (The Pipeline)
-# ---------------------------------------------------------
-@app.post("/api/extract", response_model=RDTII_Extraction)
-async def extract(req: TextRequest):
-    sample_text = req.text or ""
-    
-    # 将文本丢进正则切肉机
-    chunks = regex_legal_chunker(sample_text)
+import argparse
+import asyncio
+import sys
+from datetime import datetime
+from pathlib import Path
 
-    # 防御机制：如果正则啥都没切出来，就把整段原文当成一个大肉块喂进去
-    if not chunks:
-        chunks = [sample_text]
+from dotenv import load_dotenv
 
-    for chunk in chunks:
-        parsed = call_gemini_for_chunk(chunk)
-        if not parsed:
-            continue
-            
-        # 🔥 降维物理修复：剥掉外层的塑料袋（列表）
-        if isinstance(parsed, list):
-            if len(parsed) > 0:
-                parsed = parsed[0] # 把里面真正的字典掏出来
-            else:
-                continue
-                
-        try:
-            # 尝试把 JSON 塞进模具，过安检
-            obj = RDTII_Extraction.parse_obj(parsed)
-            return obj
-        except ValidationError as e:
-            print(f"🚨 模具校验失败 (Validation Error): {e}")
-            continue
+REPO_ROOT = Path(__file__).resolve().parent
+AI_SERVICE = REPO_ROOT / "ai-service"
+if str(AI_SERVICE) not in sys.path:
+    sys.path.insert(0, str(AI_SERVICE))
 
-    # 物理斩断退路：绝不给假数据。如果彻底没找到，如实反馈失败！
-    return RDTII_Extraction(
-        title="Not Provided",
-        last_update="Not Provided",
-        url="Not Provided",
-        scope="Not Provided",
-        provisions="No specific cross-border data transfer provisions found in this text.",
-        impact="Extraction Failed or irrelevant text.",
-        requires_human_review=True,
+load_dotenv(REPO_ROOT / ".env")
+
+
+def _parse_pillars(token: str) -> list[int]:
+    """Turn the --pillar argument ("6", "7", or "all") into pillar ids."""
+
+    token = token.strip().lower()
+    if token == "all":
+        return [6, 7]
+    if token in {"6", "7"}:
+        return [int(token)]
+    raise argparse.ArgumentTypeError("--pillar must be 6, 7, or all")
+
+
+def _pillar_label(pillars: list[int]) -> str:
+    """Filename-safe label for one or more pillars (6, 7, or 6-7)."""
+
+    return "-".join(str(p) for p in pillars)
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="main.py",
+        description="RDTII evidence discovery + indicator mapping (Pillars 6/7).",
     )
+    parser.add_argument("--economy", required=True, help="Economy name or ISO-3 code, e.g. Singapore / SGP")
+    parser.add_argument("--pillar", type=_parse_pillars, default=[6, 7], help="6, 7, or all")
+    parser.add_argument("--pdf", default=None, help="Extract from this PDF path (bypasses the crawler)")
+    parser.add_argument("--indicators", nargs="*", default=None, help="Restrict to specific indicators, e.g. 6.1 6.4")
+    parser.add_argument("--output-dir", default="outputs", help="Directory for CSV/JSON output")
+    parser.add_argument("--format", choices=("csv", "json", "both"), default="both")
+    parser.add_argument("--provider", default=None, help="Override RDTII_LLM_PROVIDER for this run")
+    parser.add_argument("--limit", type=int, default=20, help="Max discovery candidates per pillar")
+    parser.add_argument("--max-documents", type=int, default=None, help="Cap documents processed per pillar")
+    return parser.parse_args(argv)
+
+
+def _formats(choice: str) -> tuple[str, ...]:
+    return ("csv", "json") if choice == "both" else (choice,)
+
+
+async def _run(args: argparse.Namespace) -> int:
+    from submission import SubmissionRow, write_outputs
+    from submission.pipeline import discover_and_extract, run_pdf
+    from submission.schema import economy_display_name
+
+    display = economy_display_name(args.economy)
+    all_rows: list[SubmissionRow] = []
+    combined_meta: dict = {"economy": display, "pillars": args.pillar, "runs": []}
+
+    for pillar in args.pillar:
+        if args.pdf:
+            rows, meta = await run_pdf(
+                args.economy, pillar, args.pdf,
+                provider_name=args.provider, indicators=args.indicators,
+            )
+        else:
+            rows, meta = await discover_and_extract(
+                args.economy, pillar,
+                provider_name=args.provider, indicators=args.indicators,
+                limit=args.limit, max_documents=args.max_documents,
+            )
+        combined_meta["runs"].append(meta)
+        all_rows.extend(rows)
+        print(f"  Pillar {pillar}: {meta['provisions_mapped']} provisions mapped "
+              f"({meta.get('documents_processed', 'n/a')} documents)")
+        for warning in meta.get("warnings", []):
+            print(f"    ⚠ {warning}")
+
+    timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
+    written = write_outputs(
+        all_rows,
+        economy=display,
+        pillar=_pillar_label(args.pillar),
+        timestamp=timestamp,
+        output_dir=args.output_dir,
+        formats=_formats(args.format),
+        meta=combined_meta,
+    )
+
+    print(f"\n✅ {len(all_rows)} provisions written for {display} (Pillar {_pillar_label(args.pillar)}):")
+    for fmt, path in written.items():
+        print(f"   {fmt.upper()}: {path}")
+    if not all_rows:
+        print("   (No verified provisions — check provider/API key and network, or try --pdf.)")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    print(f"SENTINEL — mapping {args.economy}, Pillar {_pillar_label(args.pillar)} …")
+    try:
+        return asyncio.run(_run(args))
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
