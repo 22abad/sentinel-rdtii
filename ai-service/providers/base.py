@@ -9,17 +9,32 @@ from __future__ import annotations
 import json
 import re
 from abc import ABC, abstractmethod
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any, Literal
+
+if TYPE_CHECKING:
+    from telemetry import CostBasis, UsageCollector
+
+
+_USAGE_CONTEXT: ContextVar[tuple[str, tuple[str, ...]] | None] = ContextVar(
+    "rdtii_usage_context",
+    default=None,
+)
+_USAGE_COLLECTOR: ContextVar[UsageCollector | None] = ContextVar(
+    "rdtii_usage_collector",
+    default=None,
+)
 
 
 @dataclass
 class ExtractionUsage:
     """Token / cost telemetry for one extract_features call."""
 
-    input_tokens: int = 0
-    output_tokens: int = 0
-    cost_usd: float = 0.0
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    cost_usd: float | None = None
     latency_ms: int = 0
     raw_response: str = field(default="", repr=False)
 
@@ -46,6 +61,75 @@ class LLMProvider(ABC):
 
     name: str = "base"
     last_usage: ExtractionUsage | None = None
+    usage_collector: UsageCollector | None = None
+
+    def set_usage_collector(self, collector: UsageCollector | None) -> None:
+        """Attach a fallback collector (primarily for direct provider tests)."""
+        self.usage_collector = collector
+
+    @contextmanager
+    def usage_collection(self, collector: UsageCollector):
+        """Bind telemetry to the current async/thread context for one run."""
+        token = _USAGE_COLLECTOR.set(collector)
+        try:
+            yield
+        finally:
+            _USAGE_COLLECTOR.reset(token)
+
+    @contextmanager
+    def usage_operation(
+        self,
+        operation: str,
+        indicator_ids: tuple[str, ...] = (),
+    ):
+        """Label nested provider calls without changing the public API."""
+        token = _USAGE_CONTEXT.set((operation, indicator_ids))
+        try:
+            yield
+        finally:
+            _USAGE_CONTEXT.reset(token)
+
+    @staticmethod
+    def _usage_context(
+        default_operation: str,
+        default_indicator_ids: tuple[str, ...] = (),
+    ) -> tuple[str, tuple[str, ...]]:
+        return _USAGE_CONTEXT.get() or (default_operation, default_indicator_ids)
+
+    def _record_usage(
+        self,
+        operation: str,
+        usage: ExtractionUsage,
+        *,
+        indicator_ids: tuple[str, ...] = (),
+        status: Literal["success", "failed"] = "success",
+        error: Exception | None = None,
+        cost_basis: CostBasis = "unavailable",
+        pricing_date: str | None = None,
+        input_usd_per_million: float | None = None,
+        output_usd_per_million: float | None = None,
+    ) -> None:
+        """Finalize backward-compatible usage and append a run audit event."""
+        self.last_usage = usage
+        collector = _USAGE_COLLECTOR.get() or getattr(self, "usage_collector", None)
+        if collector is None:
+            return
+        collector.record(
+            operation=operation,
+            provider=getattr(type(self), "name", self.__class__.__name__),
+            model=getattr(self, "model_name", getattr(self, "name", "unknown")),
+            latency_ms=usage.latency_ms,
+            input_tokens=usage.input_tokens,
+            output_tokens=usage.output_tokens,
+            cost_usd=usage.cost_usd,
+            cost_basis=cost_basis,
+            pricing_date=pricing_date,
+            input_usd_per_million=input_usd_per_million,
+            output_usd_per_million=output_usd_per_million,
+            indicator_ids=indicator_ids,
+            status=status,
+            error_type=type(error).__name__ if error is not None else None,
+        )
 
     @abstractmethod
     def query(self, prompt: str, system: str = "") -> str:
@@ -127,10 +211,11 @@ class LLMProvider(ABC):
             previous_output=previous_output,
             validation_errors=validation_errors,
         )
-        raw = self.query(
-            prompt,
-            system="Output ONLY valid JSON. No prose, no markdown fences.",
-        )
+        with self.usage_operation("repair", (indicator_id,)):
+            raw = self.query(
+                prompt,
+                system="Output ONLY valid JSON. No prose, no markdown fences.",
+            )
         return self.parse_json_response(raw)
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:

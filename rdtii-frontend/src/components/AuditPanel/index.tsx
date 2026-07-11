@@ -3,6 +3,7 @@ import type {
   IndicatorMapping,
   RejectedExtraction,
   ReviewDecision,
+  RunUsageSummary,
   Status,
 } from "../../types";
 import { AuditBody } from "./AuditBody";
@@ -15,6 +16,7 @@ import {
   mappingsToExcelPreviewRows,
 } from "../../services/excelExport";
 import { RightDrawer } from "../ui/RightDrawer";
+import { UsageSummary } from "../UsageSummary";
 
 const EXPORT_TIMEOUT_MS = 30_000;
 const EXPORT_PREVIEW_LIMIT = 5;
@@ -33,6 +35,7 @@ type AuditPanelProps = {
   setShowRejected: (v: boolean) => void;
   country?: string;
   onLoadDemoData?: () => void;
+  usage?: RunUsageSummary | null;
 };
 
 export function AuditPanel({
@@ -49,6 +52,7 @@ export function AuditPanel({
   setShowRejected,
   country = "",
   onLoadDemoData,
+  usage,
 }: AuditPanelProps) {
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState("");
@@ -162,8 +166,9 @@ export function AuditPanel({
         <div>
           <h2>{t("audit.title")}</h2>
           <p>{t("audit.description")}</p>
+          {usage && <UsageSummary usage={usage} className="mt-2" />}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="nodrag flex items-center gap-2">
           {onLoadDemoData && (
             <button
               type="button"

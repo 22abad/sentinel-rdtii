@@ -9,6 +9,8 @@ export type CanvasPanel = {
   title: string;
   element: React.ReactNode;
   width?: number;
+  /** Optional selector limiting where React Flow may start dragging the panel. */
+  dragHandle?: string;
 };
 
 /** A spawnable panel type shown as a button in the toolbar palette. */

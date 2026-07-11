@@ -326,7 +326,10 @@ export async function runExtractMappingsNode(
   return result.outputs;
 }
 
-export function streamExtractMappingsNode(request: ExtractMappingsNodeRequest) {
+export function streamExtractMappingsNode(
+  request: ExtractMappingsNodeRequest,
+  options: { signal?: AbortSignal } = {},
+) {
   return streamWorkflowNode("extract.mappings", {
     node_id: "extract",
     inputs: {
@@ -339,7 +342,7 @@ export function streamExtractMappingsNode(request: ExtractMappingsNodeRequest) {
       model: request.model,
       browser_mode: request.browserMode ?? "auto",
     },
-  });
+  }, options);
 }
 
 export async function runRagQueryNode(

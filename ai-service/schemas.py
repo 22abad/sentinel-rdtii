@@ -164,6 +164,25 @@ class RejectedExtraction(BaseModel):
     raw_output: dict = Field(default_factory=dict)
 
 
+class RunUsageSummary(BaseModel):
+    """Compact run telemetry returned with extraction results."""
+
+    run_id: str
+    llm_calls: int = 0
+    successful_calls: int = 0
+    failed_calls: int = 0
+    calls_with_unknown_usage: int = 0
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    known_input_tokens: int = 0
+    known_output_tokens: int = 0
+    cost_usd: float | None = None
+    known_cost_usd: float = 0.0
+    latency_sum_ms: int = 0
+    wall_clock_ms: int = 0
+    operations: dict[str, int] = Field(default_factory=dict)
+
+
 class ExtractionResponse(BaseModel):
     """Top-level response from /api/extract.
 
@@ -175,6 +194,10 @@ class ExtractionResponse(BaseModel):
     rejected: list[RejectedExtraction] = Field(default_factory=list)
     provider: str = Field(default="unknown")
     source_text: str = Field(default="", description="The actual text used for extraction (may differ from input when URL was crawled or PDF was parsed).")
+    usage: RunUsageSummary | None = Field(
+        default=None,
+        description="Run-level token, cost, and timing summary; no prompts or responses.",
+    )
 
 
 class ReviewRequest(BaseModel):

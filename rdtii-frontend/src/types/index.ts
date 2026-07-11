@@ -34,11 +34,29 @@ export type RejectedExtraction = {
   raw_output: Record<string, unknown>;
 };
 
+export type RunUsageSummary = {
+  run_id: string;
+  llm_calls: number;
+  successful_calls: number;
+  failed_calls: number;
+  calls_with_unknown_usage: number;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  known_input_tokens: number;
+  known_output_tokens: number;
+  cost_usd: number | null;
+  known_cost_usd: number;
+  latency_sum_ms: number;
+  wall_clock_ms: number;
+  operations: Record<string, number>;
+};
+
 export type ExtractionResponse = {
   mappings: IndicatorMapping[];
   rejected: RejectedExtraction[];
   provider: string;
   source_text?: string;
+  usage?: RunUsageSummary | null;
 };
 
 export type ReviewDecision = "pending" | "approved" | "rejected";

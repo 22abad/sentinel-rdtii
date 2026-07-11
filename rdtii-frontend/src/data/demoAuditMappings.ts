@@ -2,6 +2,26 @@ import type { ExtractionResponse } from "../types";
 
 export const demoAuditExtraction: ExtractionResponse = {
   provider: "demo/rdtii-fixture",
+  usage: {
+    run_id: "demo-usage-preview",
+    llm_calls: 5,
+    successful_calls: 5,
+    failed_calls: 0,
+    calls_with_unknown_usage: 0,
+    input_tokens: 6012,
+    output_tokens: 1157,
+    known_input_tokens: 6012,
+    known_output_tokens: 1157,
+    cost_usd: 0.00187794,
+    known_cost_usd: 0.00187794,
+    latency_sum_ms: 15393,
+    wall_clock_ms: 8412,
+    operations: {
+      extract_batch: 2,
+      repair: 1,
+      analyst_comment: 2,
+    },
+  },
   source_text: `Personal Data Protection Act 2012, Section 26: An organisation shall not transfer any personal data to a country or territory outside Singapore except in accordance with requirements prescribed under this Act.
 
 Personal Data Protection Regulations 2021, Regulation 11: An organisation must develop and implement policies and practices necessary for it to meet its obligations under the Act.

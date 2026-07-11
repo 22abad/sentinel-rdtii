@@ -17,6 +17,7 @@ from .base import LLMProvider
 class OllamaProvider(LLMProvider):
     """OpenAI-compatible client targeted at a local Ollama instance."""
 
+    name = "ollama"
     default_model = "qwen2.5-coder:7b"     # fallback if nothing is set
     api_key_env = "OLLAMA_API_KEY"         # Ollama doesn't require one by default
 
@@ -32,9 +33,12 @@ class OllamaProvider(LLMProvider):
 
     def query(self, prompt: str, system: str = "") -> str:
         from openai import OpenAI
-        from .base import ExtractionError
+        from .base import ExtractionError, ExtractionUsage
 
+        operation, indicator_ids = self._usage_context("query")
         client = OpenAI(api_key=self.raw_api_key, base_url=self.base_url)
+        usage = ExtractionUsage(cost_usd=0.0)
+        t0 = time.perf_counter()
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
@@ -45,9 +49,22 @@ class OllamaProvider(LLMProvider):
                 messages=messages,
                 temperature=0.3,
             )
-            return resp.choices[0].message.content or ""
         except Exception as e:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                operation, usage, indicator_ids=indicator_ids,
+                status="failed", error=e, cost_basis="local_api_cost",
+            )
             raise ExtractionError(f"Ollama query failed: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+        raw_response = resp.choices[0].message.content or ""
+        usage.raw_response = raw_response
+        self._populate_local_usage(usage, getattr(resp, "usage", None))
+        self._record_usage(
+            operation, usage, indicator_ids=indicator_ids,
+            cost_basis="local_api_cost",
+        )
+        return raw_response
 
     def extract_features(self, article_text: str, indicator_id: str, feature_spec: dict) -> dict:
         from openai import OpenAI
@@ -69,16 +86,23 @@ class OllamaProvider(LLMProvider):
                 max_tokens=2048,
             )
         except Exception as e:
-            raise ExtractionError(f"Ollama request failed (base_url={self.base_url}): {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            usage.cost_usd = 0.0
+            self._record_usage(
+                "extract_single", usage, indicator_ids=(indicator_id,),
+                status="failed", error=e, cost_basis="local_api_cost",
+            )
+            raise ExtractionError(f"Ollama request failed (base_url={self.base_url}): {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         raw_response = resp.choices[0].message.content
         usage.raw_response = raw_response or ""
-        usage.input_tokens = resp.usage.prompt_tokens if resp.usage else 0
-        usage.output_tokens = resp.usage.completion_tokens if resp.usage else 0
         usage.cost_usd = 0.0  # local inference
-
+        self._populate_local_usage(usage, getattr(resp, "usage", None))
+        self._record_usage(
+            "extract_single", usage, indicator_ids=(indicator_id,),
+            cost_basis="local_api_cost",
+        )
         return self.parse_json_response(raw_response)
 
     def repair_extraction(
@@ -113,17 +137,31 @@ class OllamaProvider(LLMProvider):
                 max_tokens=2048,
             )
         except Exception as e:
-            raise ExtractionError(f"Ollama repair failed (base_url={self.base_url}): {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            usage.cost_usd = 0.0
+            self._record_usage(
+                "repair", usage, indicator_ids=(indicator_id,),
+                status="failed", error=e, cost_basis="local_api_cost",
+            )
+            raise ExtractionError(f"Ollama repair failed (base_url={self.base_url}): {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         raw_response = resp.choices[0].message.content
         usage.raw_response = raw_response or ""
-        usage.input_tokens = resp.usage.prompt_tokens if resp.usage else 0
-        usage.output_tokens = resp.usage.completion_tokens if resp.usage else 0
         usage.cost_usd = 0.0
-        self.last_usage = usage
+        self._populate_local_usage(usage, getattr(resp, "usage", None))
+        self._record_usage(
+            "repair", usage, indicator_ids=(indicator_id,),
+            cost_basis="local_api_cost",
+        )
         return self.parse_json_response(raw_response)
+
+    @staticmethod
+    def _populate_local_usage(usage, meta) -> None:
+        if meta is None:
+            return
+        usage.input_tokens = getattr(meta, "prompt_tokens", None)
+        usage.output_tokens = getattr(meta, "completion_tokens", None)
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         return 0.0

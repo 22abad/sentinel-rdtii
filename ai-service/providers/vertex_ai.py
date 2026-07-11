@@ -9,9 +9,7 @@ import os
 import time
 from typing import Any
 
-import google.auth.transport.requests
 import httpx
-from google.oauth2 import service_account
 
 from .base import ExtractionError, ExtractionUsage, LLMProvider
 
@@ -22,6 +20,14 @@ class VertexAIProvider(LLMProvider):
     name = "vertex-ai"
 
     def __init__(self, model_name: str | None = None):
+        try:
+            from google.oauth2 import service_account
+        except ImportError as exc:
+            raise ExtractionError(
+                "google-auth is required for Vertex AI. Install ai-service "
+                "Vertex dependencies before selecting this provider."
+            ) from exc
+
         cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "")
         if not cred_path or not os.path.exists(cred_path):
             raise ExtractionError(
@@ -40,7 +46,15 @@ class VertexAIProvider(LLMProvider):
     # ── Private helpers ──────────────────────────────────────────
 
     def _refresh_token(self) -> str:
-        auth_req = google.auth.transport.requests.Request()
+        try:
+            from google.auth.transport.requests import Request
+        except ImportError as exc:
+            raise ExtractionError(
+                "google-auth is required for Vertex AI. Install ai-service "
+                "Vertex dependencies before selecting this provider."
+            ) from exc
+
+        auth_req = Request()
         self._credentials.refresh(auth_req)
         return self._credentials.token
 
@@ -99,22 +113,26 @@ class VertexAIProvider(LLMProvider):
     # ── LLMProvider interface ────────────────────────────────────
 
     def query(self, prompt: str, system: str = "") -> str:
+        operation, indicator_ids = self._usage_context("query")
         usage = ExtractionUsage()
         t0 = time.perf_counter()
         try:
             data = self._request(prompt, system=system)
         except Exception as e:
-            raise ExtractionError(f"Vertex AI query failed: {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                operation, usage, indicator_ids=indicator_ids,
+                status="failed", error=e,
+            )
+            raise ExtractionError(f"Vertex AI query failed: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         raw = self._parse_response(data)
         meta = data.get("usageMetadata", {})
-        usage.input_tokens = meta.get("promptTokenCount", 0)
-        usage.output_tokens = meta.get("candidatesTokenCount", 0)
-        usage.cost_usd = self.estimate_cost_usd(usage.input_tokens, usage.output_tokens)
+        usage.input_tokens = meta.get("promptTokenCount")
+        usage.output_tokens = meta.get("candidatesTokenCount")
         usage.raw_response = raw
-        self.last_usage = usage
+        self._record_usage(operation, usage, indicator_ids=indicator_ids)
         return raw
 
     def extract_features(
@@ -132,17 +150,22 @@ class VertexAIProvider(LLMProvider):
                 system="Output ONLY valid JSON. No prose, no markdown fences.",
             )
         except Exception as e:
-            raise ExtractionError(f"Vertex AI extract failed: {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                "extract_single", usage, indicator_ids=(indicator_id,),
+                status="failed", error=e,
+            )
+            raise ExtractionError(f"Vertex AI extract failed: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         raw = self._parse_response(data)
         usage.raw_response = raw
         meta = data.get("usageMetadata", {})
-        usage.input_tokens = meta.get("promptTokenCount", 0)
-        usage.output_tokens = meta.get("candidatesTokenCount", 0)
-        usage.cost_usd = self.estimate_cost_usd(usage.input_tokens, usage.output_tokens)
-        self.last_usage = usage
+        usage.input_tokens = meta.get("promptTokenCount")
+        usage.output_tokens = meta.get("candidatesTokenCount")
+        self._record_usage(
+            "extract_single", usage, indicator_ids=(indicator_id,),
+        )
         return self.parse_json_response(raw)
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:

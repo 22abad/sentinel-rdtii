@@ -4,10 +4,12 @@ import asyncio
 import json
 import logging
 import os
+import uuid
 from typing import AsyncGenerator
 
 from providers.base import ExtractionError
-from schemas import RejectedExtraction
+from schemas import RejectedExtraction, RunUsageSummary
+from telemetry import UsageCollector
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,30 @@ def _event_name(sse_event: str) -> str:
 
 
 async def stream_extraction(text: str, llm_provider, pdf_metadata: dict | None = None) -> AsyncGenerator[str, None]:
+    """Stream extraction events with request-scoped telemetry."""
+    collector = UsageCollector(run_id=f"extract-{uuid.uuid4().hex}")
+    try:
+        if hasattr(llm_provider, "usage_collection"):
+            with llm_provider.usage_collection(collector):
+                async for event in _stream_extraction_impl(
+                    text, llm_provider, pdf_metadata, collector,
+                ):
+                    yield event
+        else:
+            async for event in _stream_extraction_impl(
+                text, llm_provider, pdf_metadata, collector,
+            ):
+                yield event
+    finally:
+        collector.finish()
+
+
+async def _stream_extraction_impl(
+    text: str,
+    llm_provider,
+    pdf_metadata: dict | None,
+    collector: UsageCollector,
+) -> AsyncGenerator[str, None]:
     from validation import reset_quote_registry
 
     import main as main_module
@@ -30,6 +56,12 @@ async def stream_extraction(text: str, llm_provider, pdf_metadata: dict | None =
 
     def _sse(event: str, payload: object) -> str:
         return f"event: {event}\ndata: {json.dumps(payload, default=str)}\n\n"
+
+    def _usage_snapshot() -> dict:
+        return RunUsageSummary(
+            run_id=collector.run_id,
+            **collector.summary(),
+        ).model_dump()
 
     yield _sse("started", {"source_text": text})
 
@@ -77,6 +109,7 @@ async def stream_extraction(text: str, llm_provider, pdf_metadata: dict | None =
                 ).model_dump(),
             )
             rejected_count += 1
+            yield _sse("usage", _usage_snapshot())
             continue
         except ExtractionError as exc:
             logger.warning("stream batch failed, per-indicator fallback: %s", exc)
@@ -132,12 +165,17 @@ async def stream_extraction(text: str, llm_provider, pdf_metadata: dict | None =
                         rejected_count += 1
                     yield event
 
+        yield _sse("usage", _usage_snapshot())
+
+    collector.finish()
+    usage = RunUsageSummary(run_id=collector.run_id, **collector.summary())
     yield _sse(
         "done",
         {
             "mappings_count": mapping_count,
             "rejected_count": rejected_count,
             "provider": llm_provider.name,
+            "usage": usage.model_dump(),
         },
     )
 

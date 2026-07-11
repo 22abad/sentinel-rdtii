@@ -58,7 +58,10 @@ class Llama3LocalProvider(LLMProvider):
         )
 
     def query(self, prompt: str, system: str = "") -> str:
+        operation, indicator_ids = self._usage_context("query")
         self._ensure_loaded()
+        usage = ExtractionUsage(cost_usd=0.0)
+        t0 = time.perf_counter()
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
@@ -70,9 +73,23 @@ class Llama3LocalProvider(LLMProvider):
                 max_tokens=2048,
             )
         except Exception as e:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                operation, usage, indicator_ids=indicator_ids,
+                status="failed", error=e, cost_basis="local_api_cost",
+            )
             raise ExtractionError(f"Llama 3 local error: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
         choices = resp.get("choices", []) if isinstance(resp, dict) else []
-        return choices[0].get("message", {}).get("content", "") if choices else ""
+        usage.raw_response = choices[0].get("message", {}).get("content", "") if choices else ""
+        usage_block = resp.get("usage", {}) if isinstance(resp, dict) else {}
+        usage.input_tokens = usage_block.get("prompt_tokens")
+        usage.output_tokens = usage_block.get("completion_tokens")
+        self._record_usage(
+            operation, usage, indicator_ids=indicator_ids,
+            cost_basis="local_api_cost",
+        )
+        return usage.raw_response
 
     def extract_features(
         self,
@@ -98,20 +115,28 @@ class Llama3LocalProvider(LLMProvider):
                 response_format={"type": "json_object"},
             )
         except Exception as e:
-            raise ExtractionError(f"Llama 3 local error: {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            usage.cost_usd = 0.0
+            self._record_usage(
+                "extract_single", usage, indicator_ids=(indicator_id,),
+                status="failed", error=e, cost_basis="local_api_cost",
+            )
+            raise ExtractionError(f"Llama 3 local error: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         choices = resp.get("choices", []) if isinstance(resp, dict) else []
         usage.raw_response = (
             choices[0].get("message", {}).get("content", "") if choices else ""
         )
         usage_block = resp.get("usage", {}) if isinstance(resp, dict) else {}
-        usage.input_tokens = usage_block.get("prompt_tokens", 0)
-        usage.output_tokens = usage_block.get("completion_tokens", 0)
+        usage.input_tokens = usage_block.get("prompt_tokens")
+        usage.output_tokens = usage_block.get("completion_tokens")
         usage.cost_usd = 0.0  # Local inference; no API charge.
 
-        self.last_usage = usage
+        self._record_usage(
+            "extract_single", usage, indicator_ids=(indicator_id,),
+            cost_basis="local_api_cost",
+        )
         return self.parse_json_response(usage.raw_response)
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:

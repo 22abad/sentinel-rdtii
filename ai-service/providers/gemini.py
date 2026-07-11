@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import os
 import time
+from contextvars import copy_context
+from datetime import date
 from typing import Any
 
 from .base import ExtractionError, ExtractionUsage, LLMProvider
@@ -35,46 +37,70 @@ class GeminiProvider(LLMProvider):
         self.name = self.model_name
         self._client = genai.Client(api_key=api_key)
 
-    def _call_gemini(self, prompt: str) -> tuple[str, ExtractionUsage]:
+    def _call_gemini(
+        self,
+        prompt: str,
+        *,
+        operation: str,
+        indicator_ids: tuple[str, ...] = (),
+        temperature: float = 0,
+        json_response: bool = True,
+    ) -> tuple[str, ExtractionUsage]:
         usage = ExtractionUsage()
         t0 = time.perf_counter()
         try:
+            config: dict[str, Any] = {"temperature": temperature}
+            if json_response:
+                config["response_mime_type"] = "application/json"
             resp = self._client.models.generate_content(
                 model=self.model_name,
                 contents=prompt,
-                config={
-                    "temperature": 0,
-                    "response_mime_type": "application/json",
-                },
+                config=config,
             )
         except Exception as e:
-            raise ExtractionError(f"Gemini API error: {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                operation, usage, indicator_ids=indicator_ids,
+                status="failed", error=e,
+            )
+            raise ExtractionError(f"Gemini API error: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         raw_text = getattr(resp, "text", "") or ""
         meta = getattr(resp, "usage_metadata", None)
         if meta is not None:
-            usage.input_tokens = getattr(meta, "prompt_token_count", 0) or 0
-            usage.output_tokens = getattr(meta, "candidates_token_count", 0) or 0
-            usage.cost_usd = self.estimate_cost_usd(
-                usage.input_tokens, usage.output_tokens
-            )
+            usage.input_tokens = getattr(meta, "prompt_token_count", None)
+            usage.output_tokens = getattr(meta, "candidates_token_count", None)
+            if usage.input_tokens is not None and usage.output_tokens is not None:
+                usage.cost_usd = self.estimate_cost_usd(
+                    usage.input_tokens, usage.output_tokens
+                )
         usage.raw_response = raw_text
-        self.last_usage = usage
+        usage_known = usage.input_tokens is not None and usage.output_tokens is not None
+        self._record_usage(
+            operation,
+            usage,
+            indicator_ids=indicator_ids,
+            cost_basis=(
+                "actual_tokens_x_pricing_snapshot" if usage_known else "unavailable"
+            ),
+            pricing_date=date.today().isoformat() if usage_known else None,
+            input_usd_per_million=_INPUT_USD_PER_MTOK if usage_known else None,
+            output_usd_per_million=_OUTPUT_USD_PER_MTOK if usage_known else None,
+        )
         return raw_text, usage
 
     def query(self, prompt: str, system: str = "") -> str:
+        operation, indicator_ids = self._usage_context("query")
         full_prompt = f"{system}\n\n{prompt}" if system else prompt
-        try:
-            resp = self._client.models.generate_content(
-                model=self.model_name,
-                contents=full_prompt,
-                config={"temperature": 0.3},
-            )
-        except Exception as e:
-            raise ExtractionError(f"Gemini query failed: {e}") from e
-        return getattr(resp, "text", "") or ""
+        raw_text, _usage = self._call_gemini(
+            full_prompt,
+            operation=operation,
+            indicator_ids=indicator_ids,
+            temperature=0.3,
+            json_response=False,
+        )
+        return raw_text
 
     def repair_extraction(
         self,
@@ -91,7 +117,11 @@ class GeminiProvider(LLMProvider):
             previous_output=previous_output,
             validation_errors=validation_errors,
         )
-        raw_text, _usage = self._call_gemini(prompt)
+        raw_text, _usage = self._call_gemini(
+            prompt,
+            operation="repair",
+            indicator_ids=(indicator_id,),
+        )
         return self.parse_json_response(raw_text)
 
     def extract_features(
@@ -101,7 +131,11 @@ class GeminiProvider(LLMProvider):
         feature_spec: dict[str, dict[str, str]],
     ) -> dict[str, Any]:
         prompt = self.build_prompt(article_text, indicator_id, feature_spec)
-        raw_text, usage = self._call_gemini(prompt)
+        raw_text, _usage = self._call_gemini(
+            prompt,
+            operation="extract_single",
+            indicator_ids=(indicator_id,),
+        )
         return self.parse_json_response(raw_text)
 
     def extract_batch(
@@ -113,7 +147,13 @@ class GeminiProvider(LLMProvider):
         batch: dict[str, dict[str, Any]] = {}
         with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
             fut = {
-                pool.submit(self.extract_features, chunk_text, ind_id, spec): ind_id
+                pool.submit(
+                    copy_context().run,
+                    self.extract_features,
+                    chunk_text,
+                    ind_id,
+                    spec,
+                ): ind_id
                 for ind_id, spec in indicators
             }
             for f in concurrent.futures.as_completed(fut):
