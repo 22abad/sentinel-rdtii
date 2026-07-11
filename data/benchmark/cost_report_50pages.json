@@ -1,0 +1,29 @@
+{
+  "document": "benchmark_50pages.pdf",
+  "measured_on": "2026-07-11",
+  "ocr": {
+    "engine": "none",
+    "pages": 0,
+    "cost_usd": 0.0
+  },
+  "embedding": {
+    "model": "none",
+    "tokens": 0,
+    "cost_usd": 0.0
+  },
+  "llm": {
+    "model": "qwen2.5:14b",
+    "input_tokens": 41907,
+    "output_tokens": 4968,
+    "llm_calls": 37,
+    "cost_usd": 0.0,
+    "cost_basis": "local ($0 API)"
+  },
+  "crawling": {
+    "mode": "self-hosted",
+    "cost_usd": 0.0
+  },
+  "total_cost_usd": 0.0,
+  "processing_time_seconds": 220.667,
+  "notes": "Token counts are measured from the provider's usage accounting. Costs are provider-reported when available, otherwise measured tokens priced at the rates in submission/cost.py::PRICING. Local open-weight models are recorded at $0 API cost."
+}

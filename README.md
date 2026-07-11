@@ -207,10 +207,12 @@ OCR is applied only to pages without a usable text layer.
 
 ## Actual Cost Per Document
 
-**Measured, not estimated.** Run the cost logger on any document:
+**Measured, not estimated.** Run the cost logger on the included 50-page
+benchmark (or any document):
 
 ```bash
-python tools/cost_logger.py --pdf path/to/law.pdf --economy Singapore --pillar 6
+python tools/cost_logger.py --pdf data/benchmark/benchmark_50pages.pdf \
+    --economy Malaysia --pillar all
 # → logs/cost_report.json
 ```
 
@@ -219,20 +221,27 @@ provider-reported when available, otherwise measured tokens priced at the
 published rates in `ai-service/submission/cost.py`; local open-weight models are
 recorded at **$0 API cost**.
 
-### Measured result (Singapore PDPA 2012, §§25–26; 1 page)
+### Measured result — 50-page benchmark
 
-| Component | Engine | Measured cost |
+Document: 50-page excerpt of the **Malaysia Companies Act 2016 (Act 777)**,
+including the s.245 seven-year retention provision (RDTII 7.3). See
+[`data/benchmark/`](data/benchmark/) for provenance and the raw
+`cost_report_50pages.json`.
+
+**Measured on 2026-07-11** — 37 LLM calls, **41,907 input / 4,968 output
+tokens**, **220.7 s** wall-clock on a local model; OCR not required (digital
+text layer).
+
+| Stack | Engine | Cost per 50-page document |
 |---|---|---|
-| OCR | Tesseract (local) | $0.000 |
-| LLM mapping | Ollama `qwen2.5:14b` (local) | **$0.000** |
-| LLM mapping | DeepSeek (same 4,238 in / 1,398 out tokens × published rate) | **≈ $0.0027** |
+| **Open-weight (measured)** | Ollama `qwen2.5:14b`, local | **$0.000** |
+| Cloud (measured tokens × published rate) | GPT-4o-mini | ≈ $0.009 |
+| Cloud (measured tokens × published rate) | DeepSeek | ≈ $0.017 |
+| Cloud (measured tokens × published rate) | GPT-4o | ≈ $0.154 |
 
-Measured on 2026-07-11 — 7 LLM calls, 4,238 input / 1,398 output tokens,
-52.5 s wall-clock (local model).
-
-> ⚠ **Before final submission:** run `tools/cost_logger.py` on the standard
-> 50-page benchmark document to report a full-document cost. The numbers above
-> are from a short 2-section fixture and are illustrative of the per-token cost.
+OCR and embedding cost are $0 here (born-digital PDF; RAG embeddings are not on
+the mapping path). Cloud rows apply each vendor's published per-token price to
+the **same measured token counts** — reproducible from `cost_report_50pages.json`.
 
 ---
 
