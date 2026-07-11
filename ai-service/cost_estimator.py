@@ -1,7 +1,8 @@
-"""Cost estimator script for Technical Memo.
+"""Legacy assumption-only cost calculator; not measured benchmark evidence.
 
 This script estimates the API costs for processing a 50-page legal document.
-Requirement from Q&A: "Cost estimate per 50-page doc must be in the Memo."
+Use the usage and stage-timing fields emitted by ``evaluate_golden_set.py`` for
+real benchmark runs. This helper remains available only for planning scenarios.
 
 Assumptions for a 50-page legal document:
 - 50 pages * ~400 words/page = 20,000 words.
@@ -31,7 +32,7 @@ def estimate_cost(provider_name: str, input_tokens: int, output_tokens: int) -> 
     return cost
 
 def run_estimation():
-    print("--- RDTII AI Mapper: 50-Page Document Cost Estimation ---")
+    print("--- Planning estimate only (not measured benchmark evidence) ---")
     
     # Using the assumptions listed above
     input_tokens = 10000
@@ -48,7 +49,7 @@ def run_estimation():
         print(f"Provider: {provider:<20} | Estimated Cost: ${cost:.6f}")
 
     print("-" * 55)
-    print("Note: Copy these figures into your Technical Memo submission.")
+    print("Do not cite these assumptions as actual cost. Run the real benchmark instead.")
 
 if __name__ == "__main__":
     run_estimation()

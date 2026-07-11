@@ -10,7 +10,7 @@ every page individually rather than routing the whole document at once.
 
 import logging
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import fitz
@@ -59,6 +59,9 @@ class PdfResult:
     ocr_pages: int
     text_pages: int
     page_confs: list[float]
+    page_sources: list[str] = field(default_factory=list)
+    page_durations_seconds: list[float | None] = field(default_factory=list)
+    vision_usage: list[dict] = field(default_factory=list)
 
 
 def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "") -> PdfResult:
@@ -115,6 +118,9 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "")
     # Second pass: OCR only the pages that need it.
     ocr_results: dict[int, str] = {}
     ocr_page_confs: dict[int, float] = {}
+    ocr_page_sources: dict[int, str] = {}
+    ocr_page_durations: dict[int, float] = {}
+    vision_usage: list[dict] = []
     if needs_ocr:
         pipeline_t0 = time.perf_counter()
         futures: list[tuple[int, Future]] = []
@@ -124,9 +130,13 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "")
                 fut = pool.submit(_timed_ocr_page, i, n_pages, arr, 50, langs, pipeline_t0)
                 futures.append((i, fut))
         for i, fut in futures:
-            text, source, conf = fut.result()
+            text, source, conf, duration, page_vision_usage = fut.result()
             ocr_results[i] = text
             ocr_page_confs[i] = conf if source != "none" else 0.0
+            ocr_page_sources[i] = source
+            ocr_page_durations[i] = duration
+            if page_vision_usage is not None:
+                vision_usage.append({"page_number": i + 1, **page_vision_usage})
 
     doc.close()
 
@@ -134,10 +144,14 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "")
     # loses content (e.g. title in text layer + body in scanned image).
     merged = []
     page_confs: list[float] = []
+    page_sources: list[str] = []
+    page_durations: list[float] = []
     for i in range(n_pages):
         if i not in ocr_results:
             merged.append(pymupdf_pages[i])
             page_confs.append(text_page_confs.get(i, 0.5))
+            page_sources.append("pymupdf")
+            page_durations.append(0.0)
         else:
             ocr_text = ocr_results[i]
             pdf_text = pymupdf_pages[i].strip()
@@ -146,6 +160,8 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "")
             else:
                 merged.append(ocr_text)
             page_confs.append(ocr_page_confs.get(i, 0.0))
+            page_sources.append(ocr_page_sources.get(i, "none"))
+            page_durations.append(ocr_page_durations.get(i, 0.0))
 
     mean_conf = sum(page_confs) / len(page_confs) if page_confs else 0.0
     ocr_ratio = len(needs_ocr) / n_pages if n_pages else 0.0
@@ -161,6 +177,9 @@ def read_pdf(filepath: str, langs: str = _TESSERACT_LANGS, source_url: str = "")
         ocr_pages=len(needs_ocr),
         text_pages=text_count,
         page_confs=page_confs,
+        page_sources=page_sources,
+        page_durations_seconds=page_durations,
+        vision_usage=vision_usage,
     )
 
 
@@ -209,6 +228,20 @@ def _read_pdf_via_sidecar(filepath: str, source_url: str = "") -> PdfResult | No
             payload.get("cache_hit"),
             payload.get("ocr_provider"),
         )
+        sidecar_provider = str(payload.get("ocr_provider") or "unknown")
+        sidecar_vision_usage = []
+        if sidecar_provider == "openai_vision":
+            # The current sidecar contract does not expose per-call usage.
+            # Preserve that uncertainty instead of reporting Vision cost as zero.
+            sidecar_vision_usage.append({
+                "source": "sidecar",
+                "status": "unavailable",
+                "call_count": None,
+                "input_tokens": None,
+                "output_tokens": None,
+                "cost_usd": None,
+                "reason": "sidecar did not return Vision usage metadata",
+            })
         return PdfResult(
             pages=[text],
             ocr_ratio=preflight["ocr_ratio"],
@@ -217,6 +250,9 @@ def _read_pdf_via_sidecar(filepath: str, source_url: str = "") -> PdfResult | No
             ocr_pages=preflight["ocr_pages"],
             text_pages=preflight["text_pages"],
             page_confs=preflight["page_confs"],
+            page_sources=["sidecar"] * preflight["total_pages"],
+            page_durations_seconds=[None] * preflight["total_pages"],
+            vision_usage=sidecar_vision_usage,
         )
     except Exception as exc:
         logger.warning("[PDF] sidecar extraction failed for %s: %s; using local reader", path.name, exc)

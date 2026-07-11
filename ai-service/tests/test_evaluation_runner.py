@@ -1,12 +1,26 @@
 from __future__ import annotations
 
 import json
+import types
 from pathlib import Path
 
 import pytest
+import httpx
+import requests
 
 from evaluation.models import GoldenCase
-from evaluation.runner import _run_live_discovery, load_dataset, run_evaluation
+from discovery.schemas import LegalCandidate
+from evaluation.runner import (
+    _aggregate_ocr_usage,
+    _candidate_rank,
+    _combined_cost,
+    _find_document_candidate,
+    _is_transient_error,
+    _retry_transient,
+    _run_live_discovery,
+    load_dataset,
+    run_evaluation,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +51,12 @@ async def test_offline_runner_uses_real_pipeline_and_writes_both_reports(tmp_pat
     assert report["mapping_evaluation"]["aggregate"]["mapping_recall"] == pytest.approx(1 / 3)
     assert report["source_failures"] == []
     assert report["usage"]["llm_calls"] == 0
+    assert report["ocr_usage"]["vision_calls"] == 0
+    assert report["cost_usd"]["known_llm_ocr_subtotal"] == 0.0
+    assert report["cost_usd"]["search"] == 0.0
+    assert report["cost_usd"]["total"] == 0.0
+    assert report["timing_seconds"]["mapping"] >= 0
+    assert report["timing_seconds"]["total"] >= report["timing_seconds"]["mapping"]
 
     persisted = json.loads(output_path.read_text(encoding="utf-8"))
     assert persisted["metadata"]["case_set_sha256"]
@@ -176,3 +196,100 @@ async def test_live_discovery_rejects_unsupported_indicator_before_search():
 
     with pytest.raises(ValueError, match="supports only RDTII pillar 6/7"):
         await _run_live_discovery([unsupported], documents)
+
+
+def test_transient_detection_covers_httpx_and_requests_errors():
+    assert _is_transient_error(httpx.ConnectError("connection failed"))
+    assert _is_transient_error(httpx.ReadTimeout("read timed out"))
+    assert _is_transient_error(requests.ConnectionError("connection failed"))
+    assert _is_transient_error(requests.Timeout("timed out"))
+
+
+@pytest.mark.anyio
+async def test_transient_retry_uses_non_zero_backoff(monkeypatch):
+    attempts = 0
+    delays = []
+
+    async def operation():
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise httpx.ConnectError("temporary")
+        return "ok"
+
+    async def record_sleep(delay):
+        delays.append(delay)
+
+    monkeypatch.setattr("evaluation.runner.asyncio.sleep", record_sleep)
+    monkeypatch.setattr("evaluation.runner.random.uniform", lambda *_args: 0.0)
+    result = await _retry_transient(
+        operation,
+        timeout_seconds=1,
+        operation="test operation",
+    )
+
+    assert result == "ok"
+    assert attempts == 2
+    assert delays == [0.25]
+
+
+def test_ocr_usage_preserves_partial_known_values_and_unknown_sidecar_calls():
+    summary = _aggregate_ocr_usage([
+        {
+            "status": "success",
+            "input_tokens": 100,
+            "output_tokens": 20,
+            "cost_usd": 0.001,
+        },
+        {
+            "status": "unavailable",
+            "call_count": None,
+            "input_tokens": None,
+            "output_tokens": None,
+            "cost_usd": None,
+        },
+    ])
+
+    assert summary["vision_calls"] is None
+    assert summary["input_tokens"] is None
+    assert summary["known_input_tokens"] == 100
+    assert summary["known_output_tokens"] == 20
+    assert summary["known_cost_usd"] == 0.001
+    assert summary["unavailable_calls"] == 1
+    assert summary["calls_with_unknown_usage"] == 1
+
+
+def test_full_mode_without_extraction_keeps_llm_and_total_cost_unknown():
+    costs = _combined_cost(
+        None,
+        _aggregate_ocr_usage([]),
+        mode="full",
+    )
+
+    assert costs["llm"] is None
+    assert costs["total"] is None
+
+
+def test_document_candidate_selection_prefers_verified_primary_live_source():
+    document = types.SimpleNamespace(source_legislation="Privacy Act")
+    weak = LegalCandidate(
+        id="weak",
+        country_code="AUS",
+        title="Privacy Act",
+        url="https://secondary.example/privacy",
+        source_grade="secondary",
+        validation_status="weak",
+        retrieval_mode="fallback",
+    )
+    strong = LegalCandidate(
+        id="strong",
+        country_code="AUS",
+        title="Privacy Act 1988",
+        url="https://legislation.gov.au/privacy",
+        source_grade="primary",
+        validation_status="verified",
+        retrieval_mode="live",
+    )
+
+    assert _candidate_rank(strong) > _candidate_rank(weak)
+    assert _find_document_candidate(document, [weak, strong]) is strong

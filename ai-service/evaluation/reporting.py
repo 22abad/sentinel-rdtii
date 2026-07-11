@@ -97,6 +97,27 @@ def render_markdown(report: dict) -> str:
         lines.append("")
 
     lines.extend([
+        "## Measured usage and cost",
+        "",
+        f"- Vision OCR calls: {_display(report.get('ocr_usage', {}).get('vision_calls'))}",
+        f"- Vision calls with unavailable usage: "
+        f"{report.get('ocr_usage', {}).get('calls_with_unknown_usage', 0)}",
+        f"- Known Vision token subtotal: "
+        f"{_display(report.get('ocr_usage', {}).get('known_input_tokens'))} input / "
+        f"{_display(report.get('ocr_usage', {}).get('known_output_tokens'))} output",
+        f"- Mapping LLM API cost: {_money(report.get('cost_usd', {}).get('llm'))}",
+        f"- Vision OCR API cost: {_money(report.get('cost_usd', {}).get('ocr'))}",
+        f"- Search cost: {_money(report.get('cost_usd', {}).get('search'))}",
+        f"- Known LLM + OCR subtotal: {_money(report.get('cost_usd', {}).get('known_llm_ocr_subtotal'))}",
+        f"- Total API cost: {_money(report.get('cost_usd', {}).get('total'))}",
+        "",
+        "## Stage timing",
+        "",
+        f"- Discovery: {report.get('timing_seconds', {}).get('discovery', 0.0):.3f} seconds",
+        f"- Fetch: {report.get('timing_seconds', {}).get('fetch', 0.0):.3f} seconds",
+        f"- PDF processing/OCR: {report.get('timing_seconds', {}).get('pdf_processing', 0.0):.3f} seconds",
+        f"- Mapping: {report.get('timing_seconds', {}).get('mapping', 0.0):.3f} seconds",
+        "",
         "## Reproducibility",
         "",
         f"- Runtime: {report['runtime_seconds']:.3f} seconds",
@@ -110,6 +131,14 @@ def render_markdown(report: dict) -> str:
 
 def _percent(value: float | None) -> str:
     return "Unavailable" if value is None else f"{value * 100:.2f}%"
+
+
+def _money(value: float | None) -> str:
+    return "Unavailable" if value is None else f"${value:.6f}"
+
+
+def _display(value: int | None) -> str:
+    return "Unavailable" if value is None else f"{value:,}"
 
 
 def _dimension_table(title: str, values: dict[str, dict]) -> list[str]:
