@@ -46,7 +46,13 @@ _BASE_PHRASES = {
         "consent", "adequacy", "standard contract", "prior authorization", "security assessment",
         " согласие", "充分性", "标准合同", "安全评估",
         "data exporter", "data importer", "binding corporate", "adequate level of protection",
-        "appropriate safeguard", "contractual clause", "transfer mechanism"
+        "appropriate safeguard", "contractual clause", "transfer mechanism",
+        # Conditional cross-border flow language — golden boundary cases:
+        # SGP PDPA s.26 ("comparable ... standard of protection") and
+        # AUS Privacy Act APP 8.1 ("overseas recipient", "cross-border disclosure").
+        "comparable protection", "comparable standard", "standard of protection",
+        "adequate protection", "overseas recipient", "cross-border disclosure",
+        "cross-border transfer", "跨境提供", "对外提供"
     ],
     "6.5": [
         "trade agreement", "depa", "cptpp", "rcep", "free flow of data",
