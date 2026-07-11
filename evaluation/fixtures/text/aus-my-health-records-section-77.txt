@@ -1,0 +1,5 @@
+My Health Records Act 2012
+
+Section 77. Requirement not to hold or take records outside Australia
+
+The System Operator, a registered repository operator, a registered portal operator or a registered contracted service provider that holds records for the purposes of the My Health Record system or has access to information relating to such records, must not hold the records, or take the records, outside Australia; process or handle the information relating to the records outside Australia; or cause or permit another person to do so.
