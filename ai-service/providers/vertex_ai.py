@@ -9,9 +9,7 @@ import os
 import time
 from typing import Any
 
-import google.auth.transport.requests
 import httpx
-from google.oauth2 import service_account
 
 from .base import ExtractionError, ExtractionUsage, LLMProvider
 
@@ -22,6 +20,14 @@ class VertexAIProvider(LLMProvider):
     name = "vertex-ai"
 
     def __init__(self, model_name: str | None = None):
+        try:
+            from google.oauth2 import service_account
+        except ImportError as exc:
+            raise ExtractionError(
+                "google-auth is required for Vertex AI. Install ai-service "
+                "Vertex dependencies before selecting this provider."
+            ) from exc
+
         cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "")
         if not cred_path or not os.path.exists(cred_path):
             raise ExtractionError(
@@ -40,7 +46,15 @@ class VertexAIProvider(LLMProvider):
     # ── Private helpers ──────────────────────────────────────────
 
     def _refresh_token(self) -> str:
-        auth_req = google.auth.transport.requests.Request()
+        try:
+            from google.auth.transport.requests import Request
+        except ImportError as exc:
+            raise ExtractionError(
+                "google-auth is required for Vertex AI. Install ai-service "
+                "Vertex dependencies before selecting this provider."
+            ) from exc
+
+        auth_req = Request()
         self._credentials.refresh(auth_req)
         return self._credentials.token
 
