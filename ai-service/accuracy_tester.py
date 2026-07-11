@@ -1,11 +1,12 @@
-"""ESCAP RDTII Accuracy Validation Script.
+"""Legacy simulated accuracy example — not a benchmark or submission result.
 
 This script demonstrates how to batch test the AI Mapper against known
 ESCAP RDTII dataset ground truths to prove accuracy as required in the
 competition Q&A.
 
-Usage:
-    python accuracy_tester.py --dataset path/to/dataset.csv
+This file is retained only to explain the former prototype. It copies expected
+values into predictions and therefore cannot measure system accuracy. Use
+``scripts/evaluate_golden_set.py`` for real pipeline evaluation.
 """
 
 import json
@@ -84,6 +85,7 @@ def evaluate_accuracy(ground_truth: List[Dict], predictions: List[Dict]):
     print("Note: Run this over the full ESCAP dataset for the final Technical Memo.")
 
 if __name__ == "__main__":
-    gt = load_ground_truth("mock_path.csv")
-    preds = simulate_pipeline_run(gt)
-    evaluate_accuracy(gt, preds)
+    raise SystemExit(
+        "This legacy script simulates predictions and must not be used for "
+        "accuracy claims. Run scripts/evaluate_golden_set.py instead."
+    )
