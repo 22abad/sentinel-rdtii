@@ -93,4 +93,9 @@ reported offsets to recover the exact predicted quote from the evaluated text.
 
 Reports include commit SHA, timestamp/timezone, mode, provider/model, case and
 document hashes, aggregate/per-country/per-indicator metrics, case-level false
-positives and negatives, source failures, runtime, and available provider usage.
+positives and negatives, source failures, stage timing, runtime, and available
+provider usage. Full-mode stage timing separates discovery, fetch, PDF
+processing/OCR, and mapping. Provider token and API cost values come from actual
+returned usage; unavailable values remain unavailable rather than becoming zero.
+
+Page-level OCR CER benchmarking is documented separately in `ocr/README.md`.

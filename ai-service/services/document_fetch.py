@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import re
+import time
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -24,6 +27,7 @@ class DocumentText(BaseModel):
     pdf_metadata: dict[str, Any] | None = None
     crawl_metadata: dict[str, Any] = Field(default_factory=dict)
     quality: CrawlQuality = Field(default_factory=CrawlQuality)
+    timing_seconds: dict[str, float] = Field(default_factory=dict)
 
 
 async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> DocumentText:
@@ -35,7 +39,9 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
     if not source_url:
         raise ValueError("source_url is required.")
 
+    fetch_started = time.perf_counter()
     crawl_result = await fetch_legal_content(source_url, browser_mode=browser_mode)
+    fetch_seconds = time.perf_counter() - fetch_started
     result_type = crawl_result.get("type")
     if result_type == "text":
         text = crawl_result.get("text", "")
@@ -46,6 +52,7 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
             content_type="text",
             crawl_metadata=_crawl_metadata(crawl_result, source_url, browser_mode),
             quality=quality,
+            timing_seconds={"fetch": round(fetch_seconds, 6), "pdf_processing": 0.0},
         )
     if result_type == "docx":
         text = crawl_result.get("text", "")
@@ -56,12 +63,16 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
             content_type="docx",
             crawl_metadata=_crawl_metadata(crawl_result, source_url, browser_mode),
             quality=quality,
+            timing_seconds={"fetch": round(fetch_seconds, 6), "pdf_processing": 0.0},
         )
     if result_type == "pdf":
         pdf_path = crawl_result.get("pdf_path")
         if not pdf_path:
             raise ValueError("Crawler returned a PDF result without pdf_path.")
+        source_file_sha256 = hashlib.sha256(Path(pdf_path).read_bytes()).hexdigest()
+        pdf_started = time.perf_counter()
         pdf_result = await asyncio.to_thread(read_pdf, pdf_path, source_url=source_url)
+        pdf_seconds = time.perf_counter() - pdf_started
         text = "\n".join(pdf_result.pages)
         quality = assess_crawl_quality(text, source_url=source_url, content_type="pdf")
         return DocumentText(
@@ -79,9 +90,17 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
                 "total_pages": pdf_result.total_pages,
                 "ocr_pages": pdf_result.ocr_pages,
                 "text_pages": pdf_result.text_pages,
+                "page_sources": pdf_result.page_sources,
+                "page_durations_seconds": pdf_result.page_durations_seconds,
+                "vision_usage": pdf_result.vision_usage,
+                "source_file_sha256": source_file_sha256,
             },
             crawl_metadata=_crawl_metadata(crawl_result, source_url, browser_mode),
             quality=quality,
+            timing_seconds={
+                "fetch": round(fetch_seconds, 6),
+                "pdf_processing": round(pdf_seconds, 6),
+            },
         )
 
     message = crawl_result.get("message", "unknown error")

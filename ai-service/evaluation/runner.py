@@ -6,6 +6,7 @@ import asyncio
 import hashlib
 import json
 import os
+import random
 import subprocess
 import time
 from collections import defaultdict
@@ -13,6 +14,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Literal, TypeVar
 
+import httpx
+import requests
 from pydantic import BaseModel
 
 from discovery import DiscoverySearchRequest, DiscoveryService
@@ -112,11 +115,14 @@ async def run_evaluation(
     command: str = "scripts/evaluate_golden_set.py",
 ) -> dict:
     started = time.perf_counter()
+    timing_seconds: dict[str, float] = defaultdict(float)
+    dataset_started = time.perf_counter()
     all_cases, all_documents = load_dataset(
         repo_root=repo_root,
         cases_path=cases_path,
         documents_path=documents_path,
     )
+    timing_seconds["dataset_load"] += time.perf_counter() - dataset_started
     normalized_countries = {country.upper() for country in countries or set()}
     if normalized_countries:
         all_cases = [
@@ -157,6 +163,7 @@ async def run_evaluation(
 
     predictions: list[PredictionRecord] = []
     usage_summaries: list[dict] = []
+    ocr_usage_records: list[dict] = []
     discovery_result: dict | None = None
     source_failures: list[dict] = []
     actual_provider = provider_name or "none"
@@ -182,6 +189,7 @@ async def run_evaluation(
         actual_model = OfflineFixtureProvider.model_name
         for document_id, (document, text) in evaluation_documents.items():
             provider = OfflineFixtureProvider(by_document.get(document_id, {}))
+            extraction_started = time.perf_counter()
             try:
                 response = await _with_timeout(
                     run_extraction(text, provider),
@@ -200,6 +208,8 @@ async def run_evaluation(
                     mode=mode,
                 ))
                 continue
+            finally:
+                timing_seconds["mapping"] += time.perf_counter() - extraction_started
             if provider.missing_indicators:
                 source_failures.append(_source_failure(
                     document_id=document_id,
@@ -217,10 +227,12 @@ async def run_evaluation(
             if response.usage is not None:
                 usage_summaries.append(response.usage.model_dump())
     else:
+        discovery_started = time.perf_counter()
         discovery_result = await _run_live_discovery(
             evaluated_cases,
             evaluation_documents,
         )
+        timing_seconds["discovery"] += time.perf_counter() - discovery_started
         if mode == "full":
             if not provider_name:
                 raise ValueError("full mode requires --provider")
@@ -247,23 +259,35 @@ async def run_evaluation(
                         ),
                         operation=f"document fetch for {document_id}",
                     )
+                    timing_seconds["fetch"] += fetched.timing_seconds.get("fetch", 0.0)
+                    timing_seconds["pdf_processing"] += fetched.timing_seconds.get(
+                        "pdf_processing", 0.0
+                    )
+                    if fetched.pdf_metadata:
+                        ocr_usage_records.extend(
+                            fetched.pdf_metadata.get("vision_usage", [])
+                        )
                     if not fetched.quality.should_extract:
                         raise ValueError(
                             "; ".join(fetched.quality.warnings)
                             or f"crawl quality is {fetched.quality.status}"
                         )
-                    response = await _with_timeout(
-                        run_extraction(
-                            fetched.text,
-                            provider,
-                            pdf_metadata=fetched.pdf_metadata,
-                        ),
-                        timeout_seconds=_timeout_from_env(
-                            "RDTII_EVALUATION_EXTRACTION_TIMEOUT_SECONDS",
-                            EXTRACTION_TIMEOUT_SECONDS,
-                        ),
-                        operation=f"live extraction for {document_id}",
-                    )
+                    mapping_started = time.perf_counter()
+                    try:
+                        response = await _with_timeout(
+                            run_extraction(
+                                fetched.text,
+                                provider,
+                                pdf_metadata=fetched.pdf_metadata,
+                            ),
+                            timeout_seconds=_timeout_from_env(
+                                "RDTII_EVALUATION_EXTRACTION_TIMEOUT_SECONDS",
+                                EXTRACTION_TIMEOUT_SECONDS,
+                            ),
+                            operation=f"live extraction for {document_id}",
+                        )
+                    finally:
+                        timing_seconds["mapping"] += time.perf_counter() - mapping_started
                 except Exception as exc:
                     source_failures.append(_source_failure(
                         document_id=document_id,
@@ -308,6 +332,8 @@ async def run_evaluation(
             evaluation_documents,
         )
 
+    llm_usage = _aggregate_usage(usage_summaries)
+    ocr_usage = _aggregate_ocr_usage(ocr_usage_records)
     report = {
         "schema_version": "1.0",
         "metadata": {
@@ -334,7 +360,22 @@ async def run_evaluation(
         "discovery": discovery_result,
         "mapping_evaluation": mapping_evaluation,
         "source_failures": source_failures,
-        "usage": _aggregate_usage(usage_summaries),
+        "usage": llm_usage,
+        "ocr_usage": ocr_usage,
+        "cost_usd": _combined_cost(llm_usage, ocr_usage, mode=mode),
+        "timing_seconds": {
+            **{
+                stage: round(timing_seconds.get(stage, 0.0), 6)
+                for stage in (
+                    "dataset_load",
+                    "discovery",
+                    "fetch",
+                    "pdf_processing",
+                    "mapping",
+                )
+            },
+            "total": round(time.perf_counter() - started, 6),
+        },
         "runtime_seconds": round(time.perf_counter() - started, 6),
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -362,6 +403,7 @@ async def _run_live_discovery(
         )
     service = DiscoveryService()
     matched_urls: dict[str, str] = {}
+    matched_url_ranks: dict[str, tuple] = {}
     failures: list[dict] = []
     requests: dict[tuple[str, str], set[str]] = defaultdict(set)
     for case in cases:
@@ -418,7 +460,10 @@ async def _run_live_discovery(
                     "reason": "expected official document not found",
                 })
             else:
-                matched_urls.setdefault(document_id, candidate.url)
+                rank = _candidate_rank(candidate)
+                if rank > matched_url_ranks.get(document_id, ()):
+                    matched_urls[document_id] = candidate.url
+                    matched_url_ranks[document_id] = rank
 
     expected_documents = len({case.document_id for case in cases})
     return {
@@ -439,11 +484,30 @@ async def _run_live_discovery(
 
 def _find_document_candidate(document: GoldenDocument, candidates: list):
     expected_title = normalize_evidence(document.source_legislation)
+    matches = []
     for candidate in candidates:
         title = normalize_evidence(candidate.title)
         if expected_title in title or title in expected_title:
-            return candidate
-    return None
+            matches.append(candidate)
+    return max(matches, key=_candidate_rank, default=None)
+
+
+def _candidate_rank(candidate) -> tuple:
+    validation_rank = {
+        "verified": 3,
+        "weak": 2,
+        "unverified": 1,
+        "failed": 0,
+    }
+    source_rank = {"primary": 2, "secondary": 1, "unknown": 0}
+    retrieval_rank = {"live": 2, "fallback": 1, "fixture": 0}
+    return (
+        validation_rank.get(candidate.validation_status, 0),
+        source_rank.get(candidate.source_grade, 0),
+        retrieval_rank.get(candidate.retrieval_mode, 0),
+        float(candidate.rank_score),
+        float(candidate.confidence),
+    )
 
 
 def _prediction_records(document: GoldenDocument, mappings: list) -> list[PredictionRecord]:
@@ -508,6 +572,88 @@ def _aggregate_usage(summaries: list[dict]) -> dict | None:
     }
 
 
+def _aggregate_ocr_usage(records: list[dict]) -> dict:
+    input_known = all(record.get("input_tokens") is not None for record in records)
+    output_known = all(record.get("output_tokens") is not None for record in records)
+    cost_known = all(record.get("cost_usd") is not None for record in records)
+    call_counts = [record.get("call_count", 1) for record in records]
+    calls_known = all(count is not None for count in call_counts)
+    return {
+        "vision_calls": sum(call_counts) if calls_known else None,
+        "successful_calls": sum(record.get("status") == "success" for record in records),
+        "failed_calls": sum(record.get("status") == "failed" for record in records),
+        "unavailable_calls": sum(
+            record.get("status") == "unavailable" for record in records
+        ),
+        "input_tokens": (
+            sum(record["input_tokens"] for record in records) if input_known else None
+        ),
+        "output_tokens": (
+            sum(record["output_tokens"] for record in records) if output_known else None
+        ),
+        "cost_usd": (
+            round(sum(record["cost_usd"] for record in records), 10)
+            if cost_known else None
+        ),
+        "known_cost_usd": round(
+            sum(
+                record["cost_usd"]
+                for record in records
+                if record.get("cost_usd") is not None
+            ),
+            10,
+        ),
+        "known_input_tokens": sum(
+            record["input_tokens"]
+            for record in records
+            if record.get("input_tokens") is not None
+        ),
+        "known_output_tokens": sum(
+            record["output_tokens"]
+            for record in records
+            if record.get("output_tokens") is not None
+        ),
+        "calls_with_unknown_usage": sum(
+            record.get("input_tokens") is None or record.get("output_tokens") is None
+            for record in records
+        ),
+        "calls": records,
+    }
+
+
+def _combined_cost(
+    llm_usage: dict | None,
+    ocr_usage: dict,
+    *,
+    mode: EvaluationMode,
+) -> dict:
+    llm_cost = (
+        llm_usage.get("cost_usd")
+        if llm_usage is not None
+        else 0.0
+        if mode == "offline"
+        else None
+    )
+    ocr_cost = ocr_usage.get("cost_usd")
+    search_cost = 0.0 if mode == "offline" else None
+    known_subtotal = (
+        round(llm_cost + ocr_cost, 10)
+        if llm_cost is not None and ocr_cost is not None
+        else None
+    )
+    return {
+        "llm": llm_cost,
+        "ocr": ocr_cost,
+        "search": search_cost,
+        "known_llm_ocr_subtotal": known_subtotal,
+        "total": (
+            round(known_subtotal + search_cost, 10)
+            if known_subtotal is not None and search_cost is not None
+            else None
+        ),
+    }
+
+
 async def _with_timeout(awaitable, *, timeout_seconds: float, operation: str):
     try:
         return await asyncio.wait_for(awaitable, timeout=timeout_seconds)
@@ -534,12 +680,19 @@ async def _retry_transient(
         except Exception as exc:
             if attempt >= max_attempts or not _is_transient_error(exc):
                 raise
-            await asyncio.sleep(0)
+            base_delay = min(2.0, 0.25 * (2 ** (attempt - 1)))
+            await asyncio.sleep(base_delay + random.uniform(0.0, base_delay * 0.2))
     raise RuntimeError(f"{operation} exhausted retry attempts")
 
 
 def _is_transient_error(exc: Exception) -> bool:
-    if isinstance(exc, (TimeoutError, ConnectionError)):
+    if isinstance(exc, (
+        TimeoutError,
+        ConnectionError,
+        httpx.TransportError,
+        requests.exceptions.ConnectionError,
+        requests.exceptions.Timeout,
+    )):
         return True
     message = str(exc).casefold()
     return any(token in message for token in ("429", "502", "503", "timed out"))
