@@ -13,7 +13,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import time
-from typing import Any, Tuple, List
+from typing import Any, Tuple, List, get_args
 
 from chunker import Chunk
 from classifier import classify_indicator
@@ -26,8 +26,14 @@ from source_validator import grade_source
 from extraction_repair import prepare_extraction_with_repair, repair_max_attempts_from_env
 from validation import validate_mapping
 
-from schemas import ExtractionResponse, IndicatorMapping, RejectedExtraction
+from schemas import ExtractionResponse, IndicatorId, IndicatorMapping, RejectedExtraction
 from providers.base import LLMProvider, ExtractionError
+
+# Indicators the output schema can actually represent. The keyword classifier
+# may surface indicators outside this set (e.g. "5.3" from Pillar-5 content);
+# those cannot be built into an IndicatorMapping, so they are skipped up front
+# rather than crashing the whole document run. MVP scope is Pillars 6 and 7.
+SUPPORTED_MAPPING_INDICATORS = frozenset(get_args(IndicatorId))
 
 from agents.extractor import ExtractorAgent
 from agents.analyst import AnalystAgent
@@ -65,6 +71,12 @@ class MASOrchestrator:
         for chunk in chunks:
             indicators: list[tuple[str, dict]] = []
             for indicator_id in main_module.classify_indicator(chunk.text):
+                if indicator_id not in SUPPORTED_MAPPING_INDICATORS:
+                    logger.warning(
+                        "Skipping unsupported indicator %s (outside RDTII output schema)",
+                        indicator_id,
+                    )
+                    continue
                 spec = get_feature_spec(indicator_id)
                 if spec:
                     indicators.append((indicator_id, spec))
@@ -207,8 +219,10 @@ class MASOrchestrator:
                     # Determine pillar
                     pillar_num = int(ind_id.split(".", 1)[0])
 
-                    # Build IndicatorMapping
-                    mapping_obj = IndicatorMapping(
+                    # Build IndicatorMapping (guarded so a field-validation error
+                    # rejects this single mapping instead of crashing the run)
+                    try:
+                        mapping_obj = IndicatorMapping(
                         pillar=pillar_num,
                         indicator=ind_id,
                         score=raw_score,
@@ -229,7 +243,14 @@ class MASOrchestrator:
                         requires_human_review=src_requires_review or score_not_implemented,
                         extraction_provider=self.provider.name,
                         timestamp_verification=ts_verification,
-                    )
+                        )
+                    except Exception as exc:
+                        logger.warning("Could not build mapping for %s: %s", ind_id, exc)
+                        results_list.append((None, RejectedExtraction(
+                            reason=f"invalid mapping for {ind_id}: {exc}",
+                            chunk_preview=chunk.text[:200],
+                        )))
+                        continue
 
                     # Import format_and_clean_mapping lazily to clean up fields
                     main_module.format_and_clean_mapping(mapping_obj, data, chunk.text)
