@@ -9,6 +9,9 @@ venv/
 # CLI submission outputs (generated at runtime by main.py)
 /outputs/
 
+# Measured cost reports (generated at runtime by tools/cost_logger.py)
+/logs/
+
 # Playwright
 /crawler/downloads/
 ai-service/downloads/
