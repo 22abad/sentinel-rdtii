@@ -4,6 +4,10 @@ __pycache__/
 *$py.class
 venv/
 .venv/
+.venv-eval/
+
+# CLI submission outputs (generated at runtime by main.py)
+/outputs/
 
 # Playwright
 /crawler/downloads/

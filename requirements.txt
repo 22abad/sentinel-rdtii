@@ -1,0 +1,39 @@
+# SENTINEL — root requirements for the judges' CLI (`python main.py`).
+#
+# This is the LEAN runtime: enough to run evidence discovery, document
+# fetch/OCR, and indicator mapping against an OpenAI-compatible provider
+# (Ollama, OpenAI, DeepSeek, or any --provider that speaks that API).
+#
+# It intentionally excludes the heavy RAG/embedding stack (torch,
+# transformers, sentence-transformers) so a reviewer can `pip install` and
+# run in a few minutes. For the full web app + local embeddings, install
+# `ai-service/requirements.txt` instead.
+#
+# Optional cloud providers need their own SDK:
+#   Gemini  -> pip install google-generativeai
+#   Claude  -> pip install anthropic
+#   Mistral -> pip install mistralai
+
+# Core / config
+python-dotenv==1.2.2
+pydantic[email]==2.13.4
+pyyaml==6.0.3
+
+# LLM access (OpenAI-compatible: OpenAI, DeepSeek, Ollama, Together, Groq, ...)
+openai==2.41.0
+
+# HTTP + crawling
+httpx==0.28.1
+requests==2.34.2
+playwright==1.60.0
+playwright-stealth==2.0.3
+
+# Document processing / OCR
+pymupdf==1.27.2.3
+pytesseract==0.3.13
+opencv-python-headless==4.13.0.92
+uniseg==0.10.1
+
+# Text matching + spreadsheet export
+rapidfuzz==3.14.5
+openpyxl==3.1.5
