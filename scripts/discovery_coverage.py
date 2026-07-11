@@ -15,6 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 AI_SERVICE_ROOT = REPO_ROOT / "ai-service"
 sys.path.insert(0, str(AI_SERVICE_ROOT))
 
+from discovery.evidence_markers import known_evidence_markers  # noqa: E402
 from discovery.smoke_cases import SMOKE_CASES  # noqa: E402
 
 
@@ -88,9 +89,19 @@ def validate_contract(payload: dict[str, Any]) -> None:
                         )
 
     smoke_cases_by_id = {case.case_id: case for case in SMOKE_CASES}
+    known_markers = known_evidence_markers()
     smoke_reference_ids = [case_id for case_id, _country, _indicator in smoke_references]
     if len(smoke_cases_by_id) != len(SMOKE_CASES):
         errors.append("SMOKE_CASES contains duplicate case ids")
+    for case in SMOKE_CASES:
+        unknown_markers = sorted(set(case.required_evidence_markers) - known_markers)
+        if unknown_markers:
+            errors.append(
+                f"smoke_case {case.case_id} has unknown evidence marker(s): "
+                + ", ".join(unknown_markers)
+            )
+        if len(case.required_evidence_markers) != len(set(case.required_evidence_markers)):
+            errors.append(f"smoke_case {case.case_id} has duplicate evidence markers")
     if len(smoke_reference_ids) != len(set(smoke_reference_ids)):
         errors.append("coverage contract references a smoke_case more than once")
 

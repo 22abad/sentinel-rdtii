@@ -108,6 +108,7 @@ class LegalSourceConfig(BaseModel):
     search_paths: list[str] = Field(default_factory=list)
     include_patterns: list[str] = Field(default_factory=list)
     exclude_patterns: list[str] = Field(default_factory=list)
+    title_overrides: dict[str, str] = Field(default_factory=dict)
     priority: int = 50
     notes: str = ""
 

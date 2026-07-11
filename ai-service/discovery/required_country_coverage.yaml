@@ -54,17 +54,20 @@ countries:
           smoke_case: aus-conditional-flow-6.4
       notes: Passing indicator-specific live smoke observed on 2026-07-10.
     "6.5":
-      status: source_identified
+      status: smoke_verified
       evidence_type: positive
       instruments:
         - title: Australia-Singapore Digital Economy Agreement
-          official_source: Department of Foreign Affairs and Trade
-          url: https://www.dfat.gov.au/trade/services-and-digital-trade/australia-and-singapore-digital-economy-agreement
-          role: In-force agreement page describing cross-border data-flow and data-centre commitments.
-          live_discovery: untested
-          text_fetch: untested
-          smoke_case: null
-      notes: Binding treaty language still requires instrument-level review; empty searches cannot prove non-participation.
+          official_source: Singapore Ministry of Trade and Industry (joint treaty text)
+          url: https://isomer-user-content.by.gov.sg/166/769c26eb-17cf-4e2d-962b-1277a22df9db/australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf
+          role: In-force bilateral agreement; Article 23 prohibits restrictions on covered cross-border information transfers, subject to a bounded public-policy exception.
+          live_discovery: passed
+          text_fetch: passed
+          smoke_case: aus-binding-flow-agreement-6.5
+          operative_provision: Article 23
+          entry_into_force: 2020-12-08
+          australian_entry_into_force_source: https://www.dfat.gov.au/trade/services-and-digital-trade/australia-and-singapore-digital-economy-agreement
+      notes: Operative language and exceptions are smoke-verified. Agreement coverage, sector exclusions, and the final RDTII score still require legal review.
     "7.1":
       status: smoke_verified
       evidence_type: positive
@@ -161,17 +164,19 @@ countries:
           smoke_case: mys-conditional-flow-6.4
       notes: Passing indicator-specific live smoke observed on 2026-07-10; later amendments and 2025 guidance must also be considered.
     "6.5":
-      status: source_identified
+      status: smoke_verified
       evidence_type: positive
       instruments:
-        - title: CPTPP / TPP Text Agreement
+        - title: CPTPP Chapter 14 — Electronic Commerce
           official_source: Ministry of Investment Trade and Industry
-          url: https://fta.miti.gov.my/index.php/pages/view/tpp_cptpp
-          role: Official treaty portal covering electronic-commerce and cross-border information commitments.
-          live_discovery: untested
-          text_fetch: untested
-          smoke_case: null
-      notes: Binding treaty language and Malaysia-specific reservations require manual instrument review.
+          url: https://fta.miti.gov.my/miti-fta/resources/Text%20of%20TPPA%20%28160516%29/14._Electronic_Commerce_.pdf
+          role: CPTPP-incorporated Article 14.11 requires cross-border information transfers for covered business, subject to a bounded public-policy exception.
+          live_discovery: passed
+          text_fetch: passed
+          smoke_case: mys-binding-flow-agreement-6.5
+          operative_provision: Article 14.11
+          entry_into_force_for_malaysia: 2022-11-29
+      notes: Article 14.11 is smoke-verified. Article 14.2 exclusions, non-conforming measures, and Malaysia-specific reservations remain inputs to the final legal score; the Article 14.18 two-year dispute-settlement transition has elapsed.
     "7.1":
       status: smoke_verified
       evidence_type: positive
@@ -209,24 +214,29 @@ countries:
           smoke_case: mys-retention-7.3
       notes: Indicator-specific live smoke covers the seven-year record-retention requirement.
     "7.4":
-      status: source_identified
+      status: smoke_verified
       evidence_type: positive_or_negative
       instruments:
-        - title: Personal Data Protection Act 2010
-          official_source: Attorney General's Chambers of Malaysia
-          url: https://lom.agc.gov.my/act-detail.php?act=709&lang=BI&type=principal
-          role: Potential source for DPO/DPIA duties, including later amendments and subsidiary instruments.
+        - title: Personal Data Protection (Amendment) Act 2024
+          official_source: Personal Data Protection Commissioner Malaysia
+          url: https://www.pdp.gov.my/ppdpv1/wp-content/uploads/2024/11/Act-A1727.pdf
+          role: Section 12A requires controllers and processors within Act 709's scope to appoint one or more data protection officers.
           live_discovery: passed
           text_fetch: passed
-          smoke_case: null
+          smoke_case: mys-dpo-statute-7.4
+          operative_provision: Section 12A
+          commencement_source: https://www.pdp.gov.my/ppdpv1/wp-content/uploads/2024/12/PENETAPAN-TARIKH-PERMULAAN-KUAT-KUASA.pdf
+          effective_from: 2025-06-01
         - title: Personal Data Protection Commissioner’s Circular No. 1/2025
           official_source: Personal Data Protection Commissioner Malaysia
-          url: https://www.pdp.gov.my/ppdpv1/en/guidelines-and-circular-on-personal-data-protection-appointment-of-data-protection-officer-dpo-and-data-breach-notification/
-          role: Current DPO appointment thresholds and implementation guidance effective from June 2025.
-          live_discovery: untested
-          text_fetch: untested
-          smoke_case: null
-      notes: Current official duties are identified; live discovery and horizontal-scope assessment remain incomplete.
+          url: https://www.pdp.gov.my/ppdpv1/wp-content/uploads/2025/02/Pekeliling-DPO-1.pdf
+          role: Makes DPO appointment mandatory where processing exceeds 20,000 data subjects, exceeds 10,000 sensitive/financial data subjects, or involves regular and systematic monitoring.
+          live_discovery: passed
+          text_fetch: passed
+          smoke_case: mys-dpo-circular-7.4
+          operative_provision: Paragraph 4(1)
+          effective_from: 2025-06-01
+      notes: The current DPO duty and thresholds are smoke-verified. Act 709 is limited to personal data in commercial transactions and excludes Federal and State Governments, so horizontal scope and the final 7.4 score still require legal approval.
     "7.5":
       status: smoke_verified
       evidence_type: positive_or_negative
@@ -268,17 +278,19 @@ countries:
           smoke_case: sgp-conditional-flow-6.4
       notes: Passing indicator-specific live smoke observed on 2026-07-10.
     "6.5":
-      status: source_identified
+      status: smoke_verified
       evidence_type: positive
       instruments:
-        - title: Digital Economy Partnership Agreement
+        - title: Australia-Singapore Digital Economy Agreement
           official_source: Ministry of Trade and Industry
-          url: https://www.mti.gov.sg/trade-international-economic-relations/agreements/digital-economy-agreements-dea/depa/
-          role: Government treaty page for binding cross-border data-flow commitments.
-          live_discovery: untested
-          text_fetch: untested
-          smoke_case: null
-      notes: Binding language and in-force status still require instrument-level verification.
+          url: https://isomer-user-content.by.gov.sg/166/769c26eb-17cf-4e2d-962b-1277a22df9db/australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf
+          role: In-force bilateral agreement; Article 23 prohibits restrictions on covered cross-border information transfers, subject to a bounded public-policy exception.
+          live_discovery: passed
+          text_fetch: passed
+          smoke_case: sgp-binding-flow-agreement-6.5
+          operative_provision: Article 23
+          entry_into_force: 2020-12-08
+      notes: Operative language and exceptions are smoke-verified. DEPA Article 4.3 is deliberately excluded because Annex I states it creates no rights or obligations among the Parties; agreement scope and the final RDTII score still require legal review.
     "7.1":
       status: smoke_verified
       evidence_type: positive

@@ -145,6 +145,7 @@ def _drop_empty_values(source: dict[str, Any]) -> dict[str, Any]:
         "search_paths": [],
         "include_patterns": [],
         "exclude_patterns": [],
+        "title_overrides": {},
     }
     return {
         key: value

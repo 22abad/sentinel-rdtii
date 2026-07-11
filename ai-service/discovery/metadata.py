@@ -215,6 +215,12 @@ def infer_indicator_matches(title: str, url: str, snippet: str) -> tuple[list[in
             ("transfer", "personal data", "outside"),
             ("overseas", "personal information"),
         ],
+        "6.5": [
+            ("free flow of data", "agreement"),
+            ("cross-border transfer of information", "agreement"),
+            ("digital economy agreement", "data flow"),
+            ("electronic commerce", "cross-border transfer of information"),
+        ],
         "7.1": [
             ("personal data protection",),
             ("personal information protection law",),
@@ -239,6 +245,7 @@ def infer_indicator_matches(title: str, url: str, snippet: str) -> tuple[list[in
         "7.4": [
             ("data protection officer",),
             ("dpo",),
+            ("pegawai perlindungan data",),
             ("impact assessment",),
             ("designate", "one or more individuals", "responsible", "complies with this act"),
             ("影响评估",),

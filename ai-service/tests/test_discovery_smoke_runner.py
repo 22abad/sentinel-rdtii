@@ -23,6 +23,24 @@ def test_smoke_case_filters_support_country_and_indicator():
     assert [case.case_id for case in cases] == ["mys-cyber-7.2", "sgp-cyber-7.2"]
 
 
+def test_australia_6_5_target_matches_versioned_isomer_pdf_url():
+    case = next(
+        case for case in smoke.SMOKE_CASES
+        if case.case_id == "aus-binding-flow-agreement-6.5"
+    )
+    candidate = LegalCandidate(
+        id="sadea",
+        country_code="AUS",
+        title="Joint treaty text",
+        url=(
+            "https://isomer-user-content.by.gov.sg/166/example/"
+            "australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf"
+        ),
+    )
+
+    assert smoke._candidate_matches_target(case, candidate) is True
+
+
 def test_smoke_case_ids_and_scopes_match_coverage_contract():
     import yaml
 
@@ -87,6 +105,59 @@ def test_smoke_candidate_acceptance_requires_live_verified_official_document():
     assert record["final_url_official"] is True
     assert record["page_acceptable"] is True
     assert record["acceptance_passed"] is True
+
+
+def test_smoke_candidate_requires_all_case_evidence_markers():
+    case = next(
+        case for case in smoke.SMOKE_CASES
+        if case.case_id == "mys-binding-flow-agreement-6.5"
+    )
+    source = LegalSourceConfig(
+        name="Ministry of Investment Trade and Industry",
+        base_url="https://fta.miti.gov.my",
+        domains=["fta.miti.gov.my"],
+    )
+    required = list(case.required_evidence_markers)
+    candidate = LegalCandidate(
+        id="cptpp-14",
+        country_code="MYS",
+        title="Chapter 14 Electronic Commerce",
+        url="https://fta.miti.gov.my/14._Electronic_Commerce_.pdf",
+        source_name=source.name,
+        source_adapter="search_engine",
+        retrieval_mode="live",
+        discovery_method="official_search",
+        validation_status="verified",
+        validation_metadata={
+            "final_url": "https://fta.miti.gov.my/14._Electronic_Commerce_.pdf",
+            "fetch_method": "http_fallback_pdf",
+            "document_retrieval_mode": "live",
+            "http_status": 200,
+            "tls_verified": True,
+            "document_origin_domain": "fta.miti.gov.my",
+            "document_identity_match": True,
+            "quality_status": "good",
+            "char_count": 20000,
+            "matched_indicators": ["6.5"],
+            "evidence_markers": required[:-1],
+        },
+    )
+
+    failed = smoke.candidate_record(case, candidate, {source.name: source}, 900)
+    reasons = smoke.case_failure_reasons(case, [failed])
+    passed_candidate = candidate.model_copy(update={
+        "validation_metadata": {
+            **candidate.validation_metadata,
+            "evidence_markers": required,
+        },
+    })
+    passed = smoke.candidate_record(case, passed_candidate, {source.name: source}, 900)
+
+    assert failed["acceptance_passed"] is False
+    assert failed["missing_evidence_markers"] == [required[-1]]
+    assert any(required[-1] in reason for reason in reasons)
+    assert passed["evidence_markers_passed"] is True
+    assert passed["acceptance_passed"] is True
 
 
 def test_smoke_candidate_rejects_archived_document_and_explains_failure():

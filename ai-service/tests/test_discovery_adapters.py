@@ -28,6 +28,7 @@ from discovery.adapters.malaysia import (
     _parse_lom_search_results,
 )
 from discovery.adapters.search_engine import SearchEngineAdapter, strip_site_filter
+from discovery.adapters.official_index import OfficialIndexAdapter, parse_official_index
 from discovery.adapters.singapore import (
     SingaporeSsoAdapter,
     _extract_page_title,
@@ -40,6 +41,7 @@ from discovery.adapters.thailand import (
     _external_id_from_url as _thailand_external_id_from_url,
 )
 from discovery.registry import get_sources
+from discovery.schemas import LegalSourceConfig, RawSearchHit
 
 
 class FakeSearchBackend:
@@ -460,6 +462,161 @@ async def test_generic_search_adapter_non_mock_marks_fixture_fallback(monkeypatc
     assert rows
     assert rows[0].retrieval_mode == "fallback"
     assert any("not configured" in warning for warning in rows[0].warnings)
+
+
+def test_official_index_parser_returns_only_configured_document_links():
+    source = LegalSourceConfig(
+        name="Treaty office",
+        base_url="https://official.example",
+        domains=["official.example", "files.official.example"],
+        adapter="official_index",
+        search_paths=["/agreements"],
+        include_patterns=[r"chapter-14.*\.pdf"],
+        title_overrides={r"chapter-14.*\.pdf": "Chapter 14 Electronic Commerce"},
+    )
+
+    rows = parse_official_index(
+        """
+        <a href="https://files.official.example/chapter-14-electronic-commerce.pdf">
+          Chapter 14 Electronic Commerce
+        </a>
+        <a href="/unrelated.pdf">Unrelated annex</a>
+        """,
+        index_url="https://official.example/agreements",
+        source=source,
+        query="cross-border data",
+    )
+
+    assert len(rows) == 1
+    assert rows[0].title == "Chapter 14 Electronic Commerce"
+    assert rows[0].retrieval_mode == "live"
+    assert rows[0].discovery_method == "official_search"
+    assert rows[0].raw["index_url"] == "https://official.example/agreements"
+
+
+@pytest.mark.anyio
+async def test_official_index_adapter_failure_is_auditable_fallback(monkeypatch):
+    adapter = OfficialIndexAdapter()
+
+    async def fail_search(_source, _queries, _limit):
+        raise RuntimeError("index down")
+
+    monkeypatch.setattr(adapter, "_search_indexes", fail_search)
+    source = next(
+        source for source in get_sources("MYS")
+        if source.name == "Ministry of Investment Trade and Industry"
+    )
+    rows = await adapter.search(
+        country_code="MYS",
+        source=source,
+        queries=["electronic commerce"],
+        limit=2,
+    )
+
+    assert rows
+    assert rows[0].retrieval_mode == "fallback"
+    assert any("index down" in warning for warning in rows[0].warnings)
+
+
+@pytest.mark.anyio
+async def test_official_index_adapter_respects_fixture_environment(monkeypatch):
+    monkeypatch.setenv("DISCOVERY_USE_FIXTURES", "true")
+    adapter = OfficialIndexAdapter()
+
+    async def unexpected_live_search(*_args):
+        raise AssertionError("live search should not run in fixture mode")
+
+    monkeypatch.setattr(adapter, "_search_indexes", unexpected_live_search)
+    source = next(
+        source for source in get_sources("AUS")
+        if source.name == "Singapore Ministry of Trade and Industry"
+    )
+
+    rows = await adapter.search(
+        country_code="AUS",
+        source=source,
+        queries=["Australia-Singapore Digital Economy Agreement"],
+        limit=2,
+    )
+
+    assert rows[0].retrieval_mode == "fixture"
+    assert "isomer-user-content.by.gov.sg" in rows[0].url
+
+
+@pytest.mark.anyio
+async def test_official_index_adapter_requires_search_paths():
+    source = LegalSourceConfig(
+        name="Empty index",
+        base_url="https://official.example",
+        domains=["official.example"],
+        adapter="official_index",
+    )
+
+    with pytest.raises(ValueError, match="requires at least one configured search path"):
+        await OfficialIndexAdapter()._search_indexes(source, ["law"], 2)
+
+
+@pytest.mark.anyio
+async def test_official_index_parse_failure_preserves_prior_path_rows(monkeypatch):
+    import httpx
+    import discovery.adapters.official_index as official_index_module
+
+    class Response:
+        def __init__(self, url: str):
+            self.url = url
+            self.text = url
+
+        def raise_for_status(self):
+            return None
+
+    class Client:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *_args):
+            return None
+
+        async def get(self, url: str):
+            return Response(url)
+
+    monkeypatch.setattr(httpx, "AsyncClient", lambda **_kwargs: Client())
+
+    def parse(document, **_kwargs):
+        if document.endswith("/broken"):
+            raise ValueError("malformed index")
+        return [RawSearchHit(title="Treaty", url="https://official.example/treaty.pdf")]
+
+    monkeypatch.setattr(official_index_module, "parse_official_index", parse)
+    source = LegalSourceConfig(
+        name="Treaty office",
+        base_url="https://official.example",
+        domains=["official.example"],
+        adapter="official_index",
+        search_paths=["/working", "/broken"],
+    )
+
+    rows = await OfficialIndexAdapter()._search_indexes(source, ["treaty"], 2)
+
+    assert [row.title for row in rows] == ["Treaty"]
+    assert any("ValueError" in warning for warning in rows[0].warnings)
+
+
+@pytest.mark.anyio
+async def test_australia_dfat_fixture_points_to_signed_pdf(monkeypatch):
+    monkeypatch.setenv("DISCOVERY_USE_FIXTURES", "true")
+    source = next(
+        source for source in get_sources("AUS")
+        if source.name == "Department of Foreign Affairs and Trade"
+    )
+
+    rows = await OfficialIndexAdapter().search(
+        country_code="AUS",
+        source=source,
+        queries=["Australia-Singapore Digital Economy Agreement"],
+        limit=2,
+    )
+
+    assert rows[0].url.endswith("australia-singapore-digital-economy-agreement.pdf")
 
 
 @pytest.mark.anyio
