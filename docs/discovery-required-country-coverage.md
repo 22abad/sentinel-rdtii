@@ -6,9 +6,9 @@ Guide: **RDTII 2.1**
 
 | Country | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 7.1 | 7.2 | 7.3 | 7.4 | 7.5 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| AUS | Smoke 已验证 | Smoke 已验证 | 需人工判断 | Smoke 已验证 | 已定位来源 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 |
-| MYS | 需人工判断 | Smoke 已验证 | 需人工判断 | Smoke 已验证 | 已定位来源 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | 已定位来源 | Smoke 已验证 |
-| SGP | 需人工判断 | 需人工判断 | 需人工判断 | Smoke 已验证 | 已定位来源 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 |
+| AUS | Smoke 已验证 | Smoke 已验证 | 需人工判断 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 |
+| MYS | 需人工判断 | Smoke 已验证 | 需人工判断 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 |
+| SGP | 需人工判断 | 需人工判断 | 需人工判断 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 | Smoke 已验证 |
 
 ## Evidence inventory
 
@@ -23,8 +23,8 @@ Guide: **RDTII 2.1**
 - **6.3 — 需人工判断**: Absence of a local infrastructure mandate requires manual scope review.
 - **6.4 — Smoke 已验证**: Passing indicator-specific live smoke observed on 2026-07-10.
   - [Privacy Act 1988](https://www.legislation.gov.au/Latest/C2004A03712) — Federal Register of Legislation; live discovery `passed`; text fetch `passed`; smoke `aus-conditional-flow-6.4`.
-- **6.5 — 已定位来源**: Binding treaty language still requires instrument-level review; empty searches cannot prove non-participation.
-  - [Australia-Singapore Digital Economy Agreement](https://www.dfat.gov.au/trade/services-and-digital-trade/australia-and-singapore-digital-economy-agreement) — Department of Foreign Affairs and Trade; live discovery `untested`; text fetch `untested`.
+- **6.5 — Smoke 已验证**: Operative language and exceptions are smoke-verified. Agreement coverage, sector exclusions, and the final RDTII score still require legal review.
+  - [Australia-Singapore Digital Economy Agreement](https://isomer-user-content.by.gov.sg/166/769c26eb-17cf-4e2d-962b-1277a22df9db/australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf) — Singapore Ministry of Trade and Industry (joint treaty text); live discovery `passed`; text fetch `passed`; smoke `aus-binding-flow-agreement-6.5`.
 - **7.1 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.
   - [Privacy Act 1988](https://www.legislation.gov.au/Latest/C2004A03712) — Federal Register of Legislation; live discovery `passed`; text fetch `passed`; smoke `aus-privacy-7.1`.
 - **7.2 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.
@@ -44,17 +44,17 @@ Guide: **RDTII 2.1**
 - **6.3 — 需人工判断**: Absence of a local infrastructure mandate requires manual scope review.
 - **6.4 — Smoke 已验证**: Passing indicator-specific live smoke observed on 2026-07-10; later amendments and 2025 guidance must also be considered.
   - [Personal Data Protection Act 2010](https://lom.agc.gov.my/act-detail.php?act=709&lang=BI&type=principal) — Attorney General's Chambers of Malaysia; live discovery `passed`; text fetch `passed`; smoke `mys-conditional-flow-6.4`.
-- **6.5 — 已定位来源**: Binding treaty language and Malaysia-specific reservations require manual instrument review.
-  - [CPTPP / TPP Text Agreement](https://fta.miti.gov.my/index.php/pages/view/tpp_cptpp) — Ministry of Investment Trade and Industry; live discovery `untested`; text fetch `untested`.
+- **6.5 — Smoke 已验证**: Article 14.11 is smoke-verified. Article 14.2 exclusions, non-conforming measures, and Malaysia-specific reservations remain inputs to the final legal score; the Article 14.18 two-year dispute-settlement transition has elapsed.
+  - [CPTPP Chapter 14 — Electronic Commerce](https://fta.miti.gov.my/miti-fta/resources/Text%20of%20TPPA%20%28160516%29/14._Electronic_Commerce_.pdf) — Ministry of Investment Trade and Industry; live discovery `passed`; text fetch `passed`; smoke `mys-binding-flow-agreement-6.5`.
 - **7.1 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.
   - [Personal Data Protection Act 2010](https://lom.agc.gov.my/act-detail.php?act=709&lang=BI&type=principal) — Attorney General's Chambers of Malaysia; live discovery `passed`; text fetch `passed`; smoke `mys-privacy-7.1`.
 - **7.2 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.
   - [Cyber Security Act 2024](https://lom.agc.gov.my/act-detail.php?act=854&lang=BI&type=principal) — Attorney General's Chambers of Malaysia; live discovery `passed`; text fetch `passed`; smoke `mys-cyber-7.2`.
 - **7.3 — Smoke 已验证**: Indicator-specific live smoke covers the seven-year record-retention requirement.
   - [Companies Act 2016](https://lom.agc.gov.my/act-detail.php?act=777&lang=BI&type=principal) — Attorney General's Chambers of Malaysia; live discovery `passed`; text fetch `passed`; smoke `mys-retention-7.3`.
-- **7.4 — 已定位来源**: Current official duties are identified; live discovery and horizontal-scope assessment remain incomplete.
-  - [Personal Data Protection Act 2010](https://lom.agc.gov.my/act-detail.php?act=709&lang=BI&type=principal) — Attorney General's Chambers of Malaysia; live discovery `passed`; text fetch `passed`.
-  - [Personal Data Protection Commissioner’s Circular No. 1/2025](https://www.pdp.gov.my/ppdpv1/en/guidelines-and-circular-on-personal-data-protection-appointment-of-data-protection-officer-dpo-and-data-breach-notification/) — Personal Data Protection Commissioner Malaysia; live discovery `untested`; text fetch `untested`.
+- **7.4 — Smoke 已验证**: The current DPO duty and thresholds are smoke-verified. Act 709 is limited to personal data in commercial transactions and excludes Federal and State Governments, so horizontal scope and the final 7.4 score still require legal approval.
+  - [Personal Data Protection (Amendment) Act 2024](https://www.pdp.gov.my/ppdpv1/wp-content/uploads/2024/11/Act-A1727.pdf) — Personal Data Protection Commissioner Malaysia; live discovery `passed`; text fetch `passed`; smoke `mys-dpo-statute-7.4`.
+  - [Personal Data Protection Commissioner’s Circular No. 1/2025](https://www.pdp.gov.my/ppdpv1/wp-content/uploads/2025/02/Pekeliling-DPO-1.pdf) — Personal Data Protection Commissioner Malaysia; live discovery `passed`; text fetch `passed`; smoke `mys-dpo-circular-7.4`.
 - **7.5 — Smoke 已验证**: Discovery evidence is verified; judicial-oversight and sector-scope conclusions require manual legal assessment.
   - [Digital Signature Act 1997](https://lom.agc.gov.my/act-detail.php?act=562&lang=BI&type=principal) — Attorney General's Chambers of Malaysia; live discovery `passed`; text fetch `passed`; smoke `mys-government-access-7.5`.
 
@@ -65,8 +65,8 @@ Guide: **RDTII 2.1**
 - **6.3 — 需人工判断**: Absence of a local infrastructure mandate requires manual scope review.
 - **6.4 — Smoke 已验证**: Passing indicator-specific live smoke observed on 2026-07-10.
   - [Personal Data Protection Act 2012](https://sso.agc.gov.sg/Act/PDPA2012) — Singapore Statutes Online; live discovery `passed`; text fetch `passed`; smoke `sgp-conditional-flow-6.4`.
-- **6.5 — 已定位来源**: Binding language and in-force status still require instrument-level verification.
-  - [Digital Economy Partnership Agreement](https://www.mti.gov.sg/trade-international-economic-relations/agreements/digital-economy-agreements-dea/depa/) — Ministry of Trade and Industry; live discovery `untested`; text fetch `untested`.
+- **6.5 — Smoke 已验证**: Operative language and exceptions are smoke-verified. DEPA Article 4.3 is deliberately excluded because Annex I states it creates no rights or obligations among the Parties; agreement scope and the final RDTII score still require legal review.
+  - [Australia-Singapore Digital Economy Agreement](https://isomer-user-content.by.gov.sg/166/769c26eb-17cf-4e2d-962b-1277a22df9db/australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf) — Ministry of Trade and Industry; live discovery `passed`; text fetch `passed`; smoke `sgp-binding-flow-agreement-6.5`.
 - **7.1 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.
   - [Personal Data Protection Act 2012](https://sso.agc.gov.sg/Act/PDPA2012) — Singapore Statutes Online; live discovery `passed`; text fetch `passed`; smoke `sgp-privacy-7.1`.
 - **7.2 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.

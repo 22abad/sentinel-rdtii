@@ -133,6 +133,10 @@ LEGAL_SIGNAL_TERMS = (
     "应当",
     "มาตรา",
     "พระราชบัญญัติ",
+    "akta",
+    "seksyen",
+    "hendaklah",
+    "pegawai perlindungan data",
 )
 
 ERROR_PAGE_TERMS = (

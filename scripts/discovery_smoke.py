@@ -232,6 +232,12 @@ def candidate_record(
     document_mode = str(metadata.get("document_retrieval_mode") or "")
     indicator_match = case.indicator in set(metadata.get("matched_indicators") or [])
     identity_match = metadata.get("document_identity_match") is True
+    evidence_markers = {
+        str(marker) for marker in metadata.get("evidence_markers") or []
+    }
+    required_evidence_markers = set(case.required_evidence_markers)
+    missing_evidence_markers = sorted(required_evidence_markers - evidence_markers)
+    evidence_markers_passed = not missing_evidence_markers
     accepted = all((
         target_match,
         candidate.discovery_method == "official_search",
@@ -241,6 +247,7 @@ def candidate_record(
         candidate.validation_status == "verified",
         indicator_match,
         identity_match,
+        evidence_markers_passed,
         page_acceptable,
         fallback_explained,
     ))
@@ -267,6 +274,11 @@ def candidate_record(
         "content_type": str(metadata.get("content_type") or ""),
         "char_count": char_count,
         "matched_indicators": list(metadata.get("matched_indicators") or []),
+        # Reports persist stable marker ids only, never fetched legal text.
+        "evidence_markers": sorted(evidence_markers),
+        "required_evidence_markers": sorted(required_evidence_markers),
+        "missing_evidence_markers": missing_evidence_markers,
+        "evidence_markers_passed": evidence_markers_passed,
         "duration_ms": duration_ms,
         "warnings": warnings,
         "target_match": target_match,
@@ -311,6 +323,15 @@ def case_failure_reasons(case: SmokeCase, candidates: list[dict[str, Any]]) -> l
     reasons = [reason for key, expected, reason in checks if not any(item[key] == expected for item in targets)]
     if not any(case.indicator in item["matched_indicators"] for item in targets):
         reasons.append(f"Fetched text did not provide evidence for indicator {case.indicator}.")
+    if case.required_evidence_markers and not any(
+        item["evidence_markers_passed"] for item in targets
+    ):
+        missing = sorted({
+            marker
+            for item in targets
+            for marker in item["missing_evidence_markers"]
+        })
+        reasons.append("Fetched text was missing required evidence markers: " + ", ".join(missing) + ".")
     return reasons or ["Expected law did not satisfy all smoke acceptance checks."]
 
 

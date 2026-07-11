@@ -16,14 +16,34 @@ AUS:
     - name: Department of Foreign Affairs and Trade
       base_url: https://www.dfat.gov.au
       domains: [dfat.gov.au, www.dfat.gov.au]
-      adapter: search_engine
+      adapter: official_index
       source_grade: primary
       source_type: government_portal
       languages: [en]
       pillars: [6]
       indicators: ["6.5"]
+      search_paths: [/trade/services-and-digital-trade/australia-and-singapore-digital-economy-agreement]
+      include_patterns: ['australia-singapore-digital-economy-agreement\.pdf']
+      title_overrides:
+        'australia-singapore-digital-economy-agreement\.pdf': Australia-Singapore Digital Economy Agreement
       priority: 90
-      notes: Official treaty texts and digital economy agreement pages for binding data-flow commitments.
+      notes: Official treaty texts and digital economy agreement pages for binding data flow commitments.
+
+    - name: Singapore Ministry of Trade and Industry
+      base_url: https://www.mti.gov.sg
+      domains: [mti.gov.sg, www.mti.gov.sg, isomer-user-content.by.gov.sg]
+      adapter: official_index
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [6]
+      indicators: ["6.5"]
+      search_paths: [/trade-international-economic-relations/agreements/digital-economy-agreements-dea/sadea/]
+      include_patterns: ['australia-singapore-digital-economy-agreement.*\.pdf']
+      title_overrides:
+        'australia-singapore-digital-economy-agreement.*\.pdf': Australia-Singapore Digital Economy Agreement
+      priority: 89
+      notes: Singapore government publication of the joint in-force Australia-Singapore Digital Economy Agreement and its binding data flow commitment.
 
     - name: Office of the Australian Information Commissioner
       base_url: https://www.oaic.gov.au
@@ -99,14 +119,19 @@ SGP:
 
     - name: Ministry of Trade and Industry
       base_url: https://www.mti.gov.sg
-      domains: [mti.gov.sg, www.mti.gov.sg]
-      adapter: search_engine
+      domains: [mti.gov.sg, www.mti.gov.sg, isomer-user-content.by.gov.sg]
+      adapter: official_index
       source_grade: primary
       source_type: government_portal
       languages: [en]
       pillars: [6]
+      indicators: ["6.5"]
+      search_paths: [/trade-international-economic-relations/agreements/digital-economy-agreements-dea/sadea/]
+      include_patterns: ['australia-singapore-digital-economy-agreement.*\.pdf']
+      title_overrides:
+        'australia-singapore-digital-economy-agreement.*\.pdf': Australia-Singapore Digital Economy Agreement
       priority: 85
-      notes: Official MTI treaty pages; verified for DEPA and SADEA digital economy agreements.
+      notes: Official MTI treaty pages and Singapore Government Isomer-hosted treaty PDFs; verified for a digital economy agreement data flow commitment.
 
     - name: Infocomm Media Development Authority
       base_url: https://www.imda.gov.sg
@@ -169,13 +194,21 @@ MYS:
     - name: Personal Data Protection Department
       base_url: https://www.pdp.gov.my
       domains: [pdp.gov.my, www.pdp.gov.my]
-      adapter: search_engine
+      adapter: official_index
       source_grade: primary
       source_type: regulator
       languages: [en, ms]
       pillars: [6, 7]
+      search_paths:
+        - /ppdpv1/en/akta/personal-data-protection-amendment-act-2024/
+        - /ppdpv1/en/akta/circular-of-personal-data-protection-commissioner-no-2-2025-appointment-of-data-protection-officer/
+        - /ppdpv1/en/guidelines-and-circular-on-personal-data-protection-appointment-of-data-protection-officer-dpo-and-data-breach-notification/
+      include_patterns: ['(?:Act-A1727|Pekeliling-DPO-1)\.pdf']
+      title_overrides:
+        'Act-A1727\.pdf': Personal Data Protection (Amendment) Act 2024
+        'Pekeliling-DPO-1\.pdf': Pelantikan Pegawai Perlindungan Data
       priority: 90
-      notes: Official Commissioner source; verified for PDPA 2010 and PDPA Amendment Act 2024 pages.
+      notes: Official section 12A data protection officer appointment source, including DPO requirement thresholds and the PDPA Amendment Act 2024.
 
     - name: National Cyber Security Agency
       base_url: https://www.nacsa.gov.my
@@ -203,11 +236,15 @@ MYS:
     - name: Ministry of Investment Trade and Industry
       base_url: https://fta.miti.gov.my
       domains: [fta.miti.gov.my]
-      adapter: search_engine
+      adapter: official_index
       source_grade: primary
       source_type: government_portal
       languages: [en, ms]
       pillars: [6]
       indicators: ["6.5"]
+      search_paths: [/index.php/pages/view/tpp_cptpp]
+      include_patterns: ['14\._Electronic_Commerce_\.pdf']
+      title_overrides:
+        '14\._Electronic_Commerce_\.pdf': Chapter 14 Electronic Commerce
       priority: 85
-      notes: Official CPTPP text and electronic-commerce commitment pages.
+      notes: Official electronic commerce agreement text with an Article 14.11 cross-border transfer of information commitment.

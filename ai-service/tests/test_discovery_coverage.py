@@ -41,7 +41,7 @@ def test_smoke_verified_cells_name_passing_discovery_and_fetch_checks():
         if cell["status"] == "smoke_verified"
     ]
 
-    assert len(verified) == 20
+    assert len(verified) == 24
     for cell in verified:
         assert cell["instruments"]
         assert all(instrument["live_discovery"] == "passed" for instrument in cell["instruments"])
@@ -78,6 +78,27 @@ def test_coverage_contract_rejects_smoke_case_for_wrong_indicator():
     payload["countries"]["AUS"]["6.1"]["instruments"][0]["smoke_case"] = "aus-privacy-7.1"
 
     with pytest.raises(ValueError, match="maps to AUS 7.1"):
+        coverage.validate_contract(payload)
+
+
+def test_coverage_contract_rejects_unknown_required_evidence_marker(monkeypatch):
+    payload = coverage.load_contract()
+    case = next(case for case in SMOKE_CASES if case.case_id == "aus-binding-flow-agreement-6.5")
+    monkeypatch.setattr(
+        coverage,
+        "SMOKE_CASES",
+        (*[item for item in SMOKE_CASES if item is not case], case.__class__(
+            case.case_id,
+            case.country,
+            case.expected_title,
+            case.indicator,
+            case.aliases,
+            case.expected_ids,
+            ("unknown_marker",),
+        )),
+    )
+
+    with pytest.raises(ValueError, match="unknown evidence marker.*unknown_marker"):
         coverage.validate_contract(payload)
 
 

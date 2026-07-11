@@ -274,6 +274,17 @@ def _fixture_hits(
                     snippet="Guidance on consent, notification, data protection officers, and transfer of personal data outside Singapore.",
                 )
             ],
+            "mti.gov.sg": [
+                RawSearchHit(
+                    title="Australia-Singapore Digital Economy Agreement",
+                    url=(
+                        "https://isomer-user-content.by.gov.sg/166/"
+                        "769c26eb-17cf-4e2d-962b-1277a22df9db/"
+                        "australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf"
+                    ),
+                    snippet="Official SADEA text containing binding Article 23 cross-border data-flow commitments.",
+                )
+            ],
         },
         "CHN": {
             "flk.npc.gov.cn": [
@@ -359,8 +370,19 @@ def _fixture_hits(
             "dfat.gov.au": [
                 RawSearchHit(
                     title="Australia-Singapore Digital Economy Agreement",
-                    url="https://www.dfat.gov.au/trade/services-and-digital-trade/australia-and-singapore-digital-economy-agreement",
-                    snippet="Official agreement page describing binding cross-border data-flow and data-centre commitments.",
+                    url="https://www.dfat.gov.au/sites/default/files/australia-singapore-digital-economy-agreement.pdf",
+                    snippet="Official signed agreement containing binding Article 23 cross-border data-flow commitments.",
+                )
+            ],
+            "mti.gov.sg": [
+                RawSearchHit(
+                    title="Australia-Singapore Digital Economy Agreement",
+                    url=(
+                        "https://isomer-user-content.by.gov.sg/166/"
+                        "769c26eb-17cf-4e2d-962b-1277a22df9db/"
+                        "australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf"
+                    ),
+                    snippet="Singapore government publication of the joint agreement and its binding Article 23 data-flow commitment.",
                 )
             ],
             "oaic.gov.au": [
@@ -400,10 +422,15 @@ def _fixture_hits(
             ],
             "pdp.gov.my": [
                 RawSearchHit(
-                    title="Personal Data Protection Codes of Practice",
-                    url="https://www.pdp.gov.my/ppdpv1/en/akta/",
-                    snippet="Official sectoral codes and guidance issued under Malaysia's personal data protection framework.",
-                )
+                    title="Personal Data Protection (Amendment) Act 2024",
+                    url="https://www.pdp.gov.my/ppdpv1/wp-content/uploads/2024/11/Act-A1727.pdf",
+                    snippet="Official amendment inserting section 12A on appointment of data protection officers.",
+                ),
+                RawSearchHit(
+                    title="Appointment of Data Protection Officer",
+                    url="https://www.pdp.gov.my/ppdpv1/wp-content/uploads/2025/02/Pekeliling-DPO-1.pdf",
+                    snippet="Official Commissioner Circular No. 1/2025 setting mandatory DPO appointment thresholds.",
+                ),
             ],
             "ssm.com.my": [
                 RawSearchHit(
@@ -415,9 +442,9 @@ def _fixture_hits(
             ],
             "fta.miti.gov.my": [
                 RawSearchHit(
-                    title="CPTPP / TPP Text Agreement",
-                    url="https://fta.miti.gov.my/index.php/pages/view/tpp_cptpp",
-                    snippet="Official agreement text portal including electronic-commerce commitments on cross-border data flows.",
+                    title="Chapter 14 Electronic Commerce",
+                    url="https://fta.miti.gov.my/miti-fta/resources/Text%20of%20TPPA%20%28160516%29/14._Electronic_Commerce_.pdf",
+                    snippet="Official CPTPP-incorporated chapter containing Article 14.11 on cross-border transfer of information.",
                 )
             ],
         },

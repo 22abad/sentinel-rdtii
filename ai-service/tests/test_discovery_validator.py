@@ -194,6 +194,7 @@ async def test_candidate_validator_failure_does_not_drop_candidate():
             "document_identity_match",
             "title_matched_indicators",
             "topic_matched_indicators",
+            "evidence_markers",
             "error",
     }
 

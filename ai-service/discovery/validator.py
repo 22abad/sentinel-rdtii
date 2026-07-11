@@ -9,6 +9,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any
 from urllib.parse import urlsplit
 
+from .evidence_markers import match_evidence_markers
 from .metadata import infer_indicator_matches
 from .schemas import DiscoverySearchRequest, LegalCandidate
 
@@ -103,6 +104,7 @@ STRONG_BODY_TOPIC_RULES: dict[str, tuple[tuple[str, ...], ...]] = {
     ),
     "7.4": (
         ("data protection officer",),
+        ("pegawai perlindungan data",),
         ("data protection impact assessment",),
         ("privacy impact assessment",),
         ("designate", "one or more individuals", "responsible", "complies with this act"),
@@ -211,6 +213,7 @@ class CandidateValidator:
                 sample,
                 str(crawl_metadata.get("title") or ""),
             )
+            evidence_markers = match_evidence_markers(sample)
 
             # Validation must be based on fetched evidence alone. Reusing the
             # search title/URL here can incorrectly verify a navigation or error
@@ -267,6 +270,7 @@ class CandidateValidator:
                 document_identity_match=document_identity_match,
                 title_matched_indicators=title_matched_indicators,
                 topic_matched_indicators=topic_matched_indicators,
+                evidence_markers=evidence_markers,
             )
 
             warnings = list(candidate.warnings)
@@ -513,6 +517,7 @@ def _validation_metadata(
     document_identity_match: bool = False,
     title_matched_indicators: list[str] | None = None,
     topic_matched_indicators: list[str] | None = None,
+    evidence_markers: list[str] | None = None,
     error: str = "",
 ) -> dict[str, Any]:
     return {
@@ -532,6 +537,7 @@ def _validation_metadata(
         "document_identity_match": document_identity_match,
         "title_matched_indicators": title_matched_indicators or [],
         "topic_matched_indicators": topic_matched_indicators or [],
+        "evidence_markers": evidence_markers or [],
         "error": error,
     }
 
