@@ -252,7 +252,7 @@ export function DiscoveryPanel({
           <h2>Discovery</h2>
           <p>Search official legal sources before extraction.</p>
         </div>
-        <div className="discovery-header-actions">
+        <div className="nodrag discovery-header-actions">
           <button
             type="button"
             className="secondary discovery-source-menu-button"

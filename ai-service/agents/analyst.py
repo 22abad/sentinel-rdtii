@@ -46,11 +46,12 @@ class AnalystAgent(Agent):
 Provide a comprehensive 2-3 paragraph legal comment explaining the scope of application, specific constraints, and the implications of this measure on digital trade. Do NOT include any markdown formatting, headers, or prefix/suffix chatter (e.g., "Here is the analysis:"). Return ONLY the multi-paragraph analysis text separated by double newlines.
 """
         try:
-            return await asyncio.to_thread(
-                self.provider.query,
-                prompt,
-                system=self.system_prompt,
-            )
+            with self.provider.usage_operation("analyst_comment", (indicator_id,)):
+                return await asyncio.to_thread(
+                    self.provider.query,
+                    prompt,
+                    system=self.system_prompt,
+                )
         except Exception:
             # Fallback to the basic impact provided by the extractor or a default message
             default_impact = extracted_data.get("impact") or extracted_data.get("policy_description") or ""

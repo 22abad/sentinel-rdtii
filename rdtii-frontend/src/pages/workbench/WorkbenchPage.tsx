@@ -30,6 +30,8 @@ export function WorkbenchPage() {
     error,
     warning,
     provider,
+    usage,
+    isStopping,
     mappings,
     visibleMappings,
     rejected,
@@ -48,6 +50,7 @@ export function WorkbenchPage() {
     extractionProgress,
     batchProgress,
     extract,
+    stopExtraction,
     extractShortlist,
     loadDemoAuditData,
     selectMapping,
@@ -94,6 +97,9 @@ export function WorkbenchPage() {
       availableProviders={availableProviders}
       selectedProvider={selectedProvider}
       setSelectedProvider={setSelectedProvider}
+      stopExtraction={stopExtraction}
+      isStopping={isStopping}
+      usage={usage}
     />
   );
 
@@ -144,14 +150,15 @@ export function WorkbenchPage() {
       setShowRejected={setShowRejected}
       country={country}
       onLoadDemoData={loadDemoAuditData}
+      usage={usage}
     />
   );
 
   const canvasPanels: CanvasPanel[] = [
-    { id: "discovery", title: "Discovery", element: discoveryPanel, width: 800},
-    { id: "source", title: "Source", element: sourcePanel, width: 460 },
+    { id: "discovery", title: "Discovery", element: discoveryPanel, width: 800, dragHandle: ".panel-header"},
+    { id: "source", title: "Source", element: sourcePanel, width: 460, dragHandle: ".panel-header" },
     ...(foundPdfsPanel ? [{ id: "foundPdfs", title: "Found PDFs", element: foundPdfsPanel, width: 420 }] : []),
-    { id: "audit", title: "Audit", element: auditPanel, width: 520 },
+    { id: "audit", title: "Audit", element: auditPanel, width: 520, dragHandle: ".panel-header" },
   ];
 
   return (

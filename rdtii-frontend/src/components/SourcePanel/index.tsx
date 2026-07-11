@@ -1,13 +1,14 @@
 import type React from "react";
 import { useCallback, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import type { IndicatorMapping, Status } from "../../types";
+import type { IndicatorMapping, RunUsageSummary, Status } from "../../types";
 import { SourceView } from "./SourceView";
 import {
   Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
   SelectTrigger, SelectValue, SelectSeparator,
 } from "../ui/Select";
 import { t } from "../../lib/i18n";
+import { UsageSummary } from "../UsageSummary";
 
 const PROVIDER_LABELS: Record<string, string> = {
   gemini: "Gemini",
@@ -42,6 +43,9 @@ type SourcePanelProps = {
   availableProviders: string[];
   selectedProvider: string;
   setSelectedProvider: (v: string) => void;
+  stopExtraction: () => void;
+  isStopping?: boolean;
+  usage?: RunUsageSummary | null;
 };
 
 function isValidUrl(v: string): boolean {
@@ -69,6 +73,9 @@ export function SourcePanel({
   availableProviders,
   selectedProvider,
   setSelectedProvider,
+  stopExtraction,
+  isStopping = false,
+  usage,
 }: SourcePanelProps) {
   const URL_PLACEHOLDERS = [
     "https://www.pdpc.gov.sg/Overview-of-PDPA/The-Legislation/Personal-Data-Protection-Act",
@@ -117,6 +124,9 @@ export function SourcePanel({
       : status === "loading"
         ? sourceUrl && !text.trim() ? t("status.crawling") : t("status.extracting")
         : t("source.run");
+  const stopLabel = extractionProgress?.total
+    ? `${t("status.stop")} · ${extractionProgress.current}/${extractionProgress.total}`
+    : t("status.stop");
 
   return (
     <section className="input-panel" aria-label={t("source.aria")}>
@@ -127,17 +137,25 @@ export function SourcePanel({
         </div>
         <button
           onClick={() => {
+            if (status === "loading") {
+              stopExtraction();
+              return;
+            }
             if (sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim())) return;
             extract();
           }}
-          disabled={status === "loading" || (!text.trim() && !sourceUrl.trim()) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))}
-          className="group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-500 bg-[#10B981] text-white"
+          disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim()) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
+          className={`nodrag group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-300 text-white ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#10B981]"}`}
           style={{ minHeight: 0, border: "none" }}
         >
           <span>
-            {extractionLabel}
+            {status === "loading"
+              ? isStopping ? t("status.stopping") : stopLabel
+              : extractionLabel}
           </span>
-          {status !== "loading" && (
+          {status === "loading" ? (
+            <span className="ml-2 inline-block h-2.5 w-2.5 rounded-[2px] bg-white" aria-hidden="true" />
+          ) : (
             <span className="overflow-hidden w-0 group-hover:w-4 transition-all duration-300 flex items-center justify-center">
               <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
@@ -146,6 +164,18 @@ export function SourcePanel({
           )}
         </button>
       </div>
+
+      {status === "loading" && (
+        <div className="border-b border-gray-100 px-6 py-2.5 bg-gray-50/70">
+          {usage ? (
+            <UsageSummary usage={usage} />
+          ) : (
+            <p className="text-[11px] text-gray-400">
+              {t("status.usagePending")}
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="control-grid">
         <label>

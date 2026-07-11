@@ -69,6 +69,7 @@ class ExtractMappingsExecutor(NodeExecutor):
         rejected: list[Any] = []
         source_text = ""
         provider_name = getattr(provider, "name", "unknown")
+        usage: dict[str, Any] | None = None
         try:
             async for raw_event in stream_extraction(text, provider, pdf_metadata=pdf_metadata):
                 event_name, payload = _parse_sse_event(raw_event)
@@ -80,6 +81,8 @@ class ExtractMappingsExecutor(NodeExecutor):
                     rejected.append(payload)
                 elif event_name == "done" and isinstance(payload, dict):
                     provider_name = str(payload.get("provider") or provider_name)
+                    if isinstance(payload.get("usage"), dict):
+                        usage = payload["usage"]
 
                 status = "success" if event_name == "done" else "running"
                 yield WorkflowRunEvent(
@@ -112,6 +115,7 @@ class ExtractMappingsExecutor(NodeExecutor):
                     "rejected": rejected,
                     "provider": provider_name,
                     "source_text": source_text or text,
+                    "usage": usage,
                 },
             ).model_dump(),
         )

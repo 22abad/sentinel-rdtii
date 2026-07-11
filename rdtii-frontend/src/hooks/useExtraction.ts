@@ -15,6 +15,7 @@ import type {
   IndicatorMapping,
   RejectedExtraction,
   ReviewDecision,
+  RunUsageSummary,
   Status,
 } from "../types";
 
@@ -59,6 +60,45 @@ type ExtractionStreamPayload =
   | string
   | null;
 
+function mergeUsageSummaries(
+  current: RunUsageSummary | null,
+  next: RunUsageSummary | null | undefined,
+  runId: string,
+): RunUsageSummary | null {
+  if (!next) return current;
+  if (!current) return { ...next, run_id: runId };
+  const operations = { ...current.operations };
+  for (const [name, count] of Object.entries(next.operations)) {
+    operations[name] = (operations[name] ?? 0) + count;
+  }
+  return {
+    run_id: runId,
+    llm_calls: current.llm_calls + next.llm_calls,
+    successful_calls: current.successful_calls + next.successful_calls,
+    failed_calls: current.failed_calls + next.failed_calls,
+    calls_with_unknown_usage:
+      current.calls_with_unknown_usage + next.calls_with_unknown_usage,
+    input_tokens:
+      current.input_tokens !== null && next.input_tokens !== null
+        ? current.input_tokens + next.input_tokens
+        : null,
+    output_tokens:
+      current.output_tokens !== null && next.output_tokens !== null
+        ? current.output_tokens + next.output_tokens
+        : null,
+    known_input_tokens: current.known_input_tokens + next.known_input_tokens,
+    known_output_tokens: current.known_output_tokens + next.known_output_tokens,
+    cost_usd:
+      current.cost_usd !== null && next.cost_usd !== null
+        ? current.cost_usd + next.cost_usd
+        : null,
+    known_cost_usd: current.known_cost_usd + next.known_cost_usd,
+    latency_sum_ms: current.latency_sum_ms + next.latency_sum_ms,
+    wall_clock_ms: current.wall_clock_ms + next.wall_clock_ms,
+    operations,
+  };
+}
+
 export function useExtraction() {
   const [country, setCountry] = useState("CHN");
   const [pillarFilter, setPillarFilter] = useState("all");
@@ -68,6 +108,8 @@ export function useExtraction() {
   const [error, setError] = useState("");
   const [warning, setWarning] = useState("");
   const [response, setResponse] = useState<ExtractionResponse | null>(null);
+  const extractionAbortRef = useRef<AbortController | null>(null);
+  const [isStopping, setIsStopping] = useState(false);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>(
     {},
@@ -226,6 +268,7 @@ export function useExtraction() {
   const mappings = response?.mappings ?? [];
   const rejected = response?.rejected ?? [];
   const provider = response?.provider ?? "—";
+  const usage = response?.usage ?? null;
   const activeMapping =
     mappings.find((m) => mappingKey(m) === activeKey) ?? null;
 
@@ -269,6 +312,7 @@ export function useExtraction() {
     baseRejected = [],
     updateTextFromSource = true,
     setReadyOnDone = true,
+    signal,
   }: {
     runSourceUrl: string;
     requestText: string;
@@ -276,6 +320,7 @@ export function useExtraction() {
     baseRejected?: RejectedExtraction[];
     updateTextFromSource?: boolean;
     setReadyOnDone?: boolean;
+    signal?: AbortSignal;
   }): Promise<ExtractionResponse> {
     // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
     let actualProvider = selectedProvider;
@@ -297,6 +342,7 @@ export function useExtraction() {
     const newRejected: RejectedExtraction[] = [];
     let sourceText = "";
     let providerName = "";
+    let runUsage: RunUsageSummary | null = null;
 
     for await (const event of streamExtractMappingsNode({
       text: runSourceUrl ? "" : requestText,
@@ -304,7 +350,7 @@ export function useExtraction() {
       provider: actualProvider,
       model: actualModel || undefined,
       browserMode: "auto",
-    }) as AsyncIterable<WorkflowRunEvent<ExtractionStreamPayload>>) {
+    }, { signal }) as AsyncIterable<WorkflowRunEvent<ExtractionStreamPayload>>) {
       const payload = event.payload;
 
       if (event.event === "error" || event.status === "failed") {
@@ -346,6 +392,7 @@ export function useExtraction() {
           rejected: [...collectedRejected],
           provider: providerName,
           source_text: sourceText,
+          usage: runUsage,
         });
       }
 
@@ -358,13 +405,26 @@ export function useExtraction() {
           rejected: [...collectedRejected],
           provider: providerName,
           source_text: sourceText,
+          usage: runUsage,
         });
       }
 
       if (event.event === "done" && isRecord(payload)) {
         const data = payload as Record<string, unknown>;
         providerName = String(data.provider ?? providerName);
+        if (isRunUsageSummary(data.usage)) runUsage = data.usage;
         if (setReadyOnDone) setStatus("ready");
+      }
+
+      if (event.event === "usage" && isRunUsageSummary(payload)) {
+        runUsage = payload;
+        setResponse({
+          mappings: [...collectedMappings],
+          rejected: [...collectedRejected],
+          provider: providerName,
+          source_text: sourceText,
+          usage: runUsage,
+        });
       }
 
       if (event.event === "node_output" && isNodeResult(payload)) {
@@ -373,11 +433,15 @@ export function useExtraction() {
         }
         providerName = String(payload.outputs.provider ?? providerName);
         sourceText = String(payload.outputs.source_text ?? sourceText);
+        if (isRunUsageSummary(payload.outputs.usage)) {
+          runUsage = payload.outputs.usage;
+        }
         setResponse({
           mappings: [...collectedMappings],
           rejected: [...collectedRejected],
           provider: providerName,
           source_text: sourceText,
+          usage: runUsage,
         });
       }
     }
@@ -387,6 +451,7 @@ export function useExtraction() {
       rejected: newRejected,
       provider: providerName,
       source_text: sourceText,
+      usage: runUsage,
     };
   }
 
@@ -404,11 +469,30 @@ export function useExtraction() {
     );
   }
 
+  function isRunUsageSummary(value: unknown): value is RunUsageSummary {
+    return (
+      isRecord(value) &&
+      typeof value.run_id === "string" &&
+      typeof value.llm_calls === "number" &&
+      typeof value.wall_clock_ms === "number"
+    );
+  }
+
   function extractionStreamError(payload: unknown): string {
     if (isNodeResult(payload)) {
       return payload.error || t("error.stream");
     }
     return formatWorkflowErrorPayload(payload, t("error.stream"));
+  }
+
+  function isAbortError(err: unknown): boolean {
+    return isRecord(err) && err.name === "AbortError";
+  }
+
+  function stopExtraction() {
+    if (!extractionAbortRef.current) return;
+    setIsStopping(true);
+    extractionAbortRef.current.abort();
   }
 
   async function extract(nextSourceUrl?: string) {
@@ -428,19 +512,31 @@ export function useExtraction() {
     setActiveKey(null);
     setDecisions({});
     setBatchProgress({ current: 0, total: 0, currentUrl: "" });
+    const controller = new AbortController();
+    extractionAbortRef.current = controller;
 
     try {
       await runExtractionStream({
         runSourceUrl,
         requestText: nextSourceUrl !== undefined ? "" : text,
+        signal: controller.signal,
       });
     } catch (err) {
+      if (isAbortError(err)) {
+        setWarning(t("status.extractionStopped"));
+        setStatus("ready");
+        return;
+      }
       setError(
         err instanceof Error ? err.message : t("error.extractionFailed"),
       );
       setResponse(null);
       setStatus("error");
     } finally {
+      if (extractionAbortRef.current === controller) {
+        extractionAbortRef.current = null;
+      }
+      setIsStopping(false);
       setExtractionProgress({ current: 0, total: 0, phase: "" });
     }
   }
@@ -469,7 +565,12 @@ export function useExtraction() {
     let accumulatedMappings: IndicatorMapping[] = [];
     let accumulatedRejected: RejectedExtraction[] = [];
     let accumulatedProvider = "";
+    let accumulatedUsage: RunUsageSummary | null = null;
+    const batchRunId = `shortlist-${Date.now()}`;
     const failedUrls: string[] = [];
+    const controller = new AbortController();
+    extractionAbortRef.current = controller;
+    let stopped = false;
 
     for (const [index, url] of uniqueUrls.entries()) {
       setBatchProgress({
@@ -488,11 +589,21 @@ export function useExtraction() {
           baseRejected: accumulatedRejected,
           updateTextFromSource: false,
           setReadyOnDone: false,
+          signal: controller.signal,
         });
         accumulatedMappings = [...accumulatedMappings, ...result.mappings];
         accumulatedRejected = [...accumulatedRejected, ...result.rejected];
         accumulatedProvider = result.provider || accumulatedProvider;
+        accumulatedUsage = mergeUsageSummaries(
+          accumulatedUsage,
+          result.usage,
+          batchRunId,
+        );
       } catch (err) {
+        if (isAbortError(err)) {
+          stopped = true;
+          break;
+        }
         const message =
           err instanceof Error ? err.message : t("error.extractionFailed");
         failedUrls.push(url);
@@ -510,18 +621,28 @@ export function useExtraction() {
           rejected: accumulatedRejected,
           provider: accumulatedProvider,
           source_text: "",
+          usage: accumulatedUsage,
         });
       }
     }
+
+    if (extractionAbortRef.current === controller) {
+      extractionAbortRef.current = null;
+    }
+    setIsStopping(false);
 
     setResponse({
       mappings: accumulatedMappings,
       rejected: accumulatedRejected,
       provider: accumulatedProvider,
       source_text: "",
+      usage: accumulatedUsage,
     });
 
-    if (failedUrls.length === uniqueUrls.length) {
+    if (stopped) {
+      setWarning(t("status.extractionStopped"));
+      setStatus("ready");
+    } else if (failedUrls.length === uniqueUrls.length) {
       setError(
         `All shortlist extractions failed (${failedUrls.length}/${uniqueUrls.length}).`,
       );
@@ -708,6 +829,8 @@ export function useExtraction() {
     status,
     error,
     provider,
+    usage,
+    isStopping,
     mappings,
     visibleMappings,
     rejected,
@@ -733,6 +856,7 @@ export function useExtraction() {
     extractionProgress,
     batchProgress,
     extract,
+    stopExtraction,
     extractShortlist,
     ingestFile,
     loadDemoAuditData,

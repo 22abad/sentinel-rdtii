@@ -15,7 +15,9 @@ export type PanelNodeData = {
 };
 
 /**
- * A draggable card wrapping an existing workbench panel.
+ * A draggable card wrapping an existing workbench panel. The owning React
+ * Flow node may restrict dragging to the panel header so form controls and
+ * selectable text in the body keep their native pointer behavior.
  * The body carries `nowheel` so scrolling the panel doesn't zoom the canvas.
  */
 export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeData; selected?: boolean }) {

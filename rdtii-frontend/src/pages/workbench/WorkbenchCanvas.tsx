@@ -615,6 +615,7 @@ export function WorkbenchCanvas({
           .map((p, i) => ({
             id: p.id,
             type: "panel",
+            dragHandle: p.dragHandle,
             position: positions[p.id] ?? { x: 40 + i * 48, y: 40 + i * 48 },
             data: {
               title: p.title,
@@ -632,6 +633,7 @@ export function WorkbenchCanvas({
             return {
               id: s.id,
               type: "panel",
+              dragHandle: src.dragHandle,
               position: positions[s.id] ?? { x: 160, y: 160 },
               data: {
                 title: src.title,
@@ -778,6 +780,8 @@ export function WorkbenchCanvas({
       <style>{`
         .wb-hand .react-flow__pane { cursor: grab; }
         .wb-hand .react-flow__pane.dragging { cursor: grabbing; }
+        .wb-select .react-flow__node .panel-header { cursor: grab; }
+        .wb-select .react-flow__node.dragging .panel-header { cursor: grabbing; }
       `}</style>
       <ReactFlow
         nodes={nodes}
