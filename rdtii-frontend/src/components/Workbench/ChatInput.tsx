@@ -38,10 +38,14 @@ interface AIChatInputProps {
   expandUp?: boolean;
   countryCode?: string;
   onResponse?: (answer: string) => void;
+  /** Fired when the chat bar activates/deactivates (click / focus / click-away). */
+  onActiveChange?: (active: boolean) => void;
+  /** Fired the moment the user submits a question, before the answer arrives. */
+  onSend?: (question: string) => void;
   provider?: string;
 }
 
-const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, countryCode, onResponse, provider }: AIChatInputProps) => {
+const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, countryCode, onResponse, onActiveChange, onSend, provider }: AIChatInputProps) => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [isActive, setIsActive] = useState(false);
@@ -71,11 +75,14 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
     }
 
     if (!inputValue.trim()) return;
+    const question = inputValue.trim();
+    onSend?.(question);      // show the user's bubble immediately (WhatsApp-style)
+    setInputValue("");
     setIsLoading(true);
     setError("");
     try {
       const data = await runRagQueryNode({
-        question: inputValue,
+        question,
         role: subValues.role,
         context: subValues.context,
         country_code: countryCode ?? "",
@@ -83,7 +90,6 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
       });
       if (data.answer) {
         onResponse?.(data.answer);
-        setInputValue("");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "RAG query failed.");
@@ -113,6 +119,10 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [inputValue]);
+
+  useEffect(() => {
+    onActiveChange?.(isActive);
+  }, [isActive, onActiveChange]);
 
   const handleActivate = () => setIsActive(true);
 
@@ -226,6 +236,12 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
                 className="flex-1 py-2 text-base w-full font-normal"
                 style={{ position: "relative", zIndex: 1, border: "none", borderRadius: 0, boxShadow: "none", background: "transparent", padding: "8px 0", width: "100%" }}
                 onFocus={handleActivate}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
               />
               <div className="absolute left-0 top-0 w-full h-full pointer-events-none flex items-center px-3 py-2">
                 <AnimatePresence mode="wait">
@@ -348,100 +364,100 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
               opacity: n > 0 ? 1 : 0,
               transition: "max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease",
             }}>
-            {(
-              <motion.div
-                custom={TEXT_SUB_INPUTS.length}
-                variants={subInputItemVariants}
-                initial="hidden"
-                animate={n > 0 ? "visible" : "hidden"}
-                style={{ display: "flex", flexDirection: "column", gap: 0 }}
-              >
-                {/* Stacked cards area */}
-                <div
-                  style={{ position: "relative", width: "100%", height: containerH, transition: "height 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+              {(
+                <motion.div
+                  custom={TEXT_SUB_INPUTS.length}
+                  variants={subInputItemVariants}
+                  initial="hidden"
+                  animate={n > 0 ? "visible" : "hidden"}
+                  style={{ display: "flex", flexDirection: "column", gap: 0 }}
                 >
-                  <AnimatePresence>
-                  {uploadedFiles.map(({ id, file }, i) => {
-                    const color = extColor(file.name);
-                    const label = extLabel(file.name);
-                    const expandedY = i * (CARD_H + CARD_GAP);
-                    const translateY = filesExpanded ? expandedY : i * 8;
-                    const scale = filesExpanded ? 1 : Math.max(1 - i * 0.04, 0.88);
-                    const opacity = filesExpanded ? 1 : i > 2 ? 0 : 1 - i * 0.15;
+                  {/* Stacked cards area */}
+                  <div
+                    style={{ position: "relative", width: "100%", height: containerH, transition: "height 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+                  >
+                    <AnimatePresence>
+                      {uploadedFiles.map(({ id, file }, i) => {
+                        const color = extColor(file.name);
+                        const label = extLabel(file.name);
+                        const expandedY = i * (CARD_H + CARD_GAP);
+                        const translateY = filesExpanded ? expandedY : i * 8;
+                        const scale = filesExpanded ? 1 : Math.max(1 - i * 0.04, 0.88);
+                        const opacity = filesExpanded ? 1 : i > 2 ? 0 : 1 - i * 0.15;
 
-                    return (
-                      <motion.div
-                        key={id}
-                        style={{ position: "absolute", left: 0, right: 0, height: CARD_H, zIndex: n - i }}
-                        initial={{ x: 40, opacity: 0 }}
-                        animate={{ x: 0, y: translateY, scale, opacity }}
-                        exit={{ x: 60, opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
-                        transition={{ type: "spring", stiffness: 260, damping: 26, delay: filesExpanded ? i * 0.04 : (n - 1 - i) * 0.04 }}
-                      >
-                        <div style={{ height: "100%", background: "#fff", border: "1px solid #e4eaee", borderRadius: 9999, padding: "10px 14px", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.07)" }}>
-                          <div style={{ width: 36, height: 36, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "0.6rem", fontWeight: 800, color: "#fff" }}>{label}</div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#1f2933", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{file.name}</div>
-                            <div style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 1 }}>{(file.size / 1024).toFixed(0)} KB</div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setUploadedFiles((prev) => prev.filter((entry) => entry.id !== id))}
-                            style={{ flexShrink: 0, padding: 4, borderRadius: "50%", border: "none", background: "transparent", cursor: "pointer", color: "#9ca3af", display: "flex", alignItems: "center", justifyContent: "center" }}
-                            className="hover:text-red-400 transition"
+                        return (
+                          <motion.div
+                            key={id}
+                            style={{ position: "absolute", left: 0, right: 0, height: CARD_H, zIndex: n - i }}
+                            initial={{ x: 40, opacity: 0 }}
+                            animate={{ x: 0, y: translateY, scale, opacity }}
+                            exit={{ x: 60, opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
+                            transition={{ type: "spring", stiffness: 260, damping: 26, delay: filesExpanded ? i * 0.04 : (n - 1 - i) * 0.04 }}
                           >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                  </AnimatePresence>
-                </div>
+                            <div style={{ height: "100%", background: "#fff", border: "1px solid #e4eaee", borderRadius: 9999, padding: "10px 14px", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.07)" }}>
+                              <div style={{ width: 36, height: 36, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "0.6rem", fontWeight: 800, color: "#fff" }}>{label}</div>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#1f2933", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{file.name}</div>
+                                <div style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 1 }}>{(file.size / 1024).toFixed(0)} KB</div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setUploadedFiles((prev) => prev.filter((entry) => entry.id !== id))}
+                                style={{ flexShrink: 0, padding: 4, borderRadius: "50%", border: "none", background: "transparent", cursor: "pointer", color: "#9ca3af", display: "flex", alignItems: "center", justifyContent: "center" }}
+                                className="hover:text-red-400 transition"
+                              >
+                                <X size={14} />
+                              </button>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                  </div>
 
-                {/* Expand / collapse toggle */}
-                <motion.button
-                  type="button"
-                  onClick={() => setFilesExpanded((v) => !v)}
-                  style={{
-                    marginTop: 10,
-                    alignSelf: "center",
-                    position: "relative",
-                    padding: "8px 36px 8px 20px",
-                    background: "#fff",
-                    borderRadius: 9999,
-                    border: "none",
-                    boxShadow: "0px 3px 3.5px rgba(119,113,113,0.35)",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
-                    color: "#1f2933",
-                    cursor: "pointer",
-                  }}
-                  whileHover={{ y: -2, boxShadow: "0px 5px 5px rgba(119,113,113,0.4)" }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  layout
-                >
-                  {filesExpanded ? "Collapse" : `Show all ${n} file${n !== 1 ? "s" : ""}`}
-                  <motion.span
+                  {/* Expand / collapse toggle */}
+                  <motion.button
+                    type="button"
+                    onClick={() => setFilesExpanded((v) => !v)}
                     style={{
-                      position: "absolute",
-                      right: 14,
-                      top: "50%",
-                      marginTop: -5,
-                      width: 7,
-                      height: 7,
-                      borderTop: "2px solid #1f2933",
-                      borderLeft: "2px solid #1f2933",
-                      display: "block",
+                      marginTop: 10,
+                      alignSelf: "center",
+                      position: "relative",
+                      padding: "8px 36px 8px 20px",
+                      background: "#fff",
+                      borderRadius: 9999,
+                      border: "none",
+                      boxShadow: "0px 3px 3.5px rgba(119,113,113,0.35)",
+                      fontSize: "0.75rem",
+                      fontWeight: 600,
+                      color: "#1f2933",
+                      cursor: "pointer",
                     }}
-                    initial={false}
-                    animate={{ rotate: filesExpanded ? 45 : 225, y: filesExpanded ? 2 : -2 }}
-                    transition={{ duration: 0.3, ease: "linear" }}
-                  />
-                </motion.button>
-              </motion.div>
-            )}
+                    whileHover={{ y: -2, boxShadow: "0px 5px 5px rgba(119,113,113,0.4)" }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    layout
+                  >
+                    {filesExpanded ? "Collapse" : `Show all ${n} file${n !== 1 ? "s" : ""}`}
+                    <motion.span
+                      style={{
+                        position: "absolute",
+                        right: 14,
+                        top: "50%",
+                        marginTop: -5,
+                        width: 7,
+                        height: 7,
+                        borderTop: "2px solid #1f2933",
+                        borderLeft: "2px solid #1f2933",
+                        display: "block",
+                      }}
+                      initial={false}
+                      animate={{ rotate: filesExpanded ? 45 : 225, y: filesExpanded ? 2 : -2 }}
+                      transition={{ duration: 0.3, ease: "linear" }}
+                    />
+                  </motion.button>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         )}
