@@ -101,6 +101,18 @@ RESPONSE GUIDELINES:
 
 @router.post("/api/rag/query")
 async def chat_query(req: RAGQueryRequest):
+    import asyncio
+
+    from rag.rag import build_context, retrieve
+
+    # --- retrieval (runs off the event loop; encode + DB are blocking) ---
+    hits = await asyncio.to_thread(
+        retrieve,
+        req.question,
+        country_code=req.country_code or None,
+    )
+    retrieved_context = build_context(hits)
+
     parts = [f"Question: {req.question}"]
     if req.role:
         parts.insert(0, f"Your role: {req.role}")
@@ -108,6 +120,8 @@ async def chat_query(req: RAGQueryRequest):
         parts.append(f"Additional context: {req.context}")
     if req.country_code:
         parts.append(f"Country / Economy under review: {req.country_code}")
+    if retrieved_context:
+        parts.append(f"Retrieved legal text (most relevant first):\n{retrieved_context}")
     if req.source_text:
         parts.append(f"Legal text being analyzed:\n\"\"\"\n{req.source_text}\n\"\"\"")
     user_prompt = "\n\n".join(parts)
@@ -132,7 +146,12 @@ async def chat_query(req: RAGQueryRequest):
                     full_answer += content
                     yield f"event: token\ndata: {json.dumps(content)}\n\n"
 
-            payload = {"answer": full_answer, "provider": f"ollama/{_OLLAMA_MODEL}"}
+            payload = {
+                "answer": full_answer,
+                "provider": f"ollama/{_OLLAMA_MODEL}",
+                "retrieved_chunks": [h.text for h in hits],
+                "retrieval_count": len(hits),
+            }
             yield f"event: done\ndata: {json.dumps(payload)}\n\n"
         except Exception as exc:
             yield f"event: error\ndata: {json.dumps({'detail': str(exc)})}\n\n"
