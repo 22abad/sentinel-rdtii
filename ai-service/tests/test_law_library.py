@@ -88,7 +88,8 @@ async def test_run_library_offline_tags_rows_known(monkeypatch):
         return SimpleNamespace(mappings=[mapping])
 
     monkeypatch.setattr("services.extraction.run_extraction", fake_extraction)
-    monkeypatch.setattr("providers.get_default_provider", lambda: SimpleNamespace(name="fake"))
+    monkeypatch.setattr("providers.get_provider", lambda name, model=None: SimpleNamespace(name="fake"))
+    monkeypatch.delenv("RDTII_LLM_FALLBACK_PROVIDER", raising=False)
 
     rows, meta = await run_library("SGP", 6)
 
@@ -109,7 +110,8 @@ async def test_run_library_reports_empty_economy(monkeypatch):
         raise AssertionError("extraction should not run when no cached laws match")
 
     monkeypatch.setattr("services.extraction.run_extraction", unused_extraction)
-    monkeypatch.setattr("providers.get_default_provider", lambda: SimpleNamespace(name="fake"))
+    monkeypatch.setattr("providers.get_provider", lambda name, model=None: SimpleNamespace(name="fake"))
+    monkeypatch.delenv("RDTII_LLM_FALLBACK_PROVIDER", raising=False)
 
     rows, meta = await run_library("Thailand", 6)
     assert rows == []

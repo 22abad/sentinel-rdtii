@@ -131,13 +131,13 @@ async def discover_and_extract(
     """
 
     from discovery import DiscoverySearchRequest, DiscoveryService
-    from providers import get_default_provider, get_provider
+    from providers import resolve_provider
     from services.document_fetch import fetch_document_text
     from services.extraction import run_extraction
 
     code = economy_code(economy)
     display = economy_display_name(economy)
-    provider = get_provider(provider_name) if provider_name else get_default_provider()
+    provider = resolve_provider(provider_name)
 
     request = DiscoverySearchRequest(
         country_code=code,
@@ -227,12 +227,12 @@ async def run_library(
     """
 
     from law_library import lookup
-    from providers import get_default_provider, get_provider
+    from providers import resolve_provider
     from services.extraction import run_extraction
 
     display = economy_display_name(economy)
     code = economy_code(economy)
-    provider = get_provider(provider_name) if provider_name else get_default_provider()
+    provider = resolve_provider(provider_name)
 
     entries = lookup(code, pillar=pillar, indicators=indicators)
     wanted = _pillar_indicators(pillar, indicators)
@@ -309,12 +309,12 @@ async def run_pdf(
     """Bypass discovery: extract directly from a provided PDF path."""
 
     from pdf_reader import read_pdf
-    from providers import get_default_provider, get_provider
+    from providers import resolve_provider
     from services.extraction import run_extraction
 
     display = economy_display_name(economy)
     code = economy_code(economy)
-    provider = get_provider(provider_name) if provider_name else get_default_provider()
+    provider = resolve_provider(provider_name)
 
     pdf_result = read_pdf(pdf_path, source_url=pdf_path)
     text = "\n".join(getattr(pdf_result, "pages", []) or [])

@@ -282,6 +282,23 @@ Supported providers: `ollama`, `openai`, `deepseek`, `gemini`, `claude`,
 To add one, implement a class in `ai-service/providers/` and register it in
 `providers/__init__.py`.
 
+### Automatic fallback (judge-safety net)
+
+Set a fallback so a run still completes if the primary model is unavailable in a
+reviewer's environment (e.g. Ollama not installed, or a request errors):
+
+```env
+RDTII_LLM_PROVIDER=ollama            # primary — local, $0
+RDTII_LLM_FALLBACK_PROVIDER=deepseek # fallback — used only if the primary fails
+DEEPSEEK_API_KEY=...                 # ship the team's key as the net
+```
+
+If a primary call fails, the whole multi-agent pipeline transparently fails over
+to the fallback provider (and latches to it for the rest of the run — a dead
+primary is not retried on every call). Leave `RDTII_LLM_FALLBACK_PROVIDER` blank
+to disable. The failover wrapper is `providers.resolve_provider()` →
+`providers/fallback.py`.
+
 ## OCR Engine
 
 OCR is applied only to pages without a usable text layer.
