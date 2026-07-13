@@ -16,12 +16,14 @@ Sources:
 from __future__ import annotations
 
 # Each indicator's spec maps feature_name -> (type_hint, description)
+# Bespoke specs below cover the Round 1 pillars (6/7) plus indicators with
+# hand-tuned scorers (2.1, 5.1, 5.3). Every other Round 2 indicator gets a
+# methodology-driven generic spec from get_feature_spec() — see _generic_spec.
 INDICATOR_FEATURES: dict[str, dict[str, dict[str, str]]] = {
-    # ── Pillar 6: Cross-border data policies ─────────────────────────
+    # Legacy Round 1 placeholder (1.1 is outside the Round 2 methodology; the
+    # float-coercion regression test exercises it).
     "1.1": {"tariff_rate": {"type": "float", "description": "Applicable tariff rate"}},
     "2.1": {"procurement_preference": {"type": "bool", "description": "Local preference in procurement?"}},
-    "3.1": {"foreign_equity_limit": {"type": "float", "description": "FDI equity limit"}},
-    "4.1": {"ip_protection_level": {"type": "str", "description": "IP protection level"}},
     "5.1": {
         "has_competition": {
             "type": "bool",
@@ -166,19 +168,69 @@ INDICATOR_FEATURES: dict[str, dict[str, dict[str, str]]] = {
             "description": "Allows government access to personal data without judicial warrant / independent oversight?",
         },
     },
-    "8.1": {"intermediary_liability": {"type": "str", "description": "Liability of intermediaries"}},
-    "9.1": {"content_restriction": {"type": "str", "description": "Restriction on content"}},
-    "10.1": {"non_tariff_measure": {"type": "str", "description": "Non-tariff measure type"}},
-    "11.1": {"standards_interoperability": {"type": "bool", "description": "Standards interoperability"}},
-    "12.1": {"e_signature_validity": {"type": "bool", "description": "E-signature validity"}}
 }
 
 
+def _generic_spec(indicator_id: str) -> dict[str, dict[str, str]]:
+    """Build a methodology-driven spec for indicators without a bespoke one.
+
+    The LLM extracts *which official criterion* the provision matches — a
+    categorical fact checkable against the published criteria — never a
+    numeric score. scoring/generic.py maps the criterion to its published
+    score deterministically.
+    """
+
+    from methodology import get_rule
+
+    rule = get_rule(indicator_id)
+    if rule is None:
+        return {}
+    # Keep descriptions single-line: they are injected into an indented
+    # prompt list, where embedded newlines garble the structure.
+    category = " ".join(rule.category.split())
+    numbered = " | ".join(f"[{i}] {' '.join(opt.split())}" for i, opt in enumerate(rule.options, 1))
+    spec: dict[str, dict[str, str]] = {
+        "measure_present": {
+            "type": "bool",
+            "description": (
+                f"true if the provision contains a measure/rule concerning: {category}. "
+                "false only if the text is unrelated to this policy issue."
+            ),
+        },
+        "matched_criterion": {
+            "type": "int",
+            "description": (
+                "The number of the official RDTII criterion that best describes the "
+                f"provision, from: {numbered}. Answer 0 only if none applies."
+            ),
+        },
+    }
+    if rule.counting_step is not None:
+        spec["measure_count"] = {
+            "type": "int",
+            "description": (
+                "Number of DISTINCT qualifying measures evidenced in the "
+                "provision (each must be separately identifiable)."
+            ),
+        }
+    return spec
+
+
 def get_feature_spec(indicator_id: str) -> dict[str, dict[str, str]]:
-    """Return the feature spec for an indicator, or empty dict if unknown."""
-    return INDICATOR_FEATURES.get(indicator_id, {})
+    """Return the feature spec for an indicator, or empty dict if unknown.
+
+    Bespoke specs win; all other Round 2 indicators fall back to the
+    methodology-driven generic spec.
+    """
+    spec = INDICATOR_FEATURES.get(indicator_id)
+    if spec:
+        return spec
+    return _generic_spec(indicator_id)
 
 
 def list_supported_indicators() -> list[str]:
     """Return all indicator IDs the system can handle."""
-    return list(INDICATOR_FEATURES.keys())
+    from methodology import load_methodology
+
+    ids = set(INDICATOR_FEATURES) | set(load_methodology())
+    return sorted(ids, key=lambda x: [int(p) for p in x.split(".")])

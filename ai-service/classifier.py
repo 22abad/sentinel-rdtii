@@ -95,10 +95,66 @@ _BASE_PHRASES = {
     "12.1": ["online sales", "e-signature", "在线销售", "电子签名"]
 }
 
-# Build expanded phrases at load time — original phrases + jurisdiction synonyms
+# Fragments too generic to route on — they appear in nearly every statute.
+_GENERIC_FRAGMENTS = {
+    "measures", "measure", "requirements", "requirement", "restrictions",
+    "restriction", "data", "services", "service", "other", "existence",
+    "framework", "issues", "practice", "laws", "law", "related",
+    "sectors", "sector", "products", "content",
+}
+
+
+def _phrases_from_category(category: str) -> list[str]:
+    """Derive routing phrases from an indicator's official category text.
+
+    Round 2 spans 61 indicators; hand-curating phrases for each is not
+    sustainable, so non-curated indicators route on key fragments of their
+    official RDTII category (e.g. "Foreign equity limits in e-commerce" ->
+    ["foreign equity limits", "e-commerce"]). Curated _BASE_PHRASES always win.
+    """
+
+    text = category.split("\n")[0]  # exception notes live on later lines
+    text = re.sub(r"\([^)]*\)", " ", text)
+    fragments = re.split(
+        r"[,;/]| including | such as | related to | relevant to | in | of | for | to | and | or ",
+        text, flags=re.IGNORECASE,
+    )
+    out: list[str] = []
+    for fragment in fragments:
+        fragment = fragment.strip().lower().strip(" .-–")
+        fragment = re.sub(r"^(the|a|an|any|lack of|absence of|existence of|minimum)\s+", "", fragment)
+        if (
+            4 <= len(fragment) <= 45
+            and fragment not in _GENERIC_FRAGMENTS
+            and not fragment.isdigit()
+        ):
+            out.append(fragment)
+    return out[:6]
+
+
+def _methodology_phrases() -> dict[str, list[str]]:
+    try:
+        from methodology import load_methodology
+    except ImportError:  # pragma: no cover — methodology data not provisioned
+        return {}
+    return {
+        iid: phrases
+        for iid, rule in load_methodology().items()
+        if (phrases := _phrases_from_category(rule.category))
+    }
+
+
+# Build expanded phrases at load time: curated phrases + jurisdiction synonyms,
+# unioned with methodology-derived phrases (curated entries keep their hits and
+# gain the official category wording; Round 2 indicators without curation get
+# the derived phrases alone).
 _INDICATOR_PHRASES = {
     k: expand_phrases(v) for k, v in _BASE_PHRASES.items()
 }
+for _iid, _derived in _methodology_phrases().items():
+    _INDICATOR_PHRASES[_iid] = sorted(
+        set(_INDICATOR_PHRASES.get(_iid, [])) | set(expand_phrases(_derived))
+    )
 
 # Statutes often express localization as a prohibition on offshore handling
 # rather than using the concise labels in the RDTII taxonomy. First isolate each

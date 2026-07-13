@@ -17,8 +17,9 @@ from typing import Literal, Union
 
 from pydantic import BaseModel, Field
 
-# RDTII 2.1 valid scores (the indicator-level rule yields one of these)
-Score = Literal[0.0, 0.25, 0.5, 0.75, 1.0]
+# RDTII 2.1 valid scores (the indicator-level rule yields one of these).
+# 0.8 appears in the official Round 2 criteria (e.g. 3.1 foreign equity tiers).
+Score = Literal[0.0, 0.25, 0.5, 0.75, 0.8, 1.0]
 
 # Round 2 spans all 12 pillars. The indicator set is the official RDTII 2.1
 # methodology (61 indicators; ids normalised by tools/build_round2_baseline.py,
