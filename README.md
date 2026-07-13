@@ -102,6 +102,19 @@ to live discovery to fill gaps and surface NEW finds — so a reviewer's short r
 never rides entirely on a live crawl. Add `--no-seed` for pure live discovery,
 or `--offline` to stay on the seeds only.
 
+For an auditable reviewer run, use strict live mode:
+
+```bash
+python main.py --economy Singapore --pillar 6 --strict-live
+```
+
+`--strict-live` disables the seed pass, rejects fixture/fallback and mock
+candidates, accepts only configured official domains, and requires a verified
+live document fetch. A run with no qualifying evidence fails explicitly and
+writes no submission files. JSON rows record the final URL, HTTP status, fetch
+method, and retrieval mode. Every CLI run also prints separate seed,
+live-discovered, and fixture evidence counts.
+
 For a lower-cost first run that still exercises real discovery, document
 retrieval, and mapping, process only the first accepted document:
 
@@ -138,6 +151,7 @@ python main.py --economy Singapore --pillar 6 --offline
 | `--pdf` | Extract from a local PDF (skips the crawler) |
 | `--offline` | Map cached official texts from the local law library (no network) |
 | `--no-seed` | Skip the seed pass; go straight to live discovery (default is seed-first) |
+| `--strict-live` | Reviewer mode: verified official live evidence only; fail instead of using fixtures |
 | `--provider` | Override `RDTII_LLM_PROVIDER` for this run |
 | `--format` | `csv`, `json`, or `both` (default) |
 | `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |
@@ -224,6 +238,9 @@ only if its statute is already in the authoritative baseline — the official
 ESCAP RDTII Legal Inventory (`data/known_inventory.jsonl`, 195 laws across the
 three economies) or the curated local law library; everything else is a genuine
 **NEW** find.
+
+Fixture and fixture-fallback candidates are never considered NEW, never count
+as successful live discovery, and are excluded from formal submission output.
 
 ```bash
 python tools/discover_new_laws.py --economy Singapore --pillar all

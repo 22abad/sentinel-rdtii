@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from auth import get_current_user
-from discovery import DiscoverySearchRequest, DiscoveryService
+from discovery import DiscoverySearchRequest, DiscoveryService, StrictLiveDiscoveryError
 from discovery.registry import (
     clear_registry_cache,
     get_registry,
@@ -35,6 +35,8 @@ async def discovery_search(req: DiscoverySearchRequest):
         raise HTTPException(status_code=503, detail=f"Discovery source database unavailable: {exc}") from exc
     except ValueError as exc:
         raise HTTPException(status_code=503, detail=f"Discovery source configuration invalid: {exc}") from exc
+    except StrictLiveDiscoveryError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 @router.get("/api/discovery/sources/{country_code}")

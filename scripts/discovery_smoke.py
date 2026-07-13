@@ -100,8 +100,10 @@ async def run_case(case: SmokeCase, args: argparse.Namespace) -> dict[str, Any]:
         indicators=[case.indicator],
         keywords=case.expected_title,
         source_mode="official_only",
+        include_secondary_leads=False,
         browser_mode=args.browser_mode,
         limit=args.limit,
+        strict_live=True,
     )
     try:
         response = await asyncio.wait_for(
@@ -175,6 +177,7 @@ def _request_record(request: DiscoverySearchRequest) -> dict[str, Any]:
         "keywords": request.keywords,
         "source_mode": request.source_mode,
         "browser_mode": request.browser_mode,
+        "retrieval_mode": "strict_live" if request.strict_live else "auto",
         "limit": request.limit,
     }
 
@@ -183,6 +186,7 @@ def _diagnostics_record(diagnostics: dict[str, Any]) -> dict[str, Any]:
     allowed = {
         "raw_hits", "deduped_hits", "filtered_off_domain", "filtered_low_relevance",
         "duration_ms", "mode", "live_hits", "fixture_hits", "fallback_hits",
+        "strict_rejected_non_live_hits", "live_discovery_success",
         "validation_attempted", "validation_verified", "validation_failed", "validation_weak",
     }
     record = {
@@ -371,6 +375,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     lines = [
         "# Discovery Live Smoke Report", "",
         f"Generated: `{report['generated_at']}`", "",
+        f"Retrieval mode: **{report['configuration'].get('retrieval_mode', 'unknown')}**", "",
         f"Passed: **{summary['passed_queries']}/{summary['total_queries']}**", "",
         "| Country | Indicator | Expected law | Result | Candidate | Mode | Validation | Duration |",
         "|---|---|---|---|---|---|---|---:|",
@@ -448,6 +453,7 @@ async def run(args: argparse.Namespace, cases: list[SmokeCase]) -> dict[str, Any
         "schema_version": SCHEMA_VERSION,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "configuration": {
+            "retrieval_mode": "strict_live",
             "browser_mode": args.browser_mode,
             "limit": args.limit,
             "case_timeout_seconds": args.case_timeout,

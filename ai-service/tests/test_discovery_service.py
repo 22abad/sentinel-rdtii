@@ -4,7 +4,7 @@ import pytest
 
 from discovery.registry import get_sources
 from discovery.schemas import DiscoverySearchRequest, LegalCandidate, LegalSourceConfig, RawSearchHit
-from discovery.service import DiscoveryService
+from discovery.service import DiscoveryService, StrictLiveDiscoveryError
 
 
 @pytest.mark.anyio
@@ -203,6 +203,18 @@ def test_request_rejects_indicator_outside_requested_pillars():
         )
 
 
+def test_strict_live_rejects_mock_and_non_official_scope():
+    with pytest.raises(ValueError, match="mock browser mode"):
+        DiscoverySearchRequest(
+            country_code="SGP",
+            source_mode="official_only",
+            browser_mode="mock",
+            strict_live=True,
+        )
+    with pytest.raises(ValueError, match="official_only"):
+        DiscoverySearchRequest(country_code="SGP", strict_live=True)
+
+
 def test_source_config_rejects_indicator_outside_configured_pillars():
     with pytest.raises(ValueError, match=r"6\.4.*\[7\]"):
         LegalSourceConfig(
@@ -367,3 +379,15 @@ async def test_source_adapter_failure_does_not_fail_whole_country_search(monkeyp
         "failing_adapter failed" in warning
         for warning in response.diagnostics["warnings"]
     )
+
+    with pytest.raises(StrictLiveDiscoveryError, match="no live candidate"):
+        await DiscoveryService().search(
+            DiscoverySearchRequest(
+                country_code="SGP",
+                pillars=[7],
+                indicators=["7.1"],
+                source_mode="official_only",
+                include_secondary_leads=False,
+                strict_live=True,
+            )
+        )

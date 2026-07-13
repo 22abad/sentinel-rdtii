@@ -47,6 +47,7 @@ class DiscoverySearchRequest(BaseModel):
     languages: list[str] = Field(default_factory=list)
     include_secondary_leads: bool = True
     browser_mode: str = "auto"
+    strict_live: bool = False
 
     @field_validator("country_code")
     @classmethod
@@ -91,6 +92,10 @@ class DiscoverySearchRequest(BaseModel):
             raise ValueError(
                 f"indicator(s) {mismatched} require requested pillar(s) {required_pillars}"
             )
+        if self.strict_live and self.browser_mode == "mock":
+            raise ValueError("strict_live cannot be combined with mock browser mode")
+        if self.strict_live and self.source_mode != "official_only":
+            raise ValueError("strict_live requires source_mode='official_only'")
         return self
 
 
