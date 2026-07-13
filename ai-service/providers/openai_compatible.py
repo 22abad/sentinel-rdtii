@@ -37,6 +37,9 @@ def _price_from_env(env_key: str, default: float) -> float:
 
 
 class OpenAICompatibleProvider(LLMProvider):
+    #: Vendor-specific request extensions merged into every chat call
+    #: (e.g. DeepSeek's thinking switch). Subclasses override.
+    extra_request_body: dict = {}
     """Generic OpenAI-compatible chat provider.
 
     Subclass to lock in vendor-specific defaults, or pass kwargs to instantiate
@@ -90,6 +93,12 @@ class OpenAICompatibleProvider(LLMProvider):
         client_kwargs: dict[str, Any] = {"api_key": api_key}
         if self.base_url:
             client_kwargs["base_url"] = self.base_url
+        # Explicit per-request timeout: the SDK default (600s x retries) lets a
+        # throttled/hung connection occupy a concurrency slot for ~30 minutes,
+        # which stalled full-economy evaluation runs. Fail fast; the repair /
+        # fallback-provider layers handle the miss.
+        client_kwargs["timeout"] = float(os.getenv("RDTII_LLM_TIMEOUT_SECONDS", "90"))
+        client_kwargs["max_retries"] = int(os.getenv("RDTII_LLM_MAX_RETRIES", "1"))
         self._client = OpenAI(**client_kwargs)
 
         self._input_price = _price_from_env(self.input_price_env, self.fallback_input_price)
@@ -213,6 +222,7 @@ class OpenAICompatibleProvider(LLMProvider):
                 temperature=0,
                 max_tokens=max_tokens,
                 response_format={"type": "json_object"},
+                extra_body=self.extra_request_body or None,
             )
         except Exception as e:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
@@ -300,7 +310,17 @@ class DeepSeekProvider(OpenAICompatibleProvider):
     Endpoint:  https://api.deepseek.com/v1
     Models:    deepseek-v4-flash, deepseek-v4-pro
     Set DEEPSEEK_API_KEY (and optionally DEEPSEEK_MODEL).
+
+    v4 models reason by default; for deterministic JSON extraction the
+    reasoning budget starves the actual completion (empty content with
+    finish_reason=length) and adds minutes of latency, so thinking is
+    disabled unless RDTII_DEEPSEEK_THINKING=on.
     """
+
+    extra_request_body = (
+        {} if os.getenv("RDTII_DEEPSEEK_THINKING", "").lower() == "on"
+        else {"thinking": {"type": "disabled"}}
+    )
 
     name = "deepseek"
     default_model = "deepseek-v4-flash"
