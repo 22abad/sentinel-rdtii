@@ -1,0 +1,551 @@
+[
+ {
+  "indicator_id": "1.4",
+  "pillar": 1,
+  "pillar_name": "Tariffs and Trade Defence",
+  "category": "Trade defence measures including anti-dumping, countervailing duties and safeguards on ICT-related goods imported by other economies within the considered United Nations region",
+  "criteria": "1) More than three measures\n2) Three measures\n3) Two measures\n4) One measure\n5) No measure\n(0.25 for each measure, up to 1)",
+  "possible_scores": "1\n0.75\n0.50\n0.25\n0",
+  "source_id": "1.4"
+ },
+ {
+  "indicator_id": "2.1",
+  "pillar": 2,
+  "pillar_name": "Public Procurement",
+  "category": "Foreign exclusions from public procurement related to ICT goods and digital services",
+  "criteria": "1) For any legislative measure excludes foreign firms from public procurement under any circumstances, or more than one measure under category (2)\n2) For any legislative measure excludes a specific (group) of foreign firm(s) from public procurement\n3) No measure (when there is only a legal basis that grants the government the power to exclude foreign firms)",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "2.1"
+ },
+ {
+  "indicator_id": "2.2",
+  "pillar": 2,
+  "pillar_name": "Public Procurement",
+  "category": "Specific requirements on source codes, encryption and trade secrets",
+  "criteria": "1) For any requirement to surrender patents, source codes or trade secrets as a condition for participating in tenders\n2) For any requirement to use specific encryption to win tenders\n3) No measure",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "2.2"
+ },
+ {
+  "indicator_id": "2.3",
+  "pillar": 2,
+  "pillar_name": "Public Procurement",
+  "category": "Limitations in procurement bidding",
+  "criteria": "1) For any measure that directly discriminate against foreign bidders OR more than one measure under category (2)\n2) For any measures measure that applies to all bidders, such as local content requirements and performance-based conditions\n3) No measure (when there is only a legal basis that grants the government the power to impose limitations in procurement bidding)",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "2.3"
+ },
+ {
+  "indicator_id": "3.1",
+  "pillar": 3,
+  "pillar_name": "Foreign Direct Investment",
+  "category": "Foreign equity limits in sectors relevant to digital trade \nException: Not cover foreign equity cap in telecom sector (covered under Pillar 5) and e-commerce sector (covered under Pillar 12)",
+  "criteria": "1) Ban (0%) in at least one sector OR if only a minority stake in more than one sector\n2) A minority stake (1-50%) allowed in one sector\n3) A controlling stake (51-99%) allowed OR restrictions only exist in SOEs\n4) Full ownership (100%) allowed in relevant for digital trade",
+  "possible_scores": "1\n0.8\n0.5\n0",
+  "source_id": "3.1"
+ },
+ {
+  "indicator_id": "3.2",
+  "pillar": 3,
+  "pillar_name": "Foreign Direct Investment",
+  "category": "Joint venture requirements",
+  "criteria": "1) For any measure \n2) No measure",
+  "possible_scores": "1\n0",
+  "source_id": "3.2"
+ },
+ {
+  "indicator_id": "3.3",
+  "pillar": 3,
+  "pillar_name": "Foreign Direct Investment",
+  "category": "Nationality or residency requirements for board of directors or managers",
+  "criteria": "1) For any measure \n2) No measure",
+  "possible_scores": "1\n0",
+  "source_id": "3.3"
+ },
+ {
+  "indicator_id": "3.4",
+  "pillar": 3,
+  "pillar_name": "Foreign Direct Investment",
+  "category": "Screening of investment and acquisitions\nException: Anti-trust measures related to M&A are not considered a restriction, unless discriminatory.",
+  "criteria": "1) A case that the screening mechanism has been used to block an investment in a sector relevant for digital trade\n2) Two or more investment screening mechanisms \n3) A screening mechanism\n4) No screening mechanism",
+  "possible_scores": "1\n0.5\n0.25\n0",
+  "source_id": "3.4"
+ },
+ {
+  "indicator_id": "3.5",
+  "pillar": 3,
+  "pillar_name": "Foreign Direct Investment",
+  "category": "Commercial presence requirements to offer cross-border services in sectors relevant to digital trade",
+  "criteria": "1) For any measure\n2) No measure",
+  "possible_scores": "1\n0",
+  "source_id": "3.5"
+ },
+ {
+  "indicator_id": "4.1",
+  "pillar": 4,
+  "pillar_name": "Intellectual Property Rights",
+  "category": "Patent application issues",
+  "criteria": "1) Differential treatment between local and foreign firms, requirements to appoint local representative, and a rejection of patent application in a discriminatory manner. \n2) Non-transparent process, high filing fees, high registration costs, substantive examination, and the requirement to file a patent locally before filing abroad. \n3) No restriction",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "4.01"
+ },
+ {
+  "indicator_id": "4.2",
+  "pillar": 4,
+  "pillar_name": "Intellectual Property Rights",
+  "category": "Patent enforcement issues: civil and administrative procedures and remedies; and provisional measures",
+  "criteria": "1) Abesence of civil and administrative procedures and remedies, and provisional measures\n2) Adopt civil and administrative procedures and remedies, or provisional measures\n3) Adopt civil and administrative procedures and remedies, and provisional measures",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "4.2"
+ },
+ {
+  "indicator_id": "4.3",
+  "pillar": 4,
+  "pillar_name": "Intellectual Property Rights",
+  "category": "Patent enforcement issues: others",
+  "criteria": "1) For any restriction with high impact, when the issue affecting all circumstances and sectors, OR more than one measure of category (2)\n2) For any restriction with limited impact, when the issue affecting to a specific circumstance or sector\n3) No restriction",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "4.3"
+ },
+ {
+  "indicator_id": "4.5",
+  "pillar": 4,
+  "pillar_name": "Intellectual Property Rights",
+  "category": "Lack of copyright framework and exceptions",
+  "criteria": "1) Lack of copyright legal framework OR lack of copyright exceptions\n2) Unclear copyright exceptions, such as three-step test and other types of copyright exceptions\n3) Clear copyright exceptions following fair use or fair dealing model",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "4.5"
+ },
+ {
+  "indicator_id": "4.6",
+  "pillar": 4,
+  "pillar_name": "Intellectual Property Rights",
+  "category": "Online copyright enforcement issues: civil and administrative procedures and remedies; and provisional measures",
+  "criteria": "1) Abesence of civil and administrative procedures and remedies, and provisional measures\n2) Adopt civil and administrative procedures and remedies, or provisional measures\n3) Adopt civil and administrative procedures and remedies, and provisional measures",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "4.6"
+ },
+ {
+  "indicator_id": "4.9",
+  "pillar": 4,
+  "pillar_name": "Intellectual Property Rights",
+  "category": "Mandatory disclosure of trade secrets, such as souce code and algorithms",
+  "criteria": "1) For any disclosure requirement affecting an entire sector or all sectors horizontally OR More than one measure of category (2)\n2) For any disclosure requirement of limited impact affecting only specific types of products or specific circumstance (i.e., disclosure due to court order, regulatory proceedings, or national threat provision for certain companies)\n3) No measure OR when the Government mandates to disclose trade secrets when necessary to protect the public interest and safeguards against unfair commercial use",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "4.9"
+ },
+ {
+  "indicator_id": "4.10",
+  "pillar": 4,
+  "pillar_name": "Intellectual Property Rights",
+  "category": "Lack of effective trade secrets legal framework",
+  "criteria": "1) Lack of trade secrets legal framework that is able to provide effective protection\n2) Limited practice/scope addressing protection of trade secrets OR practices with certain clauses included in the IP law/ relevant law\n3) Presence of effective protection of trade secrets protection in any forms",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "4.1"
+ },
+ {
+  "indicator_id": "5.1",
+  "pillar": 5,
+  "pillar_name": "Telecom Regulations & Competition",
+  "category": "Lack of passive infrastructure sharing",
+  "criteria": "1) No passive infrastructure sharing obligation\n2) Passive sharing is not mandated, but it is practiced in the market\n3) Passive sharing is mandated",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "5.1"
+ },
+ {
+  "indicator_id": "5.2",
+  "pillar": 5,
+  "pillar_name": "Telecom Regulations & Competition",
+  "category": "Foreign equity limits in telecom sector",
+  "criteria": "1) Ban (0%) OR if only a minority stake in more than one measures\n2) A minority stake (1-50%) allowed \n3) A controlling stake (51-99%) allowed OR restrictions only exist in SOEs\n4) Full ownership (100%) allowed in telecommunication sector",
+  "possible_scores": "1\n0.8\n0.5\n0",
+  "source_id": "5.2"
+ },
+ {
+  "indicator_id": "5.3",
+  "pillar": 5,
+  "pillar_name": "Telecom Regulations & Competition",
+  "category": "Shares owned by the Government in telecom companies",
+  "criteria": "1) At least one companies with government shares above 50% OR more than one measure of category (2)\n2) One company with government shares between 1% and 50% \n3) No shares owned by the government in telecom companies",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "5.3"
+ },
+ {
+  "indicator_id": "5.4",
+  "pillar": 5,
+  "pillar_name": "Telecom Regulations & Competition",
+  "category": "Lack of functional/accounting separation",
+  "criteria": "1) No funcation/accounting separation is mandated \n2) Only accounting separation is mandated\n3) Only functional seperation is mandated\n4) Both accounting and functional separations are mandated",
+  "possible_scores": "1\n0.5\n0.25\n0",
+  "source_id": "5.4"
+ },
+ {
+  "indicator_id": "5.5",
+  "pillar": 5,
+  "pillar_name": "Telecom Regulations & Competition",
+  "category": "Licensing requirements in telecom sector for operators",
+  "criteria": "1) For any strict licensing scheme (e.g., discrimination for foreign providers, minimum capital requirements, and mandatory performances requirements)\n2) No strict licensing scheme",
+  "possible_scores": "1\n0",
+  "source_id": "5.5"
+ },
+ {
+  "indicator_id": "5.7",
+  "pillar": 5,
+  "pillar_name": "Telecom Regulations & Competition",
+  "category": "Lack of independent telecom authority",
+  "criteria": "1) No independent telecom authority\n2) Independent telecom authority is established",
+  "possible_scores": "1\n0",
+  "source_id": "5.7"
+ },
+ {
+  "indicator_id": "6.1",
+  "pillar": 6,
+  "pillar_name": "Cross-border Data Policies",
+  "category": "Ban and local processing requirements\nException: Not score data localization measure applied to government data.",
+  "criteria": "1) Ban and/or local processing requirement for all sectors or personal data, OR more than one measure in category (2)\n2) Ban and/or local processing  requirement applied to specific sector, specific data, non-personal data, or transfer is prohibited to one country\n3) No requirement",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "6.1"
+ },
+ {
+  "indicator_id": "6.2",
+  "pillar": 6,
+  "pillar_name": "Cross-border Data Policies",
+  "category": "Local storage requirements\nException: Not score data localization measure applied to government data.",
+  "criteria": "1) Local storage requirement for all sectors or personal data, OR more than one measure in category (2)\n2) Local storage requirement applied to specific sector, specific data or non-personal data\n3) No requirement",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "6.2"
+ },
+ {
+  "indicator_id": "6.3",
+  "pillar": 6,
+  "pillar_name": "Cross-border Data Policies",
+  "category": "Infrastructure requirements\nException: Not score data localization measure applied to government data.",
+  "criteria": "1) Infrastructure requirement\n2) No requirement",
+  "possible_scores": "1\n0",
+  "source_id": "6.3"
+ },
+ {
+  "indicator_id": "6.4",
+  "pillar": 6,
+  "pillar_name": "Cross-border Data Policies",
+  "category": "Conditional flow regimes\nException: Not score data localization measure applied to government data.",
+  "criteria": "1) Conditions for all sectors or personal data \n2) Conditions for specific data or non-personal data\n3) No condition",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "6.4"
+ },
+ {
+  "indicator_id": "7.1",
+  "pillar": 7,
+  "pillar_name": "Domestic Data Protection & Privacy",
+  "category": "Lack of comprehensive legal framework for data protection",
+  "criteria": "1) No data protection legal framework\n2) Data protection legal framework only to specific sectors (sectoral law)\n3) Comprehensive data protection framework",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "7.1"
+ },
+ {
+  "indicator_id": "7.2",
+  "pillar": 7,
+  "pillar_name": "Domestic Data Protection & Privacy",
+  "category": "Lack of dedicated legal framework for cybersecurity",
+  "criteria": "1) No cybersecurity legal framework\n2) Non-dedicated cybersecurity legal framework and/or dedicated cybersecurity law only to specific sectors (sectoral law)\n3) Dedicated cybersecurity legal framework (horizontal)",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "7.2"
+ },
+ {
+  "indicator_id": "7.3",
+  "pillar": 7,
+  "pillar_name": "Domestic Data Protection & Privacy",
+  "category": "Minimum period of data retention requirements\nException: Not score requirement applied to government data.",
+  "criteria": "1) Minimum period of data retention requirement\n2) No data retention requirement",
+  "possible_scores": "1\n0",
+  "source_id": "7.3"
+ },
+ {
+  "indicator_id": "7.4",
+  "pillar": 7,
+  "pillar_name": "Domestic Data Protection & Privacy",
+  "category": "Data Protection Impact Assessment (DPIA) or Data Protection Officer (DPO) requirements",
+  "criteria": "1) DPO and DPIA OR only DPO requirement, applied to all sectors\n2) DPO and DPIA OR only DPO requirement, applied to a specific sector\n3) No requirement",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "7.4"
+ },
+ {
+  "indicator_id": "7.5",
+  "pillar": 7,
+  "pillar_name": "Domestic Data Protection & Privacy",
+  "category": "Requirements to allow government access to personal data",
+  "criteria": "1) For any measure that allows government to access data without court orders\n2) No measure",
+  "possible_scores": "1\n0",
+  "source_id": "7.5"
+ },
+ {
+  "indicator_id": "8.1",
+  "pillar": 8,
+  "pillar_name": "Internet Intermediary Liability",
+  "category": "Lack of safe harbour for copyright infringements",
+  "criteria": "1) No intermediary liability framework in place\n2) Sectoral framework in place that limits liablity for intermediaries\n3) Hoirzontal framework in place that limits liability for intermediaries",
+  "possible_scores": "1\n0.50\n0",
+  "source_id": "8.1"
+ },
+ {
+  "indicator_id": "8.2",
+  "pillar": 8,
+  "pillar_name": "Internet Intermediary Liability",
+  "category": "Lack of safe harbour for other illegal activities",
+  "criteria": "1) No intermediary liability framework in place\n2) Sectoral framework in place that limits liablity for intermediaries\n3) Hoirzontal framework in place that limits liability for intermediaries",
+  "possible_scores": "1\n0.50\n0",
+  "source_id": "8.2"
+ },
+ {
+  "indicator_id": "8.3",
+  "pillar": 8,
+  "pillar_name": "Internet Intermediary Liability",
+  "category": "User identify requirements",
+  "criteria": "1) User identity requirement to connect to the Internet or access online services \n2) Used identity requirement for SIM registration\n3) No restrictions",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "8.3"
+ },
+ {
+  "indicator_id": "8.4",
+  "pillar": 8,
+  "pillar_name": "Internet Intermediary Liability",
+  "category": "Monitoring requirements",
+  "criteria": "1) Any monitoring requirement (monitor the users’ activities or remove or block content)\n2) Any requirement to active monitoring of users’ activities without any legal obligation to remove or block the content\n3) No measure",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "8.4"
+ },
+ {
+  "indicator_id": "9.1",
+  "pillar": 9,
+  "pillar_name": "Content Access",
+  "category": "Blocking or filtering commercial web content\nException: Not score political content, criminal content (e.g., child pornography), aged-restricted content, defamation and other non-commercial content.",
+  "criteria": "1) Any blocking measure \n2) Any filtering measure\n3) No cases of blocking nor filtering (except internationally agreed illegal content/child pornography)",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "9.1"
+ },
+ {
+  "indicator_id": "9.3",
+  "pillar": 9,
+  "pillar_name": "Content Access",
+  "category": "Online advertising requirements\nException: Not score requirements that advertising should not be misleading",
+  "criteria": "1) Any restriction on online advertising\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "9.3"
+ },
+ {
+  "indicator_id": "9.4",
+  "pillar": 9,
+  "pillar_name": "Content Access",
+  "category": "Licensing requirements for online content providers and applications (social media platforms, new providers, VPN, cloud servics, etc.)\nException: Not cover license for telecommunication facilities and service providers (captured under Pillar 5), License for e-commerce platform (captured under Pillar 12)",
+  "criteria": "1) Any strict licence requirement/ cases of more than one measure in category (2)\n2) Any licensing scheme\n3) No restriction",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "9.4"
+ },
+ {
+  "indicator_id": "10.1",
+  "pillar": 10,
+  "pillar_name": "Non-technical NTMs",
+  "category": "Import ban applied to ICT goods and online services (e.g. network equipment, servers, handsets, applications, and data processing)",
+  "criteria": "1) Ban on more than one ICT goods or digital services\n2) Ban on one specific product or services\n3) No measure",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "10.1"
+ },
+ {
+  "indicator_id": "10.2",
+  "pillar": 10,
+  "pillar_name": "Non-technical NTMs",
+  "category": "Other import restrictions on ICT goods and online services",
+  "criteria": "1) Import restrictions that potentially block trade (e.g., quotas) OR at least two measures of category (2)\n2) Import estrictions that add regulatory compliance costs to trade in ICT goods and online services (e.g., licenses, permits, authorization, registration for ICT goods and labelling requirements and import controls)\n3) No restriction",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "10.2"
+ },
+ {
+  "indicator_id": "10.3",
+  "pillar": 10,
+  "pillar_name": "Non-technical NTMs",
+  "category": "Local content requirements",
+  "criteria": "1) At least one LCR at sectoral or horizontal level (i.e. HS-4 (e.g.telephony equipment)) and HS-2 levels) OR at least two LCRs of category (2)\n2) At least one LCR at product level (i.e. HS-6 and HS-8 levels (e.g. mobile phones and smartphones)\n3) No measure",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "10.3"
+ },
+ {
+  "indicator_id": "10.4",
+  "pillar": 10,
+  "pillar_name": "Non-technical NTMs",
+  "category": "Export restrictions on ICTgoods and online services",
+  "criteria": "1) Export restriction\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "10.4"
+ },
+ {
+  "indicator_id": "11.1",
+  "pillar": 11,
+  "pillar_name": "Standards and Procedures",
+  "category": "Lack of transparent technical standards",
+  "criteria": "1) Not allowed foreigners to participate in the standard-setting bodies, OR non transparent standard-setting\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "11.1"
+ },
+ {
+  "indicator_id": "11.2",
+  "pillar": 11,
+  "pillar_name": "Standards and Procedures",
+  "category": "Self-certification limitations for product safety (radio transmissions, EMC/EMI)",
+  "criteria": "1) Not allow SDoC and third-party certification \n2) SDoC is not allowed, but accept 3rd party-certification from CABs from a number of countries with MRA \n3) SDoC is allowed for foreign business",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "11.2"
+ },
+ {
+  "indicator_id": "11.3",
+  "pillar": 11,
+  "pillar_name": "Standards and Procedures",
+  "category": "Product screening and testing requirements",
+  "criteria": "1) Measure in place and used for products in scope\n2) Measure in place, but acceptance of 3rd party testing results\n3) No requirement",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "11.3"
+ },
+ {
+  "indicator_id": "11.4",
+  "pillar": 11,
+  "pillar_name": "Standards and Procedures",
+  "category": "Deviation from international encryption standards (ISO, IEC, ITU, FIPS, AES, TDES, and ECC)",
+  "criteria": "1) For any measure or known case\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "11.4"
+ },
+ {
+  "indicator_id": "12.1",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Foreign equity limits in e-commerce sector",
+  "criteria": "1) A minority stakes  (1-50%) allowed \n2) A controlling stake (51-99%) allowed\n3) Full ownership (100%) allowed in e-commerce sector",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "12.01"
+ },
+ {
+  "indicator_id": "12.2",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online purchases and delivery limitations\nException: Not score limitations on online purchases and delivery applied specifically to products related to consumer protection, notably restrictions on alcoholic beverages, tobacco, and pharmaceuticals.",
+  "criteria": "1) Any measure limits the number of products that can be purchases online AND restrictions to delivery of products bought online\n2) No measure",
+  "possible_scores": "1\n0",
+  "source_id": "12.2"
+ },
+ {
+  "indicator_id": "12.3",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Licensing scheme for e-commerce providers (B2B and B2C)\nException: Licenses pertiaining to other aspects of e-commerce businesses, such as license to operate online payment services and delivery are not captured.",
+  "criteria": "1) Any license for e-commerce providers\n2) No license",
+  "possible_scores": "1\n0",
+  "source_id": "12.3"
+ },
+ {
+  "indicator_id": "12.4.1",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online payment limitations: mandate local bank account",
+  "criteria": "1) Requirements to use a local bank account\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "12.4.1"
+ },
+ {
+  "indicator_id": "12.4.2",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online payment limitations: mandate currency used for international payments",
+  "criteria": "1) Requirements on the currency used for international payments\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "12.4.2"
+ },
+ {
+  "indicator_id": "12.4.3",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online payment limitations: deviate national standards",
+  "criteria": "1) National standards for payment security that deviate from international standards\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "12.4.3"
+ },
+ {
+  "indicator_id": "12.4.4",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online payment limitations: licensing requirements",
+  "criteria": "1) Licensing requirements with restrictive conditions\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "12.4.4"
+ },
+ {
+  "indicator_id": "12.4.5",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online payment limitations: ceiling on the maximum amount",
+  "criteria": "1) Ceilings on the maximum amount that can be paid by electronic payment methods\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "12.4.5"
+ },
+ {
+  "indicator_id": "12.4.6",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online payment limitations: mandate specific intermediaries",
+  "criteria": "1) Requirements mandating the use of specific intermediaries for online payments\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "12.4.6"
+ },
+ {
+  "indicator_id": "12.4.7",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Online payment limitations: others restrictions",
+  "criteria": "1) Other restrctions\n2) No restriction",
+  "possible_scores": "1\n0",
+  "source_id": "12.4.7"
+ },
+ {
+  "indicator_id": "12.5",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Low De Minimis",
+  "criteria": "1) No De Minimis\n2) De Minimis below < 200 USD\n3) De Minimis ≥ 200 USD",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "12.5"
+ },
+ {
+  "indicator_id": "12.6",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Imposition of custom duties on electronic transmission",
+  "criteria": "1) Imposition of custom duties on electronic transmission\n2) Legal mechanisms or regulations applicable to impose custom duties on electronic transmission\n3) No restriction",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "12.6"
+ },
+ {
+  "indicator_id": "12.7",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Domain name requirements",
+  "criteria": "1) Physical presence required, requirements to the registrater a local domain name to conduct electronic retail \n2) Local representative required\n3) No restriction",
+  "possible_scores": "1\n0.5\n0",
+  "source_id": "12.7"
+ },
+ {
+  "indicator_id": "12.8",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Local presence requirements for online service providers",
+  "criteria": "1) Local presence requirement for at least one sector\n2) No requirement",
+  "possible_scores": "1\n0",
+  "source_id": "12.8"
+ },
+ {
+  "indicator_id": "12.9",
+  "pillar": 12,
+  "pillar_name": "Online Sales and Transactions",
+  "category": "Lack of legal framework for online consumer protection",
+  "criteria": "1) No consumer protection legal framework applicable to online commerce \n2) Consumer protection law applicable to online commerce",
+  "possible_scores": "1\n0",
+  "source_id": "12.9"
+ }
+]
