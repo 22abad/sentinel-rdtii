@@ -65,3 +65,4 @@ data/known_corpus/*/
 
 # Crawler download scratch
 downloads/
+data/round2_corpus/*/
