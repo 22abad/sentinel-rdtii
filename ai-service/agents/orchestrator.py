@@ -11,6 +11,7 @@ Coordinates the MAS pipeline:
 from __future__ import annotations
 
 import asyncio
+import os
 import logging
 import time
 from typing import Any, Tuple, List, get_args
@@ -97,7 +98,7 @@ class MASOrchestrator:
             if indicators:
                 chunk_groups.append((chunk, indicators))
 
-        semaphore = asyncio.Semaphore(5)
+        semaphore = asyncio.Semaphore(int(os.getenv("RDTII_CHUNK_CONCURRENCY", "5")))
 
         async def _process_chunk_group(
             chunk: Chunk,
