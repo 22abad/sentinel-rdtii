@@ -96,11 +96,30 @@ RESPONSE GUIDELINES:
 - Explain which provisions of the law map to which indicators.
 - If asked about scoring, describe the criteria but do NOT output a final score (that is the system's job).
 - Keep answers concise and actionable for a policy audience.
-- If the context includes specific legal text, quote relevant clauses before analyzing them."""
+- If the context includes specific legal text, quote relevant clauses before analyzing them.
+
+SOURCE GROUNDING (STRICT — these rules override everything above):
+- ONLY quote legal text that appears verbatim in the retrieved context or the provided source text. NEVER reproduce a quote from memory.
+- NEVER invent or guess article, section, or clause numbers. If you are not certain a citation appears in the provided text, omit the citation entirely.
+- If no legal text was retrieved or provided, say so plainly (e.g. "No source text was retrieved for this question") and answer only in general terms. Do NOT supply an illustrative or example quote — a fabricated citation is worse than no citation.
+- Attribute every quote to the source text it came from. If you cannot point to it in the context, do not present it as a quotation.
+- You are powered by a local open-weight model. Do not claim to be created by Anthropic, OpenAI, or any other company."""
 
 
 @router.post("/api/rag/query")
 async def chat_query(req: RAGQueryRequest):
+    import asyncio
+
+    from rag.rag import build_context, retrieve
+
+    # --- retrieval (runs off the event loop; encode + DB are blocking) ---
+    hits = await asyncio.to_thread(
+        retrieve,
+        req.question,
+        country_code=req.country_code or None,
+    )
+    retrieved_context = build_context(hits)
+
     parts = [f"Question: {req.question}"]
     if req.role:
         parts.insert(0, f"Your role: {req.role}")
@@ -108,6 +127,8 @@ async def chat_query(req: RAGQueryRequest):
         parts.append(f"Additional context: {req.context}")
     if req.country_code:
         parts.append(f"Country / Economy under review: {req.country_code}")
+    if retrieved_context:
+        parts.append(f"Retrieved legal text (most relevant first):\n{retrieved_context}")
     if req.source_text:
         parts.append(f"Legal text being analyzed:\n\"\"\"\n{req.source_text}\n\"\"\"")
     user_prompt = "\n\n".join(parts)
@@ -132,7 +153,12 @@ async def chat_query(req: RAGQueryRequest):
                     full_answer += content
                     yield f"event: token\ndata: {json.dumps(content)}\n\n"
 
-            payload = {"answer": full_answer, "provider": f"ollama/{_OLLAMA_MODEL}"}
+            payload = {
+                "answer": full_answer,
+                "provider": f"ollama/{_OLLAMA_MODEL}",
+                "retrieved_chunks": [h.text for h in hits],
+                "retrieval_count": len(hits),
+            }
             yield f"event: done\ndata: {json.dumps(payload)}\n\n"
         except Exception as exc:
             yield f"event: error\ndata: {json.dumps({'detail': str(exc)})}\n\n"

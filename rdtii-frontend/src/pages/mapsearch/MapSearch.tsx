@@ -37,6 +37,9 @@ const ESCAP_DATA: any[] = [
 const MIN_SCALE = 2.5;
 const MAX_SCALE = 10;
 const INITIAL_SCALE = 4;
+// Px the pointer must travel before a left-press counts as a map drag rather
+// than a country click.
+const DRAG_THRESHOLD = 6;
 const INITIAL_X = 0;
 const INITIAL_Y = 0;
 
@@ -57,22 +60,30 @@ export function MapSearchPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dragEnabled, setDragEnabled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [ragAnswer, setRagAnswer] = useState<string | null>(null);
+  const [chatActive, setChatActive] = useState(false);
+  const [messages, setMessages] = useState<{ role: "user" | "assistant"; text: string }[]>([]);
+  const [pending, setPending] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<{ code: string; name: string } | null>(null);
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   // State for rendering; refs mirror state so event handlers always read fresh values
   const [scale, _setScale] = useState(INITIAL_SCALE);
   const [offset, _setOffset] = useState({ x: INITIAL_X, y: INITIAL_Y });
-  const scaleRef  = useRef(INITIAL_SCALE);
+  const scaleRef = useRef(INITIAL_SCALE);
   const offsetRef = useRef({ x: INITIAL_X, y: INITIAL_Y });
 
   const [mapSize, setMapSize] = useState(() =>
     Math.min(window.innerHeight, window.innerWidth) * 0.75,
   );
   const containerRef = useRef<HTMLDivElement>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
+
+  // Keep the conversation pinned to the latest message.
+  useEffect(() => {
+    threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, pending, chatActive]);
 
   const applyTransform = useCallback((s: number, o: { x: number; y: number }) => {
-    scaleRef.current  = s;
+    scaleRef.current = s;
     offsetRef.current = o;
     _setScale(s);
     _setOffset(o);
@@ -92,10 +103,10 @@ export function MapSearchPage() {
 
   // Snapshot captured when 2nd finger lands
   const gestureSnapRef = useRef<{
-    scale:  number;
+    scale: number;
     offset: { x: number; y: number };
-    mid:    { x: number; y: number };
-    dist:   number;
+    mid: { x: number; y: number };
+    dist: number;
   } | null>(null);
 
   // Snapshot captured when drag starts
@@ -105,53 +116,68 @@ export function MapSearchPage() {
     y: number;
   } | null>(null);
 
+  // Where the current press started, and whether it has moved far enough to be
+  // treated as a drag (rather than a click that selects a country).
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+  const movedRef = useRef(false);
+
   const onPointerDown = useCallback((e: React.PointerEvent) => {
+    // Reset drag tracking for every fresh press (mouse or touch).
+    dragStartRef.current = { x: e.clientX, y: e.clientY };
+    movedRef.current = false;
+
+    // Left mouse starts a *potential* pan; capture is deferred until the
+    // pointer actually crosses DRAG_THRESHOLD (see onPointerMove) so a plain
+    // click still reaches the country under the cursor.
+    let deferCapture = false;
     if (e.pointerType === "mouse") {
       if (e.button === 1) {
         // Middle mouse (wheel press) — always drags, matches classic map UX
         e.preventDefault();
-      } else if (e.button === 0 && dragEnabled) {
-        // Left click — only drags when drag-mode toggle is active
+      } else if (e.button === 0) {
+        deferCapture = true;
       } else {
         return;
       }
     }
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    if (!deferCapture) {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    }
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     const pts = [...pointersRef.current.values()];
     if (pts.length >= 2) {
       const [p0, p1] = pts;
       gestureSnapRef.current = {
-        scale:  scaleRef.current,
+        scale: scaleRef.current,
         offset: { ...offsetRef.current },
-        mid:    { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 },
-        dist:   Math.hypot(p0.x - p1.x, p0.y - p1.y),
+        mid: { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 },
+        dist: Math.hypot(p0.x - p1.x, p0.y - p1.y),
       };
       panSnapRef.current = null;
     } else {
       panSnapRef.current = { offset: { ...offsetRef.current }, x: e.clientX, y: e.clientY };
       gestureSnapRef.current = null;
     }
-  }, [dragEnabled]);
+  }, []);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!pointersRef.current.has(e.pointerId)) return;
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     const pts = [...pointersRef.current.values()];
-    const vw  = window.innerWidth;
-    const vh  = window.innerHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
 
     if (pts.length >= 2 && gestureSnapRef.current) {
       const snap = gestureSnapRef.current;
       const [p0, p1] = pts;
       const currDist = Math.hypot(p0.x - p1.x, p0.y - p1.y);
-      const currMid  = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
+      const currMid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
 
       // Absolute: every frame is computed from the gesture snapshot, never from prev frame
       const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, snap.scale * (currDist / snap.dist)));
-      const ratio    = newScale / snap.scale;
+      const ratio = newScale / snap.scale;
       applyTransform(newScale, clampOffset(
         currMid.x - vw / 2 - ratio * (snap.mid.x - vw / 2 - snap.offset.x),
         currMid.y - vh / 2 - ratio * (snap.mid.y - vh / 2 - snap.offset.y),
@@ -159,6 +185,19 @@ export function MapSearchPage() {
       ));
     } else if (pts.length === 1 && panSnapRef.current) {
       const snap = panSnapRef.current;
+      // Promote a press to a real drag once it moves past the threshold. Only
+      // then do we capture the pointer (so a fast drag that leaves the element
+      // keeps panning) and mark it moved (so the trailing click is ignored).
+      if (!movedRef.current && dragStartRef.current) {
+        const dx = e.clientX - dragStartRef.current.x;
+        const dy = e.clientY - dragStartRef.current.y;
+        if (Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+          movedRef.current = true;
+          const el = e.currentTarget as HTMLElement;
+          if (!el.hasPointerCapture(e.pointerId)) el.setPointerCapture(e.pointerId);
+        }
+      }
+      if (!movedRef.current) return;
       applyTransform(scaleRef.current, clampOffset(
         snap.offset.x + e.clientX - snap.x,
         snap.offset.y + e.clientY - snap.y,
@@ -173,25 +212,40 @@ export function MapSearchPage() {
 
     if (pts.length === 1) {
       // One finger lifted mid-pinch — seamlessly resume pan from remaining finger
-      panSnapRef.current    = { offset: { ...offsetRef.current }, x: pts[0].x, y: pts[0].y };
+      panSnapRef.current = { offset: { ...offsetRef.current }, x: pts[0].x, y: pts[0].y };
       gestureSnapRef.current = null;
     } else if (pts.length === 0) {
-      panSnapRef.current    = null;
+      panSnapRef.current = null;
       gestureSnapRef.current = null;
     }
   }, []);
 
   const onWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
+
+    // Trackpad pinch-zoom arrives as a wheel event with ctrlKey set.
+    // A plain two-finger swipe (ctrlKey false) should PAN, not zoom.
+    if (!e.ctrlKey) {
+      const dx = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaMode === 2 ? e.deltaX * 400 : e.deltaX;
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
+      applyTransform(scaleRef.current, clampOffset(
+        offsetRef.current.x - dx,
+        offsetRef.current.y - dy,
+        scaleRef.current,
+      ));
+      return;
+    }
+
+    // ── Pinch-zoom (ctrlKey) — anchored at cursor ──
     // Normalize deltaMode: lines (1) → px equivalent; pages (2) → px equivalent
     const px = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
     // Exponential factor — proportional to scroll magnitude so trackpad micro-oscillations
     // produce near-zero zoom instead of a full ±10% jump (which causes visible shaking)
-    const factor   = Math.exp(-px / 500);
-    const vw       = window.innerWidth;
-    const vh       = window.innerHeight;
+    const factor = Math.exp(-px / 500);
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
     const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scaleRef.current * factor));
-    const ratio    = newScale / scaleRef.current;
+    const ratio = newScale / scaleRef.current;
     applyTransform(newScale, clampOffset(
       e.clientX - vw / 2 - (e.clientX - vw / 2 - offsetRef.current.x) * ratio,
       e.clientY - vh / 2 - (e.clientY - vh / 2 - offsetRef.current.y) * ratio,
@@ -236,10 +290,10 @@ export function MapSearchPage() {
       />
 
       {/* World map with scroll zoom */}
-        <div
-          ref={containerRef}
-          id="world-map"
-          className="fixed inset-0 overflow-hidden"
+      <div
+        ref={containerRef}
+        id="world-map"
+        className="fixed inset-0 overflow-hidden"
         style={{ zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", cursor: dragEnabled ? "grab" : "default", touchAction: "none" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -271,7 +325,7 @@ export function MapSearchPage() {
             styleFunction={({ countryCode }) => {
               const code = countryCode.toUpperCase();
               const isSelected = selectedCountry?.code === code;
-              const isHovered  = hoveredCountry === code;
+              const isHovered = hoveredCountry === code;
               return {
                 fill: "#10B981",
                 fillOpacity: isSelected ? 1 : isHovered ? 0.65 : 0.25,
@@ -281,6 +335,8 @@ export function MapSearchPage() {
               };
             }}
             onClickFunction={({ countryCode, countryName }) => {
+              // Ignore the click that trails a drag — the press was a pan.
+              if (movedRef.current) return;
               const code = countryCode.toUpperCase();
               setSelectedCountry((prev) =>
                 prev?.code === code ? null : { code, name: countryName }
@@ -322,15 +378,15 @@ export function MapSearchPage() {
                 sourceUrl=""
                 availableProviders={[]}
                 selectedProvider=""
-                setSelectedProvider={() => {}}
+                setSelectedProvider={() => { }}
                 ollamaModels={[]}
                 selectedOllamaModel=""
-                setSelectedOllamaModel={() => {}}
+                setSelectedOllamaModel={() => { }}
                 vertexModels={[]}
                 selectedGeminiModel=""
-                setSelectedGeminiModel={() => {}}
+                setSelectedGeminiModel={() => { }}
                 selectedDeepSeekModel=""
-                setSelectedDeepSeekModel={() => {}}
+                setSelectedDeepSeekModel={() => { }}
                 onClose={() => setSidebarOpen(false)}
               />
             </motion.div>
@@ -370,7 +426,7 @@ export function MapSearchPage() {
           {menuOpen && [
             { icon: Home, key: "home", onClick: () => { setMenuOpen(false); navigate("/"); } },
             { icon: AppWindowMac, key: "workbench", onClick: () => { setMenuOpen(false); navigate("/workbench"); } },
-            { icon: User, key: "profile", onClick: () => {} },
+            { icon: User, key: "profile", onClick: () => { } },
           ].map((item, i) => {
             const Icon = item.icon;
             return (
@@ -434,30 +490,83 @@ export function MapSearchPage() {
         </motion.button>
       </div>
 
+      {/* Chat backdrop — when the chat bar is active, blur/whiten the whole map
+          so the conversation reads clearly, WhatsApp-style. */}
+      <AnimatePresence>
+        {chatActive && (
+          <motion.div
+            key="chat-backdrop"
+            className="fixed inset-0 z-40"
+            style={{ background: "rgba(255,255,255,0.5)", backdropFilter: "blur(8px)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Bottom AI chat bar — overlays the map, centered, pointer-events contained */}
       <div className="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <div className="w-full max-w-2xl pointer-events-auto flex flex-col gap-3">
+          {/* Conversation — only while the chat is active */}
           <AnimatePresence>
-            {ragAnswer && (
+            {chatActive && (messages.length > 0 || pending) && (
               <motion.div
+                ref={threadRef}
+                key="chat-thread"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.25 }}
-                className="relative w-full rounded-2xl p-4 text-sm"
-                style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.1)", color: "#1a2e26" }}
+                className="flex flex-col gap-2 overflow-y-auto pr-1"
+                style={{
+                  maxHeight: "min(75vh, 520px)",
+                  // Fade older messages out at the top edge instead of hard-clipping.
+                  maskImage: "linear-gradient(to bottom, transparent 0, #000 50px)",
+                  WebkitMaskImage: "linear-gradient(to bottom, transparent 0, #000 40px)",
+                }}
               >
-                <button
-                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
-                  onClick={() => setRagAnswer(null)}
-                >
-                  <X size={14} />
-                </button>
-                <p className="leading-relaxed pr-4 whitespace-pre-wrap">{ragAnswer}</p>
+                {messages.map((m, i) => (
+                  <motion.div
+                    key={i}
+                    // Bubble appears: fade + rise + slight scale, sliding in from
+                    // its own side (user from the right, assistant from the left).
+                    initial={{ opacity: 0, y: 12, scale: 0.95, x: m.role === "user" ? 16 : -16 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 24 }}
+                    className={`max-w-[50%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${m.role === "user" ? "self-end" : "self-start"
+                      }`}
+                    style={
+                      m.role === "user"
+                        ? { background: "#10B981", color: "#fff", borderBottomRightRadius: 6, boxShadow: "0 2px 10px rgba(16,185,129,0.25)" }
+                        : { background: "#fff", color: "#1a2e26", borderBottomLeftRadius: 6, border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }
+                    }
+                  >
+                    {m.text}
+                  </motion.div>
+                ))}
+                {pending && (
+                  <div
+                    className="self-start max-w-[80%] rounded-2xl px-4 py-3 text-sm"
+                    style={{ background: "#fff", color: "#9ca3af", borderBottomLeftRadius: 6, border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}
+                  >
+                    <span className="inline-flex gap-1">
+                      <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0 }}>●</motion.span>
+                      <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0.2 }}>●</motion.span>
+                      <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0.4 }}>●</motion.span>
+                    </span>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
-          <AIChatInput expandUp onResponse={setRagAnswer} />
+          <AIChatInput
+            expandUp
+            onActiveChange={setChatActive}
+            onSend={(q) => { setMessages((m) => [...m, { role: "user", text: q }]); setPending(true); }}
+            onResponse={(a) => { setMessages((m) => [...m, { role: "assistant", text: a }]); setPending(false); }}
+          />
         </div>
       </div>
 
