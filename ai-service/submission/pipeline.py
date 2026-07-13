@@ -12,6 +12,7 @@ network/LLM orchestration lives in :func:`discover_and_extract` and
 
 from __future__ import annotations
 
+from types import SimpleNamespace
 from typing import Any
 
 from schemas import IndicatorMapping
@@ -204,6 +205,93 @@ async def discover_and_extract(
         "provider": getattr(provider, "name", provider_name or "unknown"),
         "candidates_found": len(discovery.candidates),
         "documents_processed": documents_processed,
+        "provisions_mapped": len(rows),
+        "warnings": warnings,
+    }
+    return rows, meta
+
+
+async def run_library(
+    economy: str,
+    pillar: int,
+    *,
+    provider_name: str | None = None,
+    indicators: list[str] | None = None,
+) -> tuple[list[SubmissionRow], dict]:
+    """Offline path: map cached official texts from the local law library.
+
+    No network. Retrieval is served from ``data/law_library`` (SHA-256 verified on
+    load); the mapping itself still runs live through the same
+    ``run_extraction`` pipeline, so provisions are produced — not replayed. Rows
+    are tagged ``KNOWN`` (the library is the curated known-law baseline).
+    """
+
+    from law_library import lookup
+    from providers import get_default_provider, get_provider
+    from services.extraction import run_extraction
+
+    display = economy_display_name(economy)
+    code = economy_code(economy)
+    provider = get_provider(provider_name) if provider_name else get_default_provider()
+
+    entries = lookup(code, pillar=pillar, indicators=indicators)
+    wanted = _pillar_indicators(pillar, indicators)
+    rows: list[SubmissionRow] = []
+    warnings: list[str] = []
+    laws_processed = 0
+
+    for entry in entries:
+        candidate = SimpleNamespace(
+            url=entry.official_url,
+            title=entry.law_name,
+            last_update="",
+            discovery_method="known_mapping",  # -> discovery_tag KNOWN
+            confidence=1.0,
+            warnings=[],
+        )
+        doc_meta = {
+            "quality": "good",
+            "retrieval_method": "local_library",
+            "pdf_is_scanned": False,
+            "location_reference": entry.official_url,
+        }
+        try:
+            result = await run_extraction(entry.text, provider)
+        except Exception as exc:  # noqa: BLE001 — one bad entry must not abort the run
+            warnings.append(f"extraction failed for {entry.law_id}: {exc}")
+            continue
+
+        laws_processed += 1
+        for mapping in result.mappings:
+            if mapping.pillar != pillar:
+                continue
+            code_id = indicator_to_rdtii_code(mapping.indicator)
+            if wanted is not None and code_id not in wanted:
+                continue
+            rows.append(
+                build_row(
+                    mapping,
+                    economy_display=display,
+                    candidate=candidate,
+                    source_text=entry.text,
+                    doc_meta=doc_meta,
+                )
+            )
+
+    if not entries:
+        warnings.append(
+            f"no cached laws for {display} Pillar {pillar} in the local law library"
+        )
+
+    meta = {
+        "economy": display,
+        "economy_code": code,
+        "pillar": pillar,
+        "provider": getattr(provider, "name", provider_name or "unknown"),
+        "source": "local_library",
+        "offline": True,
+        "laws_available": len(entries),
+        "documents_processed": laws_processed,
         "provisions_mapped": len(rows),
         "warnings": warnings,
     }

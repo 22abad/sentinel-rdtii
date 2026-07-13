@@ -117,6 +117,9 @@ python main.py --economy Singapore --pillar 6 --pdf path/to/law.pdf
 
 # Choose output format / directory / provider
 python main.py --economy Australia --pillar 7 --format csv --output-dir outputs/ --provider deepseek
+
+# Fully offline: map cached official texts from the local law library (no network)
+python main.py --economy Singapore --pillar 6 --offline
 ```
 
 | Flag | Meaning |
@@ -125,10 +128,40 @@ python main.py --economy Australia --pillar 7 --format csv --output-dir outputs/
 | `--pillar` | `6`, `7`, or `all` |
 | `--indicators` | Restrict to specific indicators, e.g. `6.1 6.4` |
 | `--pdf` | Extract from a local PDF (skips the crawler) |
+| `--offline` | Map cached official texts from the local law library (no network) |
 | `--provider` | Override `RDTII_LLM_PROVIDER` for this run |
 | `--format` | `csv`, `json`, or `both` (default) |
 | `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |
 | `--max-documents` | Stop after processing this many documents |
+
+---
+
+## Offline mode & the local law library
+
+Live discovery crawls official government portals — the headline Task-1
+capability — but a portal can rate-limit, block bots, require JavaScript, or be
+down during a reviewer's short run. `--offline` removes that dependency by
+serving the source text from a **local law library** (`data/law_library/`), so a
+run is deterministic, air-gapped, and $0 in network cost.
+
+```bash
+python main.py --economy Singapore --pillar 6 --offline
+```
+
+**This caches retrieval, not answers.** Each library entry is a *verifiable
+cache of official text* — it records the source URL, retrieval date, and a
+SHA-256 that is re-checked on every load (a tampered or drifted cache fails
+loudly). The mapping itself still runs live through the same
+classify → extract → verify → deterministic-score pipeline, so provisions are
+produced, not replayed. Cached laws are the curated **KNOWN** baseline;
+anything the live sweep finds beyond the library is tagged **NEW**.
+
+| | Live (default) | `--offline` | `--pdf <path>` |
+|---|---|---|---|
+| Retrieval | Playwright crawl + cache/Wayback fallback | Local law library | One provided file |
+| Network needed | Yes | **No** | No |
+| Mapping | Live pipeline | Live pipeline | Live pipeline |
+| Discovery tag | NEW / KNOWN | KNOWN | per source |
 
 ---
 
