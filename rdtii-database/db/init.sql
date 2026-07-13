@@ -1,6 +1,11 @@
 -- ============================================================
 -- UN-DigitalTrade-AI-Mapper Database Schema
 -- PostgreSQL 17 + pgvector
+--
+-- Fresh development bootstrap only: this file is intentionally not an
+-- incremental or idempotent migration. Run `make db-reset`, which recreates
+-- the local volumes before Docker executes this schema. Introduce a versioned
+-- migration baseline before any environment contains data that must persist.
 -- ============================================================
 
 CREATE EXTENSION IF NOT EXISTS vector;
@@ -194,3 +199,168 @@ CREATE TABLE users (
     role VARCHAR(20) DEFAULT 'viewer' CHECK (role IN ('admin', 'reviewer', 'viewer')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ============================================================
+-- Authentication & Access Control
+-- ============================================================
+
+ALTER TABLE users
+    ADD COLUMN password_hash VARCHAR(255) NOT NULL DEFAULT '',
+    ADD COLUMN is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
+    ADD COLUMN last_login    TIMESTAMP;
+
+CREATE TABLE password_reset_tokens (
+    id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id    UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token      VARCHAR(64) UNIQUE NOT NULL,
+    expires_at TIMESTAMP   NOT NULL,
+    used       BOOLEAN     NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_prt_token   ON password_reset_tokens(token);
+CREATE INDEX idx_prt_user_id ON password_reset_tokens(user_id);
+
+ALTER TABLE documents
+    ADD COLUMN uploaded_by UUID REFERENCES users(id) ON DELETE SET NULL;
+
+CREATE INDEX idx_documents_uploaded_by ON documents(uploaded_by);
+
+CREATE TABLE user_document_access (
+    user_id      UUID        NOT NULL REFERENCES users(id)      ON DELETE CASCADE,
+    document_id  UUID        NOT NULL REFERENCES documents(id)  ON DELETE CASCADE,
+    access_level VARCHAR(20) NOT NULL DEFAULT 'viewer'
+        CHECK (access_level IN ('owner', 'reviewer', 'viewer')),
+    granted_by   UUID        REFERENCES users(id) ON DELETE SET NULL,
+    granted_at   TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, document_id)
+);
+
+CREATE INDEX idx_uda_user_id     ON user_document_access(user_id);
+CREATE INDEX idx_uda_document_id ON user_document_access(document_id);
+
+CREATE TABLE workbench_canvases (
+    owner_id   UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    scope_key  TEXT        NOT NULL DEFAULT 'default',
+    layout     JSONB       NOT NULL DEFAULT '{"version":1,"nodes":[],"edges":[]}',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (owner_id, scope_key)
+);
+
+-- ============================================================
+-- Discovery Source Registry
+-- ============================================================
+
+CREATE TABLE discovery_countries (
+    country_code VARCHAR(3) PRIMARY KEY,
+    label        TEXT        NOT NULL,
+    languages    JSONB       NOT NULL DEFAULT '[]',
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE discovery_sources (
+    id               UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    country_code     VARCHAR(3)  NOT NULL REFERENCES discovery_countries(country_code) ON DELETE CASCADE,
+    name             TEXT        NOT NULL,
+    base_url         TEXT        NOT NULL,
+    domains          JSONB       NOT NULL DEFAULT '[]',
+    source_grade     TEXT        NOT NULL DEFAULT 'primary' CHECK (source_grade IN ('primary', 'secondary', 'unknown')),
+    adapter          TEXT        NOT NULL DEFAULT 'search_engine',
+    source_type      TEXT        NOT NULL DEFAULT 'official_website',
+    languages        JSONB       NOT NULL DEFAULT '[]',
+    pillars          JSONB       NOT NULL DEFAULT '[]',
+    indicators       JSONB       NOT NULL DEFAULT '[]',
+    search_paths     JSONB       NOT NULL DEFAULT '[]',
+    include_patterns JSONB       NOT NULL DEFAULT '[]',
+    exclude_patterns JSONB       NOT NULL DEFAULT '[]',
+    priority         INTEGER     NOT NULL DEFAULT 50,
+    notes            TEXT        NOT NULL DEFAULT '',
+    position         INTEGER     NOT NULL DEFAULT 0,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (country_code, name, base_url)
+);
+
+CREATE INDEX idx_discovery_sources_country_position
+    ON discovery_sources(country_code, position);
+
+CREATE TABLE discovery_source_versions (
+    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    registry    JSONB       NOT NULL,
+    changed_by  UUID        REFERENCES users(id) ON DELETE SET NULL,
+    change_note TEXT        NOT NULL DEFAULT '',
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE discovery_source_audit_events (
+    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    actor_id    UUID        REFERENCES users(id) ON DELETE SET NULL,
+    action      TEXT        NOT NULL,
+    details     JSONB       NOT NULL DEFAULT '{}',
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+INSERT INTO discovery_countries (country_code, label, languages)
+VALUES
+    ('AUS', 'Australia', '["en"]'::jsonb),
+    ('CHN', 'China', '["zh","en"]'::jsonb),
+    ('MYS', 'Malaysia', '["en","ms"]'::jsonb),
+    ('SGP', 'Singapore', '["en"]'::jsonb),
+    ('THA', 'Thailand', '["th","en"]'::jsonb);
+
+INSERT INTO discovery_sources (
+    country_code, name, base_url, domains, source_grade, adapter, source_type,
+    languages, pillars, indicators, search_paths, include_patterns,
+    exclude_patterns, priority, notes, position
+)
+VALUES
+    ('AUS', 'Federal Register of Legislation', 'https://www.legislation.gov.au', '["legislation.gov.au","www.legislation.gov.au"]'::jsonb, 'primary', 'australia_legislation', 'statute_portal', '["en"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 100, 'Official Australian legislation register; verified for Privacy Act 1988 and Telecommunications (Interception and Access) Act 1979.', 0),
+    ('AUS', 'Department of Foreign Affairs and Trade', 'https://www.dfat.gov.au', '["dfat.gov.au","www.dfat.gov.au"]'::jsonb, 'primary', 'search_engine', 'government_portal', '["en"]'::jsonb, '[6]'::jsonb, '["6.5"]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 90, 'Official treaty texts and digital economy agreement pages for binding data-flow commitments.', 1),
+    ('AUS', 'Office of the Australian Information Commissioner', 'https://www.oaic.gov.au', '["oaic.gov.au","www.oaic.gov.au"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en"]'::jsonb, '[7]'::jsonb, '["7.4"]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 90, 'Official privacy impact assessment rules and guidance.', 2),
+
+    ('CHN', 'National Laws and Regulations Database', 'https://flk.npc.gov.cn', '["flk.npc.gov.cn"]'::jsonb, 'primary', 'china_flk', 'statute_portal', '["zh"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 100, 'Official national laws and regulations database', 0),
+    ('CHN', 'State Council', 'https://www.gov.cn', '["gov.cn","www.gov.cn"]'::jsonb, 'primary', 'search_engine', 'government_portal', '["zh","en"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 90, '', 1),
+    ('CHN', 'Cyberspace Administration of China', 'https://www.cac.gov.cn', '["cac.gov.cn","www.cac.gov.cn"]'::jsonb, 'primary', 'search_engine', 'regulator', '["zh"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 90, '', 2),
+
+    ('MYS', 'Attorney General''s Chambers of Malaysia', 'https://lom.agc.gov.my', '["lom.agc.gov.my"]'::jsonb, 'primary', 'malaysia_lom', 'statute_portal', '["en","ms"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 100, 'Official AGC legislation portal; verified for Cyber Security Act 2024 Act 854 record.', 0),
+    ('MYS', 'Personal Data Protection Department', 'https://www.pdp.gov.my', '["pdp.gov.my","www.pdp.gov.my"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en","ms"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 90, 'Official Commissioner source; verified for PDPA 2010 and PDPA Amendment Act 2024 pages.', 1),
+    ('MYS', 'National Cyber Security Agency', 'https://www.nacsa.gov.my', '["nacsa.gov.my","www.nacsa.gov.my"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en","ms"]'::jsonb, '[7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 85, 'Official NACSA legal page and gazette PDFs for Cyber Security Act 2024 commencement and incident notification regulations.', 2),
+    ('MYS', 'Companies Commission of Malaysia', 'https://www.ssm.com.my', '["ssm.com.my","www.ssm.com.my"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en","ms"]'::jsonb, '[7]'::jsonb, '["7.3"]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 85, 'Official Companies Act 2016 text and company-record retention materials.', 3),
+    ('MYS', 'Ministry of Investment Trade and Industry', 'https://fta.miti.gov.my', '["fta.miti.gov.my"]'::jsonb, 'primary', 'search_engine', 'government_portal', '["en","ms"]'::jsonb, '[6]'::jsonb, '["6.5"]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 85, 'Official CPTPP text and electronic-commerce commitment pages.', 4),
+
+    ('SGP', 'Singapore Statutes Online', 'https://sso.agc.gov.sg', '["sso.agc.gov.sg"]'::jsonb, 'primary', 'singapore_sso', 'statute_portal', '["en"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 100, '', 0),
+    ('SGP', 'Personal Data Protection Commission', 'https://www.pdpc.gov.sg', '["pdpc.gov.sg","www.pdpc.gov.sg"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 85, 'Official PDPC source; verified for DPIA guide.', 1),
+    ('SGP', 'Ministry of Trade and Industry', 'https://www.mti.gov.sg', '["mti.gov.sg","www.mti.gov.sg","isomer-user-content.by.gov.sg"]'::jsonb, 'primary', 'official_index', 'government_portal', '["en"]'::jsonb, '[6]'::jsonb, '["6.5"]'::jsonb, '["/trade-international-economic-relations/agreements/digital-economy-agreements-dea/sadea/"]'::jsonb, '["australia-singapore-digital-economy-agreement.*\\.pdf"]'::jsonb, '[]'::jsonb, 85, 'Official MTI treaty page and Singapore Government Isomer-hosted SADEA PDF for the binding Article 23 data-flow commitment.', 2),
+    ('SGP', 'Infocomm Media Development Authority', 'https://www.imda.gov.sg', '["imda.gov.sg","www.imda.gov.sg"]'::jsonb, 'primary', 'search_engine', 'regulator', '["en"]'::jsonb, '[7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 80, '', 3),
+
+    ('THA', 'Office of the Council of State', 'https://www.ocs.go.th', '["ocs.go.th","www.ocs.go.th","searchlaw.ocs.go.th"]'::jsonb, 'primary', 'thailand_ocs', 'statute_portal', '["th","en"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 100, '', 0),
+    ('THA', 'Electronic Transactions Development Agency', 'https://www.etda.or.th', '["etda.or.th","www.etda.or.th"]'::jsonb, 'primary', 'search_engine', 'regulator', '["th","en"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 85, '', 1),
+    ('THA', 'Personal Data Protection Committee', 'https://www.pdpc.or.th', '["pdpc.or.th","www.pdpc.or.th"]'::jsonb, 'primary', 'search_engine', 'regulator', '["th","en"]'::jsonb, '[6,7]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, '[]'::jsonb, 85, '', 2);
+
+-- ============================================================
+-- Final Embedding Shape & Sidecar Links
+-- ============================================================
+
+ALTER TABLE chunk_embeddings ALTER COLUMN embedding TYPE vector(384);
+DROP INDEX idx_chunk_embeddings_embedding;
+CREATE INDEX idx_chunk_embeddings_embedding
+    ON chunk_embeddings USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+
+ALTER TABLE extracted_documents
+    ADD COLUMN source_url TEXT;
+
+CREATE INDEX idx_ext_docs_hash ON extracted_documents(content_hash);
+CREATE INDEX idx_ext_docs_url ON extracted_documents(source_url)
+    WHERE source_url IS NOT NULL;
+CREATE INDEX idx_ext_docs_expires ON extracted_documents(expires_at)
+    WHERE expires_at IS NOT NULL;
+
+ALTER TABLE documents
+    ADD COLUMN sidecar_doc_id TEXT
+    REFERENCES extracted_documents(id) ON DELETE SET NULL;
+
+ALTER TABLE document_chunks
+    ADD COLUMN extracted_doc_id TEXT
+    REFERENCES extracted_documents(id) ON DELETE SET NULL;

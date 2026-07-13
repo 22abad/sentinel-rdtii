@@ -26,6 +26,7 @@ MATCHING = {
     "per_pillar": 4,
     "title_exact": 12,
     "snippet_match": 4,
+    "indicator_scoped_source": 12,
 }
 
 VALIDATION = {
@@ -76,6 +77,18 @@ def score_candidate(candidate: LegalCandidate, source: LegalSourceConfig | None 
         score += MATCHING["per_indicator"] * len(candidate.matched_indicators)
     if candidate.matched_pillars:
         score += MATCHING["per_pillar"] * len(candidate.matched_pillars)
+
+    # Prefer an official source that is explicitly configured for the matched
+    # indicator over a broad statute portal covering the same pillar.  Without
+    # this boost, high-priority generic Acts can consume the validation window
+    # before a lower-priority treaty or regulator source is fetched.
+    if source and source.indicators and candidate.matched_indicators:
+        scoped_match_count = sum(
+            indicator in source.indicators for indicator in candidate.matched_indicators
+        )
+        if scoped_match_count:
+            score += MATCHING["indicator_scoped_source"] * scoped_match_count
+            reasons.append("indicator-specific official source")
 
     title_lower = candidate.title.casefold()
     if any(term in title_lower for term in (

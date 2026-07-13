@@ -248,7 +248,7 @@ async def run_library(
             url=entry.official_url,
             title=entry.law_name,
             last_update="",
-            discovery_method="official_search" if is_discovered else "known_mapping",
+            discovery_method="cached_discovery" if is_discovered else "known_mapping",
             confidence=1.0,
             warnings=[],
         )

@@ -33,13 +33,11 @@
 - Forgot-password flow: single-use tokens stored in `password_reset_tokens`, email sent via SMTP (falls back to log if `SMTP_HOST` unset)
 - Always returns 200 on `/forgot-password` to avoid email enumeration
 
-### Database migrations (`rdtii-database/db/`)
-| File | Purpose |
-|---|---|
-| `migrate_001_auth.sql` | `users` table (id, username, email, password_hash, role, is_active, last_login) |
-| `migrate_002_reset_tokens.sql` | `password_reset_tokens` table (single-use, TTL) |
-| `migrate_003_document_ownership.sql` | Adds `owner_id` FK to documents table |
-| `extract_sidecar/migrations/001_extracted_documents.sql` | `extracted_documents` cache table |
+### Database schema (`rdtii-database/db/`)
+
+Auth, reset-token, ownership, discovery, and sidecar-cache tables are included
+in the consolidated `init.sql`. Use `make db-reset` to recreate the local
+database from that schema.
 
 ### Docker Compose (`docker-compose.yaml`)
 - New `extract-sidecar` service wired to Postgres with `service_healthy` dependency
@@ -49,7 +47,7 @@
 ### Makefile
 - `dev` auto-detects Postgres container IP and patches `.env` before starting
 - Three processes started: uvicorn, `cargo run` (sidecar), vite — all killed on `EXIT` trap
-- New targets: `dev-sidecar`, `install-sidecar`, `migrate-sidecar`, `image` (full rebuild + up)
+- New targets: `dev-sidecar`, `install-sidecar`, `db-reset`, `image` (full rebuild + up)
 - Python path pinned to `/opt/homebrew/bin/python3.11` via `PYTHON` variable
 
 ### Frontend (`rdtii-frontend/`)
@@ -69,8 +67,7 @@
 
 ## Test plan
 
-- [ ] `make db` starts Postgres and Redis; containers are healthy
-- [ ] `make migrate-sidecar` runs cleanly against the DB
+- [ ] `make db-reset` recreates Postgres and Redis; containers are healthy
 - [ ] `make dev` starts all three processes (backend, sidecar, frontend) without error
 - [ ] `POST /auth/register` creates a user; `POST /auth/login` returns a JWT
 - [ ] `POST /auth/forgot-password` logs a reset link (SMTP not required in dev)

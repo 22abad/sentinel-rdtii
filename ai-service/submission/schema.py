@@ -100,8 +100,8 @@ def discovery_tag_for_method(discovery_method: str) -> str:
     """Map a discovery ``discovery_method`` to the NEW/KNOWN submission tag.
 
     "known_mapping" means the candidate came from a curated known-law mapping
-    (the sample kit); anything else (official_search, web_search, ...) is an
-    independent find.
+    (the sample kit); anything else (cached_discovery, official_search,
+    web_search, ...) is an independent find.
     """
 
     return "KNOWN" if discovery_method.strip() == "known_mapping" else "NEW"

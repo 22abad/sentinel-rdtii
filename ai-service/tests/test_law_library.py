@@ -143,6 +143,9 @@ async def test_run_library_offline_tags_rows_known(monkeypatch):
     by_url = {r.source_url: r.discovery_tag for r in rows}
     assert by_url["https://sso.agc.gov.sg/Act/PDPA2012"] == "KNOWN"
     assert by_url["https://sso.agc.gov.sg/SL/PDPA2012-S63-2021"] == "NEW"
+    by_url_method = {r.source_url: r.retrieval_method for r in rows}
+    assert by_url_method["https://sso.agc.gov.sg/Act/PDPA2012"] == "known_mapping"
+    assert by_url_method["https://sso.agc.gov.sg/SL/PDPA2012-S63-2021"] == "cached_discovery"
 
 
 @pytest.mark.anyio

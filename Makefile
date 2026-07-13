@@ -1,4 +1,4 @@
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage db migrate migrate-sidecar image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage db db-reset image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
 SMOKE_ARGS ?=
@@ -35,10 +35,6 @@ install:
 install-sidecar:
 	cd extract_sidecar && cargo build --release
 
-migrate-sidecar:
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f extract_sidecar/migrations/001_extracted_documents.sql
-
-
 install-frontend:
 	cd rdtii-frontend && npm install
 
@@ -57,16 +53,10 @@ discovery-coverage:
 db:
 	docker compose up -d postgres redis
 
-migrate:
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_001_auth.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_002_reset_tokens.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_003_document_ownership.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_004_workbench_canvases.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_005_discovery_sources.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_006_embedding_dim.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_007_discovery_specialized_adapters.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_008_required_country_discovery_sources.sql
-	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f extract_sidecar/migrations/001_extracted_documents.sql
+db-reset:
+	@echo "DESTRUCTIVE: resetting local Postgres and Redis data volumes..."
+	docker compose down --volumes
+	docker compose up -d --wait postgres redis
 
 image:
 	docker compose down

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 
 from dotenv import dotenv_values
@@ -39,6 +41,7 @@ def test_quick_start_defaults_match_readme() -> None:
     # Pin the intended no-key default. The loop below separately checks that
     # README mirrors these values; both files drifting together must still fail.
     assert env["RDTII_LLM_PROVIDER"] == "ollama"
+    assert env["RDTII_LLM_FALLBACK_PROVIDER"] == ""
     assert env["OLLAMA_MODEL"] == "qwen2.5:14b"
     assert env["OLLAMA_BASE_URL"] == "http://localhost:11434/v1"
 
@@ -47,6 +50,28 @@ def test_quick_start_defaults_match_readme() -> None:
 
     assert "playwright install chromium" in README
     assert "--max-documents 1" in README
+    assert "PostgreSQL is not required" in README
+
+
+def test_judge_cli_registry_choice_is_explicit_and_db_free_by_default() -> None:
+    probe = """
+import json, runpy
+ns = runpy.run_path(%r, run_name='sentinel_contract_probe')
+parse_args = ns['parse_args']
+base = ['--economy', 'Singapore', '--pillar', '6']
+print(json.dumps({
+    'default': parse_args(base).registry_backend,
+    'explicit': parse_args(base + ['--registry-backend', 'database']).registry_backend,
+}))
+""" % str(REPO_ROOT / "main.py")
+    result = subprocess.run(
+        [sys.executable, "-c", probe],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert result.stdout.strip() == '{"default": "file", "explicit": "database"}'
 
 
 def test_readme_preserves_the_judge_csv_contract() -> None:
