@@ -170,8 +170,10 @@ anything the live sweep finds beyond the library is tagged **NEW**.
 Beyond mapping the sample-kit laws, the tool rewards **independently finding
 in-force Pillar 6/7 laws** the kit did not include. It decides novelty by
 evidence, not by which crawler surfaced a result: a mapped provision is **KNOWN**
-only if its statute is in the curated baseline (the local law library);
-everything else is a genuine **NEW** find.
+only if its statute is already in the authoritative baseline — the official
+ESCAP RDTII Legal Inventory (`data/known_inventory.jsonl`, 195 laws across the
+three economies) or the curated local law library; everything else is a genuine
+**NEW** find.
 
 ```bash
 python tools/discover_new_laws.py --economy Singapore --pillar all

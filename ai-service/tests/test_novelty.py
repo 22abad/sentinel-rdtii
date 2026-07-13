@@ -4,11 +4,21 @@ from submission.novelty import (
     build_discovery_report,
     is_known_law,
     known_law_index,
+    load_known_inventory,
     normalize_law_name,
     reconcile_discovery_tags,
     summarize_discovery,
 )
 from submission.schema import SubmissionRow
+
+
+def test_official_inventory_loads_and_covers_three_economies():
+    inv = load_known_inventory()
+    assert len(inv) > 150  # ~195 distinct KNOWN laws
+    economies = {econ for econ, _ in inv}
+    assert economies == {"AUS", "MYS", "SGP"}
+    # A representative KNOWN law from the official ESCAP inventory.
+    assert ("MYS", normalize_law_name("Personal Data Protection Act 2010")) in inv
 
 
 def _row(economy, law_name, indicator_id="P6-I1", tag="NEW", **kw):
@@ -35,8 +45,11 @@ def test_known_index_matches_baseline_and_rejects_unseen():
     assert is_known_law("Malaysia", "Companies Act 2016 (Act 777)", index)
     assert is_known_law("SGP", "Personal Data Protection Act 2012", index)
     assert is_known_law("Australia", "Privacy Act 1988", index)
-    # A law we have not cached is not KNOWN.
-    assert not is_known_law("Singapore", "Electronic Transactions Act 2010", index)
+    # Laws only in the official ESCAP Legal Inventory are also KNOWN.
+    assert is_known_law("Singapore", "Cybersecurity Act 2018", index)
+    assert is_known_law("Australia", "Security of Critical Infrastructure Act 2018", index)
+    # A law in neither the library nor the official inventory is not KNOWN.
+    assert not is_known_law("Singapore", "Zzz Data Localisation Act 2099", index)
     # Right law, wrong economy -> not KNOWN.
     assert not is_known_law("Australia", "Companies Act 2016 (Act 777)", index)
 
@@ -44,12 +57,12 @@ def test_known_index_matches_baseline_and_rejects_unseen():
 def test_reconcile_flips_tags_from_the_baseline():
     rows = [
         _row("Malaysia", "Companies Act 2016 (Act 777)", "P7-I3", tag="NEW"),  # actually KNOWN
-        _row("Singapore", "Electronic Transactions Act 2010", "P6-I5", tag="KNOWN"),  # actually NEW
+        _row("Singapore", "Zzz Data Localisation Act 2099", "P6-I5", tag="KNOWN"),  # actually NEW
     ]
     reconciled = reconcile_discovery_tags(rows)
     by_law = {r.law_name: r.discovery_tag for r in reconciled}
     assert by_law["Companies Act 2016 (Act 777)"] == "KNOWN"
-    assert by_law["Electronic Transactions Act 2010"] == "NEW"
+    assert by_law["Zzz Data Localisation Act 2099"] == "NEW"
     # Reconciliation is immutable — inputs untouched.
     assert rows[0].discovery_tag == "NEW"
 
@@ -59,11 +72,11 @@ def test_report_lists_new_candidates_with_audit_and_gate():
         _row("Singapore", "Personal Data Protection Act 2012", "P6-I4", tag="NEW"),  # KNOWN baseline
         _row(
             "Singapore",
-            "Electronic Transactions Act 2010",
+            "Zzz Data Localisation Act 2099",
             "P6-I5",
             tag="NEW",
-            source_url="https://sso.agc.gov.sg/Act/ETA2010",
-            verbatim_snippet="electronic records may be transferred…",
+            source_url="https://sso.agc.gov.sg/Act/ZZZ2099",
+            verbatim_snippet="data must be stored locally…",
         ),
     ]
     report = build_discovery_report("Singapore", rows)
@@ -72,10 +85,10 @@ def test_report_lists_new_candidates_with_audit_and_gate():
     assert summary["new_provisions"] == 1
     assert summary["known_provisions"] == 1
     assert summary["new_laws"] == [
-        {"economy": "Singapore", "law_name": "Electronic Transactions Act 2010", "indicators": ["P6-I5"]}
+        {"economy": "Singapore", "law_name": "Zzz Data Localisation Act 2099", "indicators": ["P6-I5"]}
     ]
     # NEW candidate carries the audit trail for the human gate.
-    assert report["new_candidates"][0]["source_url"] == "https://sso.agc.gov.sg/Act/ETA2010"
+    assert report["new_candidates"][0]["source_url"] == "https://sso.agc.gov.sg/Act/ZZZ2099"
     assert "draft lead for legal review" in report["review_gate"]
 
 
