@@ -49,3 +49,13 @@ rdtii-frontend/obsidian_vault_rdtii/
 
 # Sidecar build artefacts
 extract_sidecar/target/
+
+# Hackathon reference materials (official ESCAP dump — keep local, never push)
+requirements/Hackthon Knowledge Products/
+# Video recordings — never push to cloud
+*.mp4
+*.mov
+*.MOV
+*.mkv
+*.avi
+*.webm
