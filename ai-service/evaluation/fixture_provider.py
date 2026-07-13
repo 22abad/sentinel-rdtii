@@ -19,7 +19,16 @@ class OfflineFixtureProvider(LLMProvider):
 
     def __init__(self, responses: dict[str, dict[str, Any] | None]):
         self._responses = responses
+        # The evaluation's scope is the set of pillars the fixture configures.
+        # Round 2 widened the classifier to all 12 pillars, so golden documents
+        # now also get queried for out-of-scope indicators; those answer
+        # "NO MATCH" silently. Within a configured pillar the guardrail stays
+        # loud: a missing indicator outcome is a fixture bug, not a shrug.
+        self._scope_pillars = {iid.split(".")[0] for iid in responses}
         self.missing_indicators: set[str] = set()
+
+    def _in_scope(self, indicator_id: str) -> bool:
+        return indicator_id.split(".")[0] in self._scope_pillars
 
     def query(self, prompt: str, system: str = "") -> str:
         return "Offline fixture analysis; no external model was called."
@@ -31,6 +40,8 @@ class OfflineFixtureProvider(LLMProvider):
         feature_spec: dict[str, dict[str, str]],
     ) -> dict[str, Any]:
         if indicator_id not in self._responses:
+            if not self._in_scope(indicator_id):
+                return {"verbatim_quote": "NO MATCH"}
             self.missing_indicators.add(indicator_id)
             raise ExtractionError(
                 f"No offline response configured for indicator {indicator_id}"
@@ -48,7 +59,10 @@ class OfflineFixtureProvider(LLMProvider):
         result: dict[str, dict[str, Any]] = {}
         for indicator_id, _spec in indicators:
             if indicator_id not in self._responses:
-                self.missing_indicators.add(indicator_id)
+                if not self._in_scope(indicator_id):
+                    result[indicator_id] = {"verbatim_quote": "NO MATCH"}
+                else:
+                    self.missing_indicators.add(indicator_id)
                 continue
             response = self._responses[indicator_id]
             result[indicator_id] = (

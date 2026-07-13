@@ -56,8 +56,17 @@ class MASOrchestrator:
         self,
         text: str,
         pdf_metadata: dict | None = None,
+        target_indicators: list[str] | None = None,
     ) -> ExtractionResponse:
-        """Execute the entire MAS pipeline on the input text."""
+        """Execute the entire MAS pipeline on the input text.
+
+        ``target_indicators`` bypasses the keyword classifier: every chunk is
+        evaluated against exactly those indicators. Use it when the caller
+        already knows which indicator a document evidences (e.g. Round 2
+        baseline runs, where the official inventory names the indicator per
+        law) — classifier recall then stops being a bottleneck for
+        non-curated pillars and languages.
+        """
         import main as main_module
 
         from validation import reset_quote_registry
@@ -70,7 +79,12 @@ class MASOrchestrator:
         chunk_groups: list[tuple[Chunk, list[tuple[str, dict]]]] = []
         for chunk in chunks:
             indicators: list[tuple[str, dict]] = []
-            for indicator_id in main_module.classify_indicator(chunk.text):
+            candidate_ids = (
+                target_indicators
+                if target_indicators is not None
+                else main_module.classify_indicator(chunk.text)
+            )
+            for indicator_id in candidate_ids:
                 if indicator_id not in SUPPORTED_MAPPING_INDICATORS:
                     logger.warning(
                         "Skipping unsupported indicator %s (outside RDTII output schema)",
