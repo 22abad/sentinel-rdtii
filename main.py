@@ -117,7 +117,7 @@ async def _run(args: argparse.Namespace) -> int:
     if args.strict_live and (args.offline or args.pdf):
         raise ValueError("--strict-live cannot be combined with --offline or --pdf")
 
-    from submission import SubmissionRow, write_outputs
+    from submission import SubmissionRow, reconcile_discovery_tags, write_outputs
     from submission.pipeline import (
         discover_and_extract,
         run_library,
@@ -192,6 +192,11 @@ async def _run(args: argparse.Namespace) -> int:
     print(f"\nSeed evidence: {counts['seed']}")
     print(f"Live-discovered evidence: {counts['live_discovered']}")
     print(f"Fixture evidence: {counts['fixture']}")
+    # Discovery methods describe how a candidate was surfaced, not whether its
+    # law is novel. Make the ESCAP inventory/library baseline authoritative at
+    # the final submission boundary, after rows from every pillar/path have
+    # been combined and immediately before CSV/JSON serialization.
+    all_rows = reconcile_discovery_tags(all_rows)
 
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     written = write_outputs(

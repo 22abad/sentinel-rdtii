@@ -144,8 +144,9 @@ class _FakeCandidate:
 
 
 class _FixtureCandidate(_FakeCandidate):
-    discovery_method = "fixture"
+    discovery_method = "official_search"
     retrieval_mode = "fixture"
+    title = "Configured Fixture Act 2099"
 
 
 def test_build_row_maps_all_fields():
@@ -169,7 +170,7 @@ def test_build_row_maps_all_fields():
     assert row.raw_context_before or row.raw_context_after
 
 
-def test_build_row_never_marks_fixture_new_and_preserves_fetch_audit():
+def test_build_row_never_marks_fixture_new_and_preserves_fixture_fetch_audit():
     row = build_row(
         _sample_mapping(),
         economy_display="Singapore",
@@ -182,6 +183,7 @@ def test_build_row_never_marks_fixture_new_and_preserves_fetch_audit():
     )
 
     assert row.discovery_tag == "KNOWN"
+    assert row.retrieval_method == "fixture"
     assert row.retrieval_mode == "fixture"
     assert row.final_url.endswith("PDPA2012")
     assert row.http_status == 200

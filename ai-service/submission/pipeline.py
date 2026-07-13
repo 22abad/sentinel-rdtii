@@ -109,7 +109,13 @@ def build_row(
         raw_context_before=before,
         raw_context_after=after,
         pdf_is_scanned=doc_meta.get("pdf_is_scanned"),
-        retrieval_method=discovery_method or doc_meta.get("retrieval_method", ""),
+        # Preserve fixture provenance for final novelty reconciliation. For live
+        # candidates, retain the more descriptive discovery method as before.
+        retrieval_method=(
+            retrieval_mode
+            if retrieval_mode in {"fixture", "fallback"}
+            else discovery_method or doc_meta.get("retrieval_method", "")
+        ),
         retrieval_mode=retrieval_mode or doc_meta.get("retrieval_mode", "unknown"),
         final_url=doc_meta.get("final_url", ""),
         http_status=doc_meta.get("http_status"),
