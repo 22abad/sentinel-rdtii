@@ -26,7 +26,7 @@ article-level citation, a verbatim quote, and a Discovery Tag marking whether it
 was found independently (`NEW`) or matched a curated known-law example
 (`KNOWN`).
 
-To eliminate LLM hallucination in a legal context the engine is a
+To reduce hallucination risk in a legal context the engine is a
 **deterministic + probabilistic hybrid**: regex slices the statute → a
 keyword classifier routes chunks → the LLM extracts features and a verbatim
 quote → the quote is verified character-for-character against the source → a
@@ -58,6 +58,7 @@ cd UN-DigitalTrade-AI-Mapper-private
 python -m venv venv
 source venv/bin/activate            # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+playwright install chromium
 ```
 
 This lean install runs the discovery + OCR + mapping CLI. (The full web app and
@@ -93,9 +94,15 @@ python main.py --economy Singapore --pillar 6
 
 **Output:** `outputs/Singapore_P6_<timestamp>.csv` and `.json`.
 
-> Live discovery crawls official portals via Playwright — install the browser
-> once with `playwright install chromium`. To try the pipeline with **no
-> network or browser**, point at a local PDF instead: `--pdf path/to/law.pdf`.
+For a lower-cost first run that still exercises real discovery, document
+retrieval, and mapping, process only the first accepted document:
+
+```bash
+python main.py --economy Singapore --pillar 6 --max-documents 1
+```
+
+> To try the pipeline with **no discovery or browser**, point at a local PDF
+> instead: `--pdf path/to/law.pdf`. Mapping still uses the configured model.
 
 ---
 
@@ -120,6 +127,8 @@ python main.py --economy Australia --pillar 7 --format csv --output-dir outputs/
 | `--pdf` | Extract from a local PDF (skips the crawler) |
 | `--provider` | Override `RDTII_LLM_PROVIDER` for this run |
 | `--format` | `csv`, `json`, or `both` (default) |
+| `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |
+| `--max-documents` | Stop after processing this many documents |
 
 ---
 
@@ -151,7 +160,15 @@ the internal engine to the judges' output contract lives in
 
 ---
 
-## Output Format
+## Output Formats
+
+### Round 1 prototype output — 13 fields
+
+For Round 1, the explicitly mandatory submission items are a complete Quick
+Start and a runnable functional prototype. The prototype output contract below
+is nevertheless part of the supplied Round 1 README template, so the
+judge-facing root CLI (`python main.py ...`) always preserves these 13 fields.
+This is the output reviewers should use when validating the Round 1 prototype.
 
 Each run writes a CSV and a JSON file. **CSV columns are in this exact order —
 do not rename or reorder.**
@@ -174,6 +191,16 @@ do not rename or reorder.**
 
 The JSON adds extended metadata (`raw_context_before/after`, `pdf_is_scanned`,
 `retrieval_method`, …) for the audit view.
+
+### Frontend RDTII data-table export — 10 fields
+
+The web frontend also offers the standard RDTII 2.1 data-collection table with
+`Pillar_ID`, `Indicator_ID`, `Cat_Score`, `Raw_Score`,
+`Act_and_or_practice`, `Coverage`, `Impact_or_comments`, `Timeframe`,
+`References`, and `Note`. That export is intended for RDTII scoring/database
+workflows. It is supplemental and **does not replace** the root CLI's 13-field
+Round 1 prototype output. Both formats are maintained because they serve
+different consumers.
 
 ---
 
