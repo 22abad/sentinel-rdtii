@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from dotenv import dotenv_values
+
 from submission.schema import CSV_COLUMNS
 
 
@@ -12,19 +14,30 @@ README = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 
 
 def _env_values() -> dict[str, str]:
-    values: dict[str, str] = {}
-    for raw_line in (REPO_ROOT / ".env.example").read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        values[key.strip()] = value.strip()
-    return values
+    values = dotenv_values(REPO_ROOT / ".env.example")
+    return {key: value or "" for key, value in values.items()}
+
+
+def _documented_judge_columns() -> tuple[str, ...]:
+    lines = README.splitlines()
+    table_header = "| # | Column | Required | Description |"
+    header_index = lines.index(table_header)
+    columns: list[str] = []
+
+    for line in lines[header_index + 1 :]:
+        if not line.startswith("|"):
+            break
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if cells and cells[0].isdigit():
+            columns.append(cells[1].strip("`"))
+    return tuple(columns)
 
 
 def test_quick_start_defaults_match_readme() -> None:
     env = _env_values()
 
+    # Pin the intended no-key default. The loop below separately checks that
+    # README mirrors these values; both files drifting together must still fail.
     assert env["RDTII_LLM_PROVIDER"] == "ollama"
     assert env["OLLAMA_MODEL"] == "qwen2.5:14b"
     assert env["OLLAMA_BASE_URL"] == "http://localhost:11434/v1"
@@ -38,12 +51,7 @@ def test_quick_start_defaults_match_readme() -> None:
 
 def test_readme_preserves_the_judge_csv_contract() -> None:
     assert len(CSV_COLUMNS) == 13
-    judge_section = README.split(
-        "### Round 1 prototype output — 13 fields", 1
-    )[1].split("### Frontend RDTII data-table export — 10 fields", 1)[0]
-
-    positions = [judge_section.index(f"`{column}`") for column in CSV_COLUMNS]
-    assert positions == sorted(positions)
+    assert _documented_judge_columns() == CSV_COLUMNS
     assert "does not replace" in README
 
 
