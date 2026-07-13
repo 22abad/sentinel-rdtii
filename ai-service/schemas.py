@@ -18,15 +18,28 @@ from typing import Literal, Union
 from pydantic import BaseModel, Field
 
 # RDTII 2.1 valid scores (the indicator-level rule yields one of these)
-Score = Literal[0.0, 0.25, 0.5, 1.0]
+Score = Literal[0.0, 0.25, 0.5, 0.75, 1.0]
 
-# We focus on Pillars 6 and 7 for MVP; framework supports adding more later.
+# Round 2 spans all 12 pillars. The indicator set is the official RDTII 2.1
+# methodology (61 indicators; ids normalised by tools/build_round2_baseline.py,
+# kept in sync with data/rdtii21_methodology.json) plus Round 1 legacy ids
+# ("1.1", "6.5") for backwards compatibility.
 PillarId = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 IndicatorId = Literal[
-    "1.1", "2.1", "3.1", "4.1", "5.1",
+    "1.1", "1.4",
+    "2.1", "2.2", "2.3",
+    "3.1", "3.2", "3.3", "3.4", "3.5",
+    "4.1", "4.2", "4.3", "4.5", "4.6", "4.9", "4.10",
+    "5.1", "5.2", "5.3", "5.4", "5.5", "5.7",
     "6.1", "6.2", "6.3", "6.4", "6.5",
     "7.1", "7.2", "7.3", "7.4", "7.5",
-    "8.1", "9.1", "10.1", "11.1", "12.1"
+    "8.1", "8.2", "8.3", "8.4",
+    "9.1", "9.3", "9.4",
+    "10.1", "10.2", "10.3", "10.4",
+    "11.1", "11.2", "11.3", "11.4",
+    "12.1", "12.2", "12.3",
+    "12.4.1", "12.4.2", "12.4.3", "12.4.4", "12.4.5", "12.4.6", "12.4.7",
+    "12.5", "12.6", "12.7", "12.8", "12.9",
 ]
 
 ScopeKind = Literal["horizontal", "sectoral", "unknown"]

@@ -34,7 +34,11 @@ def test_csv_columns_frozen_order():
 
 @pytest.mark.parametrize(
     ("internal", "expected"),
-    [("6.1", "P6-I1"), ("7.3", "P7-I3"), ("6.5", "P6-I5"), ("P6-I1", "P6-I1")],
+    [
+        ("6.1", "P6-I1"), ("7.3", "P7-I3"), ("6.5", "P6-I5"), ("P6-I1", "P6-I1"),
+        # Round 2: double-digit and dotted sub-indicators
+        ("4.10", "P4-I10"), ("12.4.1", "P12-I4.1"), ("P12-I4.1", "P12-I4.1"),
+    ],
 )
 def test_indicator_code_conversion(internal, expected):
     assert indicator_to_rdtii_code(internal) == expected
@@ -65,6 +69,35 @@ def test_economy_resolution():
     assert economy_display_name("MYS") == "Malaysia"
     with pytest.raises(ValueError):
         economy_code("Atlantis")
+
+
+def test_round2_economy_resolution():
+    # The 7 Round 2 economies all resolve; display names match the official
+    # Round 2 database sheet names so outputs join against the baseline.
+    assert economy_code("Indonesia") == "IDN"
+    assert economy_code("Lao PDR") == "LAO"
+    assert economy_code("Laos") == "LAO"
+    assert economy_code("Russia") == "RUS"
+    assert economy_display_name("RUS") == "Russian Federation"
+    assert economy_display_name("LAO") == "Lao PDR"
+    assert economy_code("Mongolia") == "MNG"
+
+
+def test_round2_indicator_ids_are_in_output_schema():
+    # Every normalised indicator id in the extracted methodology must be an
+    # allowed IndicatorId, or the orchestrator would silently skip it.
+    import json
+    from pathlib import Path
+    from typing import get_args
+
+    from schemas import IndicatorId
+
+    meth_path = Path(__file__).resolve().parents[2] / "data" / "rdtii21_methodology.json"
+    methodology = json.loads(meth_path.read_text(encoding="utf-8"))
+    allowed = set(get_args(IndicatorId))
+    missing = {m["indicator_id"] for m in methodology} - allowed
+    assert not missing, f"methodology ids missing from IndicatorId: {sorted(missing)}"
+    assert len(methodology) == 61
 
 
 def test_law_number_and_year_extraction():
