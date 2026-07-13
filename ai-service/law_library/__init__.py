@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -48,6 +49,9 @@ class LawEntry:
     sha256: str
     retrieved_at: str
     discovery_tag: str
+    version: str = ""
+    currency_source: str = ""
+    currency_checked_at: str = ""
     text: str = field(repr=False, default="")
 
     def covers_pillar(self, pillar: int | None) -> bool:
@@ -114,10 +118,47 @@ def load_library(
                 sha256=record["sha256"],
                 retrieved_at=record.get("retrieved_at", ""),
                 discovery_tag=record.get("discovery_tag", "KNOWN"),
+                version=record.get("version", ""),
+                currency_source=record.get("currency_source", ""),
+                currency_checked_at=record.get("currency_checked_at", ""),
                 text=text,
             )
         )
     return entries
+
+
+# Distinctive version fingerprints: compilation numbers, revised editions, act
+# numbers, and dates. Their disappearance from an official page is a signal that a
+# law may have been amended/re-compiled since we cached it.
+_CURRENCY_TOKEN = re.compile(
+    r"Compilation No\.\s*\d+|\d{4}\s+Revised Edition|Act\s+\d+|\d{1,2}\s+[A-Z][a-z]+\s+\d{4}"
+)
+
+
+def currency_tokens(version: str) -> list[str]:
+    """Distinctive fingerprints extracted from a stored version label."""
+
+    return _CURRENCY_TOKEN.findall(version or "")
+
+
+def assess_currency(version: str, page_text: str) -> dict:
+    """Compare a stored version label against freshly fetched official page text.
+
+    Returns whether every distinctive version fingerprint still appears on the
+    live page. A missing fingerprint means the law may have been amended/
+    re-compiled — a lead for review, not proof (following the draft-for-review
+    guardrail).
+    """
+
+    tokens = currency_tokens(version)
+    normalized = re.sub(r"\s+", " ", page_text or "")
+    found = [t for t in tokens if t in normalized]
+    return {
+        "version": version,
+        "tokens": tokens,
+        "tokens_found": found,
+        "current": bool(tokens) and len(found) == len(tokens),
+    }
 
 
 def lookup(
