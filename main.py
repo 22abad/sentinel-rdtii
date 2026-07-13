@@ -65,6 +65,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Serve official texts from the local law library (no network crawl); "
              "recommended for reproducible / air-gapped runs",
     )
+    parser.add_argument(
+        "--no-seed",
+        action="store_true",
+        help="Skip the known-good seed pass and go straight to live discovery. "
+             "By default a run seeds from the local library first, then falls "
+             "back to discovery (seed-first hybrid).",
+    )
     parser.add_argument("--indicators", nargs="*", default=None, help="Restrict to specific indicators, e.g. 6.1 6.4")
     parser.add_argument("--output-dir", default="outputs", help="Directory for CSV/JSON output")
     parser.add_argument("--format", choices=("csv", "json", "both"), default="both")
@@ -91,7 +98,12 @@ async def _run(args: argparse.Namespace) -> int:
     os.environ["DISCOVERY_REGISTRY_BACKEND"] = args.registry_backend
 
     from submission import SubmissionRow, write_outputs
-    from submission.pipeline import discover_and_extract, run_library, run_pdf
+    from submission.pipeline import (
+        discover_and_extract,
+        run_library,
+        run_pdf,
+        run_seed_first,
+    )
     from submission.schema import economy_display_name
 
     display = economy_display_name(args.economy)
@@ -109,8 +121,14 @@ async def _run(args: argparse.Namespace) -> int:
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
             )
-        else:
+        elif args.no_seed:
             rows, meta = await discover_and_extract(
+                args.economy, pillar,
+                provider_name=args.provider, indicators=args.indicators,
+                limit=args.limit, max_documents=args.max_documents,
+            )
+        else:
+            rows, meta = await run_seed_first(
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
                 limit=args.limit, max_documents=args.max_documents,
