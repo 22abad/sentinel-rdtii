@@ -52,6 +52,9 @@ class LawEntry:
     version: str = ""
     currency_source: str = ""
     currency_checked_at: str = ""
+    # "known" = sample-kit / KNOWN baseline; "discovered" = an independent NEW find
+    # (cached for reproducibility, but must still surface as NEW, not KNOWN).
+    origin: str = "known"
     text: str = field(repr=False, default="")
 
     def covers_pillar(self, pillar: int | None) -> bool:
@@ -121,6 +124,7 @@ def load_library(
                 version=record.get("version", ""),
                 currency_source=record.get("currency_source", ""),
                 currency_checked_at=record.get("currency_checked_at", ""),
+                origin=record.get("origin", "known"),
                 text=text,
             )
         )

@@ -1,0 +1,5 @@
+Credit Reporting Agencies Act 2010 (Act 710)
+
+Security of credit information
+
+the credit reporting agency shall, for the purpose of protecting the credit information from any loss, misuse, modification, unauthorized or accidental access or disclosure, alteration or destruction, ensure that the credit information processor— (a) provides sufficient guarantees in respect of the technical and organizational security measures governing the processing to be carried out; and (b) takes reasonable steps to ensure compliance with those measures.

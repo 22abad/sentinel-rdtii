@@ -18,16 +18,30 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 6
+    assert len(entries) == 9
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
     for e in entries:
         assert e.text.strip()
         assert hashlib.sha256(e.text.encode("utf-8")).hexdigest() == e.sha256
-        assert e.discovery_tag == "KNOWN"
+        assert e.discovery_tag in {"KNOWN", "NEW"}
         assert e.official_url.startswith("http")
         assert e.version and e.currency_checked_at
+
+
+def test_discovered_new_laws_are_tagged_and_not_treated_as_known():
+    from submission.novelty import is_known_law, known_law_index
+
+    entries = load_library()
+    discovered = [e for e in entries if e.origin == "discovered"]
+    assert len(discovered) == 3
+    assert {e.economy for e in discovered} == {"AUS", "MYS", "SGP"}
+    index = known_law_index()  # unions inventory + KNOWN-baseline library entries
+    for e in discovered:
+        assert e.discovery_tag == "NEW"
+        # A cached NEW discovery must NOT be counted as KNOWN.
+        assert not is_known_law(e.economy, e.law_name, index)
 
 
 def test_malaysia_pdpa_2010_fills_the_pillar6_gap():
@@ -120,13 +134,15 @@ async def test_run_library_offline_tags_rows_known(monkeypatch):
 
     assert meta["offline"] is True
     assert meta["source"] == "local_library"
-    assert meta["laws_available"] == 1  # only PDPA covers SGP pillar 6
-    assert len(rows) == 1
-    row = rows[0]
-    assert row.discovery_tag == "KNOWN"
-    assert row.indicator_id == "P6-I4"
-    assert row.retrieval_method == "known_mapping"
-    assert row.source_url == "https://sso.agc.gov.sg/Act/PDPA2012"
+    # SGP pillar 6 now has the PDPA 2012 (KNOWN baseline) and the PDP
+    # Regulations 2021 (a cached NEW discovery) — origin drives the tag.
+    assert meta["laws_available"] == 2
+    assert len(rows) == 2
+    assert all(r.indicator_id == "P6-I4" for r in rows)
+    assert {r.discovery_tag for r in rows} == {"KNOWN", "NEW"}
+    by_url = {r.source_url: r.discovery_tag for r in rows}
+    assert by_url["https://sso.agc.gov.sg/Act/PDPA2012"] == "KNOWN"
+    assert by_url["https://sso.agc.gov.sg/SL/PDPA2012-S63-2021"] == "NEW"
 
 
 @pytest.mark.anyio
