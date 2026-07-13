@@ -20,6 +20,7 @@ Adding a new provider:
 from __future__ import annotations
 
 import importlib
+import logging
 import os
 from typing import Type
 
@@ -125,6 +126,40 @@ def get_default_provider() -> LLMProvider:
     return get_provider(name)
 
 
+def resolve_provider(name: str | None = None) -> LLMProvider:
+    """Resolve the run's provider, wrapping it with failover when configured.
+
+    Primary   = ``name`` or ``RDTII_LLM_PROVIDER`` (default ``deepseek``).
+    Fallback  = ``RDTII_LLM_FALLBACK_PROVIDER`` (default unset = no fallback).
+
+    When a distinct, constructible fallback is configured, returns a
+    :class:`~providers.fallback.FallbackProvider` so that if the primary model is
+    unavailable in a reviewer's environment, calls transparently fail over. This
+    is the judge-safety net: ship ``RDTII_LLM_FALLBACK_PROVIDER=deepseek`` with an
+    API key so a run still completes even if local Ollama is absent. Default
+    behaviour (no fallback env) is unchanged, so tests and the eval harness are
+    unaffected.
+    """
+
+    primary_name = name or os.getenv("RDTII_LLM_PROVIDER", "deepseek")
+    primary = get_provider(primary_name)
+
+    fb_name = os.getenv("RDTII_LLM_FALLBACK_PROVIDER", "").strip()
+    if not fb_name or _canonicalise(fb_name) == _canonicalise(primary_name):
+        return primary
+    try:
+        fallback = get_provider(fb_name)
+    except Exception as exc:  # noqa: BLE001 — a missing fallback must not break the run
+        logging.getLogger(__name__).warning(
+            "fallback provider %r unavailable (%s); using primary %s only",
+            fb_name, exc, primary_name,
+        )
+        return primary
+
+    from .fallback import FallbackProvider
+    return FallbackProvider(primary, fallback)
+
+
 def list_providers() -> list[str]:
     """Return registered provider keys."""
     return sorted(_LAZY_REGISTRY.keys())
@@ -137,4 +172,5 @@ __all__ = [
     "get_default_provider",
     "is_recognised",
     "list_providers",
+    "resolve_provider",
 ]
