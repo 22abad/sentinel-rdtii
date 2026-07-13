@@ -185,6 +185,36 @@ touching the network.
 
 ---
 
+## Round 2 — all 12 pillars × 7 economies
+
+Round 2 (final) spans the **full RDTII 2.1 methodology: 61 indicators across
+pillars 1–12** for **China, India, Indonesia, Lao PDR, Mongolia, the Russian
+Federation and Thailand**. The engine is methodology-driven: the official
+criteria (`data/rdtii21_methodology.json`) generate each indicator's
+extraction spec and its deterministic tier-to-score rule, so the LLM only ever
+identifies *which published criterion* a provision matches — never the number.
+
+```bash
+# Extract the official baseline (methodology + 809 baseline laws, 1,707 URLs)
+python tools/build_round2_baseline.py
+
+# Fetch the baseline laws' full texts into a local corpus (resumable)
+python tools/build_round2_corpus.py --economy IND
+
+# Run any economy / any pillar through the same CLI
+python main.py --economy India --pillar all
+python main.py --economy "Lao PDR" --pillar 6,7,12
+
+# Self-evaluate against the official Round 2 raw scores
+python tools/run_round2_eval.py --economy IND
+```
+
+The self-evaluation reports **coverage, evidence yield, exact-score-match rate
+and MAE against the official database** — rows without local text, failed
+extractions and mismatches are counted, never hidden.
+
+---
+
 ## Discovering new laws (NEW vs KNOWN)
 
 Beyond mapping the sample-kit laws, the tool rewards **independently finding
