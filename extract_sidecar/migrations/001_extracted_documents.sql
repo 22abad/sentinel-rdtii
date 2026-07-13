@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS extracted_documents (
     created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE extracted_documents
+  ADD COLUMN IF NOT EXISTS source_url TEXT;
+
 CREATE INDEX IF NOT EXISTS idx_ext_docs_hash
     ON extracted_documents (content_hash);
 
@@ -35,6 +38,6 @@ ALTER TABLE documents
 
 -- ── Link RAG chunks → sidecar extraction record ───────────────────────────────
 -- Nullable: existing chunks unaffected. parent_document_id remains as-is.
-ALTER TABLE chunks
+ALTER TABLE document_chunks
   ADD COLUMN IF NOT EXISTS extracted_doc_id TEXT
     REFERENCES extracted_documents(id) ON DELETE SET NULL;

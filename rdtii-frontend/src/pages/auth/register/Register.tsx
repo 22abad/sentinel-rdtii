@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RegisterForm } from "@/components/Register/Register";
 import { useAuth } from "@/hooks/useAuth";
+import { t } from "@/lib/i18n";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export function RegisterPage() {
       await register(username, email, password);
       navigate("/workbench", { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      setError(err instanceof Error ? err.message : t("auth.registrationFailed"));
     }
   };
 

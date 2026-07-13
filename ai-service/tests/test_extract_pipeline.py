@@ -17,6 +17,7 @@ FakeProvider that emits canned outputs.
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 import pytest
@@ -27,8 +28,10 @@ class FakeProvider:
 
     name = "fake-provider"
 
-    def __init__(self, response: dict[str, Any]):
+    def __init__(self, response: dict[str, Any], repairs: list[dict[str, Any]] | None = None):
         self._response = response
+        self._repairs = list(repairs or [])
+        self.repair_calls: list[dict[str, Any]] = []
 
     def extract_features(
         self,
@@ -45,6 +48,24 @@ class FakeProvider:
     ) -> dict[str, dict[str, Any]]:
         return {ind_id: dict(self._response) for ind_id, _ in indicators}
 
+    def repair_extraction(
+        self,
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict,
+        previous_output: dict[str, Any],
+        validation_errors: list[str],
+    ) -> dict[str, Any]:
+        self.repair_calls.append({
+            "article_text": article_text,
+            "indicator_id": indicator_id,
+            "previous_output": dict(previous_output),
+            "validation_errors": list(validation_errors),
+        })
+        if self._repairs:
+            return dict(self._repairs.pop(0))
+        return dict(previous_output)
+
 
 def _patch_provider(monkeypatch, response: dict[str, Any]) -> None:
     """Force /api/extract to use FakeProvider and re-import."""
@@ -52,7 +73,14 @@ def _patch_provider(monkeypatch, response: dict[str, Any]) -> None:
 
     fake = FakeProvider(response)
     # Reset the singleton and replace the factory.
-    main_module._provider = fake
+    monkeypatch.setattr(main_module, "_provider", fake)
+    monkeypatch.setattr(main_module, "_get_provider", lambda: fake)
+
+
+def _patch_fake_provider(monkeypatch, fake: FakeProvider) -> None:
+    import main as main_module
+
+    monkeypatch.setattr(main_module, "_provider", fake)
     monkeypatch.setattr(main_module, "_get_provider", lambda: fake)
 
 
@@ -177,6 +205,9 @@ def test_quote_outside_chunk_is_rejected_even_if_in_full_document(monkeypatch):
                 for ind_id, _ in indicators
             }
 
+    import chunker
+    monkeypatch.setattr(chunker, "_MIN_CHARS", 0)
+
     fake = CrossChunkLyingProvider()
     main_module._provider = fake
     monkeypatch.setattr(main_module, "_get_provider", lambda: fake)
@@ -219,6 +250,387 @@ def test_quote_outside_chunk_is_rejected_even_if_in_full_document(monkeypatch):
     assert "not found in chunk" in cross_chunk_rejections[0]["reason"]
 
 
+def test_runtime_repair_loop_fixes_bad_quote(monkeypatch):
+    """A quote verification failure should be fed back to the provider once,
+    allowing it to return an exact source substring before the mapping is
+    scored and emitted."""
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = "Article 1. Personal data shall not be transferred abroad."
+    exact_quote = "Personal data shall not be transferred abroad"
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": "Personal data cannot be transferred overseas",
+            "personal_data": True,
+            "has_ban": True,
+            "scope": "horizontal",
+        },
+        repairs=[
+            {
+                "verbatim_quote": exact_quote,
+                "personal_data": True,
+                "has_ban": True,
+                "scope": "horizontal",
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 1
+    assert "not found in chunk" in "; ".join(fake.repair_calls[0]["validation_errors"])
+    assert len(data["mappings"]) == 1
+    assert data["mappings"][0]["verbatim_quote"] == exact_quote
+    assert data["rejected"] == []
+
+
+def test_runtime_repair_loop_preserves_metadata_when_repair_omits_it(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = "Article 1. Personal data shall not be transferred abroad."
+    exact_quote = "Personal data shall not be transferred abroad"
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": "Personal data cannot be transferred overseas",
+            "personal_data": True,
+            "has_ban": True,
+            "scope": "horizontal",
+            "source_legislation": "Singapore Personal Data Protection Act (PDPA), 2012",
+            "last_update": "2012",
+        },
+        repairs=[
+            {
+                "verbatim_quote": exact_quote,
+                "personal_data": True,
+                "has_ban": True,
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(data["mappings"]) == 1
+    m = data["mappings"][0]
+    assert m["source_legislation"].startswith("Singapore Personal Data Protection Act")
+    assert m["scope"] == "horizontal"
+
+
+def test_runtime_repair_loop_handles_non_string_quote_without_500(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = "Article 1. Personal data shall not be transferred abroad."
+    exact_quote = "Personal data shall not be transferred abroad"
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": ["Personal data"],
+            "personal_data": True,
+            "has_ban": True,
+            "scope": "horizontal",
+        },
+        repairs=[
+            {
+                "verbatim_quote": exact_quote,
+                "personal_data": True,
+                "has_ban": True,
+                "scope": "horizontal",
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 1
+    assert "verbatim_quote must be a string" in "; ".join(fake.repair_calls[0]["validation_errors"])
+    assert len(data["mappings"]) == 1
+    assert data["mappings"][0]["verbatim_quote"] == exact_quote
+
+
+def test_runtime_float_string_feature_does_not_500(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "0")
+    source = "Article 1. The tariff rate shall be 50 percent for covered digital products."
+    quote = "The tariff rate shall be 50 percent for covered digital products"
+
+    fake = FakeProvider({
+        "verbatim_quote": quote,
+        "tariff_rate": "50",
+        "scope": "sectoral",
+    })
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["1.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(data["mappings"]) == 1
+    assert data["mappings"][0]["score"] == 0.5
+    assert data["mappings"][0]["features"]["tariff_rate"] == 50.0
+
+
+def test_runtime_validation_flag_does_not_trigger_repair(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = "Article 1. The objective of this Act is to provide a legal framework for personal data protection."
+    quote = "The objective of this Act is to provide a legal framework for personal data protection"
+
+    fake = FakeProvider({
+        "verbatim_quote": quote,
+        "has_comprehensive_framework": True,
+        "scope": "horizontal",
+    })
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["7.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 0
+    assert len(data["mappings"]) == 1
+    assert data["mappings"][0]["requires_human_review"] is True
+    assert data["mappings"][0]["flag_reasons"]
+
+
+def test_runtime_repair_loop_fixes_validation_reject(monkeypatch):
+    """A deterministic validation reject, such as a section heading quote,
+    should be repairable before the candidate is finally rejected."""
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = "PART II - DATA PROTECTION. Personal data shall not be transferred abroad."
+    exact_quote = "Personal data shall not be transferred abroad"
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": "PART II - DATA PROTECTION",
+            "personal_data": True,
+            "has_ban": True,
+            "scope": "horizontal",
+        },
+        repairs=[
+            {
+                "verbatim_quote": exact_quote,
+                "personal_data": True,
+                "has_ban": True,
+                "scope": "horizontal",
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 1
+    assert any("section/part heading" in err for err in fake.repair_calls[0]["validation_errors"])
+    assert len(data["mappings"]) == 1
+    assert data["mappings"][0]["verbatim_quote"] == exact_quote
+    assert data["rejected"] == []
+
+
+def test_runtime_repair_loop_rejects_when_repair_still_invalid(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = "Article 1. Personal data shall not be transferred abroad."
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": "not in the source",
+            "personal_data": True,
+            "has_ban": True,
+            "scope": "horizontal",
+        },
+        repairs=[
+            {
+                "verbatim_quote": "still not in the source",
+                "personal_data": True,
+                "has_ban": True,
+                "scope": "horizontal",
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 1
+    assert data["mappings"] == []
+    assert data["rejected"]
+    assert "not found in chunk" in data["rejected"][0]["reason"]
+
+
+def test_runtime_feature_normalization_prevents_string_false_scoring_bug(monkeypatch):
+    """String booleans from LLM JSON must be coerced before scoring.
+
+    Without this, Python's bool("false") would incorrectly count a false
+    feature as true and inflate the score.
+    """
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "0")
+    source = "Article 1. Personal data shall be freely transferred abroad."
+    quote = "Personal data shall be freely transferred abroad"
+
+    fake = FakeProvider({
+        "verbatim_quote": quote,
+        "personal_data": "true",
+        "has_ban": "false",
+        "has_local_processing": "false",
+        "scope": "horizontal",
+    })
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 0
+    assert len(data["mappings"]) == 1
+    m = data["mappings"][0]
+    assert m["score"] == 0.0
+    assert m["features"]["personal_data"] is True
+    assert m["features"]["has_ban"] is False
+    assert m["features"]["has_local_processing"] is False
+
+
+def test_streaming_runtime_uses_same_feature_normalization(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "0")
+    source = "Article 1. Personal data shall be freely transferred abroad."
+    quote = "Personal data shall be freely transferred abroad"
+
+    fake = FakeProvider({
+        "verbatim_quote": quote,
+        "personal_data": "true",
+        "has_ban": "false",
+        "has_local_processing": "false",
+        "scope": "horizontal",
+    })
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract/stream", data={"text": source})
+    assert r.status_code == 200
+
+    mapping_payloads = []
+    for line in r.text.splitlines():
+        if line.startswith("data: ") and '"score"' in line:
+            mapping_payloads.append(json.loads(line.removeprefix("data: ")))
+
+    assert len(mapping_payloads) == 1
+    m = mapping_payloads[0]
+    assert m["score"] == 0.0
+    assert m["features"]["has_ban"] is False
+
+
+def test_streaming_runtime_repair_loop_fixes_bad_quote(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = "Article 1. Personal data shall not be transferred abroad."
+    exact_quote = "Personal data shall not be transferred abroad"
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": "Personal data cannot be transferred overseas",
+            "personal_data": True,
+            "has_ban": True,
+            "scope": "horizontal",
+        },
+        repairs=[
+            {
+                "verbatim_quote": exact_quote,
+                "personal_data": True,
+                "has_ban": True,
+                "scope": "horizontal",
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract/stream", data={"text": source})
+    assert r.status_code == 200
+
+    mapping_payloads = []
+    rejected_payloads = []
+    current_event = None
+    for line in r.text.splitlines():
+        if line.startswith("event: "):
+            current_event = line.removeprefix("event: ")
+        elif line.startswith("data: "):
+            payload = json.loads(line.removeprefix("data: "))
+            if current_event == "mapping":
+                mapping_payloads.append(payload)
+            elif current_event == "rejected":
+                rejected_payloads.append(payload)
+
+    assert len(fake.repair_calls) == 1
+    assert "not found in chunk" in "; ".join(fake.repair_calls[0]["validation_errors"])
+    assert rejected_payloads == []
+    assert len(mapping_payloads) == 1
+    assert mapping_payloads[0]["verbatim_quote"] == exact_quote
+
+
 @pytest.mark.parametrize(
     "bad_scope",
     ["global", "regional", "national", "", None, "Sectoral ", "HORIZONTAL"],
@@ -241,6 +653,7 @@ def test_invalid_scope_is_sanitized(monkeypatch, bad_scope):
 
     _patch_provider(monkeypatch, response)
     _patch_classifier_to(monkeypatch, ["6.1"])
+    monkeypatch.setattr(main_module, "classify_coverage", lambda **kwargs: {"scope": "unknown", "reasons": []})
 
     client = TestClient(main_module.app)
     r = client.post("/api/extract", data={"text": source})
@@ -327,3 +740,160 @@ def test_providers_active_is_in_available_when_recognised(monkeypatch):
     assert body["active"] == "llama-3-local"  # resolved canonical
     assert body["active"] in body["available"]
     assert body["active_alias"] == "llama3"
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# Formatting Interceptor Tests (UN Compliance)
+# ──────────────────────────────────────────────────────────────────────────
+
+
+def test_formatting_interceptor_un_compliance(monkeypatch):
+    """Verify that formatting interceptor correctly cleans up and formats the fields
+
+    to UN ESCAP RDTII 2.1 specifications:
+      1. Strips clause/article numbers from 'Act and/or practice' (source_legislation)
+         and formats it as [Country] [Law Name] ([Abbreviation]), [Year], [Law Number].
+      2. Prepends [Article X] or [Section Y] to the front of 'Impacts or comments' (impact).
+      3. Normalizes last_update and timeframe_column to use Month Name YYYY format.
+    """
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    source = "Article 18. Personal data shall not be transferred abroad."
+    quote = "Personal data shall not be transferred abroad"
+
+    # LLM raw output with article in title, non-normalized date, etc.
+    response = {
+        "verbatim_quote": quote,
+        "article_clause": "Article 18",
+        "personal_data": True,
+        "has_ban": True,
+        "scope": "horizontal",
+        "source_legislation": "Personal Data Protection Act (PDPA) 2012 Article 18",
+        "last_update": "05/2012",  # non-normalized
+        "source_url": "https://www.sso.gov.sg/PDPA",
+    }
+
+    _patch_provider(monkeypatch, response)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    # Mock crawler's network requests to keep test purely local and fast
+    async def fake_fetch(url):
+        return {"type": "text", "text": source}
+    async def fake_verify_timeline(url, claimed_date):
+        return {"verified": True, "best_date": "05/2012", "verification_log": "Mocked", "source_details": []}
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+    monkeypatch.setattr("crawler.verify_law_timeline", fake_verify_timeline)
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source, "source_url": "https://www.sso.gov.sg/PDPA"})
+    assert r.status_code == 200
+    data = r.json()
+    
+    assert len(data["mappings"]) == 1
+    m = data["mappings"][0]
+
+    # Rule 1: Clean and format source_legislation (Prepend country, strip article)
+    assert m["source_legislation"] == "Singapore Personal Data Protection Act (PDPA), 2012"
+    assert m["article_clause"] == "Article 18"
+
+    # Rule 2: Prepend article/clause to the impact column
+    assert m["impact"].startswith("[Article 18]")
+
+    # Rule 3: Timeframe dates calibrated to Month Name YYYY format
+    assert m["last_update"] == "May 2012"
+    assert "May 2012" in m["features"]["_timeframe_column"]
+
+
+def test_extract_rejects_crawled_website_error_page(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    async def fake_fetch(url):
+        return {
+            "type": "text",
+            "text": "Page Not Found. We are sorry, the page you are looking for may have been removed, had its name changed, or is temporarily unavailable.",
+        }
+
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+
+    client = TestClient(main_module.app)
+    response = client.post("/api/extract", data={"source_url": "https://www.imda.gov.sg/page-not-found"})
+
+    assert response.status_code == 400
+    assert "website error page" in response.json()["detail"]
+
+
+def test_stream_extract_rejects_crawled_website_error_page(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    async def fake_fetch(url):
+        return {
+            "type": "text",
+            "text": "Page Not Found. We are sorry, the page you are looking for may have been removed, had its name changed, or is temporarily unavailable.",
+        }
+
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+
+    client = TestClient(main_module.app)
+    response = client.post("/api/extract/stream", data={"source_url": "https://www.imda.gov.sg/page-not-found"})
+
+    assert response.status_code == 200
+    assert "event: error" in response.text
+    assert "website error page" in response.text
+
+
+def test_null_optional_text_fields_do_not_crash_extraction(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    source = "Article 1. Personal data shall not be transferred abroad."
+    quote = "Personal data shall not be transferred abroad"
+    response = {
+        "verbatim_quote": quote,
+        "personal_data": True,
+        "has_ban": True,
+        "scope": "horizontal",
+        "source_legislation": None,
+        "last_update": None,
+        "source_url": None,
+        "coverage": None,
+        "cluster": None,
+        "name": None,
+        "policy_description": None,
+    }
+
+    _patch_provider(monkeypatch, response)
+    _patch_classifier_to(monkeypatch, ["6.1"])
+
+    client = TestClient(main_module.app)
+    result = client.post("/api/extract", data={"text": source})
+
+    assert result.status_code == 200
+    mapping = result.json()["mappings"][0]
+    assert isinstance(mapping["coverage"], str)
+    assert mapping["cluster"] == ""
+    assert mapping["name"] == ""
+    assert mapping["policy_description"] == ""
+
+
+def test_stream_pdf_parse_error_returns_sse_error(monkeypatch):
+    from fastapi.testclient import TestClient
+    import main as main_module
+
+    async def fake_fetch(url):
+        return {"type": "pdf", "pdf_path": "/tmp/missing.pdf"}
+
+    def fake_read_pdf(path):
+        raise RuntimeError("cannot parse pdf")
+
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+    monkeypatch.setattr("pdf_reader.read_pdf", fake_read_pdf)
+
+    client = TestClient(main_module.app)
+    response = client.post("/api/extract/stream", data={"source_url": "https://example.test/law.pdf"})
+
+    assert response.status_code == 200
+    assert "event: error" in response.text
+    assert "PDF parsing failed: cannot parse pdf" in response.text

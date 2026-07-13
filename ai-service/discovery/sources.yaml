@@ -1,0 +1,250 @@
+AUS:
+  label: Australia
+  languages: [en]
+  sources:
+    - name: Federal Register of Legislation
+      base_url: https://www.legislation.gov.au
+      domains: [legislation.gov.au, www.legislation.gov.au]
+      adapter: australia_legislation
+      source_grade: primary
+      source_type: statute_portal
+      languages: [en]
+      pillars: [6, 7]
+      priority: 100
+      notes: Official Australian legislation register; verified for Privacy Act 1988 and Telecommunications (Interception and Access) Act 1979.
+
+    - name: Department of Foreign Affairs and Trade
+      base_url: https://www.dfat.gov.au
+      domains: [dfat.gov.au, www.dfat.gov.au]
+      adapter: official_index
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [6]
+      indicators: ["6.5"]
+      search_paths: [/trade/services-and-digital-trade/australia-and-singapore-digital-economy-agreement]
+      include_patterns: ['australia-singapore-digital-economy-agreement\.pdf']
+      title_overrides:
+        'australia-singapore-digital-economy-agreement\.pdf': Australia-Singapore Digital Economy Agreement
+      priority: 90
+      notes: Official treaty texts and digital economy agreement pages for binding data flow commitments.
+
+    - name: Singapore Ministry of Trade and Industry
+      base_url: https://www.mti.gov.sg
+      domains: [mti.gov.sg, www.mti.gov.sg, isomer-user-content.by.gov.sg]
+      adapter: official_index
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [6]
+      indicators: ["6.5"]
+      search_paths: [/trade-international-economic-relations/agreements/digital-economy-agreements-dea/sadea/]
+      include_patterns: ['australia-singapore-digital-economy-agreement.*\.pdf']
+      title_overrides:
+        'australia-singapore-digital-economy-agreement.*\.pdf': Australia-Singapore Digital Economy Agreement
+      priority: 89
+      notes: Singapore government publication of the joint in-force Australia-Singapore Digital Economy Agreement and its binding data flow commitment.
+
+    - name: Office of the Australian Information Commissioner
+      base_url: https://www.oaic.gov.au
+      domains: [oaic.gov.au, www.oaic.gov.au]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en]
+      pillars: [7]
+      indicators: ["7.4"]
+      priority: 90
+      notes: Official privacy impact assessment rules and guidance.
+
+CHN:
+  label: China
+  languages: [zh, en]
+  sources:
+    - name: National Laws and Regulations Database
+      base_url: https://flk.npc.gov.cn
+      domains: [flk.npc.gov.cn]
+      adapter: china_flk
+      source_grade: primary
+      source_type: statute_portal
+      languages: [zh]
+      pillars: [6, 7]
+      priority: 100
+      notes: Official national laws and regulations database
+
+    - name: State Council
+      base_url: https://www.gov.cn
+      domains: [gov.cn, www.gov.cn]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [zh, en]
+      pillars: [6, 7]
+      priority: 90
+
+    - name: Cyberspace Administration of China
+      base_url: https://www.cac.gov.cn
+      domains: [cac.gov.cn, www.cac.gov.cn]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [zh]
+      pillars: [6, 7]
+      priority: 90
+
+SGP:
+  label: Singapore
+  languages: [en]
+  sources:
+    - name: Singapore Statutes Online
+      base_url: https://sso.agc.gov.sg
+      domains: [sso.agc.gov.sg]
+      adapter: singapore_sso
+      source_grade: primary
+      source_type: statute_portal
+      languages: [en]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Personal Data Protection Commission
+      base_url: https://www.pdpc.gov.sg
+      domains: [pdpc.gov.sg, www.pdpc.gov.sg]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en]
+      pillars: [6, 7]
+      priority: 85
+      notes: Official PDPC source; verified for DPIA guide.
+
+    - name: Ministry of Trade and Industry
+      base_url: https://www.mti.gov.sg
+      domains: [mti.gov.sg, www.mti.gov.sg, isomer-user-content.by.gov.sg]
+      adapter: official_index
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [6]
+      indicators: ["6.5"]
+      search_paths: [/trade-international-economic-relations/agreements/digital-economy-agreements-dea/sadea/]
+      include_patterns: ['australia-singapore-digital-economy-agreement.*\.pdf']
+      title_overrides:
+        'australia-singapore-digital-economy-agreement.*\.pdf': Australia-Singapore Digital Economy Agreement
+      priority: 85
+      notes: Official MTI treaty pages and Singapore Government Isomer-hosted treaty PDFs; verified for a digital economy agreement data flow commitment.
+
+    - name: Infocomm Media Development Authority
+      base_url: https://www.imda.gov.sg
+      domains: [imda.gov.sg, www.imda.gov.sg]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en]
+      pillars: [7]
+      priority: 80
+
+THA:
+  label: Thailand
+  languages: [th, en]
+  sources:
+    - name: Office of the Council of State
+      base_url: https://www.ocs.go.th
+      domains: [ocs.go.th, www.ocs.go.th, searchlaw.ocs.go.th]
+      adapter: thailand_ocs
+      source_grade: primary
+      source_type: statute_portal
+      languages: [th, en]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Electronic Transactions Development Agency
+      base_url: https://www.etda.or.th
+      domains: [etda.or.th, www.etda.or.th]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [th, en]
+      pillars: [6, 7]
+      priority: 85
+
+    - name: Personal Data Protection Committee
+      base_url: https://www.pdpc.or.th
+      domains: [pdpc.or.th, www.pdpc.or.th]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [th, en]
+      pillars: [6, 7]
+      priority: 85
+
+MYS:
+  label: Malaysia
+  languages: [en, ms]
+  sources:
+    - name: Attorney General's Chambers of Malaysia
+      base_url: https://lom.agc.gov.my
+      domains: [lom.agc.gov.my]
+      adapter: malaysia_lom
+      source_grade: primary
+      source_type: statute_portal
+      languages: [en, ms]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Personal Data Protection Department
+      base_url: https://www.pdp.gov.my
+      domains: [pdp.gov.my, www.pdp.gov.my]
+      adapter: official_index
+      source_grade: primary
+      source_type: regulator
+      languages: [en, ms]
+      pillars: [6, 7]
+      search_paths:
+        - /ppdpv1/en/akta/personal-data-protection-amendment-act-2024/
+        - /ppdpv1/en/akta/circular-of-personal-data-protection-commissioner-no-2-2025-appointment-of-data-protection-officer/
+        - /ppdpv1/en/guidelines-and-circular-on-personal-data-protection-appointment-of-data-protection-officer-dpo-and-data-breach-notification/
+      include_patterns: ['(?:Act-A1727|Pekeliling-DPO-1)\.pdf']
+      title_overrides:
+        'Act-A1727\.pdf': Personal Data Protection (Amendment) Act 2024
+        'Pekeliling-DPO-1\.pdf': Pelantikan Pegawai Perlindungan Data
+      priority: 90
+      notes: Official section 12A data protection officer appointment source, including DPO requirement thresholds and the PDPA Amendment Act 2024.
+
+    - name: National Cyber Security Agency
+      base_url: https://www.nacsa.gov.my
+      domains: [nacsa.gov.my, www.nacsa.gov.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en, ms]
+      pillars: [7]
+      priority: 85
+      notes: Official NACSA legal page and gazette PDFs for Cyber Security Act 2024 commencement and incident notification regulations.
+
+    - name: Companies Commission of Malaysia
+      base_url: https://www.ssm.com.my
+      domains: [ssm.com.my, www.ssm.com.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en, ms]
+      pillars: [7]
+      indicators: ["7.3"]
+      priority: 85
+      notes: Official Companies Act 2016 text and company-record retention materials.
+
+    - name: Ministry of Investment Trade and Industry
+      base_url: https://fta.miti.gov.my
+      domains: [fta.miti.gov.my]
+      adapter: official_index
+      source_grade: primary
+      source_type: government_portal
+      languages: [en, ms]
+      pillars: [6]
+      indicators: ["6.5"]
+      search_paths: [/index.php/pages/view/tpp_cptpp]
+      include_patterns: ['14\._Electronic_Commerce_\.pdf']
+      title_overrides:
+        '14\._Electronic_Commerce_\.pdf': Chapter 14 Electronic Commerce
+      priority: 85
+      notes: Official electronic commerce agreement text with an Article 14.11 cross-border transfer of information commitment.

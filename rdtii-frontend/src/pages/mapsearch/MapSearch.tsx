@@ -8,6 +8,7 @@ import ColorBends from "../../components/ColorBends/ColorBends";
 import { AnimatePresence, motion } from "motion/react";
 import { Plus, Menu, X, Home, AppWindowMac, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
+import { t } from "../../lib/i18n";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ESCAP_DATA: any[] = [
@@ -322,6 +323,14 @@ export function MapSearchPage() {
                 availableProviders={[]}
                 selectedProvider=""
                 setSelectedProvider={() => {}}
+                ollamaModels={[]}
+                selectedOllamaModel=""
+                setSelectedOllamaModel={() => {}}
+                vertexModels={[]}
+                selectedGeminiModel=""
+                setSelectedGeminiModel={() => {}}
+                selectedDeepSeekModel=""
+                setSelectedDeepSeekModel={() => {}}
                 onClose={() => setSidebarOpen(false)}
               />
             </motion.div>
@@ -334,15 +343,15 @@ export function MapSearchPage() {
         <div className="fixed left-4 top-4 w-12 h-12 z-50 group">
           <button
             onClick={() => setSidebarOpen(true)}
-            title="Open sidebar"
-            className="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            style={{ width: 48, height: 48, minHeight: 0, borderRadius: "50%", background: "#0c1210", border: "1px solid rgba(255,255,255,0.1)", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
+            title={t("nav.openSidebar")}
+            className="hidden md:flex opacity-60 hover:opacity-100 hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg"
+            style={{ width: 48, height: 48, minHeight: 0, borderRadius: "50%", background: "#0c1210", border: "1px solid rgba(255,255,255,0.15)", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
           >
             <Plus size={20} color="white" />
           </button>
           <button
             onClick={() => setSidebarOpen(true)}
-            title="Open sidebar"
+            title={t("nav.openSidebar")}
             className="flex md:hidden"
             style={{ width: 48, height: 48, minHeight: 0, background: "transparent", border: "none", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
           >

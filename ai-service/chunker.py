@@ -28,8 +28,8 @@ _MIN_CHARS = int(os.getenv("CHUNK_MIN_CHARS", "200"))
 # Structural heading patterns — used as preferred break points, not required.
 _HEADING_RE = re.compile(
     r"^\s*(?:"
-    r"Article|Section|Clause|Part|Chapter|Schedule|Regulation|Annex|Appendix"
-    r"|Art\.?|Sec\.?|Para\.?|Cl\.?"
+    r"(?i:(?:Article|Section|Clause|Part|Chapter|Schedule|Regulation|Annex|Appendix))\s+(?:\d+|[IVXLC]+\b|[A-Z]\b)"
+    r"|(?i:(?:Art|Sec|Para|Cl)\.?\s*\d+)"
     r"|第\s*[\d一二三四五六七八九十百千]+\s*条"  # Chinese
     r"|มาตรา\s*\d+"                              # Thai
     r"|Pasal\s*\d+"                              # Indonesian
@@ -37,7 +37,7 @@ _HEADING_RE = re.compile(
     r"|(?:\d+\.){1,3}\s+[A-Z]"                  # numbered: 1.2.3 Heading
     r"|\([a-z]\)\s+[A-Z]"                        # lettered: (a) Heading
     r")",
-    re.IGNORECASE,
+    re.MULTILINE,
 )
 
 
@@ -59,11 +59,48 @@ def regex_legal_chunker(text: str) -> list[Chunk]:
     up to CHUNK_CHAR_BUDGET chars. Structural headings act as preferred
     break points so each article starts a fresh chunk where possible.
     """
-    if not text:
+    if not text or not text.strip():
         return []
 
-    sents = list(_uax29_sentences(text))
-    if not sents:
+    def _sentence_units(segment: str, offset: int) -> list[tuple[str, int, bool]]:
+        sents = list(_uax29_sentences(segment))
+        if not sents:
+            return [(segment, offset, bool(_HEADING_RE.match(segment)))]
+
+        units: list[tuple[str, int, bool]] = []
+        pos = 0
+        for sent in sents:
+            rel = segment.find(sent, pos)
+            if rel < 0:
+                rel = pos
+            units.append((sent, offset + rel, bool(_HEADING_RE.match(sent))))
+            pos = rel + len(sent)
+        return units
+
+    units: list[tuple[str, int, bool]] = []
+    heading_matches = list(_HEADING_RE.finditer(text))
+    if len(heading_matches) > 1:
+        starts = [m.start() for m in heading_matches]
+        if text[: starts[0]].strip():
+            starts.insert(0, 0)
+
+        for idx, start in enumerate(starts):
+            end = starts[idx + 1] if idx + 1 < len(starts) else len(text)
+            segment = text[start:end]
+            if not segment.strip():
+                continue
+            if len(segment) <= _BUDGET:
+                units.append((segment, start, bool(_HEADING_RE.match(segment))))
+            else:
+                section_units = _sentence_units(segment, start)
+                if section_units:
+                    first_text, first_start, _is_heading = section_units[0]
+                    units.append((first_text, first_start, True))
+                    units.extend(section_units[1:])
+    else:
+        units = _sentence_units(text, 0)
+
+    if not units:
         stripped = text.strip()
         if not stripped:
             return []
@@ -71,15 +108,15 @@ def regex_legal_chunker(text: str) -> list[Chunk]:
         return [Chunk(text=stripped, start=lead, end=lead + len(stripped))]
 
     chunks: list[Chunk] = []
-    buf: list[str] = []
-    buf_start = 0   # absolute offset of first char in buf
+    buf_start: int | None = None
+    buf_end = 0
     buf_chars = 0
-    pos = 0         # tracks current position in original text
 
     def _flush() -> None:
-        if not buf:
+        nonlocal buf_start, buf_end, buf_chars
+        if buf_start is None:
             return
-        raw = "".join(buf)
+        raw = text[buf_start:buf_end]
         stripped = raw.strip()
         if stripped:
             lead = len(raw) - len(raw.lstrip())
@@ -88,21 +125,22 @@ def regex_legal_chunker(text: str) -> list[Chunk]:
                 start=buf_start + lead,
                 end=buf_start + lead + len(stripped),
             ))
+        buf_start = None
+        buf_end = 0
+        buf_chars = 0
 
-    for sent in sents:
-        is_heading = bool(_HEADING_RE.match(sent))
-        over_budget = (buf_chars + len(sent) > _BUDGET) and (buf_chars >= _MIN_CHARS)
-        at_heading  = is_heading and (buf_chars >= _MIN_CHARS)
+    for unit_text, unit_start, is_heading in units:
+        unit_end = unit_start + len(unit_text)
+        over_budget = (buf_chars + len(unit_text) > _BUDGET) and (buf_chars >= _MIN_CHARS)
+        at_heading = is_heading and buf_start is not None and buf_chars > 0
 
-        if buf and (over_budget or at_heading):
+        if buf_start is not None and (over_budget or at_heading):
             _flush()
-            buf = []
-            buf_start = pos
-            buf_chars = 0
 
-        buf.append(sent)
-        buf_chars += len(sent)
-        pos += len(sent)
+        if buf_start is None:
+            buf_start = unit_start
+        buf_end = unit_end
+        buf_chars += len(unit_text)
 
     _flush()
 

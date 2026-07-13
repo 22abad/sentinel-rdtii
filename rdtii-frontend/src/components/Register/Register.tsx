@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { t } from "../../lib/i18n";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48">
@@ -44,32 +45,32 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           <div className="flex flex-col gap-6">
 
             <h1 className="text-4xl md:text-5xl font-light leading-tight">
-              Join <a href="/" className="text-[#10B981] bg-gradient-to-r from-[#10B981] to-[#10B981] bg-[length:0%_1.5px] hover:bg-[length:100%_1.5px] bg-left-bottom bg-no-repeat transition-all duration-500 cursor-pointer">Sentinel</a>
+              {t("auth.join")} <a href="/" className="text-[#10B981] bg-gradient-to-r from-[#10B981] to-[#10B981] bg-[length:0%_1.5px] hover:bg-[length:100%_1.5px] bg-left-bottom bg-no-repeat transition-all duration-500 cursor-pointer">Sentinel</a>
             </h1>
             <p className="text-muted-foreground">
-              Create your account to access the digital trade evidence workbench.
+              {t("auth.registerDescription")}
             </p>
 
             <form className="space-y-5" onSubmit={onRegister}>
               <div className="mt-10">
-                <label className="text-sm font-medium text-muted-foreground mb-2">Full Name</label>
+                <label className="text-sm font-medium text-muted-foreground mb-2">{t("auth.fullName")}</label>
                 <GlassInputWrapper>
-                  <input name="name" type="text" placeholder="Enter your full name" className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
+                  <input name="name" type="text" placeholder={t("auth.fullNamePlaceholder")} className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
                 </GlassInputWrapper>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2">Email Address</label>
+                <label className="text-sm font-medium text-muted-foreground mb-2">{t("auth.email")}</label>
                 <GlassInputWrapper>
-                  <input name="email" type="email" placeholder="Enter your email address" className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
+                  <input name="email" type="email" placeholder={t("auth.emailPlaceholder")} className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none" />
                 </GlassInputWrapper>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2">Password</label>
+                <label className="text-sm font-medium text-muted-foreground mb-2">{t("auth.password")}</label>
                 <GlassInputWrapper>
                   <div className="relative">
-                    <input name="password" type={showPassword ? "text" : "password"} placeholder="Create a password" className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none" />
+                    <input name="password" type={showPassword ? "text" : "password"} placeholder={t("auth.createPassword")} className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-3 flex items-center bg-transparent">
                       {showPassword
                         ? <EyeOff className="w-5 h-5 text-black transition-colors" />
@@ -81,23 +82,23 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
               {error && <p className="text-sm text-red-500 text-center">{error}</p>}
               <button type="submit" disabled={isLoading} className="w-full rounded-2xl bg-[#10B981] py-4 font-medium text-white hover:bg-[#0da373] disabled:opacity-50 transition-colors">
-                {isLoading ? "Creating account…" : "Create Account"}
+                {isLoading ? t("auth.creatingAccount") : t("auth.createAccount")}
               </button>
             </form>
 
             <div className="relative flex items-center justify-center">
               <span className="w-full border-t border-border"></span>
-              <span className="mt-10 px-5 text-sm text-muted-foreground bg-background absolute">Or continue with</span>
+              <span className="mt-10 px-5 text-sm text-muted-foreground bg-background absolute">{t("auth.orContinueWith")}</span>
             </div>
 
             <button onClick={onGoogleSignUp} className="animate-element animate-delay-800 w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:border-[#10B981] hover:text-[#10B981] hover:bg-[#10B981]/5 transition-colors mt-5">
                 <GoogleIcon />
-                Continue with Google
+                {t("auth.continueWithGoogle")}
             </button>
 
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <a href="#" onClick={(e) => { e.preventDefault(); onSignIn?.(); }} className="text-[#10B981] hover:underline transition-colors">Sign In</a>
+              {t("auth.alreadyHaveAccount")}{" "}
+              <a href="#" onClick={(e) => { e.preventDefault(); onSignIn?.(); }} className="text-[#10B981] hover:underline transition-colors">{t("auth.signIn")}</a>
             </p>
 
           </div>

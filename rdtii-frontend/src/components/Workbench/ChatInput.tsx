@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { getStoredToken } from "../../hooks/useAuth";
 import { Lightbulb, Mic, Globe, Paperclip, Send, X } from "lucide-react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
+import { runRagQueryNode } from "../../services/workflowNodes";
 
 const PLACEHOLDERS = [
   "Summarise the cross-border data flow obligations...",
@@ -50,6 +50,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
   const [inputValue, setInputValue] = useState("");
   const [subValues, setSubValues] = useState<Record<string, string>>({ role: "", context: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<{ id: number; file: File }[]>([]);
   const [filesExpanded, setFilesExpanded] = useState(false);
   const fileIdRef = useRef(0);
@@ -71,26 +72,21 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
 
     if (!inputValue.trim()) return;
     setIsLoading(true);
+    setError("");
     try {
-      const res = await fetch("/api/rag/query", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getStoredToken()}`,
-        },
-        body: JSON.stringify({
-          question: inputValue,
-          role: subValues.role,
-          context: subValues.context,
-          country_code: countryCode ?? "",
-          provider: provider ?? "",
-        }),
+      const data = await runRagQueryNode({
+        question: inputValue,
+        role: subValues.role,
+        context: subValues.context,
+        country_code: countryCode ?? "",
+        provider: provider ?? "",
       });
-      const data = await res.json();
       if (data.answer) {
         onResponse?.(data.answer);
         setInputValue("");
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "RAG query failed.");
     } finally {
       setIsLoading(false);
     }
@@ -304,6 +300,12 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
           </motion.div>
         </div>
       </motion.div>
+
+      {error && (
+        <p className="px-2 text-xs text-red-500">
+          {error}
+        </p>
+      )}
 
       {/* Sub input fields — appear below the chat bar */}
       <AnimatePresence>

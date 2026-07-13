@@ -1,6 +1,7 @@
 import type React from "react";
 import { scoreClass } from "../../lib/utils";
 import type { IndicatorMapping } from "../../types";
+import { t } from "../../lib/i18n";
 
 type SourceViewProps = {
   text: string;
@@ -39,7 +40,7 @@ export function SourceView({ text, activeMapping, sourceRef, onClick }: SourceVi
       className="source-view active-highlight"
       tabIndex={0}
       onClick={onClick}
-      title="Click to switch back to edit mode"
+      title={t("source.switchToEditTitle")}
     >
       {before}
       <mark className={`mark ${scoreClass(activeMapping.score)}-mark`}>{middle}</mark>

@@ -1,0 +1,13 @@
+{
+  "name": "rdtii-opencli-browser-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "health": "node server.mjs --once health",
+    "test": "node --test"
+  },
+  "optionalDependencies": {
+    "@jackwener/opencli": "^1.8.4"
+  }
+}

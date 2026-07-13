@@ -37,6 +37,10 @@ _LAZY_REGISTRY: dict[str, tuple[str, str]] = {
     "gemini": (".gemini", "GeminiProvider"),
     "claude": (".claude", "ClaudeProvider"),
     "llama-3-local": (".llama_local", "Llama3LocalProvider"),
+    # Vertex AI — Google Cloud Vertex AI with service account
+    "vertex-ai": (".vertex_ai", "VertexAIProvider"),
+    # Ollama — local model server with OpenAI-compatible API
+    "ollama": (".ollama", "OllamaProvider"),
     # OpenAI-compatible (single SDK, many vendors via base_url)
     "openai": (".openai_compatible", "OpenAIProvider"),
     "deepseek": (".openai_compatible", "DeepSeekProvider"),
@@ -54,6 +58,8 @@ _ALIASES: dict[str, str] = {
     "llama3": "llama-3-local",
     "llama3-local": "llama-3-local",
     "llama-3": "llama-3-local",
+    "vertex": "vertex-ai",
+    "vertexai": "vertex-ai",
 }
 
 
@@ -91,8 +97,8 @@ def _load_class(name: str) -> Type[LLMProvider]:
     return getattr(module, class_name)
 
 
-def get_provider(name: str) -> LLMProvider:
-    """Return an instance of the named provider.
+def get_provider(name: str, model: str | None = None) -> LLMProvider:
+    """Return an instance of the named provider, optionally overriding the default model.
 
     Names are case-insensitive and tolerant of aliases (e.g. `llama3` and
     `llama-3-local` both resolve to the local Llama 3 provider).
@@ -100,15 +106,22 @@ def get_provider(name: str) -> LLMProvider:
     key for the chosen provider is missing.
     """
     cls = _load_class(name)
+    if model:
+        import inspect
+        sig = inspect.signature(cls.__init__)
+        if "model_name" in sig.parameters:
+            return cls(model_name=model)
+        elif "model" in sig.parameters:
+            return cls(model=model)
     return cls()
 
 
 def get_default_provider() -> LLMProvider:
-    """Return the provider configured via env var, or fall back to Gemini.
+    """Return the provider configured via env var, or fall back to DeepSeek.
 
-    Read order: RDTII_LLM_PROVIDER -> default 'gemini'.
+    Read order: RDTII_LLM_PROVIDER -> default 'deepseek'.
     """
-    name = os.getenv("RDTII_LLM_PROVIDER", "gemini")
+    name = os.getenv("RDTII_LLM_PROVIDER", "deepseek")
     return get_provider(name)
 
 

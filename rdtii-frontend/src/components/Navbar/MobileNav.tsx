@@ -2,15 +2,16 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { t } from "@/lib/i18n";
 
 const EASE = [0.65, 0.01, 0.05, 0.99] as const;
 
 const navLinks = [
-  { label: "Home", href: "/", index: "01" },
-  { label: "About", href: "/about", index: "02" },
-  { label: "Workbench", href: "/workbench", index: "03" },
-  { label: "Tech Memo", href: "/tech_memo", index: "04" },
-];
+  { labelKey: "nav.home", href: "/", index: "01" },
+  { labelKey: "nav.about", href: "/about", index: "02" },
+  { labelKey: "nav.workbench", href: "/workbench", index: "03" },
+  { labelKey: "nav.techMemo", href: "/tech_memo", index: "04" },
+] as const;
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -44,14 +45,14 @@ export function MobileNav() {
         {!open && (
           <motion.button
             onClick={() => setOpen(true)}
-            aria-label="Open menu"
+            aria-label={t("nav.openSidebar")}
             className="fixed top-5 right-5 z-[60] text-xs font-light text-[#FFFFF] tracking-widest uppercase bg-transparent border-0 p-0 min-h-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            Menu
+            {t("nav.menu")}
           </motion.button>
         )}
       </AnimatePresence>
@@ -135,14 +136,14 @@ export function MobileNav() {
                     className="text-xs text-white/40 hover:text-white transition-colors bg-transparent border-0 p-0 min-h-0"
                     onClick={() => { logout(); setOpen(false); window.location.href = "/"; }}
                   >
-                    Sign out →
+                    {t("nav.signOut")} →
                   </button>
                 ) : (
                   <button
                     className="text-xs text-white/40 hover:text-white transition-colors bg-transparent border-0 p-0 min-h-0"
                     onClick={() => { setOpen(false); window.location.href = "/login"; }}
                   >
-                    Login →
+                    {t("nav.login")} →
                   </button>
                 )}
               </motion.div>
@@ -160,7 +161,7 @@ function NavItem({
   active,
   onNavigate,
 }: {
-  link: { label: string; href: string; index: string };
+  link: { labelKey: "nav.home" | "nav.about" | "nav.workbench" | "nav.techMemo"; href: string; index: string };
   index: number;
   active: boolean;
   onNavigate: () => void;
@@ -197,7 +198,7 @@ function NavItem({
           }}
           transition={{ duration: 0.25, ease: EASE }}
         >
-          {link.label}
+          {t(link.labelKey)}
         </motion.span>
       </div>
 

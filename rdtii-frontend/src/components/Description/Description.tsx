@@ -7,7 +7,7 @@ const bricks = [
   {
     tag: "02",
     title: "AI-Powered Mapping",
-    body: "Gemini and Claude reason over every clause, mapping provisions to all 12 RDTII pillars simultaneously with verbatim evidence and confidence scores.",
+    body: "Gemini and Claude reason over every clause, mapping provisions to the MVP scoring pillars with verbatim evidence and confidence signals.",
   },
   {
     tag: "03",

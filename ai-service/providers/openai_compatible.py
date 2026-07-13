@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import os
 import time
+from datetime import date
 from typing import Any, ClassVar
 
 from .base import ExtractionError, ExtractionUsage, LLMProvider
@@ -95,6 +96,9 @@ class OpenAICompatibleProvider(LLMProvider):
         self._output_price = _price_from_env(self.output_price_env, self.fallback_output_price)
 
     def query(self, prompt: str, system: str = "") -> str:
+        operation, indicator_ids = self._usage_context("query")
+        usage = ExtractionUsage()
+        t0 = time.perf_counter()
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
@@ -107,9 +111,21 @@ class OpenAICompatibleProvider(LLMProvider):
                 max_tokens=4096,
             )
         except Exception as e:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                operation,
+                usage,
+                indicator_ids=indicator_ids,
+                status="failed",
+                error=e,
+            )
             raise ExtractionError(f"{self.model_name} API error: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
         choice = resp.choices[0] if getattr(resp, "choices", None) else None
-        return choice.message.content if choice else ""
+        usage.raw_response = choice.message.content if choice else ""
+        self._populate_usage(usage, getattr(resp, "usage", None))
+        self._record_priced_usage(operation, usage, indicator_ids=indicator_ids)
+        return usage.raw_response
 
     def extract_features(
         self,
@@ -118,7 +134,32 @@ class OpenAICompatibleProvider(LLMProvider):
         feature_spec: dict[str, dict[str, str]],
     ) -> dict[str, Any]:
         prompt = self.build_prompt(article_text, indicator_id, feature_spec)
-        return self._call_llm(prompt)
+        return self._call_llm(
+            prompt,
+            operation="extract_single",
+            indicator_ids=(indicator_id,),
+        )
+
+    def repair_extraction(
+        self,
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict[str, dict[str, str]],
+        previous_output: dict[str, Any],
+        validation_errors: list[str],
+    ) -> dict[str, Any]:
+        prompt = self.build_repair_prompt(
+            article_text=article_text,
+            indicator_id=indicator_id,
+            feature_spec=feature_spec,
+            previous_output=previous_output,
+            validation_errors=validation_errors,
+        )
+        return self._call_llm(
+            prompt,
+            operation="repair",
+            indicator_ids=(indicator_id,),
+        )
 
     def extract_batch(
         self,
@@ -136,7 +177,12 @@ class OpenAICompatibleProvider(LLMProvider):
         """
         from .base import LLMProvider as _Base
         prompt = _Base.build_batch_prompt(article_text, indicators)
-        raw = self._call_llm(prompt, max_tokens=8192)
+        raw = self._call_llm(
+            prompt,
+            max_tokens=8192,
+            operation="extract_batch",
+            indicator_ids=tuple(indicator_id for indicator_id, _spec in indicators),
+        )
         # raw is {"6.1": {...}, "6.4": {...}, ...}
         result: dict[str, dict[str, Any]] = {}
         for indicator_id, _spec in indicators:
@@ -144,7 +190,14 @@ class OpenAICompatibleProvider(LLMProvider):
                 result[indicator_id] = raw[indicator_id]
         return result
 
-    def _call_llm(self, prompt: str, max_tokens: int = 4096) -> dict[str, Any]:
+    def _call_llm(
+        self,
+        prompt: str,
+        max_tokens: int = 4096,
+        *,
+        operation: str,
+        indicator_ids: tuple[str, ...] = (),
+    ) -> dict[str, Any]:
         usage = ExtractionUsage()
         t0 = time.perf_counter()
         try:
@@ -162,22 +215,63 @@ class OpenAICompatibleProvider(LLMProvider):
                 response_format={"type": "json_object"},
             )
         except Exception as e:
-            raise ExtractionError(f"{self.model_name} API error: {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                operation,
+                usage,
+                indicator_ids=indicator_ids,
+                status="failed",
+                error=e,
+            )
+            raise ExtractionError(f"{self.model_name} API error: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         # Newer SDKs return objects; convert defensively.
         choice = resp.choices[0] if getattr(resp, "choices", None) else None
         usage.raw_response = choice.message.content if choice else ""
 
-        meta = getattr(resp, "usage", None)
-        if meta is not None:
-            usage.input_tokens = getattr(meta, "prompt_tokens", 0) or 0
-            usage.output_tokens = getattr(meta, "completion_tokens", 0) or 0
-            usage.cost_usd = self.estimate_cost_usd(usage.input_tokens, usage.output_tokens)
-
-        self.last_usage = usage
+        self._populate_usage(usage, getattr(resp, "usage", None))
+        self._record_priced_usage(operation, usage, indicator_ids=indicator_ids)
         return self.parse_json_response(usage.raw_response)
+
+    def _populate_usage(self, usage: ExtractionUsage, meta: Any) -> None:
+        if meta is None:
+            return
+        usage.input_tokens = getattr(meta, "prompt_tokens", None)
+        usage.output_tokens = getattr(meta, "completion_tokens", None)
+        pricing_known = self._input_price > 0 or self._output_price > 0
+        if (
+            pricing_known
+            and usage.input_tokens is not None
+            and usage.output_tokens is not None
+        ):
+            usage.cost_usd = self.estimate_cost_usd(
+                usage.input_tokens,
+                usage.output_tokens,
+            )
+
+    def _record_priced_usage(
+        self,
+        operation: str,
+        usage: ExtractionUsage,
+        *,
+        indicator_ids: tuple[str, ...] = (),
+    ) -> None:
+        usage_known = usage.input_tokens is not None and usage.output_tokens is not None
+        pricing_known = self._input_price > 0 or self._output_price > 0
+        self._record_usage(
+            operation,
+            usage,
+            indicator_ids=indicator_ids,
+            cost_basis=(
+                "actual_tokens_x_pricing_snapshot"
+                if usage_known and pricing_known
+                else "unavailable"
+            ),
+            pricing_date=date.today().isoformat() if pricing_known else None,
+            input_usd_per_million=self._input_price if pricing_known else None,
+            output_usd_per_million=self._output_price if pricing_known else None,
+        )
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         return (
@@ -204,12 +298,12 @@ class DeepSeekProvider(OpenAICompatibleProvider):
     """DeepSeek — cheap reasoning-strong Chinese vendor.
 
     Endpoint:  https://api.deepseek.com/v1
-    Models:    deepseek-chat, deepseek-reasoner
+    Models:    deepseek-v4-flash, deepseek-v4-pro
     Set DEEPSEEK_API_KEY (and optionally DEEPSEEK_MODEL).
     """
 
     name = "deepseek"
-    default_model = "deepseek-chat"
+    default_model = "deepseek-v4-flash"
     default_base_url = "https://api.deepseek.com/v1"
     api_key_env = "DEEPSEEK_API_KEY"
     input_price_env = "DEEPSEEK_INPUT_USD_PER_MTOK"

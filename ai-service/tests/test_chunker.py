@@ -94,3 +94,52 @@ def test_leading_whitespace_does_not_break_offsets():
         assert text[c.start : c.end] == c.text
         assert not c.text.startswith(" ")
         assert not c.text.startswith("\n")
+
+
+def test_wrapped_prose_does_not_match_section_prefix_as_heading():
+    text = (
+        "Article 1. Personal data shall not be transferred abroad.\n"
+        "Section headings in this explanatory paragraph are not new legal sections.\n"
+        "Section covers both domestic and overseas processors in this paragraph.\n"
+        "Part includes examples and implementation notes, not a new legal part.\n"
+        "Article 2. Operators shall appoint a data protection officer."
+    )
+    chunks = regex_legal_chunker(text)
+    assert len(chunks) == 2
+    assert "Section headings" in chunks[0].text
+    assert "Section covers" in chunks[0].text
+    assert "Part includes" in chunks[0].text
+    for c in chunks:
+        assert text[c.start : c.end] == c.text
+
+
+def test_uppercase_roman_and_letter_headings_still_split():
+    text = (
+        "Article I. Personal data shall not be transferred abroad.\n\n"
+        "Section A. Operators shall appoint a data protection officer."
+    )
+    chunks = regex_legal_chunker(text)
+    assert len(chunks) == 2
+    assert chunks[0].text.startswith("Article I")
+    assert chunks[1].text.startswith("Section A")
+    for c in chunks:
+        assert text[c.start : c.end] == c.text
+
+
+def test_long_article_still_respects_budget_after_heading_split(monkeypatch):
+    import chunker as chunker_module
+
+    monkeypatch.setattr(chunker_module, "_BUDGET", 80)
+    monkeypatch.setattr(chunker_module, "_MIN_CHARS", 20)
+    text = (
+        "Article 1. "
+        "Personal data shall not be transferred abroad. "
+        "Controllers shall store audit records securely. "
+        "Operators shall appoint a data protection officer.\n\n"
+        "Article 2. Companies shall maintain a domestic data centre."
+    )
+    chunks = regex_legal_chunker(text)
+    assert len(chunks) >= 3
+    assert chunks[-1].text.startswith("Article 2")
+    for c in chunks:
+        assert text[c.start : c.end] == c.text

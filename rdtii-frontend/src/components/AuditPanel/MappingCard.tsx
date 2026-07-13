@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { QUOTE_TRUNCATE } from "../../lib/constants";
 import { formatFeatureValue, formatScore, scoreClass } from "../../lib/utils";
+import { t } from "../../lib/i18n";
 import type { IndicatorMapping, ReviewDecision } from "../../types";
 
 type MappingCardProps = {
@@ -56,11 +57,20 @@ export function MappingCard({
       </div>
 
       <div className="card-titles">
-        <h3>{mapping.source_legislation || "Untitled legislation"}</h3>
+        <h3>{mapping.source_legislation || t("mapping.untitled")}</h3>
         <p className="muted">
-          {mapping.last_update || "Date unknown"}
+          {mapping.last_update || t("mapping.dateUnknown")}
           {mapping.scope !== "unknown" ? ` · ${mapping.scope}` : null}
         </p>
+      </div>
+
+      <div className="taxonomy-row">
+        {mapping.cluster ? <span className="taxonomy-chip cluster">{mapping.cluster}</span> : null}
+        {mapping.name ? <span className="taxonomy-chip name">{mapping.name}</span> : null}
+        {mapping.policy_description ? <span className="taxonomy-chip policy">{mapping.policy_description}</span> : null}
+        {mapping.cov_name ? <span className="taxonomy-chip cov">{mapping.cov_name}</span> : null}
+        {mapping.region ? <span className="taxonomy-chip region">{mapping.region}</span> : null}
+        {mapping.coverage ? <span className="taxonomy-chip coverage">{mapping.coverage}</span> : null}
       </div>
 
       <blockquote className="quote select-text">
@@ -74,7 +84,7 @@ export function MappingCard({
               setExpanded((v) => !v);
             }}
           >
-            {expanded ? "show less" : "show more"}
+            {expanded ? t("mapping.showLess") : t("mapping.showMore")}
           </button>
         ) : null}
       </blockquote>
@@ -92,7 +102,7 @@ export function MappingCard({
 
       {mapping.impact ? (
         <p className="impact">
-          <strong>Scoring Reason:</strong> {mapping.impact}
+          <strong>{t("mapping.scoreReason")}</strong> {mapping.impact}
         </p>
       ) : null}
 
@@ -105,17 +115,17 @@ export function MappingCard({
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
             >
-              Source ↗
+              {t("mapping.source")} ↗
             </a>
           ) : (
-            <span className="muted">No source URL</span>
+            <span className="muted">{t("mapping.noSourceUrl")}</span>
           )}
           {mapping.requires_human_review ? (
-            <span className="review-flag">Needs review</span>
+            <span className="review-flag">{t("mapping.needsReview")}</span>
           ) : null}
         </div>
         <span className="muted small">
-          via {mapping.extraction_provider || "unknown"}
+          {t("mapping.via")} {mapping.extraction_provider || "unknown"}
         </span>
       </div>
 
@@ -128,7 +138,7 @@ export function MappingCard({
             onDecision(decision === "rejected" ? "pending" : "rejected");
           }}
         >
-          Reject
+          {t("mapping.reject")}
         </button>
         <button
           type="button"
@@ -138,7 +148,7 @@ export function MappingCard({
             onDecision(decision === "approved" ? "pending" : "approved");
           }}
         >
-          Approve
+          {t("mapping.approve")}
         </button>
       </div>
     </li>

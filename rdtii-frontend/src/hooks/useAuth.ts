@@ -1,7 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { AUTH_API_URL } from "../lib/constants";
+import { t } from "../lib/i18n";
 
 const TOKEN_KEY = "sentinel_token";
+const DEV_AUTH_BYPASS_USER: AuthUser = {
+  id: "dev-bypass",
+  username: "Demo User",
+  email: "demo@sentinel.local",
+  role: "admin",
+};
 
 export type AuthUser = {
   id: string;
@@ -23,11 +30,11 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function useAuthProvider(): AuthContextValue {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(() => isAuthBypassEnabled() ? DEV_AUTH_BYPASS_USER : null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setUser(token ? _parseUser(token) : null);
+    setUser(isAuthBypassEnabled() ? DEV_AUTH_BYPASS_USER : token ? _parseUser(token) : null);
   }, [token]);
 
   const _save = useCallback((data: {
@@ -47,7 +54,7 @@ export function useAuthProvider(): AuthContextValue {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      if (!res.ok) throw new Error((await res.json()).detail ?? "Login failed");
+      if (!res.ok) throw new Error((await res.json()).detail ?? t("auth.loginFailed"));
       _save(await res.json());
     } finally {
       setIsLoading(false);
@@ -62,7 +69,7 @@ export function useAuthProvider(): AuthContextValue {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
       });
-      if (!res.ok) throw new Error((await res.json()).detail ?? "Registration failed");
+      if (!res.ok) throw new Error((await res.json()).detail ?? t("auth.registrationFailed"));
       _save(await res.json());
     } finally {
       setIsLoading(false);
@@ -86,6 +93,10 @@ export function useAuth(): AuthContextValue {
 
 export function getStoredToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
+}
+
+export function isAuthBypassEnabled(): boolean {
+  return import.meta.env.VITE_AUTH_BYPASS === "true";
 }
 
 function _parseUser(token: string): AuthUser | null {

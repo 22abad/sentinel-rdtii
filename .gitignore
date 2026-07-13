@@ -4,6 +4,13 @@ __pycache__/
 *$py.class
 venv/
 .venv/
+.venv-eval/
+
+# CLI submission outputs (generated at runtime by main.py)
+/outputs/
+
+# Measured cost reports (generated at runtime by tools/cost_logger.py)
+/logs/
 
 # Playwright
 /crawler/downloads/
@@ -18,6 +25,9 @@ inspect_site.py
 .vscode/
 .idea/
 
+# GCP service account key (never commit)
+gcp-vertex-key.json
+
 # Frontend build artefacts
 node_modules/
 rdtii-frontend/dist/
@@ -30,9 +40,12 @@ rdtii-frontend/public/vids
 # Draft ./
 PR_REPORT.md
 
+# Timestamped local Discovery smoke reports
+/reports/discovery-smoke-[0-9]*.json
+/reports/discovery-smoke-[0-9]*.md
+
 # Personal notes
 rdtii-frontend/obsidian_vault_rdtii/
 
 # Sidecar build artefacts
 extract_sidecar/target/
-

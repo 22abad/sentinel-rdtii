@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import time
+from datetime import date
 from typing import Any
 
 from .base import ExtractionError, ExtractionUsage, LLMProvider
@@ -41,6 +42,9 @@ class ClaudeProvider(LLMProvider):
         self.name = self.model_name
 
     def query(self, prompt: str, system: str = "") -> str:
+        operation, indicator_ids = self._usage_context("query")
+        usage = ExtractionUsage()
+        t0 = time.perf_counter()
         try:
             resp = self._client.messages.create(
                 model=self.model_name,
@@ -50,12 +54,21 @@ class ClaudeProvider(LLMProvider):
                 messages=[{"role": "user", "content": prompt}],
             )
         except Exception as e:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                operation, usage, indicator_ids=indicator_ids,
+                status="failed", error=e,
+            )
             raise ExtractionError(f"Claude API error: {e}") from e
-        return "".join(
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+        usage.raw_response = "".join(
             getattr(block, "text", "")
             for block in (getattr(resp, "content", []) or [])
             if getattr(block, "type", None) == "text"
         )
+        self._populate_usage(usage, getattr(resp, "usage", None))
+        self._record_priced_usage(operation, usage, indicator_ids=indicator_ids)
+        return usage.raw_response
 
     def extract_features(
         self,
@@ -75,9 +88,13 @@ class ClaudeProvider(LLMProvider):
                 messages=[{"role": "user", "content": prompt}],
             )
         except Exception as e:
-            raise ExtractionError(f"Claude API error: {e}") from e
-        finally:
             usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                "extract_single", usage, indicator_ids=(indicator_id,),
+                status="failed", error=e,
+            )
+            raise ExtractionError(f"Claude API error: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
 
         # The SDK returns content as list of TextBlock — concat .text from blocks
         text_chunks = []
@@ -86,17 +103,86 @@ class ClaudeProvider(LLMProvider):
                 text_chunks.append(getattr(block, "text", ""))
         usage.raw_response = "".join(text_chunks)
 
-        meta = getattr(resp, "usage", None)
-        if meta is not None:
-            usage.input_tokens = getattr(meta, "input_tokens", 0) or 0
-            usage.output_tokens = getattr(meta, "output_tokens", 0) or 0
-            usage.cost_usd = self.estimate_cost_usd(
-                usage.input_tokens, usage.output_tokens
-            )
-
-        self.last_usage = usage
+        self._populate_usage(usage, getattr(resp, "usage", None))
+        self._record_priced_usage(
+            "extract_single", usage, indicator_ids=(indicator_id,),
+        )
 
         return self.parse_json_response(usage.raw_response)
+
+    def repair_extraction(
+        self,
+        article_text: str,
+        indicator_id: str,
+        feature_spec: dict[str, dict[str, str]],
+        previous_output: dict[str, Any],
+        validation_errors: list[str],
+    ) -> dict[str, Any]:
+        prompt = self.build_repair_prompt(
+            article_text=article_text,
+            indicator_id=indicator_id,
+            feature_spec=feature_spec,
+            previous_output=previous_output,
+            validation_errors=validation_errors,
+        )
+        usage = ExtractionUsage()
+        t0 = time.perf_counter()
+        try:
+            resp = self._client.messages.create(
+                model=self.model_name,
+                max_tokens=2048,
+                temperature=0,
+                system="Output ONLY valid JSON. No prose, no markdown fences.",
+                messages=[{"role": "user", "content": prompt}],
+            )
+        except Exception as e:
+            usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+            self._record_usage(
+                "repair", usage, indicator_ids=(indicator_id,),
+                status="failed", error=e,
+            )
+            raise ExtractionError(f"Claude repair API error: {e}") from e
+        usage.latency_ms = int((time.perf_counter() - t0) * 1000)
+
+        text_chunks = []
+        for block in getattr(resp, "content", []) or []:
+            if getattr(block, "type", None) == "text":
+                text_chunks.append(getattr(block, "text", ""))
+        usage.raw_response = "".join(text_chunks)
+
+        self._populate_usage(usage, getattr(resp, "usage", None))
+        self._record_priced_usage("repair", usage, indicator_ids=(indicator_id,))
+        return self.parse_json_response(usage.raw_response)
+
+    def _populate_usage(self, usage: ExtractionUsage, meta: Any) -> None:
+        if meta is None:
+            return
+        usage.input_tokens = getattr(meta, "input_tokens", None)
+        usage.output_tokens = getattr(meta, "output_tokens", None)
+        if usage.input_tokens is not None and usage.output_tokens is not None:
+            usage.cost_usd = self.estimate_cost_usd(
+                usage.input_tokens, usage.output_tokens,
+            )
+
+    def _record_priced_usage(
+        self,
+        operation: str,
+        usage: ExtractionUsage,
+        *,
+        indicator_ids: tuple[str, ...] = (),
+    ) -> None:
+        usage_known = usage.input_tokens is not None and usage.output_tokens is not None
+        self._record_usage(
+            operation,
+            usage,
+            indicator_ids=indicator_ids,
+            cost_basis=(
+                "actual_tokens_x_pricing_snapshot" if usage_known else "unavailable"
+            ),
+            pricing_date=date.today().isoformat() if usage_known else None,
+            input_usd_per_million=_INPUT_USD_PER_MTOK if usage_known else None,
+            output_usd_per_million=_OUTPUT_USD_PER_MTOK if usage_known else None,
+        )
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
         return (

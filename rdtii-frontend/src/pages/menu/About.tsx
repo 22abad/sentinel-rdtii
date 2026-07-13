@@ -134,7 +134,7 @@ export function AboutPage() {
             <h2 className="text-2xl md:text-3xl font-semibold mb-6 mt-10 sticky top-0 py-3 backdrop-blur-md bg-background/80 z-20">The Mission</h2>
           <p className="opacity-70 leading-relaxed text-lg">
               Sentinel is an automated workflow engine designed for UN ESCAP researchers to map legal evidence 
-              against all 12 RDTII pillars. It automates the discovery, extraction, and mapping of complex 
+              against the MVP RDTII scoring pillars. It automates the discovery, extraction, and mapping of complex 
               digital trade regulations, transforming raw legislation into structured, evidence-based policy insights.
             </p>
           </section>

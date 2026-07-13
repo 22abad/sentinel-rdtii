@@ -26,6 +26,40 @@ services:
     volumes:
       - redis-data:/data
 
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: rdtii-ai-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      CORS_ALLOW_ORIGINS: http://localhost:5173,http://localhost:3000
+      DATABASE_URL: postgresql://rdtii_user:rdtii_password@postgres:5432/rdtii
+      JWT_SECRET: rdtii-hackathon-secret-change-in-production
+      EXTRACT_SIDECAR_URL: http://extract-sidecar:4000
+      # Ollama on host — Docker Desktop auto-resolves host.docker.internal
+      # On Linux, the extra_hosts entry provides the same mapping.
+      RDTII_LLM_PROVIDER: deepseek
+      DEEPSEEK_MODEL: deepseek-v4-flash
+      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_BASE_URL: http://host.docker.internal:11434/v1
+      # Vertex AI — project + location from .env (gitignored)
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp-vertex-key.json
+    volumes:
+      - ./ai-service:/app
+      - ~/.config/opencode/gcp-vertex-key.json:/etc/gcp-vertex-key.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      extract-sidecar:
+        condition: service_healthy
+    restart: on-failure
+
   extract-sidecar:
     build:
       context: ./extract_sidecar
@@ -36,34 +70,16 @@ services:
     env_file:
       - .env
     environment:
-      SIDECAR_ADDR: 0.0.0.0:4000
-      DATABASE_URL: postgres://rdtii_user:rdtii_password@postgres:5432/rdtii
-      RUST_LOG: debug
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: on-failure
-
-  ai-service:
-    build:
-      context: ./ai-service
-      dockerfile: Dockerfile
-    volumes:
-      - ./ai-service:/app
-    container_name: rdtii-ai-service
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
-    environment:
-      CORS_ALLOW_ORIGINS: http://localhost:5173,http://localhost:3000
-      EXTRACT_SIDECAR_URL: http://extract-sidecar:4000
       DATABASE_URL: postgresql://rdtii_user:rdtii_password@postgres:5432/rdtii
+      SIDECAR_ADDR: 0.0.0.0:4000
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:4000/health >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       postgres:
         condition: service_healthy
-      extract-sidecar:
-        condition: service_started
     restart: on-failure
 
   frontend:
@@ -74,7 +90,8 @@ services:
     ports:
       - "5173:80"
     depends_on:
-      - ai-service
+      ai-service:
+        condition: service_started
 
 volumes:
   redis-data:

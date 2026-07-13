@@ -1,4 +1,5 @@
 import type { RejectedExtraction } from "../../types";
+import { t } from "../../lib/i18n";
 
 type RejectedPanelProps = {
   rejected: RejectedExtraction[];
@@ -13,7 +14,7 @@ export function RejectedPanel({ rejected, open, setOpen }: RejectedPanelProps) {
       open={open}
       onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}
     >
-      <summary>Rejected extractions ({rejected.length})</summary>
+      <summary>{t("rejected.summary", { count: rejected.length })}</summary>
       <ul>
         {rejected.map((r, i) => (
           <li key={i} className="rejected-item">

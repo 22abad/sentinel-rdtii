@@ -1,30 +1,33 @@
-.PHONY: dev dev-backend dev-frontend dev-sidecar install install-frontend install-sidecar test db migrate-sidecar image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage db migrate migrate-sidecar image
 
-PYTHON := /opt/homebrew/bin/python3.11
+PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
+SMOKE_ARGS ?=
+
+setup:
+	@if [ ! -f .env ]; then cp .env.example .env; echo "Created .env from .env.example. Edit API keys before running extraction."; fi
+	$(MAKE) install
+	$(MAKE) install-opencli-bridge
+	$(MAKE) install-frontend
+
+doctor:
+	bash scripts/doctor.sh
 
 dev:
-	@DB_IP=$$(docker inspect rdtii-postgres --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 2>/dev/null); \
-	if [ -n "$$DB_IP" ]; then \
-		sed -i '' "s|DATABASE_URL=.*|DATABASE_URL=postgresql://rdtii_user:rdtii_password@$$DB_IP:5432/rdtii|" .env; \
-		echo "Postgres at $$DB_IP:5432"; \
-	else \
-		echo "Warning: rdtii-postgres not running, run 'make db' first"; \
-	fi
 	@echo "Starting backend, sidecar, and frontend..."
 	@trap 'kill 0' EXIT; \
-		$(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info & \
-		(export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run) & \
-		(cd rdtii-frontend && npx vite --host 0.0.0.0 --force) & \
+		(export EXTRACT_SIDECAR_URL=$$(grep '^EXTRACT_SIDECAR_URL=' .env | cut -d= -f2-); if [ -z "$$EXTRACT_SIDECAR_URL" ]; then export EXTRACT_SIDECAR_URL=http://localhost:4000; fi; $(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info) & \
+		(export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) SIDECAR_API_KEY=$$(grep '^SIDECAR_API_KEY=' .env | cut -d= -f2-) SIDECAR_ADDR=$$(grep '^SIDECAR_ADDR=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run) & \
+		(export VITE_AUTH_BYPASS=$$(grep '^VITE_AUTH_BYPASS=' .env | cut -d= -f2-) && cd rdtii-frontend && npx vite --host 0.0.0.0 --force) & \
 		wait
 
 dev-backend:
 	$(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info
 
 dev-frontend:
-	cd rdtii-frontend && npx vite --host 0.0.0.0 --force
+	export VITE_AUTH_BYPASS=$$(grep '^VITE_AUTH_BYPASS=' .env | cut -d= -f2-) && cd rdtii-frontend && npx vite --host 0.0.0.0 --force
 
 dev-sidecar:
-	cd extract_sidecar && cargo run
+	export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) SIDECAR_API_KEY=$$(grep '^SIDECAR_API_KEY=' .env | cut -d= -f2-) SIDECAR_ADDR=$$(grep '^SIDECAR_ADDR=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run
 
 install:
 	cd ai-service && $(PYTHON) -m pip install -r requirements.txt && $(PYTHON) -m playwright install webkit
@@ -33,17 +36,37 @@ install-sidecar:
 	cd extract_sidecar && cargo build --release
 
 migrate-sidecar:
-	psql "$$DATABASE_URL" -f extract_sidecar/migrations/001_extracted_documents.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f extract_sidecar/migrations/001_extracted_documents.sql
 
 
 install-frontend:
 	cd rdtii-frontend && npm install
 
+install-opencli-bridge:
+	cd tools/opencli-browser-mcp && npm install
+
 test:
 	cd ai-service && $(PYTHON) -m pytest
 
+smoke-discovery:
+	cd ai-service && DISCOVERY_REGISTRY_BACKEND=file PYTHONPATH=. $(PYTHON) ../scripts/discovery_smoke.py $(SMOKE_ARGS)
+
+discovery-coverage:
+	$(PYTHON) scripts/discovery_coverage.py --write
+
 db:
 	docker compose up -d postgres redis
+
+migrate:
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_001_auth.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_002_reset_tokens.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_003_document_ownership.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_004_workbench_canvases.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_005_discovery_sources.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_006_embedding_dim.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_007_discovery_specialized_adapters.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f rdtii-database/db/migrate_008_required_country_discovery_sources.sql
+	psql -v ON_ERROR_STOP=1 "$$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" -f extract_sidecar/migrations/001_extracted_documents.sql
 
 image:
 	docker compose down

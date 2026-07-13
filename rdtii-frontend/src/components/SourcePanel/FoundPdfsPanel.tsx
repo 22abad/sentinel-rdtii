@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { FileText } from "lucide-react";
+import { t } from "../../lib/i18n";
 
 const CARD_H = 52;
 const CARD_GAP = 8;
@@ -18,9 +19,10 @@ interface Props {
   urls: string[];
   onSelect?: (url: string) => void;
   loading?: boolean;
+  error?: string;
 }
 
-export function FoundPdfsPanel({ urls, onSelect, loading = false }: Props) {
+export function FoundPdfsPanel({ urls, onSelect, loading = false, error = "" }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   if (urls.length === 0) return null;
@@ -40,8 +42,13 @@ export function FoundPdfsPanel({ urls, onSelect, loading = false }: Props) {
       className="w-full flex flex-col gap-2"
     >
       <p className="text-xs text-gray-400 px-1">
-        {n} PDF{n !== 1 ? "s" : ""} found on this page
+        {t("pdf.found", { count: n, plural: n !== 1 ? "s" : "" })}
       </p>
+      {error && (
+        <p className="text-xs text-red-500 px-1">
+          {error}
+        </p>
+      )}
 
       {/* Stacked cards */}
       <div style={{ position: "relative", height: containerH, transition: "height 0.35s cubic-bezier(0.4,0,0.2,1)" }}>
@@ -89,7 +96,7 @@ export function FoundPdfsPanel({ urls, onSelect, loading = false }: Props) {
                     style={{ flexShrink: 0, padding: "3px 10px", borderRadius: 9999, border: "1px solid #10B981", background: "transparent", color: "#10B981", fontSize: "0.68rem", fontWeight: 600, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.6 : 1 }}
                     className="hover:bg-[#10B981] hover:text-white transition"
                   >
-                    {loading ? "Loading…" : "Select"}
+                    {loading ? t("pdf.loading") : t("pdf.select")}
                   </button>
                 </div>
               </motion.div>
@@ -119,7 +126,7 @@ export function FoundPdfsPanel({ urls, onSelect, loading = false }: Props) {
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.97 }}
         >
-          {expanded ? "Collapse" : `Show all ${n} PDFs`}
+          {expanded ? t("pdf.collapse") : t("pdf.showAll", { count: n })}
           <motion.span
             style={{ position: "absolute", right: 12, top: "50%", marginTop: -4, width: 6, height: 6, borderTop: "2px solid #1f2933", borderLeft: "2px solid #1f2933", display: "block" }}
             animate={{ rotate: expanded ? 45 : 225, y: expanded ? 2 : -2 }}

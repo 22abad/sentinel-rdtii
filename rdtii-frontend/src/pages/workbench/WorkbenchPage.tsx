@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FETCH_TEXT_API_URL } from "../../lib/constants";
-import { getStoredToken } from "../../hooks/useAuth";
 import { AuditPanel } from "../../components/AuditPanel";
+import { DiscoveryPanel } from "../../components/Discovery/DiscoveryPanel";
 import { SourcePanel } from "../../components/SourcePanel";
 import { FoundPdfsPanel } from "../../components/SourcePanel/FoundPdfsPanel";
 import { SideBar } from "../../components/SideBar";
 import { useExtraction } from "../../hooks/useExtraction";
-import ColorBends from "../../components/ColorBends/ColorBends";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Menu, X, Home, Map, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
+import { t } from "../../lib/i18n";
+import { WorkbenchCanvas, type CanvasPanel } from "./WorkbenchCanvas";
+import { fetchSourceTextNode } from "../../services/workflowNodes";
 
 export function WorkbenchPage() {
   const navigate = useNavigate();
@@ -18,8 +19,10 @@ export function WorkbenchPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [fetchingPdf, setFetchingPdf] = useState(false);
+  const [fetchPdfError, setFetchPdfError] = useState("");
   const {
     country, setCountry,
+    detectedCountry,
     pillarFilter, setPillarFilter,
     sourceUrl, setSourceUrl,
     text, onTextChange,
@@ -27,6 +30,8 @@ export function WorkbenchPage() {
     error,
     warning,
     provider,
+    usage,
+    isStopping,
     mappings,
     visibleMappings,
     rejected,
@@ -37,8 +42,17 @@ export function WorkbenchPage() {
     showRejected, setShowRejected,
     availableProviders,
     selectedProvider, setSelectedProvider,
+    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
+    vertexModels,
+    selectedGeminiModel, setSelectedGeminiModel,
+    selectedDeepSeekModel, setSelectedDeepSeekModel,
     foundPdfs,
+    extractionProgress,
+    batchProgress,
     extract,
+    stopExtraction,
+    extractShortlist,
+    loadDemoAuditData,
     selectMapping,
     setDecision,
   } = useExtraction();
@@ -49,26 +63,112 @@ export function WorkbenchPage() {
     if (mark) mark.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [activeKey, activeMapping]);
 
+  const discoveryPanel = (
+    <DiscoveryPanel
+      country={country}
+      pillarFilter={pillarFilter}
+      extracting={status === "loading"}
+      batchProgress={batchProgress}
+      onUseCandidate={(candidate) => setSourceUrl(candidate.url)}
+      onExtractCandidate={(candidate) => extract(candidate.url)}
+      onExtractShortlist={(candidates) => extractShortlist(candidates.map((candidate) => candidate.url))}
+    />
+  );
+
+  const sourcePanel = (
+    <SourcePanel
+      sourceRef={sourceRef}
+      country={country}
+      setCountry={setCountry}
+      detectedCountry={detectedCountry}
+      pillarFilter={pillarFilter}
+      setPillarFilter={setPillarFilter}
+      sourceUrl={sourceUrl}
+      setSourceUrl={setSourceUrl}
+      text={text}
+      onTextChange={onTextChange}
+      activeMapping={activeMapping}
+      setActiveKey={setActiveKey}
+      extract={extract}
+      status={status}
+      error={error}
+      warning={warning}
+      extractionProgress={extractionProgress}
+      availableProviders={availableProviders}
+      selectedProvider={selectedProvider}
+      setSelectedProvider={setSelectedProvider}
+      stopExtraction={stopExtraction}
+      isStopping={isStopping}
+      usage={usage}
+    />
+  );
+
+  const foundPdfsPanel =
+    foundPdfs.length > 0 ? (
+      <FoundPdfsPanel
+        urls={foundPdfs}
+        loading={fetchingPdf}
+        error={fetchPdfError}
+        onSelect={async (url) => {
+          setFetchingPdf(true);
+          setFetchPdfError("");
+          try {
+            const fetchedDocument = await fetchSourceTextNode(url);
+            if (fetchedDocument.text) {
+              setSourceUrl(url);
+              onTextChange({ target: { value: fetchedDocument.text } } as React.ChangeEvent<HTMLTextAreaElement>);
+              if (fetchedDocument.quality && !fetchedDocument.quality.should_extract) {
+                setFetchPdfError(
+                  [
+                    `Crawl quality: ${fetchedDocument.quality.status}`,
+                    ...fetchedDocument.quality.warnings,
+                  ].join(" · "),
+                );
+              }
+            }
+          } catch (err) {
+            setFetchPdfError(err instanceof Error ? err.message : "Failed to fetch PDF text.");
+          } finally {
+            setFetchingPdf(false);
+          }
+        }}
+      />
+    ) : null;
+
+  const auditPanel = (
+    <AuditPanel
+      status={status}
+      mappings={visibleMappings}
+      exportMappings={mappings}
+      totalMappings={mappings.length}
+      activeKey={activeKey}
+      decisions={decisions}
+      selectMapping={selectMapping}
+      setDecision={setDecision}
+      rejected={rejected}
+      showRejected={showRejected}
+      setShowRejected={setShowRejected}
+      country={country}
+      onLoadDemoData={loadDemoAuditData}
+      usage={usage}
+    />
+  );
+
+  const canvasPanels: CanvasPanel[] = [
+    { id: "discovery", title: "Discovery", element: discoveryPanel, width: 800, dragHandle: ".panel-header"},
+    { id: "source", title: "Source", element: sourcePanel, width: 460, dragHandle: ".panel-header" },
+    ...(foundPdfsPanel ? [{ id: "foundPdfs", title: "Found PDFs", element: foundPdfsPanel, width: 420 }] : []),
+    { id: "audit", title: "Audit", element: auditPanel, width: 520, dragHandle: ".panel-header" },
+  ];
+
   return (
     <div className="flex overflow-hidden" style={{ height: "100dvh" }}>
 
-      {/* Full-page background */}
-      <div className="fixed inset-0 -z-10" style={{ height: "100dvh" }}>
-        <ColorBends colors={["#0d3326", "#072418"]} speed={0.15} intensity={1.2} noise={0.1} frequency={0.8} />
-      </div>
-
-      <div className="fixed inset-0 -z-10 bg-black/20" style={{ height: "100dvh" }} />
-
       <div
-        className="fixed inset-0 -z-10 pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(0, 80, 63, 0.20) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 80, 63, 0.20) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
+        className="fixed inset-0 -z-10"
+        style={{ height: "100dvh", background: "linear-gradient(160deg, #0d3326, #072418)" }}
       />
-
-       
+      <div className="fixed inset-0 -z-10 bg-black/20" style={{ height: "100dvh" }} />
 
       {/* Left sidebar — overlay drawer */}
       <AnimatePresence>
@@ -102,6 +202,14 @@ export function WorkbenchPage() {
                 availableProviders={availableProviders}
                 selectedProvider={selectedProvider}
                 setSelectedProvider={setSelectedProvider}
+                ollamaModels={ollamaModels}
+                selectedOllamaModel={selectedOllamaModel}
+                setSelectedOllamaModel={setSelectedOllamaModel}
+                vertexModels={vertexModels}
+                selectedGeminiModel={selectedGeminiModel}
+                setSelectedGeminiModel={setSelectedGeminiModel}
+                selectedDeepSeekModel={selectedDeepSeekModel}
+                setSelectedDeepSeekModel={setSelectedDeepSeekModel}
                 onClose={() => setSidebarOpen(false)}
               />
             </motion.div>
@@ -114,15 +222,15 @@ export function WorkbenchPage() {
         <div className="fixed left-4 top-4 w-12 h-12 z-50 group">
           <button
             onClick={() => setSidebarOpen(true)}
-            title="Open sidebar"
-            className="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            style={{ width: 48, height: 48, minHeight: 0, borderRadius: "50%", background: "#0c1210", border: "1px solid rgba(255,255,255,0.1)", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
+            title={t("nav.openSidebar")}
+            className="hidden md:flex opacity-60 hover:opacity-100 hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg"
+            style={{ width: 48, height: 48, minHeight: 0, borderRadius: "50%", background: "#0c1210", border: "1px solid rgba(255,255,255,0.15)", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
           >
             <Plus size={20} color="white" />
           </button>
           <button
             onClick={() => setSidebarOpen(true)}
-            title="Open sidebar"
+            title={t("nav.openSidebar")}
             className="flex md:hidden"
             style={{ width: 48, height: 48, minHeight: 0, background: "transparent", border: "none", color: "white", cursor: "pointer", alignItems: "center", justifyContent: "center", padding: 0 }}
           >
@@ -205,75 +313,8 @@ export function WorkbenchPage() {
         </motion.button>
       </div>
 
-      {/* Main workspace */}
-      <main className="flex-1 overflow-auto px-5 pb-8 pt-12">
-        <section className="workspace h-full">
-
-          <div className="flex flex-col gap-4 min-w-0 self-start">
-            <SourcePanel
-              sourceRef={sourceRef}
-              country={country}
-              setCountry={setCountry}
-              pillarFilter={pillarFilter}
-              setPillarFilter={setPillarFilter}
-              sourceUrl={sourceUrl}
-              setSourceUrl={setSourceUrl}
-              text={text}
-              onTextChange={onTextChange}
-              activeMapping={activeMapping}
-              setActiveKey={setActiveKey}
-              extract={extract}
-              status={status}
-              error={error}
-              warning={warning}
-              availableProviders={availableProviders}
-              selectedProvider={selectedProvider}
-              setSelectedProvider={setSelectedProvider}
-            />
-            <AnimatePresence>
-              {foundPdfs.length > 0 && (
-                <FoundPdfsPanel
-                  urls={foundPdfs}
-                  loading={fetchingPdf}
-                  onSelect={async (url) => {
-                    setFetchingPdf(true);
-                    try {
-                      const form = new FormData();
-                      form.append("source_url", url);
-                      const res = await fetch(FETCH_TEXT_API_URL, {
-                        method: "POST",
-                        headers: { Authorization: `Bearer ${getStoredToken()}` },
-                        body: form,
-                      });
-                      const data = await res.json();
-                      if (data.text) {
-                        setSourceUrl(url);
-                        onTextChange({ target: { value: data.text } } as React.ChangeEvent<HTMLTextAreaElement>);
-                      }
-                    } finally {
-                      setFetchingPdf(false);
-                    }
-                  }}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-
-          <AuditPanel
-            status={status}
-            mappings={visibleMappings}
-            totalMappings={mappings.length}
-            activeKey={activeKey}
-            decisions={decisions}
-            selectMapping={selectMapping}
-            setDecision={setDecision}
-            rejected={rejected}
-            showRejected={showRejected}
-            setShowRejected={setShowRejected}
-          />
-
-        </section>
-      </main>
+      {/* The workbench is now the free-canvas — the classic stacked layout is retired */}
+      <WorkbenchCanvas panels={canvasPanels} onExit={() => navigate("/")} />
 
     </div>
   );

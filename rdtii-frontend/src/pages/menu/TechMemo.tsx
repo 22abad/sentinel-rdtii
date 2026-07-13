@@ -35,7 +35,7 @@ const layers = [
     label: "Layer III",
     title: "Reasoning & Mapping",
     subtitle: "Vector-Relational Hybrid",
-    body: "We utilise a PostgreSQL + pgvector architecture. Legal clauses are converted into high-dimensional embeddings stored alongside relational metadata, enabling semantic search and multi-pillar mapping via Gemini 1.5 Pro and Claude 3.5 Sonnet across all 12 RDTII pillars simultaneously.",
+    body: "We utilise a PostgreSQL + pgvector architecture. Legal clauses are converted into high-dimensional embeddings stored alongside relational metadata, enabling semantic search and MVP multi-pillar mapping via Gemini and Claude providers.",
   },
   {
     id: "layer-4",
@@ -60,8 +60,8 @@ const sustainability = [
 const differentiators = [
   {
     label: "01",
-    title: "Production-Grade, Not a Demo",
-    desc: "SENTINEL ships with JWT-secured multi-user authentication, persistent PostgreSQL audit storage, and a Rust-based extract sidecar — architecture decisions made for real UN deployment, not just a hackathon presentation.",
+    title: "Demo-Ready Architecture",
+    desc: "SENTINEL includes JWT-secured authentication, persistent PostgreSQL audit storage, and a Rust-based extract sidecar — practical architecture decisions that make the prototype easier to harden beyond a hackathon presentation.",
   },
   {
     label: "02",
@@ -85,8 +85,8 @@ const differentiators = [
   },
   {
     label: "06",
-    title: "Zero-Infrastructure Deployment",
-    desc: "A single `docker compose up` spins the entire stack — PostgreSQL, Redis, AI service, Rust sidecar, and Nginx-served frontend. Designed to run on a UN analyst's laptop or scale to a cloud cluster without code changes.",
+    title: "Compose-Based Local Deployment",
+    desc: "A single Docker Compose stack runs PostgreSQL, Redis, the AI service, Rust sidecar, and Nginx-served frontend. It is designed for repeatable local demos and provides a clear path to managed infrastructure.",
   },
 ];
 

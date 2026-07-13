@@ -124,16 +124,27 @@ def _decode_token(token: str) -> dict[str, Any]:
 
 def _db_connect():
     import psycopg2
+    connect_timeout = _db_connect_timeout()
     url = os.getenv("DATABASE_URL")
     if url:
-        return psycopg2.connect(url)
+        return psycopg2.connect(url, connect_timeout=connect_timeout)
     return psycopg2.connect(
         dbname=os.getenv("POSTGRES_DB", "rdtii"),
         user=os.getenv("POSTGRES_USER", "rdtii_user"),
         password=os.getenv("POSTGRES_PASSWORD", "rdtii_password"),
         host=os.getenv("POSTGRES_HOST", "localhost"),
         port=os.getenv("POSTGRES_PORT", "5433"),
+        connect_timeout=connect_timeout,
     )
+
+
+def _db_connect_timeout() -> int:
+    raw_value = os.getenv("DB_CONNECT_TIMEOUT_SECONDS", "5").strip()
+    try:
+        value = int(raw_value)
+    except ValueError:
+        return 5
+    return value if value > 0 else 5
 
 
 def get_user_by_email(email: str) -> dict | None:

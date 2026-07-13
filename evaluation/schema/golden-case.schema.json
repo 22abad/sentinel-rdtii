@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rdtii.example/schema/golden-case.schema.json",
+  "title": "RDTII 2.1 Golden Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "country_code",
+    "document_id",
+    "source_legislation",
+    "official_source_url",
+    "source_status",
+    "indicator_id",
+    "should_map",
+    "article_clause",
+    "verbatim_quote",
+    "expected_scope",
+    "coverage_detail",
+    "expected_raw_score",
+    "expected_cat_score",
+    "legal_rationale",
+    "review"
+  ],
+  "properties": {
+    "case_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "country_code": {"type": "string", "pattern": "^[A-Z]{3}$"},
+    "document_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "source_legislation": {"type": "string", "minLength": 1},
+    "official_source_url": {"type": "string", "pattern": "^https?://"},
+    "source_status": {
+      "enum": ["in_force", "repealed", "superseded", "draft", "unknown"]
+    },
+    "indicator_id": {
+      "enum": [
+        "1.1", "2.1", "3.1", "4.1", "5.1",
+        "6.1", "6.2", "6.3", "6.4", "6.5",
+        "7.1", "7.2", "7.3", "7.4", "7.5",
+        "8.1", "9.1", "10.1", "11.1", "12.1"
+      ]
+    },
+    "should_map": {"type": "boolean"},
+    "article_clause": {"type": "string"},
+    "verbatim_quote": {"type": "string", "minLength": 1},
+    "expected_scope": {"enum": ["horizontal", "sectoral", "unknown"]},
+    "coverage_detail": {"type": "string"},
+    "expected_raw_score": {"enum": [0.0, 0.25, 0.5, 1.0]},
+    "expected_cat_score": {"enum": [0.0, 0.25, 0.5, 1.0]},
+    "legal_rationale": {"type": "string", "minLength": 10},
+    "review": {"$ref": "#/$defs/review"}
+  },
+  "$defs": {
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewer_role",
+        "reviewed_at",
+        "framework_version",
+        "notes"
+      ],
+      "properties": {
+        "status": {"enum": ["pending", "approved", "rejected"]},
+        "reviewer_role": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": ["string", "null"]},
+        "framework_version": {"const": "RDTII 2.1"},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}

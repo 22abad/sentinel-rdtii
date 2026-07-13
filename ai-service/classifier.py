@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from terminology import expand_phrases
+
 # Unified dictionary for all 12 supported RDTII indicators
-_INDICATOR_PHRASES = {
+_BASE_PHRASES = {
     "1.1": ["tariff", "customs duty", "tax", "关税", "贸易防御"],
     "2.1": [
         "public procurement", "government tender", 
@@ -16,11 +18,19 @@ _INDICATOR_PHRASES = {
     ],
     "4.1": ["intellectual property", "patent", "copyright", "知识产权", "专利", "著作权"],
     "5.1": ["telecom", "broadband", "frequency", "电信", "宽带"],
+    "5.3": [
+        "government equity", "government ownership", "state-owned",
+        "majority stake", "government share", "public sector",
+        "telecom", "operator", "telecommunication service provider",
+        "政府持股", "国有", "国有控股", "控股",
+    ],
     "6.1": [
         "transfer abroad", "transferred abroad", "transferring abroad", "transferring data abroad", "ban on transfer",
         "process locally", "data localization", "data localisation",
         "xử lý tại chỗ", "pemrosesan", "proses", "ห้ามโอนย้ายไปต่างประเทศ",
-        "出境", "境外", "境内处理", "禁止传输", "本地处理"
+        "出境", "境外", "境内处理", "禁止传输", "本地处理",
+        "transfer personal data", "transfer of personal data", "restrict transfer",
+        "prohibition of transfer", "no transfer", "shall not transfer"
     ],
     "6.2": [
         "store data within", "local storage", "stored locally",
@@ -34,7 +44,15 @@ _INDICATOR_PHRASES = {
     ],
     "6.4": [
         "consent", "adequacy", "standard contract", "prior authorization", "security assessment",
-        "同意", "充分性", "标准合同", "安全评估"
+        " согласие", "充分性", "标准合同", "安全评估",
+        "data exporter", "data importer", "binding corporate", "adequate level of protection",
+        "appropriate safeguard", "contractual clause", "transfer mechanism",
+        # Conditional cross-border flow language — golden boundary cases:
+        # SGP PDPA s.26 ("comparable ... standard of protection") and
+        # AUS Privacy Act APP 8.1 ("overseas recipient", "cross-border disclosure").
+        "comparable protection", "comparable standard", "standard of protection",
+        "adequate protection", "overseas recipient", "cross-border disclosure",
+        "cross-border transfer", "跨境提供", "对外提供"
     ],
     "6.5": [
         "trade agreement", "depa", "cptpp", "rcep", "free flow of data",
@@ -56,17 +74,28 @@ _INDICATOR_PHRASES = {
     ],
     "7.4": [
         "data protection officer", "dpo", "dpia", "impact assessment",
-        "数据保护官", "影响评估"
+        "数据保护官", "影响评估",
+        "compliance officer", "privacy officer", "registration with",
+        "data controller", "data processor", "register of processing",
+        "annual audit", "data audit", "compliance audit"
     ],
     "7.5": [
         "law enforcement access", "without warrant", "surveillance",
-        "执法", "国家安全", "监视"
+        "执法", "国家安全", "监视",
+        "public interest", "public authority access", "government access",
+        "national security", "public order", "disclosure to law enforcement",
+        "obligation to notify", "competent authority", "regulatory authority"
     ],
     "8.1": ["intermediary liability", "safe harbor", "互联网平台责任", "责任承担"],
     "9.1": ["online content", "illegal content", "在线内容", "违法内容"],
     "10.1": ["non-tariff measure", "trade restriction", "非关税措施", "贸易限制"],
     "11.1": ["standards", "conformity assessment", "技术标准", "合格评定"],
     "12.1": ["online sales", "e-signature", "在线销售", "电子签名"]
+}
+
+# Build expanded phrases at load time — original phrases + jurisdiction synonyms
+_INDICATOR_PHRASES = {
+    k: expand_phrases(v) for k, v in _BASE_PHRASES.items()
 }
 
 def _phrase_in_text(phrase: str, text: str) -> bool:
