@@ -26,7 +26,7 @@ article-level citation, a verbatim quote, and a Discovery Tag marking whether it
 was found independently (`NEW`) or matched a curated known-law example
 (`KNOWN`).
 
-To eliminate LLM hallucination in a legal context the engine is a
+To reduce hallucination risk in a legal context the engine is a
 **deterministic + probabilistic hybrid**: regex slices the statute → a
 keyword classifier routes chunks → the LLM extracts features and a verbatim
 quote → the quote is verified character-for-character against the source → a
@@ -58,6 +58,7 @@ cd UN-DigitalTrade-AI-Mapper-private
 python -m venv venv
 source venv/bin/activate            # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+playwright install chromium
 ```
 
 This lean install runs the discovery + OCR + mapping CLI. (The full web app and
@@ -93,9 +94,15 @@ python main.py --economy Singapore --pillar 6
 
 **Output:** `outputs/Singapore_P6_<timestamp>.csv` and `.json`.
 
-> Live discovery crawls official portals via Playwright — install the browser
-> once with `playwright install chromium`. To try the pipeline with **no
-> network or browser**, point at a local PDF instead: `--pdf path/to/law.pdf`.
+For a lower-cost first run that still exercises real discovery, document
+retrieval, and mapping, process only the first accepted document:
+
+```bash
+python main.py --economy Singapore --pillar 6 --max-documents 1
+```
+
+> To try the pipeline with **no discovery or browser**, point at a local PDF
+> instead: `--pdf path/to/law.pdf`. Mapping still uses the configured model.
 
 ---
 
@@ -120,6 +127,8 @@ python main.py --economy Australia --pillar 7 --format csv --output-dir outputs/
 | `--pdf` | Extract from a local PDF (skips the crawler) |
 | `--provider` | Override `RDTII_LLM_PROVIDER` for this run |
 | `--format` | `csv`, `json`, or `both` (default) |
+| `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |
+| `--max-documents` | Stop after processing this many documents |
 
 ---
 
