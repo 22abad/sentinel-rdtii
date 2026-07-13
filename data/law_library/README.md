@@ -22,19 +22,45 @@ tagged **NEW**.
 ## Layout
 
 - `manifest.jsonl` — one JSON record per law: economy, law name, official URL,
-  in-force status, pillars, indicator hints, `text_path`, `sha256`, retrieval date.
+  in-force status, pillars, indicator hints, `text_path`, `sha256`, retrieval date,
+  and **version/currency** fields (`version`, `currency_source`,
+  `currency_checked_at`).
 - `text/*.txt` — the official provision texts referenced by the manifest.
+
+## Version currency (don't map stale law)
+
+Laws get amended and re-compiled. Each record stores a `version` fingerprint
+(e.g. "Compilation No. 104, 4 June 2026", "2020 Revised Edition", "Act 709") and
+the date it was last checked. Re-check against the live official source with:
+
+```bash
+python tools/check_law_currency.py            # whole library
+python tools/check_law_currency.py --economy MYS
+# → logs/law_currency_report.json
+```
+
+It re-fetches each source via the project crawler and flags any law whose stored
+version fingerprint no longer appears — a lead to review, not proof of change.
 
 ## Provenance
 
 Seeded from the human-reviewed golden set (`evaluation/golden/`), whose sources
 and legal sign-off are documented in
 [`docs/golden-set-legal-review-dossier.md`](../../docs/golden-set-legal-review-dossier.md).
-Current coverage: Singapore (PDPA 2012, Income Tax Act 1947), Malaysia
-(Companies Act 2016), Australia (My Health Records Act 2012, Privacy Act 1988).
+Coverage (Pillar 6/7, mandatory economies):
+
+| Economy | Laws |
+|---|---|
+| Singapore | PDPA 2012 (s.25/26), Income Tax Act 1947 (s.67) |
+| Malaysia | PDPA 2010 (s.129, cross-border), Companies Act 2016 (s.245) |
+| Australia | My Health Records Act 2012 (s.77), Privacy Act 1988 (APP 8) |
+
+The Malaysia PDPA 2010 entry was retrieved via the project crawler and is a
+library baseline pending substantive legal review (not a golden-set answer key).
 
 ## Regenerating / extending
 
 Add a law by appending a `text/<name>.txt` file and a manifest record with its
-SHA-256 (`shasum -a 256 text/<name>.txt`), official URL, and retrieval date. Keep
-the recorded hash in sync with the file or the integrity check will reject it.
+SHA-256 (`shasum -a 256 text/<name>.txt`), official URL, `version`, and retrieval
+date. Keep the recorded hash in sync with the file or the integrity check rejects
+it. Then run `check_law_currency.py` to confirm the source is reachable and current.

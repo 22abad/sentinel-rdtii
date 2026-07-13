@@ -6,20 +6,45 @@ from types import SimpleNamespace
 
 import pytest
 
-from law_library import LawLibraryError, load_library, lookup
+from law_library import (
+    LawLibraryError,
+    assess_currency,
+    currency_tokens,
+    load_library,
+    lookup,
+)
 from submission.pipeline import run_library
 
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 5
+    assert len(entries) == 6
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
-    # Every cached text passed SHA-256 verification on load and is non-empty.
+    # Every cached text passed SHA-256 verification on load and is non-empty,
+    # and every entry records a version + currency-check date.
     for e in entries:
         assert e.text.strip()
         assert hashlib.sha256(e.text.encode("utf-8")).hexdigest() == e.sha256
         assert e.discovery_tag == "KNOWN"
         assert e.official_url.startswith("http")
+        assert e.version and e.currency_checked_at
+
+
+def test_malaysia_pdpa_2010_fills_the_pillar6_gap():
+    # Malaysia's core data-protection law (conditional cross-border, 6.4).
+    mys6 = lookup("MYS", pillar=6)
+    assert any(e.law_name.startswith("Personal Data Protection Act 2010") for e in mys6)
+
+
+def test_currency_assessment_flags_missing_version_fingerprint():
+    # Fingerprint present on the live page -> current.
+    ok = assess_currency("Compilation No. 104, compilation date 4 June 2026",
+                         "… Privacy Act 1988 Compilation No. 104 Compilation date 4 June 2026 …")
+    assert ok["current"] is True
+    # A newer compilation on the page -> our stored fingerprint missing -> review.
+    drifted = assess_currency("Compilation No. 104", "… now Compilation No. 106 …")
+    assert drifted["current"] is False
+    assert currency_tokens("Compilation No. 104, 2020 Revised Edition, Act 709")
 
 
 def test_lookup_filters_by_economy_and_pillar():
