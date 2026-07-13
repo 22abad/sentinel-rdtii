@@ -359,7 +359,7 @@ the **same measured token counts** — reproducible from `cost_report_50pages.js
 ## Running the Test Suite
 
 ```bash
-cd ai-service && python -m pytest       # 422 tests
+cd ai-service && python -m pytest
 ```
 
 Key coverage: extraction/anti-hallucination pipeline, discovery adapters +
@@ -372,6 +372,10 @@ Reproduce the human-reviewed golden-set metrics:
 python scripts/evaluate_golden_set.py --mode offline --output reports/golden
 ```
 
+The approved eight-case set currently reports 100% mapping precision, recall,
+F1, citation exact-match, scoring, and scope accuracy in offline mode. This is a
+small deterministic regression benchmark, not a claim of general model accuracy.
+
 ---
 
 ## Known Limitations
@@ -382,8 +386,9 @@ Transparency builds credibility — we are honest about the current state.
   errors (e.g. it may code a conditional-transfer clause as 6.1 instead of 6.4).
   Every mapping is therefore quote-verified and flagged for human legal review;
   a fine-tuned 12B model is in progress.
-- **Legal sign-off pending:** the golden-set benchmark answers await a
-  substantive-lead review (`docs/golden-set-legal-review-checklist.md`).
+- **Golden-set coverage:** all eight current cases have substantive-lead sign-off,
+  but they cover only five documents across AUS, MYS, and SGP. Broader legal
+  review remains necessary before treating the benchmark as representative.
 - **JavaScript-only portals:** the crawler falls back to OpenCLI for heavily
   rendered pages; some dynamic portals may still fail.
 - **Bilingual documents:** non-English sections of mixed-language PDFs may be

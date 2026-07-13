@@ -11,8 +11,10 @@
 > Federal Register of Legislation text **through the project's own crawler** (its
 > HTTP fallback reached legislation.gov.au where headless fetchers were 403'd). The
 > fixtures, golden quotes, offline canned quotes, law-library copies, and all
-> SHA-256 hashes were updated together; offline metrics unchanged (precision 100%,
-> recall 67%, F1 80%). **Singapore PDPA s.25 and s.26 have since been confirmed
+> SHA-256 hashes were updated together. A subsequent classifier boundary fix for
+> the two approved My Health Records s.77 mappings raised the offline regression
+> metrics to precision 100%, recall 100%, and F1 100%. **Singapore PDPA s.25 and
+> s.26 have since been confirmed
 > verbatim against Singapore Statutes Online through the same project crawler
 > (s.25's quote was corrected to the official "(a)/(b)" structure); only the
 > Income Tax Act s.67 quote still warrants a human eyeball** (its SSO page forced

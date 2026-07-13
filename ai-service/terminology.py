@@ -198,30 +198,3 @@ def expand_phrases(phrases: list[str]) -> list[str]:
                 result.append(syn)
                 seen.add(syn.lower())
     return result
-
-
-def classify_indicator_expanded(article_text: str) -> list[str]:
-    """Same as classifier.classify_indicator but with expanded jurisdiction keywords.
-
-    This mirrors the original classify_indicator logic but feeds the
-    indicator phrases through expand_phrases() first so that jurisdiction-
-    specific terms (e.g. "data fiduciary" for India) also trigger matches.
-
-    Note: For production use, prefer integrating expand_phrases directly
-    into the classifier's _INDICATOR_PHRASES at module load time:
-        from terminology import expand_phrases
-        _INDICATOR_PHRASES = {k: expand_phrases(v) for k, v in _ORIGINAL_PHRASES.items()}
-    """
-    from classifier import _INDICATOR_PHRASES, _phrase_in_text as _match
-
-    if not article_text or not article_text.strip():
-        return []
-    lowered = article_text.lower()
-    matched: set[str] = set()
-    for indicator, phrases in _INDICATOR_PHRASES.items():
-        expanded = expand_phrases(phrases)
-        for phrase in expanded:
-            if _match(phrase.lower(), lowered):
-                matched.add(indicator)
-                break
-    return sorted(matched)

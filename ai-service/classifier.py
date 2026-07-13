@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from terminology import expand_phrases
 
 # Unified dictionary for all 12 supported RDTII indicators
@@ -98,6 +100,39 @@ _INDICATOR_PHRASES = {
     k: expand_phrases(v) for k, v in _BASE_PHRASES.items()
 }
 
+# Statutes often express localization as a prohibition on offshore handling
+# rather than using the concise labels in the RDTII taxonomy. First isolate each
+# ``must not`` / ``shall not`` clause so a later positive ``must`` clause cannot
+# inherit the earlier negation. ASCII-only boundaries intentionally allow forms
+# such as ``规定must not ...`` while still rejecting English word continuations.
+_NORMATIVE_PROHIBITION_CLAUSE = re.compile(
+    r"(?<![A-Za-z0-9_])(?:must|shall)(?![A-Za-z0-9_])\s+not(?![A-Za-z0-9_])"
+    r"(?:(?!(?<![A-Za-z0-9_])(?:must|shall)(?![A-Za-z0-9_])|[.。]).){0,260}",
+    re.IGNORECASE | re.DOTALL,
+)
+
+_STRUCTURED_INDICATOR_PATTERNS = {
+    "6.1": (
+        re.compile(
+            r"(?<![A-Za-z0-9_])"
+            r"(?:process(?:ed|es|ing)?|handle(?:d|s|ing)?)"
+            r"(?![A-Za-z0-9_])[^.。]{0,80}"
+            r"(?<![A-Za-z0-9_])(?:outside|abroad|overseas)(?![A-Za-z0-9_])",
+            re.IGNORECASE,
+        ),
+    ),
+    "6.2": (
+        re.compile(
+            r"(?<![A-Za-z0-9_])"
+            r"(?:hold(?:s|ing)?|held|store(?:d|s|ing)?|keep(?:s|ing)?|kept|"
+            r"retain(?:ed|s|ing)?)"
+            r"(?![A-Za-z0-9_])[^.。]{0,100}"
+            r"(?<![A-Za-z0-9_])(?:outside|abroad|overseas)(?![A-Za-z0-9_])",
+            re.IGNORECASE,
+        ),
+    ),
+}
+
 def _phrase_in_text(phrase: str, text: str) -> bool:
     if phrase in text:
         return True
@@ -118,5 +153,14 @@ def classify_indicator(article_text: str) -> list[str]:
             if _phrase_in_text(phrase.lower(), lowered):
                 matched.add(indicator)
                 break
+
+    prohibition_clauses = (
+        match.group(0)
+        for match in _NORMATIVE_PROHIBITION_CLAUSE.finditer(article_text)
+    )
+    for clause in prohibition_clauses:
+        for indicator, patterns in _STRUCTURED_INDICATOR_PATTERNS.items():
+            if any(pattern.search(clause) for pattern in patterns):
+                matched.add(indicator)
 
     return sorted(matched)
