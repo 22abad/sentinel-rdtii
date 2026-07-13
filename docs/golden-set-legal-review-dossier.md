@@ -12,7 +12,11 @@
 > HTTP fallback reached legislation.gov.au where headless fetchers were 403'd). The
 > fixtures, golden quotes, offline canned quotes, law-library copies, and all
 > SHA-256 hashes were updated together; offline metrics unchanged (precision 100%,
-> recall 67%, F1 80%). The four Singapore quotes still warrant a human SSO eyeball.
+> recall 67%, F1 80%). **Singapore PDPA s.25 and s.26 have since been confirmed
+> verbatim against Singapore Statutes Online through the same project crawler
+> (s.25's quote was corrected to the official "(a)/(b)" structure); only the
+> Income Tax Act s.67 quote still warrants a human eyeball** (its SSO page forced
+> the browser path, which was unavailable here).
 
 ---
 
