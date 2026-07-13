@@ -18,11 +18,21 @@ attorney verification, not a settled legal conclusion.
 
 from __future__ import annotations
 
+import json
 import re
+from pathlib import Path
 
 from law_library import LawEntry, load_library
 
 from .schema import SubmissionRow, economy_code
+
+# ai-service/submission/novelty.py -> parents[2] == repo root
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+# The authoritative KNOWN set: the official ESCAP RDTII Legal Inventory for the
+# mandatory economies, distilled to (economy, law) keys. A provision whose law is
+# in this inventory (or in our curated library) is KNOWN; anything else the tool
+# finds in force is a genuine NEW discovery.
+KNOWN_INVENTORY_PATH = _REPO_ROOT / "data" / "known_inventory.jsonl"
 
 _PAREN = re.compile(r"\(.*?\)")
 _YEAR = re.compile(r"\b\d{4}\b")
@@ -43,11 +53,38 @@ def normalize_law_name(name: str) -> str:
     return re.sub(r"\s+", " ", lowered).strip()
 
 
+def load_known_inventory(path: Path | str = KNOWN_INVENTORY_PATH) -> set[tuple[str, str]]:
+    """Load the official ESCAP Legal Inventory as ``(economy, normalized law)`` keys.
+
+    Returns an empty set if the distilled inventory is absent, so tagging degrades
+    to the curated library baseline rather than erroring.
+    """
+
+    path = Path(path)
+    if not path.exists():
+        return set()
+    keys: set[tuple[str, str]] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        keys.add((record["economy"].upper(), normalize_law_name(record["law_name"])))
+    return keys
+
+
 def known_law_index(entries: list[LawEntry] | None = None) -> set[tuple[str, str]]:
-    """Identity keys ``(ISO3 economy, normalized law name)`` for KNOWN laws."""
+    """Identity keys ``(ISO3 economy, normalized law name)`` for KNOWN laws.
+
+    Union of the official ESCAP Legal Inventory (the authoritative KNOWN set) and
+    our curated law-library baseline, so a law counts as KNOWN if either source
+    already has it.
+    """
 
     pool = entries if entries is not None else load_library()
-    return {(entry.economy.upper(), normalize_law_name(entry.law_name)) for entry in pool}
+    library_keys = {
+        (entry.economy.upper(), normalize_law_name(entry.law_name)) for entry in pool
+    }
+    return library_keys | load_known_inventory()
 
 
 def is_known_law(economy: str, law_name: str, index: set[tuple[str, str]]) -> bool:
