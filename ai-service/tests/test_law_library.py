@@ -18,7 +18,7 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 9
+    assert len(entries) == 10
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
@@ -35,7 +35,7 @@ def test_discovered_new_laws_are_tagged_and_not_treated_as_known():
 
     entries = load_library()
     discovered = [e for e in entries if e.origin == "discovered"]
-    assert len(discovered) == 3
+    assert len(discovered) == 4
     assert {e.economy for e in discovered} == {"AUS", "MYS", "SGP"}
     index = known_law_index()  # unions inventory + KNOWN-baseline library entries
     for e in discovered:
