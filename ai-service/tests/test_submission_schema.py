@@ -141,6 +141,12 @@ class _FakeCandidate:
     warnings = ["bilingual source"]
 
 
+class _FixtureCandidate(_FakeCandidate):
+    discovery_method = "official_search"
+    retrieval_mode = "fixture"
+    title = "Configured Fixture Act 2099"
+
+
 def test_build_row_maps_all_fields():
     text = "x" * 100 + _sample_mapping().verbatim_quote + "y" * 200
     row = build_row(
@@ -160,6 +166,18 @@ def test_build_row_maps_all_fields():
     assert "bilingual source" in row.notes
     # Context windows populated for the JSON audit view.
     assert row.raw_context_before or row.raw_context_after
+
+
+def test_build_row_preserves_fixture_provenance_for_final_reconciliation():
+    row = build_row(
+        _sample_mapping().model_copy(
+            update={"source_legislation": "Configured Fixture Act 2099"}
+        ),
+        economy_display="Singapore",
+        candidate=_FixtureCandidate(),
+    )
+
+    assert row.retrieval_method == "fixture"
 
 
 def test_csv_and_json_round_trip(tmp_path):

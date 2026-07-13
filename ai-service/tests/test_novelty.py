@@ -67,6 +67,21 @@ def test_reconcile_flips_tags_from_the_baseline():
     assert rows[0].discovery_tag == "NEW"
 
 
+def test_reconcile_never_labels_fixture_sources_new():
+    fixture = _row(
+        "Singapore",
+        "Unseen Fixture Act 2099",
+        tag="NEW",
+    ).model_copy(update={"retrieval_method": "fixture"})
+    fallback = fixture.model_copy(
+        update={"law_name": "Unseen Fallback Act 2099", "retrieval_method": "fallback"}
+    )
+
+    reconciled = reconcile_discovery_tags([fixture, fallback])
+
+    assert [row.discovery_tag for row in reconciled] == ["KNOWN", "KNOWN"]
+
+
 def test_report_lists_new_candidates_with_audit_and_gate():
     rows = [
         _row("Singapore", "Personal Data Protection Act 2012", "P6-I4", tag="NEW"),  # KNOWN baseline

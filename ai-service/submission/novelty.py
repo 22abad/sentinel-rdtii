@@ -108,14 +108,21 @@ def reconcile_discovery_tags(
 ) -> list[SubmissionRow]:
     """Return rows with ``discovery_tag`` set from the KNOWN baseline (evidence-based).
 
-    A provision whose law is in the local library is KNOWN; everything else is a
-    genuine NEW find, regardless of which adapter surfaced it.
+    A provision whose law is in the ESCAP inventory/local library is KNOWN;
+    everything else is a genuine NEW find, regardless of which live adapter
+    surfaced it. Fixture and fixture-fallback sources are also never labelled
+    NEW because they are configured evidence, not independent discoveries.
     """
 
     index = known_law_index(entries)
     reconciled: list[SubmissionRow] = []
     for row in rows:
-        tag = "KNOWN" if is_known_law(row.economy, row.law_name, index) else "NEW"
+        fixture_source = row.retrieval_method.strip().lower() in {"fixture", "fallback"}
+        tag = (
+            "KNOWN"
+            if fixture_source or is_known_law(row.economy, row.law_name, index)
+            else "NEW"
+        )
         reconciled.append(
             row if row.discovery_tag == tag else row.model_copy(update={"discovery_tag": tag})
         )
