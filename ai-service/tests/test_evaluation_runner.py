@@ -69,11 +69,30 @@ async def test_offline_runner_uses_real_pipeline_and_writes_both_reports(tmp_pat
 
 @pytest.mark.anyio
 async def test_pending_cases_are_excluded_by_default(tmp_path):
+    # The checked-in golden set is now fully approved, so force every case back
+    # to "pending" in a temp copy to prove the default still excludes them.
+    pending_cases = []
+    for line in (
+        (REPO_ROOT / "evaluation/golden/cases.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ):
+        if not line.strip():
+            continue
+        case = json.loads(line)
+        case["review"] = {**case["review"], "status": "pending", "reviewed_at": None}
+        pending_cases.append(case)
+    cases_path = tmp_path / "all-pending-cases.jsonl"
+    cases_path.write_text(
+        "\n".join(json.dumps(case) for case in pending_cases) + "\n",
+        encoding="utf-8",
+    )
+
     with pytest.raises(ValueError, match="No approved golden cases"):
         await run_evaluation(
             repo_root=REPO_ROOT,
             mode="offline",
-            cases_path=REPO_ROOT / "evaluation/golden/cases.jsonl",
+            cases_path=cases_path,
             documents_path=REPO_ROOT / "evaluation/golden/documents.jsonl",
             offline_responses_path=(
                 REPO_ROOT / "evaluation/fixtures/offline-provider-responses.jsonl"
@@ -114,6 +133,12 @@ async def test_predictions_matching_pending_cases_do_not_pollute_approved_metric
         case for case in source_cases
         if case["case_id"] == "mys-companies-7-3-section-245"
     )
+    # The checked-in case is now approved; force it back to pending so this test
+    # still exercises the "pending prediction is excluded" path.
+    pending = {
+        **pending,
+        "review": {**pending["review"], "status": "pending", "reviewed_at": None},
+    }
     approved = {
         **pending,
         "case_id": "mys-companies-6-4-approved-negative",
