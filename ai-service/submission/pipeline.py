@@ -241,11 +241,14 @@ async def run_library(
     laws_processed = 0
 
     for entry in entries:
+        # Cached KNOWN-baseline laws map to the KNOWN tag; cached NEW discoveries
+        # (origin="discovered") must surface as NEW.
+        is_discovered = getattr(entry, "origin", "known") == "discovered"
         candidate = SimpleNamespace(
             url=entry.official_url,
             title=entry.law_name,
             last_update="",
-            discovery_method="known_mapping",  # -> discovery_tag KNOWN
+            discovery_method="official_search" if is_discovered else "known_mapping",
             confidence=1.0,
             warnings=[],
         )

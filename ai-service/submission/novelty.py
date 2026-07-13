@@ -81,8 +81,12 @@ def known_law_index(entries: list[LawEntry] | None = None) -> set[tuple[str, str
     """
 
     pool = entries if entries is not None else load_library()
+    # Only KNOWN-baseline library entries count; a cached NEW discovery
+    # (origin="discovered") must still be treated as NEW.
     library_keys = {
-        (entry.economy.upper(), normalize_law_name(entry.law_name)) for entry in pool
+        (entry.economy.upper(), normalize_law_name(entry.law_name))
+        for entry in pool
+        if getattr(entry, "origin", "known") != "discovered"
     }
     return library_keys | load_known_inventory()
 
