@@ -46,7 +46,10 @@ IndicatorId = Literal[
 ScopeKind = Literal["horizontal", "sectoral", "unknown"]
 
 # Feature dict values can be bool / int / str depending on the indicator spec.
-FeatureValue = Union[bool, int, str]
+# float included: specs legitimately declare float features (e.g. 5.3
+# government_equity_percentage returns 23.15) — omitting it sent every
+# such mapping into the repair loop.
+FeatureValue = Union[bool, int, float, str]
 
 
 class IndicatorMapping(BaseModel):
