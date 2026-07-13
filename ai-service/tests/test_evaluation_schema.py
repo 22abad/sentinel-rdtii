@@ -25,7 +25,11 @@ def test_checked_in_golden_candidates_validate_and_match_reference_texts():
     assert len(documents) == 5
     assert {case.country_code for case in cases} == {"AUS", "MYS", "SGP"}
     assert any(not case.should_map for case in cases)
-    assert all(case.review.status == "pending" for case in cases)
+    # The golden set received substantive legal sign-off on 2026-07-13
+    # (see docs/golden-set-legal-review-dossier.md); every case is now approved
+    # and, per GoldenReview, an approved label must carry a reviewed_at date.
+    assert all(case.review.status == "approved" for case in cases)
+    assert all(case.review.reviewed_at for case in cases)
 
 
 def test_portable_schema_required_fields_match_runtime_model():
