@@ -58,6 +58,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--economy", required=True, help="Economy name or ISO-3 code, e.g. Singapore / SGP")
     parser.add_argument("--pillar", type=_parse_pillars, default=[6, 7], help="6, 7, or all")
     parser.add_argument("--pdf", default=None, help="Extract from this PDF path (bypasses the crawler)")
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="Serve official texts from the local law library (no network crawl); "
+             "recommended for reproducible / air-gapped runs",
+    )
     parser.add_argument("--indicators", nargs="*", default=None, help="Restrict to specific indicators, e.g. 6.1 6.4")
     parser.add_argument("--output-dir", default="outputs", help="Directory for CSV/JSON output")
     parser.add_argument("--format", choices=("csv", "json", "both"), default="both")
@@ -73,7 +79,7 @@ def _formats(choice: str) -> tuple[str, ...]:
 
 async def _run(args: argparse.Namespace) -> int:
     from submission import SubmissionRow, write_outputs
-    from submission.pipeline import discover_and_extract, run_pdf
+    from submission.pipeline import discover_and_extract, run_library, run_pdf
     from submission.schema import economy_display_name
 
     display = economy_display_name(args.economy)
@@ -84,6 +90,11 @@ async def _run(args: argparse.Namespace) -> int:
         if args.pdf:
             rows, meta = await run_pdf(
                 args.economy, pillar, args.pdf,
+                provider_name=args.provider, indicators=args.indicators,
+            )
+        elif args.offline:
+            rows, meta = await run_library(
+                args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
             )
         else:
