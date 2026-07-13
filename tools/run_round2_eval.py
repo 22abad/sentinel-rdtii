@@ -39,8 +39,44 @@ load_dotenv(REPO_ROOT / ".env")
 INVENTORY = REPO_ROOT / "data" / "round2_inventory.jsonl"
 CORPUS_MANIFEST = REPO_ROOT / "data" / "round2_corpus" / "manifest.jsonl"
 
-TEXT_CAP = 60_000        # chars per document fed to extraction
+TEXT_CAP = 60_000        # total chars per document fed to extraction
+WINDOW = 4_000           # relevance-selection window size
 DOC_CONCURRENCY = 2      # documents extracted in parallel (deepseek TPM headroom)
+
+
+def _select_relevant_text(text: str, indicators: list[str]) -> str:
+    """Pick the document segments most relevant to the target indicators.
+
+    Long statutes bury the operative clause hundreds of kB in; a blind prefix
+    cap never shows it to the model (the India P7 rows all missed this way).
+    Windows are scored by indicator phrase hits (same table the classifier
+    routes on); the best windows are concatenated up to TEXT_CAP, keeping
+    document order. Falls back to the prefix when nothing matches.
+    """
+    if len(text) <= TEXT_CAP:
+        return text
+    from classifier import _INDICATOR_PHRASES  # routing phrase table
+
+    phrases: set[str] = set()
+    for iid in indicators:
+        phrases.update(p.lower() for p in _INDICATOR_PHRASES.get(iid, []))
+    windows = [(i, text[i:i + WINDOW]) for i in range(0, len(text), WINDOW)]
+    scored = []
+    for start, chunk in windows:
+        low = chunk.lower()
+        hits = sum(low.count(p) for p in phrases if p)
+        scored.append((hits, start, chunk))
+    ranked = sorted(scored, key=lambda t: (-t[0], t[1]))
+    if not ranked or ranked[0][0] == 0:
+        return text[:TEXT_CAP]
+    picked, budget = [], TEXT_CAP
+    for hits, start, chunk in ranked:
+        if budget <= 0 or hits == 0:
+            break
+        picked.append((start, chunk))
+        budget -= len(chunk)
+    picked.sort()  # restore document order for offset sanity
+    return "\n".join(chunk for _start, chunk in picked)
 
 
 def _slug(name: str) -> str:
@@ -116,8 +152,10 @@ async def _evaluate(args: argparse.Namespace) -> dict:
 
     async def _one(slug: str, doc_rows: list[dict]) -> None:
         text_path = REPO_ROOT / corpus[slug]
-        text = text_path.read_text(encoding="utf-8")[:TEXT_CAP]
         indicators = sorted({r["indicator_id"] for r in doc_rows})
+        text = _select_relevant_text(
+            text_path.read_text(encoding="utf-8"), indicators
+        )
         async with semaphore:
             try:
                 response = await asyncio.wait_for(
@@ -133,6 +171,8 @@ async def _evaluate(args: argparse.Namespace) -> dict:
             best[m.indicator] = max(best.get(m.indicator, 0.0), float(m.score))
         for row in doc_rows:
             predicted = best.get(row["indicator_id"])
+            # RDTII semantics: no qualifying evidence extracted = score 0.
+            effective = predicted if predicted is not None else 0.0
             results.append({
                 "economy": row["economy"],
                 "pillar": row["pillar"],
@@ -140,9 +180,9 @@ async def _evaluate(args: argparse.Namespace) -> dict:
                 "law_name": row["law_name"][:100],
                 "official_score": row["official_score"],
                 "predicted_score": predicted,
+                "effective_score": effective,
                 "evidence_found": predicted is not None,
-                "exact_match": (predicted is not None
-                                and abs(predicted - row["official_score"]) < 1e-9),
+                "exact_match": abs(effective - row["official_score"]) < 1e-9,
                 "error": error,
             })
         done = sum(1 for r in results)
@@ -151,9 +191,9 @@ async def _evaluate(args: argparse.Namespace) -> dict:
 
     await asyncio.gather(*(_one(slug, doc_rows) for slug, doc_rows in docs))
 
-    evaluated = [r for r in results if r["evidence_found"]]
+    evaluated = results  # every evaluated row scores (no-evidence = 0.0)
     exact = [r for r in evaluated if r["exact_match"]]
-    mae = (sum(abs(r["predicted_score"] - r["official_score"]) for r in evaluated)
+    mae = (sum(abs(r["effective_score"] - r["official_score"]) for r in evaluated)
            / len(evaluated)) if evaluated else None
 
     per_pillar: dict[int, dict] = {}
@@ -172,7 +212,7 @@ async def _evaluate(args: argparse.Namespace) -> dict:
         "rows_without_local_text": len(no_text),
         "documents_evaluated": len(docs),
         "rows_evaluated": len(results),
-        "evidence_yield": len(evaluated),
+        "evidence_yield": sum(1 for r in results if r["evidence_found"]),
         "exact_score_matches": len(exact),
         "exact_match_rate": round(len(exact) / len(evaluated), 3) if evaluated else None,
         "mean_absolute_error": round(mae, 3) if mae is not None else None,
