@@ -59,3 +59,9 @@ requirements/Hackthon Knowledge Products/
 *.mkv
 *.avi
 *.webm
+
+# KNOWN law full-text corpus — bulk text kept local (RAG input); index is tracked
+data/known_corpus/*/
+
+# Crawler download scratch
+downloads/
