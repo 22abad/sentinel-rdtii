@@ -75,6 +75,9 @@ def build_row(
     discovery_method = (
         getattr(candidate, "discovery_method", "") if candidate is not None else ""
     )
+    retrieval_mode = (
+        getattr(candidate, "retrieval_mode", "") if candidate is not None else ""
+    )
     confidence = float(getattr(candidate, "confidence", 0.0) or 0.0) if candidate else 0.0
 
     before, after = _context_windows(
@@ -101,7 +104,13 @@ def build_row(
         raw_context_before=before,
         raw_context_after=after,
         pdf_is_scanned=doc_meta.get("pdf_is_scanned"),
-        retrieval_method=discovery_method or doc_meta.get("retrieval_method", ""),
+        # Preserve fixture provenance for final novelty reconciliation. For live
+        # candidates, retain the more descriptive discovery method as before.
+        retrieval_method=(
+            retrieval_mode
+            if retrieval_mode in {"fixture", "fallback"}
+            else discovery_method or doc_meta.get("retrieval_method", "")
+        ),
     )
 
 

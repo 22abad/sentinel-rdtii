@@ -109,7 +109,7 @@ async def _run(args: argparse.Namespace) -> int:
     # any deferred Discovery imports occur.
     os.environ["DISCOVERY_REGISTRY_BACKEND"] = args.registry_backend
 
-    from submission import SubmissionRow, write_outputs
+    from submission import SubmissionRow, reconcile_discovery_tags, write_outputs
     from submission.pipeline import (
         discover_and_extract,
         run_library,
@@ -151,6 +151,12 @@ async def _run(args: argparse.Namespace) -> int:
               f"({meta.get('documents_processed', 'n/a')} documents)")
         for warning in meta.get("warnings", []):
             print(f"    ⚠ {warning}")
+
+    # Discovery methods describe how a candidate was surfaced, not whether its
+    # law is novel. Make the ESCAP inventory/library baseline authoritative at
+    # the final submission boundary, after rows from every pillar/path have
+    # been combined and immediately before CSV/JSON serialization.
+    all_rows = reconcile_discovery_tags(all_rows)
 
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     written = write_outputs(
