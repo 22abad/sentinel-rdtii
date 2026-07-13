@@ -123,40 +123,33 @@ make install-frontend
 make install-sidecar
 ```
 
-## 3. Start Database
+## 3. Initialize Database
 
 ```bash
-make db
+make db-reset
 ```
 
-This starts:
+This recreates the local database from the consolidated `init.sql` and starts:
 
 - Postgres on `localhost:5433`
 - Redis on `localhost:6379`
+
+`db-reset` deletes the project's local Postgres and Redis data volumes. Use
+`make db` instead when you only need to start an existing database.
+
+The consolidated schema is a development bootstrap, not a repeatable migration
+and not an upgrade path for persistent data. Before deploying with real users
+or review records, establish a versioned migration baseline and stop resetting
+the database.
 
 If Docker is not reachable, open Docker Desktop or OrbStack from Applications
 and rerun:
 
 ```bash
-make db
+make db-reset
 ```
 
-## 4. Run Migrations
-
-Run these once for auth, reset tokens, and document ownership fields:
-
-```bash
-make migrate
-```
-
-If `psql` is not installed, install Homebrew `libpq` or use another Postgres
-client against:
-
-```text
-postgresql://rdtii_user:rdtii_password@localhost:5433/rdtii
-```
-
-## 5. Check Local Setup
+## 4. Check Local Setup
 
 ```bash
 make doctor
@@ -282,12 +275,12 @@ make dev
 
 ### Register/Login Fails With Missing User Columns
 
-The auth migrations have not been run.
+The local database was created from an older schema.
 
 Fix:
 
 ```bash
-make migrate
+make db-reset
 ```
 
 ### `make dev` Starts Frontend But Not Backend

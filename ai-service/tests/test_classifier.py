@@ -97,7 +97,7 @@ def test_multiple_indicators_triggered():
         "protection framework."
     )
     result = classify_indicator(text)
-    assert "6.1" in result  # transferring data abroad
+    assert "6.1" in result  # broad shortlist; exact-quote validation resolves the boundary
     assert "6.4" in result  # consent
     assert "7.1" in result  # personal data protection
     assert "7.2" in result  # cybersecurity
@@ -112,3 +112,23 @@ def test_result_is_sorted_and_unique():
     assert result == sorted(set(result))
     assert "7.1" in result
     assert "7.2" in result
+
+
+def test_conditional_transfer_clause_shortlists_both_boundary_indicators():
+    text = (
+        "An organisation must not transfer personal data outside Singapore except "
+        "in accordance with requirements that ensure a comparable standard of protection."
+    )
+    result = classify_indicator(text)
+    assert "6.1" in result
+    assert "6.4" in result
+
+
+def test_local_processing_and_conditional_flow_can_both_route():
+    text = (
+        "Personal data must be processed locally, and any overseas transfer is subject "
+        "to prior consent and an adequate standard of protection."
+    )
+    result = classify_indicator(text)
+    assert "6.1" in result
+    assert "6.4" in result

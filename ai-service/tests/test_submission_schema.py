@@ -47,7 +47,13 @@ def test_indicator_code_rejects_garbage():
 
 @pytest.mark.parametrize(
     ("method", "tag"),
-    [("known_mapping", "KNOWN"), ("official_search", "NEW"), ("web_search", "NEW"), ("", "NEW")],
+    [
+        ("known_mapping", "KNOWN"),
+        ("cached_discovery", "NEW"),
+        ("official_search", "NEW"),
+        ("web_search", "NEW"),
+        ("", "NEW"),
+    ],
 )
 def test_discovery_tag(method, tag):
     assert discovery_tag_for_method(method) == tag

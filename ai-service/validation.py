@@ -188,6 +188,65 @@ def check_cross_reference(quote: str, indicator_id: str) -> list[str]:
     return []
 
 
+_TRANSFER_TERM = re.compile(
+    r"\b(?:transfer(?:red|ring|s)?|disclos(?:e|ed|es|ure)|export(?:ed|ing|s)?)\b|"
+    r"(?:数据|个人信息|信息)?出境|跨境(?:传输|提供)?|向境外提供|传输(?:至|到)?境外|境外传输",
+    re.IGNORECASE,
+)
+_CONDITIONAL_FLOW_TERM = re.compile(
+    r"\b(?:except\s+in\s+accordance|subject\s+to|provided\s+that|consent|"
+    r"adequacy|security\s+assessment|standard\s+contract|comparable\s+"
+    r"(?:protection|standard)|standard\s+of\s+protection|adequate\s+protection|"
+    r"legally\s+enforceable\s+obligations?)\b|"
+    r"(?:取得|获得|经).{0,20}同意|安全评估|标准合同|个人信息保护认证|"
+    r"充分性(?:决定|认定)?|可比(?:的)?保护(?:水平|标准)|除非|"
+    r"符合.{0,20}(?:条件|要求)|依照.{0,20}规定",
+    re.IGNORECASE,
+)
+_LOCAL_PROCESSING_TERM = re.compile(
+    r"\b(?:process(?:ed|ing)?\s+(?:locally|within\s+the\s+(?:country|territory))|"
+    r"local\s+processing|data\s+locali[sz]ation)\b|境内处理|本地处理",
+    re.IGNORECASE,
+)
+_ABSOLUTE_TRANSFER_BAN = re.compile(
+    r"\b(?:(?:must|shall)\s+not\b.{0,80}\btransfer(?:red|ring|s)?|"
+    r"prohibit(?:ed|s|ion)?\b.{0,80}\btransfer(?:red|ring|s)?|"
+    r"ban\s+on\s+transfer(?:red|ring|s)?)\b|"
+    r"(?:严禁|禁止|不得).{0,40}(?:出境|跨境|向境外提供|传输(?:至|到)?境外|境外传输)",
+    re.IGNORECASE,
+)
+
+
+def is_conditional_transfer_without_6_1_requirement(quote: str) -> bool:
+    """True when the exact quote is a 6.4 condition, not a 6.1 restriction.
+
+    The classifier deliberately produces a broad shortlist. This check runs on
+    the extractor's verified quote, so a consent clause elsewhere in a long
+    article cannot suppress a distinct local-processing or absolute-ban clause.
+    """
+
+    if not quote or _LOCAL_PROCESSING_TERM.search(quote):
+        return False
+
+    conditional_transfer = False
+    unconditional_ban = False
+    segments = [
+        segment.strip()
+        for segment in re.split(r"(?<=[.;。；])\s*|[\r\n]+", quote)
+        if segment.strip()
+    ]
+    for segment in segments:
+        if not _TRANSFER_TERM.search(segment):
+            continue
+        conditional = bool(_CONDITIONAL_FLOW_TERM.search(segment))
+        if conditional:
+            conditional_transfer = True
+        elif _ABSOLUTE_TRANSFER_BAN.search(segment):
+            unconditional_ban = True
+
+    return conditional_transfer and not unconditional_ban
+
+
 # ── Multi-language embedding similarity (optional) ─────────────────────
 
 
@@ -291,6 +350,16 @@ def validate_mapping(
         ``level`` is one of ``"pass"``, ``"flag"``, ``"reject"``.
     """
     result = ValidationResult()
+
+    # A verified conditional-transfer quote belongs to 6.4, even if broad
+    # shortlist terms such as "must not transfer ... except" also triggered 6.1.
+    if indicator_id == "6.1" and is_conditional_transfer_without_6_1_requirement(quote):
+        result.level = "reject"
+        result.reasons.append(
+            "Conditional cross-border transfer safeguard belongs to indicator 6.4, "
+            "not a 6.1 ban or local-processing requirement"
+        )
+        return result
 
     # 1. Section header → reject (no substantive content)
     if is_section_header(quote):

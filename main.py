@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -70,6 +71,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--provider", default=None, help="Override RDTII_LLM_PROVIDER for this run")
     parser.add_argument("--limit", type=int, default=20, help="Max discovery candidates per pillar")
     parser.add_argument("--max-documents", type=int, default=None, help="Cap documents processed per pillar")
+    parser.add_argument(
+        "--registry-backend",
+        choices=("file", "database"),
+        default="file",
+        help="Discovery source registry (default: checked-in file; database is for the full app)",
+    )
     return parser.parse_args(argv)
 
 
@@ -78,6 +85,11 @@ def _formats(choice: str) -> tuple[str, ...]:
 
 
 async def _run(args: argparse.Namespace) -> int:
+    # The judge CLI is DB-free by default, while the full web app keeps the
+    # registry module's database default. Set the CLI choice explicitly before
+    # any deferred Discovery imports occur.
+    os.environ["DISCOVERY_REGISTRY_BACKEND"] = args.registry_backend
+
     from submission import SubmissionRow, write_outputs
     from submission.pipeline import discover_and_extract, run_library, run_pdf
     from submission.schema import economy_display_name

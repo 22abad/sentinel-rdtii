@@ -634,13 +634,9 @@ Use a debounce so drag operations do not write on every pointer movement.
 
 ### Backend Persistence Later
 
-Once the local shape is stable, use the repository's existing SQL migration style. Do not introduce Alembic or SQLAlchemy just for canvas layout tables.
-
-Add a migration such as:
-
-```text
-rdtii-database/db/migrate_004_workbench_canvases.sql
-```
+The local competition database uses a resettable consolidated schema. Keep the
+canvas table in `rdtii-database/db/init.sql`; do not introduce Alembic or
+SQLAlchemy just for canvas layout tables.
 
 Suggested table:
 

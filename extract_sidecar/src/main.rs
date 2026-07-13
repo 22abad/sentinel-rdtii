@@ -663,18 +663,52 @@ mod tests {
             .await
             .expect("TEST_DATABASE_URL should point to a reachable Postgres database");
 
-        sqlx::query("CREATE TABLE IF NOT EXISTS documents ()")
-            .execute(&db)
-            .await
-            .expect("documents stub table should be creatable when absent");
-        sqlx::query("CREATE TABLE IF NOT EXISTS document_chunks ()")
-            .execute(&db)
-            .await
-            .expect("document_chunks stub table should be creatable when absent");
-        sqlx::raw_sql(include_str!("../migrations/001_extracted_documents.sql"))
-            .execute(&db)
-            .await
-            .expect("sidecar migration should run against the test database");
+        // The consolidated init.sql is the only production schema source. This
+        // integration smoke therefore requires a database created by
+        // `make db-reset` and validates the columns the sidecar depends on.
+        let required_cache_columns: i64 = sqlx::query_scalar(
+            r#"
+            SELECT COUNT(*)
+            FROM information_schema.columns
+            WHERE table_schema = ANY(current_schemas(false))
+              AND table_name = 'extracted_documents'
+              AND column_name = ANY($1)
+            "#,
+        )
+        .bind(vec![
+            "id",
+            "content_hash",
+            "source_url",
+            "filename",
+            "source_type",
+            "ocr_provider",
+            "extracted_text",
+            "expires_at",
+            "created_at",
+        ])
+        .fetch_one(&db)
+        .await
+        .expect("sidecar schema should be queryable");
+        assert_eq!(
+            required_cache_columns, 9,
+            "TEST_DATABASE_URL must point to a database initialized by `make db-reset`"
+        );
+
+        let required_link_columns: i64 = sqlx::query_scalar(
+            r#"
+            SELECT COUNT(*)
+            FROM information_schema.columns
+            WHERE table_schema = ANY(current_schemas(false))
+              AND (table_name, column_name) IN (
+                    ('documents', 'sidecar_doc_id'),
+                    ('document_chunks', 'extracted_doc_id')
+              )
+            "#,
+        )
+        .fetch_one(&db)
+        .await
+        .expect("sidecar link schema should be queryable");
+        assert_eq!(required_link_columns, 2, "init.sql sidecar links are incomplete");
 
         let fixture_text = format!("sidecar smoke fixture {}", Uuid::new_v4());
         let fixture_hash = content_hash(fixture_text.as_bytes());

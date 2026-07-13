@@ -40,6 +40,41 @@ def test_official_source_candidate_outranks_secondary_article():
     assert "official statute portal" in ranked[0].reasons
 
 
+def test_indicator_scoped_source_outranks_generic_portal_for_same_pillar():
+    sources = get_sources("SGP")
+    generic_act = LegalCandidate(
+        id="generic-act",
+        country_code="SGP",
+        title="Interpretation Act",
+        url="https://sso.agc.gov.sg/Act/IA1965",
+        source_domain="sso.agc.gov.sg",
+        source_name="Singapore Statutes Online",
+        source_grade="primary",
+        document_type="act",
+    )
+    scoped_treaty = LegalCandidate(
+        id="scoped-treaty",
+        country_code="SGP",
+        title="Australia-Singapore Digital Economy Agreement",
+        url=(
+            "https://isomer-user-content.by.gov.sg/166/"
+            "australia-singapore-digital-economy-agreement.pdf"
+        ),
+        source_domain="isomer-user-content.by.gov.sg",
+        source_name="Ministry of Trade and Industry",
+        source_grade="primary",
+        document_type="pdf",
+        matched_pillars=[6],
+        matched_indicators=["6.5"],
+        snippet="Binding cross-border transfer of information commitment.",
+    )
+
+    ranked = rank_candidates([generic_act, scoped_treaty], sources)
+
+    assert ranked[0].id == "scoped-treaty"
+    assert "indicator-specific official source" in ranked[0].reasons
+
+
 def test_warning_candidate_gets_staleness_penalty():
     sources = get_sources("SGP")
     clean = LegalCandidate(

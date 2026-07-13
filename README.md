@@ -61,8 +61,10 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
-This lean install runs the discovery + OCR + mapping CLI. (The full web app and
-local RAG embeddings use `ai-service/requirements.txt`; see [SETUP.md](SETUP.md).)
+This lean install runs the discovery + OCR + mapping CLI. The CLI reads its
+official-source registry from the checked-in YAML, so PostgreSQL is not required.
+(The full web app and local RAG embeddings use `ai-service/requirements.txt`;
+see [SETUP.md](SETUP.md).)
 
 ### 3. Configure the model
 
@@ -133,6 +135,7 @@ python main.py --economy Singapore --pillar 6 --offline
 | `--format` | `csv`, `json`, or `both` (default) |
 | `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |
 | `--max-documents` | Stop after processing this many documents |
+| `--registry-backend` | Source registry: `file` (CLI default) or `database` (full app) |
 
 ---
 
@@ -161,7 +164,7 @@ anything the live sweep finds beyond the library is tagged **NEW**.
 | Retrieval | Playwright crawl + cache/Wayback fallback | Local law library | One provided file |
 | Network needed | Yes | **No** | No |
 | Mapping | Live pipeline | Live pipeline | Live pipeline |
-| Discovery tag | NEW / KNOWN | KNOWN | per source |
+| Discovery tag | NEW / KNOWN | KNOWN / cached NEW | per source |
 
 ---
 
