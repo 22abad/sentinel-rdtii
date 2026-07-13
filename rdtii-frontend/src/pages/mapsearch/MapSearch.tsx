@@ -521,9 +521,9 @@ export function MapSearchPage() {
                 transition={{ duration: 0.25 }}
                 className="flex flex-col gap-2 overflow-y-auto pr-1"
                 style={{
-                  maxHeight: "min(55vh, 520px)",
+                  maxHeight: "min(75vh, 520px)",
                   // Fade older messages out at the top edge instead of hard-clipping.
-                  maskImage: "linear-gradient(to bottom, transparent 0, #000 70px)",
+                  maskImage: "linear-gradient(to bottom, transparent 0, #000 50px)",
                   WebkitMaskImage: "linear-gradient(to bottom, transparent 0, #000 40px)",
                 }}
               >

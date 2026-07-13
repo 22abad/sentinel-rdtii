@@ -21,13 +21,16 @@ class RagQueryExecutor(NodeExecutor):
         context: WorkflowContext,
     ) -> NodeResult:
         req = _request_from(node.config, inputs, context.runtime)
-        answer = await _complete(req)
+        hits, retrieved_context = await _retrieve(req)
+        answer = await _complete(req, retrieved_context)
         return NodeResult(
             node_id=node.id,
             status="success",
             outputs={
                 "answer": answer,
                 "provider": _provider_name(),
+                "retrieved_chunks": [h.text for h in hits],
+                "retrieval_count": len(hits),
             },
         )
 
@@ -45,10 +48,11 @@ class RagQueryExecutor(NodeExecutor):
             payload={"node_type": node.type},
         )
         req = _request_from(node.config, inputs, context.runtime)
+        hits, retrieved_context = await _retrieve(req)
         answer = ""
         provider = _provider_name()
         failed = False
-        async for event in _stream_complete(req):
+        async for event in _stream_complete(req, retrieved_context):
             if event["event"] == "token":
                 answer += str(event.get("payload") or "")
             elif event["event"] == "done" and isinstance(event.get("payload"), dict):
@@ -76,6 +80,8 @@ class RagQueryExecutor(NodeExecutor):
                     outputs={
                         "answer": answer,
                         "provider": provider,
+                        "retrieved_chunks": [h.text for h in hits],
+                        "retrieval_count": len(hits),
                     },
                 ).model_dump(),
             )
@@ -89,7 +95,25 @@ def _request_from(config: dict, inputs: dict, runtime: dict) -> RAGQueryRequest:
     return RAGQueryRequest(**payload)
 
 
-def _prompt(req: RAGQueryRequest) -> str:
+async def _retrieve(req: RAGQueryRequest):
+    """Vector-retrieve the chunks most relevant to the question.
+
+    Mirrors /api/rag/query: embedding + DB are blocking, so run them off the
+    event loop. Returns (hits, context_block); both are empty when nothing is
+    retrieved, which the system prompt requires the model to admit rather than
+    quote from memory.
+    """
+    from rag.rag import build_context, retrieve
+
+    hits = await asyncio.to_thread(
+        retrieve,
+        req.question,
+        country_code=req.country_code or None,
+    )
+    return hits, build_context(hits)
+
+
+def _prompt(req: RAGQueryRequest, retrieved_context: str = "") -> str:
     parts = [f"Question: {req.question}"]
     if req.role:
         parts.insert(0, f"Your role: {req.role}")
@@ -97,6 +121,13 @@ def _prompt(req: RAGQueryRequest) -> str:
         parts.append(f"Additional context: {req.context}")
     if req.country_code:
         parts.append(f"Country / Economy under review: {req.country_code}")
+    if retrieved_context:
+        parts.append(f"Retrieved legal text (most relevant first):\n{retrieved_context}")
+    else:
+        parts.append(
+            "Retrieved legal text: NONE — no source text was retrieved for this "
+            "question. Do not quote or cite any legal provision."
+        )
     if req.source_text:
         parts.append(f"Legal text being analyzed:\n\"\"\"\n{req.source_text}\n\"\"\"")
     return "\n\n".join(parts)
@@ -114,7 +145,7 @@ def _provider_name() -> str:
     return f"ollama/{_OLLAMA_MODEL}"
 
 
-async def _complete(req: RAGQueryRequest) -> str:
+async def _complete(req: RAGQueryRequest, retrieved_context: str = "") -> str:
     from api.system import _OLLAMA_MODEL, _RDTII_SYSTEM_PROMPT
 
     response = await asyncio.to_thread(
@@ -122,7 +153,7 @@ async def _complete(req: RAGQueryRequest) -> str:
         model=_OLLAMA_MODEL,
         messages=[
             {"role": "system", "content": _RDTII_SYSTEM_PROMPT},
-            {"role": "user", "content": _prompt(req)},
+            {"role": "user", "content": _prompt(req, retrieved_context)},
         ],
         stream=False,
         temperature=0.3,
@@ -130,7 +161,9 @@ async def _complete(req: RAGQueryRequest) -> str:
     return response.choices[0].message.content or ""
 
 
-async def _stream_complete(req: RAGQueryRequest) -> AsyncIterator[dict]:
+async def _stream_complete(
+    req: RAGQueryRequest, retrieved_context: str = ""
+) -> AsyncIterator[dict]:
     from api.system import _OLLAMA_MODEL, _RDTII_SYSTEM_PROMPT
 
     full_answer = ""
@@ -139,7 +172,7 @@ async def _stream_complete(req: RAGQueryRequest) -> AsyncIterator[dict]:
             model=_OLLAMA_MODEL,
             messages=[
                 {"role": "system", "content": _RDTII_SYSTEM_PROMPT},
-                {"role": "user", "content": _prompt(req)},
+                {"role": "user", "content": _prompt(req, retrieved_context)},
             ],
             stream=True,
             temperature=0.3,
