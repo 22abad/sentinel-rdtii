@@ -96,6 +96,12 @@ python main.py --economy Singapore --pillar 6
 
 **Output:** `outputs/Singapore_P6_<timestamp>.csv` and `.json`.
 
+By default this runs **seed-first**: it maps the known-good official sources from
+the local library (verified, reproducible, no network) *first*, then falls back
+to live discovery to fill gaps and surface NEW finds — so a reviewer's short run
+never rides entirely on a live crawl. Add `--no-seed` for pure live discovery,
+or `--offline` to stay on the seeds only.
+
 For a lower-cost first run that still exercises real discovery, document
 retrieval, and mapping, process only the first accepted document:
 
@@ -131,6 +137,7 @@ python main.py --economy Singapore --pillar 6 --offline
 | `--indicators` | Restrict to specific indicators, e.g. `6.1 6.4` |
 | `--pdf` | Extract from a local PDF (skips the crawler) |
 | `--offline` | Map cached official texts from the local law library (no network) |
+| `--no-seed` | Skip the seed pass; go straight to live discovery (default is seed-first) |
 | `--provider` | Override `RDTII_LLM_PROVIDER` for this run |
 | `--format` | `csv`, `json`, or `both` (default) |
 | `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |
@@ -159,12 +166,22 @@ classify → extract → verify → deterministic-score pipeline, so provisions 
 produced, not replayed. Cached laws are the curated **KNOWN** baseline;
 anything the live sweep finds beyond the library is tagged **NEW**.
 
-| | Live (default) | `--offline` | `--pdf <path>` |
-|---|---|---|---|
-| Retrieval | Playwright crawl + cache/Wayback fallback | Local law library | One provided file |
-| Network needed | Yes | **No** | No |
-| Mapping | Live pipeline | Live pipeline | Live pipeline |
-| Discovery tag | NEW / KNOWN | KNOWN / cached NEW | per source |
+| | Seed-first (default) | `--no-seed` | `--offline` | `--pdf <path>` |
+|---|---|---|---|---|
+| Retrieval | Library seeds → then live crawl | Playwright crawl + cache/Wayback fallback | Local law library | One provided file |
+| Network needed | Fallback only | Yes | **No** | No |
+| Mapping | Live pipeline | Live pipeline | Live pipeline | Live pipeline |
+| Discovery tag | KNOWN / cached NEW + live NEW | NEW / KNOWN | KNOWN / cached NEW | per source |
+
+### Seed registry — one place for the trusted URLs
+
+Every known-good official source URL is consolidated into a single, tiered,
+de-duplicated registry at **`data/seed_sources.jsonl`** (rebuilt by
+`python tools/build_seed_registry.py`). It merges the curated library (exact URL
++ SHA-256-verified cached text) with the broad KNOWN corpus (204 official URLs +
+fetch status), so "which sources do we trust, and did they fetch?" is one
+auditable list. The seed-first run serves the `library_cached` tier before
+touching the network.
 
 ---
 
