@@ -165,6 +165,35 @@ anything the live sweep finds beyond the library is tagged **NEW**.
 
 ---
 
+## Discovering new laws (NEW vs KNOWN)
+
+Beyond mapping the sample-kit laws, the tool rewards **independently finding
+in-force Pillar 6/7 laws** the kit did not include. It decides novelty by
+evidence, not by which crawler surfaced a result: a mapped provision is **KNOWN**
+only if its statute is in the curated baseline (the local law library);
+everything else is a genuine **NEW** find.
+
+```bash
+python tools/discover_new_laws.py --economy Singapore --pillar all
+# → logs/discovery_report.json
+```
+
+The report lists each NEW candidate with its full audit trail — official source
+URL, verbatim quote, indicator, and confidence — behind an explicit
+**human-review gate**: a NEW find is a *draft lead for legal verification, not a
+settled legal conclusion*. Every candidate already passed the same
+verbatim-quote check and deterministic scorer as any other mapping, so unverified
+finds never appear. The golden set demonstrates the pattern in practice — the
+My Health Records Act (6.1/6.2), Companies Act s.245 (7.3), and Income Tax Act
+s.67 (7.3) are exactly such sectoral-law discoveries beyond a core
+data-protection statute.
+
+Reconciliation is reusable in code: `submission.reconcile_discovery_tags(rows)`
+re-tags any result set against the baseline, and `build_discovery_report(...)`
+produces the gated report.
+
+---
+
 ## Architecture Overview
 
 ```

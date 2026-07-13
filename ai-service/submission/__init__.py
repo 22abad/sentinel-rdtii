@@ -13,6 +13,11 @@ Modules:
 - pipeline.py — orchestrates discovery -> fetch -> extract -> rows
 """
 
+from .novelty import (
+    build_discovery_report,
+    reconcile_discovery_tags,
+    summarize_discovery,
+)
 from .schema import (
     CSV_COLUMNS,
     SubmissionRow,
@@ -24,8 +29,11 @@ from .writer import write_csv, write_json, write_outputs
 __all__ = [
     "CSV_COLUMNS",
     "SubmissionRow",
+    "build_discovery_report",
     "discovery_tag_for_method",
     "indicator_to_rdtii_code",
+    "reconcile_discovery_tags",
+    "summarize_discovery",
     "write_csv",
     "write_json",
     "write_outputs",
