@@ -5,6 +5,15 @@
 **Prepared:** 2026-07-13 (technical pre-verification, not a substitute for legal sign-off)  
 **Cases:** 8 (`evaluation/golden/cases.jsonl`)
 
+> **Update 2026-07-13 — both citation corrections APPLIED.** The two verbatim-quote
+> fixes flagged below (APP 8.1 missing "(other than Australian Privacy Principle 1)";
+> My Health Records s.77 flattened paraphrase) were resolved by pulling the official
+> Federal Register of Legislation text **through the project's own crawler** (its
+> HTTP fallback reached legislation.gov.au where headless fetchers were 403'd). The
+> fixtures, golden quotes, offline canned quotes, law-library copies, and all
+> SHA-256 hashes were updated together; offline metrics unchanged (precision 100%,
+> recall 67%, F1 80%). The four Singapore quotes still warrant a human SSO eyeball.
+
 ---
 
 ## How to use this document

@@ -1,5 +1,5 @@
 Privacy Act 1988
 
-Australian Privacy Principle 8.1. Cross-border disclosure of personal information
+Australian Privacy Principle 8—cross-border disclosure of personal information
 
-Before an APP entity discloses personal information about an individual to a person who is not in Australia or an external Territory and who is not the entity or the individual, the entity must take such steps as are reasonable in the circumstances to ensure that the overseas recipient does not breach the Australian Privacy Principles in relation to the information.
+8.1 Before an APP entity discloses personal information about an individual to a person (the overseas recipient): (a) who is not in Australia or an external Territory; and (b) who is not the entity or the individual; the entity must take such steps as are reasonable in the circumstances to ensure that the overseas recipient does not breach the Australian Privacy Principles (other than Australian Privacy Principle 1) in relation to the information.
