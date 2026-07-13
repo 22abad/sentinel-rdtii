@@ -40,7 +40,7 @@ INVENTORY = REPO_ROOT / "data" / "round2_inventory.jsonl"
 CORPUS_MANIFEST = REPO_ROOT / "data" / "round2_corpus" / "manifest.jsonl"
 
 TEXT_CAP = 60_000        # chars per document fed to extraction
-DOC_CONCURRENCY = 3      # documents extracted in parallel
+DOC_CONCURRENCY = 2      # documents extracted in parallel (deepseek TPM headroom)
 
 
 def _slug(name: str) -> str:
