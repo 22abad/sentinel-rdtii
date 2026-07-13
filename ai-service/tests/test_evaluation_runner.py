@@ -47,10 +47,14 @@ async def test_offline_runner_uses_real_pipeline_and_writes_both_reports(tmp_pat
     assert report["metadata"]["include_pending"] is True
     assert report["dataset"]["cases_evaluated"] == 8
     assert report["dataset"]["documents_evaluated"] == 5
-    # Recall improved from 1/3 to 2/3 after the classifier learned the
-    # conditional-flow (6.4) language of SGP PDPA s.26 and AUS Privacy APP 8.1.
-    assert report["mapping_evaluation"]["aggregate"]["predicted_mappings"] == 4
-    assert report["mapping_evaluation"]["aggregate"]["mapping_recall"] == pytest.approx(2 / 3)
+    # The classifier covers both conditional-flow language and the statutory
+    # offshore-processing/storage prohibitions in AUS My Health Records s.77.
+    evaluation = report["mapping_evaluation"]
+    assert evaluation["aggregate"]["predicted_mappings"] == 6
+    assert evaluation["aggregate"]["mapping_precision"] == pytest.approx(1.0)
+    assert evaluation["aggregate"]["mapping_recall"] == pytest.approx(1.0)
+    assert evaluation["aggregate"]["mapping_f1"] == pytest.approx(1.0)
+    assert evaluation["false_negatives"] == []
     assert report["source_failures"] == []
     assert report["usage"]["llm_calls"] == 0
     assert report["ocr_usage"]["vision_calls"] == 0
@@ -64,7 +68,7 @@ async def test_offline_runner_uses_real_pipeline_and_writes_both_reports(tmp_pat
     assert persisted["metadata"]["case_set_sha256"]
     markdown = output_path.with_suffix(".md").read_text(encoding="utf-8")
     assert "Development-only report" in markdown
-    assert "False negatives: 2" in markdown
+    assert "False negatives: 0" in markdown
 
 
 @pytest.mark.anyio
