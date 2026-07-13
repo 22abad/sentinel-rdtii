@@ -38,7 +38,10 @@ class _FakeProvider:
 
 def test_supported_set_matches_schema():
     assert SUPPORTED_MAPPING_INDICATORS == frozenset(get_args(IndicatorId))
-    assert "5.3" not in SUPPORTED_MAPPING_INDICATORS
+    # 9.2 does not exist in the RDTII 2.1 methodology (P9 has 9.1/9.3/9.4);
+    # 5.3 became a legitimate Round 2 indicator, so it is supported now.
+    assert "9.2" not in SUPPORTED_MAPPING_INDICATORS
+    assert "5.3" in SUPPORTED_MAPPING_INDICATORS
     assert "6.4" in SUPPORTED_MAPPING_INDICATORS
 
 
@@ -46,7 +49,7 @@ def test_unsupported_indicator_is_skipped_without_crashing(monkeypatch):
     import main as main_module
 
     # Force the classifier to surface only the out-of-schema indicator.
-    monkeypatch.setattr(main_module, "classify_indicator", lambda _t: ["5.3"])
+    monkeypatch.setattr(main_module, "classify_indicator", lambda _t: ["9.2"])
 
     provider = _FakeProvider()
     orchestrator = MASOrchestrator(provider)

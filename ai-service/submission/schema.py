@@ -42,6 +42,8 @@ JSON_EXTENDED_FIELDS: tuple[str, ...] = (
 MAPPING_RATIONALE_MAX = 300
 
 # Official UN economy names keyed by ISO-3166 alpha-3 code.
+# Display names follow the Round 2 database sheet names so outputs join
+# cleanly against the official baseline.
 ECONOMY_NAMES: dict[str, str] = {
     "SGP": "Singapore",
     "MYS": "Malaysia",
@@ -49,12 +51,21 @@ ECONOMY_NAMES: dict[str, str] = {
     "CHN": "China",
     "THA": "Thailand",
     "IND": "India",
+    "IDN": "Indonesia",
+    "LAO": "Lao PDR",
+    "MNG": "Mongolia",
+    "RUS": "Russian Federation",
     "NIU": "Niue",
 }
 
 # Reverse lookup accepting common spellings/casing.
 _NAME_TO_CODE: dict[str, str] = {name.lower(): code for code, name in ECONOMY_NAMES.items()}
 _NAME_TO_CODE.update({code.lower(): code for code in ECONOMY_NAMES})
+_NAME_TO_CODE.update({
+    "laos": "LAO",
+    "lao people's democratic republic": "LAO",
+    "russia": "RUS",
+})
 
 
 def economy_code(economy: str) -> str:
@@ -82,14 +93,15 @@ def economy_display_name(economy: str) -> str:
 def indicator_to_rdtii_code(indicator: str) -> str:
     """Convert an internal indicator id to the judges' RDTII code.
 
-    "6.1" -> "P6-I1", "7.3" -> "P7-I3". Input already in "Pn-Im" form is
-    returned unchanged.
+    "6.1" -> "P6-I1", "7.3" -> "P7-I3", "4.10" -> "P4-I10", and sub-indicators
+    keep their dotted tail: "12.4.1" -> "P12-I4.1". Input already in "Pn-Im"
+    form is returned unchanged.
     """
 
     indicator = indicator.strip()
-    if re.fullmatch(r"P\d+-I\d+", indicator):
+    if re.fullmatch(r"P\d+-I\d+(\.\d+)?", indicator):
         return indicator
-    match = re.fullmatch(r"(\d+)\.(\d+)", indicator)
+    match = re.fullmatch(r"(\d+)\.(\d+(?:\.\d+)?)", indicator)
     if not match:
         raise ValueError(f"Cannot convert indicator id {indicator!r} to RDTII code.")
     pillar, index = match.group(1), match.group(2)

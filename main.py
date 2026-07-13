@@ -35,14 +35,26 @@ load_dotenv(REPO_ROOT / ".env")
 
 
 def _parse_pillars(token: str) -> list[int]:
-    """Turn the --pillar argument ("6", "7", or "all") into pillar ids."""
+    """Turn the --pillar argument into pillar ids.
+
+    Round 2 spans all 12 pillars: accepts a single pillar ("7"), a comma list
+    ("6,7,12"), "all" (1-12), or "round1" (the Round 1 scope, pillars 6-7).
+    """
 
     token = token.strip().lower()
     if token == "all":
+        return list(range(1, 13))
+    if token == "round1":
         return [6, 7]
-    if token in {"6", "7"}:
-        return [int(token)]
-    raise argparse.ArgumentTypeError("--pillar must be 6, 7, or all")
+    try:
+        pillars = sorted({int(part) for part in token.split(",") if part.strip()})
+    except ValueError:
+        pillars = []
+    if pillars and all(1 <= p <= 12 for p in pillars):
+        return pillars
+    raise argparse.ArgumentTypeError(
+        "--pillar must be 1-12, a comma list like 6,7, 'all', or 'round1'"
+    )
 
 
 def _pillar_label(pillars: list[int]) -> str:
@@ -57,7 +69,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         description="RDTII evidence discovery + indicator mapping (Pillars 6/7).",
     )
     parser.add_argument("--economy", required=True, help="Economy name or ISO-3 code, e.g. Singapore / SGP")
-    parser.add_argument("--pillar", type=_parse_pillars, default=[6, 7], help="6, 7, or all")
+    parser.add_argument("--pillar", type=_parse_pillars, default=[6, 7], help="1-12, comma list (6,7), all, or round1")
     parser.add_argument("--pdf", default=None, help="Extract from this PDF path (bypasses the crawler)")
     parser.add_argument(
         "--offline",
