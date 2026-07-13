@@ -76,7 +76,9 @@ def _laws_from_inventory(economy: str | None) -> list[dict]:
     return out
 
 
-async def _fetch_first_success(urls: list[str], timeout: int) -> tuple[str, str]:
+async def _fetch_first_success(
+    urls: list[str], timeout: int, browser_mode: str = "http"
+) -> tuple[str, str]:
     """Try each URL in order; return (text, url_used). Raises if all fail."""
     from services.document_fetch import fetch_document_text
 
@@ -84,7 +86,7 @@ async def _fetch_first_success(urls: list[str], timeout: int) -> tuple[str, str]
     for url in urls:
         try:
             doc = await asyncio.wait_for(
-                fetch_document_text(url, browser_mode="http"), timeout=timeout
+                fetch_document_text(url, browser_mode=browser_mode), timeout=timeout
             )
             text = getattr(doc, "text", "") or ""
             if len(text) >= MIN_TEXT_CHARS:
@@ -113,7 +115,10 @@ async def _build(args: argparse.Namespace) -> dict:
             results.append(row)
             continue
         try:
-            body, used = await _fetch_first_success(law["urls"], args.timeout)
+            body, used = await _fetch_first_success(
+                law["urls"], args.timeout,
+                browser_mode="auto" if args.browser else "http",
+            )
             text_path.write_text(body, encoding="utf-8")
             row.update(status="ok", url_used=used, char_count=len(body),
                        sha256=hashlib.sha256(body.encode()).hexdigest())
@@ -124,8 +129,20 @@ async def _build(args: argparse.Namespace) -> dict:
         results.append(row)
 
     CORPUS_DIR.mkdir(parents=True, exist_ok=True)
-    (CORPUS_DIR / "manifest.jsonl").write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False) for r in results) + "\n", encoding="utf-8")
+    manifest_path = CORPUS_DIR / "manifest.jsonl"
+    # Merge with prior runs (keyed by economy+text_path) so a filtered run
+    # (--economy MNG) does not wipe other economies' records.
+    merged: dict[tuple[str, str], dict] = {}
+    if manifest_path.exists():
+        for line in manifest_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rec = json.loads(line)
+                merged[(rec.get("economy", ""), rec.get("text_path", ""))] = rec
+    for r in results:
+        merged[(r.get("economy", ""), r.get("text_path", ""))] = r
+    manifest_path.write_text(
+        "\n".join(json.dumps(r, ensure_ascii=False) for r in merged.values()) + "\n",
+        encoding="utf-8")
     ok = sum(r["status"] in ("ok", "cached") for r in results)
     return {"total": len(results), "fetched_or_cached": ok, "failed": len(results) - ok}
 
@@ -134,6 +151,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(prog="build_round2_corpus.py", description=__doc__)
     p.add_argument("--economy", default=None, help="ISO-3 economy filter, e.g. IND")
     p.add_argument("--limit", type=int, default=None)
+    p.add_argument("--browser", action="store_true",
+                   help="also use the browser path (JS portals, e.g. legalinfo.mn; slower)")
     p.add_argument("--timeout", type=int, default=60, help="per-URL fetch timeout (s)")
     return p.parse_args(argv)
 
