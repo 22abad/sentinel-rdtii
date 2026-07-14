@@ -126,7 +126,7 @@ async def _run(args: argparse.Namespace) -> int:
     if strict_live and (args.offline or args.pdf):
         raise ValueError("--strict-live cannot be combined with --offline or --pdf")
 
-    from submission import SubmissionRow, reconcile_discovery_tags, write_outputs
+    from submission import SubmissionRow, reconcile_submission_tags, write_outputs
     from submission.pipeline import (
         discover_and_extract,
         run_library,
@@ -210,7 +210,7 @@ async def _run(args: argparse.Namespace) -> int:
     # law is novel. Make the ESCAP inventory/library baseline authoritative at
     # the final submission boundary, after rows from every pillar/path have
     # been combined and immediately before CSV/JSON serialization.
-    all_rows = reconcile_discovery_tags(all_rows)
+    all_rows = reconcile_submission_tags(all_rows)
     validate_submission_rows(
         all_rows,
         allow_empty=getattr(args, "allow_empty", False),

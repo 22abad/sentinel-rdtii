@@ -9,6 +9,7 @@ from submission.novelty import (
     normalize_law_name,
     normalized_quote_hash,
     reconcile_discovery_tags,
+    reconcile_submission_tags,
     summarize_discovery,
 )
 from submission.schema import SubmissionRow
@@ -124,6 +125,29 @@ def test_reconcile_distinguishes_law_amendment_provision_and_known_evidence():
     assert reconciled[1].normalized_quote_hash == normalized_quote_hash(
         "A newly inserted provision."
     )
+
+
+def test_submission_tags_remain_law_level_with_detailed_novelty_metadata():
+    rows = [
+        _row(
+            "Singapore",
+            "Cybersecurity Act 2018",
+            article="Section 99A",
+            verbatim_snippet="A newly discovered provision.",
+        ),
+        _row(
+            "Singapore",
+            "Unseen Fixture Act 2099",
+            retrieval_method="fixture",
+        ),
+        _row("Singapore", "Zzz Data Localisation Act 2099"),
+    ]
+
+    reconciled = reconcile_submission_tags(rows)
+
+    assert [row.discovery_tag for row in reconciled] == ["KNOWN", "KNOWN", "NEW"]
+    assert reconciled[0].novelty_type == "NEW_PROVISION"
+    assert reconciled[2].novelty_type == "NEW_LAW"
 
 
 def test_evidence_normalization_is_stable():

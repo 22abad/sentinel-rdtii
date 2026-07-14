@@ -16,6 +16,7 @@ Modules:
 from .novelty import (
     build_discovery_report,
     reconcile_discovery_tags,
+    reconcile_submission_tags,
     summarize_discovery,
 )
 from .schema import (
@@ -37,6 +38,7 @@ __all__ = [
     "indicator_to_rdtii_code",
     "validate_submission_rows",
     "reconcile_discovery_tags",
+    "reconcile_submission_tags",
     "summarize_discovery",
     "write_csv",
     "write_json",

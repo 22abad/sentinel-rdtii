@@ -367,6 +367,35 @@ def reconcile_discovery_tags(
     return reconciled
 
 
+def reconcile_submission_tags(
+    rows: list[SubmissionRow],
+    *,
+    entries: list[LawEntry] | None = None,
+) -> list[SubmissionRow]:
+    """Reconcile detailed novelty while preserving the law-level CSV contract.
+
+    ``novelty_type`` records provision/amendment-level discoveries in extended
+    JSON metadata. The frozen ``discovery_tag`` column remains law-level:
+    provisions from an inventoried law are KNOWN, as are fixture/fallback rows.
+    Only laws absent from the official inventory and curated library are NEW.
+    """
+
+    reconciled = reconcile_discovery_tags(rows, entries=entries)
+    law_index = known_law_index(entries)
+    submission_rows: list[SubmissionRow] = []
+    for row in reconciled:
+        fixture_source = row.retrieval_method.strip().lower() in {"fixture", "fallback"}
+        tag = (
+            "KNOWN"
+            if fixture_source or is_known_law(row.economy, row.law_name, law_index)
+            else "NEW"
+        )
+        submission_rows.append(
+            row if row.discovery_tag == tag else row.model_copy(update={"discovery_tag": tag})
+        )
+    return submission_rows
+
+
 def summarize_discovery(rows: list[SubmissionRow]) -> dict:
     """Count NEW vs KNOWN and list the distinct laws behind each."""
 
