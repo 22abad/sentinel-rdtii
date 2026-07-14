@@ -11,7 +11,10 @@ from dataclasses import dataclass
 
 from auth import _db_connect
 
-EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+# Multilingual: the corpus spans 10 economies in 8 languages; the English
+# MiniLM embedded RU/TH/ZH text as near-noise (Russian query -> junk hits).
+# Same 384 dims, so the pgvector column is untouched.
+EMBED_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 DEFAULT_TOP_K = 5
 
 _model = None
@@ -38,6 +41,22 @@ class RetrievedChunk:
     score: float  # cosine similarity in ~[0, 1], higher = closer
 
 
+def _normalize_country(country_code: str | None) -> str | None:
+    """Accept display names ("China") and ISO codes ("CHN") alike.
+
+    The Workbench canvas passes the Source node's display name; documents
+    store ISO-3. An exact-match filter on 'China' silently returned zero
+    rows and the chat claimed no sources exist.
+    """
+    if not country_code:
+        return None
+    try:
+        from submission.schema import economy_code
+        return economy_code(country_code)
+    except Exception:
+        return country_code.strip().upper() or None
+
+
 def retrieve(
     query: str,
     *,
@@ -47,7 +66,8 @@ def retrieve(
 ) -> list[RetrievedChunk]:
     """Embed *query* and return the top_k most similar chunks.
 
-    Optionally filter by country_code and drop hits below min_score.
+    Optionally filter by country_code (display name or ISO-3, normalised)
+    and drop hits below min_score.
     """
     if not query or not query.strip():
         return []
@@ -73,6 +93,8 @@ def retrieve(
         ORDER  BY ce.embedding <=> %s::vector
         LIMIT  %s
     """
+
+    country_code = _normalize_country(country_code)
 
     with _db_connect() as conn:
         with conn.cursor() as cur:
