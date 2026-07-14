@@ -139,6 +139,9 @@ python main.py --economy Singapore --pillar 6 --pdf path/to/law.pdf
 # Choose output format / directory / provider
 python main.py --economy Australia --pillar 7 --format csv --output-dir outputs/ --provider deepseek
 
+# Run several economies in one command
+python batch_run.py --economies Singapore Australia Malaysia --pillar 6 7
+
 # Fully offline: map cached official texts from the local law library (no network)
 python main.py --economy Singapore --pillar 6 --offline
 ```
