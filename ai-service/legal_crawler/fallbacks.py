@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import html as html_module
 import re
 from pathlib import Path
@@ -226,7 +227,18 @@ async def _http_pdf_response_result(
             str(tmp_path),
             source_url=source_url,
         )
-        document_text = "\n".join(pdf_result.pages)
+        parts: list[str] = []
+        page_char_spans: list[dict[str, int]] = []
+        cursor = 0
+        for page_number, page_text in enumerate(pdf_result.pages, start=1):
+            if parts:
+                parts.append("\n")
+                cursor += 1
+            start = cursor
+            parts.append(page_text or "")
+            cursor += len(page_text or "")
+            page_char_spans.append({"page": page_number, "start": start, "end": cursor})
+        document_text = "".join(parts)
     finally:
         tmp_path.unlink(missing_ok=True)
     if len(document_text) <= 500:
@@ -237,6 +249,28 @@ async def _http_pdf_response_result(
         "type": "text",
         "url": str(response.url),
         "text": document_text,
+        "pdf_metadata": {
+            "mean_confidence": round(
+                float(getattr(pdf_result, "mean_conf", 1.0)), 3
+            ),
+            "ocr_ratio": round(float(getattr(pdf_result, "ocr_ratio", 0.0)), 3),
+            "pdf_type": "scanned"
+            if float(getattr(pdf_result, "ocr_ratio", 0.0)) > 0.5
+            else "mixed"
+            if float(getattr(pdf_result, "ocr_ratio", 0.0)) > 0
+            else "pure_text",
+            "total_pages": int(
+                getattr(pdf_result, "total_pages", len(pdf_result.pages))
+            ),
+            "ocr_pages": int(getattr(pdf_result, "ocr_pages", 0)),
+            "text_pages": int(getattr(pdf_result, "text_pages", len(pdf_result.pages))),
+            "page_sources": getattr(pdf_result, "page_sources", []),
+            "page_durations_seconds": getattr(pdf_result, "page_durations_seconds", []),
+            "vision_usage": getattr(pdf_result, "vision_usage", []),
+            "source_file_sha256": hashlib.sha256(response.content).hexdigest(),
+            "source_pdf_path": "",
+            "page_char_spans": page_char_spans,
+        },
         "metadata": {
             "source": fetch_method,
             "original_format": "pdf",

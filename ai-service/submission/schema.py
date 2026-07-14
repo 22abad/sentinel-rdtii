@@ -47,6 +47,11 @@ JSON_EXTENDED_FIELDS: tuple[str, ...] = (
     "final_url",
     "http_status",
     "fetch_method",
+    "model_version",
+    "source_file_sha256",
+    "source_pdf_path",
+    "pdf_type",
+    "confidence_type",
 )
 
 MAPPING_RATIONALE_MAX = 300
@@ -222,6 +227,13 @@ class SubmissionRow(BaseModel):
     final_url: str = ""
     http_status: int | None = None
     fetch_method: str = ""
+    model_version: str = ""
+    source_file_sha256: str = ""
+    source_pdf_path: str = ""
+    pdf_type: Literal[
+        "scanned", "mixed", "pure_text", "not_pdf", "unknown"
+    ] = "unknown"
+    confidence_type: Literal["discovery_confidence", "not_available"] = "not_available"
 
     def csv_record(self) -> dict[str, str]:
         """Return an ordered dict of exactly the 13 CSV columns as strings."""

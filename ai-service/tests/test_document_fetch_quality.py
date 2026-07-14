@@ -54,6 +54,31 @@ async def test_fetch_document_text_flags_error_page(monkeypatch):
     assert any("error" in warning for warning in document.quality.warnings)
 
 
+@pytest.mark.anyio
+async def test_fetch_document_text_preserves_http_pdf_audit_metadata(monkeypatch):
+    pdf_metadata = {
+        "ocr_ratio": 0.5,
+        "pdf_type": "mixed",
+        "page_char_spans": [{"page": 1, "start": 0, "end": 900}],
+        "source_file_sha256": "a" * 64,
+    }
+
+    async def fake_fetch(_url: str, browser_mode: str = "auto"):
+        return {
+            "type": "text",
+            "url": "https://official.example/law",
+            "text": "Section 1 personal data law shall apply. " * 30,
+            "pdf_metadata": pdf_metadata,
+            "metadata": {"source": "http_fallback_pdf", "original_format": "pdf"},
+        }
+
+    monkeypatch.setattr("crawler.fetch_legal_content", fake_fetch)
+    document = await fetch_document_text("https://official.example/law")
+
+    assert document.content_type == "pdf"
+    assert document.pdf_metadata == pdf_metadata
+
+
 def test_assess_crawl_quality_flags_short_non_legal_text():
     quality = assess_crawl_quality(
         "Home About Contact Search Menu Privacy Policy Subscribe Share",

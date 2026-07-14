@@ -45,11 +45,14 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
     result_type = crawl_result.get("type")
     if result_type == "text":
         text = crawl_result.get("text", "")
-        quality = assess_crawl_quality(text, source_url=source_url, content_type="text")
+        pdf_metadata = crawl_result.get("pdf_metadata")
+        content_type = "pdf" if isinstance(pdf_metadata, dict) else "text"
+        quality = assess_crawl_quality(text, source_url=source_url, content_type=content_type)
         return DocumentText(
             source_url=source_url,
             text=text,
-            content_type="text",
+            content_type=content_type,
+            pdf_metadata=pdf_metadata if isinstance(pdf_metadata, dict) else None,
             crawl_metadata=_crawl_metadata(crawl_result, source_url, browser_mode),
             quality=quality,
             timing_seconds={"fetch": round(fetch_seconds, 6), "pdf_processing": 0.0},
@@ -73,7 +76,7 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
         pdf_started = time.perf_counter()
         pdf_result = await asyncio.to_thread(read_pdf, pdf_path, source_url=source_url)
         pdf_seconds = time.perf_counter() - pdf_started
-        text = "\n".join(pdf_result.pages)
+        text, page_char_spans = _join_pdf_pages(pdf_result.pages)
         quality = assess_crawl_quality(text, source_url=source_url, content_type="pdf")
         return DocumentText(
             source_url=source_url,
@@ -94,6 +97,8 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
                 "page_durations_seconds": pdf_result.page_durations_seconds,
                 "vision_usage": pdf_result.vision_usage,
                 "source_file_sha256": source_file_sha256,
+                "source_pdf_path": str(Path(pdf_path).resolve()),
+                "page_char_spans": page_char_spans,
             },
             crawl_metadata=_crawl_metadata(crawl_result, source_url, browser_mode),
             quality=quality,
@@ -105,6 +110,24 @@ async def fetch_document_text(source_url: str, browser_mode: str = "auto") -> Do
 
     message = crawl_result.get("message", "unknown error")
     raise ValueError(f"Crawl failed: {message}")
+
+
+def _join_pdf_pages(pages: list[str]) -> tuple[str, list[dict[str, int]]]:
+    """Join PDF pages while retaining offsets in the resulting source text."""
+
+    parts: list[str] = []
+    spans: list[dict[str, int]] = []
+    cursor = 0
+    for page_number, page_text in enumerate(pages, start=1):
+        if parts:
+            parts.append("\n")
+            cursor += 1
+        page_text = page_text or ""
+        start = cursor
+        parts.append(page_text)
+        cursor += len(page_text)
+        spans.append({"page": page_number, "start": start, "end": cursor})
+    return "".join(parts), spans
 
 
 LEGAL_SIGNAL_TERMS = (
