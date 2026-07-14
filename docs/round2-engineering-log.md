@@ -142,9 +142,11 @@ never padded.
 
 ## Final numbers (full 7-economy overnight run)
 
-**Definitive run (tier calibration + expanded corpus): 482 baseline rows
-end-to-end; evidence for 336 (70%); exact official-score match on 239
-(49.6%) — one in two fully-automated scores matches the official evaluator.**
+**Definitive run (tier calibration + expanded corpus + Wayback recovery):
+500 baseline rows end-to-end; evidence for 351 (70%); exact official-score
+match on 251 — 50.2%. Half of all fully-automated scores match the official
+evaluator exactly.** (RUS re-evaluated after archive recovery lifted its
+corpus 41%→58%: 58 rows, 53.4% exact.)
 Per economy (exact | MAE): LAO **60%** | 0.33, MNG **55%** | 0.37,
 THA **53%** | 0.37, IND **49%** | 0.41, RUS **48%** | 0.40, CHN **47%** | 0.44,
 IDN **36%** | 0.54.
