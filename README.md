@@ -436,8 +436,14 @@ submission 13-field contract (`tests/test_submission_schema.py`).
 Reproduce the human-reviewed golden-set metrics:
 
 ```bash
-python scripts/evaluate_golden_set.py --mode offline --output reports/golden
+make eval-setup
+make eval-golden
 ```
+
+`eval-setup` installs only the lean reviewer dependencies from the repository
+root; the offline evaluation does not require FastAPI, browser binaries, a
+database, network access, or an API key. `eval-golden` regenerates the committed
+JSON and Markdown reports in `evaluation/reports/`.
 
 The approved eight-case set currently reports 100% mapping precision, recall,
 F1, citation exact-match, scoring, and scope accuracy in offline mode. This is a

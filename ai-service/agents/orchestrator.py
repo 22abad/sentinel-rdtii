@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import os
 import logging
+import sys
 import time
 from typing import Any, Tuple, List, get_args
 
@@ -25,6 +26,7 @@ from timeframe_extractor import extract_timeframe, build_timeframe_column, forma
 from staleness_checker import check_staleness
 from source_validator import grade_source
 from extraction_repair import prepare_extraction_with_repair, repair_max_attempts_from_env
+from services.mapping_cleanup import format_and_clean_mapping
 from validation import validate_mapping
 
 from schemas import ExtractionResponse, IndicatorId, IndicatorMapping, RejectedExtraction
@@ -41,6 +43,18 @@ from agents.analyst import AnalystAgent
 from agents.critic import CriticAgent
 
 logger = logging.getLogger(__name__)
+
+
+def _runtime_hook(name: str, default):
+    """Keep legacy API monkeypatch points without importing the web app.
+
+    The extraction pipeline is also used by the lean CLI and offline evaluator.
+    Importing ``ai-service/main.py`` there pulls in FastAPI even though neither
+    caller serves HTTP. When the web entry point is already loaded, retain its
+    patchable compatibility hooks; otherwise use the dependency directly.
+    """
+    main_module = sys.modules.get("main")
+    return getattr(main_module, name, default) if main_module is not None else default
 
 
 class MASOrchestrator:
@@ -68,8 +82,6 @@ class MASOrchestrator:
         law) — classifier recall then stops being a bottleneck for
         non-curated pillars and languages.
         """
-        import main as main_module
-
         from validation import reset_quote_registry
         reset_quote_registry()
 
@@ -83,7 +95,7 @@ class MASOrchestrator:
             candidate_ids = (
                 target_indicators
                 if target_indicators is not None
-                else main_module.classify_indicator(chunk.text)
+                else _runtime_hook("classify_indicator", classify_indicator)(chunk.text)
             )
             for indicator_id in candidate_ids:
                 if indicator_id not in SUPPORTED_MAPPING_INDICATORS:
@@ -187,7 +199,7 @@ class MASOrchestrator:
 
                     # Coverage classification override
                     if scope_value == "unknown":
-                        cc = main_module.classify_coverage(
+                        cc = _runtime_hook("classify_coverage", classify_coverage)(
                             provision_text=quote,
                             source_legislation=source_legislation_val,
                             indicator_id=ind_id,
@@ -196,12 +208,14 @@ class MASOrchestrator:
                         features["_coverage_reasons"] = "; ".join(cc.get("reasons", []))
 
                     # Timeframe extraction
-                    tf = main_module.extract_timeframe(
+                    tf = _runtime_hook("extract_timeframe", extract_timeframe)(
                         text=chunk.text,
                         source_legislation=source_legislation_val,
                         source_url=source_url_val,
                     )
-                    tf_column = main_module.build_timeframe_column(
+                    tf_column = _runtime_hook(
+                        "build_timeframe_column", build_timeframe_column
+                    )(
                         status=tf["status"],
                         in_force_date=tf.get("in_force_date") or last_update_val,
                         last_amended_date=tf.get("last_amended_date"),
@@ -222,7 +236,7 @@ class MASOrchestrator:
                             pass
 
                     # Staleness / outdated-law detection
-                    stale = main_module.check_staleness(
+                    stale = _runtime_hook("check_staleness", check_staleness)(
                         last_update=last_update_val,
                         timeframe_status=tf["status"],
                         source_url=source_url_val,
@@ -268,7 +282,9 @@ class MASOrchestrator:
                         continue
 
                     # Import format_and_clean_mapping lazily to clean up fields
-                    main_module.format_and_clean_mapping(mapping_obj, data, chunk.text)
+                    _runtime_hook(
+                        "format_and_clean_mapping", format_and_clean_mapping
+                    )(mapping_obj, data, chunk.text)
 
                     # Now explicitly populate the new 10 RDTII 2.1 Fields & compatibility aliases
                     mapping_obj.Pillar_ID = f"{pillar_num}.0"
