@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 import os
 import tempfile
 from copy import deepcopy
@@ -62,7 +64,9 @@ def clear_registry_cache() -> None:
 
 
 def save_file_registry(registry: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    normalized = normalize_registry(registry)
+    # Saves are strict: silently dropping a user's invalid source is worse
+    # than rejecting the submission.
+    normalized = normalize_registry(registry, strict=True)
     registry_path = _registry_path()
     registry_path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(
@@ -86,7 +90,19 @@ def save_file_registry(registry: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return get_registry()
 
 
-def normalize_registry(registry: dict[str, Any]) -> dict[str, dict[str, Any]]:
+logger = logging.getLogger(__name__)
+
+
+def normalize_registry(
+    registry: dict[str, Any], *, strict: bool = False
+) -> dict[str, dict[str, Any]]:
+    """Validate and normalise the registry.
+
+    By default one invalid source is SKIPPED with a logged warning instead of
+    blanking the whole registry (the Source Manager went "No countries
+    configured" over a single stale row). ``strict=True`` restores
+    fail-fast for validation tooling and tests.
+    """
     if not isinstance(registry, dict):
         raise ValueError("Discovery registry must be an object keyed by country code.")
 
@@ -111,9 +127,18 @@ def normalize_registry(registry: dict[str, Any]) -> dict[str, dict[str, Any]]:
                 raise ValueError(f"{country_code}.sources[{index}] must be an object.")
             source_config = dict(raw_source)
             source_config.setdefault("country_code", country_code)
-            source = LegalSourceConfig(**source_config)
-            if not source.domains:
-                raise ValueError(f"{country_code}.sources[{index}].domains cannot be empty.")
+            try:
+                source = LegalSourceConfig(**source_config)
+                if not source.domains:
+                    raise ValueError(f"{country_code}.sources[{index}].domains cannot be empty.")
+            except (ValueError, TypeError) as exc:
+                if strict:
+                    raise
+                logger.warning(
+                    "Skipping invalid discovery source %s.sources[%d] (%s): %s",
+                    country_code, index, source_config.get("name", "?"), exc,
+                )
+                continue
 
             stored_source = source.model_dump()
             stored_source.pop("country_code", None)

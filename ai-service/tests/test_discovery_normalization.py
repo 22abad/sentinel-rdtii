@@ -194,3 +194,37 @@ def test_candidate_flags_repealed_or_draft_status():
 
     assert candidate.last_update == "2010-01-01"
     assert any("repealed" in warning.lower() for warning in candidate.warnings)
+
+
+def test_one_invalid_source_is_skipped_not_fatal(caplog):
+    """A single stale row must not blank the whole registry (Source Manager bug)."""
+    import logging
+
+    from discovery.registry import normalize_registry
+
+    registry = {
+        "THA": {"label": "Thailand", "sources": [
+            {  # invalid: base_url host missing from domains
+                "name": "Office of the Council of State",
+                "base_url": "https://www.ocs.go.th",
+                "domains": ["ocs.go.th"],
+                "adapter": "thailand_ocs", "source_grade": "primary",
+                "source_type": "statute_portal", "priority": 100,
+            },
+            {  # valid
+                "name": "Royal Gazette",
+                "base_url": "https://www.ratchakitcha.soc.go.th",
+                "domains": ["ratchakitcha.soc.go.th", "www.ratchakitcha.soc.go.th"],
+                "adapter": "search_engine", "source_grade": "primary",
+                "source_type": "statute_portal", "priority": 90,
+            },
+        ]},
+    }
+    with caplog.at_level(logging.WARNING):
+        normalized = normalize_registry(registry)
+    assert len(normalized["THA"]["sources"]) == 1  # valid one survives
+    assert "Skipping invalid discovery source" in caplog.text
+    # strict mode preserves fail-fast for validation tooling.
+    import pytest
+    with pytest.raises(ValueError, match="must be listed in domains"):
+        normalize_registry(registry, strict=True)
