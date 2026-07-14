@@ -35,10 +35,11 @@ def _row(law_name: str, *, retrieval_method: str = "official_search") -> Submiss
 
 
 @pytest.mark.anyio
-async def test_cli_reconciles_inventory_and_fixture_tags_before_writing(monkeypatch, tmp_path):
+async def test_cli_reconciles_provision_and_fixture_tags_before_writing(monkeypatch, tmp_path):
     main_cli = _load_main_module()
     pipeline_rows = [
-        _row("Cybersecurity Act 2018"),  # Present in the ESCAP inventory.
+        # The law is inventoried, but this provision is not in the evidence baseline.
+        _row("Cybersecurity Act 2018"),
         _row("Configured Fixture Act 2099", retrieval_method="fixture"),
     ]
 
@@ -75,4 +76,5 @@ async def test_cli_reconciles_inventory_and_fixture_tags_before_writing(monkeypa
     )
 
     assert await main_cli._run(args) == 0
-    assert [row.discovery_tag for row in captured["rows"]] == ["KNOWN", "KNOWN"]
+    assert [row.discovery_tag for row in captured["rows"]] == ["NEW", "KNOWN"]
+    assert [row.novelty_type for row in captured["rows"]] == ["NEW_PROVISION", "KNOWN"]
