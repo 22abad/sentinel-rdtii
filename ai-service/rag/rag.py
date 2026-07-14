@@ -72,6 +72,8 @@ def retrieve(
     if not query or not query.strip():
         return []
 
+    country_code = _normalize_country(country_code)  # display name or ISO-3 -> ISO-3
+
     from sklearn.preprocessing import normalize
     vec = normalize(_get_model().encode([query]))[0]
     qvec = _to_pgvector(vec)
@@ -93,8 +95,6 @@ def retrieve(
         ORDER  BY ce.embedding <=> %s::vector
         LIMIT  %s
     """
-
-    country_code = _normalize_country(country_code)
 
     with _db_connect() as conn:
         with conn.cursor() as cur:
