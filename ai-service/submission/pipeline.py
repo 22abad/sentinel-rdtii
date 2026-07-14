@@ -201,6 +201,22 @@ def _strict_fetch_audit(candidate: Any, document: Any) -> tuple[bool, str]:
     return True, ""
 
 
+def _merge_usage(total: dict, usage) -> dict:
+    """Accumulate a RunUsageSummary into the run meta's usage dict.
+
+    The rubric asks for our ACTUAL operational cost; every run now carries
+    llm_calls / tokens / measured USD in its meta instead of burying them
+    in telemetry.
+    """
+    if usage is None:
+        return total
+    total["llm_calls"] = total.get("llm_calls", 0) + (usage.llm_calls or 0)
+    total["input_tokens"] = total.get("input_tokens", 0) + (usage.known_input_tokens or 0)
+    total["output_tokens"] = total.get("output_tokens", 0) + (usage.known_output_tokens or 0)
+    total["cost_usd"] = round(total.get("cost_usd", 0.0) + (usage.known_cost_usd or 0.0), 6)
+    return total
+
+
 def _pillar_indicators(pillar: int, requested: list[str] | None) -> set[str] | None:
     """Restrict mappings to the requested pillar/indicators (None = all in pillar)."""
 
@@ -251,6 +267,7 @@ async def discover_and_extract(
     wanted = _pillar_indicators(pillar, indicators)
     rows: list[SubmissionRow] = []
     documents_processed = 0
+    usage_totals: dict = {}
     warnings: list[str] = list(discovery.diagnostics.get("warnings", []))
     seen_urls: set[str] = set()
 
@@ -303,6 +320,7 @@ async def discover_and_extract(
             warnings.append(f"extraction failed for {candidate.url}: {exc}")
             continue
 
+        _merge_usage(usage_totals, getattr(result, "usage", None))
         documents_processed += 1
         for mapping in result.mappings:
             if mapping.pillar != pillar:
@@ -329,6 +347,7 @@ async def discover_and_extract(
         "live_candidates": len(eligible_candidates),
         "fixture_candidates_excluded": excluded_non_live,
         "documents_processed": documents_processed,
+        "usage": usage_totals,
         "provisions_mapped": len(rows),
         "retrieval_mode": "strict_live" if strict_live else discovery.diagnostics.get("mode", "auto"),
         "evidence_counts": {
@@ -369,6 +388,7 @@ async def run_library(
     wanted = _pillar_indicators(pillar, indicators)
     rows: list[SubmissionRow] = []
     warnings: list[str] = []
+    usage_totals: dict = {}
     laws_processed = 0
 
     for entry in entries:
@@ -395,6 +415,7 @@ async def run_library(
             warnings.append(f"extraction failed for {entry.law_id}: {exc}")
             continue
 
+        _merge_usage(usage_totals, getattr(result, "usage", None))
         laws_processed += 1
         for mapping in result.mappings:
             if mapping.pillar != pillar:
@@ -427,6 +448,7 @@ async def run_library(
         "offline": True,
         "laws_available": len(entries),
         "documents_processed": laws_processed,
+        "usage": usage_totals,
         "provisions_mapped": len(rows),
         "evidence_counts": {"seed": len(rows), "live_discovered": 0, "fixture": 0},
         "warnings": warnings,
@@ -499,6 +521,11 @@ async def run_seed_first(
             seed_meta.get("documents_processed", 0)
             + disc_meta.get("documents_processed", 0)
         ),
+        "usage": {
+            k: round(seed_meta.get("usage", {}).get(k, 0)
+                     + disc_meta.get("usage", {}).get(k, 0), 6)
+            for k in ("llm_calls", "input_tokens", "output_tokens", "cost_usd")
+        },
         "provisions_mapped": len(rows),
         "evidence_counts": {
             "seed": len(seed_rows),
@@ -545,6 +572,7 @@ async def run_pdf(
     }
 
     result = await run_extraction(text, provider)
+    usage_totals = _merge_usage({}, getattr(result, "usage", None))
     wanted = _pillar_indicators(pillar, indicators)
     rows: list[SubmissionRow] = []
     for mapping in result.mappings:
@@ -569,6 +597,7 @@ async def run_pdf(
         "pillar": pillar,
         "provider": getattr(provider, "name", provider_name or "unknown"),
         "source_pdf": pdf_path,
+        "usage": usage_totals,
         "provisions_mapped": len(rows),
         "warnings": [],
     }
