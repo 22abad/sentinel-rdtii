@@ -460,3 +460,15 @@ def test_authoritative_law_name_overrides_llm_guess():
     )
     row = build_row(mapping, economy_display="Australia", candidate=candidate)
     assert row.law_name == "Information Privacy Act 2009 (QLD)"
+
+
+def test_pdf_row_source_url_falls_back_to_file_path():
+    # A provided-PDF run has no official URL; the file path is the provenance,
+    # so the row must not be dropped for an empty source_url (OCR deliverable).
+    row = build_row(
+        _sample_mapping().model_copy(update={"source_url": ""}),
+        economy_display="India", candidate=None,
+        doc_meta={"source_pdf_path": "/tmp/scan.pdf", "quality": "unknown"},
+    )
+    assert row.source_url == "/tmp/scan.pdf"
+    assert validate_submission_rows([row]) == [row]
