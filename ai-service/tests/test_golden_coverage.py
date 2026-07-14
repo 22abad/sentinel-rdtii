@@ -26,9 +26,11 @@ def test_candidate_set_meets_structural_coverage_contract():
     assert all(pillars == ["6", "7"] for pillars in audit.country_pillars.values())
 
 
-def test_pending_expansion_does_not_overstate_approved_coverage():
+def test_approved_set_meets_structural_coverage_contract():
     audit = audit_coverage(*_dataset(), approved_only=True)
 
-    assert not audit.structurally_complete
-    assert audit.case_count == 8
-    assert any("below minimum" in issue for issue in audit.issues)
+    assert audit.structurally_complete, audit.issues
+    assert audit.case_count == 29
+    assert audit.document_count == 10
+    assert audit.pending_case_ids == []
+    assert audit.pending_document_ids == []

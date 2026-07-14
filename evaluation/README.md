@@ -8,19 +8,18 @@ negative labels, exact evidence, input hashes, and legal-review metadata.
 
 ## Review boundary
 
-The original eight labels are approved. The coverage expansion adds pending
-candidate labels; they are not part of the approved Golden Set until the
-substantive lead confirms the legal conclusion, scope, score, source status,
-and framework version. The runner excludes pending labels by default.
-`--include-pending` is development-only and adds a warning to both report
+All 29 labels and all 10 source records have substantive-lead approval. Each
+approved record carries its review date, role, framework version, and review
+notes. The runner continues to exclude any future pending labels by default;
+`--include-pending` remains development-only and adds a warning to both report
 formats.
 
 The candidate set has a machine-checked structural contract: 25–40 cases, a
 positive and boundary negative for every Pillar 6/7 indicator, and Pillar 6 and
 7 coverage for AUS, MYS, and SGP. Run `make golden-coverage`. This structural
-check is deliberately separate from legal approval; run
-`python scripts/check_golden_coverage.py --approved-only` to see the remaining
-approval gap.
+check is deliberately separate from legal approval. Run
+`python scripts/check_golden_coverage.py --approved-only` to verify that the
+approved subset independently satisfies the same contract.
 
 ## Files
 
@@ -49,13 +48,11 @@ only substituted boundary is the external model response.
 ```bash
 python scripts/evaluate_golden_set.py \
   --mode offline \
-  --include-pending \
   --output /tmp/evaluation-offline.json
 ```
 
-Omit `--include-pending` for submission evidence. The command will fail until
-at least one case has been approved, which prevents accidental publication of
-unreviewed accuracy claims.
+The command fails when no approved cases exist, preventing accidental
+publication of metrics based only on unreviewed labels.
 
 ### Live discovery
 
