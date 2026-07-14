@@ -483,10 +483,17 @@ async def run_pdf(
 
     pdf_result = read_pdf(pdf_path, source_url=pdf_path)
     text = "\n".join(getattr(pdf_result, "pages", []) or [])
+    # PdfResult reports OCR usage as ocr_ratio/ocr_pages (there is no
+    # ``used_ocr`` attribute — the old getattr silently always said False,
+    # so scanned documents lost their audit metadata).
+    ocr_ratio = float(getattr(pdf_result, "ocr_ratio", 0.0) or 0.0)
+    mean_conf = getattr(pdf_result, "mean_conf", None)
     doc_meta = {
         "quality": "unknown",
         "retrieval_method": "provided_pdf",
-        "pdf_is_scanned": bool(getattr(pdf_result, "used_ocr", False)),
+        "pdf_is_scanned": ocr_ratio > 0.0,
+        "ocr_quality_cer": (round(1.0 - mean_conf, 4)
+                            if ocr_ratio > 0.0 and mean_conf is not None else None),
         "location_reference": pdf_path,
     }
 
