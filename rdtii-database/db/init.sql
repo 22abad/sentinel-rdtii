@@ -126,7 +126,7 @@ CREATE TABLE chunk_embeddings (
     chunk_id UUID NOT NULL REFERENCES document_chunks(id) ON DELETE CASCADE,
     document_id UUID REFERENCES documents(id) ON DELETE CASCADE,
     country_code VARCHAR(3) REFERENCES countries(code),
-    embedding vector(1536),
+    embedding vector(384),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
