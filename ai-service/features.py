@@ -193,15 +193,21 @@ def _generic_spec(indicator_id: str) -> dict[str, dict[str, str]]:
         "measure_present": {
             "type": "bool",
             "description": (
-                f"true if the provision contains a measure/rule concerning: {category}. "
-                "false only if the text is unrelated to this policy issue."
+                f"true ONLY if the provision itself ESTABLISHES a binding measure/"
+                f"requirement concerning: {category}. false if the text merely "
+                "relates to the topic, grants a general power, or describes "
+                "policy without imposing the measure."
             ),
         },
         "matched_criterion": {
             "type": "int",
             "description": (
-                "The number of the official RDTII criterion that best describes the "
-                f"provision, from: {numbered}. Answer 0 only if none applies."
+                "The official RDTII criterion whose conditions the quoted text "
+                f"EXPLICITLY satisfies, from: {numbered}. Calibration: choose the "
+                "LOWEST-scoring criterion consistent with the quote; topical "
+                "relevance alone is not a measure; if the text only provides a "
+                "legal basis or power without the actual measure, or you are "
+                "unsure, answer 0."
             ),
         },
     }
