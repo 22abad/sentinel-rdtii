@@ -201,6 +201,48 @@ def _strict_fetch_audit(candidate: Any, document: Any) -> tuple[bool, str]:
     return True, ""
 
 
+def _persist_fetched_document(economy_code: str, candidate, document) -> None:
+    """Auto-cache every successfully fetched official document (the flywheel).
+
+    Live runs used to discard fetched texts after extraction; now each one
+    lands in ``data/fetch_cache/<ECON>/`` with a manifest line (url, sha256,
+    retrieved_at, title), so every run grows a reproducible, auditable
+    store of official texts ready for offline reuse and RAG ingestion.
+    Failures are silent by design — caching must never break a run.
+    """
+
+    import hashlib
+    from datetime import date
+    from pathlib import Path
+
+    try:
+        text = getattr(document, "text", "") or ""
+        if len(text) < 500:
+            return
+        repo_root = Path(__file__).resolve().parents[3]
+        cache_dir = repo_root / "data" / "fetch_cache" / economy_code.upper()
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        url = getattr(candidate, "url", "") or ""
+        title = (getattr(candidate, "title", "") or url or "document")[:80]
+        slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:80] or "document"
+        digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        text_path = cache_dir / f"{slug}.txt"
+        if text_path.exists() and text_path.stat().st_size > 0:
+            return  # already cached
+        text_path.write_text(text, encoding="utf-8")
+        import json as _json
+        manifest = cache_dir.parent / "manifest.jsonl"
+        with manifest.open("a", encoding="utf-8") as fh:
+            fh.write(_json.dumps({
+                "economy": economy_code.upper(), "title": title, "url": url,
+                "text_path": str(text_path.relative_to(repo_root)),
+                "sha256": digest, "char_count": len(text),
+                "retrieved_at": date.today().isoformat(),
+            }, ensure_ascii=False) + "\n")
+    except Exception:  # noqa: BLE001 — cache is best-effort
+        pass
+
+
 def _merge_usage(total: dict, usage) -> dict:
     """Accumulate a RunUsageSummary into the run meta's usage dict.
 
@@ -321,6 +363,7 @@ async def discover_and_extract(
             continue
 
         _merge_usage(usage_totals, getattr(result, "usage", None))
+        _persist_fetched_document(code, candidate, document)
         documents_processed += 1
         for mapping in result.mappings:
             if mapping.pillar != pillar:
