@@ -164,10 +164,30 @@ def test_build_row_maps_all_fields():
     assert row.article == "Section 26"
     assert row.source_url.endswith("PDPA2012")
     assert row.confidence == pytest.approx(0.91)
+    assert row.amendment_version_date == "Amended 2020"
     assert "requires human review" in row.notes
     assert "bilingual source" in row.notes
     # Context windows populated for the JSON audit view.
     assert row.raw_context_before or row.raw_context_after
+
+
+def test_detailed_novelty_fields_are_json_only():
+    row = SubmissionRow(
+        economy="Singapore",
+        law_name="Test Act 2026",
+        indicator_id="P6-I1",
+        discovery_tag="NEW",
+        novelty_type="NEW_PROVISION",
+        canonical_law_id="SGP:test-act",
+        amendment_version_date="2026-07-14",
+        normalized_article="section 2",
+        normalized_quote_hash="abc123",
+        verbatim_snippet="Exact provision.",
+    )
+
+    assert "novelty_type" not in row.csv_record()
+    assert row.json_record()["novelty_type"] == "NEW_PROVISION"
+    assert row.json_record()["canonical_law_id"] == "SGP:test-act"
 
 
 def test_build_row_never_marks_fixture_new_and_preserves_fixture_fetch_audit():

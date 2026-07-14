@@ -8,6 +8,7 @@ official README template.
 from __future__ import annotations
 
 import re
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -31,6 +32,11 @@ CSV_COLUMNS: tuple[str, ...] = (
 
 # Extended metadata written only to the JSON output (not the CSV).
 JSON_EXTENDED_FIELDS: tuple[str, ...] = (
+    "novelty_type",
+    "canonical_law_id",
+    "amendment_version_date",
+    "normalized_article",
+    "normalized_quote_hash",
     "ocr_quality_cer",
     "processing_time_seconds",
     "raw_context_before",
@@ -191,6 +197,11 @@ class SubmissionRow(BaseModel):
     notes: str = ""
 
     # Extended metadata (JSON only)
+    novelty_type: Literal["KNOWN", "NEW_LAW", "NEW_AMENDMENT", "NEW_PROVISION"] = "NEW_LAW"
+    canonical_law_id: str = ""
+    amendment_version_date: str = ""
+    normalized_article: str = ""
+    normalized_quote_hash: str = ""
     ocr_quality_cer: float | None = None
     processing_time_seconds: float | None = None
     raw_context_before: str = ""
