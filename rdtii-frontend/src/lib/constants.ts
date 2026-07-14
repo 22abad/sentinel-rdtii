@@ -30,6 +30,9 @@ export const DISCOVERY_SEARCH_TIMEOUT_MS = envNumber(
 export const WORKBENCH_CANVAS_API_URL =
   import.meta.env.VITE_WORKBENCH_CANVAS_API_URL ?? "/api/workbench-canvas";
 
+export const CANVAS_FILES_API_URL =
+  import.meta.env.VITE_CANVAS_FILES_API_URL ?? "/api/canvas-files";
+
 export const AUTH_API_URL =
   import.meta.env.VITE_AUTH_API_URL ?? "/auth";
 

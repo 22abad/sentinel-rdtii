@@ -44,6 +44,8 @@ export function CanvasToolbar({
     justifyContent: "center",
     width: 36,
     height: 36,
+    minHeight: 0,   // global `button` rule sets min-height 40 + padding 0 16px —
+    padding: 0,     // reset both, or the icon gets squeezed into a 4px content box
     borderRadius: 10,
     border: "none",
     background: "transparent",
@@ -90,7 +92,7 @@ export function CanvasToolbar({
               aria-pressed={mode === "select"}
               onClick={() => onSetMode("select")}
             >
-              <MousePointer2 size={18} />
+              <MousePointer2 size={15} />
             </button>
             <button
               style={modeBtn(mode === "hand")}
@@ -98,7 +100,7 @@ export function CanvasToolbar({
               aria-pressed={mode === "hand"}
               onClick={() => onSetMode("hand")}
             >
-              <Lock size={18} />
+              <Lock size={15} />
             </button>
             {divider}
           </>

@@ -6,6 +6,8 @@ import { AIChatInput } from "../../components/Workbench/ChatInput";
 import { CountrySourcesPanel } from "../../components/MapSearch/CountrySourcesPanel";
 import ColorBends from "../../components/ColorBends/ColorBends";
 import { AnimatePresence, motion } from "motion/react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Plus, Menu, X, Home, AppWindowMac, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
@@ -267,6 +269,20 @@ export function MapSearchPage() {
       #world-map path { transition: fill-opacity 0.12s; outline: none; }
       #world-map path:hover { fill-opacity: 1 !important; stroke-opacity: 1 !important; }
       #world-map *:focus { outline: none; }
+
+      /* Compact markdown inside assistant chat bubbles */
+      .chat-md p { margin: 0 0 0.5em; }
+      .chat-md p:last-child { margin-bottom: 0; }
+      .chat-md h1, .chat-md h2, .chat-md h3, .chat-md h4 { font-size: 0.9rem; font-weight: 700; margin: 0.6em 0 0.3em; }
+      .chat-md ul, .chat-md ol { margin: 0.25em 0 0.5em; padding-left: 1.25em; }
+      .chat-md li { margin: 0.15em 0; }
+      .chat-md code { background: rgba(0,0,0,0.06); padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.85em; }
+      .chat-md pre { background: rgba(0,0,0,0.06); padding: 0.6em 0.8em; border-radius: 8px; overflow-x: auto; margin: 0.4em 0; }
+      .chat-md pre code { background: none; padding: 0; }
+      .chat-md blockquote { border-left: 3px solid #10B981; margin: 0.4em 0; padding-left: 0.7em; color: #4b5563; }
+      .chat-md table { border-collapse: collapse; margin: 0.4em 0; font-size: 0.85em; }
+      .chat-md th, .chat-md td { border: 1px solid rgba(0,0,0,0.12); padding: 0.25em 0.5em; }
+      .chat-md a { color: #0f766e; text-decoration: underline; }
     `;
     document.head.appendChild(style);
     return () => { const el = document.getElementById("map-hover-style"); if (el) el.remove(); };
@@ -520,8 +536,13 @@ export function MapSearchPage() {
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.25 }}
                 className="flex flex-col gap-2 overflow-y-auto pr-1"
+                // ChatInput dismisses on any mousedown outside its wrapper; the
+                // thread lives outside it, so selecting reply text would close
+                // the chat. Stop the event before it reaches that listener.
+                onMouseDown={(e) => e.stopPropagation()}
                 style={{
                   maxHeight: "min(75vh, 520px)",
+                  userSelect: "text",
                   // Fade older messages out at the top edge instead of hard-clipping.
                   maskImage: "linear-gradient(to bottom, transparent 0, #000 50px)",
                   WebkitMaskImage: "linear-gradient(to bottom, transparent 0, #000 40px)",
@@ -535,7 +556,7 @@ export function MapSearchPage() {
                     initial={{ opacity: 0, y: 12, scale: 0.95, x: m.role === "user" ? 16 : -16 }}
                     animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
                     transition={{ type: "spring", stiffness: 260, damping: 24 }}
-                    className={`max-w-[50%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${m.role === "user" ? "self-end" : "self-start"
+                    className={`max-w-[50%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${m.role === "user" ? "self-end whitespace-pre-wrap" : "self-start chat-md"
                       }`}
                     style={
                       m.role === "user"
@@ -543,7 +564,11 @@ export function MapSearchPage() {
                         : { background: "#fff", color: "#1a2e26", borderBottomLeftRadius: 6, border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }
                     }
                   >
-                    {m.text}
+                    {m.role === "assistant" ? (
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+                    ) : (
+                      m.text
+                    )}
                   </motion.div>
                 ))}
                 {pending && (
