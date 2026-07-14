@@ -181,6 +181,11 @@ async def _run(args: argparse.Namespace) -> int:
         all_rows.extend(rows)
         print(f"  Pillar {pillar}: {meta['provisions_mapped']} provisions mapped "
               f"({meta.get('documents_processed', 'n/a')} documents)")
+        usage = meta.get("usage") or {}
+        if usage.get("llm_calls"):
+            print(f"    Measured cost: {usage.get('llm_calls', 0)} LLM calls, "
+                  f"{usage.get('input_tokens', 0):,} in / {usage.get('output_tokens', 0):,} out tokens, "
+                  f"${usage.get('cost_usd', 0.0):.4f}")
         print(f"    Retrieval mode: {meta.get('retrieval_mode', 'unknown')}")
         for warning in meta.get("warnings", []):
             print(f"    ⚠ {warning}")
