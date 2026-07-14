@@ -5,7 +5,15 @@ import ssl
 
 # Live Discovery evidence must retain normal TLS certificate and hostname
 # verification. A certificate failure is a retrieval failure, not a live hit.
-_SSL_CTX = ssl.create_default_context()
+# python.org macOS builds ship without the system CA store wired up, which
+# made every Wayback fallback die with CERTIFICATE_VERIFY_FAILED on a valid
+# chain; certifi provides the standard Mozilla bundle without weakening
+# verification in any way.
+try:
+    import certifi
+    _SSL_CTX = ssl.create_default_context(cafile=certifi.where())
+except ImportError:  # pragma: no cover — fall back to platform defaults
+    _SSL_CTX = ssl.create_default_context()
 
 # Download directory for crawler-managed temporary files.
 DOWNLOADS_DIR = "./downloads"
