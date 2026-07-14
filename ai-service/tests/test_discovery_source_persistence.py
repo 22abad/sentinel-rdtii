@@ -115,7 +115,7 @@ def test_save_registry_writes_discovery_tables_and_audit(monkeypatch):
     assert registry["TST"]["sources"][0]["name"] == "Test Statutes"
 
 
-def test_get_registry_wraps_invalid_stored_data(monkeypatch):
+def test_get_registry_skips_invalid_stored_source(monkeypatch):
     persistence.clear_registry_cache()
     cursor = _FakeCursor(rows=[
         [("TST", "Testland", '["en"]')],
@@ -143,11 +143,11 @@ def test_get_registry_wraps_invalid_stored_data(monkeypatch):
     monkeypatch.setattr(persistence, "_db_connect", lambda: connection)
 
     try:
-        persistence.get_registry()
-    except persistence.DiscoverySourcePersistenceError as exc:
-        assert "unsupported source pillar" in str(exc)
-    else:
-        raise AssertionError("Expected invalid stored data to be wrapped")
+        registry = persistence.get_registry()
+        # Source-level invalid rows are skipped with a warning (a single stale
+        # row must not blank the Source Manager); the country survives with
+        # zero sources instead of nuking the whole registry.
+        assert registry["TST"]["sources"] == []
     finally:
         persistence.clear_registry_cache()
 
