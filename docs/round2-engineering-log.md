@@ -159,6 +159,13 @@ Two findings worth the meeting's attention:
   numbered option fits), not in missing evidence — the right frontier for
   targeted spec tuning, and visible per pillar in the meeting report.
 
+Composition note for honest reading: exact matches include rows where the
+pipeline found no qualifying evidence and the official score is also 0 —
+correct abstention, not extraction. LAO is the extreme case: of its 33 exact
+matches, 15 are evidence-backed and 18 are correct zeros; its headline 53%
+therefore overstates extraction strength relative to THA/MNG/IND, whose
+evidence yields are 90%+. Both components are separable in every eval JSON.
+
 Operational note: a handful of dense Indonesian documents (one maps to 14
 indicators) exceeded the 600 s per-document budget and are recorded as
 timeouts rather than silently dropped; raising the budget for dense docs is
