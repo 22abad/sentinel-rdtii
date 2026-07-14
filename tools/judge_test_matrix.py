@@ -51,6 +51,7 @@ class Case:
     args: list[str]
     expect: str  # "output" | "clean_error" | "empty_ok"
     network: bool = False
+    is_pdf: bool = False  # provenance is a file path, not an http URL
 
 
 @dataclass
@@ -72,7 +73,7 @@ CASES = [
     # Tier 2 — full mandatory scope + the required OCR path.
     Case(2, "MYS P6+7 offline", ["--economy", "Malaysia", "--pillar", "6,7", "--offline"], "output"),
     Case(2, "AUS P6+7 offline", ["--economy", "Australia", "--pillar", "6,7", "--offline"], "output"),
-    Case(2, "Scanned PDF -> citations (OCR)", ["--economy", "India", "--pillar", "2", "--pdf", str(SCANNED_PDF)], "output"),
+    Case(2, "Scanned PDF -> citations (OCR)", ["--economy", "India", "--pillar", "2", "--pdf", str(SCANNED_PDF)], "output", is_pdf=True),
     # Tier 3 — robustness / adversarial inputs a judge will try.
     Case(3, "Misspelled economy -> clean error", ["--economy", "Singapoore", "--pillar", "6", "--offline"], "clean_error"),
     Case(3, "Invalid pillar -> clean error", ["--economy", "Singapore", "--pillar", "13", "--offline"], "clean_error"),
@@ -96,6 +97,7 @@ def _grade_output(out_dir: Path) -> tuple[int, dict]:
     q = {
         "verbatim_pct": round(100 * sum(1 for r in rows if len(r.get("verbatim_snippet", "")) > 20) / n),
         "url_pct": round(100 * sum(1 for r in rows if r.get("source_url", "").startswith("http")) / n),
+        "source_present_pct": round(100 * sum(1 for r in rows if r.get("source_url", "").strip()) / n),
         "article_pct": round(100 * sum(1 for r in rows if r.get("article", "").strip()) / n),
         "suspect_names": sum(1 for r in rows if _SUSPECT_NAME.search(r.get("law_name", ""))),
         "duplicate_rows": n - len({(r["indicator_id"], r["law_name"], " ".join(r["verbatim_snippet"].split()).casefold()) for r in rows}),
@@ -118,15 +120,19 @@ def run_case(case: Case, offline_env: dict) -> Result:
                  quality=quality, seconds=round(secs, 1))
 
     if case.expect == "output":
+        # A provided PDF has no official http URL; its provenance is the file
+        # path (source_present_pct), so grade that instead of url_pct.
+        prov_pct = quality.get("source_present_pct", 0) if case.is_pdf else quality.get("url_pct", 0)
+        prov_label = "source" if case.is_pdf else "url"
         res.passed = proc.returncode == 0 and wrote and quality.get("verbatim_pct", 0) >= 80 \
-            and quality.get("url_pct", 0) >= 80 and quality.get("suspect_names", 1) == 0 \
+            and prov_pct >= 80 and quality.get("suspect_names", 1) == 0 \
             and quality.get("duplicate_rows", 1) == 0
         if not res.passed:
             bad = []
             if proc.returncode != 0: bad.append(f"exit={proc.returncode}")
             if not wrote: bad.append("no output files")
             if quality.get("verbatim_pct", 0) < 80: bad.append(f"verbatim {quality.get('verbatim_pct')}%")
-            if quality.get("url_pct", 0) < 80: bad.append(f"url {quality.get('url_pct')}%")
+            if prov_pct < 80: bad.append(f"{prov_label} {prov_pct}%")
             if quality.get("suspect_names"): bad.append(f"{quality['suspect_names']} suspect names")
             if quality.get("duplicate_rows"): bad.append(f"{quality['duplicate_rows']} dup rows")
             res.note = "; ".join(bad)
