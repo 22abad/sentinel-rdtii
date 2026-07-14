@@ -67,3 +67,4 @@ data/known_corpus/*/
 downloads/
 data/round2_corpus/*/
 data/fetch_cache/*/
+outputs/judge_matrix/
