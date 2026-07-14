@@ -14,7 +14,7 @@ link every claim to code._
 | 3 | Local full-text corpus of baseline laws | ✅ #74 (+#81 browser path) |
 | 4 | Methodology-driven extraction + deterministic scoring for all 61 indicators | ✅ #75 |
 | 5 | Self-evaluation harness vs official scores | ✅ #76 (+#80 windowing) |
-| 6 | Full 7-economy evaluation run | 🔄 running |
+| 6 | Full 7-economy evaluation run | ✅ complete |
 | 7 | Meeting report generator | ✅ #82 |
 
 **Design thesis carried over from Round 1:** the LLM never chooses a number.
@@ -139,6 +139,30 @@ never padded.
   default for stability.
 
 ---
+
+## Final numbers (full 7-economy overnight run)
+
+**464 baseline rows evaluated end-to-end; evidence extracted for 366 (78%);
+exact official-score match on 217 (46%).** Per economy (exact match | MAE):
+RUS **57%** | 0.31, LAO **53%** | 0.38, THA **48%** | 0.44, CHN **47%** | 0.44,
+MNG **44%** | 0.49, IND **43%** | 0.44, IDN **41%** | 0.47.
+
+Two findings worth the meeting's attention:
+
+- **Language is not the bottleneck we feared.** Exact-match rates across
+  English, Chinese, Thai, Indonesian, Lao, Mongolian (Cyrillic) and Russian
+  all land in the 41–57% band; Mongolia — the economy with the *least*
+  digitised sources — reached 96% evidence yield once the browser path
+  unlocked legalinfo.mn (100% corpus coverage), and Russian scored highest
+  of all. The criterion-tier design travels across languages.
+- **Residual error is now concentrated in criterion-tier judgement** (which
+  numbered option fits), not in missing evidence — the right frontier for
+  targeted spec tuning, and visible per pillar in the meeting report.
+
+Operational note: a handful of dense Indonesian documents (one maps to 14
+indicators) exceeded the 600 s per-document budget and are recorded as
+timeouts rather than silently dropped; raising the budget for dense docs is
+a cheap follow-up.
 
 ## What the meeting can claim
 
