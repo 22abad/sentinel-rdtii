@@ -142,10 +142,19 @@ never padded.
 
 ## Final numbers (full 7-economy overnight run)
 
-**464 baseline rows evaluated end-to-end; evidence extracted for 366 (78%);
-exact official-score match on 217 (46%).** Per economy (exact match | MAE):
-RUS **57%** | 0.31, LAO **53%** | 0.38, THA **48%** | 0.44, CHN **47%** | 0.44,
-MNG **44%** | 0.49, IND **43%** | 0.44, IDN **41%** | 0.47.
+**Definitive run (tier calibration + expanded corpus): 482 baseline rows
+end-to-end; evidence for 336 (70%); exact official-score match on 239
+(49.6%) — one in two fully-automated scores matches the official evaluator.**
+Per economy (exact | MAE): LAO **60%** | 0.33, MNG **55%** | 0.37,
+THA **53%** | 0.37, IND **49%** | 0.41, RUS **48%** | 0.40, CHN **47%** | 0.44,
+IDN **36%** | 0.54.
+
+Calibration effects were real but uneven: MNG +10.7pt, LAO +6.5, THA +5.5,
+IND +6.1; CHN flat; RUS −10 (40-row sample noise); IDN −4.5 with a sharp
+evidence drop — the conservative instruction over-suppresses on
+Indonesian-language texts. Next calibration must be language-aware; the
+per-run variance on ≤50-row economies is ±4pt and quoted claims stay
+aggregate-level for that reason.
 
 Two findings worth the meeting's attention:
 
