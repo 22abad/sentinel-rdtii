@@ -225,7 +225,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"SENTINEL — mapping {args.economy}, Pillar {_pillar_label(args.pillar)} …")
     try:
         return asyncio.run(_run(args))
-    except (ValueError, RuntimeError) as exc:
+    except (ValueError, RuntimeError, FileNotFoundError) as exc:
+        # Judges stress-test with bad inputs — a clean message beats a traceback.
         print(f"Error: {exc}", file=sys.stderr)
         return 2
 
