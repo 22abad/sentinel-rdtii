@@ -165,7 +165,12 @@ def build_row(
     """Convert one internal mapping into the judges' 13-field row (pure)."""
 
     doc_meta = doc_meta or {}
-    law_name = mapping.source_legislation or getattr(candidate, "title", "") or ""
+    # An authoritative name (from the curated library manifest) always wins over
+    # the LLM's guessed source_legislation; otherwise fall back to the model's
+    # name, then the candidate title.
+    law_name = (
+        getattr(candidate, "authoritative_law_name", "") if candidate is not None else ""
+    ) or mapping.source_legislation or getattr(candidate, "title", "") or ""
     candidate_url = getattr(candidate, "url", "") if candidate is not None else ""
     candidate_last = getattr(candidate, "last_update", "") if candidate is not None else ""
     discovery_method = (
@@ -560,6 +565,11 @@ async def run_library(
         candidate = SimpleNamespace(
             url=entry.official_url,
             title=entry.law_name,
+            # The library manifest carries the authoritative statute name;
+            # build_row must use it instead of the LLM's guessed
+            # source_legislation (offline runs otherwise emit one act under
+            # a dozen hallucinated names, e.g. "South Korea Queensland...").
+            authoritative_law_name=entry.law_name,
             last_update="",
             discovery_method="cached_discovery" if is_discovered else "known_mapping",
             confidence=1.0,

@@ -444,3 +444,19 @@ def test_dedupe_drops_repeated_provisions():
     ]
     out = dedupe_submission_rows(rows)
     assert len(out) == 4  # only the whitespace/case duplicate is removed
+
+
+def test_authoritative_law_name_overrides_llm_guess():
+    from types import SimpleNamespace
+
+    mapping = _sample_mapping().model_copy(update={
+        "source_legislation": "South Korea Queensland Privacy Act (hallucinated)",
+    })
+    candidate = SimpleNamespace(
+        title="Information Privacy Act 2009 (QLD)",
+        authoritative_law_name="Information Privacy Act 2009 (QLD)",
+        discovery_method="known_mapping", url="https://x", last_update="",
+        confidence=1.0, warnings=[],
+    )
+    row = build_row(mapping, economy_display="Australia", candidate=candidate)
+    assert row.law_name == "Information Privacy Act 2009 (QLD)"
