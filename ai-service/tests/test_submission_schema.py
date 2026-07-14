@@ -472,3 +472,19 @@ def test_pdf_row_source_url_falls_back_to_file_path():
     )
     assert row.source_url == "/tmp/scan.pdf"
     assert validate_submission_rows([row]) == [row]
+
+
+def test_cap_rows_per_law_indicator_trims_over_extraction():
+    from submission.schema import cap_rows_per_law_indicator
+
+    def mk(quote, ind="P7-I1", law="QLD IP Act"):
+        return SubmissionRow(economy="Australia", law_name=law, indicator_id=ind,
+                             verbatim_snippet=quote, source_url="https://x")
+    rows = [mk(f"provision number {i} " + "x" * i) for i in range(15)]  # 15 for one (law,ind)
+    rows += [mk("other indicator provision", ind="P7-I3")]
+    out = cap_rows_per_law_indicator(rows, cap=10)
+    p7i1 = [r for r in out if r.indicator_id == "P7-I1"]
+    assert len(p7i1) == 10                       # capped
+    assert len([r for r in out if r.indicator_id == "P7-I3"]) == 1  # untouched
+    # The longest (most substantive) quotes are the ones kept.
+    assert all("x" * 5 in r.verbatim_snippet for r in p7i1)

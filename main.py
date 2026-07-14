@@ -128,6 +128,7 @@ async def _run(args: argparse.Namespace) -> int:
 
     from submission import (
         SubmissionRow,
+        cap_rows_per_law_indicator,
         dedupe_submission_rows,
         reconcile_submission_tags,
         write_outputs,
@@ -217,6 +218,7 @@ async def _run(args: argparse.Namespace) -> int:
     # been combined and immediately before CSV/JSON serialization.
     all_rows = reconcile_submission_tags(all_rows)
     all_rows = dedupe_submission_rows(all_rows)
+    all_rows = cap_rows_per_law_indicator(all_rows)
     all_rows = validate_submission_rows(
         all_rows,
         allow_empty=getattr(args, "allow_empty", False),

@@ -271,6 +271,35 @@ class SubmissionRow(BaseModel):
         return clipped.rstrip() + "…"
 
 
+def cap_rows_per_law_indicator(
+    rows: list["SubmissionRow"], *, cap: int = 10
+) -> list["SubmissionRow"]:
+    """Keep at most ``cap`` provisions per (law, indicator).
+
+    A single statute run through extraction can surface dozens of clauses for
+    the same indicator (the 173k-char QLD IP Act produced 42 rows for P7-I1);
+    an indicator is established by its few strongest provisions, and the long
+    tail reads as padding. Keeps the rows with the longest verbatim quote
+    (proxy for a substantive provision), preserving original order among kept
+    rows. Purely a submission-tidiness pass — it never fabricates or reorders
+    output, only trims over-extraction.
+    """
+    if cap <= 0:
+        return rows
+    groups: dict[tuple[str, str], list[int]] = {}
+    for i, row in enumerate(rows):
+        law = " ".join((row.law_name or "").split()).casefold()
+        groups.setdefault((law, row.indicator_id), []).append(i)
+    keep: set[int] = set()
+    for idxs in groups.values():
+        if len(idxs) <= cap:
+            keep.update(idxs)
+            continue
+        ranked = sorted(idxs, key=lambda i: len(rows[i].verbatim_snippet or ""), reverse=True)
+        keep.update(ranked[:cap])
+    return [row for i, row in enumerate(rows) if i in keep]
+
+
 def dedupe_submission_rows(rows: list["SubmissionRow"]) -> list["SubmissionRow"]:
     """Drop duplicate provisions (same indicator + same law + same verbatim quote).
 
