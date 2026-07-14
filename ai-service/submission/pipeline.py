@@ -187,6 +187,16 @@ def build_row(
         if article:
             inferred_note = "article inferred from document structure"
 
+    # Attribution transparency: the LLM sometimes names the statute a
+    # provision TALKS ABOUT rather than the document it is quoted FROM
+    # (e.g. RBI guidelines citing the PSSA). A reviewer who opens the named
+    # law then cannot find the quote and reads it as hallucination. When the
+    # two names diverge materially, say where the quote physically lives.
+    doc_title = (getattr(candidate, "title", "") or "").strip()
+    attribution_note = ""
+    if doc_title and law_name and doc_title.lower() not in law_name.lower()             and law_name.lower() not in doc_title.lower():
+        attribution_note = f"quoted from document: {doc_title[:80]}"
+
     return SubmissionRow(
         economy=economy_display,
         law_name=law_name,
@@ -204,7 +214,8 @@ def build_row(
         mapping_rationale=SubmissionRow.clip_rationale(mapping.impact),
         source_url=mapping.source_url or candidate_url,
         confidence=confidence,
-        notes="; ".join(x for x in (_notes(mapping, candidate, doc_meta), inferred_note) if x),
+        notes="; ".join(x for x in (
+            _notes(mapping, candidate, doc_meta), inferred_note, attribution_note) if x),
         # Extended (JSON-only) metadata
         amendment_version_date=(mapping.last_update or candidate_last).strip(),
         ocr_quality_cer=doc_meta.get("ocr_quality_cer"),
