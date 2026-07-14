@@ -232,7 +232,15 @@ def build_row(
         location_reference=_location_reference(mapping, doc_meta, article),
         verbatim_snippet=mapping.verbatim_quote,
         mapping_rationale=SubmissionRow.clip_rationale(mapping.impact),
-        source_url=mapping.source_url or candidate_url,
+        # For a judge-provided PDF there is no official URL; the file itself is
+        # the provenance, so fall back to its path rather than shipping an empty
+        # source that the validator would drop (the OCR deliverable).
+        source_url=(
+            mapping.source_url
+            or candidate_url
+            or doc_meta.get("source_pdf_path")
+            or doc_meta.get("location_reference", "")
+        ),
         confidence=confidence,
         notes="; ".join(x for x in (
             _notes(mapping, candidate, doc_meta), inferred_note, attribution_note, title_note) if x),
