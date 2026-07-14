@@ -114,7 +114,10 @@ async def _run(args: argparse.Namespace) -> int:
     # registry module's database default. Set the CLI choice explicitly before
     # any deferred Discovery imports occur.
     os.environ["DISCOVERY_REGISTRY_BACKEND"] = args.registry_backend
-    if args.strict_live and (args.offline or args.pdf):
+    # Internal callers and tests may construct a partial Namespace instead of
+    # going through parse_args(), so optional flags need a safe default.
+    strict_live = getattr(args, "strict_live", False)
+    if strict_live and (args.offline or args.pdf):
         raise ValueError("--strict-live cannot be combined with --offline or --pdf")
 
     from submission import SubmissionRow, reconcile_discovery_tags, write_outputs
@@ -133,7 +136,7 @@ async def _run(args: argparse.Namespace) -> int:
         "pillars": args.pillar,
         "retrieval_mode": (
             "strict_live"
-            if args.strict_live
+            if strict_live
             else "live_discovery"
             if args.no_seed
             else "provided_pdf"
@@ -157,12 +160,12 @@ async def _run(args: argparse.Namespace) -> int:
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
             )
-        elif args.strict_live or args.no_seed:
+        elif strict_live or args.no_seed:
             rows, meta = await discover_and_extract(
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
                 limit=args.limit, max_documents=args.max_documents,
-                strict_live=args.strict_live,
+                strict_live=strict_live,
             )
         else:
             rows, meta = await run_seed_first(
@@ -182,7 +185,7 @@ async def _run(args: argparse.Namespace) -> int:
         for warning in meta.get("warnings", []):
             print(f"    ⚠ {warning}")
 
-    if args.strict_live and not all_rows:
+    if strict_live and not all_rows:
         raise ValueError(
             "Strict live discovery failed: live discovery produced no formally "
             "submittable evidence. No output files were written."
