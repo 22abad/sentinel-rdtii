@@ -403,3 +403,16 @@ def test_attribution_note_when_quote_source_differs_from_named_law():
     # No note when names agree.
     row2 = build_row(_sample_mapping(), economy_display="Singapore", candidate=_FakeCandidate())
     assert "quoted from document" not in row2.notes
+
+
+def test_title_quote_guard_flags_name_only_quotes():
+    # A quote that is just the document's own name evidences nothing.
+    mapping = _sample_mapping().model_copy(update={
+        "verbatim_quote": "Personal Data Protection Act 2012",
+        "source_legislation": "Personal Data Protection Act 2012",
+    })
+    row = build_row(mapping, economy_display="Singapore", candidate=_FakeCandidate())
+    assert "quote appears to be a title" in row.notes
+    # An operative provision is not flagged.
+    row2 = build_row(_sample_mapping(), economy_display="Singapore", candidate=_FakeCandidate())
+    assert "quote appears to be a title" not in row2.notes
