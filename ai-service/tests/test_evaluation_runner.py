@@ -45,12 +45,12 @@ async def test_offline_runner_uses_real_pipeline_and_writes_both_reports(tmp_pat
     assert output_path.with_suffix(".md").exists()
     assert report["metadata"]["mode"] == "offline"
     assert report["metadata"]["include_pending"] is True
-    assert report["dataset"]["cases_evaluated"] == 8
-    assert report["dataset"]["documents_evaluated"] == 5
+    assert report["dataset"]["cases_evaluated"] == 29
+    assert report["dataset"]["documents_evaluated"] == 10
     # The classifier covers both conditional-flow language and the statutory
     # offshore-processing/storage prohibitions in AUS My Health Records s.77.
     evaluation = report["mapping_evaluation"]
-    assert evaluation["aggregate"]["predicted_mappings"] == 6
+    assert evaluation["aggregate"]["predicted_mappings"] == 16
     assert evaluation["aggregate"]["mapping_precision"] == pytest.approx(1.0)
     assert evaluation["aggregate"]["mapping_recall"] == pytest.approx(1.0)
     assert evaluation["aggregate"]["mapping_f1"] == pytest.approx(1.0)
@@ -208,7 +208,7 @@ async def test_offline_document_failure_is_reported_without_aborting_run(
     assert output_path.exists()
     assert report["source_failures"][0]["stage"] == "extraction"
     assert report["source_failures"][0]["url"].startswith("https://")
-    assert report["mapping_evaluation"]["aggregate"]["false_negatives"] == 1
+    assert report["mapping_evaluation"]["aggregate"]["false_negatives"] == 3
 
 
 @pytest.mark.anyio

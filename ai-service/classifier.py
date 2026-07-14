@@ -61,7 +61,7 @@ _BASE_PHRASES = {
         "自由贸易协定", "数字经济伙伴关系"
     ],
     "7.1": [
-        "personal data protection", "privacy law", "data protection act",
+        "personal data protection", "privacy law", "privacy act", "data protection act",
         "luật bảo vệ dữ liệu", "undang-undang perlindungan data",
         "个人信息保护法", "隐私", "数据主体"
     ],
@@ -76,6 +76,7 @@ _BASE_PHRASES = {
     ],
     "7.4": [
         "data protection officer", "dpo", "dpia", "impact assessment",
+        "designate one or more individuals",
         "数据保护官", "影响评估",
         "compliance officer", "privacy officer", "registration with",
         "data controller", "data processor", "register of processing",

@@ -1,3 +1,4 @@
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage golden-coverage db db-reset image
 .PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test eval-setup eval-golden smoke-discovery discovery-coverage db db-reset image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
@@ -55,6 +56,9 @@ smoke-discovery:
 
 discovery-coverage:
 	$(PYTHON) scripts/discovery_coverage.py --write
+
+golden-coverage:
+	$(PYTHON) scripts/check_golden_coverage.py
 
 db:
 	docker compose up -d postgres redis

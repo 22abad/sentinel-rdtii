@@ -1,0 +1,7 @@
+RDTII 2.1 Singapore economy assessment excerpt
+
+Infrastructure requirements: Singapore does not implement a local data centre, local server, or other physical infrastructure requirement.
+
+Binding data-transfer commitments: Singapore has joined trade agreements with binding commitments to cross-border transfer and free flow of data, including the CPTPP and RCEP.
+
+Cybersecurity framework: Singapore has a dedicated horizontal cybersecurity legal framework under the Cybersecurity Act 2018.
