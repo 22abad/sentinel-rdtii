@@ -1,0 +1,7 @@
+Personal Data Protection Act 2010 (Act 709)
+
+Section 129  Transfer of personal data to places outside Malaysia
+
+(1) A data user shall not transfer any personal data of a data subject to a place outside Malaysia unless to such place as specified by the Minister, upon the recommendation of the Commissioner, by notification published in the Gazette.
+
+(2) For the purposes of subsection (1), the Minister may specify any place outside Malaysia if— (a) there is in that place in force any law which is substantially similar to this Act, or that serves the same purposes as this Act; or (b) that place ensures an adequate level of protection in relation to the processing of personal data which is at least equivalent to the level of protection afforded by this Act.

@@ -440,8 +440,11 @@ python scripts/evaluate_golden_set.py --mode offline --output reports/golden
 ```
 
 The approved eight-case set currently reports 100% mapping precision, recall,
-F1, citation exact-match, scoring, and scope accuracy in offline mode. This is a
-small deterministic regression benchmark, not a claim of general model accuracy.
+F1, citation exact-match, scoring, and scope accuracy in offline mode. A
+29-case candidate expansion now covers all ten Pillar 6/7 indicators with a
+positive and boundary negative per indicator and both pillars for AUS, MYS,
+and SGP. New labels remain excluded from formal metrics until substantive legal
+sign-off. Run `make golden-coverage` to verify the structural coverage contract.
 
 ---
 
@@ -453,9 +456,10 @@ Transparency builds credibility — we are honest about the current state.
   errors (e.g. it may code a conditional-transfer clause as 6.1 instead of 6.4).
   Every mapping is therefore quote-verified and flagged for human legal review;
   a fine-tuned 12B model is in progress.
-- **Golden-set coverage:** all eight current cases have substantive-lead sign-off,
-  but they cover only five documents across AUS, MYS, and SGP. Broader legal
-  review remains necessary before treating the benchmark as representative.
+- **Golden-set legal approval:** 29 candidate cases now meet the structural
+  coverage target, but only the original eight currently have substantive-lead
+  sign-off. Pending labels are excluded from formal accuracy metrics until
+  reviewed; see `docs/golden-set-expansion-review.md`.
 - **JavaScript-only portals:** the crawler falls back to OpenCLI for heavily
   rendered pages; some dynamic portals may still fail.
 - **Bilingual documents:** non-English sections of mixed-language PDFs may be

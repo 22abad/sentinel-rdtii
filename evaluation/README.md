@@ -8,12 +8,19 @@ negative labels, exact evidence, input hashes, and legal-review metadata.
 
 ## Review boundary
 
-All initial candidate labels are `review.status=pending`. They are grounded in
-official workshop materials and primary legal sources, but they are not an
-approved Golden Set until the substantive lead confirms the legal conclusion,
-scope, score, source status, and framework version. The runner excludes pending
-labels by default. `--include-pending` is development-only and adds a warning to
-both report formats.
+The original eight labels are approved. The coverage expansion adds pending
+candidate labels; they are not part of the approved Golden Set until the
+substantive lead confirms the legal conclusion, scope, score, source status,
+and framework version. The runner excludes pending labels by default.
+`--include-pending` is development-only and adds a warning to both report
+formats.
+
+The candidate set has a machine-checked structural contract: 25–40 cases, a
+positive and boundary negative for every Pillar 6/7 indicator, and Pillar 6 and
+7 coverage for AUS, MYS, and SGP. Run `make golden-coverage`. This structural
+check is deliberately separate from legal approval; run
+`python scripts/check_golden_coverage.py --approved-only` to see the remaining
+approval gap.
 
 ## Files
 
