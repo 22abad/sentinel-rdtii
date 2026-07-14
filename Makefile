@@ -1,4 +1,4 @@
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage db db-reset image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test eval-setup eval-golden smoke-discovery discovery-coverage db db-reset image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
 SMOKE_ARGS ?=
@@ -43,6 +43,12 @@ install-opencli-bridge:
 
 test:
 	cd ai-service && $(PYTHON) -m pytest
+
+eval-setup:
+	$(PYTHON) -m pip install -r requirements.txt
+
+eval-golden:
+	$(PYTHON) scripts/evaluate_golden_set.py --mode offline --output evaluation/reports/golden-offline.json
 
 smoke-discovery:
 	cd ai-service && DISCOVERY_REGISTRY_BACKEND=file PYTHONPATH=. $(PYTHON) ../scripts/discovery_smoke.py $(SMOKE_ARGS)
