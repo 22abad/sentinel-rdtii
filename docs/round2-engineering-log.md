@@ -217,8 +217,16 @@ improves not only the data but the tooling around it.
 
 44 verdicts + 33 written notes from the legal lead:
 
-- **Evidence precision (human-verified): 70% on the Round-2 pack (19/27
-  decided), 44% on the Singapore add-on pack (4/9), 64% combined (23/36).**
+- **Evidence precision (human-verified, final): 70% combined (31/44
+  decided)** — Round-2 pack 19/27, Singapore pack 12/17 after the Payment
+  Services Act cards landed 8/8 correct (semantic curation validated).
+- **Adjudication (Task B): the official evaluators were right in 7/7
+  disagreements reviewed** — every engine over-score quoted a principles/
+  objectives provision. The rule is now encoded in the extraction
+  calibration ("statements of principle are not measures").
+- **Inferred citations (Task E): 2/2 sampled flagged for granularity**
+  (heading right, sub-paragraph missing, e.g. "2" vs "2.i") — inference is
+  clause-level, reviewers want sub-clause; logged as a known limit.
 - **NEW laws: 4 of 5 signed off** (SGP PDP Regulations, MYS Credit Reporting,
   NSW PPIPA, QLD IP Act). Archives Act 1983 flagged "needs work" — the
   statute does not specify digitised archives; kept as a lead, excluded from
