@@ -432,7 +432,9 @@ export function DiscoveryPanel({
               {retrievalDisclosure.kind === "fallback" && (
                 <p>
                   <em>
-                    注意：此数据来自本地缓存，未计入实时搜索指标，也不会进入正式提交结果。
+                    Note: This evidence comes from a local fixture cache. It is
+                    not counted in live-search metrics and is excluded from
+                    formal submission results.
                   </em>
                 </p>
               )}
