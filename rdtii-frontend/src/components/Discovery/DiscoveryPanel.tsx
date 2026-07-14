@@ -180,6 +180,48 @@ export function DiscoveryPanel({
     return parts.join(", ") || "no hits";
   }, [data]);
 
+  const retrievalDisclosure = useMemo(() => {
+    if (!data) return null;
+    const live =
+      data.diagnostics.live_hits ??
+      data.candidates.filter((candidate) => candidate.retrieval_mode === "live")
+        .length;
+    const fixture =
+      data.diagnostics.fixture_hits ??
+      data.candidates.filter(
+        (candidate) => candidate.retrieval_mode === "fixture",
+      ).length;
+    const fallback =
+      data.diagnostics.fallback_hits ??
+      data.candidates.filter(
+        (candidate) => candidate.retrieval_mode === "fallback",
+      ).length;
+    const fixtureFallback = fixture + fallback;
+
+    if (fixtureFallback > 0) {
+      return {
+        kind: "fallback",
+        label: "🟡 Offline Demo Mode (Fixture Fallback)",
+        live,
+        fixtureFallback,
+      } as const;
+    }
+    if (live > 0) {
+      return {
+        kind: "live",
+        label: "🟢 Live Search (Real-time)",
+        live,
+        fixtureFallback,
+      } as const;
+    }
+    return {
+      kind: "empty",
+      label: "No retrieval evidence",
+      live,
+      fixtureFallback,
+    } as const;
+  }, [data]);
+
   function togglePillar(pillar: number) {
     setPillars((current) => {
       if (current.includes(pillar)) {
@@ -375,6 +417,28 @@ export function DiscoveryPanel({
 
       {data && (
         <div className="discovery-results">
+          {retrievalDisclosure && (
+            <div
+              className={`retrieval-disclosure ${retrievalDisclosure.kind}`}
+              role="status"
+            >
+              <div className="retrieval-disclosure-heading">
+                <strong>{retrievalDisclosure.label}</strong>
+                <span>
+                  Live evidence: {retrievalDisclosure.live} · Fixture/fallback
+                  evidence: {retrievalDisclosure.fixtureFallback}
+                </span>
+              </div>
+              {retrievalDisclosure.kind === "fallback" && (
+                <p>
+                  <em>
+                    注意：此数据来自本地缓存，未计入实时搜索指标，也不会进入正式提交结果。
+                  </em>
+                </p>
+              )}
+            </div>
+          )}
+
           <div className="discovery-summary">
             <span>{data.candidates.length} candidates</span>
             <span>{diagnosticsText}</span>
