@@ -187,6 +187,31 @@ def build_row(
         if article:
             inferred_note = "article inferred from document structure"
 
+    # Title-quote guard: five legal-review findings were quotes that are
+    # merely the document's own name/heading — no operative content. A title
+    # cannot evidence an indicator; flag loudly for the reviewer.
+    quote_norm = " ".join(mapping.verbatim_quote.lower().split())
+    law_norm = " ".join((law_name or "").lower().split())
+    title_note = ""
+    if quote_norm and law_norm and (
+        quote_norm in law_norm or law_norm in quote_norm
+        or (len(quote_norm) < 90 and not re.search(
+            r"\b(shall|must|may not|required|prohibit|no person|liable|"
+            r"应当|不得|禁止|必须|ต้อง|ห้าม|wajib|dilarang|обязан|запрещ)\b|[.。]",
+            mapping.verbatim_quote))
+    ):
+        title_note = "requires human review: quote appears to be a title/heading, not an operative provision"
+
+    # Attribution transparency: the LLM sometimes names the statute a
+    # provision TALKS ABOUT rather than the document it is quoted FROM
+    # (e.g. RBI guidelines citing the PSSA). A reviewer who opens the named
+    # law then cannot find the quote and reads it as hallucination. When the
+    # two names diverge materially, say where the quote physically lives.
+    doc_title = (getattr(candidate, "title", "") or "").strip()
+    attribution_note = ""
+    if doc_title and law_name and doc_title.lower() not in law_name.lower()             and law_name.lower() not in doc_title.lower():
+        attribution_note = f"quoted from document: {doc_title[:80]}"
+
     return SubmissionRow(
         economy=economy_display,
         law_name=law_name,
@@ -204,7 +229,8 @@ def build_row(
         mapping_rationale=SubmissionRow.clip_rationale(mapping.impact),
         source_url=mapping.source_url or candidate_url,
         confidence=confidence,
-        notes="; ".join(x for x in (_notes(mapping, candidate, doc_meta), inferred_note) if x),
+        notes="; ".join(x for x in (
+            _notes(mapping, candidate, doc_meta), inferred_note, attribution_note, title_note) if x),
         # Extended (JSON-only) metadata
         amendment_version_date=(mapping.last_update or candidate_last).strip(),
         ocr_quality_cer=doc_meta.get("ocr_quality_cer"),

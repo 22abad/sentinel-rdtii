@@ -205,9 +205,11 @@ def _generic_spec(indicator_id: str) -> dict[str, dict[str, str]]:
                 "The official RDTII criterion whose conditions the quoted text "
                 f"EXPLICITLY satisfies, from: {numbered}. Calibration: choose the "
                 "LOWEST-scoring criterion consistent with the quote; topical "
-                "relevance alone is not a measure; if the text only provides a "
-                "legal basis or power without the actual measure, or you are "
-                "unsure, answer 0."
+                "relevance alone is not a measure; statements of principle, "
+                "objectives or general policy are NOT measures (legal review: "
+                "every adjudicated over-score quoted a principles provision); "
+                "if the text only provides a legal basis or power without the "
+                "actual measure, or you are unsure, answer 0."
             ),
         },
     }

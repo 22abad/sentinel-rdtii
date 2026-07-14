@@ -385,3 +385,34 @@ def test_build_row_backfills_article_and_flags_it():
     row2 = build_row(mapping2, economy_display="India", source_text=text)
     assert row2.article == "Paragraph 3(b)"
     assert "inferred" not in row2.notes
+
+
+def test_attribution_note_when_quote_source_differs_from_named_law():
+    # LLM names the statute the provision talks about (PSSA) while the quote
+    # physically lives in RBI guidelines — the note must say so.
+    mapping = _sample_mapping().model_copy(update={
+        "source_legislation": "Payment and Settlement Systems Act (PSSA), 2007",
+    })
+
+    class _GuidelinesCandidate(_FakeCandidate):
+        title = "RBI Guidelines on Regulation of Payment Aggregators 2020"
+        discovery_method = "known_mapping"
+
+    row = build_row(mapping, economy_display="India", candidate=_GuidelinesCandidate())
+    assert "quoted from document: RBI Guidelines on Regulation" in row.notes
+    # No note when names agree.
+    row2 = build_row(_sample_mapping(), economy_display="Singapore", candidate=_FakeCandidate())
+    assert "quoted from document" not in row2.notes
+
+
+def test_title_quote_guard_flags_name_only_quotes():
+    # A quote that is just the document's own name evidences nothing.
+    mapping = _sample_mapping().model_copy(update={
+        "verbatim_quote": "Personal Data Protection Act 2012",
+        "source_legislation": "Personal Data Protection Act 2012",
+    })
+    row = build_row(mapping, economy_display="Singapore", candidate=_FakeCandidate())
+    assert "quote appears to be a title" in row.notes
+    # An operative provision is not flagged.
+    row2 = build_row(_sample_mapping(), economy_display="Singapore", candidate=_FakeCandidate())
+    assert "quote appears to be a title" not in row2.notes

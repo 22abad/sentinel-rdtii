@@ -142,9 +142,11 @@ never padded.
 
 ## Final numbers (full 7-economy overnight run)
 
-**Definitive run (tier calibration + expanded corpus): 482 baseline rows
-end-to-end; evidence for 336 (70%); exact official-score match on 239
-(49.6%) — one in two fully-automated scores matches the official evaluator.**
+**Definitive run (tier calibration + expanded corpus + Wayback recovery):
+500 baseline rows end-to-end; evidence for 351 (70%); exact official-score
+match on 251 — 50.2%. Half of all fully-automated scores match the official
+evaluator exactly.** (RUS re-evaluated after archive recovery lifted its
+corpus 41%→58%: 58 rows, 53.4% exact.)
 Per economy (exact | MAE): LAO **60%** | 0.33, MNG **55%** | 0.37,
 THA **53%** | 0.37, IND **49%** | 0.41, RUS **48%** | 0.40, CHN **47%** | 0.44,
 IDN **36%** | 0.54.
@@ -210,6 +212,38 @@ tooling itself, and every gap found was fixed **while the reviewer worked**:
 Five find-fix cycles inside one working session, reviewer never blocked more
 than minutes. This is the human-in-the-loop claim made concrete: the loop
 improves not only the data but the tooling around it.
+
+## Legal review results (Jul 14 session, exported verdicts)
+
+44 verdicts + 33 written notes from the legal lead:
+
+- **Evidence precision (human-verified, final): 70% combined (31/44
+  decided)** — Round-2 pack 19/27, Singapore pack 12/17 after the Payment
+  Services Act cards landed 8/8 correct (semantic curation validated).
+- **Adjudication (Task B): the official evaluators were right in 7/7
+  disagreements reviewed** — every engine over-score quoted a principles/
+  objectives provision. The rule is now encoded in the extraction
+  calibration ("statements of principle are not measures").
+- **Inferred citations (Task E): 2/2 sampled flagged for granularity**
+  (heading right, sub-paragraph missing, e.g. "2" vs "2.i") — inference is
+  clause-level, reviewers want sub-clause; logged as a known limit.
+- **NEW laws: 4 of 5 signed off** (SGP PDP Regulations, MYS Credit Reporting,
+  NSW PPIPA, QLD IP Act). Archives Act 1983 flagged "needs work" — the
+  statute does not specify digitised archives; kept as a lead, excluded from
+  signed-off claims.
+- **The "hallucination" that wasn't:** reviewer flagged a quote as invented
+  (not in the named act). Investigation: the quote was char-verified at the
+  exact URL shown — but `source_legislation` named the statute the provision
+  *discusses* (PSSA 2007) instead of the document it is *quoted from* (RBI
+  Payment Aggregator Guidelines). Same-day fix: rows now carry
+  "quoted from document: <title>" whenever the two diverge (#107). The
+  verbatim-verification chain held; the label was the misdirection.
+- Residual note themes: rationale sentences occasionally cut mid-sentence by
+  the token budget; circulars/policies flagged as weaker evidence than
+  statutes (a future law-type weighting); one article-granularity miss
+  ("Section 2.1 not paragraph 4").
+- Tasks B (score adjudication) and E (citation spot-check) deferred — B goes
+  to the visiting trade-law professor on Thursday by design.
 
 ## What the meeting can claim
 

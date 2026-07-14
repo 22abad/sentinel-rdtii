@@ -99,7 +99,8 @@ def save_registry(
     changed_by: str | None = None,
     change_note: str = "",
 ) -> dict[str, dict[str, Any]]:
-    normalized = normalize_registry(registry)
+    # Saves are strict; loads (get_registry) are lenient skip-and-warn.
+    normalized = normalize_registry(registry, strict=True)
     try:
         with _db_connect() as conn:
             with conn.cursor() as cur:

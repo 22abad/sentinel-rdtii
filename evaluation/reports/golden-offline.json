@@ -1,0 +1,282 @@
+{
+  "schema_version": "1.0",
+  "metadata": {
+    "commit_sha": "dd979bb5519505f063e48ceaa0aa3cf99dafe905",
+    "generated_at": "2026-07-14T16:25:49+01:00",
+    "timezone": "IST",
+    "mode": "offline",
+    "provider": "offline-fixture",
+    "model": "offline-fixture-v1",
+    "command": "python scripts/evaluate_golden_set.py --mode offline --output evaluation/reports/golden-offline.json",
+    "case_set_sha256": "6ce558372bef2d8c0732194d6b6c940b651e54ac6d05f309b2a4e2ac3a7186bd",
+    "document_set_sha256": "bd63aeb00f42975c2c4a4c81c48dd8e772c48e66415f4c4dc3e88b34c97d615a",
+    "include_pending": false
+  },
+  "dataset": {
+    "cases_loaded": 8,
+    "cases_evaluated": 8,
+    "documents_evaluated": 5,
+    "countries": [
+      "AUS",
+      "MYS",
+      "SGP"
+    ],
+    "indicators": [
+      "6.1",
+      "6.2",
+      "6.4",
+      "7.3"
+    ],
+    "excluded_cases": [],
+    "excluded_predictions": []
+  },
+  "discovery": null,
+  "mapping_evaluation": {
+    "aggregate": {
+      "expected_positive_mappings": 6,
+      "explicit_negative_cases": 2,
+      "predicted_mappings": 6,
+      "true_positives": 6,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "mapping_precision": 1.0,
+      "mapping_recall": 1.0,
+      "mapping_f1": 1.0,
+      "false_positive_rate": 0.0,
+      "citation_exact_match_rate": 1.0,
+      "article_citation_accuracy": 1.0,
+      "raw_score_accuracy": 1.0,
+      "category_score_accuracy": 1.0,
+      "scope_accuracy": 1.0,
+      "human_review_rate": 0.16666666666666666,
+      "approval_rate": null,
+      "correction_rate": null
+    },
+    "matches": [
+      {
+        "case_id": "sgp-income-tax-7-3-section-67",
+        "prediction_id": "sgp-income-tax-act-1947-prediction-1",
+        "evidence_similarity": 1.0
+      },
+      {
+        "case_id": "aus-privacy-act-6-4-app-8-1",
+        "prediction_id": "aus-privacy-act-1988-app8-prediction-1",
+        "evidence_similarity": 1.0
+      },
+      {
+        "case_id": "aus-my-health-records-6-2-section-77",
+        "prediction_id": "aus-my-health-records-act-2012-prediction-2",
+        "evidence_similarity": 1.0
+      },
+      {
+        "case_id": "aus-my-health-records-6-1-section-77",
+        "prediction_id": "aus-my-health-records-act-2012-prediction-1",
+        "evidence_similarity": 1.0
+      },
+      {
+        "case_id": "mys-companies-7-3-section-245",
+        "prediction_id": "mys-companies-act-2016-prediction-1",
+        "evidence_similarity": 1.0
+      },
+      {
+        "case_id": "sgp-pdpa-6-4-section-26",
+        "prediction_id": "sgp-pdpa-2012-prediction-1",
+        "evidence_similarity": 1.0
+      }
+    ],
+    "false_positives": [],
+    "false_negatives": [],
+    "negative_case_hits": [],
+    "citation_failures": [],
+    "per_country": {
+      "AUS": {
+        "expected_positive_mappings": 3,
+        "explicit_negative_cases": 0,
+        "predicted_mappings": 3,
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "mapping_precision": 1.0,
+        "mapping_recall": 1.0,
+        "mapping_f1": 1.0,
+        "false_positive_rate": 0.0,
+        "citation_exact_match_rate": 1.0,
+        "article_citation_accuracy": 1.0,
+        "raw_score_accuracy": 1.0,
+        "category_score_accuracy": 1.0,
+        "scope_accuracy": 1.0,
+        "human_review_rate": 0.3333333333333333,
+        "approval_rate": null,
+        "correction_rate": null
+      },
+      "MYS": {
+        "expected_positive_mappings": 1,
+        "explicit_negative_cases": 0,
+        "predicted_mappings": 1,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "mapping_precision": 1.0,
+        "mapping_recall": 1.0,
+        "mapping_f1": 1.0,
+        "false_positive_rate": 0.0,
+        "citation_exact_match_rate": 1.0,
+        "article_citation_accuracy": 1.0,
+        "raw_score_accuracy": 1.0,
+        "category_score_accuracy": 1.0,
+        "scope_accuracy": 1.0,
+        "human_review_rate": 0.0,
+        "approval_rate": null,
+        "correction_rate": null
+      },
+      "SGP": {
+        "expected_positive_mappings": 2,
+        "explicit_negative_cases": 2,
+        "predicted_mappings": 2,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "mapping_precision": 1.0,
+        "mapping_recall": 1.0,
+        "mapping_f1": 1.0,
+        "false_positive_rate": 0.0,
+        "citation_exact_match_rate": 1.0,
+        "article_citation_accuracy": 1.0,
+        "raw_score_accuracy": 1.0,
+        "category_score_accuracy": 1.0,
+        "scope_accuracy": 1.0,
+        "human_review_rate": 0.0,
+        "approval_rate": null,
+        "correction_rate": null
+      }
+    },
+    "per_indicator": {
+      "6.1": {
+        "expected_positive_mappings": 1,
+        "explicit_negative_cases": 1,
+        "predicted_mappings": 1,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "mapping_precision": 1.0,
+        "mapping_recall": 1.0,
+        "mapping_f1": 1.0,
+        "false_positive_rate": 0.0,
+        "citation_exact_match_rate": 1.0,
+        "article_citation_accuracy": 1.0,
+        "raw_score_accuracy": 1.0,
+        "category_score_accuracy": 1.0,
+        "scope_accuracy": 1.0,
+        "human_review_rate": 0.0,
+        "approval_rate": null,
+        "correction_rate": null
+      },
+      "6.2": {
+        "expected_positive_mappings": 1,
+        "explicit_negative_cases": 0,
+        "predicted_mappings": 1,
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "mapping_precision": 1.0,
+        "mapping_recall": 1.0,
+        "mapping_f1": 1.0,
+        "false_positive_rate": 0.0,
+        "citation_exact_match_rate": 1.0,
+        "article_citation_accuracy": 1.0,
+        "raw_score_accuracy": 1.0,
+        "category_score_accuracy": 1.0,
+        "scope_accuracy": 1.0,
+        "human_review_rate": 1.0,
+        "approval_rate": null,
+        "correction_rate": null
+      },
+      "6.4": {
+        "expected_positive_mappings": 2,
+        "explicit_negative_cases": 0,
+        "predicted_mappings": 2,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "mapping_precision": 1.0,
+        "mapping_recall": 1.0,
+        "mapping_f1": 1.0,
+        "false_positive_rate": 0.0,
+        "citation_exact_match_rate": 1.0,
+        "article_citation_accuracy": 1.0,
+        "raw_score_accuracy": 1.0,
+        "category_score_accuracy": 1.0,
+        "scope_accuracy": 1.0,
+        "human_review_rate": 0.0,
+        "approval_rate": null,
+        "correction_rate": null
+      },
+      "7.3": {
+        "expected_positive_mappings": 2,
+        "explicit_negative_cases": 1,
+        "predicted_mappings": 2,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "mapping_precision": 1.0,
+        "mapping_recall": 1.0,
+        "mapping_f1": 1.0,
+        "false_positive_rate": 0.0,
+        "citation_exact_match_rate": 1.0,
+        "article_citation_accuracy": 1.0,
+        "raw_score_accuracy": 1.0,
+        "category_score_accuracy": 1.0,
+        "scope_accuracy": 1.0,
+        "human_review_rate": 0.0,
+        "approval_rate": null,
+        "correction_rate": null
+      }
+    }
+  },
+  "source_failures": [],
+  "usage": {
+    "llm_calls": 0,
+    "successful_calls": 0,
+    "failed_calls": 0,
+    "calls_with_unknown_usage": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "known_input_tokens": 0,
+    "known_output_tokens": 0,
+    "cost_usd": 0.0,
+    "known_cost_usd": 0.0,
+    "latency_sum_ms": 0,
+    "wall_clock_ms": 128,
+    "operations": {}
+  },
+  "ocr_usage": {
+    "vision_calls": 0,
+    "successful_calls": 0,
+    "failed_calls": 0,
+    "unavailable_calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "known_cost_usd": 0,
+    "known_input_tokens": 0,
+    "known_output_tokens": 0,
+    "calls_with_unknown_usage": 0,
+    "calls": []
+  },
+  "cost_usd": {
+    "llm": 0.0,
+    "ocr": 0,
+    "search": 0.0,
+    "known_llm_ocr_subtotal": 0.0,
+    "total": 0.0
+  },
+  "timing_seconds": {
+    "dataset_load": 0.000904,
+    "discovery": 0.0,
+    "fetch": 0.0,
+    "pdf_processing": 0.0,
+    "mapping": 0.140924,
+    "total": 0.15586
+  },
+  "runtime_seconds": 0.155861
+}

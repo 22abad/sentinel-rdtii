@@ -10,8 +10,10 @@ therefore the judges' CLI). Unsupported indicators must be skipped instead.
 from __future__ import annotations
 
 import asyncio
+import sys
 from typing import get_args
 
+import agents.orchestrator as orchestrator_module
 from agents.orchestrator import SUPPORTED_MAPPING_INDICATORS, MASOrchestrator
 from schemas import IndicatorId
 
@@ -61,5 +63,18 @@ def test_unsupported_indicator_is_skipped_without_crashing(monkeypatch):
 
     # No crash, no mappings, and the provider was never invoked for the
     # skipped indicator.
+    assert response.mappings == []
+    assert provider.calls == 0
+
+
+def test_orchestrator_does_not_import_web_entrypoint(monkeypatch):
+    """Lean CLI/evaluation runs must not require FastAPI via ``main``."""
+    monkeypatch.delitem(sys.modules, "main", raising=False)
+    monkeypatch.setattr(orchestrator_module, "classify_indicator", lambda _text: [])
+
+    provider = _FakeProvider()
+    response = asyncio.run(MASOrchestrator(provider).run_pipeline("No indicators here."))
+
+    assert "main" not in sys.modules
     assert response.mappings == []
     assert provider.calls == 0
