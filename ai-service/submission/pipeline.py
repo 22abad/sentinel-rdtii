@@ -12,7 +12,10 @@ network/LLM orchestration lives in :func:`discover_and_extract` and
 
 from __future__ import annotations
 
+import hashlib
 import re
+import time
+from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 from urllib.parse import urlsplit
@@ -81,6 +84,58 @@ def _context_windows(text: str, start: int, end: int) -> tuple[str, str]:
     return before, after
 
 
+def page_location_reference(
+    page_char_spans: list[dict[str, int]], quote_start: int, quote_end: int
+) -> str:
+    """Resolve verified quote offsets to a one-based PDF page reference."""
+
+    if quote_start < 0 or quote_end < quote_start:
+        return ""
+    pages = [
+        int(span["page"])
+        for span in page_char_spans
+        if quote_start < int(span["end"]) and quote_end > int(span["start"])
+    ]
+    if not pages:
+        return ""
+    return f"p. {pages[0]}" if pages[0] == pages[-1] else f"pp. {pages[0]}–{pages[-1]}"
+
+
+def _location_reference(mapping: IndicatorMapping, doc_meta: dict, article: str) -> str:
+    """Build a source-native PDF page or HTML section reference."""
+
+    explicit = str(doc_meta.get("location_reference") or "").strip()
+    if explicit:
+        return explicit
+    spans = doc_meta.get("page_char_spans") or []
+    if spans:
+        return page_location_reference(spans, mapping.quote_start, mapping.quote_end)
+
+    # HTML fetchers retain a real URL fragment or DOM selector when available.
+    final_url = str(doc_meta.get("final_url") or mapping.source_url or "").strip()
+    if "#" in final_url:
+        return final_url
+    selector = str(doc_meta.get("html_selector") or "").strip()
+    if selector:
+        return f"{final_url} (DOM: {selector})" if final_url else f"DOM: {selector}"
+    if article:
+        return f"{final_url} ({article})" if final_url else article
+    return final_url
+
+
+def _provider_model_version(provider: Any) -> str:
+    """Return the model that actually handled the run, including failover."""
+
+    active = provider
+    if hasattr(provider, "_primary") and hasattr(provider, "_fallback"):
+        active = (
+            provider._fallback
+            if getattr(provider, "primary_dead", False)
+            else provider._primary
+        )
+    return str(getattr(active, "model_name", None) or getattr(active, "name", "") or "")
+
+
 def _notes(mapping: IndicatorMapping, candidate: Any, doc_meta: dict) -> str:
     """Compose the transparency ``notes`` column from audit signals."""
 
@@ -144,7 +199,7 @@ def build_row(
             if retrieval_mode in {"fixture", "fallback"}
             else discovery_tag_for_method(discovery_method)
         ),
-        location_reference=doc_meta.get("location_reference", ""),
+        location_reference=_location_reference(mapping, doc_meta, article),
         verbatim_snippet=mapping.verbatim_quote,
         mapping_rationale=SubmissionRow.clip_rationale(mapping.impact),
         source_url=mapping.source_url or candidate_url,
@@ -168,6 +223,11 @@ def build_row(
         final_url=doc_meta.get("final_url", ""),
         http_status=doc_meta.get("http_status"),
         fetch_method=doc_meta.get("fetch_method", ""),
+        model_version=doc_meta.get("model_version", ""),
+        source_file_sha256=doc_meta.get("source_file_sha256", ""),
+        source_pdf_path=doc_meta.get("source_pdf_path", ""),
+        pdf_type=doc_meta.get("pdf_type", "unknown"),
+        confidence_type="discovery_confidence" if candidate is not None else "not_available",
     )
 
 
@@ -347,21 +407,53 @@ async def discover_and_extract(
                 continue
 
         crawl_meta = dict(getattr(document, "crawl_metadata", {}) or {})
+        pdf_meta = dict(getattr(document, "pdf_metadata", {}) or {})
+        ocr_ratio = float(pdf_meta.get("ocr_ratio") or 0.0)
+        pdf_type = str(
+            pdf_meta.get("pdf_type")
+            or (
+                "not_pdf"
+                if getattr(document, "content_type", "") != "pdf"
+                else "unknown"
+            )
+        )
+        mean_conf = pdf_meta.get("mean_confidence")
         doc_meta = {
             "quality": getattr(document, "quality", "unknown"),
             "retrieval_method": candidate.discovery_method,
-            "pdf_is_scanned": getattr(document, "content_type", "") == "pdf",
+            "pdf_is_scanned": pdf_type == "scanned",
+            "pdf_type": pdf_type,
+            "ocr_quality_cer": (
+                round(1.0 - float(mean_conf), 4)
+                if ocr_ratio > 0.0 and mean_conf is not None else None
+            ),
+            "page_char_spans": pdf_meta.get("page_char_spans") or [],
+            "source_file_sha256": (
+                pdf_meta.get("source_file_sha256")
+                or hashlib.sha256(document.text.encode("utf-8")).hexdigest()
+            ),
+            "source_pdf_path": pdf_meta.get("source_pdf_path") or "",
             "retrieval_mode": candidate.retrieval_mode,
             "final_url": crawl_meta.get("final_url") or candidate.url,
             "http_status": crawl_meta.get("http_status"),
             "fetch_method": crawl_meta.get("fetch_method") or "",
+            "html_selector": crawl_meta.get("selector") or "",
         }
 
+        extraction_started = time.perf_counter()
         try:
             result = await run_extraction(document.text, provider)
         except Exception as exc:  # noqa: BLE001
             warnings.append(f"extraction failed for {candidate.url}: {exc}")
             continue
+        extraction_seconds = time.perf_counter() - extraction_started
+        document_timings = getattr(document, "timing_seconds", {}) or {}
+        doc_meta["processing_time_seconds"] = round(
+            sum(float(value or 0.0) for value in document_timings.values())
+            + extraction_seconds,
+            6,
+        )
+        doc_meta["model_version"] = _provider_model_version(provider)
 
         _merge_usage(usage_totals, getattr(result, "usage", None))
         _persist_fetched_document(code, candidate, document)
@@ -599,23 +691,36 @@ async def run_pdf(
     code = economy_code(economy)
     provider = resolve_provider(provider_name)
 
+    run_started = time.perf_counter()
     pdf_result = read_pdf(pdf_path, source_url=pdf_path)
-    text = "\n".join(getattr(pdf_result, "pages", []) or [])
+    from services.document_fetch import _join_pdf_pages
+
+    text, page_char_spans = _join_pdf_pages(getattr(pdf_result, "pages", []) or [])
     # PdfResult reports OCR usage as ocr_ratio/ocr_pages (there is no
     # ``used_ocr`` attribute — the old getattr silently always said False,
     # so scanned documents lost their audit metadata).
     ocr_ratio = float(getattr(pdf_result, "ocr_ratio", 0.0) or 0.0)
     mean_conf = getattr(pdf_result, "mean_conf", None)
+    pdf_type = (
+        "scanned" if ocr_ratio > 0.5
+        else "mixed" if ocr_ratio > 0
+        else "pure_text"
+    )
     doc_meta = {
         "quality": "unknown",
         "retrieval_method": "provided_pdf",
-        "pdf_is_scanned": ocr_ratio > 0.0,
+        "pdf_is_scanned": pdf_type == "scanned",
+        "pdf_type": pdf_type,
         "ocr_quality_cer": (round(1.0 - mean_conf, 4)
                             if ocr_ratio > 0.0 and mean_conf is not None else None),
-        "location_reference": pdf_path,
+        "page_char_spans": page_char_spans,
+        "source_file_sha256": hashlib.sha256(Path(pdf_path).read_bytes()).hexdigest(),
+        "source_pdf_path": str(Path(pdf_path).resolve()),
     }
 
     result = await run_extraction(text, provider)
+    doc_meta["processing_time_seconds"] = round(time.perf_counter() - run_started, 6)
+    doc_meta["model_version"] = _provider_model_version(provider)
     usage_totals = _merge_usage({}, getattr(result, "usage", None))
     wanted = _pillar_indicators(pillar, indicators)
     rows: list[SubmissionRow] = []

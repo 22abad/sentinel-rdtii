@@ -8,7 +8,8 @@ import json
 import pytest
 
 from schemas import IndicatorMapping
-from submission.pipeline import build_row
+from services.document_fetch import _join_pdf_pages
+from submission.pipeline import build_row, page_location_reference
 from submission.schema import (
     CSV_COLUMNS,
     REQUIRED_SUBMISSION_FIELDS,
@@ -197,6 +198,61 @@ def test_build_row_maps_all_fields():
     assert "bilingual source" in row.notes
     # Context windows populated for the JSON audit view.
     assert row.raw_context_before or row.raw_context_after
+    assert row.confidence_type == "discovery_confidence"
+
+
+def test_pdf_offsets_resolve_to_page_and_cross_page_range():
+    text, spans = _join_pdf_pages(["first page", "second page quote", "third page"])
+    quote_start = text.index("page quote")
+    quote_end = quote_start + len("page quote")
+
+    assert page_location_reference(spans, quote_start, quote_end) == "p. 2"
+    assert page_location_reference(
+        spans,
+        text.index("quote"),
+        text.index("third") + len("third"),
+    ) == "pp. 2–3"
+
+    mapping = _sample_mapping().model_copy(update={
+        "verbatim_quote": "page quote",
+        "quote_start": quote_start,
+        "quote_end": quote_end,
+    })
+    row = build_row(
+        mapping,
+        economy_display="Singapore",
+        source_text=text,
+        doc_meta={"page_char_spans": spans, "pdf_type": "pure_text"},
+    )
+    assert row.location_reference == "p. 2"
+
+
+def test_html_location_prefers_anchor_then_dom_path_then_legal_section():
+    mapping = _sample_mapping()
+
+    anchored = build_row(
+        mapping,
+        economy_display="Singapore",
+        doc_meta={"final_url": "https://official.example/act#section-26"},
+    )
+    assert anchored.location_reference.endswith("#section-26")
+
+    dom = build_row(
+        mapping,
+        economy_display="Singapore",
+        doc_meta={
+            "final_url": "https://official.example/act",
+            "html_selector": "main article:nth-of-type(2)",
+        },
+    )
+    assert dom.location_reference.endswith("(DOM: main article:nth-of-type(2))")
+
+    section = build_row(
+        mapping,
+        economy_display="Singapore",
+        doc_meta={"final_url": "https://official.example/act"},
+    )
+    assert section.location_reference.endswith("(Section 26)")
 
 
 def test_detailed_novelty_fields_are_json_only():
@@ -216,6 +272,28 @@ def test_detailed_novelty_fields_are_json_only():
     assert "novelty_type" not in row.csv_record()
     assert row.json_record()["novelty_type"] == "NEW_PROVISION"
     assert row.json_record()["canonical_law_id"] == "SGP:test-act"
+
+
+def test_audit_metadata_fields_are_json_only():
+    row = SubmissionRow(
+        economy="Singapore",
+        law_name="Test Act 2026",
+        indicator_id="P6-I1",
+        verbatim_snippet="Exact provision.",
+        model_version="model-v2",
+        source_file_sha256="a" * 64,
+        source_pdf_path="/evidence/test.pdf",
+        pdf_type="mixed",
+        confidence_type="discovery_confidence",
+    )
+
+    json_record = row.json_record()
+    for field in (
+        "model_version", "source_file_sha256", "source_pdf_path",
+        "pdf_type", "confidence_type",
+    ):
+        assert field not in row.csv_record()
+        assert field in json_record
 
 
 def test_build_row_never_marks_fixture_new_and_preserves_fixture_fetch_audit():

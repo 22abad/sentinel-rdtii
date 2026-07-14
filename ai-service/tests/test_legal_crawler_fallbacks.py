@@ -221,6 +221,11 @@ async def test_http_pdf_response_detects_pdf_without_filename_suffix(monkeypatch
     assert result is not None
     assert result["metadata"]["source"] == "http_fallback_pdf"
     assert result["metadata"]["tls_verified"] is True
+    assert result["pdf_metadata"]["pdf_type"] == "pure_text"
+    assert result["pdf_metadata"]["page_char_spans"] == [
+        {"page": 1, "start": 0, "end": len(result["text"])}
+    ]
+    assert len(result["pdf_metadata"]["source_file_sha256"]) == 64
 
 
 @pytest.mark.anyio
