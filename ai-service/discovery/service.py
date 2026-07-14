@@ -16,6 +16,10 @@ from .schemas import DiscoverySearchRequest, DiscoverySearchResponse, LegalCandi
 from .validator import CandidateValidator
 
 
+class StrictLiveDiscoveryError(RuntimeError):
+    """Raised when a strict-live search cannot prove live official evidence."""
+
+
 class DiscoveryService:
     def __init__(self, validator: CandidateValidator | None = None) -> None:
         self.validator = validator or CandidateValidator()
@@ -37,6 +41,7 @@ class DiscoveryService:
         adapter_warnings: list[str] = []
         raw_hit_count = 0
         filtered_off_domain = 0
+        strict_rejected_non_live_hits = 0
         retrieval_modes: Counter[str] = Counter()
         discovery_methods: Counter[str] = Counter()
         source_retrieval_modes: dict[str, list[str]] = {}
@@ -46,13 +51,19 @@ class DiscoveryService:
             raw_hits, rejected_count, domain_warnings = self._filter_source_hits(source, raw_hits)
             filtered_off_domain += rejected_count
             adapter_warnings.extend(domain_warnings)
+            adapter_warnings.extend(
+                warning for hit in raw_hits for warning in hit.warnings
+            )
+            if request.strict_live:
+                non_live = [hit for hit in raw_hits if hit.retrieval_mode != "live"]
+                strict_rejected_non_live_hits += len(non_live)
+                raw_hits = [hit for hit in raw_hits if hit.retrieval_mode == "live"]
             source_modes = sorted({hit.retrieval_mode for hit in raw_hits})
             if source_modes:
                 source_retrieval_modes[source.name] = source_modes
             for hit in raw_hits:
                 retrieval_modes[hit.retrieval_mode] += 1
                 discovery_methods[hit.discovery_method or "unknown"] += 1
-                adapter_warnings.extend(hit.warnings)
                 candidates.append(self._filter_candidate_matches(normalize_hit(request.country_code, source, hit), request))
 
         deduped = dedupe_candidates(candidates)
@@ -62,10 +73,32 @@ class DiscoveryService:
             preranked[: request.limit],
             request,
         )
+        if request.strict_live:
+            validated_candidates = [
+                candidate
+                for candidate in validated_candidates
+                if candidate.retrieval_mode == "live"
+                and candidate.validation_status == "verified"
+                and candidate.validation_metadata.get("final_url_official") is True
+            ]
         ranked = rank_candidates(validated_candidates, sources)[: request.limit]
         all_queries = [query for queries in source_queries.values() for query in queries]
 
-        mode = "mock_no_network" if request.browser_mode == "mock" else "auto_with_adapter_fallbacks"
+        if request.strict_live and not ranked:
+            details = sorted(set(adapter_warnings + adapter_failures))
+            suffix = f" Details: {'; '.join(details)}" if details else ""
+            raise StrictLiveDiscoveryError(
+                "Strict live discovery failed: no live candidate passed official-domain "
+                f"and document validation.{suffix}"
+            )
+
+        mode = (
+            "strict_live"
+            if request.strict_live
+            else "mock_no_network"
+            if request.browser_mode == "mock"
+            else "auto_with_adapter_fallbacks"
+        )
         return DiscoverySearchResponse(
             country_code=request.country_code,
             queries=all_queries,
@@ -75,6 +108,7 @@ class DiscoveryService:
                 "raw_hits": raw_hit_count,
                 "deduped_hits": len(deduped),
                 "filtered_off_domain": filtered_off_domain,
+                "strict_rejected_non_live_hits": strict_rejected_non_live_hits,
                 "filtered_low_relevance": filtered_low_relevance,
                 "duration_ms": round((time.perf_counter() - started) * 1000),
                 "mode": mode,
@@ -84,6 +118,11 @@ class DiscoveryService:
                 "fixture_hits": retrieval_modes.get("fixture", 0),
                 "fallback_hits": retrieval_modes.get("fallback", 0),
                 "live_search": retrieval_modes.get("live", 0) > 0 and retrieval_modes.get("fixture", 0) == 0 and retrieval_modes.get("fallback", 0) == 0,
+                "live_discovery_success": bool(ranked) and any(
+                    candidate.retrieval_mode == "live"
+                    and candidate.validation_status == "verified"
+                    for candidate in ranked
+                ),
                 "source_retrieval_modes": source_retrieval_modes,
                 "source_mode": request.source_mode,
                 "warnings": sorted(set(adapter_warnings + adapter_failures)),

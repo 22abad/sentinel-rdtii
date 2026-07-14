@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 from typing import Any
+from urllib.parse import urlsplit
 
 from schemas import IndicatorMapping
 
@@ -91,7 +92,11 @@ def build_row(
         last_amended=extract_year(mapping.last_update, candidate_last),
         indicator_id=indicator_to_rdtii_code(mapping.indicator),
         article=mapping.article_clause,
-        discovery_tag=discovery_tag_for_method(discovery_method),
+        discovery_tag=(
+            "KNOWN"
+            if retrieval_mode in {"fixture", "fallback"}
+            else discovery_tag_for_method(discovery_method)
+        ),
         location_reference=doc_meta.get("location_reference", ""),
         verbatim_snippet=mapping.verbatim_quote,
         mapping_rationale=SubmissionRow.clip_rationale(mapping.impact),
@@ -111,7 +116,42 @@ def build_row(
             if retrieval_mode in {"fixture", "fallback"}
             else discovery_method or doc_meta.get("retrieval_method", "")
         ),
+        retrieval_mode=retrieval_mode or doc_meta.get("retrieval_mode", "unknown"),
+        final_url=doc_meta.get("final_url", ""),
+        http_status=doc_meta.get("http_status"),
+        fetch_method=doc_meta.get("fetch_method", ""),
     )
+
+
+def _strict_fetch_audit(candidate: Any, document: Any) -> tuple[bool, str]:
+    """Verify the extraction fetch itself is live, successful, and official."""
+
+    from discovery.validator import _document_retrieval_mode
+
+    metadata = dict(getattr(document, "crawl_metadata", {}) or {})
+    final_url = str(metadata.get("final_url") or getattr(candidate, "url", ""))
+    fetch_method = str(metadata.get("fetch_method") or "")
+    try:
+        status = int(metadata.get("http_status"))
+    except (TypeError, ValueError):
+        status = 0
+    try:
+        hostname = (urlsplit(final_url).hostname or "").encode("idna").decode("ascii").casefold()
+    except (UnicodeError, ValueError):
+        hostname = ""
+    official_domains = {
+        str(domain).rstrip(".").casefold()
+        for domain in getattr(candidate, "official_domains", [])
+    }
+    if hostname not in official_domains:
+        return False, f"final URL is outside configured official domains: {final_url}"
+    if not 200 <= status < 400:
+        return False, f"fetch did not return a successful HTTP status: {status or 'missing'}"
+    if _document_retrieval_mode(fetch_method) != "live":
+        return False, f"fetch method is not live: {fetch_method or 'missing'}"
+    if metadata.get("tls_verified") is not True:
+        return False, "fetch did not prove TLS verification"
+    return True, ""
 
 
 def _pillar_indicators(pillar: int, requested: list[str] | None) -> set[str] | None:
@@ -131,6 +171,7 @@ async def discover_and_extract(
     limit: int = 20,
     browser_mode: str = "auto",
     max_documents: int | None = None,
+    strict_live: bool = False,
 ) -> tuple[list[SubmissionRow], dict]:
     """Run discovery + extraction for one economy and pillar.
 
@@ -146,7 +187,6 @@ async def discover_and_extract(
 
     code = economy_code(economy)
     display = economy_display_name(economy)
-    provider = resolve_provider(provider_name)
 
     request = DiscoverySearchRequest(
         country_code=code,
@@ -154,16 +194,31 @@ async def discover_and_extract(
         indicators=indicators or [],
         limit=limit,
         browser_mode=browser_mode,
+        source_mode="official_only" if strict_live else "official_first",
+        include_secondary_leads=not strict_live,
+        strict_live=strict_live,
     )
     discovery = await DiscoveryService().search(request)
+    provider = resolve_provider(provider_name)
 
     wanted = _pillar_indicators(pillar, indicators)
     rows: list[SubmissionRow] = []
     documents_processed = 0
-    warnings: list[str] = []
+    warnings: list[str] = list(discovery.diagnostics.get("warnings", []))
     seen_urls: set[str] = set()
 
-    for candidate in discovery.candidates:
+    eligible_candidates = [
+        candidate
+        for candidate in discovery.candidates
+        if candidate.retrieval_mode == "live"
+    ]
+    excluded_non_live = len(discovery.candidates) - len(eligible_candidates)
+    if excluded_non_live:
+        warnings.append(
+            f"Excluded {excluded_non_live} fixture/fallback candidate(s) from formal submission."
+        )
+
+    for candidate in eligible_candidates:
         if max_documents is not None and documents_processed >= max_documents:
             break
         if candidate.url in seen_urls:
@@ -178,10 +233,21 @@ async def discover_and_extract(
             warnings.append(f"fetch failed for {candidate.url}: {exc}")
             continue
 
+        if strict_live:
+            accepted, reason = _strict_fetch_audit(candidate, document)
+            if not accepted:
+                warnings.append(f"strict-live rejected {candidate.url}: {reason}")
+                continue
+
+        crawl_meta = dict(getattr(document, "crawl_metadata", {}) or {})
         doc_meta = {
             "quality": getattr(document, "quality", "unknown"),
             "retrieval_method": candidate.discovery_method,
             "pdf_is_scanned": getattr(document, "content_type", "") == "pdf",
+            "retrieval_mode": candidate.retrieval_mode,
+            "final_url": crawl_meta.get("final_url") or candidate.url,
+            "http_status": crawl_meta.get("http_status"),
+            "fetch_method": crawl_meta.get("fetch_method") or "",
         }
 
         try:
@@ -213,8 +279,17 @@ async def discover_and_extract(
         "pillar": pillar,
         "provider": getattr(provider, "name", provider_name or "unknown"),
         "candidates_found": len(discovery.candidates),
+        "live_candidates": len(eligible_candidates),
+        "fixture_candidates_excluded": excluded_non_live,
         "documents_processed": documents_processed,
         "provisions_mapped": len(rows),
+        "retrieval_mode": "strict_live" if strict_live else discovery.diagnostics.get("mode", "auto"),
+        "evidence_counts": {
+            "seed": 0,
+            "live_discovered": len(rows),
+            "fixture": 0,
+        },
+        "discovery_diagnostics": discovery.diagnostics,
         "warnings": warnings,
     }
     return rows, meta
@@ -301,10 +376,12 @@ async def run_library(
         "pillar": pillar,
         "provider": getattr(provider, "name", provider_name or "unknown"),
         "source": "local_library",
+        "retrieval_mode": "seed",
         "offline": True,
         "laws_available": len(entries),
         "documents_processed": laws_processed,
         "provisions_mapped": len(rows),
+        "evidence_counts": {"seed": len(rows), "live_discovered": 0, "fixture": 0},
         "warnings": warnings,
     }
     return rows, meta
@@ -365,6 +442,7 @@ async def run_seed_first(
         "pillar": pillar,
         "provider": seed_meta.get("provider") or disc_meta.get("provider"),
         "retrieval_strategy": "seed_first",
+        "retrieval_mode": "seed_first_with_live_discovery",
         "seed_provisions": len(seed_rows),
         "discovery_provisions": len(fresh_rows),
         "discovery_duplicates_dropped": deduped,
@@ -375,6 +453,11 @@ async def run_seed_first(
             + disc_meta.get("documents_processed", 0)
         ),
         "provisions_mapped": len(rows),
+        "evidence_counts": {
+            "seed": len(seed_rows),
+            "live_discovered": len(fresh_rows),
+            "fixture": 0,
+        },
         "warnings": [*seed_meta.get("warnings", []), *disc_meta.get("warnings", [])],
     }
     return rows, meta

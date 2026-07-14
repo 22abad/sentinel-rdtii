@@ -62,6 +62,7 @@ base = ['--economy', 'Singapore', '--pillar', '6']
 print(json.dumps({
     'default': parse_args(base).registry_backend,
     'explicit': parse_args(base + ['--registry-backend', 'database']).registry_backend,
+    'strict_live': parse_args(base + ['--strict-live']).strict_live,
 }))
 """ % str(REPO_ROOT / "main.py")
     result = subprocess.run(
@@ -71,7 +72,7 @@ print(json.dumps({
         capture_output=True,
         text=True,
     )
-    assert result.stdout.strip() == '{"default": "file", "explicit": "database"}'
+    assert result.stdout.strip() == '{"default": "file", "explicit": "database", "strict_live": true}'
 
 
 def test_readme_preserves_the_judge_csv_contract() -> None:

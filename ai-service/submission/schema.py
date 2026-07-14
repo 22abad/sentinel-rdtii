@@ -37,6 +37,10 @@ JSON_EXTENDED_FIELDS: tuple[str, ...] = (
     "raw_context_after",
     "pdf_is_scanned",
     "retrieval_method",
+    "retrieval_mode",
+    "final_url",
+    "http_status",
+    "fetch_method",
 )
 
 MAPPING_RATIONALE_MAX = 300
@@ -116,7 +120,11 @@ def discovery_tag_for_method(discovery_method: str) -> str:
     web_search, ...) is an independent find.
     """
 
-    return "KNOWN" if discovery_method.strip() == "known_mapping" else "NEW"
+    return (
+        "KNOWN"
+        if discovery_method.strip().lower() in {"known_mapping", "fixture", "fallback"}
+        else "NEW"
+    )
 
 
 # Law-number patterns in priority order. A bare "Act <4-digit-year>" is the
@@ -189,6 +197,10 @@ class SubmissionRow(BaseModel):
     raw_context_after: str = ""
     pdf_is_scanned: bool | None = None
     retrieval_method: str = ""
+    retrieval_mode: str = "unknown"
+    final_url: str = ""
+    http_status: int | None = None
+    fetch_method: str = ""
 
     def csv_record(self) -> dict[str, str]:
         """Return an ordered dict of exactly the 13 CSV columns as strings."""

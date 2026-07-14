@@ -71,6 +71,7 @@ async def test_cli_reconciles_inventory_and_fixture_tags_before_writing(monkeypa
         registry_backend="file",
         output_dir=str(tmp_path),
         format="both",
+        strict_live=False,
     )
 
     assert await main_cli._run(args) == 0

@@ -84,6 +84,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
              "By default a run seeds from the local library first, then falls "
              "back to discovery (seed-first hybrid).",
     )
+    parser.add_argument(
+        "--strict-live",
+        action="store_true",
+        help="Review mode: pure live discovery only; rejects fixtures, mock candidates, "
+             "unverified/off-domain documents, and fails explicitly when no live evidence passes.",
+    )
     parser.add_argument("--indicators", nargs="*", default=None, help="Restrict to specific indicators, e.g. 6.1 6.4")
     parser.add_argument("--output-dir", default="outputs", help="Directory for CSV/JSON output")
     parser.add_argument("--format", choices=("csv", "json", "both"), default="both")
@@ -108,6 +114,11 @@ async def _run(args: argparse.Namespace) -> int:
     # registry module's database default. Set the CLI choice explicitly before
     # any deferred Discovery imports occur.
     os.environ["DISCOVERY_REGISTRY_BACKEND"] = args.registry_backend
+    # Internal callers and tests may construct a partial Namespace instead of
+    # going through parse_args(), so optional flags need a safe default.
+    strict_live = getattr(args, "strict_live", False)
+    if strict_live and (args.offline or args.pdf):
+        raise ValueError("--strict-live cannot be combined with --offline or --pdf")
 
     from submission import SubmissionRow, reconcile_discovery_tags, write_outputs
     from submission.pipeline import (
@@ -120,7 +131,23 @@ async def _run(args: argparse.Namespace) -> int:
 
     display = economy_display_name(args.economy)
     all_rows: list[SubmissionRow] = []
-    combined_meta: dict = {"economy": display, "pillars": args.pillar, "runs": []}
+    combined_meta: dict = {
+        "economy": display,
+        "pillars": args.pillar,
+        "retrieval_mode": (
+            "strict_live"
+            if strict_live
+            else "live_discovery"
+            if args.no_seed
+            else "provided_pdf"
+            if args.pdf
+            else "seed"
+            if args.offline
+            else "seed_first"
+        ),
+        "evidence_counts": {"seed": 0, "live_discovered": 0, "fixture": 0},
+        "runs": [],
+    }
 
     for pillar in args.pillar:
         if args.pdf:
@@ -133,11 +160,12 @@ async def _run(args: argparse.Namespace) -> int:
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
             )
-        elif args.no_seed:
+        elif strict_live or args.no_seed:
             rows, meta = await discover_and_extract(
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
                 limit=args.limit, max_documents=args.max_documents,
+                strict_live=strict_live,
             )
         else:
             rows, meta = await run_seed_first(
@@ -146,12 +174,27 @@ async def _run(args: argparse.Namespace) -> int:
                 limit=args.limit, max_documents=args.max_documents,
             )
         combined_meta["runs"].append(meta)
+        for mode, count in meta.get("evidence_counts", {}).items():
+            combined_meta["evidence_counts"][mode] = (
+                combined_meta["evidence_counts"].get(mode, 0) + int(count)
+            )
         all_rows.extend(rows)
         print(f"  Pillar {pillar}: {meta['provisions_mapped']} provisions mapped "
               f"({meta.get('documents_processed', 'n/a')} documents)")
+        print(f"    Retrieval mode: {meta.get('retrieval_mode', 'unknown')}")
         for warning in meta.get("warnings", []):
             print(f"    ⚠ {warning}")
 
+    if strict_live and not all_rows:
+        raise ValueError(
+            "Strict live discovery failed: live discovery produced no formally "
+            "submittable evidence. No output files were written."
+        )
+
+    counts = combined_meta["evidence_counts"]
+    print(f"\nSeed evidence: {counts['seed']}")
+    print(f"Live-discovered evidence: {counts['live_discovered']}")
+    print(f"Fixture evidence: {counts['fixture']}")
     # Discovery methods describe how a candidate was surfaced, not whether its
     # law is novel. Make the ESCAP inventory/library baseline authoritative at
     # the final submission boundary, after rows from every pillar/path have
@@ -182,7 +225,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"SENTINEL — mapping {args.economy}, Pillar {_pillar_label(args.pillar)} …")
     try:
         return asyncio.run(_run(args))
-    except ValueError as exc:
+    except (ValueError, RuntimeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 2
 

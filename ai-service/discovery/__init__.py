@@ -7,12 +7,13 @@ from .schemas import (
     LegalSourceConfig,
     RawSearchHit,
 )
-from .service import DiscoveryService
+from .service import DiscoveryService, StrictLiveDiscoveryError
 
 __all__ = [
     "DiscoverySearchRequest",
     "DiscoverySearchResponse",
     "DiscoveryService",
+    "StrictLiveDiscoveryError",
     "LegalCandidate",
     "LegalSourceConfig",
     "RawSearchHit",

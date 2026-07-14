@@ -56,6 +56,8 @@ def test_indicator_code_rejects_garbage():
         ("cached_discovery", "NEW"),
         ("official_search", "NEW"),
         ("web_search", "NEW"),
+        ("fixture", "KNOWN"),
+        ("fallback", "KNOWN"),
         ("", "NEW"),
     ],
 )
@@ -168,16 +170,24 @@ def test_build_row_maps_all_fields():
     assert row.raw_context_before or row.raw_context_after
 
 
-def test_build_row_preserves_fixture_provenance_for_final_reconciliation():
+def test_build_row_never_marks_fixture_new_and_preserves_fixture_fetch_audit():
     row = build_row(
-        _sample_mapping().model_copy(
-            update={"source_legislation": "Configured Fixture Act 2099"}
-        ),
+        _sample_mapping(),
         economy_display="Singapore",
         candidate=_FixtureCandidate(),
+        doc_meta={
+            "final_url": "https://sso.agc.gov.sg/Act/PDPA2012",
+            "http_status": 200,
+            "fetch_method": "download",
+        },
     )
 
+    assert row.discovery_tag == "KNOWN"
     assert row.retrieval_method == "fixture"
+    assert row.retrieval_mode == "fixture"
+    assert row.final_url.endswith("PDPA2012")
+    assert row.http_status == 200
+    assert row.fetch_method == "download"
 
 
 def test_csv_and_json_round_trip(tmp_path):
