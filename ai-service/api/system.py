@@ -80,6 +80,22 @@ def embed(req: TextRequest):
 _OLLAMA_BASE = os.getenv("OLLAMA_BASE_URL", "http://host.docker.internal:11434/v1")
 _OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3.6")
 
+
+def _rag_chat_client():
+    """Pick the RAG-chat LLM. Default Ollama (offline-capable); set
+    RAG_CHAT_PROVIDER=deepseek for stronger multilingual reasoning."""
+    provider = os.getenv("RAG_CHAT_PROVIDER", "ollama").lower()
+    if provider == "deepseek":
+        key = os.getenv("DEEPSEEK_API_KEY", "")
+        if key:
+            return (
+                OpenAI(base_url="https://api.deepseek.com/v1", api_key=key),
+                os.getenv("DEEPSEEK_MODEL", "deepseek-v4-flash"),
+                "deepseek",
+                {"thinking": {"type": "disabled"}},
+            )
+    return (OpenAI(base_url=_OLLAMA_BASE, api_key="ollama"), _OLLAMA_MODEL, "ollama", None)
+
 _RDTII_SYSTEM_PROMPT = """You are a UN ESCAP digital trade policy analyst specializing in the Regional Digital Trade Integration Index (RDTII) 2.1 framework.
 
 Your role is to help researchers and policymakers evaluate a country's digital trade policies using the RDTII 2.1 methodology.
@@ -133,12 +149,12 @@ async def chat_query(req: RAGQueryRequest):
         parts.append(f"Legal text being analyzed:\n\"\"\"\n{req.source_text}\n\"\"\"")
     user_prompt = "\n\n".join(parts)
 
-    client = OpenAI(base_url=_OLLAMA_BASE, api_key="ollama")
+    client, chat_model, chat_provider, extra_body = _rag_chat_client()
 
     async def _stream():
         try:
-            stream = client.chat.completions.create(
-                model=_OLLAMA_MODEL,
+            kwargs = dict(
+                model=chat_model,
                 messages=[
                     {"role": "system", "content": _RDTII_SYSTEM_PROMPT},
                     {"role": "user", "content": user_prompt},
@@ -146,6 +162,9 @@ async def chat_query(req: RAGQueryRequest):
                 stream=True,
                 temperature=0.3,
             )
+            if extra_body:
+                kwargs["extra_body"] = extra_body
+            stream = client.chat.completions.create(**kwargs)
             full_answer = ""
             for chunk in stream:
                 content = chunk.choices[0].delta.content or ""
@@ -155,7 +174,7 @@ async def chat_query(req: RAGQueryRequest):
 
             payload = {
                 "answer": full_answer,
-                "provider": f"ollama/{_OLLAMA_MODEL}",
+                "provider": f"{chat_provider}/{chat_model}",
                 "retrieved_chunks": [h.text for h in hits],
                 "retrieval_count": len(hits),
             }
