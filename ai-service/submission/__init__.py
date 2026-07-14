@@ -20,18 +20,22 @@ from .novelty import (
 )
 from .schema import (
     CSV_COLUMNS,
+    REQUIRED_SUBMISSION_FIELDS,
     SubmissionRow,
     discovery_tag_for_method,
     indicator_to_rdtii_code,
+    validate_submission_rows,
 )
 from .writer import write_csv, write_json, write_outputs
 
 __all__ = [
     "CSV_COLUMNS",
+    "REQUIRED_SUBMISSION_FIELDS",
     "SubmissionRow",
     "build_discovery_report",
     "discovery_tag_for_method",
     "indicator_to_rdtii_code",
+    "validate_submission_rows",
     "reconcile_discovery_tags",
     "summarize_discovery",
     "write_csv",
