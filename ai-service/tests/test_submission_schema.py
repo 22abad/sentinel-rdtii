@@ -213,3 +213,49 @@ def test_csv_and_json_round_trip(tmp_path):
     assert payload["provisions"][0]["indicator_id"] == "P6-I4"
     # Extended metadata present only in JSON.
     assert "raw_context_before" in payload["provisions"][0]
+
+
+def test_infer_article_reference_backfills_nearest_heading():
+    from submission.pipeline import infer_article_reference
+
+    text = (
+        "Section 25. Retention.\nAn organisation must cease to retain documents.\n"
+        "Section 26(2). Transfer.\nAn organisation must not transfer personal data "
+        "outside Singapore unless prescribed requirements are met."
+    )
+    quote_start = text.index("An organisation must not transfer")
+    assert infer_article_reference(text, quote_start) == "Section 26(2)"
+    # Nearest heading wins, not the first.
+    early = text.index("An organisation must cease")
+    assert infer_article_reference(text, early) == "Section 25"
+    # No high-precision heading -> empty, never a guess.
+    assert infer_article_reference("just some text with 9. numbering", 20) == ""
+    # Multilingual: Chinese and Indonesian heading forms.
+    zh = "第 19 条 数据处理者应当履行下列义务。"
+    assert infer_article_reference(zh, zh.index("数据处理者")) == "第 19 条"
+    idn = "Pasal 21\nSetiap orang berhak atas perlindungan data pribadi."
+    assert infer_article_reference(idn, idn.index("Setiap")) == "Pasal 21"
+
+
+def test_build_row_backfills_article_and_flags_it():
+    text = (
+        "Paragraph 3. Purchase preference.\n"
+        "Purchase preference shall be given to local suppliers in all procurements."
+    )
+    quote = "Purchase preference shall be given to local suppliers"
+    start = text.index(quote)
+    mapping = IndicatorMapping(
+        pillar=2, indicator="2.1", score=0.5, verbatim_quote=quote,
+        quote_start=start, quote_end=start + len(quote),
+        article_clause="",  # LLM left it blank
+        source_legislation="India Public Procurement Order, 2017",
+        last_update="", source_url="", impact="Local preference in procurement.",
+    )
+    row = build_row(mapping, economy_display="India", source_text=text)
+    assert row.article == "Paragraph 3"
+    assert "article inferred from document structure" in row.notes
+    # An explicit LLM-provided clause is never overridden.
+    mapping2 = mapping.model_copy(update={"article_clause": "Paragraph 3(b)"})
+    row2 = build_row(mapping2, economy_display="India", source_text=text)
+    assert row2.article == "Paragraph 3(b)"
+    assert "inferred" not in row2.notes
