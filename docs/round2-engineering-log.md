@@ -171,6 +171,20 @@ indicators) exceeded the 600 s per-document budget and are recorded as
 timeouts rather than silently dropped; raising the budget for dense docs is
 a cheap follow-up.
 
+## Pre-submission polish (rubric-driven, Jul 14)
+
+Each item traces to the judges' published scoring language:
+
+| Rubric line | Before | After | PR |
+|---|---|---|---|
+| "exact article and paragraph required" | 2/8 rows carried an article on the official scanned sample | **7/8** — deterministic backfill from the nearest legal heading (EN/ZH/TH/ID/RU forms), inferred rows flagged in notes; empty beats wrong | #89 |
+| OCR audit trail | scanned docs silently reported `pdf_is_scanned=False`, no CER | `pdf_is_scanned=True`, measured `ocr_quality_cer=0.064` on the official sample | #88 |
+| "error below 5%" (OCR) | — | Honest known-limit: tesseract plateaus at 93.6% mean confidence on the official scan; DPI/PSM sweeps verified unhelpful (200 dpi wins per-page but loses full-document). We measure and expose per-page confidence instead of claiming a number we cannot back | log |
+| "zero points if only pre-downloaded PDFs" | untested without search keys | Live-crawl smoke: **28 provisions live-discovered from the SGP portal with no SerpAPI key**, fixture fallbacks excluded from formal output | smoke |
+| "mis-spelt country, edge cases" | missing-PDF path dumped a raw traceback | clean `Error: PDF not found` (exit 2); economy/pillar errors verified clean | #90 |
+| "your actual operational cost" | telemetry collected, never surfaced | every run prints and records measured cost (SGP P6 offline: 13 calls, **$0.0139**) | #91 |
+| Docker deployment | untested | full 5-service stack builds and runs healthy (`/health` ok, frontend 200); caveat: the compose file mounts a local Vertex key path that will be an empty dir on clean machines — noisy but non-fatal under the default DeepSeek provider | tested |
+
 ## What the meeting can claim
 
 1. **The full official methodology is executable**: 61/61 indicators have a
