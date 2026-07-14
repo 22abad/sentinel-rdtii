@@ -5,7 +5,9 @@ from submission.novelty import (
     is_known_law,
     known_law_index,
     load_known_inventory,
+    normalize_article,
     normalize_law_name,
+    normalized_quote_hash,
     reconcile_discovery_tags,
     summarize_discovery,
 )
@@ -30,6 +32,9 @@ def _row(economy, law_name, indicator_id="P6-I1", tag="NEW", **kw):
         discovery_tag=tag,
         source_url=kw.get("source_url", "https://example.gov/x"),
         article=kw.get("article", ""),
+        last_amended=kw.get("last_amended", ""),
+        amendment_version_date=kw.get("amendment_version_date", ""),
+        retrieval_method=kw.get("retrieval_method", "official_search"),
     )
 
 
@@ -67,6 +72,70 @@ def test_reconcile_flips_tags_from_the_baseline():
     assert rows[0].discovery_tag == "NEW"
 
 
+def test_reconcile_distinguishes_law_amendment_provision_and_known_evidence():
+    known_quote = (
+        "An organisation must not transfer any personal data to a country or "
+        "territory outside Singapore except in accordance with requirements "
+        "prescribed under this Act to ensure that organisations provide a standard "
+        "of protection to personal data so transferred that is comparable to the "
+        "protection under this Act."
+    )
+    rows = [
+        _row(
+            "Singapore",
+            "Personal Data Protection Act 2012",
+            article="Section 26",
+            verbatim_snippet=known_quote,
+            amendment_version_date="2025-12-05",
+        ),
+        _row(
+            "Singapore",
+            "Personal Data Protection Act 2012",
+            article="Section 27A",
+            verbatim_snippet="A newly inserted provision.",
+        ),
+        _row(
+            "Singapore",
+            "Personal Data Protection Act 2012",
+            article="Section 26",
+            verbatim_snippet=known_quote,
+            amendment_version_date="2027-01-01",
+        ),
+        _row(
+            "Australia",
+            "Privacy Act 1988",
+            article="Australian Privacy Principle 8.1",
+            verbatim_snippet="Existing provision in a newly numbered compilation.",
+            amendment_version_date="Compilation No. 105",
+        ),
+        _row("Singapore", "Zzz Data Localisation Act 2099"),
+    ]
+
+    reconciled = reconcile_discovery_tags(rows)
+
+    assert [row.novelty_type for row in reconciled] == [
+        "KNOWN", "NEW_PROVISION", "NEW_AMENDMENT", "NEW_AMENDMENT", "NEW_LAW",
+    ]
+    assert [row.discovery_tag for row in reconciled] == [
+        "KNOWN", "NEW", "NEW", "NEW", "NEW",
+    ]
+    assert reconciled[0].canonical_law_id == "sgp-pdpa-2012"
+    assert reconciled[1].normalized_article == "section 27a"
+    assert reconciled[1].normalized_quote_hash == normalized_quote_hash(
+        "A newly inserted provision."
+    )
+
+
+def test_evidence_normalization_is_stable():
+    assert normalize_article("Sec. 26(2)") == normalize_article("Section 26 (2)")
+    assert normalized_quote_hash("Data must stay here.") == normalized_quote_hash(
+        " data MUST stay here "
+    )
+    assert normalized_quote_hash("Данные должны храниться здесь") != normalized_quote_hash(
+        "Другой текст"
+    )
+
+
 def test_reconcile_never_labels_fixture_sources_new():
     fixture = _row(
         "Singapore",
@@ -99,11 +168,18 @@ def test_report_lists_new_candidates_with_audit_and_gate():
     assert summary["total_provisions"] == 2
     assert summary["new_provisions"] == 1
     assert summary["known_provisions"] == 1
+    assert summary["novelty_types"] == {
+        "KNOWN": 1,
+        "NEW_LAW": 1,
+        "NEW_AMENDMENT": 0,
+        "NEW_PROVISION": 0,
+    }
     assert summary["new_laws"] == [
         {"economy": "Singapore", "law_name": "Zzz Data Localisation Act 2099", "indicators": ["P6-I5"]}
     ]
     # NEW candidate carries the audit trail for the human gate.
     assert report["new_candidates"][0]["source_url"] == "https://sso.agc.gov.sg/Act/ZZZ2099"
+    assert report["new_candidates"][0]["novelty_type"] == "NEW_LAW"
     assert "draft lead for legal review" in report["review_gate"]
 
 

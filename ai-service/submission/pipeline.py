@@ -151,6 +151,7 @@ def build_row(
         confidence=confidence,
         notes="; ".join(x for x in (_notes(mapping, candidate, doc_meta), inferred_note) if x),
         # Extended (JSON-only) metadata
+        amendment_version_date=(mapping.last_update or candidate_last).strip(),
         ocr_quality_cer=doc_meta.get("ocr_quality_cer"),
         processing_time_seconds=doc_meta.get("processing_time_seconds"),
         raw_context_before=before,

@@ -194,6 +194,23 @@ Each item traces to the judges' published scoring language:
 | "your actual operational cost" | telemetry collected, never surfaced | every run prints and records measured cost (SGP P6 offline: 13 calls, **$0.0139**) | #91 |
 | Docker deployment | untested | full 5-service stack builds and runs healthy (`/health` ok, frontend 200); caveat: the compose file mounts a local Vertex key path that will be an empty dir on clean machines — noisy but non-fatal under the default DeepSeek provider | tested |
 
+## The review console itself was iterated live (Jul 14, one afternoon)
+
+The legal-review session was not just a QA pass — it stress-tested the review
+tooling itself, and every gap found was fixed **while the reviewer worked**:
+
+| # | Found by | Gap | Fix (same session) |
+|---|---|---|---|
+| 1 | reviewer screenshot | Cards showed indicator codes (P6-I1) but not what the indicator *means* — the question being judged was missing | Official category + scoring criteria injected into every card ("THE QUESTION" block) |
+| 2 | reviewer | Mapping rationales truncated mid-sentence (the 300-char submission-spec clip leaked into the review view) | Full 2–3-sentence rationales regenerated for all 35 evidence cards, labelled `[regenerated for review]` |
+| 3 | native-speaker check | Chinese cards quoted policy-principle clauses (ride-hailing pricing!) as cross-border-data evidence — structural curation (has article + long quote) ignored semantic relevance | Relevance-aware curation (quote × indicator phrase table); textbook-correct localization/retention clauses surfaced (网约车办法 §27 was there all along) |
+| 4 | reviewer (no Thai) | Thai/Chinese/Russian quotes unreviewable by an English-speaking lawyer | Machine translation blocks auto-added to all 16 non-English quotes, clearly labelled |
+| 5 | reviewer | Adjudication cards had scores but no evidence and no links — unjudgeable | Official URLs backfilled 10/10; engine quotes re-extracted 5/10 (+ translations); "judge from the source" guidance for the rest |
+
+Five find-fix cycles inside one working session, reviewer never blocked more
+than minutes. This is the human-in-the-loop claim made concrete: the loop
+improves not only the data but the tooling around it.
+
 ## What the meeting can claim
 
 1. **The full official methodology is executable**: 61/61 indicators have a
