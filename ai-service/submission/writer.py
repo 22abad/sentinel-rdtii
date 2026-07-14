@@ -15,6 +15,8 @@ from .schema import CSV_COLUMNS, SubmissionRow
 
 
 def _timestamped_stem(economy: str, pillar: str, timestamp: str) -> str:
+    # Filenames must be shell-safe for judges' scripts: "Lao PDR" -> "Lao_PDR".
+    economy = "_".join(economy.split())
     """Build the ``<Economy>_P<pillar>_<timestamp>`` output file stem."""
 
     return f"{economy}_P{pillar}_{timestamp}"
