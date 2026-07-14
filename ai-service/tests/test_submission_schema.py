@@ -36,7 +36,7 @@ def test_csv_columns_frozen_order():
 
 
 def test_submission_validator_rejects_empty_results_by_default():
-    with pytest.raises(ValueError, match="No verified provisions"):
+    with pytest.raises(ValueError, match="No judge-usable provisions"):
         validate_submission_rows([])
 
 
@@ -44,21 +44,31 @@ def test_submission_validator_allows_explicit_research_empty_results():
     validate_submission_rows([], allow_empty=True)
 
 
-def test_submission_validator_requires_judge_critical_fields():
+def test_submission_validator_drops_incomplete_rows_but_keeps_output():
+    # article is best-effort (not required); source_url IS required.
     assert REQUIRED_SUBMISSION_FIELDS == (
-        "law_name", "indicator_id", "article", "verbatim_snippet", "source_url",
+        "law_name", "indicator_id", "verbatim_snippet", "source_url",
     )
-    row = SubmissionRow(
-        economy="Singapore",
-        law_name="Test Act 2026",
-        indicator_id="P6-I1",
-        article=" ",
-        verbatim_snippet="Exact provision.",
-        source_url="",
+    good = SubmissionRow(
+        economy="Singapore", law_name="Good Act 2026", indicator_id="P6-I1",
+        article="", verbatim_snippet="A complete provision.",
+        source_url="https://sso.agc.gov.sg/Act/PDPA2012",
     )
-
-    with pytest.raises(ValueError, match=r"row 1: article, source_url"):
-        validate_submission_rows([row], allow_empty=True)
+    bad = SubmissionRow(  # no source_url -> unusable, must be dropped
+        economy="Singapore", law_name="Bad Act 2026", indicator_id="P6-I1",
+        article="Section 1", verbatim_snippet="Provision.", source_url="",
+    )
+    # An empty article no longer suppresses the row.
+    kept = validate_submission_rows([good])
+    assert [r.law_name for r in kept] == ["Good Act 2026"]
+    # One bad row is dropped, the good one survives — never zero output.
+    kept = validate_submission_rows([bad, good])
+    assert [r.law_name for r in kept] == ["Good Act 2026"]
+    # All-bad with allow_empty -> empty list, no raise.
+    assert validate_submission_rows([bad], allow_empty=True) == []
+    # All-bad without allow_empty -> raise (nothing usable).
+    with pytest.raises(ValueError, match="No judge-usable provisions"):
+        validate_submission_rows([bad])
 
 
 @pytest.mark.parametrize(
