@@ -93,6 +93,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--indicators", nargs="*", default=None, help="Restrict to specific indicators, e.g. 6.1 6.4")
     parser.add_argument("--output-dir", default="outputs", help="Directory for CSV/JSON output")
     parser.add_argument("--format", choices=("csv", "json", "both"), default="both")
+    parser.add_argument(
+        "--allow-empty",
+        action="store_true",
+        help="Allow empty output files for research/debugging. By default, a run "
+             "with no verified provisions fails without writing output.",
+    )
     parser.add_argument("--provider", default=None, help="Override RDTII_LLM_PROVIDER for this run")
     parser.add_argument("--limit", type=int, default=20, help="Max discovery candidates per pillar")
     parser.add_argument("--max-documents", type=int, default=None, help="Cap documents processed per pillar")
@@ -120,14 +126,14 @@ async def _run(args: argparse.Namespace) -> int:
     if strict_live and (args.offline or args.pdf):
         raise ValueError("--strict-live cannot be combined with --offline or --pdf")
 
-    from submission import SubmissionRow, reconcile_discovery_tags, write_outputs
+    from submission import SubmissionRow, reconcile_submission_tags, write_outputs
     from submission.pipeline import (
         discover_and_extract,
         run_library,
         run_pdf,
         run_seed_first,
     )
-    from submission.schema import economy_display_name
+    from submission.schema import economy_display_name, validate_submission_rows
 
     display = economy_display_name(args.economy)
     all_rows: list[SubmissionRow] = []
@@ -204,7 +210,11 @@ async def _run(args: argparse.Namespace) -> int:
     # law is novel. Make the ESCAP inventory/library baseline authoritative at
     # the final submission boundary, after rows from every pillar/path have
     # been combined and immediately before CSV/JSON serialization.
-    all_rows = reconcile_discovery_tags(all_rows)
+    all_rows = reconcile_submission_tags(all_rows)
+    validate_submission_rows(
+        all_rows,
+        allow_empty=getattr(args, "allow_empty", False),
+    )
 
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     written = write_outputs(
@@ -220,8 +230,6 @@ async def _run(args: argparse.Namespace) -> int:
     print(f"\n✅ {len(all_rows)} provisions written for {display} (Pillar {_pillar_label(args.pillar)}):")
     for fmt, path in written.items():
         print(f"   {fmt.upper()}: {path}")
-    if not all_rows:
-        print("   (No verified provisions — check provider/API key and network, or try --pdf.)")
     return 0
 
 

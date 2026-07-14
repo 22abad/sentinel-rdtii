@@ -11,6 +11,7 @@ from schemas import IndicatorMapping
 from submission.pipeline import build_row
 from submission.schema import (
     CSV_COLUMNS,
+    REQUIRED_SUBMISSION_FIELDS,
     SubmissionRow,
     discovery_tag_for_method,
     economy_code,
@@ -18,6 +19,7 @@ from submission.schema import (
     extract_law_number_ref,
     extract_year,
     indicator_to_rdtii_code,
+    validate_submission_rows,
 )
 from submission.writer import write_csv, write_json
 
@@ -30,6 +32,32 @@ def test_csv_columns_frozen_order():
         "mapping_rationale", "source_url", "confidence", "notes",
     )
     assert len(CSV_COLUMNS) == 13
+
+
+def test_submission_validator_rejects_empty_results_by_default():
+    with pytest.raises(ValueError, match="No verified provisions"):
+        validate_submission_rows([])
+
+
+def test_submission_validator_allows_explicit_research_empty_results():
+    validate_submission_rows([], allow_empty=True)
+
+
+def test_submission_validator_requires_judge_critical_fields():
+    assert REQUIRED_SUBMISSION_FIELDS == (
+        "law_name", "indicator_id", "article", "verbatim_snippet", "source_url",
+    )
+    row = SubmissionRow(
+        economy="Singapore",
+        law_name="Test Act 2026",
+        indicator_id="P6-I1",
+        article=" ",
+        verbatim_snippet="Exact provision.",
+        source_url="",
+    )
+
+    with pytest.raises(ValueError, match=r"row 1: article, source_url"):
+        validate_submission_rows([row], allow_empty=True)
 
 
 @pytest.mark.parametrize(

@@ -51,6 +51,16 @@ JSON_EXTENDED_FIELDS: tuple[str, ...] = (
 
 MAPPING_RATIONALE_MAX = 300
 
+# These fields are required for every provision to be useful to the judges'
+# automated evaluator. Other frozen-schema columns may legitimately be blank.
+REQUIRED_SUBMISSION_FIELDS: tuple[str, ...] = (
+    "law_name",
+    "indicator_id",
+    "article",
+    "verbatim_snippet",
+    "source_url",
+)
+
 # Official UN economy names keyed by ISO-3166 alpha-3 code.
 # Display names follow the Round 2 database sheet names so outputs join
 # cleanly against the official baseline.
@@ -244,3 +254,37 @@ class SubmissionRow(BaseModel):
             return text
         clipped = text[:MAPPING_RATIONALE_MAX].rsplit(" ", 1)[0]
         return clipped.rstrip() + "…"
+
+
+def validate_submission_rows(
+    rows: list[SubmissionRow],
+    *,
+    allow_empty: bool = False,
+) -> None:
+    """Validate judge-critical fields before any submission files are written."""
+
+    if not rows:
+        if allow_empty:
+            return
+        raise ValueError(
+            "No verified provisions were produced. No output files were written. "
+            "Check the provider/API key and network, try --pdf, or use "
+            "--allow-empty for research-only runs."
+        )
+
+    invalid_rows: list[str] = []
+    for index, row in enumerate(rows, start=1):
+        missing = [
+            field
+            for field in REQUIRED_SUBMISSION_FIELDS
+            if not str(getattr(row, field, "") or "").strip()
+        ]
+        if missing:
+            invalid_rows.append(f"row {index}: {', '.join(missing)}")
+
+    if invalid_rows:
+        details = "; ".join(invalid_rows)
+        raise ValueError(
+            "Submission schema validation failed; required fields are empty "
+            f"({details}). No output files were written."
+        )
