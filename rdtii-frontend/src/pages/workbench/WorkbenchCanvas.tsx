@@ -35,6 +35,7 @@ import {
   type WorkbenchCanvasViewport,
 } from "../../components/Canvas";
 import { AIChatInput } from "../../components/Workbench/ChatInput";
+import { uploadCanvasFile } from "../../services/canvasFiles";
 import {
   loadWorkbenchCanvasLayout,
   readLocalWorkbenchCanvasLayout,
@@ -398,8 +399,30 @@ export function WorkbenchCanvas({
   const noteCounter = useRef(restoredState.noteCounter);
   const spawnCounter = useRef(restoredState.spawnCounter);
   const chatCounter = useRef(restoredState.chatCounter);
-  const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string }[]>([]);
+  const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string; ingestStatus?: "uploading" | "ingested" | "failed" }[]>([]);
   const fileCounter = useRef(0);
+  // Files live in the browser (blob URLs) until a file node is linked to the
+  // RAG chat node — that connection triggers the upload/ingest to the backend.
+  const filesRef = useRef(files);
+  filesRef.current = files;
+
+  const ingestFileToRag = useCallback(async (fileId: string) => {
+    const entry = filesRef.current.find((f) => f.id === fileId);
+    if (!entry?.previewUrl || entry.ingestStatus === "uploading" || entry.ingestStatus === "ingested") return;
+    const setStatus = (ingestStatus: "uploading" | "ingested" | "failed") =>
+      setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, ingestStatus } : f)));
+    setStatus("uploading");
+    try {
+      // Recover the original bytes from the browser-held blob URL.
+      const blob = await fetch(entry.previewUrl).then((r) => r.blob());
+      const file = new File([blob], entry.fileName ?? "upload", { type: entry.fileType || blob.type });
+      await uploadCanvasFile(file);
+      setStatus("ingested");
+    } catch (err) {
+      console.error("Canvas file ingest failed:", err);
+      setStatus("failed");
+    }
+  }, []);
 
 
   const handleFile = useCallback(async (id: string, file: File) => {
@@ -688,6 +711,7 @@ export function WorkbenchCanvas({
             fileSize: f.fileSize,
             previewUrl: f.previewUrl,
             fileType: f.fileType,
+            ingestStatus: f.ingestStatus,
             width: sizes[f.id]?.width,
             height: sizes[f.id]?.height,
             onResize: (size: WorkbenchCanvasSize) => resizeNode(f.id, size),
@@ -743,8 +767,14 @@ export function WorkbenchCanvas({
     (c: Connection) => {
       markCanvasDirty();
       setEdges((es) => addEdge(c, es));
+      // Linking a file node to the RAG chat node sends the file to the backend
+      // for ingestion (extract → chunk → embed) so retrieval can use it.
+      const ids = [c.source, c.target];
+      const fileId = ids.find((id) => id?.startsWith("file-"));
+      const chatId = ids.find((id) => id?.startsWith("chat-"));
+      if (fileId && chatId) void ingestFileToRag(fileId);
     },
-    [markCanvasDirty],
+    [markCanvasDirty, ingestFileToRag],
   );
 
   const handleReset = useCallback(() => {

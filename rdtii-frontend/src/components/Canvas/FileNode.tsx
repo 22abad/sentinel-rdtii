@@ -10,11 +10,22 @@ export type FileNodeData = {
   fileSize?: number;
   previewUrl?: string,
   fileType?: string,
+  /** RAG ingestion state — set when the file node is linked to the chat node. */
+  ingestStatus?: "uploading" | "ingested" | "failed";
   width?: number;
   height?: number;
   onResize?: (size: WorkbenchCanvasSize) => void;
   onResetSize?: () => void;
   onDelete: () => void;
+};
+
+const INGEST_BADGE: Record<
+  NonNullable<FileNodeData["ingestStatus"]>,
+  { label: string; color: string; bg: string }
+> = {
+  uploading: { label: "Ingesting…", color: "#92400e", bg: "#fef3c7" },
+  ingested:  { label: "In RAG", color: "#065f46", bg: "#d1fae5" },
+  failed:    { label: "Ingest failed", color: "#991b1b", bg: "#fee2e2" },
 };
 
 function Preview({ url, type, name }: { url?: string; type?: string; name?: string }) {
@@ -109,6 +120,22 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
         }}>
           File
         </span>
+        {data.ingestStatus && (
+          <span
+            title={data.ingestStatus === "failed" ? "Re-link the node to the RAG chat to retry." : undefined}
+            style={{
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              padding: "2px 8px",
+              borderRadius: 9999,
+              whiteSpace: "nowrap",
+              color: INGEST_BADGE[data.ingestStatus].color,
+              background: INGEST_BADGE[data.ingestStatus].bg,
+            }}
+          >
+            {INGEST_BADGE[data.ingestStatus].label}
+          </span>
+        )}
         <button
           className="nodrag"
           title={open? "Collapse preview" : "Expand preview"}
