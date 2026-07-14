@@ -211,6 +211,30 @@ Five find-fix cycles inside one working session, reviewer never blocked more
 than minutes. This is the human-in-the-loop claim made concrete: the loop
 improves not only the data but the tooling around it.
 
+## Legal review results (Jul 14 session, exported verdicts)
+
+44 verdicts + 33 written notes from the legal lead:
+
+- **Evidence precision (human-verified): 70% on the Round-2 pack (19/27
+  decided), 44% on the Singapore add-on pack (4/9), 64% combined (23/36).**
+- **NEW laws: 4 of 5 signed off** (SGP PDP Regulations, MYS Credit Reporting,
+  NSW PPIPA, QLD IP Act). Archives Act 1983 flagged "needs work" — the
+  statute does not specify digitised archives; kept as a lead, excluded from
+  signed-off claims.
+- **The "hallucination" that wasn't:** reviewer flagged a quote as invented
+  (not in the named act). Investigation: the quote was char-verified at the
+  exact URL shown — but `source_legislation` named the statute the provision
+  *discusses* (PSSA 2007) instead of the document it is *quoted from* (RBI
+  Payment Aggregator Guidelines). Same-day fix: rows now carry
+  "quoted from document: <title>" whenever the two diverge (#107). The
+  verbatim-verification chain held; the label was the misdirection.
+- Residual note themes: rationale sentences occasionally cut mid-sentence by
+  the token budget; circulars/policies flagged as weaker evidence than
+  statutes (a future law-type weighting); one article-granularity miss
+  ("Section 2.1 not paragraph 4").
+- Tasks B (score adjudication) and E (citation spot-check) deferred — B goes
+  to the visiting trade-law professor on Thursday by design.
+
 ## What the meeting can claim
 
 1. **The full official methodology is executable**: 61/61 indicators have a
