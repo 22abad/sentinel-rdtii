@@ -58,10 +58,13 @@ MAPPING_RATIONALE_MAX = 300
 
 # These fields are required for every provision to be useful to the judges'
 # automated evaluator. Other frozen-schema columns may legitimately be blank.
+# Fields a row MUST have to be judge-usable. 'article' is deliberately NOT
+# here: it is best-effort (backfilled by infer_article_reference), the official
+# CSV schema only requires the column to exist, and a few unlocatable headings
+# must never suppress an otherwise-complete submission.
 REQUIRED_SUBMISSION_FIELDS: tuple[str, ...] = (
     "law_name",
     "indicator_id",
-    "article",
     "verbatim_snippet",
     "source_url",
 )
@@ -272,19 +275,19 @@ def validate_submission_rows(
     rows: list[SubmissionRow],
     *,
     allow_empty: bool = False,
-) -> None:
-    """Validate judge-critical fields before any submission files are written."""
+) -> list[SubmissionRow]:
+    """Return the judge-usable rows, dropping incomplete ones with a warning.
 
-    if not rows:
-        if allow_empty:
-            return
-        raise ValueError(
-            "No verified provisions were produced. No output files were written. "
-            "Check the provider/API key and network, try --pdf, or use "
-            "--allow-empty for research-only runs."
-        )
+    A row missing a judge-critical field (source, quote, law, indicator) is
+    dropped rather than allowed to suppress the whole submission — a single
+    bad row must never leave a judge with zero output files. Raises only when
+    NO usable row remains (unless ``allow_empty``).
+    """
+    import logging
 
-    invalid_rows: list[str] = []
+    logger = logging.getLogger(__name__)
+
+    valid: list[SubmissionRow] = []
     for index, row in enumerate(rows, start=1):
         missing = [
             field
@@ -292,11 +295,17 @@ def validate_submission_rows(
             if not str(getattr(row, field, "") or "").strip()
         ]
         if missing:
-            invalid_rows.append(f"row {index}: {', '.join(missing)}")
+            logger.warning(
+                "Dropping incomplete submission row %d (missing: %s)",
+                index, ", ".join(missing),
+            )
+            continue
+        valid.append(row)
 
-    if invalid_rows:
-        details = "; ".join(invalid_rows)
+    if not valid and not allow_empty:
         raise ValueError(
-            "Submission schema validation failed; required fields are empty "
-            f"({details}). No output files were written."
+            "No judge-usable provisions were produced (all rows were empty or "
+            "incomplete). No output files were written. Check the provider/API "
+            "key and network, try --pdf, or use --allow-empty for research runs."
         )
+    return valid

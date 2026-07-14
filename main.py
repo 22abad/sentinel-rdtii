@@ -211,7 +211,7 @@ async def _run(args: argparse.Namespace) -> int:
     # the final submission boundary, after rows from every pillar/path have
     # been combined and immediately before CSV/JSON serialization.
     all_rows = reconcile_submission_tags(all_rows)
-    validate_submission_rows(
+    all_rows = validate_submission_rows(
         all_rows,
         allow_empty=getattr(args, "allow_empty", False),
     )
