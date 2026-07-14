@@ -426,3 +426,21 @@ def test_title_quote_guard_flags_name_only_quotes():
     # An operative provision is not flagged.
     row2 = build_row(_sample_mapping(), economy_display="Singapore", candidate=_FakeCandidate())
     assert "quote appears to be a title" not in row2.notes
+
+
+def test_dedupe_drops_repeated_provisions():
+    from submission.schema import dedupe_submission_rows
+
+    def mk(quote, ind="P7-I1", law="Privacy Act 1988"):
+        return SubmissionRow(economy="Australia", law_name=law,
+                             indicator_id=ind, verbatim_snippet=quote,
+                             source_url="https://legislation.gov.au/x")
+    rows = [
+        mk("The same clause."),
+        mk("the  same   clause."),                 # whitespace/case dup -> dropped
+        mk("A different clause."),                  # kept
+        mk("The same clause.", ind="P7-I3"),        # different indicator -> kept
+        mk("The same clause.", law="Other Act"),    # different law -> kept
+    ]
+    out = dedupe_submission_rows(rows)
+    assert len(out) == 4  # only the whitespace/case duplicate is removed

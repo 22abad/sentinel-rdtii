@@ -271,6 +271,28 @@ class SubmissionRow(BaseModel):
         return clipped.rstrip() + "…"
 
 
+def dedupe_submission_rows(rows: list["SubmissionRow"]) -> list["SubmissionRow"]:
+    """Drop duplicate provisions (same indicator + same law + same verbatim quote).
+
+    Long statutes run through extraction can surface the identical clause in
+    several chunks; shipping the same (indicator, quote) twice inflates the
+    submission and reads as padding to judges. Keeps first occurrence, order
+    preserved. Rows with an empty quote are never treated as duplicates.
+    """
+    seen: set[tuple[str, str, str]] = set()
+    out: list["SubmissionRow"] = []
+    for row in rows:
+        quote = " ".join((row.verbatim_snippet or "").split()).casefold()
+        law = " ".join((row.law_name or "").split()).casefold()
+        key = (row.indicator_id, law, quote)
+        if quote and key in seen:
+            continue
+        if quote:
+            seen.add(key)
+        out.append(row)
+    return out
+
+
 def validate_submission_rows(
     rows: list[SubmissionRow],
     *,
