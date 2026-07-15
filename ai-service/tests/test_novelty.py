@@ -132,6 +132,20 @@ def test_normalize_strips_constitutional_state_suffix():
     assert normalize_law_name("Bank of China Law") == "bank of china law"
 
 
+def test_thai_bilingual_paren_and_era_marker_reconcile():
+    # The Round 2 inventory stores Thai titles in ORDINARY parens with a "B.E."
+    # era marker: "Personal Data Protection Act B.E.2562 (พระราชบัญญัติ… พ.ศ. 2562)".
+    # A native-script discovery result, the English form, and the bare English
+    # name must all reconcile against it — else Thailand's flagship PDPA looks NEW.
+    index = known_law_index()
+    assert is_known_law("Thailand", "พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562", index)  # native
+    assert is_known_law("Thailand", "พระราชบัญญัติการรักษาความมั่นคงปลอดภัยไซเบอร์ พ.ศ. 2562", index)  # cyber
+    assert is_known_law("Thailand", "Personal Data Protection Act B.E.2562", index)
+    assert is_known_law("Thailand", "Personal Data Protection Act", index)
+    # A "be"-containing word without the "B.E." dot form must NOT be treated as an era marker.
+    assert normalize_law_name("Be Kind Act 2020") == "be kind act"
+
+
 def test_china_flagship_laws_reconcile_from_short_name():
     index = known_law_index()
     for short in ("China Cybersecurity Law, 2016",

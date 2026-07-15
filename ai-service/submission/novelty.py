@@ -47,6 +47,10 @@ GOLDEN_DOCUMENTS_PATH = _REPO_ROOT / "evaluation" / "golden" / "documents.jsonl"
 
 _PAREN = re.compile(r"\(.*?\)")
 _YEAR = re.compile(r"\b\d{4}\b")
+# Buddhist-era markers ("B.E." / Thai "พ.ศ.") attached to the year we already
+# strip. Removing them lets "Personal Data Protection Act B.E.2562" and the bare
+# "Personal Data Protection Act" reconcile to one identity.
+_ERA_MARKER = re.compile(r"\bb\.\s*e\.?|พ\.?\s*ศ\.?", re.IGNORECASE)
 # Standalone statute-number tokens the LLM appends verbosely: "No. 709",
 # "Act 709", "Cap. 486", "Chapter 14". Parenthesised forms ("(Act 777)") are
 # already dropped by _PAREN; this catches the bare forms so "... Act, No. 709"
@@ -206,6 +210,7 @@ def normalize_law_name(name: str) -> str:
     lowered = (name or "").lower()
     lowered = _PAREN.sub(" ", lowered)
     lowered = _YEAR.sub(" ", lowered)
+    lowered = _ERA_MARKER.sub(" ", lowered)
     lowered = _ACT_NUMBER.sub(" ", lowered)
     lowered = _STATE_SUFFIX.sub("", lowered.strip())
     lowered = _TRAILING_JURISDICTION.sub("", lowered.strip())
@@ -359,6 +364,15 @@ def known_evidence_index(
 _INVENTORY_SEP = re.compile(r"[;\n•]+")
 _CJK_BRACKET = re.compile(r"《([^》]*)》|〈([^〉]*)〉")
 _NATIVE_RUN = re.compile(r"[　-〿㐀-䶿一-鿿가-힯฀-๿]+")
+# Native-script characters (CJK ideographs, Hangul, Thai, and CJK punctuation).
+_NATIVE_CHAR = r"　-〿㐀-䶿一-鿿가-힯฀-๿"
+# The Round 2 inventory writes bilingual titles as "English Name (Native Name)"
+# using ORDINARY parentheses — e.g. "Personal Data Protection Act B.E.2562
+# (พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562)". normalize_law_name strips
+# "(...)" wholesale, so the native title would never be indexed and a
+# native-language discovery result (the Thai PDPA) would look NEW. Capture the
+# native text inside any "(...)"/"（…）" so it becomes its own identity key.
+_PAREN_NATIVE = re.compile(rf"[(（]([^)）]*[{_NATIVE_CHAR}][^)）]*)[)）]")
 
 
 def _inventory_identity_keys(economy: str, raw_law_name: str) -> set[tuple[str, str]]:
@@ -385,9 +399,14 @@ def _inventory_identity_keys(economy: str, raw_law_name: str) -> set[tuple[str, 
         english_norm = normalize_law_name(english)
         if english_norm:
             keys.add((econ, english_norm))
-        # Native-script only: each bracketed original title on its own.
+        # Native-script only: each bracketed original title on its own —
+        # from CJK 《…》/〈…〉 brackets and from ordinary "(native …)" parentheses.
         for match in _CJK_BRACKET.finditer(part):
             native = normalize_law_name(match.group(1) or match.group(2) or "")
+            if native:
+                keys.add((econ, native))
+        for match in _PAREN_NATIVE.finditer(part):
+            native = normalize_law_name(match.group(1))
             if native:
                 keys.add((econ, native))
     return keys
