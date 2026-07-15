@@ -129,9 +129,38 @@ def test_validator_drops_agreements_and_blog_sources():
         "Personal Data Protection Act 2012",
         "https://www.imda.gov.sg/resources/blog/blog-articles/2021/11/mastering-the-must-dos",
     )
+    # A trade-agreement chapter whose name hides the agreement, caught by URL.
+    assert _is_out_of_scope_source(
+        "Chapter 14 Electronic Commerce", "https://fta.miti.gov.my/miti-fta/resources/Text of TPPA"
+    )
+    # A foreign jurisdiction named in a domestic-law title is a mislabel.
+    assert _is_out_of_scope_source(
+        "Hong Kong Personal Data (Privacy) Ordinance", "https://lom.agc.gov.my/act-detail.php?act=709"
+    )
     # A real statute on its official Act page is in scope.
     assert not _is_out_of_scope_source("Personal Data Protection Act 2012", "https://sso.agc.gov.sg/Act/PDPA2012")
     assert not _is_out_of_scope_source("Privacy Act 1988", "https://www.legislation.gov.au/C2004A03712")
+
+
+def test_cap_and_dedupe_merge_law_name_variants():
+    from submission.schema import cap_rows_per_law, dedupe_submission_rows
+
+    def mk(ind, name, quote):
+        return SubmissionRow(economy="Malaysia", law_name=name, indicator_id=ind,
+                             verbatim_snippet=quote, source_url="https://lom.agc.gov.my/act?709")
+    # The same MYS PDPA under five title variants (a live run's shape).
+    variants = ["Personal Data Protection Act 2010", "PERSONAL DATA PROTECTION ACT 2010",
+                "Malaysia Personal Data Protection Act 2010", "Personal Data Protection Act (PDPA) 2010",
+                "Personal Data Protection Act 2010 (Act 709)"]
+    rows = [mk("P7-I1", v, f"a substantive provision clause number {i} about personal data handling")
+            for i, v in enumerate(variants) for _ in range(3)]  # 15 rows, one real law
+    capped = cap_rows_per_law(rows, cap=8)
+    assert len(capped) == 8  # collapsed to one law, capped — not 15 across "5 laws"
+
+    # Dedupe treats title variants + same quote as one.
+    dup = [mk("P6-I4", "Personal Data Protection Act 2010", "identical cross-border transfer clause text here"),
+           mk("P6-I4", "Malaysia Personal Data Protection Act 2010", "identical cross-border transfer clause text here")]
+    assert len(dedupe_submission_rows(dup)) == 1
 
     # End-to-end: agreement + blog rows drop, the statute row survives.
     agreement = SubmissionRow(
