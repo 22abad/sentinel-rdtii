@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api import (
     activity,
     auth,
+    evidence,
     canvas_files,
     discovery,
     excel,
@@ -39,6 +40,7 @@ def create_app() -> FastAPI:
 
     app.include_router(system.router)
     app.include_router(activity.router)
+    app.include_router(evidence.router)
     app.include_router(extraction.router)
     app.include_router(discovery.router)
     app.include_router(auth.router)
