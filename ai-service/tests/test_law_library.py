@@ -18,7 +18,7 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 19
+    assert len(entries) == 21
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
@@ -35,7 +35,7 @@ def test_discovered_new_laws_are_tagged_and_not_treated_as_known():
 
     entries = load_library()
     discovered = [e for e in entries if e.origin == "discovered"]
-    assert len(discovered) == 12
+    assert len(discovered) == 14
     assert {e.economy for e in discovered} == {"AUS", "MYS", "SGP"}
     index = known_law_index()  # unions inventory + KNOWN-baseline library entries
     for e in discovered:
@@ -70,6 +70,8 @@ def test_lookup_filters_by_economy_and_pillar():
     assert {e.law_name for e in lookup("AUS", pillar=6)} == {
         "My Health Records Act 2012",
         "Privacy Act 1988",
+        "Privacy and Data Protection Act 2014 (Victoria) — Sch 1 IPP 9 (Transborder Data Flows)",
+        "Information Act 2002 (Northern Territory) — Sch 2 IPP 9 (Transborder Data Flows)",
     }
     # SGP PDPA is tagged for pillars 6 and 7; Income Tax Act only pillar 7.
     p7 = {e.law_name for e in lookup("SGP", pillar=7)}
