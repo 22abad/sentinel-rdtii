@@ -13,7 +13,9 @@ from pathlib import Path
 from auth import _db_connect
 from chunker import regex_legal_chunker
 
-MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+# MUST match the query-side model in rag/rag.py (EMBED_MODEL) — both sides
+# embed into the same vector space or pgvector similarity is meaningless.
+MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 UPLOAD_DIR = Path(os.getenv("CANVAS_UPLOAD_DIR", "downloads/canvas"))
 
 _model = None

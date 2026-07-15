@@ -11,6 +11,10 @@ export type CanvasPanel = {
   width?: number;
   /** Optional selector limiting where React Flow may start dragging the panel. */
   dragHandle?: string;
+  /** Edges are data wires: when set, this panel's content only renders while
+      an edge connects it to the named node — otherwise a "disconnected"
+      guard is shown (e.g. audit requires its link to source). */
+  upstreamId?: string;
 };
 
 /** A spawnable panel type shown as a button in the toolbar palette. */

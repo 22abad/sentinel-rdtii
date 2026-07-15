@@ -250,13 +250,21 @@ def is_conditional_transfer_without_6_1_requirement(quote: str) -> bool:
 # ── Multi-language embedding similarity (optional) ─────────────────────
 
 
+_embedder = None
+
+
 def _get_embedder():
     """Lazy-load the embedding model (nomic-embed-text via sentence-transformers).
 
-    Only called when cross-language validation is needed.
+    Only called when cross-language validation is needed. Cached at module
+    level — this runs once per mapping, and without the cache every call
+    reloads the ~500MB model from disk (and re-hits the HF Hub).
     """
-    from sentence_transformers import SentenceTransformer
-    return SentenceTransformer("nomic-ai/nomic-embed-text-v1.5", trust_remote_code=True)
+    global _embedder
+    if _embedder is None:
+        from sentence_transformers import SentenceTransformer
+        _embedder = SentenceTransformer("nomic-ai/nomic-embed-text-v1.5", trust_remote_code=True)
+    return _embedder
 
 
 _INDICATOR_CANONICAL_PHRASES: dict[str, list[str]] = {
