@@ -44,6 +44,15 @@ _SUSPECT_NAME = re.compile(
     re.IGNORECASE,
 )
 
+# Reuse the submission pipeline's own out-of-scope test so the gate stays in
+# lock-step with what validate_submission_rows actually drops.
+sys.path.insert(0, str(REPO_ROOT / "ai-service"))
+try:
+    from submission.schema import _is_out_of_scope_source
+except Exception:  # pragma: no cover - keep the harness runnable in isolation
+    def _is_out_of_scope_source(law_name: str, source_url: str) -> bool:
+        return False
+
 
 @dataclass
 class Case:
@@ -83,6 +92,9 @@ CASES = [
     Case(3, "Uncovered economy offline -> empty, honest", ["--economy", "Mongolia", "--pillar", "6", "--offline", "--allow-empty"], "empty_ok"),
     # Tier 4 — network / live (opt-in; flaky by nature).
     Case(4, "SGP P6 seed-first (default, network)", ["--economy", "Singapore", "--pillar", "6", "--max-documents", "1"], "output", network=True),
+    # The judge's realistic headline run: enough live discovery to surface the
+    # trade-agreement / blog noise, gated on out_of_scope_rows == 0 (#155).
+    Case(4, "SGP P6,7 default headline (noise gate)", ["--economy", "Singapore", "--pillar", "6,7", "--max-documents", "4"], "output", network=True),
     Case(4, "SGP P6 strict-live (auditable crawl)", ["--economy", "Singapore", "--pillar", "6", "--strict-live", "--max-documents", "1"], "output", network=True),
     # Tier 5 — hard / honesty stress (offline, deterministic, no network).
     Case(5, "Indicator filter (--indicators 6.1)", ["--economy", "Singapore", "--pillar", "6", "--indicators", "6.1", "--offline", "--allow-empty"], "empty_ok"),
@@ -113,6 +125,11 @@ def _grade_output(out_dir: Path) -> tuple[int, dict]:
         "article_pct": round(100 * sum(1 for r in rows if r.get("article", "").strip()) / n),
         "suspect_names": sum(1 for r in rows if _SUSPECT_NAME.search(r.get("law_name", ""))),
         "duplicate_rows": n - len({(r["indicator_id"], r["law_name"], " ".join(r["verbatim_snippet"].split()).casefold()) for r in rows}),
+        # Rows a judge would read as noise: clauses from trade agreements or
+        # blog/news pages that slipped past the submission filter (#155).
+        "out_of_scope_rows": sum(
+            1 for r in rows if _is_out_of_scope_source(r.get("law_name", ""), r.get("source_url", ""))
+        ),
     }
     return n, q
 
@@ -138,7 +155,8 @@ def run_case(case: Case, offline_env: dict) -> Result:
         prov_label = "source" if case.is_pdf else "url"
         res.passed = proc.returncode == 0 and wrote and quality.get("verbatim_pct", 0) >= 80 \
             and prov_pct >= 80 and quality.get("suspect_names", 1) == 0 \
-            and quality.get("duplicate_rows", 1) == 0
+            and quality.get("duplicate_rows", 1) == 0 \
+            and quality.get("out_of_scope_rows", 1) == 0
         if not res.passed:
             bad = []
             if proc.returncode != 0: bad.append(f"exit={proc.returncode}")
@@ -147,6 +165,7 @@ def run_case(case: Case, offline_env: dict) -> Result:
             if prov_pct < 80: bad.append(f"{prov_label} {prov_pct}%")
             if quality.get("suspect_names"): bad.append(f"{quality['suspect_names']} suspect names")
             if quality.get("duplicate_rows"): bad.append(f"{quality['duplicate_rows']} dup rows")
+            if quality.get("out_of_scope_rows"): bad.append(f"{quality['out_of_scope_rows']} out-of-scope rows")
             res.note = "; ".join(bad)
     elif case.expect == "clean_error":
         # Fail-fast with a non-zero code and NO traceback in stderr.
