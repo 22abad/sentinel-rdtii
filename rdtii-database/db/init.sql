@@ -299,6 +299,19 @@ CREATE INDEX idx_verified_evidence_lookup ON verified_evidence(economy, indicato
 CREATE INDEX idx_verified_evidence_source ON verified_evidence(source_sha256);
 
 -- ============================================================
+-- Extraction cache — skip re-running the LLM on identical content.
+-- Keyed by the SHA-256 of the exact source text; stores the full
+-- extraction response JSON so a repeat run returns it verbatim.
+-- ============================================================
+
+CREATE TABLE extraction_cache (
+    source_sha256 VARCHAR(64) PRIMARY KEY,
+    response      JSONB       NOT NULL,
+    provider      VARCHAR(100),
+    created_at    TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================
 -- Discovery Source Registry
 -- ============================================================
 
