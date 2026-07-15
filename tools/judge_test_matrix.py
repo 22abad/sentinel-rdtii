@@ -28,6 +28,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = REPO_ROOT / "outputs" / "judge_matrix"
+FIXTURES = OUT_DIR / "_fixtures"
 REPORT = REPO_ROOT / "docs" / "judge-test-report.md"
 PYTHON = sys.executable
 SCANNED_PDF = (
@@ -83,6 +84,13 @@ CASES = [
     # Tier 4 — network / live (opt-in; flaky by nature).
     Case(4, "SGP P6 seed-first (default, network)", ["--economy", "Singapore", "--pillar", "6", "--max-documents", "1"], "output", network=True),
     Case(4, "SGP P6 strict-live (auditable crawl)", ["--economy", "Singapore", "--pillar", "6", "--strict-live", "--max-documents", "1"], "output", network=True),
+    # Tier 5 — hard / honesty stress (offline, deterministic, no network).
+    Case(5, "Indicator filter (--indicators 6.1)", ["--economy", "Singapore", "--pillar", "6", "--indicators", "6.1", "--offline", "--allow-empty"], "empty_ok"),
+    Case(5, "All 12 pillars on a mandatory economy", ["--economy", "Singapore", "--pillar", "all", "--offline"], "output"),
+    Case(5, "Mismatched-pillar PDF -> honest, no hallucination", ["--economy", "India", "--pillar", "7", "--pdf", str(SCANNED_PDF), "--allow-empty"], "empty_ok", is_pdf=True),
+    Case(5, "Malformed PDF -> clean error", ["--economy", "India", "--pillar", "6", "--pdf", str(FIXTURES / "malformed.pdf")], "clean_error"),
+    Case(5, "Blank PDF -> empty, honest", ["--economy", "India", "--pillar", "6", "--pdf", str(FIXTURES / "blank.pdf"), "--allow-empty"], "empty_ok", is_pdf=True),
+    Case(5, "Huge --limit does not crash", ["--economy", "Singapore", "--pillar", "6", "--offline", "--limit", "500"], "output"),
 ]
 
 
@@ -154,7 +162,7 @@ def render(results: list[Result]) -> str:
     for tier in sorted({r.case.tier for r in results}):
         trs = [r for r in results if r.case.tier == tier]
         label = {1: "Trivial (headline command)", 2: "Mandatory scope + OCR",
-                 3: "Robustness / adversarial", 4: "Live / network"}.get(tier, str(tier))
+                 3: "Robustness / adversarial", 4: "Live / network", 5: "Hard / honesty stress"}.get(tier, str(tier))
         passed = sum(1 for r in trs if r.passed)
         lines += [f"## Tier {tier} — {label}  ({passed}/{len(trs)} pass)", "",
                   "| Case | Result | Rows | Quality | Notes |", "|---|---|---|---|---|"]
@@ -178,6 +186,15 @@ def main(argv: list[str] | None = None) -> int:
 
     env = dict(os.environ)
     env.setdefault("RDTII_LLM_PROVIDER", "deepseek")
+
+    # Self-contained adversarial fixtures (no binaries in the repo).
+    FIXTURES.mkdir(parents=True, exist_ok=True)
+    (FIXTURES / "malformed.pdf").write_bytes(b"%PDF-1.4\n garbage not a real pdf body\n")
+    try:
+        import fitz  # pymupdf
+        doc = fitz.open(); doc.new_page(); doc.save(str(FIXTURES / "blank.pdf")); doc.close()
+    except Exception:
+        (FIXTURES / "blank.pdf").write_bytes(b"%PDF-1.4\n")
 
     cases = [c for c in CASES if (args.live or not c.network)]
     if args.tier:
