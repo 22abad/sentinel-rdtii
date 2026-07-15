@@ -73,7 +73,7 @@ async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
     """
     import httpx
 
-    print(f"[HTTP Fallback] 直接 HTTP 获取: {url}")
+    print(f"[HTTP Fallback] direct HTTP fetch: {url}")
     try:
         async with httpx.AsyncClient(
             timeout=httpx.Timeout(timeout / 1000),
@@ -96,7 +96,7 @@ async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
 
             html = resp.text
             if len(html) < 1000:
-                print(f"[HTTP Fallback] 内容过短 ({len(html)} 字符)，跳过")
+                print(f"[HTTP Fallback] content too short ({len(html)} chars), skipping")
                 return None
 
             # Prefer the actual embedded law/PDF over extracting a shell page.
@@ -151,7 +151,7 @@ async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
                 and _has_legal_signal(text)
                 and not _looks_like_error_or_challenge(text)
             ):
-                print(f"[HTTP Fallback] 成功！{len(text)} 字符")
+                print(f"[HTTP Fallback] OK — {len(text)} chars")
                 return {
                     "type": "text",
                     "url": str(resp.url),
@@ -180,7 +180,7 @@ async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
                     parsed = urlparse(url)
                     pdf_candidate = f"{parsed.scheme}://{parsed.netloc}{pdf_candidate}"
 
-            print(f"[HTTP Fallback] HTML 文本过短，尝试 PDF 版本: {pdf_candidate}")
+            print(f"[HTTP Fallback] HTML text too short — trying PDF version: {pdf_candidate}")
             try:
                 pdf_resp = await client.get(pdf_candidate)
                 pdf_resp.raise_for_status()
@@ -192,11 +192,11 @@ async def _try_http_fallback(url: str, timeout: int = 30000) -> dict | None:
                 if pdf_result:
                     return pdf_result
             except Exception as pdf_exc:
-                print(f"[HTTP Fallback PDF] 失败: {pdf_exc}")
+                print(f"[HTTP Fallback PDF] failed: {pdf_exc}")
 
-            print(f"[HTTP Fallback] 提取文本过短 ({len(text)} 字符)")
+            print(f"[HTTP Fallback] extracted text too short ({len(text)} chars)")
     except Exception as e:
-        print(f"[HTTP Fallback] 失败: {e}")
+        print(f"[HTTP Fallback] failed: {e}")
     return None
 
 
@@ -211,7 +211,7 @@ async def _http_pdf_response_result(
     if "application/pdf" not in content_type and not response.content.startswith(b"%PDF"):
         return None
     if len(response.content) > 25 * 1024 * 1024:
-        print(f"[HTTP PDF] 文件过大，跳过: {source_url}")
+        print(f"[HTTP PDF] file too large — skipping: {source_url}")
         return None
 
     import tempfile
@@ -244,7 +244,7 @@ async def _http_pdf_response_result(
     if len(document_text) <= 500:
         return None
 
-    print(f"[HTTP PDF] 成功！{len(document_text)} 字符")
+    print(f"[HTTP PDF] OK — {len(document_text)} chars")
     return {
         "type": "text",
         "url": str(response.url),
@@ -320,7 +320,7 @@ async def _try_embedded_document(client, *, markup: str, container_url: str) -> 
         is_pdf = "application/pdf" in content_type or response.content.startswith(b"%PDF")
         if is_pdf:
             if len(response.content) > 25 * 1024 * 1024:
-                print(f"[HTTP Embedded PDF] 文件过大，跳过: {document_url}")
+                print(f"[HTTP Embedded PDF] file too large — skipping: {document_url}")
                 continue
             import tempfile
 
@@ -365,8 +365,8 @@ async def _try_embedded_document(client, *, markup: str, container_url: str) -> 
     fetch_method = f"http_fallback_embedded_{original_format}"
     document_text = "\n\n".join(document_parts)
     print(
-        f"[HTTP Embedded {original_format.upper()}] 成功！"
-        f"{len(document_text)} 字符，{len(document_parts)} 个文档部分"
+        f"[HTTP Embedded {original_format.upper()}] OK — "
+        f"{len(document_text)} chars, {len(document_parts)} 个doc部分"
     )
     return {
         "type": "text",
@@ -396,7 +396,7 @@ async def _fetch_embedded_response(client, document_url: str):
         response.raise_for_status()
         return response
     except Exception as exc:
-        print(f"[HTTP Embedded Document] 获取失败: {document_url} ({exc})")
+        print(f"[HTTP Embedded Document] fetch failed: {document_url} ({exc})")
         return None
 
 
@@ -539,12 +539,12 @@ def _looks_like_error_or_challenge(text: str) -> bool:
 
 async def _try_wayback_fallback(url: str, context: str = "dead link") -> dict | None:
     """Try Wayback Machine fallback and log the attempt."""
-    print(f"[Dead Link] {url} — {context}，尝试 Internet Archive 归档...")
+    print(f"[Dead Link] {url} — {context}, trying Internet Archive archive...")
     wb_result = await fetch_wayback_content(url)
     if wb_result["type"] == "text":
-        print(f"[Wayback] 成功！归档于 {wb_result.get('metadata', {}).get('archive_timestamp', '?')}")
+        print(f"[Wayback] OK — archived at {wb_result.get('metadata', {}).get('archive_timestamp', '?')}")
         return wb_result
-    print(f"[Wayback] 未找到 '{url}' 的快照")
+    print(f"[Wayback] no snapshot for '{url}'  snapshot")
     return None
 
 
@@ -552,9 +552,9 @@ async def _try_opencli_fetch(url: str, timeout: int) -> dict | None:
     try:
         result = await OpenCliBrowserDriver().fetch_legal_content(url, timeout=timeout)
         if result.get("type") == "text" and result.get("text"):
-            print(f"[OpenCLI] 成功提取 {len(result['text'])} 字符: {url}")
+            print(f"[OpenCLI] extracted OK, {len(result['text'])} chars: {url}")
             return result
         return None
     except BrowserFetchError as e:
-        print(f"[OpenCLI] 不可用或提取失败: {e}")
+        print(f"[OpenCLI] unavailable or extraction failed: {e}")
         return None

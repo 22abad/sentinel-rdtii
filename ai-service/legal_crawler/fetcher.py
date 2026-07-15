@@ -28,12 +28,12 @@ async def fetch_legal_content(
     browser_mode: BrowserMode | str = "auto",
 ) -> Dict[str, Any]:
     """
-    抓取法律内容（HTML 文本或 PDF）。
+    抓取法律内容（HTML 文本或 PDF）. 
     """
     mode = normalize_browser_mode(str(browser_mode))
 
     if any(re.match(pattern, url) for pattern in INVALID_URL_PATTERNS):
-        return {"type": "error", "message": f"URL 无效: {url}"}
+        return {"type": "error", "message": f"URL invalid: {url}"}
 
     path_lower = url.lower().split('?')[0]
     direct_file_url = path_lower.endswith((".pdf", ".doc", ".docx"))
@@ -45,7 +45,7 @@ async def fetch_legal_content(
         opencli_result = await _try_opencli_fetch(url, timeout)
         if opencli_result:
             return opencli_result
-        print("[OpenCLI] 首选路径失败，继续尝试 HTTP/Playwright/归档兜底。")
+        print("[OpenCLI] primary path failed — falling back to HTTP / Playwright / archive fallback.")
 
     # ── Pre-check: dead link detection before launching Playwright ──
     dead_reason = await _precheck_url(url)
@@ -72,13 +72,13 @@ async def fetch_legal_content(
                 
                 # Task: Check if direct PDF / Word URL to avoid ERR_ABORTED
                 if path_lower.endswith(".pdf"):
-                    print(f"检测到直接 PDF URL: {url}")
+                    print(f"detected direct PDF URL: {url}")
                     pdf_path = await _download_file(page, url)
                     if pdf_path:
                         return {"type": "pdf", "url": url, "pdf_path": pdf_path}
 
                 if path_lower.endswith(".docx") or path_lower.endswith(".doc"):
-                    print(f"检测到 Word 文档: {url}")
+                    print(f"detected Word document: {url}")
                     doc_path = await _download_file(page, url)
                     if doc_path:
                         if doc_path.endswith(".docx"):
@@ -87,16 +87,16 @@ async def fetch_legal_content(
                             doc_text = None
                         if doc_text:
                             return {"type": "docx", "url": url, "text": doc_text}
-                        return {"type": "error", "message": f"Word 文档解析失败: {url}"}
+                        return {"type": "error", "message": f"Word doc解析failed: {url}"}
 
-                print(f"正在访问: {url}")
+                print(f"visiting: {url}")
                 response = None
                 try:
                     # Increase timeout and use wait_until="domcontentloaded" for potentially slow gov sites
                     response = await page.goto(url, wait_until="domcontentloaded", timeout=timeout)
                     # Inline dead-link detection — catch 404/410 from Playwright response
                     if response and response.status in (404, 410):
-                        print(f"[Dead Link] Playwright 返回 HTTP {response.status} — 跳过重试，尝试 Wayback")
+                        print(f"[Dead Link] Playwright returned HTTP {response.status} — skipping retry — trying Wayback")
                         wb = await _try_wayback_fallback(url, f"HTTP {response.status}")
                         if wb:
                             return wb
@@ -105,7 +105,7 @@ async def fetch_legal_content(
                     # If aborted but it's a PDF, we might still be able to download it
                     error_str = str(e).lower()
                     if "err_aborted" in error_str or "navigation was aborted" in error_str or "timeout" in error_str:
-                        print(f"尝试中断/超时修复，直接尝试下载: {url}")
+                        print(f"interrupt/timeout recovery — downloading directly: {url}")
                         pdf_path = await _download_file(page, url)
                         if pdf_path:
                             return {"type": "pdf", "url": url, "pdf_path": pdf_path}
@@ -154,7 +154,7 @@ async def fetch_legal_content(
                     low = content.lower().strip()
                     # Only flag when content is short (< 5KB) AND contains block language
                     if len(content) < 5000 and any(ind in low for ind in block_indicators):
-                        print(f"[警告] 检测到反爬拦截 ({content[:60].strip()}...)")
+                        print(f"[WARNING] anti-scraping block detected ({content[:60].strip()}...)")
                         # Try HTTP fallback before raising
                         http_result = await _try_http_fallback(url, timeout)
                         if http_result:
@@ -179,35 +179,35 @@ async def fetch_legal_content(
                     opencli_result = await _try_opencli_fetch(url, timeout)
                     if opencli_result:
                         return opencli_result
-                return {"type": "error", "message": "未找到有效内容"}
+                return {"type": "error", "message": "no snapshot forhas效内容"}
             except Exception as e:
-                print(f"[重试 {attempt}/{max_retries}] 错误: {e}")
+                print(f"[retry {attempt}/{max_retries}] error: {e}")
                 if attempt == max_retries:
                     if mode == "auto":
                         opencli_result = await _try_opencli_fetch(url, timeout)
                         if opencli_result:
                             return opencli_result
 
-                    # ── 所有重试失败 → 尝试 KNOWN_ALTERNATIVES ──────────
+                    # ── 所hasretryfailed → trying KNOWN_ALTERNATIVES ──────────
                     parsed = urlparse(url)
                     domain = parsed.netloc.replace("www.", "")
                     alternatives = KNOWN_ALTERNATIVES.get(domain, [])
                     if alternatives:
-                        print(f"[Fallback] {domain} 有 {len(alternatives)} 个替代来源，尝试中...")
+                        print(f"[Fallback] {domain} has {len(alternatives)} alternative source(s) — trying…")
                         for alt in alternatives:
                             if alt["type"] == "search_ocs":
-                                # ratchakitcha → OCS 替代：提取 URL 中有意义的搜索词
+                                # ratchakitcha → OCS 替代: 提取 URL 中has意义的search词
                                 # URL 格式: /search-result?keyword=xxx 或 /documents/xxx.pdf
                                 parsed_url = urlparse(url)
                                 
-                                # 尝试从 ratchakitcha URL 路径中提取法条关键词
+                                # trying从 ratchakitcha URL 路径中提取法条关键词
                                 path_parts = [p for p in parsed_url.path.split("/") if p]
                                 if "search" in "".join(path_parts).lower():
                                     search_query = dict(p.split("=") for p in parsed_url.query.split("&") if "=" in p).get("keyword", "")
                                 else:
                                     search_query = ""
 
-                                # 如果 URL 中无法提取有意义的关键词，用文件名部分启发式推断
+                                # 如果 URL 中无法提取has意义的关键词, 用文件名部分启发式推断
                                 if not search_query or len(search_query) < 3:
                                     last_part = path_parts[-1] if path_parts else ""
                                     if "pdpa" in last_part.lower():
@@ -220,21 +220,21 @@ async def fetch_legal_content(
                                         search_query = ""
 
                                 if search_query:
-                                    print(f"[Fallback] OCS 搜索关键词: '{search_query}'")
+                                    print(f"[Fallback] OCS search keyword: '{search_query}'")
                                     result = await fetch_thai_law_by_keyword(search_query, timeout=timeout)
                                     if result["type"] == "text":
                                         return result
                                 else:
-                                    print("[Fallback] 无法自动推断 OCS 搜索关键词。")
-                                    print("[Fallback] ratchakitcha.soc.go.th 可能被 Cloudflare 阻断或 URL 信息不足。")
-                                    print("建议: 直接使用 fetch_thai_law_by_keyword('ชื่อกฎหมายภาษาไทย') 从 OCS 获取。")
+                                    print("[Fallback] could not infer OCS search keyword. ")
+                                    print("[Fallback] ratchakitcha.soc.go.th possibly Cloudflare-blocked or insufficient URL info. ")
+                                    print("hint: use fetch_thai_law_by_keyword('<thai-law-title>') to fetch from OCS. ")
                             elif alt["type"] == "web":
                                 alt_url = f"https://www.{alt['source']}/"
-                                print(f"[Fallback] 尝试替代网站: {alt_url}")
+                                print(f"[Fallback] trying alternative site: {alt_url}")
                                 try:
                                     return await fetch_legal_content(alt_url, timeout=timeout, max_retries=1, browser_mode=mode)
                                 except Exception as alt_e:
-                                    print(f"[Fallback] 替代来源失败: {alt_e}")
+                                    print(f"[Fallback] alternative source failed: {alt_e}")
                                     continue
 
                     # ── HTTP Fallback (WAF-blocked SSR sites) ───────────
@@ -243,13 +243,13 @@ async def fetch_legal_content(
                         return http_result
 
                     # ── Wayback Machine 兜底 ──
-                    print(f"[Wayback Fallback] 尝试从 Internet Archive 获取 '{url}' 的快照...")
+                    print(f"[Wayback Fallback] trying Internet Archive snapshot for '{url}'  snapshot...")
                     wb_result = await fetch_wayback_content(url)
                     if wb_result["type"] == "text":
                         return wb_result
 
-                    # ── 最后尝试 Google Cache ──
-                    print(f"[Google Cache Fallback] 尝试 Google Cache...")
+                    # ── 最后trying Google Cache ──
+                    print(f"[Google Cache Fallback] trying Google Cache...")
                     gc_text = await fetch_google_cache(url)
                     if gc_text:
                         return {
@@ -271,7 +271,7 @@ async def fetch_legal_content(
 
 async def crawl_for_pdpa_pdf(start_url: str, keyword: str = "Personal Data Protection", max_depth: int = 2, timeout: int = 60000) -> Optional[str]:
     """
-    递归搜索 PDF。
+    recursivesearch PDF. 
     """
     visited = set()
     queue = deque([(start_url, 0)])
@@ -282,7 +282,7 @@ async def crawl_for_pdpa_pdf(start_url: str, keyword: str = "Personal Data Prote
             continue
         visited.add(url)
         
-        print(f"[递归] 访问: {url} (深度{depth})")
+        print(f"[recursive] visit: {url} (depth{depth})")
         try:
             async with async_playwright() as p:
                 context = await _initialize_browser_context(p)
@@ -293,18 +293,18 @@ async def crawl_for_pdpa_pdf(start_url: str, keyword: str = "Personal Data Prote
                 await page.wait_for_timeout(5000) # 等待 Cloudflare 或 JS 挑战
                 
                 title = await page.title()
-                print(f"[页面标题] {title}")
+                print(f"[page title] {title}")
                 
                 if "Cloudflare" in title or "Just a moment" in title:
-                    print("[警告] 遇到 Cloudflare 挑战，尝试等待更多时间...")
+                    print("[WARNING] Cloudflare challenge — waiting longer...")
                     await page.wait_for_timeout(10000)
                     title = await page.title()
-                    print(f"[重新检查标题] {title}")
+                    print(f"[re-checking title] {title}")
                 if page.url.lower().endswith('.pdf') and keyword.lower() in page.url.lower():
                     pdf_path = await _download_file(page, page.url)
                     if pdf_path: return pdf_path
                 
-                # 2. 查找页面内所有链接
+                # 2. 查找页面内所has链接
                 links = await page.evaluate('Array.from(document.querySelectorAll("a")).map(a => ({href: a.href, text: a.innerText}))')
                 
                 for link in links:
@@ -316,16 +316,16 @@ async def crawl_for_pdpa_pdf(start_url: str, keyword: str = "Personal Data Prote
                         
                     # 如果是 PDF 且包含关键词
                     if href.lower().endswith('.pdf') and (keyword.lower() in href.lower() or keyword.lower() in text.lower()):
-                        print(f"[命中] 发现 PDF: {href}")
+                        print(f"[hit] found PDF: {href}")
                         pdf_path = await _download_file(page, href)
                         if pdf_path: return pdf_path
                     
-                    # 如果是同站链接，加入队列
+                    # 如果是同站链接, 加入队列
                     if urlparse(href).netloc == urlparse(start_url).netloc:
                         queue.append((href, depth + 1))
                 
                 await context.close()
         except Exception as e:
-            print(f"[错误] {url}: {e}")
+            print(f"[error] {url}: {e}")
             
     return None
