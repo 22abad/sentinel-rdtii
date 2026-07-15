@@ -51,12 +51,15 @@ def test_submission_validator_drops_incomplete_rows_but_keeps_output():
     )
     good = SubmissionRow(
         economy="Singapore", law_name="Good Act 2026", indicator_id="P6-I1",
-        article="", verbatim_snippet="A complete provision.",
+        article="",
+        verbatim_snippet="A complete provision that reads like a real statutory clause.",
         source_url="https://sso.agc.gov.sg/Act/PDPA2012",
     )
     bad = SubmissionRow(  # no source_url -> unusable, must be dropped
         economy="Singapore", law_name="Bad Act 2026", indicator_id="P6-I1",
-        article="Section 1", verbatim_snippet="Provision.", source_url="",
+        article="Section 1",
+        verbatim_snippet="A provision with enough substance to be a real clause.",
+        source_url="",
     )
     # An empty article no longer suppresses the row.
     kept = validate_submission_rows([good])
@@ -69,6 +72,39 @@ def test_submission_validator_drops_incomplete_rows_but_keeps_output():
     # All-bad without allow_empty -> raise (nothing usable).
     with pytest.raises(ValueError, match="No judge-usable provisions"):
         validate_submission_rows([bad])
+
+
+def test_validator_drops_fragment_quotes_but_keeps_title_and_provision():
+    from submission.schema import _is_fragment_quote
+
+    # Mid-sentence fragments the extractor emits by mistake -> dropped.
+    assert _is_fragment_quote("Personal Data Protection Act 2012", "personal data")
+    assert _is_fragment_quote("Information Privacy Act 2009 (QLD)", "data processor")
+    assert _is_fragment_quote("Information Privacy Act 2009 (QLD)", "privacy principle requirements")
+    # A framework-existence title-quote (e.g. P7-I1 evidence) -> kept, even short.
+    assert not _is_fragment_quote("Privacy Act 1988", "Privacy Act 1988")
+    assert not _is_fragment_quote(
+        "Singapore Personal Data Protection Act (PDPA), 2012", "Personal Data Protection Act 2012"
+    )
+    # A substantive provision -> kept.
+    assert not _is_fragment_quote(
+        "PDPA", "An organisation must not transfer any personal data outside Singapore unless"
+    )
+
+    # End-to-end: a fragment row is dropped from the submission, a good row kept.
+    frag = SubmissionRow(
+        economy="Australia", law_name="Information Privacy Act 2009 (QLD)",
+        indicator_id="P7-I4", article="", verbatim_snippet="privacy principle requirements",
+        source_url="https://legislation.qld.gov.au/x",
+    )
+    prov = SubmissionRow(
+        economy="Singapore", law_name="Personal Data Protection Act 2012",
+        indicator_id="P7-I3", article="Section 25",
+        verbatim_snippet="An organisation must cease to retain documents containing personal data.",
+        source_url="https://sso.agc.gov.sg/Act/PDPA2012",
+    )
+    kept = validate_submission_rows([frag, prov])
+    assert [r.indicator_id for r in kept] == ["P7-I3"]
 
 
 @pytest.mark.parametrize(
