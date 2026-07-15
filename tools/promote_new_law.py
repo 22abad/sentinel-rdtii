@@ -74,7 +74,39 @@ def parse_args(argv=None) -> argparse.Namespace:
     p.add_argument("--language", default="en")
     p.add_argument("--notes", default="")
     p.add_argument("--dry-run", action="store_true", help="Show the entry, don't write")
+    p.add_argument("--verify", action="store_true",
+                   help="Before banking, run the pseudo-intelligent triage: fetch the "
+                        "official URL, confirm the provision text is present verbatim, and "
+                        "reject if the law is already KNOWN or the quote is weak evidence.")
+    p.add_argument("--force", action="store_true",
+                   help="Bank even if --verify returns a non-PROMOTE verdict (records the verdict).")
     return p.parse_args(argv)
+
+
+def _triage_before_promote(code: str, args, text: str) -> tuple[bool, str]:
+    """Run the reusable triage gate. Returns (allowed, verdict_note)."""
+    # Probe with the longest line of the provision body (after the header line),
+    # which is the most distinctive verbatim slice to locate at the source.
+    body = text.split("\n\n", 1)[-1] if "\n\n" in text else text
+    probe = max((ln.strip() for ln in body.splitlines()), key=len, default=body.strip())
+    try:
+        from services.source_verification import Verdict, triage_candidate
+
+        indicator = ""
+        inds = [i.strip() for i in args.indicators.split(",") if i.strip()]
+        if inds:
+            # normalise "7.1" -> "P7-I1" for the weak-evidence framework check
+            try:
+                from submission.schema import indicator_to_rdtii_code
+                indicator = indicator_to_rdtii_code(inds[0])
+            except Exception:  # noqa: BLE001
+                indicator = inds[0]
+        v = triage_candidate(code, args.law_name, probe, args.url, indicator_id=indicator)
+        note = (f"verdict={v.verdict.value} quote_found={v.quote_found} "
+                f"is_known={v.is_known} is_weak={v.is_weak} fetch={v.fetch_method or '-'}")
+        return (v.verdict == Verdict.PROMOTE), note
+    except Exception as exc:  # noqa: BLE001 — verification must never hard-crash the tool
+        return True, f"triage skipped ({type(exc).__name__}: {exc})"
 
 
 def main(argv=None) -> int:
@@ -93,6 +125,14 @@ def main(argv=None) -> int:
         print(f"Error: law_id '{law_id}' is already in the library (use --law-id to disambiguate).",
               file=sys.stderr)
         return 2
+
+    if args.verify:
+        allowed, note = _triage_before_promote(code, args, text)
+        print(f"[verify] {note}")
+        if not allowed and not args.force:
+            print("Refusing to promote — triage did not return PROMOTE. Re-check the source, "
+                  "or pass --force to bank anyway.", file=sys.stderr)
+            return 3
 
     text_path = TEXT_DIR / f"{law_id}.txt"
     sha256 = hashlib.sha256(text.encode("utf-8")).hexdigest()
