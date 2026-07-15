@@ -35,13 +35,18 @@ def test_discovered_new_laws_are_tagged_and_not_treated_as_known():
 
     entries = load_library()
     discovered = [e for e in entries if e.origin == "discovered"]
-    assert len(discovered) == 5
+    assert len(discovered) == 4
     assert {e.economy for e in discovered} == {"AUS", "MYS", "SGP"}
     index = known_law_index()  # unions inventory + KNOWN-baseline library entries
     for e in discovered:
         assert e.discovery_tag == "NEW"
         # A cached NEW discovery must NOT be counted as KNOWN.
         assert not is_known_law(e.economy, e.law_name, index)
+
+    qld = next(e for e in entries if e.law_id == "aus-qld-ip-act-2009")
+    assert qld.origin == "known"
+    assert qld.discovery_tag == "KNOWN"
+    assert is_known_law(qld.economy, qld.law_name, index)
 
 
 def test_malaysia_pdpa_2010_fills_the_pillar6_gap():

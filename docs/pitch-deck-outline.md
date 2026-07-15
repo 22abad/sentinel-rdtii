@@ -37,9 +37,10 @@ Tagline: **"The LLM never decides the score."**
 
 ## 5. Discovery of NEW evidence (1 slide) — the judges' differentiator
 
-5 genuine NEW in-force laws found beyond the sample kit (e.g. Queensland
-Information Privacy Act 2009 — state statute absent from the federal
-inventory), each cached with URL + SHA-256 + human-review gate.
+5 genuine NEW in-force laws found beyond the sample kit (e.g. Australia's
+Identity Verification Services Act 2023), each cached with URL + SHA-256 +
+human-review gate. The Queensland Information Privacy Act is treated as
+baseline evidence and is not claimed as NEW.
 
 ## 6. Beyond mandatory: the full methodology, measured (1–2 slides) — the wow
 

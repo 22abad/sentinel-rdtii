@@ -338,7 +338,7 @@ do not rename or reorder.**
 | 1 | `economy` | ✓ | Official UN economy name |
 | 2 | `law_name` | ✓ | Full statute name and year |
 | 3 | `law_number_ref` |  | Official act/law number (e.g. `Act 777`) |
-| 4 | `last_amended` |  | Year of most recent amendment |
+| 4 | `last_amended` | ✓ | Year of most recent amendment, or `Not stated in source` |
 | 5 | `indicator_id` | ✓ | RDTII code (e.g. `P6-I1`, `P7-I3`) |
 | 6 | `article` | ✓ | Exact article/section (e.g. `Section 26`) |
 | 7 | `discovery_tag` | ✓ | `NEW` = independent find; `KNOWN` = curated example |

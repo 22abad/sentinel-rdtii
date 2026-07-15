@@ -19,7 +19,7 @@ CSV_COLUMNS: tuple[str, ...] = (
     "economy",           # 1  Official UN country name
     "law_name",          # 2  Full official statute name and year
     "law_number_ref",    # 3  Official act/law number (e.g. Act 709, B.E. 2562)
-    "last_amended",      # 4  Year of most recent amendment; blank if never amended
+    "last_amended",      # 4  Year of most recent amendment; explicit unknown if unavailable
     "indicator_id",      # 5  RDTII code (e.g. P6-I1, P7-I3)
     "article",           # 6  Exact article and paragraph (e.g. Art. 26(2))
     "discovery_tag",     # 7  NEW = independent find; KNOWN = sample kit
@@ -59,13 +59,15 @@ MAPPING_RATIONALE_MAX = 300
 
 # These fields are required for every provision to be useful to the judges'
 # automated evaluator. Other frozen-schema columns may legitimately be blank.
-# Fields a row MUST have to be judge-usable. 'article' is deliberately NOT
-# here: it is best-effort (backfilled by infer_article_reference), the official
-# CSV schema only requires the column to exist, and a few unlocatable headings
-# must never suppress an otherwise-complete submission.
+# Fields a row MUST have to be judge-usable.  The official orientation rubric
+# requires an exact article/paragraph and last-amended value. Location remains
+# optional in the frozen schema, but build_row fills it whenever provenance is
+# available.
 REQUIRED_SUBMISSION_FIELDS: tuple[str, ...] = (
     "law_name",
+    "last_amended",
     "indicator_id",
+    "article",
     "verbatim_snippet",
     "source_url",
 )
@@ -204,7 +206,7 @@ class SubmissionRow(BaseModel):
     economy: str
     law_name: str
     law_number_ref: str = ""
-    last_amended: str = ""
+    last_amended: str = "Not stated in source"
     indicator_id: str
     article: str = ""
     discovery_tag: str = "NEW"

@@ -106,6 +106,11 @@ def _location_reference(mapping: IndicatorMapping, doc_meta: dict, article: str)
 
     explicit = str(doc_meta.get("location_reference") or "").strip()
     if explicit:
+        # A bare URL is provenance, not a precise location.  Preserve page,
+        # anchor and DOM references as-is, but qualify a bare URL with the
+        # exact legal section so the CSV remains directly auditable.
+        if explicit.startswith(("http://", "https://")) and "#" not in explicit and article:
+            return f"{explicit} ({article})"
         return explicit
     spans = doc_meta.get("page_char_spans") or []
     if spans:
@@ -185,6 +190,7 @@ def build_row(
         source_text, mapping.quote_start, mapping.quote_end
     )
 
+    indicator_id = indicator_to_rdtii_code(mapping.indicator)
     article = mapping.article_clause or ""
     inferred_note = ""
     if not article and source_text:
@@ -197,6 +203,12 @@ def build_row(
     # cannot evidence an indicator; flag loudly for the reviewer.
     quote_norm = " ".join(mapping.verbatim_quote.lower().split())
     law_norm = " ".join((law_name or "").lower().split())
+    if not article and indicator_id == "P7-I1" and quote_norm and law_norm and (
+        quote_norm in law_norm or law_norm in quote_norm
+    ):
+        # Framework-existence evidence is legitimately supported by the Act as
+        # a whole.  Say that explicitly instead of shipping an empty citation.
+        article = "Whole Act (framework-level evidence)"
     title_note = ""
     if quote_norm and law_norm and (
         quote_norm in law_norm or law_norm in quote_norm
@@ -221,8 +233,11 @@ def build_row(
         economy=economy_display,
         law_name=law_name,
         law_number_ref=extract_law_number_ref(law_name),
-        last_amended=extract_year(mapping.last_update, candidate_last),
-        indicator_id=indicator_to_rdtii_code(mapping.indicator),
+        last_amended=(
+            extract_year(mapping.last_update, candidate_last)
+            or "Not stated in source"
+        ),
+        indicator_id=indicator_id,
         article=article,
         discovery_tag=(
             "KNOWN"
@@ -593,7 +608,7 @@ async def run_library(
             # source_legislation (offline runs otherwise emit one act under
             # a dozen hallucinated names, e.g. "South Korea Queensland...").
             authoritative_law_name=entry.law_name,
-            last_update="",
+            last_update=entry.last_amended,
             discovery_method="cached_discovery" if is_discovered else "known_mapping",
             confidence=1.0,
             warnings=[],

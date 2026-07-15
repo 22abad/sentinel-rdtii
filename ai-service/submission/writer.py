@@ -28,7 +28,11 @@ def write_csv(rows: list[SubmissionRow], path: str | Path) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(CSV_COLUMNS))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(CSV_COLUMNS),
+            lineterminator="\n",
+        )
         writer.writeheader()
         for row in rows:
             writer.writerow(row.csv_record())
