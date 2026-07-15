@@ -11,7 +11,7 @@ before the July 20 submission. Print this; assign presenters at the top._
 |---|---|---|---|
 | 0–3 | Problem & architecture in one picture | Dong | deck outline §1–3 |
 | 3–8 | **Live demo**: `python main.py --economy Singapore --pillar 6` + scanned-PDF run | Dong | terminal (offline mode as backup) |
-| 8–12 | Round 1 status: golden set signed off, 5 NEW laws, 500+ tests | Abel | deck §4–5 |
+| 8–12 | Round 1 status: golden set signed off, 12 verified NEW laws, 550+ tests | Abel | deck §4–5 |
 | 12–18 | **The benchmark**: 500 rows vs official DB, 251 exact (50.2%) / 351 evidence-backed (70.2%), 7 languages | Dong | `round2-meeting-report.md` |
 | 18–22 | Legal-in-the-loop: Katie's verification session + adjudication findings | Katie | her exported results |
 | 22–25 | Engineering war stories (pick 2: reasoning-budget starvation, prefix-cap blindness) | Eric/Abel | engineering log §5–6 |
@@ -54,11 +54,23 @@ _Frame: "we didn't just build it, we tried to break it the way a judge would."_
   clean export** that applies the submission noise-gate rule, so a raw export can't
   leak weak rows even if the audit step is skipped. Tagline for the live demo:
   *"Point, drag, run — and never do the same work twice."*
-- **Genuine NEW evidence, independently verified** (the discovery differentiator):
-  - 🇦🇺 *Identity Verification Services Act 2023* (P7-I5) and *Privacy Amendment
-    (Public Health Contact Information) Act 2020* — confirmed in force via the
-    Federal Register API; indicators re-checked against the actual provision (we
-    **retracted** the model's over-tags rather than ship them).
+- **Genuine NEW evidence, independently verified** (the discovery differentiator —
+  this is the explicit **20-point "Discovery of New Evidence"** item at Stage 2):
+  - **12 verified NEW laws now in the library** (SGP 3 · MYS 5 · AUS 4), each with a
+    verbatim provision fetched from the official government portal and a
+    machine-checked SHA-256. Highlights: 🇸🇬 Banking Act 1970 s 47 (secrecy),
+    Healthcare Services (General) Regs 2021 (retention), PDP Reg 2021; 🇲🇾 PDPA
+    (Amendment) Act 2024 (Act A1727) — breach notification s 12B, DPO s 12A, data
+    portability s 43A — all in force 2025, plus PDP Regulations 2013; 🇦🇺 Digital ID
+    Act 2024 s 48 (biometrics), Identity Verification Services Act 2023 s 10.
+  - **How we found them (say this):** three parallel research passes per economy
+    across 5 angles (subsidiary legislation, sectoral/adjacent laws, recent
+    amendments, other pillars, cross-reference), then **a double rigor gate** —
+    every candidate was (1) re-verified by hand against the official source and
+    (2) run through an automated `is_known_law` check. That gate **rejected ~10
+    would-be finds as already-known or not-in-force** (e.g. Electronic Transactions
+    Act, China's PIPL/DSL/CSL, the spent COVIDSafe cross-border ban) — we ship only
+    what survives both.
   - 🇹🇭 two *PDPA exemption Royal Decrees* (2020/2023) — verbatim provisions pulled
     from the Office of the Council of State; existence corroborated by DLA Piper.
   - Full audit trail in `docs/new-law-candidates.md`.

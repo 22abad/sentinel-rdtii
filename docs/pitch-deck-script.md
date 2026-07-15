@@ -102,22 +102,25 @@ That's the difference between a demo and a submission."
 
 ## Slide 6 — Discovery of NEW evidence (the differentiator)
 
-**On slide:**
-- Beyond the sample kit, we find **genuine, in-force laws absent from the official inventory** — each independently verified
-- 🇦🇺 **Identity Verification Services Act 2023** (P7-I5) & **Privacy Amendment (Public Health Contact Information) Act 2020** — confirmed *in force* via the Federal Register API
-- 🇹🇭 **two PDPA-exemption Royal Decrees (2020 / 2023)** — verbatim provisions from the Office of the Council of State; corroborated by DLA Piper
-- **We retract the model's over-tagged indicators rather than ship them** — full audit trail in `docs/new-law-candidates.md`
+**On slide:** (the explicit **20-point "Discovery of New Evidence"** item)
+- Beyond the sample kit, we find **genuine, in-force laws absent from the official inventory** — **12 verified NEW laws** now banked (🇸🇬 3 · 🇲🇾 5 · 🇦🇺 4), each with a verbatim provision + SHA-256
+- Found by **parallel research across 5 angles** (subsidiary legislation · sectoral/adjacent laws · recent amendments · other pillars · cross-references)
+- **A double rigor gate**: hand-verify against the official portal **+** an automated `is_known_law` check — it **rejected ~10 would-be finds** as already-known or not-in-force (e.g. China's PIPL/DSL/CSL, the spent COVIDSafe ban)
+- 🇲🇾 **PDPA Amendment 2024 (A1727)** breach-notification / DPO / data-portability (in force 2025) · 🇦🇺 **Digital ID Act 2024** biometrics · 🇹🇭 two PDPA-exemption Royal Decrees — full audit trail in `docs/new-law-candidates.md`
 
-**🎤 Speaker:** "This is our differentiator. The tool doesn't just re-map the
-provided laws — it discovers real, in-force laws the official inventory misses. In
-Australia, the 2023 Identity Verification Services Act and the COVID-app-data
-Privacy Amendment — both confirmed in force through the government's own register
-API. In Thailand, two Royal Decrees that exempt agencies from the PDPA, with the
-verbatim Thai text pulled from the Council of State. And crucially: where the model
-over-tagged an indicator, we retracted it rather than ship a wrong claim. Every
-lead is verified before we make it."
+**🎤 Speaker:** "This is our differentiator, and it maps to an explicit twenty-point
+item — Discovery of New Evidence. The tool doesn't just re-map the provided laws; it
+finds real, in-force laws the official inventory misses. We've banked twelve verified
+new laws across Singapore, Malaysia and Australia — Malaysia's 2024 data-protection
+amendments, Australia's Digital ID Act, and more — each with a verbatim provision we
+fetched from the government's own portal. And here's the discipline that keeps us
+safe: every candidate passes two gates — a human check against the official source,
+and an automated 'is-this-already-known' filter. That filter rejected about ten
+would-be finds — including China's flagship laws and a COVID-era ban that's since
+been repealed — so we ship only what survives both. We'd rather find fewer and be
+right."
 
-**💡 中文提示:** 差异化——发现官方清单外的真新法(AUS 2 + THA 2),都独立核实过;过度声称的指标我们撤回不硬交。
+**💡 中文提示:** 差异化 + 对应 20 分——已入库 **12 条已核实新法**(SGP3/MYS5/AUS4),5 思路并行挖 + **双重闸(人工核实 + is_known_law 自动过滤,拒掉约 10 条已知/失效)**;宁可少而准。
 
 ---
 
