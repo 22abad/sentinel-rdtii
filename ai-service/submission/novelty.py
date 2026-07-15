@@ -41,6 +41,22 @@ GOLDEN_DOCUMENTS_PATH = _REPO_ROOT / "evaluation" / "golden" / "documents.jsonl"
 
 _PAREN = re.compile(r"\(.*?\)")
 _YEAR = re.compile(r"\b\d{4}\b")
+# Standalone statute-number tokens the LLM appends verbosely: "No. 709",
+# "Act 709", "Cap. 486", "Chapter 14". Parenthesised forms ("(Act 777)") are
+# already dropped by _PAREN; this catches the bare forms so "... Act, No. 709"
+# reconciles to the same identity as the curated "Personal Data Protection Act".
+_ACT_NUMBER = re.compile(r"\b(?:no|act|cap|chapter)\.?\s*[a-z]?\d+\b", re.IGNORECASE)
+# A leading economy / nationality prefix the LLM prepends ("Malaysia Personal
+# Data Protection Act", "Singapore PDPA"). Identity keys are already scoped by
+# (economy, name), so a leading country word is redundant noise that must not
+# defeat KNOWN-baseline reconciliation of an economy's own flagship statute.
+_LEADING_GEO = re.compile(
+    r"^(?:the\s+)?(?:singapore|malaysia|malaysian|australia|australian|china|chinese|"
+    r"thailand|thai|india|indian|indonesia|indonesian|lao(?:\s+pdr)?|mongolia|mongolian|"
+    r"russia(?:n\s+federation)?|hong\s+kong|viet\s*nam|vietnamese|korea|korean|japan|"
+    r"japanese|new\s+zealand|united\s+kingdom|united\s+states)\s+",
+    re.IGNORECASE,
+)
 _ARTICLE_PREFIX = re.compile(r"\b(?:sections?|secs?|s)\b", re.IGNORECASE)
 _ARTICLE_WORD = re.compile(r"\b(?:articles?|arts?)\b", re.IGNORECASE)
 _ISO_DATE = re.compile(r"\b(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])\b")
@@ -86,6 +102,8 @@ def normalize_law_name(name: str) -> str:
     lowered = (name or "").lower()
     lowered = _PAREN.sub(" ", lowered)
     lowered = _YEAR.sub(" ", lowered)
+    lowered = _ACT_NUMBER.sub(" ", lowered)
+    lowered = _LEADING_GEO.sub("", lowered.strip())
     return _normalize_words(lowered)
 
 
