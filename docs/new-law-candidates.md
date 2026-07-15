@@ -79,34 +79,33 @@ Data Security Law, the cross-border data measures), **all already in the Round 2
 baseline** once short-name/long-name reconciliation is applied (#144). No
 verified new law.
 
-### 🇹🇭 Thailand — 2 verified-to-exist new subordinate laws (indicator TBC by a Thai-reading reviewer)
+### 🇹🇭 Thailand — 2 new PDPA-exemption Royal Decrees (verbatim provisions extracted)
 The PDPA and Cybersecurity Act B.E. 2562 themselves reconcile as KNOWN (#147).
 Beyond them, the sweep surfaced two **Royal Decrees (พระราชกฤษฎีกา) that exempt
-entities from the PDPA** — absent from the RDTII Round 2 baseline (its Thai Royal
-Decrees are different ones: digital identification, digital-platform services,
-customs tariff):
+entities from the PDPA**, both absent from the RDTII baseline (whose Thai Royal
+Decrees are unrelated: digital identification, digital-platform services, customs
+tariff). Source: the **Office of the Council of State** legal database
+(`searchlaw.ocs.go.th`), Thailand's authoritative statute portal. Existence also
+independently corroborated by DLA Piper *Data Protection Laws of the World —
+Thailand* (a 2020 data-controller exemption decree; a 2023 government-authority
+exemption decree). _English translations below are unofficial (mine); the Thai is
+verbatim from the official source._
 
-1. **Royal Decree prescribing agencies/businesses whose data controllers are not
-   subject to the PDPA B.E. 2562** — _"พระราชกฤษฎีกากำหนดหน่วยงานและกิจการที่ผู้ควบคุมข้อมูลส่วนบุคคลไม่อยู่ภายใต้บังคับแห่งพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562"_
-2. **Royal Decree prescribing businesses/agencies exempted from applying parts of
-   the PDPA B.E. 2562** — _"พระราชกฤษฎีกากำหนดลักษณะ กิจการ หรือหน่วยงานที่ได้รับการยกเว้นไม่ให้นำพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 บางส่วนมาใช้บังคับ"_
+#### 🟢 Decree 1 — Royal Decree … Exempting Data Controllers from Applying **Parts** of the PDPA, B.E. 2566 (2023)
+- **Thai title:** พระราชกฤษฎีกากำหนดลักษณะ กิจการ หรือหน่วยงานที่ได้รับการยกเว้นไม่ให้นำพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 บางส่วนมาใช้บังคับ พ.ศ. 2566
+- **Absent from baseline:** ✔  ·  **Source:** searchlaw.ocs.go.th (Council of State)
+- **Verbatim operative provision — Section 4(2):** _"(๒) หน้าที่ของผู้ควบคุมข้อมูลส่วนบุคคลในการเปิดเผยข้อมูลส่วนบุคคลโดยไม่ต้องได้รับความยินยอมจากเจ้าของข้อมูลส่วนบุคคล เมื่อได้รับการร้องขอข้อมูลดังกล่าวจากหน่วยงานของรัฐซึ่งมีกฎหมายให้อำนาจในการร้องขอข้อมูลนั้น โดยหน่วยงานของรัฐได้ระบุบทบัญญัติแห่งกฎหมายที่ให้อำนาจในการร้องขอ เพื่อปฏิบัติงานตามหน้าที่และอำนาจของหน่วยงาน"_
+- **Unofficial translation:** _"(2) The duty of a data controller to disclose personal data **without the consent of the data subject**, upon a request for such data **from a state agency empowered by law to request it**, where the state agency has cited the statutory provision authorising the request, in order to perform the agency's duties and powers."_
+- **Indicator — P7-I5 (requirements to allow government access to personal data): evidenced.** The provision creates a duty to disclose personal data to a state agency without the data subject's consent — a direct government-access-to-personal-data requirement.
 
-- **Existence independently confirmed** (DLA Piper *Data Protection Laws of the
-  World — Thailand*): Thailand issued a **Royal Decree B.E. 2563 (2020)**
-  exempting certain data controllers from PDPA applicability, and a **Royal Decree
-  of 17 Aug 2023** exempting specified government authorities (NACC, Revenue,
-  Customs, Excise Departments) from certain PDPA obligations. Decree (1) matches
-  the 2020 decree; (2) is a partial-exemption decree — **a Thai-reading reviewer
-  should confirm which registered decree each title is and pull the operative
-  section.**
-- **Absent from baseline:** ✔ (`is_known_law` = false; the baseline's Thai Royal
-  Decrees are unrelated).
-- **Indicator — assessment only, NOT yet evidenced by a quote.** Exemptions
-  define the *scope* of the data-protection framework → **P7-I1 territory**; the
-  2023 government-authority exemption also touches **P7-I5** (government handling
-  of personal data). No verbatim provision was extracted (the large Thai PDFs
-  stalled LLM extraction), so **do not cite an indicator until the operative
-  section is pulled.**
+#### 🟢 Decree 2 — Royal Decree Prescribing Agencies/Businesses whose Data Controllers are **Not Subject** to the PDPA, B.E. 2563 (2020)
+- **Thai title:** พระราชกฤษฎีกากำหนดหน่วยงานและกิจการที่ผู้ควบคุมข้อมูลส่วนบุคคลไม่อยู่ภายใต้บังคับแห่งพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 พ.ศ. 2563
+- **Given at:** 20 May B.E. 2563 (2020), countersigned by PM Gen. Prayut Chan-o-cha (from the fetched text).  ·  **Absent from baseline:** ✔  ·  **Source:** searchlaw.ocs.go.th
+- **Verbatim operative provision — the Schedule (บัญชีท้าย) lists the exempted categories:** _"(๑) หน่วยงานของรัฐ (๒) หน่วยงานของรัฐต่างประเทศและองค์การระหว่างประเทศ (๓) มูลนิธิ สมาคม องค์กรศาสนา และองค์กรไม่แสวงหากำไร (๔) กิจการด้านเกษตรกรรม (๕) กิจการด้านอุตสาหกรรม (๖) กิจการด้านพาณิชยกรรม (๗) กิจการด้านการแพทย์และสาธารณสุข …"_
+- **Unofficial translation:** _"(1) state agencies; (2) foreign state agencies and international organisations; (3) foundations, associations, religious and non-profit organisations; (4) agriculture; (5) industry; (6) commerce; (7) medical and public-health businesses; …"_
+- **Indicator — P7-I1 (comprehensive legal framework for data protection): evidenced.** By carving broad categories of controllers out of the PDPA, the decree defines the framework's **coverage** — directly relevant to how complete the data-protection regime is.
+
+**Caveats (rigour):** the Thai is verbatim from the Council of State portal; **translations are unofficial** and a Thai-reading legal reviewer should confirm them and the precise scoring direction (an exemption may *lower* the framework-completeness score). Decree 2's 2020 broad exemptions were a transitional measure — confirm current status/consolidation before relying on it.
 
 ### 🌏 IND / IDN / LAO / MNG / RUS — not swept
 No discovery registry configured; not sweepable without additional source
