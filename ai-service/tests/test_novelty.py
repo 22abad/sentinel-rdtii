@@ -45,6 +45,34 @@ def test_normalize_drops_year_number_and_punctuation():
     assert normalize_law_name("My Health Records Act 2012") == "my health records act"
 
 
+def test_normalize_strips_country_prefix_and_bare_act_number():
+    # Live discovery emits verbose titles: a leading country word and a bare
+    # statute number ("No. 709") must not create a distinct identity from the
+    # curated "Personal Data Protection Act".
+    canonical = "personal data protection act"
+    assert normalize_law_name("Malaysia Personal Data Protection Act (PDPA), 2010, No. 709") == canonical
+    assert normalize_law_name("Singapore Personal Data Protection Act (PDPA), 2012, No. 26") == canonical
+    assert normalize_law_name("PERSONAL DATA PROTECTION ACT 2010") == canonical
+    # A leading "Chapter N" is number noise too.
+    assert normalize_law_name("Chapter 14 Electronic Commerce") == "electronic commerce"
+    # A bare "Act" with no number is part of the title and must be kept.
+    assert normalize_law_name("Communications and Multimedia Act (Act 588) 1998") == (
+        "communications and multimedia act"
+    )
+
+
+def test_false_new_suppressed_but_genuine_new_preserved():
+    # The economy's own flagship statute — however the LLM verbosely titles it,
+    # including foreign-relabelled hallucinations of a Malaysia document — must
+    # reconcile to KNOWN, not be paraded as a NEW discovery.
+    index = known_law_index()
+    assert is_known_law("Malaysia", "Malaysia Personal Data Protection Act (PDPA), 2010, No. 709", index)
+    assert is_known_law("Malaysia", "Singapore Personal Data Protection Act (PDPA), 2012, No. 26", index)
+    # Genuine independent finds stay NEW after the stronger normalization.
+    assert not is_known_law("Singapore", "Spam Control Act 2007", index)
+    assert not is_known_law("Australia", "Identity Verification Services Act 2023", index)
+
+
 def test_known_index_matches_baseline_and_rejects_unseen():
     index = known_law_index()
     # Laws in the KNOWN baseline (library), across title variants.
