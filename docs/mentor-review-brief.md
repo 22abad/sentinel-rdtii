@@ -25,6 +25,34 @@ before the July 20 submission. Print this; assign presenters at the top._
   across 7 languages (41–57% band, incl. Cyrillic Mongolian and Russian).**
 - Every row: verbatim quote (char-verified), article ref, official URL, SHA-256 provenance.
 
+## Latest hardening — talking points (all landed since the last brief; all tested, all golden-safe)
+
+_Frame: "we didn't just build it, we tried to break it the way a judge would."_
+
+- **We simulated the judge's *real* command** (`main.py --economy X --pillar 6,7`,
+  default + live discovery — not our clean `--offline` path) and audited every row.
+  It exposed that a naive run was **58% noise on Singapore** — clauses lifted from
+  *trade agreements* (SAFTA, the AU–SG Digital Economy Agreement) and an IMDA
+  *blog article*. We added golden-safe filters that drop out-of-scope sources,
+  fragment quotes, foreign-jurisdiction mislabels (a Malaysia PDPA page the model
+  tagged "Hong Kong PDPO"), and one-statute domination. Result: the judge's own
+  command now yields clean domestic-law output — **SGP 26→8, MYS 30→9, AUS 19,
+  zero noise** — verified against the 29-case golden set with **0 regressions**.
+- **A committed, reproducible submission sample** lives in
+  `docs/r1-submission-sample/` (SGP/MYS/AUS × P6/P7, frozen 13-field schema).
+- **Genuine NEW evidence, independently verified** (the discovery differentiator):
+  - 🇦🇺 *Identity Verification Services Act 2023* (P7-I5) and *Privacy Amendment
+    (Public Health Contact Information) Act 2020* — confirmed in force via the
+    Federal Register API; indicators re-checked against the actual provision (we
+    **retracted** the model's over-tags rather than ship them).
+  - 🇹🇭 two *PDPA exemption Royal Decrees* (2020/2023) — verbatim provisions pulled
+    from the Office of the Council of State; existence corroborated by DLA Piper.
+  - Full audit trail in `docs/new-law-candidates.md`.
+- **Rigor discipline** (say this — mentors reward it): every filter is verified to
+  drop **0 of 29 legally-approved golden cases**; each candidate is checked against
+  an authoritative source before it is claimed; what can't be verified is flagged,
+  not asserted. ~530 automated tests, green.
+
 ## Questions to ask each mentor (the real payload)
 
 **Prof. Timoney (CS/architecture):**
@@ -59,7 +87,8 @@ before the July 20 submission. Print this; assign presenters at the top._
 - [ ] `git pull`; `.env` has DEEPSEEK_API_KEY; ollama running as fallback
 - [ ] Rehearse: `python main.py --economy Singapore --pillar 6 --offline` (fast, deterministic)
 - [ ] Scanned-PDF command ready in shell history (India procurement order)
-- [ ] `docs/round2-meeting-report.md` + `review.html` open in tabs
+- [ ] Tabs open: `docs/r1-submission-sample/` (the clean output), `docs/new-law-candidates.md` (the discoveries), `docs/round2-meeting-report.md`
+- [ ] Optional wow: `docs/judge-test-report.md` (the graded judge-simulation matrix)
 - [ ] If campus wifi fails: everything above runs offline
 
 ## What NOT to claim
