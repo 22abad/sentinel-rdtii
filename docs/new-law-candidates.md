@@ -26,6 +26,53 @@ mentor makes the final call.
 
 ---
 
+## 2026-07-15 multi-angle sweep (SGP / MYS / AUS) — 4 new finds promoted
+
+_Method: three parallel research passes (one per R1 economy) across 5 distinct
+angles — (A) subsidiary legislation, (B) sectoral/adjacent data laws, (C) recent
+amendments & new enactments, (D) other-pillar candidates, (E) cross-reference
+mining. Every promoted row below was **independently re-verified by hand**: the
+exact verbatim quote was fetched from the official government source (curl/PDF
+extract) and confirmed present, and each candidate was run through
+`is_known_law` to reject anything already in the KNOWN baseline._
+
+### 🟢 Promoted to the library as NEW (verified verbatim + in force)
+
+| Economy | Law (instrument) | Provision | Indicator (hint) | Verbatim verified against | In force |
+|---|---|---|---|---|---|
+| 🇦🇺 AUS | **Digital ID Act 2024** (No. 25, 2024) | s 48 — biometric information may be collected/used/disclosed only if authorised under s 49 or 50 | P7 (7.1) | legislation.gov.au (browser fetch) | 30 Nov 2024 |
+| 🇲🇾 MYS | **PDPA (Amendment) Act 2024, Act A1727** — new s 12B | data-breach notification to the Commissioner + affected data subjects | P7 (7.1) | pdp.gov.my Act-A1727 PDF | 1 Jun 2025 (P.U.(B) 522) |
+| 🇲🇾 MYS | **PDPA (Amendment) Act 2024, Act A1727** — new s 12A | mandatory appointment of a Data Protection Officer | P7 (7.1) | pdp.gov.my Act-A1727 PDF | 1 Jun 2025 (P.U.(B) 522) |
+| 🇸🇬 SGP | **Banking Act 1970** (2020 Rev Ed) — s 47 | banking secrecy — customer information must not be disclosed except as provided | P7 (7.1) | sso.agc.gov.sg (curl) | in force |
+
+> **Indicator hints are conservative (all P7-framework) and pending Katie's
+> sign-off** — the extraction pipeline assigns the precise sub-indicator and the
+> deterministic score at run time. Do not hard-claim a specific P7 sub-indicator
+> for these until the provision→indicator mapping is confirmed.
+
+### 🔴 Rejected during hand-verification — already KNOWN (would have been an over-claim)
+
+`is_known_law` flagged these as present in the KNOWN baseline, so they are **not**
+tagged NEW (they remain usable as KNOWN evidence for their provisions):
+
+- 🇦🇺 **Competition and Consumer Act 2010** (Consumer Data Right — Privacy Safeguard 8, s 56EK). The cross-border CDR rule (an accredited data recipient must not disclose CDR data overseas unless one of four exceptions applies — verified verbatim in the OAIC Privacy Safeguard 8 guideline) is strong **P6-I4** evidence, but the parent Act is already known → tag KNOWN, not NEW.
+- 🇲🇾 **Communications and Multimedia Act 1998** (Act 588, s 234 interception/disclosure offence — verified verbatim in the MCMC PDF). Parent Act already known → KNOWN.
+
+### 🟡 Tier-2 leads (verified to exist / in force, but held back)
+
+- 🇲🇾 **A1727 s 129 cross-border** (P6): the amended operative text is a *composite* of delete/substitute instructions — an independent verbatim check did **not** match a single printed paragraph. Needs a clean side-by-side (original s 129 + s 12 amendment) before quoting. Do not present as a single verbatim block.
+- 🇦🇺 **Telecommunications Act 1997 Part 13, s 276** (P7) and **Privacy Act 1988 Sch 2 cl 7 statutory tort** (in force 10 Jun 2025): existence + in-force + location confirmed, but the exact clause text sits beyond the fetch window — copy verbatim from the Register before claiming.
+- 🇸🇬 **Cybersecurity Act 2018 s 14** (incident reporting) and **Spam Control Act 2007 s 11**: verified verbatim, but P6/P7 mapping is adjacent (cyber/marketing, not core data-protection) → bonus/other-pillar, not R1 headline.
+- 🇸🇬 **PDPA breach-notification amendments** (s 26B/26D, inserted by Act 40 of 2020): genuine new *provisions* of the KNOWN PDPA — usable as NEW_PROVISION evidence pending a decision on double-counting the parent Act.
+
+### ⛔ Excluded on timing (do NOT claim as in force)
+
+- 🇦🇺 **Privacy Act APP 1.8** (automated-decision transparency, inserted by the Privacy and Other Legislation Amendment Act 2024): **commences 10 Dec 2026** — not yet in force.
+- 🇦🇺 **Privacy Regulations 2025** (F2025L01377): commences 1 Apr 2026 (in force as of today, but exact prescribing text not yet copied).
+- 🇲🇾 **Financial Services Act 2013 s 133** (secrecy): the BNM PDF was blocked; verbatim text not captured → not promoted.
+
+---
+
 ## 🇦🇺 Australia — 1 new principal Act + 1 new amendment Act (both verified in force)
 
 ### 🟢 Identity Verification Services Act 2023 — new principal Act

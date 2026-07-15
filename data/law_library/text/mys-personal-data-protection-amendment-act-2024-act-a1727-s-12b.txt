@@ -1,0 +1,3 @@
+Personal Data Protection (Amendment) Act 2024 (Act A1727) — new section 12B of the Personal Data Protection Act 2010
+
+12B. (1) Where a data controller has reason to believe that a personal data breach has occurred, the data controller shall, as soon as practicable, notify the Commissioner in the manner and form as determined by the Commissioner. (2) Where the personal data breach under subsection (1) causes or likely to cause any significant harm to the data subject, the data controller shall notify the personal data breach to the data subject in the manner and form as determined by the Commissioner without unnecessary delay.
