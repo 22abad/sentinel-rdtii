@@ -271,6 +271,34 @@ CREATE INDEX idx_activity_log_target  ON activity_log(target_type, target_id);
 CREATE INDEX idx_activity_log_created ON activity_log(created_at DESC);
 
 -- ============================================================
+-- Verified evidence — a reusable, deduplicated store of extraction
+-- results (one indicator mapping = one row). "Work done once is banked":
+-- the same (economy, indicator, law, quote) is never stored twice, and an
+-- approved row can be reused instead of re-extracting on a later run.
+-- ============================================================
+
+CREATE TABLE verified_evidence (
+    id             UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    economy        VARCHAR(64)  NOT NULL,
+    indicator_id   VARCHAR(20)  NOT NULL,   -- e.g. 'P6-I4'
+    law_name       VARCHAR(500) NOT NULL,
+    law_name_norm  VARCHAR(500) NOT NULL,   -- normalized, for dedup
+    verbatim_quote TEXT         NOT NULL,
+    quote_hash     VARCHAR(64)  NOT NULL,   -- sha256 of the normalized quote
+    article        VARCHAR(200),
+    source_url     VARCHAR(2000),
+    source_sha256  VARCHAR(64),             -- provenance of the source document
+    score          NUMERIC,
+    review_status  VARCHAR(20)  DEFAULT 'draft' CHECK (review_status IN ('draft','approved','rejected')),
+    created_by     UUID,
+    created_at     TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (economy, indicator_id, law_name_norm, quote_hash)
+);
+CREATE INDEX idx_verified_evidence_lookup ON verified_evidence(economy, indicator_id, review_status);
+CREATE INDEX idx_verified_evidence_source ON verified_evidence(source_sha256);
+
+-- ============================================================
 -- Discovery Source Registry
 -- ============================================================
 
