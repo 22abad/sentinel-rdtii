@@ -68,29 +68,63 @@ the PDPA 2010, Cyber Security Act 2024 and the Communications & Multimedia Act.
 
 ---
 
-## Round 2 economies (CHN / THA) — swept, no verified lead yet
+## Round 2 economies (CHN / THA)
 
-The Round 2 KNOWN baseline was wired in (#143/#144) and live web search was
-enabled (SerpAPI). Status as of this run:
+The Round 2 KNOWN baseline was wired in (#143/#144/#147) and live web search was
+enabled (SerpAPI); the Thailand adapter timeout was fixed (#146).
 
-- **China** — the sweep surfaces only China's flagship data laws (PIPL,
-  Cybersecurity Law, Data Security Law, the cross-border data measures), **all
-  already in the Round 2 baseline** once short-name/long-name reconciliation is
-  applied (#144). **No verified new law.**
-- **Thailand** — the `thailand_ocs` discovery adapter hangs (times out) in this
-  environment, so **no clean sweep completed**. Not yet assessed; do not cite any
-  Thai result until the adapter is fixed and a run finishes cleanly.
-- **IND / IDN / LAO / MNG / RUS** — no discovery registry configured; not
-  sweepable without additional source registration.
+### 🇨🇳 China — no verified new law
+The sweep surfaces only China's flagship data laws (PIPL, Cybersecurity Law,
+Data Security Law, the cross-border data measures), **all already in the Round 2
+baseline** once short-name/long-name reconciliation is applied (#144). No
+verified new law.
+
+### 🇹🇭 Thailand — 2 verified-to-exist new subordinate laws (indicator TBC by a Thai-reading reviewer)
+The PDPA and Cybersecurity Act B.E. 2562 themselves reconcile as KNOWN (#147).
+Beyond them, the sweep surfaced two **Royal Decrees (พระราชกฤษฎีกา) that exempt
+entities from the PDPA** — absent from the RDTII Round 2 baseline (its Thai Royal
+Decrees are different ones: digital identification, digital-platform services,
+customs tariff):
+
+1. **Royal Decree prescribing agencies/businesses whose data controllers are not
+   subject to the PDPA B.E. 2562** — _"พระราชกฤษฎีกากำหนดหน่วยงานและกิจการที่ผู้ควบคุมข้อมูลส่วนบุคคลไม่อยู่ภายใต้บังคับแห่งพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562"_
+2. **Royal Decree prescribing businesses/agencies exempted from applying parts of
+   the PDPA B.E. 2562** — _"พระราชกฤษฎีกากำหนดลักษณะ กิจการ หรือหน่วยงานที่ได้รับการยกเว้นไม่ให้นำพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 บางส่วนมาใช้บังคับ"_
+
+- **Existence independently confirmed** (DLA Piper *Data Protection Laws of the
+  World — Thailand*): Thailand issued a **Royal Decree B.E. 2563 (2020)**
+  exempting certain data controllers from PDPA applicability, and a **Royal Decree
+  of 17 Aug 2023** exempting specified government authorities (NACC, Revenue,
+  Customs, Excise Departments) from certain PDPA obligations. Decree (1) matches
+  the 2020 decree; (2) is a partial-exemption decree — **a Thai-reading reviewer
+  should confirm which registered decree each title is and pull the operative
+  section.**
+- **Absent from baseline:** ✔ (`is_known_law` = false; the baseline's Thai Royal
+  Decrees are unrelated).
+- **Indicator — assessment only, NOT yet evidenced by a quote.** Exemptions
+  define the *scope* of the data-protection framework → **P7-I1 territory**; the
+  2023 government-authority exemption also touches **P7-I5** (government handling
+  of personal data). No verbatim provision was extracted (the large Thai PDFs
+  stalled LLM extraction), so **do not cite an indicator until the operative
+  section is pulled.**
+
+### 🌏 IND / IDN / LAO / MNG / RUS — not swept
+No discovery registry configured; not sweepable without additional source
+registration.
 
 ## Method & honesty note
 
 The KNOWN baseline is comprehensive, so genuine new Pillar 6/7 laws are scarce —
-and that is the finding, not a failure. The pipeline was hardened (#138–#144) so
+and that is the finding, not a failure. The pipeline was hardened (#138–#147) so
 it would **not pad the NEW list** with an economy's own flagship statute, trade
-agreements, mislabels, off-topic legislation, or over-tagged indicators. Two
-Australia leads survive hand-verification; **for those, only the indicator the
-quoted provision actually supports is asserted** (see the retractions above). A
-short, correct list is worth more than a long one a reviewer cannot trust.
+agreements, mislabels, off-topic legislation, or over-tagged indicators.
+
+Verified leads so far: **2 in Australia** (Identity Verification Services Act
+2023; Privacy Amendment (Public Health Contact Information) Act 2020) and **2 in
+Thailand** (the PDPA exemption Royal Decrees). Each was checked against an
+authoritative source (Federal Register API for AUS; DLA Piper for THA) and the
+baseline. **Where a claim could not be independently verified — an exact section,
+an indicator mapping — it is flagged as such, not asserted.** A short, correct
+list is worth more than a long one a reviewer cannot trust.
 
 Reproduce (AUS): `RDTII_LLM_PROVIDER=deepseek python tools/discover_new_laws.py --economy Australia --pillar all --limit 35`
