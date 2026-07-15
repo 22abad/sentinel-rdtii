@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api import (
+    activity,
     auth,
     canvas_files,
     discovery,
@@ -37,6 +38,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(system.router)
+    app.include_router(activity.router)
     app.include_router(extraction.router)
     app.include_router(discovery.router)
     app.include_router(auth.router)

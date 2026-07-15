@@ -249,6 +249,28 @@ CREATE TABLE workbench_canvases (
 );
 
 -- ============================================================
+-- Activity log — a general, queryable audit trail of every step a
+-- user (or the system) takes: ingest, extract, discover, review, export.
+-- Powers the frontend "activity timeline" and makes work reproducible.
+-- ============================================================
+
+CREATE TABLE activity_log (
+    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id     UUID,                    -- who (NULL for system/CLI actions)
+    action      VARCHAR(50) NOT NULL,    -- ingest | extract | discover | review | export | ...
+    target_type VARCHAR(50),             -- document | mapping | economy | workflow | ...
+    target_id   VARCHAR(200),            -- id/reference of the acted-on object
+    economy     VARCHAR(64),             -- economy context, when relevant
+    status      VARCHAR(20) DEFAULT 'success' CHECK (status IN ('success','failed','partial')),
+    summary     TEXT,                    -- short human-readable result summary
+    detail      JSONB,                   -- structured detail (counts, params, output refs)
+    created_at  TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_activity_log_user    ON activity_log(user_id, created_at DESC);
+CREATE INDEX idx_activity_log_target  ON activity_log(target_type, target_id);
+CREATE INDEX idx_activity_log_created ON activity_log(created_at DESC);
+
+-- ============================================================
 -- Discovery Source Registry
 -- ============================================================
 
