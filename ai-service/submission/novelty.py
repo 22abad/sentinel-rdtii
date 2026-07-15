@@ -437,14 +437,23 @@ def build_discovery_report(
 
     reconciled = reconcile_discovery_tags(rows, entries=entries)
     summary = summarize_discovery(reconciled)
-    return {
-        "economy": economy,
-        "summary": summary,
-        "new_candidates": [
-            {
+
+    # Group NEW rows into one candidate per distinct LAW (a live sweep surfaces
+    # the same statute from many chunks — 15 near-identical "PDPA 2010" rows is
+    # noise for a legal reviewer). Key by normalized law name; aggregate the
+    # indicators it touches; keep the longest verbatim quote + a source URL as
+    # the representative evidence. This is the reviewer-facing candidate list.
+    grouped: dict[str, dict] = {}
+    for r in reconciled:
+        if r.discovery_tag != "NEW" or not (r.law_name or "").strip():
+            continue
+        key = normalize_law_name(r.law_name)
+        cand = grouped.get(key)
+        if cand is None:
+            grouped[key] = {
                 "economy": r.economy,
                 "law_name": r.law_name,
-                "indicator_id": r.indicator_id,
+                "indicators": [r.indicator_id],
                 "article": r.article,
                 "verbatim_snippet": r.verbatim_snippet,
                 "source_url": r.source_url,
@@ -452,12 +461,28 @@ def build_discovery_report(
                 "novelty_type": r.novelty_type,
                 "canonical_law_id": r.canonical_law_id,
                 "amendment_version_date": r.amendment_version_date,
-                "normalized_article": r.normalized_article,
-                "normalized_quote_hash": r.normalized_quote_hash,
+                "evidence_rows": 1,
             }
-            for r in reconciled
-            if r.discovery_tag == "NEW"
-        ],
+        else:
+            cand["evidence_rows"] += 1
+            if r.indicator_id not in cand["indicators"]:
+                cand["indicators"].append(r.indicator_id)
+            if len(r.verbatim_snippet or "") > len(cand["verbatim_snippet"] or ""):
+                cand["verbatim_snippet"] = r.verbatim_snippet
+                cand["article"] = r.article
+            if not cand["source_url"] and r.source_url:
+                cand["source_url"] = r.source_url
+
+    new_candidates = sorted(
+        grouped.values(), key=lambda c: (-c["evidence_rows"], c["law_name"].lower())
+    )
+    for c in new_candidates:
+        c["indicators"].sort()
+
+    return {
+        "economy": economy,
+        "summary": summary,
+        "new_candidates": new_candidates,
         "review_gate": (
             "Each NEW discovery is a draft lead for legal review, not a settled "
             "legal conclusion. Verify the verbatim quote and citation against the "

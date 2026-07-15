@@ -152,3 +152,25 @@ async def test_cli_allow_empty_writes_research_output(monkeypatch, tmp_path):
 
     assert await main_cli._run(args) == 0
     assert captured["rows"] == []
+
+
+def test_discovery_report_groups_candidates_by_law():
+    from submission.novelty import build_discovery_report
+
+    def row(law, ind, quote):
+        return SubmissionRow(economy="Malaysia", law_name=law, indicator_id=ind,
+                             discovery_tag="NEW", verbatim_snippet=quote,
+                             source_url="https://x", article="s.1")
+    rows = [
+        row("Personal Data Protection Act 2010", "P7-I1", "short"),
+        row("PERSONAL DATA PROTECTION ACT 2010", "P7-I3", "a much longer provision text"),
+        row("Personal Data Protection Act  2010", "P7-I1", "dup"),
+        row("Spam Control Act 2007", "P7-I5", "spam clause"),
+    ]
+    cands = build_discovery_report("Malaysia", rows)["new_candidates"]
+    # The three PDPA variants collapse into one candidate; indicators aggregate.
+    assert len(cands) == 2
+    pdpa = next(c for c in cands if "Data Protection" in c["law_name"])
+    assert sorted(pdpa["indicators"]) == ["P7-I1", "P7-I3"]
+    assert pdpa["evidence_rows"] == 3
+    assert pdpa["verbatim_snippet"] == "a much longer provision text"  # longest kept
