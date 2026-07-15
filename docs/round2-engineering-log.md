@@ -143,12 +143,12 @@ never padded.
 ## Final numbers (full 7-economy overnight run)
 
 **Definitive run (tier calibration + expanded corpus + Wayback recovery):
-500 baseline rows end-to-end; evidence for 351 (70%); exact official-score
+500 baseline rows end-to-end; evidence for 351 (70.2%); exact official-score
 match on 251 — 50.2%. Half of all fully-automated scores match the official
 evaluator exactly.** (RUS re-evaluated after archive recovery lifted its
 corpus 41%→58%: 58 rows, 53.4% exact.)
 Per economy (exact | MAE): LAO **60%** | 0.33, MNG **55%** | 0.37,
-THA **53%** | 0.37, IND **49%** | 0.41, RUS **48%** | 0.40, CHN **47%** | 0.44,
+THA **53%** | 0.37, RUS **53%** | 0.36, IND **49%** | 0.41, CHN **47%** | 0.44,
 IDN **36%** | 0.54.
 
 Calibration effects were real but uneven: MNG +10.7pt, LAO +6.5, THA +5.5,
@@ -162,7 +162,7 @@ Two findings worth the meeting's attention:
 
 - **Language is not the bottleneck we feared.** Exact-match rates across
   English, Chinese, Thai, Indonesian, Lao, Mongolian (Cyrillic) and Russian
-  all land in the 41–57% band; Mongolia — the economy with the *least*
+  all land in the 36–60% band; Mongolia — the economy with the *least*
   digitised sources — reached 96% evidence yield once the browser path
   unlocked legalinfo.mn (100% corpus coverage), and Russian scored highest
   of all. The criterion-tier design travels across languages.
@@ -172,10 +172,9 @@ Two findings worth the meeting's attention:
 
 Composition note for honest reading: exact matches include rows where the
 pipeline found no qualifying evidence and the official score is also 0 —
-correct abstention, not extraction. LAO is the extreme case: of its 33 exact
-matches, 15 are evidence-backed and 18 are correct zeros; its headline 53%
-therefore overstates extraction strength relative to THA/MNG/IND, whose
-evidence yields are 90%+. Both components are separable in every eval JSON.
+correct abstention, not extraction. LAO's 37/62 exact matches (60%) must
+therefore be read alongside its 31/62 evidence yield. Both components are
+separable in every eval JSON.
 
 Operational note: a handful of dense Indonesian documents (one maps to 14
 indicators) exceeded the 600 s per-document budget and are recorded as
@@ -279,7 +278,7 @@ improves not only the data but the tooling around it.
    database itself, with coverage, evidence yield, exact-match rate and MAE
    per economy and per pillar (`docs/round2-meeting-report.md`).
 3. **Every failure mode found became a shipped fix** (#72–#82), and the
-   fixes are regression-tested (482-test suite green).
+   fixes are regression-tested (500+ automated tests).
 
 ### Tier 6 edge cases + the "offline matrix is not hermetic" insight (#137)
 **Problem.** The judge matrix had no coverage for malformed *arguments* (as

@@ -33,7 +33,7 @@ Tagline: **"The LLM never decides the score."**
 - P6/P7 × Singapore/Australia/Malaysia; golden set **legally signed off**.
 - Seed-first retrieval: a judge's 10-minute run is never hostage to a live
   crawl (offline mode = same pipeline, zero network).
-- 482-test suite; judge command: `python main.py --economy Singapore --pillar 6`.
+- 500+ automated tests; judge command: `python main.py --economy Singapore --pillar 6`.
 
 ## 5. Discovery of NEW evidence (1 slide) — the judges' differentiator
 
@@ -48,13 +48,13 @@ baseline evidence and is not claimed as NEW.
   rules generated from the official methodology; adding an indicator is a
   data change.
 - Benchmarked against the **official Round 2 database itself**:
-  **464 rows · 78% evidence yield · 46% exact score agreement, fully
-  automated** — consistent (41–57%) across **7 languages** incl. Thai,
+  **500 rows · 351 evidence-backed (70.2%) · 251 exact score matches (50.2%),
+  fully automated** — a 36–60% exact-match band across **7 languages** incl. Thai,
   Mongolian (Cyrillic), Russian. Table per economy from
   `docs/round2-meeting-report.md`.
-- Honest footnotes ready for Q&A: LAO composition (15 evidence-backed +
-  18 correct abstentions), IDN dense-doc timeouts, corpus coverage by
-  economy.
+- Honest footnotes ready for Q&A: exact matches include correct abstentions;
+  LAO's 37/62 exact matches (60%) should be read alongside its 31/62 evidence
+  yield; IDN dense-doc timeouts; corpus coverage by economy.
 
 ## 7. Technical resilience (1 slide) — the 30% resilience story
 

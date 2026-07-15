@@ -85,6 +85,26 @@ def build_report() -> str:
                  " scoring); our score is compared to the official raw score."
                  " No evidence found counts as score 0 per RDTII semantics._")
     lines.append("")
+    completed_evals = [ev for ev in evals.values() if ev is not None]
+    totals = {
+        "rows": sum(ev["rows_evaluated"] for ev in completed_evals),
+        "evidence": sum(ev["evidence_yield"] for ev in completed_evals),
+        "exact": sum(ev["exact_score_matches"] for ev in completed_evals),
+    }
+    if totals["rows"]:
+        evidence_rate = 100 * totals["evidence"] / totals["rows"]
+        exact_rate = 100 * totals["exact"] / totals["rows"]
+        lines.append(
+            f"**Headline benchmark: {totals['rows']} rows evaluated · "
+            f"{totals['evidence']} evidence-backed ({evidence_rate:.1f}%) · "
+            f"{totals['exact']} exact score matches ({exact_rate:.1f}%).**"
+        )
+        lines.append(
+            "Exact matches include correct abstentions where both the pipeline "
+            "and official raw score are zero; this is not a standalone "
+            "extraction-accuracy rate."
+        )
+        lines.append("")
     lines.append("| Economy | Baseline rows | Rows evaluated | Evidence found | Exact score match | MAE |")
     lines.append("|---|---|---|---|---|---|")
     pillar_roll: dict[str, dict[str, int]] = defaultdict(lambda: {"rows": 0, "evidence": 0, "exact": 0})

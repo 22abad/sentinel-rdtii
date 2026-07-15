@@ -11,8 +11,8 @@ before the July 20 submission. Print this; assign presenters at the top._
 |---|---|---|---|
 | 0–3 | Problem & architecture in one picture | Dong | deck outline §1–3 |
 | 3–8 | **Live demo**: `python main.py --economy Singapore --pillar 6` + scanned-PDF run | Dong | terminal (offline mode as backup) |
-| 8–12 | Round 1 status: golden set signed off, 5 NEW laws, 482 tests | Abel | deck §4–5 |
-| 12–18 | **The accuracy benchmark**: 464 rows vs official DB, 46% exact / 78% evidence, 7 languages | Dong | `round2-meeting-report.md` |
+| 8–12 | Round 1 status: golden set signed off, 5 NEW laws, 500+ tests | Abel | deck §4–5 |
+| 12–18 | **The benchmark**: 500 rows vs official DB, 251 exact (50.2%) / 351 evidence-backed (70.2%), 7 languages | Dong | `round2-meeting-report.md` |
 | 18–22 | Legal-in-the-loop: Katie's verification session + adjudication findings | Katie | her exported results |
 | 22–25 | Engineering war stories (pick 2: reasoning-budget starvation, prefix-cap blindness) | Eric/Abel | engineering log §5–6 |
 | 25–30 | Our questions to you (below) | all | — |
@@ -20,9 +20,10 @@ before the July 20 submission. Print this; assign presenters at the top._
 ## The one-slide numbers (memorize)
 
 - Round 1 mandatory: **done + legally signed off**; judge command runs in one line; $0.01–0.05 per economy-pillar.
-- Beyond mandatory: **61/61 indicators executable; 464 official baseline rows
-  benchmarked; 46% exact score agreement, 78% evidence yield, fully automated,
-  across 7 languages (41–57% band, incl. Cyrillic Mongolian and Russian).**
+- Beyond mandatory: **61/61 indicators executable; 500 official baseline rows
+  benchmarked; 251 exact score matches (50.2%), 351 evidence-backed (70.2%),
+  fully automated, across 7 languages (36–60% exact-match band, incl.
+  Cyrillic Mongolian and Russian).**
 - Every row: verbatim quote (char-verified), article ref, official URL, SHA-256 provenance.
 
 ## Latest hardening — talking points (all landed since the last brief; all tested, all golden-safe)
@@ -51,7 +52,7 @@ _Frame: "we didn't just build it, we tried to break it the way a judge would."_
 - **Rigor discipline** (say this — mentors reward it): every filter is verified to
   drop **0 of 29 legally-approved golden cases**; each candidate is checked against
   an authoritative source before it is claimed; what can't be verified is flagged,
-  not asserted. ~530 automated tests, green.
+  not asserted. 500+ automated tests, green.
 
 ## Questions to ask each mentor (the real payload)
 
@@ -59,7 +60,7 @@ _Frame: "we didn't just build it, we tried to break it the way a judge would."_
 1. For the 3 Aug live pitch, which failure mode would you stress-test first —
    live crawling, OCR, or provider outage? (We have offline fallback; is that
    convincing or does it look like dodging?)
-2. Is a 46% fully-automated exact-match rate against official evaluators a
+2. Is a 50.2% fully-automated exact-match rate against official evaluators a
    number to LEAD with or to contextualize carefully?
 
 **Prof. Qian Xiao (AI-assisted legal documents):**
@@ -93,10 +94,11 @@ _Frame: "we didn't just build it, we tried to break it the way a judge would."_
 
 ## What NOT to claim
 
-- Do not say "46% accuracy" bare — say "46% of fully-automated scores match
+- Do not say "50.2% accuracy" bare — say "251 of 500 fully-automated scores match
   the official evaluators exactly; the tool is a draft-for-review system, and
   scoring stays with the human researcher per the official Zone 3 guidance."
 - Do not claim RAG retrieval in the CLI — say the embedding store is live in
   the web app; CLI integration is a finale-stage upgrade.
-- LAO's 53% headline includes 18 correct abstentions — say "evidence-backed
-  exact matches" if pressed (15/62 evidence-backed exact).
+- Exact matches include correct abstentions. For LAO, say "37/62 exact (60%),
+  with evidence found for 31/62" rather than treating exact match as extraction
+  accuracy.
