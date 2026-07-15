@@ -56,3 +56,30 @@ def test_rejects_too_short_provision(tmp_path):
     )
     assert proc.returncode == 2
     assert "too short" in proc.stderr.lower()
+
+
+def test_verify_refuses_an_already_known_law(tmp_path):
+    """--verify runs the triage gate; an already-KNOWN law is refused (return 3)
+    without a network call (the known/weak check short-circuits before fetching)."""
+    text = tmp_path / "provision.txt"
+    text.write_text(
+        "An organisation must not transfer any personal data to a country or "
+        "territory outside Singapore except in accordance with this Act.",
+        encoding="utf-8",
+    )
+    proc = subprocess.run(
+        [
+            sys.executable, str(TOOL),
+            "--economy", "Singapore",
+            "--law-name", "Personal Data Protection Act 2012",  # already KNOWN
+            "--url", "https://sso.agc.gov.sg/Act/PDPA2012",
+            "--pillars", "7", "--indicators", "7.1",
+            "--text-file", str(text),
+            "--law-id", "test-verify-known",
+            "--verify", "--dry-run",
+        ],
+        cwd=REPO_ROOT, capture_output=True, text=True, timeout=120,
+    )
+    assert proc.returncode == 3, (proc.stdout, proc.stderr)
+    assert "REJECT_KNOWN" in proc.stdout
+    assert "Refusing to promote" in proc.stderr
