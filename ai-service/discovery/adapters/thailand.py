@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import time
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -9,6 +11,15 @@ from discovery.schemas import LegalSourceConfig, RawSearchHit
 
 from .base import DiscoveryAdapter
 from .search_engine import FixtureSearchAdapter, strip_site_filter
+
+# The OCS portal is loaded with a headless browser (Playwright). When it is slow
+# or unresponsive a single query can burn ~50s (goto 30s + selector waits), and
+# a multi-pillar sweep issues many queries — enough to stall the whole
+# DiscoveryService for minutes and starve the other (SerpAPI-backed) Thai
+# sources. Bound each query, and the adapter as a whole, so a stalled portal
+# degrades to fixture fallback quickly instead of hanging the sweep.
+_OCS_QUERY_TIMEOUT_S = 25.0
+_OCS_ADAPTER_BUDGET_S = 75.0
 
 
 class ThailandOcsAdapter(DiscoveryAdapter):
@@ -60,6 +71,7 @@ class ThailandOcsAdapter(DiscoveryAdapter):
     async def _search_queries(self, search_ocs_law: Any, queries: list[str], limit: int) -> list[RawSearchHit]:
         hits: list[RawSearchHit] = []
         seen_keys: set[str] = set()
+        deadline = time.monotonic() + _OCS_ADAPTER_BUDGET_S
 
         for query in queries:
             search_term = strip_site_filter(query)
@@ -69,8 +81,21 @@ class ThailandOcsAdapter(DiscoveryAdapter):
             for ocs_query in _expanded_ocs_queries(search_term):
                 if expanded_hit and ocs_query != search_term:
                     continue
+                if time.monotonic() >= deadline:
+                    # Overall budget spent — stop and let the caller fall back /
+                    # let other sources contribute rather than stalling further.
+                    return hits
                 hit_count_before_query = len(hits)
-                rows = await search_ocs_law(ocs_query, max_results=max(1, min(limit, 20)))
+                try:
+                    rows = await asyncio.wait_for(
+                        search_ocs_law(ocs_query, max_results=max(1, min(limit, 20))),
+                        timeout=_OCS_QUERY_TIMEOUT_S,
+                    )
+                except asyncio.TimeoutError:
+                    # A stalled portal query: skip it, keep the hits gathered so
+                    # far, and move on. (Non-timeout errors still propagate to the
+                    # adapter's fixture-fallback handler, preserving prior behaviour.)
+                    continue
                 for row in rows:
                     url = str(row.get("doc_url") or row.get("url") or "").strip()
                     if not url:
