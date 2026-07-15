@@ -1,0 +1,3 @@
+Personal Data Protection (Amendment) Act 2024 (Act A1727) — new section 43A of the Personal Data Protection Act 2010 (data portability)
+
+43A. (1) A data subject may request the data controller to transmit his personal data to another data controller of his choice directly by giving a notice in writing by way of electronic means. (3) Upon receiving the request for data portability, the data controller shall complete the transmission of personal data within the period as may be prescribed.

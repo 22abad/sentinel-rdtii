@@ -1,0 +1,7 @@
+Personal Data Protection Regulations 2013, P.U. (A) 335 (subsidiary to the Personal Data Protection Act 2010) — regulations 6, 7 and 12
+
+Regulation 6. The data user shall develop and implement a security policy for the purposes of section 9 of the Act. The data user shall ensure that the security standard in the processing of personal data be complied with by any data processor that carry out the processing of the personal data on behalf of the data user.
+
+Regulation 7. For the purposes of section 10 of the Act, the personal data of a data subject shall be retained in accordance with the retention standard.
+
+Regulation 12 (penalty). Any data user who contravenes regulations 6, 7 and 8 commits an offence and shall, on conviction, be liable to a fine not exceeding two hundred and fifty thousand ringgit or imprisonment for a term not exceeding two years or to both.

@@ -18,7 +18,7 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 15
+    assert len(entries) == 19
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
@@ -35,7 +35,7 @@ def test_discovered_new_laws_are_tagged_and_not_treated_as_known():
 
     entries = load_library()
     discovered = [e for e in entries if e.origin == "discovered"]
-    assert len(discovered) == 8
+    assert len(discovered) == 12
     assert {e.economy for e in discovered} == {"AUS", "MYS", "SGP"}
     index = known_law_index()  # unions inventory + KNOWN-baseline library entries
     for e in discovered:
@@ -82,7 +82,10 @@ def test_lookup_filters_by_economy_and_pillar():
 def test_lookup_indicator_hint_narrows_results():
     # Only the Income Tax Act carries the 7.3 hint; PDPA's hint is 6.4.
     names = {e.law_name for e in lookup("SGP", indicators=["7.3"])}
-    assert names == {"Income Tax Act 1947"}
+    assert names == {
+        "Income Tax Act 1947",
+        "Healthcare Services (General) Regulations 2021 (S 1035/2021)",
+    }
 
 
 def test_missing_manifest_returns_empty(tmp_path):
