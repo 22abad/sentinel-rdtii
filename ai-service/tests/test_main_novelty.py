@@ -30,7 +30,7 @@ def _row(law_name: str, *, retrieval_method: str = "official_search") -> Submiss
         indicator_id="P6-I1",
         article="Section 1",
         discovery_tag="NEW",
-        verbatim_snippet="Exact provision text.",
+        verbatim_snippet="Exact provision text stating a substantive statutory obligation.",
         source_url="https://example.gov.test/law",
         retrieval_method=retrieval_method,
     )

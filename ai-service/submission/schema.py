@@ -8,6 +8,7 @@ official README template.
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -322,6 +323,49 @@ def dedupe_submission_rows(rows: list["SubmissionRow"]) -> list["SubmissionRow"]
     return out
 
 
+# A verbatim quote at least this long is treated as a substantive provision.
+# Below it, the quote must (approximately) be the law's own title to be kept —
+# that is the legitimate "framework exists" evidence pattern for indicators like
+# P7-I1 (the golden set carries such title-quotes, e.g. "Privacy Act 1988").
+# Anything shorter that is NOT the title is a mid-sentence fragment the extractor
+# emitted by mistake ("data processor", "personal data") and is dropped.
+_MIN_PROVISION_QUOTE_LEN = 45
+_STATUTE_WORD = re.compile(
+    r"\b(act|law|regulation|regulations|ordinance|decree|code|rules|bill|"
+    r"constitution|notification)\b",
+    re.IGNORECASE,
+)
+
+
+def _quote_key(value: str) -> str:
+    text = unicodedata.normalize("NFKC", value or "").casefold()
+    return " ".join("".join(c if c.isalnum() else " " for c in text).split())
+
+
+def _is_fragment_quote(law_name: str, quote: str) -> bool:
+    """True if the quote is a short mid-sentence fragment, not a real provision.
+
+    Kept when the quote is long enough to be a provision, OR reads as the law's
+    own title — the framework-existence evidence pattern (e.g. "Privacy Act
+    1988"): it carries a statute-type word AND overlaps the law name. A short
+    quote with neither trait ("data processor", "personal data") is extractor
+    noise and is dropped.
+    """
+
+    q = (quote or "").strip()
+    if len(q) >= _MIN_PROVISION_QUOTE_LEN:
+        return False
+    nq, nl = _quote_key(q), _quote_key(law_name)
+    qt, lt = set(nq.split()), set(nl.split())
+    # A title-quote carries a statute-type word and its tokens are a subset of
+    # (or superset of) the law-name tokens — robust to a country prefix or a
+    # "(PDPA)" acronym sitting between the name and the year.
+    looks_like_title = bool(_STATUTE_WORD.search(q)) and bool(qt) and bool(lt) and (
+        qt <= lt or lt <= qt
+    )
+    return not looks_like_title
+
+
 def validate_submission_rows(
     rows: list[SubmissionRow],
     *,
@@ -331,8 +375,10 @@ def validate_submission_rows(
 
     A row missing a judge-critical field (source, quote, law, indicator) is
     dropped rather than allowed to suppress the whole submission — a single
-    bad row must never leave a judge with zero output files. Raises only when
-    NO usable row remains (unless ``allow_empty``).
+    bad row must never leave a judge with zero output files. Rows whose verbatim
+    quote is a short mid-sentence fragment (not a provision and not the law
+    title) are also dropped: they are extractor noise, not evidence. Raises only
+    when NO usable row remains (unless ``allow_empty``).
     """
     import logging
 
@@ -349,6 +395,16 @@ def validate_submission_rows(
             logger.warning(
                 "Dropping incomplete submission row %d (missing: %s)",
                 index, ", ".join(missing),
+            )
+            continue
+        if _is_fragment_quote(
+            str(getattr(row, "law_name", "") or ""),
+            str(getattr(row, "verbatim_snippet", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: verbatim quote is a fragment, not a "
+                "provision (%r)",
+                index, str(getattr(row, "verbatim_snippet", ""))[:40],
             )
             continue
         valid.append(row)
