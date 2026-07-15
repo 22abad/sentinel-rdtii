@@ -377,12 +377,14 @@ async def discover_and_extract(
     browser_mode: str = "auto",
     max_documents: int | None = None,
     strict_live: bool = False,
+    progress=None,
 ) -> tuple[list[SubmissionRow], dict]:
     """Run discovery + extraction for one economy and pillar.
 
     Returns (rows, run_meta). Heavy imports are deferred so that importing this
     module (and unit-testing :func:`build_row`) does not require the provider or
-    crawler stack.
+    crawler stack. ``progress`` is an optional ``callable(str)`` for live demo
+    narration.
     """
 
     from discovery import DiscoverySearchRequest, DiscoveryService
@@ -390,8 +392,10 @@ async def discover_and_extract(
     from services.document_fetch import fetch_document_text
     from services.extraction import run_extraction
 
+    say = progress if callable(progress) else (lambda _m: None)
     code = economy_code(economy)
     display = economy_display_name(economy)
+    say(f"Pillar {pillar}: searching official sources for relevant laws…")
 
     request = DiscoverySearchRequest(
         country_code=code,
@@ -424,6 +428,8 @@ async def discover_and_extract(
             f"Excluded {excluded_non_live} fixture/fallback candidate(s) from formal submission."
         )
 
+    say(f"Pillar {pillar}: found {len(eligible_candidates)} candidate document(s); "
+        f"fetching and extracting…")
     for candidate in eligible_candidates:
         if max_documents is not None and documents_processed >= max_documents:
             break
@@ -431,6 +437,7 @@ async def discover_and_extract(
             continue
         seen_urls.add(candidate.url)
 
+        say(f"Pillar {pillar}: fetching & reading {getattr(candidate, 'title', None) or candidate.url}…")
         try:
             document = await fetch_document_text(
                 candidate.url, browser_mode=browser_mode
@@ -542,6 +549,7 @@ async def run_library(
     *,
     provider_name: str | None = None,
     indicators: list[str] | None = None,
+    progress=None,
 ) -> tuple[list[SubmissionRow], dict]:
     """Offline path: map cached official texts from the local law library.
 
@@ -549,24 +557,31 @@ async def run_library(
     load); the mapping itself still runs live through the same
     ``run_extraction`` pipeline, so provisions are produced — not replayed. Rows
     are tagged ``KNOWN`` (the library is the curated known-law baseline).
+
+    ``progress`` is an optional ``callable(str)`` used to narrate live progress
+    (which law is being read) so a demo/judge sees the tool working, not a hang.
     """
 
     from law_library import lookup
     from providers import resolve_provider
     from services.extraction import run_extraction
 
+    say = progress if callable(progress) else (lambda _m: None)
     display = economy_display_name(economy)
     code = economy_code(economy)
     provider = resolve_provider(provider_name)
 
     entries = lookup(code, pillar=pillar, indicators=indicators)
     wanted = _pillar_indicators(pillar, indicators)
+    say(f"Pillar {pillar}: reading {len(entries)} cached official text(s) from the library…")
     rows: list[SubmissionRow] = []
     warnings: list[str] = []
     usage_totals: dict = {}
     laws_processed = 0
 
-    for entry in entries:
+    for position, entry in enumerate(entries, start=1):
+        say(f"Pillar {pillar}: extracting & verifying provisions from "
+            f"{entry.law_name} ({position}/{len(entries)})…")
         # Cached KNOWN-baseline laws map to the KNOWN tag; cached NEW discoveries
         # (origin="discovered") must surface as NEW.
         is_discovered = getattr(entry, "origin", "known") == "discovered"
@@ -645,6 +660,7 @@ async def run_seed_first(
     limit: int = 20,
     browser_mode: str = "auto",
     max_documents: int | None = None,
+    progress=None,
 ) -> tuple[list[SubmissionRow], dict]:
     """Hybrid retrieval: try the known-good seed URLs first, then live discovery.
 
@@ -664,18 +680,24 @@ async def run_seed_first(
     display = economy_display_name(economy)
     code = economy_code(economy)
 
+    say = progress if callable(progress) else (lambda _m: None)
+
     # 1) Seed pass — cached official texts (reproducible, offline).
+    say(f"Pillar {pillar}: seed pass — reading curated official texts…")
     seed_rows, seed_meta = await run_library(
         economy, pillar, provider_name=provider_name, indicators=indicators,
+        progress=progress,
     )
     covered = {
         canonicalize_url(r.source_url) for r in seed_rows if r.source_url
     }
 
     # 2) Fallback pass — live discovery, minus anything a seed already covered.
+    say(f"Pillar {pillar}: discovery pass — searching official portals for more/newer laws…")
     disc_rows, disc_meta = await discover_and_extract(
         economy, pillar,
         provider_name=provider_name, indicators=indicators,
+        progress=progress,
         limit=limit, browser_mode=browser_mode, max_documents=max_documents,
     )
     fresh_rows = [

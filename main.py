@@ -162,7 +162,14 @@ async def _run(args: argparse.Namespace) -> int:
         "runs": [],
     }
 
+    # Live progress narration to stderr, so a demo/judge sees the tool working
+    # during the (silent-looking) discovery + LLM-extraction phase instead of a
+    # blank screen. Goes to stderr so it never pollutes the CSV/JSON on stdout.
+    def narrate(message: str) -> None:
+        print(f"   … {message}", file=sys.stderr, flush=True)
+
     for pillar in args.pillar:
+        print(f"\n▶ Pillar {pillar}: starting …", flush=True)
         if args.pdf:
             rows, meta = await run_pdf(
                 args.economy, pillar, args.pdf,
@@ -172,19 +179,21 @@ async def _run(args: argparse.Namespace) -> int:
             rows, meta = await run_library(
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
+                progress=narrate,
             )
         elif strict_live or args.no_seed:
             rows, meta = await discover_and_extract(
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
                 limit=args.limit, max_documents=args.max_documents,
-                strict_live=strict_live,
+                strict_live=strict_live, progress=narrate,
             )
         else:
             rows, meta = await run_seed_first(
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
                 limit=args.limit, max_documents=args.max_documents,
+                progress=narrate,
             )
         combined_meta["runs"].append(meta)
         for mode, count in meta.get("evidence_counts", {}).items():
