@@ -147,13 +147,17 @@ data change, not a rebuild."
 - **OCR** on scanned PDFs with a measured error rate per row
 - **Failure containment**: one bad source never aborts a run; every failure is recorded, never hidden
 - **Offline mode = same pipeline, zero network** — a judge's 10-minute run is never hostage to a live crawl
+- **Built for a live demo**: real-time dual progress bars (overall + current step) narrate every document as it's read/extracted — English, in-terminal, never a silent hang
 
 **🎤 Speaker:** "Resilience is 30% of the score, so we engineered for the bad day.
 JavaScript-only portal? We drive a browser. Page gone? We hit the Wayback Machine —
 that took Mongolia from 15 to 100% coverage. Scanned PDF? OCR with a measured error
 rate. One source fails? It's logged and the run continues. And the whole pipeline
 runs fully offline from a verified cache — so a judge on bad campus wifi still gets
-a clean, identical result."
+a clean, identical result. And you'll see it working — live progress bars narrate
+every step, so it never looks frozen."
+
+**💡 中文提示:** (演示时可指着进度条说)实时进度条,读到哪部法、抽取到第几篇,一目了然,不会像卡死。
 
 **💡 中文提示:** 30% 韧性——浏览器抓 JS 站、Wayback 兜底、OCR、单点失败不崩、离线可复现。
 
