@@ -120,6 +120,26 @@ def test_false_new_suppressed_but_genuine_new_preserved():
     assert not is_known_law("Australia", "Identity Verification Services Act 2023", index)
 
 
+def test_normalize_strips_constitutional_state_suffix():
+    # The inventory keeps the long-form "... of the People's Republic of China";
+    # discovery drops it. Both must reconcile.
+    assert normalize_law_name("Cybersecurity Law of the People's Republic of China") == "cybersecurity law"
+    assert normalize_law_name("China Personal Information Protection Law (PIPL), 2021") == (
+        "personal information protection law"
+    )
+    assert normalize_law_name("Data Security Law of the People's Republic of China") == "data security law"
+    # Only a trailing jurisdiction tag is removed — an embedded country word stays.
+    assert normalize_law_name("Bank of China Law") == "bank of china law"
+
+
+def test_china_flagship_laws_reconcile_from_short_name():
+    index = known_law_index()
+    for short in ("China Cybersecurity Law, 2016",
+                  "China Personal Information Protection Law (PIPL), 2021",
+                  "China Data Security Law, 2021"):
+        assert is_known_law("China", short, index), short
+
+
 def test_round2_baseline_wired_with_bilingual_and_split_acts():
     # The seven Round 2 economies must have a KNOWN baseline (from the Round 2
     # Database inventory), else every discovered law is spuriously NEW.
@@ -144,9 +164,9 @@ def test_inventory_identity_keys_splits_and_delanguages():
            "Measures for Cybersecurity Review《网络安全审查办法》")
     keys = _inventory_identity_keys("CHN", raw)
     normed = {k[1] for k in keys}
-    assert "cybersecurity law of the people s republic of china" in normed  # English-only
-    assert "measures for cybersecurity review" in normed                    # split second act
-    assert "中华人民共和国网络安全法" in normed                                 # native-script only
+    assert "cybersecurity law" in normed                 # English-only, state suffix stripped
+    assert "measures for cybersecurity review" in normed  # split second act
+    assert "中华人民共和国网络安全法" in normed              # native-script only
     assert all(k[0] == "CHN" for k in keys)
 
 

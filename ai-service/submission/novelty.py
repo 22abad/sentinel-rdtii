@@ -69,6 +69,19 @@ _LEADING_GEO = re.compile(rf"^(?:the\s+)?(?:{_GEO_ALT})\s+", re.IGNORECASE)
 # Only the dash-separated suffix is stripped — a statute title never ends in
 # " - Malaysia", so "Bank Negara Malaysia" and friends are untouched.
 _TRAILING_JURISDICTION = re.compile(rf"\s+[-–—]\s*(?:{_GEO_ALT})\s*$", re.IGNORECASE)
+# Constitutional long-form state suffixes the official inventory keeps but common
+# usage / discovery drops: "Cybersecurity Law of the People's Republic of China"
+# vs "Cybersecurity Law". Anchored at end so only a genuine jurisdiction tag is
+# removed, letting the short and official names reconcile.
+_STATE_SUFFIX = re.compile(
+    r"\s+of\s+the\s+people'?s\s+republic\s+of\s+china$"
+    r"|\s+of\s+the\s+lao\s+people'?s\s+democratic\s+republic$"
+    r"|\s+of\s+the\s+russian\s+federation$"
+    r"|\s+of\s+the\s+kingdom\s+of\s+thailand$"
+    r"|\s+of\s+the\s+republic\s+of\s+(?:indonesia|india)$"
+    r"|\s+of\s+(?:the\s+)?(?:china|mongolia|thailand|india|indonesia)$",
+    re.IGNORECASE,
+)
 
 # --- Discovery-candidate triage -------------------------------------------
 # A live sweep surfaces three recurring kinds of non-finding: international
@@ -194,6 +207,7 @@ def normalize_law_name(name: str) -> str:
     lowered = _PAREN.sub(" ", lowered)
     lowered = _YEAR.sub(" ", lowered)
     lowered = _ACT_NUMBER.sub(" ", lowered)
+    lowered = _STATE_SUFFIX.sub("", lowered.strip())
     lowered = _TRAILING_JURISDICTION.sub("", lowered.strip())
     lowered = _LEADING_GEO.sub("", lowered.strip())
     return _normalize_words(lowered)
