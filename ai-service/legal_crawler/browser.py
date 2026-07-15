@@ -34,7 +34,7 @@ async def _apply_stealth(page: Page) -> None:
 
 async def _initialize_browser_context(playwright_instance: Any, proxy: Optional[dict] = None) -> BrowserContext:
     """
-    初始化浏览器上下文，并注入 stealth 插件。
+    初始化浏览器上下文, 并注入 stealth 插件. 
     """
     launch_args = {
         "headless": True,
@@ -64,7 +64,7 @@ async def _initialize_browser_context(playwright_instance: Any, proxy: Optional[
 
 async def _wait_for_page_load(page: Page, timeout: int) -> None:
     """
-    等待页面加载完成，处理 JS 渲染。
+    等待页面加载完成, 处理 JS 渲染. 
     """
     try:
         await page.wait_for_load_state("networkidle", timeout=timeout)
@@ -74,7 +74,7 @@ async def _wait_for_page_load(page: Page, timeout: int) -> None:
 
 async def _download_file(page: Page, file_url: str, filename: Optional[str] = None) -> Optional[str]:
     """
-    下载文件（PDF / Word / 任意类型）到本地。
+    下载文件（PDF / Word / 任意类型）到本地. 
     """
     try:
         parsed_url = urlparse(file_url)
@@ -96,28 +96,28 @@ async def _download_file(page: Page, file_url: str, filename: Optional[str] = No
         if response.ok:
             with open(local_path, "wb") as f:
                 f.write(await response.body())
-            print(f"文件已下载到: {local_path}")
+            print(f"file downloaded to: {local_path}")
             return str(local_path)
         return None
     except Exception as e:
-        print(f"下载文件时发生错误 {file_url}: {e}")
+        print(f"error downloading file {file_url}: {e}")
         return None
 
 
 async def _read_docx(path: str) -> Optional[str]:
-    """用 python-docx 提取 .docx 文本。"""
+    """用 python-docx 提取 .docx 文本. """
     try:
         from docx import Document
         doc = Document(path)
         text = "\n".join(p.text for p in doc.paragraphs if p.text.strip())
         return text if text.strip() else None
     except Exception as e:
-        print(f"读取 docx 失败 {path}: {e}")
+        print(f"failed to read docx {path}: {e}")
         return None
 
 async def _extract_html_content(page: Page) -> str:
     """
-    提取 HTML 页面正文。
+    提取 HTML 页面正文. 
     """
     selectors = [
         # Site-generic content selectors

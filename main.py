@@ -34,6 +34,74 @@ if str(AI_SERVICE) not in sys.path:
 load_dotenv(REPO_ROOT / ".env")
 
 
+class _ProgressUI:
+    """A single-line, self-contained dual progress bar for an interactive run:
+    OVERALL progress (pillars) and the CURRENT-STEP progress (documents), plus a
+    live label of what's happening — so a demo/judge sees continuous motion.
+
+    Drawn on stderr with a carriage return, so the CSV/JSON on stdout is
+    untouched. Pure ASCII, no dependency; only used when stderr is a TTY.
+    """
+
+    def __init__(self, total_pillars: int) -> None:
+        self.total_pillars = max(1, total_pillars)
+        self.done_pillars = 0
+        self.cur_pillar: int | None = None
+        self.step_n = 0
+        self.step_total = 1
+        self.label = "starting…"
+        self._last_len = 0
+
+    @staticmethod
+    def _bar(n: int, total: int, width: int = 14) -> str:
+        total = max(1, total)
+        filled = int(round(width * min(max(n, 0), total) / total))
+        return "#" * filled + "-" * (width - filled)
+
+    def _render(self) -> None:
+        line = (
+            f"Overall [{self._bar(self.done_pillars, self.total_pillars)}] "
+            f"{self.done_pillars}/{self.total_pillars} pillars  "
+            f"Step [{self._bar(self.step_n, self.step_total)}] "
+            f"{self.step_n}/{self.step_total}  {self.label}"
+        )
+        pad = max(0, self._last_len - len(line))
+        sys.stderr.write("\r" + line + " " * pad)
+        sys.stderr.flush()
+        self._last_len = len(line)
+
+    def start_pillar(self, pillar: int) -> None:
+        self.cur_pillar = pillar
+        self.step_n, self.step_total = 0, 1
+        self.label = f"Pillar {pillar}: starting…"
+        self._render()
+
+    def on_progress(self, label: str, current=None, total=None) -> None:
+        if total:
+            self.step_total = total
+        if current is not None:
+            self.step_n = current
+        prefix = f"P{self.cur_pillar}: " if self.cur_pillar is not None else ""
+        self.label = (prefix + (label or ""))[:64]
+        self._render()
+
+    def pillar_done(self) -> None:
+        self.done_pillars = min(self.done_pillars + 1, self.total_pillars)
+        self.step_n = self.step_total
+        self._render()
+
+    def log(self, message: str) -> None:
+        # Clear the progress line, print the log above it, then re-render.
+        sys.stderr.write("\r" + " " * self._last_len + "\r")
+        self._last_len = 0
+        print(message, file=sys.stderr, flush=True)
+        self._render()
+
+    def close(self) -> None:
+        sys.stderr.write("\n")
+        sys.stderr.flush()
+
+
 def _parse_pillars(token: str) -> list[int]:
     """Turn the --pillar argument into pillar ids.
 
@@ -162,14 +230,30 @@ async def _run(args: argparse.Namespace) -> int:
         "runs": [],
     }
 
-    # Live progress narration to stderr, so a demo/judge sees the tool working
-    # during the (silent-looking) discovery + LLM-extraction phase instead of a
-    # blank screen. Goes to stderr so it never pollutes the CSV/JSON on stdout.
-    def narrate(message: str) -> None:
-        print(f"   … {message}", file=sys.stderr, flush=True)
+    # Live progress so a demo/judge sees the tool working during the
+    # (silent-looking) discovery + LLM-extraction phase instead of a blank
+    # screen. In an interactive terminal we draw two progress bars — overall
+    # (pillars) and the current step (documents) — via tqdm; otherwise we fall
+    # back to plain narration lines. Everything goes to stderr, so it never
+    # pollutes the CSV/JSON on stdout.
+    ui = None
+    if sys.stderr.isatty():
+        try:
+            ui = _ProgressUI(len(args.pillar))
+        except Exception:  # tqdm missing or terminal quirk — degrade to plain lines
+            ui = None
+
+    def narrate(message: str, current: int | None = None, total: int | None = None) -> None:
+        if ui is not None:
+            ui.on_progress(message, current, total)
+        else:
+            print(f"   … {message}", file=sys.stderr, flush=True)
 
     for pillar in args.pillar:
-        print(f"\n▶ Pillar {pillar}: starting …", flush=True)
+        if ui is not None:
+            ui.start_pillar(pillar)
+        else:
+            print(f"\n▶ Pillar {pillar}: starting …", flush=True)
         if args.pdf:
             rows, meta = await run_pdf(
                 args.economy, pillar, args.pdf,
@@ -201,16 +285,22 @@ async def _run(args: argparse.Namespace) -> int:
                 combined_meta["evidence_counts"].get(mode, 0) + int(count)
             )
         all_rows.extend(rows)
-        print(f"  Pillar {pillar}: {meta['provisions_mapped']} provisions mapped "
-              f"({meta.get('documents_processed', 'n/a')} documents)")
+        emit = ui.log if ui is not None else print
+        emit(f"  Pillar {pillar}: {meta['provisions_mapped']} provisions mapped "
+             f"({meta.get('documents_processed', 'n/a')} documents)")
         usage = meta.get("usage") or {}
         if usage.get("llm_calls"):
-            print(f"    Measured cost: {usage.get('llm_calls', 0)} LLM calls, "
-                  f"{usage.get('input_tokens', 0):,} in / {usage.get('output_tokens', 0):,} out tokens, "
-                  f"${usage.get('cost_usd', 0.0):.4f}")
-        print(f"    Retrieval mode: {meta.get('retrieval_mode', 'unknown')}")
+            emit(f"    Measured cost: {usage.get('llm_calls', 0)} LLM calls, "
+                 f"{usage.get('input_tokens', 0):,} in / {usage.get('output_tokens', 0):,} out tokens, "
+                 f"${usage.get('cost_usd', 0.0):.4f}")
+        emit(f"    Retrieval mode: {meta.get('retrieval_mode', 'unknown')}")
         for warning in meta.get("warnings", []):
-            print(f"    ⚠ {warning}")
+            emit(f"    ⚠ {warning}")
+        if ui is not None:
+            ui.pillar_done()
+
+    if ui is not None:
+        ui.close()
 
     if strict_live and not all_rows:
         raise ValueError(

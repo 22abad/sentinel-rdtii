@@ -392,10 +392,10 @@ async def discover_and_extract(
     from services.document_fetch import fetch_document_text
     from services.extraction import run_extraction
 
-    say = progress if callable(progress) else (lambda _m: None)
+    say = progress if callable(progress) else (lambda *a, **k: None)
     code = economy_code(economy)
     display = economy_display_name(economy)
-    say(f"Pillar {pillar}: searching official sources for relevant laws…")
+    say("searching official sources for relevant laws…")
 
     request = DiscoverySearchRequest(
         country_code=code,
@@ -428,16 +428,17 @@ async def discover_and_extract(
             f"Excluded {excluded_non_live} fixture/fallback candidate(s) from formal submission."
         )
 
-    say(f"Pillar {pillar}: found {len(eligible_candidates)} candidate document(s); "
-        f"fetching and extracting…")
-    for candidate in eligible_candidates:
+    _total_docs = min(len(eligible_candidates), max_documents) if max_documents else len(eligible_candidates)
+    say(f"found {len(eligible_candidates)} candidate document(s); fetching and extracting…", 0, _total_docs)
+    for _pos, candidate in enumerate(eligible_candidates, start=1):
         if max_documents is not None and documents_processed >= max_documents:
             break
         if candidate.url in seen_urls:
             continue
         seen_urls.add(candidate.url)
 
-        say(f"Pillar {pillar}: fetching & reading {getattr(candidate, 'title', None) or candidate.url}…")
+        say(f"fetching & reading: {getattr(candidate, 'title', None) or candidate.url}",
+            min(_pos, _total_docs), _total_docs)
         try:
             document = await fetch_document_text(
                 candidate.url, browser_mode=browser_mode
@@ -566,22 +567,21 @@ async def run_library(
     from providers import resolve_provider
     from services.extraction import run_extraction
 
-    say = progress if callable(progress) else (lambda _m: None)
+    say = progress if callable(progress) else (lambda *a, **k: None)
     display = economy_display_name(economy)
     code = economy_code(economy)
     provider = resolve_provider(provider_name)
 
     entries = lookup(code, pillar=pillar, indicators=indicators)
     wanted = _pillar_indicators(pillar, indicators)
-    say(f"Pillar {pillar}: reading {len(entries)} cached official text(s) from the library…")
+    say(f"reading {len(entries)} cached official text(s) from the library…", 0, len(entries))
     rows: list[SubmissionRow] = []
     warnings: list[str] = []
     usage_totals: dict = {}
     laws_processed = 0
 
     for position, entry in enumerate(entries, start=1):
-        say(f"Pillar {pillar}: extracting & verifying provisions from "
-            f"{entry.law_name} ({position}/{len(entries)})…")
+        say(f"extracting: {entry.law_name}", position, len(entries))
         # Cached KNOWN-baseline laws map to the KNOWN tag; cached NEW discoveries
         # (origin="discovered") must surface as NEW.
         is_discovered = getattr(entry, "origin", "known") == "discovered"
@@ -680,10 +680,10 @@ async def run_seed_first(
     display = economy_display_name(economy)
     code = economy_code(economy)
 
-    say = progress if callable(progress) else (lambda _m: None)
+    say = progress if callable(progress) else (lambda *a, **k: None)
 
     # 1) Seed pass — cached official texts (reproducible, offline).
-    say(f"Pillar {pillar}: seed pass — reading curated official texts…")
+    say("seed pass — reading curated official texts…")
     seed_rows, seed_meta = await run_library(
         economy, pillar, provider_name=provider_name, indicators=indicators,
         progress=progress,
@@ -693,7 +693,7 @@ async def run_seed_first(
     }
 
     # 2) Fallback pass — live discovery, minus anything a seed already covered.
-    say(f"Pillar {pillar}: discovery pass — searching official portals for more/newer laws…")
+    say("discovery pass — searching official portals for more/newer laws…")
     disc_rows, disc_meta = await discover_and_extract(
         economy, pillar,
         provider_name=provider_name, indicators=indicators,

@@ -6,9 +6,9 @@ from urllib.parse import quote
 from legal_crawler.browser import async_playwright, _apply_stealth, _initialize_browser_context
 
 # ── 泰国 OCS (Office of the Council of State) 法律库爬取 ─────────────
-# OCS 网站 (https://www.ocs.go.th/searchlaw) 不依赖 Cloudflare，
-# 可替代被 Cloudflare 保护的 ratchakitcha.soc.go.th（泰王國政府公報）。
-# 其 SPA 阅读器 (https://searchlaw.ocs.go.th) 提供泰文 + 英文双语法律全文。
+# OCS 网站 (https://www.ocs.go.th/searchlaw) 不依赖 Cloudflare, 
+# 可替代被 Cloudflare 保护的 ratchakitcha.soc.go.th（泰王國政府公報）. 
+# 其 SPA 阅读器 (https://searchlaw.ocs.go.th) 提供泰文 + 英文双语法律全文. 
 
 OCS_BASE = "https://www.ocs.go.th"
 OCS_SEARCH = f"{OCS_BASE}/searchlaw"
@@ -22,10 +22,10 @@ async def search_ocs_law(
     max_results: int = 10,
     timeout: int = 30000,
 ) -> list[dict]:
-    """在泰国 OCS 法律库按关键词搜索，返回法律列表。
+    """在泰国 OCS 法律库按关键词search, 返回法律列表. 
 
     Args:
-        query: 搜索关键词（泰文或英文）
+        query: search keyword（泰文或英文）
         search_topic: True=按标题搜, False=按内容搜
         max_results: 最大返回条数
         timeout: 页面加载超时(ms)
@@ -43,11 +43,11 @@ async def search_ocs_law(
             encoded_q = quote(query)
             topic_param = "&topic=on" if search_topic else ""
             url = f"{OCS_SEARCH}?q={encoded_q}{topic_param}"
-            print(f"[OCS 搜索] {url}")
+            print(f"[OCS search] {url}")
             await page.goto(url, wait_until="domcontentloaded", timeout=timeout)
             await page.wait_for_timeout(4000)
 
-            # OCS 的 SPA 异步加载结果列表，等待结果 DOM 出现
+            # OCS 的 SPA 异步加载结果列表, 等待结果 DOM 出现
             try:
                 await page.wait_for_selector(
                     'a[href*="/public/doc"]',
@@ -57,12 +57,12 @@ async def search_ocs_law(
                 # 可能无结果或页面结构不同
                 body = await page.evaluate("document.body?.innerText || ''")
                 if "ไม่พบข้อมูล" in body or "No results" in body:
-                    print("[OCS 搜索] 未找到结果")
+                    print("[OCS search] no results found")
                     return []
                 # fallback: 试着多等一会
                 await page.wait_for_timeout(5000)
 
-            # 提取所有法律文档链接
+            # 提取所has法律doc链接
             links = await page.locator('a[href*="/public/doc"]').all()
             visited_ids: set[str] = set()
             for link in links:
@@ -88,7 +88,7 @@ async def search_ocs_law(
                 if len(results) >= max_results:
                     break
 
-            print(f"[OCS 搜索] 找到 {len(results)} 条结果")
+            print(f"[OCS search] found {len(results)} results")
             return results
 
         finally:
@@ -100,18 +100,18 @@ async def fetch_ocs_law_document(
     lang: str = "th",
     timeout: int = 30000,
 ) -> Optional[str]:
-    """从 OCS SPA 阅读器提取法律全文（泰文或英文）。
+    """从 OCS SPA 阅读器提取法律全文（泰文或英文）. 
 
-    OCS 的 document viewer 是 React SPA，需要用 Playwright 渲染后
-    才能获取全文。支持 ?lang=en 参数切换到英文版。
+    OCS 的 document viewer 是 React SPA, 需要用 Playwright 渲染后
+    才能获取全文. 支持 ?lang=en 参数切换到英文版. 
 
     Args:
-        doc_id: OCS 文档 ID（从 search_ocs_law 返回的 doc_id）
+        doc_id: OCS doc ID（从 search_ocs_law 返回的 doc_id）
         lang: "th"=泰文, "en"=英文
         timeout: 页面加载 + 渲染超时(ms)
 
     Returns:
-        法律全文文本，失败返回 None
+        法律全文文本, failed返回 None
     """
     lang_param = "?lang=en" if lang == "en" else ""
     url = f"{OCS_DOC_READER}/{doc_id}{lang_param}"
@@ -122,18 +122,18 @@ async def fetch_ocs_law_document(
             page = await context.new_page()
             await _apply_stealth(page)
 
-            print(f"[OCS 文档] 正在加载: {url}")
+            print(f"[OCS doc] loading: {url}")
             await page.goto(url, wait_until="domcontentloaded", timeout=timeout)
             # SPA 需要额外时间渲染
             await page.wait_for_timeout(5000)
 
-            # 检查页面是否成功加载
+            # 检查页面是否OK加载
             title = await page.title()
             if "404" in title:
-                print(f"[OCS 文档] 404 — doc_id 无效: {doc_id}")
+                print(f"[OCS doc] 404 — doc_id invalid: {doc_id}")
                 return None
 
-            # 如果请求英文版，尝试点击 "Latest Translation" 按钮加载翻译内容
+            # 如果请求英文版, trying点击 "Latest Translation" button加载翻译内容
             if lang == "en":
                 try:
                     trans_btn = page.locator(
@@ -143,23 +143,23 @@ async def fetch_ocs_law_document(
                     ).first
                     if await trans_btn.count() > 0:
                         await trans_btn.click()
-                        print("[OCS 文档] 点击了 Translation 按钮")
+                        print("[OCS doc] clicked Translation button")
                         await page.wait_for_timeout(3000)
                 except Exception:
                     pass
 
-            # 获取全文 — 使用 body.innerText 获取所有可见文本
+            # 获取全文 — 使用 body.innerText 获取所has可见文本
             body = await page.evaluate("document.body?.innerText || ''")
             if len(body) < 200:
-                # 可能内容在某个深层容器里，等更久再试一次
+                # 可能内容在某个深层容器里, 等更久再试一次
                 await page.wait_for_timeout(3000)
                 body = await page.evaluate("document.body?.innerText || ''")
 
             if len(body) < 100:
-                print(f"[OCS 文档] 提取的文本过短 ({len(body)} chars)，可能被拦截")
+                print(f"[OCS doc] extracted text too short ({len(body)} chars), possibly blocked")
                 return None
 
-            print(f"[OCS 文档] 成功提取 {len(body)} 字符 ({lang})")
+            print(f"[OCS doc] extracted OK, {len(body)} chars ({lang})")
             return body
 
         finally:
@@ -171,10 +171,10 @@ async def fetch_thai_law_by_keyword(
     lang: str = "th",
     timeout: int = 30000,
 ) -> Dict[str, Any]:
-    """一站式泰国法律获取：关键词搜索 → 选取第一条 → 拉取全文。
+    """一站式泰国法律获取: 关键词search → 选取第一条 → 拉取全文. 
 
-    这是推荐给上层 /api/extract 调用的高级接口。
-    自动处理：OCS 搜索 → SPA 渲染 → 全文提取。
+    这是推荐给上层 /api/extract 调用的高级接口. 
+    自动处理: OCS search → SPA 渲染 → 全文提取. 
 
     Args:
         query: 法律名称关键词（泰文）
@@ -188,7 +188,7 @@ async def fetch_thai_law_by_keyword(
     if not results:
         return {
             "type": "error",
-            "message": f"OCS 未找到与 '{query}' 相关的法律",
+            "message": f"OCS no snapshot for与 '{query}' 相关的法律",
         }
 
     best = results[0]
@@ -196,7 +196,7 @@ async def fetch_thai_law_by_keyword(
     if not text:
         return {
             "type": "error",
-            "message": f"OCS 文档提取失败: {best['doc_url']}",
+            "message": f"OCS doc提取failed: {best['doc_url']}",
         }
 
     return {
