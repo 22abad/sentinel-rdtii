@@ -316,9 +316,15 @@ def cap_rows_per_law(
     """
     if cap <= 0:
         return rows
+    # Group by the NORMALISED law name so a statute's title variants — a country
+    # prefix, an ALL-CAPS copy, a "(PDPA)" acronym — collapse into one law and
+    # the cap actually bites (a live MYS run surfaced the PDPA under ~5 variant
+    # names, 20 rows, which evaded a raw-name cap).
+    from .novelty import normalize_law_name
+
     by_law: dict[str, list[int]] = {}
     for i, row in enumerate(rows):
-        law = " ".join((row.law_name or "").split()).casefold()
+        law = normalize_law_name(row.law_name or "") or " ".join((row.law_name or "").split()).casefold()
         by_law.setdefault(law, []).append(i)
     keep: set[int] = set()
     for idxs in by_law.values():
@@ -352,11 +358,13 @@ def dedupe_submission_rows(rows: list["SubmissionRow"]) -> list["SubmissionRow"]
     submission and reads as padding to judges. Keeps first occurrence, order
     preserved. Rows with an empty quote are never treated as duplicates.
     """
+    from .novelty import normalize_law_name
+
     seen: set[tuple[str, str, str]] = set()
     out: list["SubmissionRow"] = []
     for row in rows:
         quote = " ".join((row.verbatim_snippet or "").split()).casefold()
-        law = " ".join((row.law_name or "").split()).casefold()
+        law = normalize_law_name(row.law_name or "") or " ".join((row.law_name or "").split()).casefold()
         key = (row.indicator_id, law, quote)
         if quote and key in seen:
             continue
@@ -392,6 +400,22 @@ _NON_AUTHORITATIVE_URL = re.compile(
     r"media-release|speeches?)(/|$)",
     re.IGNORECASE,
 )
+# A trade-agreement source by URL — the FTA portal or a TPPA/CPTPP/RCEP text —
+# catches instrument chapters whose name hides the agreement ("Chapter 14
+# Electronic Commerce" served from the FTA portal is a CPTPP chapter).
+_AGREEMENT_URL = re.compile(
+    r"//fta\.|/miti-fta/|/tppa|/cptpp|/rcep\b|trans-pacific|free-?trade-?agreement",
+    re.IGNORECASE,
+)
+# A foreign jurisdiction named in a domestic-law title is a mislabel: none of
+# these are economies the tool runs (a Malaysia PDPA page was tagged "Hong Kong
+# Personal Data (Privacy) Ordinance" / "Singapore PDPA" by the extractor). The
+# golden set contains no such source.
+_FOREIGN_JURISDICTION = re.compile(
+    r"\b(hong\s*kong|viet\s*nam|vietnam|south\s*korea|korea|japan|"
+    r"european\s+union|united\s+kingdom|united\s+states|new\s+zealand)\b",
+    re.IGNORECASE,
+)
 
 
 def _is_out_of_scope_source(law_name: str, source_url: str) -> bool:
@@ -405,7 +429,11 @@ def _is_out_of_scope_source(law_name: str, source_url: str) -> bool:
 
     if _OUT_OF_SCOPE_INSTRUMENT.search(law_name or ""):
         return True
+    if _FOREIGN_JURISDICTION.search(law_name or ""):
+        return True
     if _NON_AUTHORITATIVE_URL.search(source_url or ""):
+        return True
+    if _AGREEMENT_URL.search(source_url or ""):
         return True
     return False
 _STATUTE_WORD = re.compile(
