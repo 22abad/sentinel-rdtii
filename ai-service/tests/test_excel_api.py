@@ -65,3 +65,55 @@ def test_excel_export_returns_rdtii_workbook():
     assert worksheet["A2"].value == "Pillar 6"
     assert worksheet["B2"].value == "6.1"
     assert worksheet["D2"].value == "Personal Data Protection Act 2012"
+
+
+def _mapping(indicator, quote, *, pillar):
+    return {
+        "pillar": pillar,
+        "indicator": indicator,
+        "score": 1.0,
+        "verbatim_quote": quote,
+        "quote_start": 0,
+        "quote_end": len(quote),
+        "source_legislation": "Personal Data Protection Act 2012",
+        "source_url": "https://sso.agc.gov.sg/Act/PDPA2012",
+    }
+
+
+_STRONG = _mapping(
+    "6.4",
+    "An organisation must not transfer any personal data to a country or "
+    "territory outside Singapore except in accordance with this Act.",
+    pillar=6,
+)
+_WEAK_TITLE = _mapping("7.5", "Personal Data Protection Act 2012", pillar=7)  # non-framework title-quote
+
+
+def _rows(content):
+    workbook = load_workbook(BytesIO(content))
+    ws = workbook.active
+    return list(ws.iter_rows(min_row=2, values_only=True))
+
+
+def test_export_keeps_all_rows_by_default():
+    client = TestClient(main_module.app)
+    resp = client.post(
+        "/api/excel/export",
+        json={"country": "SGP", "mappings": [_STRONG, _WEAK_TITLE]},
+    )
+    assert resp.status_code == 200
+    # Default (drop_weak absent) exports exactly what it was given — both rows.
+    assert len(_rows(resp.content)) == 2
+
+
+def test_drop_weak_filters_weak_evidence_rows():
+    client = TestClient(main_module.app)
+    resp = client.post(
+        "/api/excel/export",
+        json={"country": "SGP", "mappings": [_STRONG, _WEAK_TITLE], "drop_weak": True},
+    )
+    assert resp.status_code == 200
+    rows = _rows(resp.content)
+    # The weak non-framework title-quote is dropped; the strong provision stays.
+    assert len(rows) == 1
+    assert rows[0][1] == "6.4"
