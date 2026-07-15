@@ -77,6 +77,37 @@ def test_node_reuses_cache_and_skips_the_llm(monkeypatch):
     assert logged, "a reuse hit should be logged"
 
 
+def test_force_refresh_bypasses_the_cache_read(monkeypatch):
+    """force_refresh re-extracts even when a cache entry exists (still re-caches)."""
+    import workflows.nodes.extract as node_mod
+
+    monkeypatch.setattr(node_mod, "_cache_get", lambda text: dict(_RESPONSE))  # cache HAS an entry
+
+    class _Resp:
+        def model_dump(self):
+            return dict(_RESPONSE)
+
+    class _Provider:
+        name = "deepseek"
+
+    monkeypatch.setattr(node_mod, "configured_provider", lambda *a, **k: _Provider())
+    ran = {"n": 0}
+
+    async def fake_extraction(text, provider, **kwargs):
+        ran["n"] += 1
+        return _Resp()
+
+    monkeypatch.setattr(node_mod, "run_extraction", fake_extraction)
+    monkeypatch.setattr(node_mod, "_cache_put", lambda *a, **k: None)
+
+    node = WorkflowNode(id="n1", type="extract.mappings", config={"text": _TEXT, "force_refresh": True})
+    ctx = WorkflowContext(run_id="r1", runtime={})
+    result = asyncio.run(ExtractMappingsExecutor().run(node=node, inputs={"text": _TEXT}, context=ctx))
+
+    assert ran["n"] == 1, "force_refresh must re-run extraction despite a cache hit"
+    assert "reused" not in result.outputs
+
+
 def test_node_extracts_then_caches_on_miss(monkeypatch):
     """On a cache miss the node runs extraction and writes the result to the
     cache so the next identical run can reuse it."""
