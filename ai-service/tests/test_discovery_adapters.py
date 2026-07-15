@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import sys
 import types
 
@@ -957,6 +958,38 @@ async def test_thailand_ocs_live_failure_marks_fixture_fallback(monkeypatch):
     assert rows
     assert rows[0].retrieval_mode == "fallback"
     assert any("ocs down" in warning for warning in rows[0].warnings)
+
+
+@pytest.mark.anyio
+async def test_thailand_ocs_query_timeout_degrades_without_hanging(monkeypatch):
+    # A stalled OCS portal (Playwright load never returns) must not hang the
+    # whole sweep: the per-query timeout skips it and the adapter falls back.
+    from discovery.adapters import thailand as thailand_mod
+
+    async def slow_search(_query: str, max_results: int = 10):
+        await asyncio.sleep(5)  # would stall for seconds without the guard
+        return []
+
+    fake_crawler = types.ModuleType("crawler")
+    fake_crawler.search_ocs_law = slow_search
+    monkeypatch.setitem(sys.modules, "crawler", fake_crawler)
+    monkeypatch.setattr(thailand_mod, "_OCS_QUERY_TIMEOUT_S", 0.05)
+    source = get_sources("THA")[0]
+
+    # The whole call must finish well under the 5s-per-query stall.
+    rows = await asyncio.wait_for(
+        ThailandOcsAdapter().search(
+            country_code="THA",
+            source=source,
+            queries=["site:ocs.go.th personal data protection law"],
+            limit=2,
+            browser_mode="auto",
+        ),
+        timeout=3.0,
+    )
+
+    assert rows
+    assert rows[0].retrieval_mode == "fallback"
 
 
 def test_thailand_expands_english_pdpa_query_to_thai_ocs_title():
