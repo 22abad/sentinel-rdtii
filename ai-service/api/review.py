@@ -87,6 +87,7 @@ def review_mapping(req: ReviewRequest):
 
         conn.commit()
         cur.close()
+        _bank_and_log(req, str(mapping_id))
         return {"status": "success", "mapping_id": str(mapping_id)}
     except Exception as exc:
         if conn:
@@ -95,4 +96,52 @@ def review_mapping(req: ReviewRequest):
     finally:
         if conn:
             conn.close()
+
+
+def _bank_and_log(req: ReviewRequest, mapping_id: str) -> None:
+    """On approval, bank the mapping into the reusable evidence store; always log.
+
+    This is the "review approves -> promote to the reusable baseline" step: an
+    approved mapping becomes reusable evidence a later run can serve instead of
+    re-extracting. Best-effort — never fails the review.
+    """
+    m = req.mapping
+    try:
+        from submission.schema import indicator_to_rdtii_code
+        indicator = indicator_to_rdtii_code(str(m.indicator))
+    except Exception:  # noqa: BLE001
+        indicator = str(getattr(m, "indicator", ""))
+    try:
+        score = float(getattr(m, "score", None)) if getattr(m, "score", None) is not None else None
+    except (TypeError, ValueError):
+        score = None
+
+    if req.decision == "approved":
+        try:
+            from services.evidence_store import save_evidence
+
+            save_evidence(
+                req.country_code,
+                [{
+                    "indicator_id": indicator,
+                    "law_name": m.source_legislation or "",
+                    "verbatim_quote": m.verbatim_quote or "",
+                    "article": getattr(m, "article_clause", None),
+                    "source_url": m.source_url or None,
+                    "score": score,
+                }],
+                review_status="approved",
+            )
+        except Exception:  # noqa: BLE001 — banking must never break the review
+            pass
+    try:
+        from services.activity_log import record_activity
+
+        record_activity(
+            "review", target_type="mapping", target_id=mapping_id, economy=req.country_code,
+            summary=f"Mapping {req.decision}: {indicator} — {(m.source_legislation or '')[:40]}",
+            detail={"decision": req.decision, "indicator": indicator},
+        )
+    except Exception:  # noqa: BLE001
+        pass
 
