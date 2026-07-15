@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import os
-
 from fastapi import APIRouter, HTTPException
 
+from auth import _db_connect
 from schemas import ReviewRequest
 
 router = APIRouter()
@@ -11,19 +10,11 @@ router = APIRouter()
 
 @router.post("/api/mappings/review")
 def review_mapping(req: ReviewRequest):
-    db_config = {
-        "dbname": os.getenv("POSTGRES_DB", "rdtii"),
-        "user": os.getenv("POSTGRES_USER", "rdtii_user"),
-        "password": os.getenv("POSTGRES_PASSWORD", "rdtii_password"),
-        "host": os.getenv("POSTGRES_HOST", "postgres"),
-        "port": os.getenv("POSTGRES_PORT", "5432"),
-    }
-
-    import psycopg2
-
+    # Use the shared DATABASE_URL-based connection (same as auth / activity_log /
+    # evidence_store), so the endpoint works both in Docker and from the host.
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = _db_connect()
         cur = conn.cursor()
 
         cur.execute(
