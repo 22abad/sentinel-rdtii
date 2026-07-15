@@ -127,6 +127,12 @@ def classify_new_candidate(
         return "REJECT", "foreign law name on this economy's official domain (likely LLM mislabel)"
     if topical is not None and not (topical.search(name) or topical.search(quote)):
         return "REJECT", "name/evidence off-topic for the pillar under review"
+    # The discovery bonus rewards new *laws*. A NEW_PROVISION whose canonical law
+    # is already KNOWN is not a new-law find (and is the shape the LLM produces
+    # when it labels a quote from one statute with a different, known statute's
+    # name). Down-rank so genuine new laws lead the reviewer's list.
+    if candidate.get("novelty_type") == "NEW_PROVISION":
+        return "REVIEW", "new provision of an already-KNOWN law, not a new-law discovery"
     if not on_official:
         return "REVIEW", "on-topic but not on a recognised official government domain"
     return "CANDIDATE", "on-topic domestic statute on an official domain"

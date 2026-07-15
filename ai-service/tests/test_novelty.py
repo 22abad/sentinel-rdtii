@@ -97,6 +97,16 @@ def test_classify_new_candidate_triages_noise_and_leads():
     # On-topic but off an official domain needs a provenance check.
     assert verdict("Some Data Privacy Rules", "https://random-blog.example.com/x") == "REVIEW"
 
+    # A NEW_PROVISION of an already-KNOWN law is not a new-law discovery — it is
+    # also the shape of the LLM mislabelling a quote from one statute with a
+    # different known statute's name (a PDPA name on a Financial Services Act
+    # URL). It must be demoted from CANDIDATE to REVIEW.
+    from submission.novelty import classify_new_candidate
+    prov = {"law_name": "Personal Data Protection Act 2012",
+            "source_url": "https://sso.agc.gov.sg/Act/FSA1993",
+            "verbatim_snippet": "personal data", "novelty_type": "NEW_PROVISION"}
+    assert classify_new_candidate(prov, economy_code="SGP", topical=topical)[0] == "REVIEW"
+
 
 def test_false_new_suppressed_but_genuine_new_preserved():
     # The economy's own flagship statute — however the LLM verbosely titles it,
