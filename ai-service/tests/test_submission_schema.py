@@ -117,6 +117,42 @@ def test_validator_drops_fragment_quotes_but_keeps_title_and_provision():
     assert [r.indicator_id for r in kept] == ["P7-I3"]
 
 
+def test_validator_drops_agreements_and_blog_sources():
+    from submission.schema import _is_out_of_scope_source
+
+    # International instruments are not domestic measures the RDTII scores.
+    assert _is_out_of_scope_source("Singapore-Australia Free Trade Agreement", "https://x.gov.sg/a")
+    assert _is_out_of_scope_source("Australia-Singapore Digital Economy Agreement (DEA)", "https://x")
+    assert _is_out_of_scope_source("Comprehensive and Progressive Agreement for TPP", "https://x")
+    # A blog/news page is not authoritative legal text, even on an official domain.
+    assert _is_out_of_scope_source(
+        "Personal Data Protection Act 2012",
+        "https://www.imda.gov.sg/resources/blog/blog-articles/2021/11/mastering-the-must-dos",
+    )
+    # A real statute on its official Act page is in scope.
+    assert not _is_out_of_scope_source("Personal Data Protection Act 2012", "https://sso.agc.gov.sg/Act/PDPA2012")
+    assert not _is_out_of_scope_source("Privacy Act 1988", "https://www.legislation.gov.au/C2004A03712")
+
+    # End-to-end: agreement + blog rows drop, the statute row survives.
+    agreement = SubmissionRow(
+        economy="Singapore", law_name="Singapore-Australia Free Trade Agreement",
+        indicator_id="P6-I5", verbatim_snippet="binding commitments to allow cross-border data flows apply",
+        source_url="https://isomer-user-content.by.gov.sg/166/safta",
+    )
+    blog = SubmissionRow(
+        economy="Singapore", law_name="Personal Data Protection Act 2012", indicator_id="P7-I1",
+        verbatim_snippet="Singapore put into place the PDPA to regulate the collection of data.",
+        source_url="https://www.imda.gov.sg/resources/blog/blog-articles/2021/11/mastering",
+    )
+    statute = SubmissionRow(
+        economy="Singapore", law_name="Personal Data Protection Act 2012", indicator_id="P6-I4",
+        verbatim_snippet="An organisation must not transfer any personal data outside Singapore unless",
+        source_url="https://sso.agc.gov.sg/Act/PDPA2012",
+    )
+    kept = validate_submission_rows([agreement, blog, statute])
+    assert [r.indicator_id for r in kept] == ["P6-I4"]
+
+
 @pytest.mark.parametrize(
     ("internal", "expected"),
     [
