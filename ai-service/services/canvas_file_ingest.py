@@ -72,6 +72,7 @@ def register_upload(
                 row = cur.fetchone()
                 if row:
                     conn.commit()
+                    _log_ingest(str(row[0]), filename, country_code, uploaded_by, deduplicated=False)
                     return {"document_id": str(row[0]), "status": "processing", "deduplicated": False}
                 cur.execute(
                     "SELECT id, status FROM documents WHERE source_url = %s",
@@ -83,7 +84,24 @@ def register_upload(
 
     if not existing:
         raise CanvasIngestError("document vanished after conflict")
+    _log_ingest(str(existing[0]), filename, country_code, uploaded_by, deduplicated=True)
     return {"document_id": str(existing[0]), "status": existing[1], "deduplicated": True}
+
+
+def _log_ingest(document_id, filename, country_code, uploaded_by, *, deduplicated):
+    """Record the ingest in the activity log (best-effort)."""
+    try:
+        from services.activity_log import record_activity
+
+        record_activity(
+            "ingest", user_id=uploaded_by, target_type="document",
+            target_id=document_id, economy=country_code,
+            summary=(f"Reused already-ingested: {filename}" if deduplicated
+                     else f"Ingested new document: {filename}"),
+            detail={"filename": filename, "deduplicated": deduplicated},
+        )
+    except Exception:  # noqa: BLE001 — logging must never break ingest
+        pass
 
 
 def _extract_text(file_path: str, filename: str) -> str:
