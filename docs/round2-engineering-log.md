@@ -182,6 +182,29 @@ indicators) exceeded the 600 s per-document budget and are recorded as
 timeouts rather than silently dropped; raising the budget for dense docs is
 a cheap follow-up.
 
+## Round 1 pre-submission hardening (Jul 14-15, judge-path audit)
+
+Graded easy->hard testing the way judges probe a tool, plus a clean-room
+reproducibility check, caught a cluster of "the judge's exact run breaks"
+bugs that no unit test or dev environment surfaced:
+
+| # | Found by | Bug | Why it would eliminate us | Fix |
+|---|---|---|---|---|
+| 1 | fresh-venv install | **`import psycopg2` outside a try/except** in the batch-prompt builder zeroed EVERY extraction on a clean `pip install` (lean deps have no psycopg2) | Judge follows the README exactly -> headline command writes ZERO output | import moved inside try; DB corrections degrade gracefully (#130) |
+| 2 | judge matrix | empty `article` failed the whole submission | mandatory command -> zero files | drop incomplete rows, keep the rest (#121) |
+| 3 | judge matrix | `--pdf` rows dropped for empty source_url | the OCR video deliverable -> zero output | source_url falls back to the file path (#125) |
+| 4 | native-speaker + matrix | one act shipped under ~22 hallucinated names; 42 near-dup rows for one indicator | citation-fidelity point deductions | authoritative library names (#123), dedup (#122), per-(law,indicator) cap (#127) |
+
+Two runnable gates now guard against regressions: `tools/check_reproducibility.sh`
+(fresh venv + headline command) and `tools/judge_test_matrix.py` (5 tiers,
+18 cases, incl. the live network path and honesty stress). Both green.
+
+**The lesson for the pitch:** Round 1 is not lost on capability (golden set
+100% F1, judge matrix 18/18) — it is lost when the judge's exact run breaks.
+The only way to find those breaks is to reproduce the judge's exact run: a
+clean virtualenv, the documented command, graded output. Every bug above was
+invisible to unit tests and the dev environment.
+
 ## Pre-submission polish (rubric-driven, Jul 14)
 
 Each item traces to the judges' published scoring language:
