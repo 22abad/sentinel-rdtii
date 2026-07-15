@@ -301,6 +301,49 @@ def cap_rows_per_law_indicator(
     return [row for i, row in enumerate(rows) if i in keep]
 
 
+def cap_rows_per_law(
+    rows: list["SubmissionRow"], *, cap: int = 8
+) -> list["SubmissionRow"]:
+    """Keep at most ``cap`` provisions per LAW, balanced across its indicators.
+
+    The per-(law, indicator) cap still lets one big statute dominate the whole
+    economy: the 174 KB Queensland state IP Act produced ~35 rows across four
+    indicators, swamping the federal Privacy Act 1988 in the Australia output —
+    misleading for a national-level assessment. This caps the total per law and,
+    when trimming, keeps a balanced spread across the indicators the law touches
+    (round-robin by longest quote) rather than a single indicator's long tail.
+    Purely a tidiness pass — it never fabricates or reorders kept rows.
+    """
+    if cap <= 0:
+        return rows
+    by_law: dict[str, list[int]] = {}
+    for i, row in enumerate(rows):
+        law = " ".join((row.law_name or "").split()).casefold()
+        by_law.setdefault(law, []).append(i)
+    keep: set[int] = set()
+    for idxs in by_law.values():
+        if len(idxs) <= cap:
+            keep.update(idxs)
+            continue
+        # Bucket the law's rows by indicator, each ranked by quote length.
+        per_ind: dict[str, list[int]] = {}
+        for i in idxs:
+            per_ind.setdefault(rows[i].indicator_id, []).append(i)
+        for lst in per_ind.values():
+            lst.sort(key=lambda i: len(rows[i].verbatim_snippet or ""), reverse=True)
+        # Round-robin across indicators until the cap is reached.
+        order = sorted(per_ind)
+        chosen: list[int] = []
+        pos = 0
+        while len(chosen) < cap and any(per_ind[k] for k in order):
+            bucket = per_ind[order[pos % len(order)]]
+            if bucket:
+                chosen.append(bucket.pop(0))
+            pos += 1
+        keep.update(chosen)
+    return [row for i, row in enumerate(rows) if i in keep]
+
+
 def dedupe_submission_rows(rows: list["SubmissionRow"]) -> list["SubmissionRow"]:
     """Drop duplicate provisions (same indicator + same law + same verbatim quote).
 

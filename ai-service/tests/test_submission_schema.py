@@ -524,3 +524,28 @@ def test_cap_rows_per_law_indicator_trims_over_extraction():
     assert len([r for r in out if r.indicator_id == "P7-I3"]) == 1  # untouched
     # The longest (most substantive) quotes are the ones kept.
     assert all("x" * 5 in r.verbatim_snippet for r in p7i1)
+
+
+def test_cap_rows_per_law_balances_a_dominant_statute_across_indicators():
+    from submission.schema import cap_rows_per_law
+
+    def mk(ind, n, law="Information Privacy Act 2009 (QLD)"):
+        return SubmissionRow(economy="Australia", law_name=law, indicator_id=ind,
+                             verbatim_snippet=f"{ind} provision text number {n} " + "y" * n,
+                             source_url="https://legislation.qld.gov.au/x")
+    # One statute floods four indicators (34 rows); a federal law has one each.
+    rows = [mk("P7-I1", i) for i in range(12)]
+    rows += [mk("P7-I3", i) for i in range(10)]
+    rows += [mk("P7-I5", i) for i in range(8)]
+    rows += [mk("P7-I2", i) for i in range(4)]
+    rows += [
+        SubmissionRow(economy="Australia", law_name="Privacy Act 1988", indicator_id="P7-I1",
+                      verbatim_snippet="Privacy Act 1988", source_url="https://legislation.gov.au/x"),
+    ]
+    out = cap_rows_per_law(rows, cap=8)
+    qld = [r for r in out if "QLD" in r.law_name]
+    fed = [r for r in out if r.law_name == "Privacy Act 1988"]
+    assert len(qld) == 8                         # dominant statute capped
+    assert len(fed) == 1                          # small law untouched
+    # The 8 kept QLD rows are spread across its indicators, not one indicator's tail.
+    assert len({r.indicator_id for r in qld}) == 4
