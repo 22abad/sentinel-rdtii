@@ -1,5 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import { INGEST_API_URL, REVIEW_API_URL, sampleText } from "../lib/constants";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+import { INGEST_API_URL, REVIEW_API_URL } from "../lib/constants";
+import {
+  DEFAULT_THREAD_ID,
+  getThreadAbortRef,
+  getThreadDetectTimerRef,
+  getThreadSnapshot,
+  subscribeThread,
+  updateThread,
+  type ExtractionThreadState,
+} from "./extractionStore";
 import { demoAuditExtraction } from "../data/demoAuditMappings";
 import { authHeaders, readErrorMessage } from "../lib/http";
 import { t } from "../lib/i18n";
@@ -99,42 +108,68 @@ function mergeUsageSummaries(
   };
 }
 
-export function useExtraction() {
-  const [country, setCountry] = useState("CHN");
-  const [pillarFilter, setPillarFilter] = useState("all");
-  const [sourceUrl, setSourceUrl] = useState("");
-  const [text, setText] = useState(sampleText);
-  const [status, setStatus] = useState<Status>("idle");
-  const [error, setError] = useState("");
-  const [warning, setWarning] = useState("");
-  const [response, setResponse] = useState<ExtractionResponse | null>(null);
-  const extractionAbortRef = useRef<AbortController | null>(null);
-  const [isStopping, setIsStopping] = useState(false);
-  const [activeKey, setActiveKey] = useState<string | null>(null);
-  const [decisions, setDecisions] = useState<Record<string, ReviewDecision>>(
-    {},
+export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
+  // Per-thread run state lives in the external store (see extractionStore.ts)
+  // so it survives panel unmount and can be shared by sibling canvas nodes.
+  const thread = useSyncExternalStore(
+    useCallback((callback: () => void) => subscribeThread(threadId, callback), [threadId]),
+    () => getThreadSnapshot(threadId),
   );
-  const [showRejected, setShowRejected] = useState(false);
+  const {
+    country,
+    pillarFilter,
+    sourceUrl,
+    text,
+    status,
+    error,
+    warning,
+    response,
+    isStopping,
+    activeKey,
+    decisions,
+    showRejected,
+    extractionProgress,
+    batchProgress,
+    foundPdfs,
+    detectedCountry,
+  } = thread;
+
+  // React-style setters (functional updates included) writing to the thread
+  // slice — names preserved so the extraction logic below stays unchanged.
+  function makeSetter<K extends keyof ExtractionThreadState>(key: K) {
+    return (
+      value:
+        | ExtractionThreadState[K]
+        | ((prev: ExtractionThreadState[K]) => ExtractionThreadState[K]),
+    ) =>
+      updateThread(threadId, (prev) => ({
+        [key]:
+          typeof value === "function"
+            ? (value as (p: ExtractionThreadState[K]) => ExtractionThreadState[K])(prev[key])
+            : value,
+      }) as Partial<ExtractionThreadState>);
+  }
+  const setCountry = makeSetter("country");
+  const setPillarFilter = makeSetter("pillarFilter");
+  const setSourceUrl = makeSetter("sourceUrl");
+  const setText = makeSetter("text");
+  const setStatus = makeSetter("status");
+  const setError = makeSetter("error");
+  const setWarning = makeSetter("warning");
+  const setResponse = makeSetter("response");
+  const setIsStopping = makeSetter("isStopping");
+  const setActiveKey = makeSetter("activeKey");
+  const setDecisions = makeSetter("decisions");
+  const setShowRejected = makeSetter("showRejected");
+  const setExtractionProgress = makeSetter("extractionProgress");
+  const setBatchProgress = makeSetter("batchProgress");
+  const setFoundPdfs = makeSetter("foundPdfs");
+  const setDetectedCountry = makeSetter("detectedCountry");
+
+  const extractionAbortRef = getThreadAbortRef(threadId);
+
   const [availableProviders, setAvailableProviders] =
     useState<string[]>(DEFAULT_PROVIDERS);
-  const [extractionProgress, setExtractionProgress] = useState<{
-    current: number;
-    total: number;
-    phase: string;
-  }>({
-    current: 0,
-    total: 0,
-    phase: "",
-  });
-  const [batchProgress, setBatchProgress] = useState<{
-    current: number;
-    total: number;
-    currentUrl: string;
-  }>({
-    current: 0,
-    total: 0,
-    currentUrl: "",
-  });
 
   // Persistent state using localStorage to remember user's last selection
   const [selectedProvider, setSelectedProviderState] = useState(
@@ -172,15 +207,9 @@ export function useExtraction() {
 
   const [vertexModels, setVertexModels] = useState<string[]>([]);
   const [ollamaModels, setOllamaModels] = useState<string[]>([]);
-  const [foundPdfs, setFoundPdfs] = useState<string[]>([]);
 
   // ── Country auto-detection ──────────────────────────────────────
-  const [detectedCountry, setDetectedCountry] = useState<{
-    code: string;
-    name: string;
-    detected: boolean;
-  } | null>(null);
-  const detectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const detectTimer = getThreadDetectTimerRef(threadId);
 
   function triggerCountryDetect(srcUrl: string, srcText: string) {
     if (detectTimer.current) clearTimeout(detectTimer.current);
@@ -915,4 +944,9 @@ export function useExtraction() {
     selectMapping,
     setDecision,
   };
+}
+
+/** Back-compat: the single default extraction thread (pre-multi-thread API). */
+export function useExtraction() {
+  return useExtractionThread(DEFAULT_THREAD_ID);
 }
