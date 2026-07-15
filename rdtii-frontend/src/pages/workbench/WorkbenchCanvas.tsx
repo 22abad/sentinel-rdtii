@@ -35,6 +35,7 @@ import {
   type WorkbenchCanvasViewport,
 } from "../../components/Canvas";
 import { AIChatInput } from "../../components/Workbench/ChatInput";
+import { PanelLinkGuard } from "../../components/Canvas/PanelLinkGuard";
 import { uploadCanvasFile } from "../../services/canvasFiles";
 import {
   loadWorkbenchCanvasLayout,
@@ -379,9 +380,12 @@ function toCanvasViewport(viewport: Viewport): WorkbenchCanvasViewport {
 export function WorkbenchCanvas({
   panels,
   onExit,
+  onFileLink,
 }: {
   panels: CanvasPanel[];
   onExit: () => void;
+  /** Called when a file node is linked to a workbench panel (e.g. "source"). */
+  onFileLink?: (panelId: string, file: File) => void | Promise<void>;
 }) {
   const restoredState = useMemo(() => restoreCanvasState(readSavedCanvasLayout()), []);
   const flowRef = useRef<ReactFlowInstance | null>(null);
@@ -399,7 +403,7 @@ export function WorkbenchCanvas({
   const noteCounter = useRef(restoredState.noteCounter);
   const spawnCounter = useRef(restoredState.spawnCounter);
   const chatCounter = useRef(restoredState.chatCounter);
-  const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string; ingestStatus?: "uploading" | "ingested" | "failed" }[]>([]);
+  const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string; ingestStatus?: "uploading" | "ingested" | "failed" | "extracting" | "extracted" }[]>([]);
   const fileCounter = useRef(0);
   // Files live in the browser (blob URLs) until a file node is linked to the
   // RAG chat node — that connection triggers the upload/ingest to the backend.
@@ -423,6 +427,27 @@ export function WorkbenchCanvas({
       setStatus("failed");
     }
   }, []);
+
+  /** Linking a file node to a panel hands the file to that panel's pipeline.
+      Separate from ingestFileToRag — file→chat (RAG) keeps working unchanged. */
+  const linkFileToPanel = useCallback(async (fileId: string, panelId: string) => {
+    if (!onFileLink) return;
+    const entry = filesRef.current.find((f) => f.id === fileId);
+    if (!entry?.previewUrl || entry.ingestStatus === "extracting") return;
+    const setStatus = (ingestStatus: "extracting" | "extracted" | "failed") =>
+      setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, ingestStatus } : f)));
+    setStatus("extracting");
+    try {
+      // Recover the original bytes from the browser-held blob URL.
+      const blob = await fetch(entry.previewUrl).then((r) => r.blob());
+      const file = new File([blob], entry.fileName ?? "upload", { type: entry.fileType || blob.type });
+      await Promise.resolve(onFileLink(panelId, file));
+      setStatus("extracted");
+    } catch (err) {
+      console.error("Canvas file → panel link failed:", err);
+      setStatus("failed");
+    }
+  }, [onFileLink]);
 
 
   const handleFile = useCallback(async (id: string, file: File) => {
@@ -635,20 +660,41 @@ export function WorkbenchCanvas({
       [
         ...panels
           .filter((p) => !removed[p.id])
-          .map((p, i) => ({
-            id: p.id,
-            type: "panel",
-            dragHandle: p.dragHandle,
-            position: positions[p.id] ?? { x: 40 + i * 48, y: 40 + i * 48 },
-            data: {
-              title: p.title,
-              element: p.element,
-              width: sizes[p.id]?.width ?? p.width,
-              height: sizes[p.id]?.height,
-              onResize: (size: WorkbenchCanvasSize) => resizeNode(p.id, size),
-              onDelete: () => removeNode(p.id),
-            } satisfies PanelNodeData,
-          })),
+          .map((p, i) => {
+            // Edges are data wires: a panel that declares an upstream only
+            // shows its content while an edge to that node exists.
+            const connected =
+              !p.upstreamId ||
+              edges.some(
+                (e) =>
+                  (e.source === p.upstreamId && e.target === p.id) ||
+                  (e.source === p.id && e.target === p.upstreamId),
+              );
+            return {
+              id: p.id,
+              type: "panel",
+              dragHandle: p.dragHandle,
+              position: positions[p.id] ?? { x: 40 + i * 48, y: 40 + i * 48 },
+              data: {
+                title: p.title,
+                element: p.upstreamId ? (
+                  <PanelLinkGuard
+                    connected={connected}
+                    upstreamLabel={panelById[p.upstreamId]?.title ?? p.upstreamId}
+                    panelLabel={p.title}
+                  >
+                    {p.element}
+                  </PanelLinkGuard>
+                ) : (
+                  p.element
+                ),
+                width: sizes[p.id]?.width ?? p.width,
+                height: sizes[p.id]?.height,
+                onResize: (size: WorkbenchCanvasSize) => resizeNode(p.id, size),
+                onDelete: () => removeNode(p.id),
+              } satisfies PanelNodeData,
+            };
+          }),
         ...spawned
           .filter((s) => !removed[s.id] && panelById[s.panelId])
           .map((s) => {
@@ -720,7 +766,7 @@ export function WorkbenchCanvas({
           } satisfies FileNodeData,
         })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds],
+    [panels, spawned, panelById, customNotes, chatIds, files, positions, sizes, removed, edges, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds],
   );
 
   const renderedEdges = useMemo(() => {
@@ -767,14 +813,21 @@ export function WorkbenchCanvas({
     (c: Connection) => {
       markCanvasDirty();
       setEdges((es) => addEdge(c, es));
-      // Linking a file node to the RAG chat node sends the file to the backend
-      // for ingestion (extract → chunk → embed) so retrieval can use it.
+      // Edges from a file node act as data wires:
+      //   file ↔ chat-N   → RAG ingest (extract → chunk → embed)
+      //   file ↔ <panel>  → hand the file to that panel's pipeline
       const ids = [c.source, c.target];
       const fileId = ids.find((id) => id?.startsWith("file-"));
-      const chatId = ids.find((id) => id?.startsWith("chat-"));
-      if (fileId && chatId) void ingestFileToRag(fileId);
+      if (!fileId) return;
+      const otherId = ids.find((id) => id !== fileId);
+      if (!otherId) return;
+      if (otherId.startsWith("chat-")) {
+        void ingestFileToRag(fileId);
+      } else if (panels.some((p) => p.id === otherId)) {
+        void linkFileToPanel(fileId, otherId);
+      }
     },
-    [markCanvasDirty, ingestFileToRag],
+    [markCanvasDirty, ingestFileToRag, linkFileToPanel, panels],
   );
 
   const handleReset = useCallback(() => {

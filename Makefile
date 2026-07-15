@@ -16,13 +16,13 @@ doctor:
 dev:
 	@echo "Starting backend, sidecar, and frontend..."
 	@trap 'kill 0' EXIT; \
-		(export EXTRACT_SIDECAR_URL=$$(grep '^EXTRACT_SIDECAR_URL=' .env | cut -d= -f2-); if [ -z "$$EXTRACT_SIDECAR_URL" ]; then export EXTRACT_SIDECAR_URL=http://localhost:4000; fi; $(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info) & \
+		(export EXTRACT_SIDECAR_URL=$$(grep '^EXTRACT_SIDECAR_URL=' .env | cut -d= -f2-); if [ -z "$$EXTRACT_SIDECAR_URL" ]; then export EXTRACT_SIDECAR_URL=http://localhost:4000; fi; $(PYTHON) -m uvicorn main:app --reload --reload-dir ai-service --reload-exclude ".venv" --reload-exclude "downloads" --port 8000 --app-dir ai-service --log-level info) & \
 		(export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) SIDECAR_API_KEY=$$(grep '^SIDECAR_API_KEY=' .env | cut -d= -f2-) SIDECAR_ADDR=$$(grep '^SIDECAR_ADDR=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run) & \
 		(export VITE_AUTH_BYPASS=$$(grep '^VITE_AUTH_BYPASS=' .env | cut -d= -f2-) && cd rdtii-frontend && npx vite --host 0.0.0.0 --force) & \
 		wait
 
 dev-backend:
-	$(PYTHON) -m uvicorn main:app --reload --port 8000 --app-dir ai-service --log-level info
+	$(PYTHON) -m uvicorn main:app --reload --reload-dir ai-service --reload-exclude ".venv" --reload-exclude "downloads" --port 8000 --app-dir ai-service --log-level info
 
 dev-frontend:
 	export VITE_AUTH_BYPASS=$$(grep '^VITE_AUTH_BYPASS=' .env | cut -d= -f2-) && cd rdtii-frontend && npx vite --host 0.0.0.0 --force

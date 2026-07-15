@@ -55,6 +55,7 @@ export function WorkbenchPage() {
     loadDemoAuditData,
     selectMapping,
     setDecision,
+    ingestFile,
   } = useExtraction();
 
   useEffect(() => {
@@ -158,7 +159,7 @@ export function WorkbenchPage() {
     { id: "discovery", title: "Discovery", element: discoveryPanel, width: 800, dragHandle: ".panel-header"},
     { id: "source", title: "Source", element: sourcePanel, width: 460, dragHandle: ".panel-header" },
     ...(foundPdfsPanel ? [{ id: "foundPdfs", title: "Found PDFs", element: foundPdfsPanel, width: 420 }] : []),
-    { id: "audit", title: "Audit", element: auditPanel, width: 520, dragHandle: ".panel-header" },
+    { id: "audit", title: "Audit", element: auditPanel, width: 520, dragHandle: ".panel-header", upstreamId: "source" },
   ];
 
   return (
@@ -314,7 +315,14 @@ export function WorkbenchPage() {
       </div>
 
       {/* The workbench is now the free-canvas — the classic stacked layout is retired */}
-      <WorkbenchCanvas panels={canvasPanels} onExit={() => navigate("/")} />
+      <WorkbenchCanvas
+        panels={canvasPanels}
+        onExit={() => navigate("/")}
+        onFileLink={(panelId, file) => {
+          // file node linked to the Source panel → run the extraction pipeline
+          if (panelId === "source") return ingestFile(file);
+        }}
+      />
 
     </div>
   );

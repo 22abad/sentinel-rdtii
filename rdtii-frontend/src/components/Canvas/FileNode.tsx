@@ -10,8 +10,9 @@ export type FileNodeData = {
   fileSize?: number;
   previewUrl?: string,
   fileType?: string,
-  /** RAG ingestion state — set when the file node is linked to the chat node. */
-  ingestStatus?: "uploading" | "ingested" | "failed";
+  /** Pipeline state — set when the file node is linked to the chat node (RAG)
+      or to a workbench panel (extraction). */
+  ingestStatus?: "uploading" | "ingested" | "failed" | "extracting" | "extracted";
   width?: number;
   height?: number;
   onResize?: (size: WorkbenchCanvasSize) => void;
@@ -23,9 +24,11 @@ const INGEST_BADGE: Record<
   NonNullable<FileNodeData["ingestStatus"]>,
   { label: string; color: string; bg: string }
 > = {
-  uploading: { label: "Ingesting…", color: "#92400e", bg: "#fef3c7" },
-  ingested:  { label: "In RAG", color: "#065f46", bg: "#d1fae5" },
-  failed:    { label: "Ingest failed", color: "#991b1b", bg: "#fee2e2" },
+  uploading:  { label: "Ingesting…", color: "#92400e", bg: "#fef3c7" },
+  ingested:   { label: "In RAG", color: "#065f46", bg: "#d1fae5" },
+  extracting: { label: "Extracting…", color: "#92400e", bg: "#fef3c7" },
+  extracted:  { label: "In Source", color: "#1e40af", bg: "#dbeafe" },
+  failed:     { label: "Ingest failed", color: "#991b1b", bg: "#fee2e2" },
 };
 
 function Preview({ url, type, name }: { url?: string; type?: string; name?: string }) {
@@ -102,6 +105,43 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
         }}
       />
 
+      {/* Floating Delete — matches PanelNode: red pill above the card when selected */}
+      {selected && (
+        <button
+          className="nodrag"
+          title="Delete file node"
+          onClick={(e) => {
+            e.stopPropagation();
+            data.onDelete();
+          }}
+          style={{
+            position: "absolute",
+            bottom: "100%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            marginBottom: 12,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            height: 24,
+            minHeight: 0,
+            padding: "0 10px",
+            borderRadius: 9999,
+            border: "none",
+            background: "#b91c1c",
+            color: "white",
+            fontSize: "0.7rem",
+            fontWeight: 600,
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+          }}
+        >
+          <Trash2 size={12} /> Delete
+        </button>
+      )}
+
       <Handle type="source" position={Position.Right} style = {{ background: "#10B981" }} />
       <div style={{
         display: "flex",
@@ -171,26 +211,6 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
             <ChevronDown size={14}/>
           </motion.span>
         </button>
-        {selected && (
-        <button className="nodrag" title="Delete"
-          onClick={(e) => {
-            e.stopPropagation();
-            data.onDelete() 
-          }}
-          style={{
-              display: "flex",
-              alignItems: "center",
-              height: 18,
-              padding: "0 8px",
-              borderRadius: 9999,
-              border: "none",
-              background: "#b91c1c",
-              color: "white",
-              cursor: "pointer"
-          }}>
-            <Trash2 size={11} />
-          </button>
-        )}
       </div>
       <div style={{
       padding: 14,

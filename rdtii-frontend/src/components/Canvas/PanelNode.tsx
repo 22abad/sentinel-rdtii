@@ -57,6 +57,7 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
             justifyContent: "center",
             gap: 4,
             height: 24,
+            minHeight: 0, // global `button { min-height: 40px }` would inflate the pill
             padding: "0 10px",
             borderRadius: 9999,
             border: "none",

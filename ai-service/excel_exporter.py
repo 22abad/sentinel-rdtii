@@ -48,18 +48,25 @@ _RDTII_COLUMNS = [
 # Column widths
 _COL_WIDTHS = {name: width for name, width in _RDTII_COLUMNS}
 
-# Styling
-_HEADER_FILL = PatternFill(start_color="1F4E79", end_color="1F4E79", fill_type="solid")
-_HEADER_FONT = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
-_ALTERNATE_FILL = PatternFill(start_color="D6E4F0", end_color="D6E4F0", fill_type="solid")
-_THIN_BORDER = Border(
-    left=Side(style="thin"),
-    right=Side(style="thin"),
-    top=Side(style="thin"),
-    bottom=Side(style="thin"),
-)
-_NEW_ADDITION_FILL = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
-_NEW_ADDITION_FONT = Font(name="Calibri", size=10, color="1B5E20")
+# Styling — only constructible when openpyxl is present. Without the guard,
+# importing this module crashes with NameError in environments that lack
+# openpyxl, which takes down every caller (e.g. the extraction orchestrator
+# imports _timeframe_display from here).
+if _HAS_OPENPYXL:
+    _HEADER_FILL = PatternFill(start_color="1F4E79", end_color="1F4E79", fill_type="solid")
+    _HEADER_FONT = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
+    _ALTERNATE_FILL = PatternFill(start_color="D6E4F0", end_color="D6E4F0", fill_type="solid")
+    _THIN_BORDER = Border(
+        left=Side(style="thin"),
+        right=Side(style="thin"),
+        top=Side(style="thin"),
+        bottom=Side(style="thin"),
+    )
+    _NEW_ADDITION_FILL = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
+    _NEW_ADDITION_FONT = Font(name="Calibri", size=10, color="1B5E20")
+else:
+    _HEADER_FILL = _HEADER_FONT = _ALTERNATE_FILL = None
+    _THIN_BORDER = _NEW_ADDITION_FILL = _NEW_ADDITION_FONT = None
 
 
 def _init_workbook() -> Any:

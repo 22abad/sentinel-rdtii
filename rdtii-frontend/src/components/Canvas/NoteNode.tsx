@@ -87,6 +87,7 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
               justifyContent: "center",
               gap: 4,
               height: 18,
+              minHeight: 0, // global `button { min-height: 40px }` would inflate it
               padding: "0 8px",
               borderRadius: 9999,
               border: "none",
