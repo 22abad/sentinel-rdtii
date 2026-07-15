@@ -5,98 +5,62 @@ import { DiscoveryPanel } from "../../components/Discovery/DiscoveryPanel";
 import { SourcePanel } from "../../components/SourcePanel";
 import { FoundPdfsPanel } from "../../components/SourcePanel/FoundPdfsPanel";
 import { SideBar } from "../../components/SideBar";
-import { useExtraction } from "../../hooks/useExtraction";
+import { useExtractionThread } from "../../hooks/useExtraction";
+import { PanelLinkGuard } from "../../components/Canvas/PanelLinkGuard";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Menu, X, Home, Map, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
-import { WorkbenchCanvas, type CanvasPanel, type LinkedFile } from "./WorkbenchCanvas";
+import { WorkbenchCanvas, type CanvasPanel, type CanvasGraph, type LinkedFile } from "./WorkbenchCanvas";
 import { fetchSourceTextNode } from "../../services/workflowNodes";
 import { parseFile } from "../../services/canvasFiles";
 
-export function WorkbenchPage() {
-  const navigate = useNavigate();
-  const sourceRef = useRef<HTMLDivElement>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [fetchingPdf, setFetchingPdf] = useState(false);
-  const [fetchPdfError, setFetchPdfError] = useState("");
+/** The original Source panel's node id doubles as the "main" thread id —
+    Discovery, Found PDFs, and the SideBar pin to it. Source copies get their
+    own thread keyed by their node id. */
+const MAIN_THREAD_ID = "source";
+
+/** One Source panel instance bound to its own extraction thread. */
+function SourceThreadPanel({ threadId, linkedFiles }: { threadId: string; linkedFiles: LinkedFile[] }) {
   const {
     country, setCountry,
     detectedCountry,
     pillarFilter, setPillarFilter,
     sourceUrl, setSourceUrl,
     text, onTextChange,
-    status,
-    error,
-    warning,
-    provider,
-    usage,
-    isStopping,
-    mappings,
-    visibleMappings,
-    rejected,
-    activeKey, setActiveKey,
-    activeMapping,
-    decisions,
-    pendingCount,
-    showRejected, setShowRejected,
+    activeKey, activeMapping, setActiveKey,
+    status, error, warning,
+    extractionProgress,
     availableProviders,
     selectedProvider, setSelectedProvider,
-    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
-    vertexModels,
-    selectedGeminiModel, setSelectedGeminiModel,
-    selectedDeepSeekModel, setSelectedDeepSeekModel,
-    foundPdfs,
-    extractionProgress,
-    batchProgress,
+    stopExtraction, isStopping, usage,
     extract,
-    stopExtraction,
-    extractShortlist,
-    loadDemoAuditData,
-    selectMapping,
-    setDecision,
-  } = useExtraction();
+  } = useExtractionThread(threadId);
+  const sourceRef = useRef<HTMLDivElement>(null);
 
-  // File nodes edge-linked to the Source panel (live ones only). Linking
-  // registers availability; Run consumes them.
-  const [linkedSourceFiles, setLinkedSourceFiles] = useState<LinkedFile[]>([]);
-
-  const handleLinkedFilesChange = useCallback(
-    (byPanel: Record<string, LinkedFile[]>) =>
-      setLinkedSourceFiles((prev) => {
-        const next = byPanel["source"] ?? [];
-        // Bail out when nothing changed — storing a fresh array every call
-        // re-renders the page, which rebuilds the panels prop, which refires
-        // the canvas effect: an infinite update loop.
-        const same =
-          prev.length === next.length &&
-          prev.every((p, i) => p.id === next[i].id && p.previewUrl === next[i].previewUrl);
-        return same ? prev : next;
-      }),
-    [],
-  );
+  useEffect(() => {
+    if (!activeMapping || !sourceRef.current) return;
+    const mark = sourceRef.current.querySelector("mark");
+    if (mark) mark.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [activeKey, activeMapping]);
 
   // Run: prefer explicit text/URL; otherwise parse every linked file node to
-  // text and feed it through the normal streaming extraction (keeps the
-  // progress display, unlike the non-streaming ingest endpoint).
+  // text and feed it through the normal streaming extraction.
   const runExtraction = useCallback(() => {
-    if (text.trim() || sourceUrl.trim() || linkedSourceFiles.length === 0) {
+    if (text.trim() || sourceUrl.trim() || linkedFiles.length === 0) {
       extract();
       return;
     }
     void (async () => {
       try {
         const parts = await Promise.all(
-          linkedSourceFiles
+          linkedFiles
             .filter((l) => l.previewUrl)
             .map(async (l) => {
               const blob = await fetch(l.previewUrl as string).then((r) => r.blob());
               const file = new File([blob], l.fileName ?? "upload", { type: blob.type });
               const { text: parsed } = await parseFile(file);
-              return linkedSourceFiles.length > 1
-                ? `=== ${l.fileName ?? "file"} ===\n${parsed}`
-                : parsed;
+              return linkedFiles.length > 1 ? `=== ${l.fileName ?? "file"} ===\n${parsed}` : parsed;
             }),
         );
         await extract(undefined, parts.join("\n\n"));
@@ -105,27 +69,9 @@ export function WorkbenchPage() {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, sourceUrl, linkedSourceFiles, extract]);
+  }, [text, sourceUrl, linkedFiles, extract]);
 
-  useEffect(() => {
-    if (!activeMapping || !sourceRef.current) return;
-    const mark = sourceRef.current.querySelector("mark");
-    if (mark) mark.scrollIntoView({ block: "center", behavior: "smooth" });
-  }, [activeKey, activeMapping]);
-
-  const discoveryPanel = (
-    <DiscoveryPanel
-      country={country}
-      pillarFilter={pillarFilter}
-      extracting={status === "loading"}
-      batchProgress={batchProgress}
-      onUseCandidate={(candidate) => setSourceUrl(candidate.url)}
-      onExtractCandidate={(candidate) => extract(candidate.url)}
-      onExtractShortlist={(candidates) => extractShortlist(candidates.map((candidate) => candidate.url))}
-    />
-  );
-
-  const sourcePanel = (
+  return (
     <SourcePanel
       sourceRef={sourceRef}
       country={country}
@@ -140,7 +86,7 @@ export function WorkbenchPage() {
       activeMapping={activeMapping}
       setActiveKey={setActiveKey}
       extract={runExtraction}
-      linkedSourceCount={linkedSourceFiles.length}
+      linkedSourceCount={linkedFiles.length}
       status={status}
       error={error}
       warning={warning}
@@ -153,40 +99,23 @@ export function WorkbenchPage() {
       usage={usage}
     />
   );
+}
 
-  const foundPdfsPanel =
-    foundPdfs.length > 0 ? (
-      <FoundPdfsPanel
-        urls={foundPdfs}
-        loading={fetchingPdf}
-        error={fetchPdfError}
-        onSelect={async (url) => {
-          setFetchingPdf(true);
-          setFetchPdfError("");
-          try {
-            const fetchedDocument = await fetchSourceTextNode(url);
-            if (fetchedDocument.text) {
-              setSourceUrl(url);
-              onTextChange({ target: { value: fetchedDocument.text } } as React.ChangeEvent<HTMLTextAreaElement>);
-              if (fetchedDocument.quality && !fetchedDocument.quality.should_extract) {
-                setFetchPdfError(
-                  [
-                    `Crawl quality: ${fetchedDocument.quality.status}`,
-                    ...fetchedDocument.quality.warnings,
-                  ].join(" · "),
-                );
-              }
-            }
-          } catch (err) {
-            setFetchPdfError(err instanceof Error ? err.message : "Failed to fetch PDF text.");
-          } finally {
-            setFetchingPdf(false);
-          }
-        }}
-      />
-    ) : null;
+/** One Audit panel instance showing the thread of the Source it is
+    edge-bound to; unwired instances render the disconnected guard. */
+function AuditThreadPanel({ threadId }: { threadId: string | null }) {
+  // Hooks must run unconditionally — unbound panels read a placeholder
+  // thread (always empty) underneath the guard.
+  const {
+    status,
+    mappings, visibleMappings, rejected,
+    activeKey, decisions,
+    selectMapping, setDecision,
+    showRejected, setShowRejected,
+    country, loadDemoAuditData, usage,
+  } = useExtractionThread(threadId ?? "__unbound__");
 
-  const auditPanel = (
+  const panel = (
     <AuditPanel
       status={status}
       mappings={visibleMappings}
@@ -204,12 +133,127 @@ export function WorkbenchPage() {
       usage={usage}
     />
   );
+  if (threadId) return panel;
+  return (
+    <PanelLinkGuard connected={false} upstreamLabel="Source" panelLabel="Audit">
+      {panel}
+    </PanelLinkGuard>
+  );
+}
+
+/** Discovery drives the main thread (candidate URLs → main Source). */
+function DiscoveryThreadPanel() {
+  const { country, pillarFilter, status, batchProgress, setSourceUrl, extract, extractShortlist } =
+    useExtractionThread(MAIN_THREAD_ID);
+  return (
+    <DiscoveryPanel
+      country={country}
+      pillarFilter={pillarFilter}
+      extracting={status === "loading"}
+      batchProgress={batchProgress}
+      onUseCandidate={(candidate) => setSourceUrl(candidate.url)}
+      onExtractCandidate={(candidate) => extract(candidate.url)}
+      onExtractShortlist={(candidates) => extractShortlist(candidates.map((candidate) => candidate.url))}
+    />
+  );
+}
+
+/** Found PDFs feed the main thread's source text. */
+function FoundPdfsThreadPanel() {
+  const { foundPdfs, setSourceUrl, onTextChange } = useExtractionThread(MAIN_THREAD_ID);
+  const [fetchingPdf, setFetchingPdf] = useState(false);
+  const [fetchPdfError, setFetchPdfError] = useState("");
+  return (
+    <FoundPdfsPanel
+      urls={foundPdfs}
+      loading={fetchingPdf}
+      error={fetchPdfError}
+      onSelect={async (url) => {
+        setFetchingPdf(true);
+        setFetchPdfError("");
+        try {
+          const fetchedDocument = await fetchSourceTextNode(url);
+          if (fetchedDocument.text) {
+            setSourceUrl(url);
+            onTextChange({ target: { value: fetchedDocument.text } } as React.ChangeEvent<HTMLTextAreaElement>);
+            if (fetchedDocument.quality && !fetchedDocument.quality.should_extract) {
+              setFetchPdfError(
+                [
+                  `Crawl quality: ${fetchedDocument.quality.status}`,
+                  ...fetchedDocument.quality.warnings,
+                ].join(" · "),
+              );
+            }
+          }
+        } catch (err) {
+          setFetchPdfError(err instanceof Error ? err.message : "Failed to fetch PDF text.");
+        } finally {
+          setFetchingPdf(false);
+        }
+      }}
+    />
+  );
+}
+
+export function WorkbenchPage() {
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Main-thread view for the page furniture (SideBar, Found PDFs presence).
+  const {
+    country,
+    provider,
+    status,
+    mappings,
+    pendingCount,
+    sourceUrl,
+    availableProviders,
+    selectedProvider, setSelectedProvider,
+    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
+    vertexModels,
+    selectedGeminiModel, setSelectedGeminiModel,
+    selectedDeepSeekModel, setSelectedDeepSeekModel,
+    foundPdfs,
+  } = useExtractionThread(MAIN_THREAD_ID);
+
+  // Data-wire graph from the canvas: file nodes per panel instance + which
+  // Source instance each Audit instance is bound to.
+  const [graph, setGraph] = useState<CanvasGraph>({ filesByInstance: {}, bindings: {} });
+  const handleGraphChange = useCallback((next: CanvasGraph) => {
+    // Content-compare so unchanged reports don't re-render (and re-trigger
+    // the canvas effect) forever.
+    setGraph((prev) => (JSON.stringify(prev) === JSON.stringify(next) ? prev : next));
+  }, []);
 
   const canvasPanels: CanvasPanel[] = [
-    { id: "discovery", title: "Discovery", element: discoveryPanel, width: 800, dragHandle: ".panel-header"},
-    { id: "source", title: "Source", element: sourcePanel, width: 460, dragHandle: ".panel-header" },
-    ...(foundPdfsPanel ? [{ id: "foundPdfs", title: "Found PDFs", element: foundPdfsPanel, width: 420 }] : []),
-    { id: "audit", title: "Audit", element: auditPanel, width: 520, dragHandle: ".panel-header", upstreamId: "source" },
+    { id: "discovery", title: "Discovery", element: <DiscoveryThreadPanel />, width: 800, dragHandle: ".panel-header" },
+    {
+      id: "source",
+      title: "Source",
+      renderElement: (instanceId) => (
+        <SourceThreadPanel
+          key={instanceId}
+          threadId={instanceId}
+          linkedFiles={graph.filesByInstance[instanceId] ?? []}
+        />
+      ),
+      width: 460,
+      dragHandle: ".panel-header",
+    },
+    ...(foundPdfs.length > 0
+      ? [{ id: "foundPdfs", title: "Found PDFs", element: <FoundPdfsThreadPanel />, width: 420 }]
+      : []),
+    {
+      id: "audit",
+      title: "Audit",
+      renderElement: (instanceId) => (
+        <AuditThreadPanel key={instanceId} threadId={graph.bindings[instanceId] ?? null} />
+      ),
+      width: 520,
+      dragHandle: ".panel-header",
+      upstreamId: "source",
+    },
   ];
 
   return (
@@ -368,7 +412,7 @@ export function WorkbenchPage() {
       <WorkbenchCanvas
         panels={canvasPanels}
         onExit={() => navigate("/")}
-        onLinkedFilesChange={handleLinkedFilesChange}
+        onGraphChange={handleGraphChange}
       />
 
     </div>
