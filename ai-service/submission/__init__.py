@@ -15,6 +15,7 @@ Modules:
 
 from .novelty import (
     build_discovery_report,
+    classify_new_candidate,
     reconcile_discovery_tags,
     reconcile_submission_tags,
     summarize_discovery,
@@ -36,6 +37,7 @@ __all__ = [
     "REQUIRED_SUBMISSION_FIELDS",
     "SubmissionRow",
     "build_discovery_report",
+    "classify_new_candidate",
     "cap_rows_per_law_indicator",
     "dedupe_submission_rows",
     "discovery_tag_for_method",

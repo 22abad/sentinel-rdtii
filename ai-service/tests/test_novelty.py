@@ -72,6 +72,32 @@ def test_normalize_strips_dash_jurisdiction_suffix_but_not_bare_country_word():
     assert normalize_law_name("Standards of Malaysia Act (Act 549) 1996") == "standards of malaysia act"
 
 
+def test_classify_new_candidate_triages_noise_and_leads():
+    import re as _re
+
+    from submission.novelty import classify_new_candidate
+
+    topical = _re.compile(r"privacy|personal data|identity verificat|cyber", _re.I)
+
+    def verdict(name, url, quote="", econ="AUS"):
+        cand = {"law_name": name, "source_url": url, "verbatim_snippet": quote}
+        return classify_new_candidate(cand, economy_code=econ, topical=topical)[0]
+
+    # International instruments are not domestic statutes.
+    assert verdict("Singapore-Australia Free Trade Agreement", "https://legislation.gov.au/x") == "REJECT"
+    assert verdict("Western Australia Pasture Seeds Levy Agreement", "https://legislation.gov.au/x") == "REJECT"
+    # A foreign law name served from this economy's own official domain = mislabel.
+    assert verdict("Hong Kong Personal Data (Privacy) Ordinance", "https://lom.agc.gov.my/act", econ="MYS") == "REJECT"
+    # Off-topic domestic legislation (no pillar vocabulary in name or quote).
+    assert verdict("Primary Industries (Customs) Charges Regulations 2024",
+                   "https://legislation.gov.au/x", quote="Wine Export Charge") == "REJECT"
+    # A genuine on-topic domestic statute on an official domain is a lead.
+    assert verdict("Identity Verification Services Act 2023",
+                   "https://legislation.gov.au/C2023A00123") == "CANDIDATE"
+    # On-topic but off an official domain needs a provenance check.
+    assert verdict("Some Data Privacy Rules", "https://random-blog.example.com/x") == "REVIEW"
+
+
 def test_false_new_suppressed_but_genuine_new_preserved():
     # The economy's own flagship statute — however the LLM verbosely titles it,
     # including foreign-relabelled hallucinations of a Malaysia document — must

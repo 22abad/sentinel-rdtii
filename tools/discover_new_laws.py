@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -53,6 +54,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+# Pillar 6 (cross-border data) / Pillar 7 (data protection, cybersecurity,
+# retention, DPIA, government access) subject vocabulary. A genuine NEW P6/P7
+# law's name or evidence must touch one of these — this rejects the off-topic
+# legislation a broad crawl drags in (agricultural levies, customs charges).
+_P67_TOPICAL = re.compile(
+    r"\b(privacy|personal (?:data|information)|data protection|data localis|localis|"
+    r"cross.?border|cyber|surveillance|interception|retention|biometric|facial recognit|"
+    r"identity verificat|identification information|health record|telecommunications data|"
+    r"data (?:breach|retention|storage|transfer|officer)|encryption|metadata)\b",
+    re.IGNORECASE,
+)
+
+
 async def _sweep(args: argparse.Namespace) -> dict:
     from submission import build_discovery_report
     from submission.pipeline import discover_and_extract
@@ -69,7 +83,9 @@ async def _sweep(args: argparse.Namespace) -> dict:
         rows.extend(pillar_rows)
         warnings.extend(meta.get("warnings", []))
 
-    report = build_discovery_report(economy_display_name(args.economy), rows)
+    report = build_discovery_report(
+        economy_display_name(args.economy), rows, topical=_P67_TOPICAL
+    )
     report["warnings"] = warnings
     # The reconciled SubmissionRow objects are not JSON-friendly; drop them here
     # (the summary and new_candidates already carry the reportable content).
@@ -87,10 +103,19 @@ def main(argv: list[str] | None = None) -> int:
     out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     s = report["summary"]
+    cands = report.get("new_candidates", [])
+    strong = [c for c in cands if c.get("verdict") == "CANDIDATE"]
+    review = [c for c in cands if c.get("verdict") == "REVIEW"]
+    rejected = [c for c in cands if c.get("verdict") == "REJECT"]
     print(f"  {s['new_provisions']} NEW / {s['known_provisions']} KNOWN provisions "
-          f"across {len(s['new_laws'])} new law(s)")
-    for law in s["new_laws"]:
-        print(f"    NEW: {law['economy']} — {law['law_name']} {law['indicators']}")
+          f"across {len(cands)} distinct law(s)")
+    print(f"  triage: {len(strong)} candidate · {len(review)} review · {len(rejected)} flagged noise")
+    mark = {"CANDIDATE": "🟢", "REVIEW": "🟡", "REJECT": "🔴"}
+    for c in strong + review:
+        print(f"    {mark[c['verdict']]} {c['law_name']} {c['indicators']}")
+        print(f"        {c['verdict_reason']} — {c.get('source_url', '')}")
+    if rejected:
+        print(f"    🔴 {len(rejected)} flagged (agreements / mislabels / off-topic) — see report")
     print(f"\n📄 Discovery report (for legal review): {out}")
     return 0
 
