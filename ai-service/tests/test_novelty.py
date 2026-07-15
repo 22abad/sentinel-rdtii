@@ -61,6 +61,17 @@ def test_normalize_strips_country_prefix_and_bare_act_number():
     )
 
 
+def test_normalize_strips_dash_jurisdiction_suffix_but_not_bare_country_word():
+    # The ESCAP inventory tags multilateral instruments "... - Malaysia"; a
+    # discovery title carries no such suffix, so both must reconcile.
+    cptpp = "comprehensive and progressive agreement for trans pacific partnership"
+    assert normalize_law_name("Comprehensive And Progressive Agreement For Trans-Pacific Partnership - Malaysia") == cptpp
+    assert normalize_law_name("Viet Nam Comprehensive and Progressive Agreement for Trans-Pacific Partnership (CPTPP), 2018") == cptpp
+    # A statute whose title genuinely ends in a country word (no dash) is kept.
+    assert normalize_law_name("Bank Negara Malaysia") == "bank negara malaysia"
+    assert normalize_law_name("Standards of Malaysia Act (Act 549) 1996") == "standards of malaysia act"
+
+
 def test_false_new_suppressed_but_genuine_new_preserved():
     # The economy's own flagship statute — however the LLM verbosely titles it,
     # including foreign-relabelled hallucinations of a Malaysia document — must
