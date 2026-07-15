@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuditPanel } from "../../components/AuditPanel";
 import { DiscoveryPanel } from "../../components/Discovery/DiscoveryPanel";
@@ -10,8 +10,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { Plus, Menu, X, Home, Map, User } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
-import { WorkbenchCanvas, type CanvasPanel } from "./WorkbenchCanvas";
+import { WorkbenchCanvas, type CanvasPanel, type LinkedFile } from "./WorkbenchCanvas";
 import { fetchSourceTextNode } from "../../services/workflowNodes";
+import { parseFile } from "../../services/canvasFiles";
 
 export function WorkbenchPage() {
   const navigate = useNavigate();
@@ -55,8 +56,56 @@ export function WorkbenchPage() {
     loadDemoAuditData,
     selectMapping,
     setDecision,
-    ingestFile,
   } = useExtraction();
+
+  // File nodes edge-linked to the Source panel (live ones only). Linking
+  // registers availability; Run consumes them.
+  const [linkedSourceFiles, setLinkedSourceFiles] = useState<LinkedFile[]>([]);
+
+  const handleLinkedFilesChange = useCallback(
+    (byPanel: Record<string, LinkedFile[]>) =>
+      setLinkedSourceFiles((prev) => {
+        const next = byPanel["source"] ?? [];
+        // Bail out when nothing changed — storing a fresh array every call
+        // re-renders the page, which rebuilds the panels prop, which refires
+        // the canvas effect: an infinite update loop.
+        const same =
+          prev.length === next.length &&
+          prev.every((p, i) => p.id === next[i].id && p.previewUrl === next[i].previewUrl);
+        return same ? prev : next;
+      }),
+    [],
+  );
+
+  // Run: prefer explicit text/URL; otherwise parse every linked file node to
+  // text and feed it through the normal streaming extraction (keeps the
+  // progress display, unlike the non-streaming ingest endpoint).
+  const runExtraction = useCallback(() => {
+    if (text.trim() || sourceUrl.trim() || linkedSourceFiles.length === 0) {
+      extract();
+      return;
+    }
+    void (async () => {
+      try {
+        const parts = await Promise.all(
+          linkedSourceFiles
+            .filter((l) => l.previewUrl)
+            .map(async (l) => {
+              const blob = await fetch(l.previewUrl as string).then((r) => r.blob());
+              const file = new File([blob], l.fileName ?? "upload", { type: blob.type });
+              const { text: parsed } = await parseFile(file);
+              return linkedSourceFiles.length > 1
+                ? `=== ${l.fileName ?? "file"} ===\n${parsed}`
+                : parsed;
+            }),
+        );
+        await extract(undefined, parts.join("\n\n"));
+      } catch (err) {
+        console.error("Linked-file extraction failed:", err);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, sourceUrl, linkedSourceFiles, extract]);
 
   useEffect(() => {
     if (!activeMapping || !sourceRef.current) return;
@@ -90,7 +139,8 @@ export function WorkbenchPage() {
       onTextChange={onTextChange}
       activeMapping={activeMapping}
       setActiveKey={setActiveKey}
-      extract={extract}
+      extract={runExtraction}
+      linkedSourceCount={linkedSourceFiles.length}
       status={status}
       error={error}
       warning={warning}
@@ -318,10 +368,7 @@ export function WorkbenchPage() {
       <WorkbenchCanvas
         panels={canvasPanels}
         onExit={() => navigate("/")}
-        onFileLink={(panelId, file) => {
-          // file node linked to the Source panel → run the extraction pipeline
-          if (panelId === "source") return ingestFile(file);
-        }}
+        onLinkedFilesChange={handleLinkedFilesChange}
       />
 
     </div>

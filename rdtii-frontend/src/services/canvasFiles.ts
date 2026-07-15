@@ -1,5 +1,26 @@
-import { CANVAS_FILES_API_URL } from "../lib/constants";
+import { CANVAS_FILES_API_URL, PARSE_FILE_API_URL } from "../lib/constants";
 import { authHeaders, safeJsonParse } from "../lib/http";
+
+/** Parse a file to plain text on the backend (no LLM run). */
+export async function parseFile(file: File): Promise<{ text: string }> {
+  // Plain-text formats don't need the backend PDF parser.
+  if (!file.name.toLowerCase().endsWith(".pdf")) {
+    return { text: await file.text() };
+  }
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch(PARSE_FILE_API_URL, { method: "POST", body: form });
+  const raw = await res.text();
+  const payload = raw ? safeJsonParse(raw) : null;
+  if (!res.ok) {
+    const detail =
+      payload && typeof payload === "object" && "detail" in payload
+        ? (payload as { detail?: unknown }).detail
+        : null;
+    throw new Error(typeof detail === "string" ? detail : `File parsing failed (HTTP ${res.status}).`);
+  }
+  return payload as { text: string };
+}
 
 export type CanvasFileUploadResponse = {
   document_id: string;

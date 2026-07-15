@@ -33,6 +33,9 @@ export const WORKBENCH_CANVAS_API_URL =
 export const CANVAS_FILES_API_URL =
   import.meta.env.VITE_CANVAS_FILES_API_URL ?? "/api/canvas-files";
 
+export const PARSE_FILE_API_URL =
+  import.meta.env.VITE_PARSE_FILE_API_URL ?? "/api/parse-file";
+
 export const AUTH_API_URL =
   import.meta.env.VITE_AUTH_API_URL ?? "/auth";
 

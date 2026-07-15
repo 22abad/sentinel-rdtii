@@ -12,7 +12,7 @@ export type FileNodeData = {
   fileType?: string,
   /** Pipeline state — set when the file node is linked to the chat node (RAG)
       or to a workbench panel (extraction). */
-  ingestStatus?: "uploading" | "ingested" | "failed" | "extracting" | "extracted";
+  ingestStatus?: "uploading" | "ingested" | "failed" | "extracting" | "extracted" | "stale";
   width?: number;
   height?: number;
   onResize?: (size: WorkbenchCanvasSize) => void;
@@ -29,6 +29,7 @@ const INGEST_BADGE: Record<
   extracting: { label: "Extracting…", color: "#92400e", bg: "#fef3c7" },
   extracted:  { label: "In Source", color: "#1e40af", bg: "#dbeafe" },
   failed:     { label: "Ingest failed", color: "#991b1b", bg: "#fee2e2" },
+  stale:      { label: "Re-drop file", color: "#57534e", bg: "#e7e5e4" },
 };
 
 function Preview({ url, type, name }: { url?: string; type?: string; name?: string }) {
@@ -162,7 +163,13 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
         </span>
         {data.ingestStatus && (
           <span
-            title={data.ingestStatus === "failed" ? "Re-link the node to the RAG chat to retry." : undefined}
+            title={
+              data.ingestStatus === "failed"
+                ? "Re-link the node to retry."
+                : data.ingestStatus === "stale"
+                  ? "File contents were lost when the page reloaded — drop the PDF onto the canvas again."
+                  : undefined
+            }
             style={{
               fontSize: "0.65rem",
               fontWeight: 700,

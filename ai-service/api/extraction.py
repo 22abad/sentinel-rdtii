@@ -299,6 +299,44 @@ async def ingest_document(file: UploadFile = File(...), provider: str = Form(Non
     return await upload(file, provider, model)
 
 
+@router.post("/api/parse-file")
+async def parse_file(file: UploadFile = File(...)):
+    """Extract text from an uploaded PDF WITHOUT running the LLM pipeline.
+
+    Used by the workbench canvas: linking a file node to the Source panel
+    registers it as a source; Run parses it here and feeds the text through
+    the normal streaming extraction (so progress display keeps working).
+    """
+    if not file.filename or not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    from pdf_reader import read_pdf
+
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+    try:
+        content = await file.read()
+        await asyncio.to_thread(tmp.write, content)
+        tmp.close()
+        pdf_result = await asyncio.to_thread(_read_pdf_with_optional_source, read_pdf, tmp.name)
+        text = "\n".join(pdf_result.pages)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"PDF parsing failed: {str(exc)}")
+    finally:
+        await asyncio.to_thread(os.unlink, tmp.name)
+
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="No text could be extracted from the PDF.")
+
+    return {
+        "text": text,
+        "pdf_metadata": {
+            "_ocr_mean_confidence": round(pdf_result.mean_conf, 3),
+            "_ocr_ratio": round(pdf_result.ocr_ratio, 3),
+            "_pdf_type": "scanned" if pdf_result.ocr_ratio > 0.5 else "mixed" if pdf_result.ocr_ratio > 0 else "pure_text",
+        },
+    }
+
+
 class FetchTextRequest(BaseModel):
     source_url: str = ""
     browser_mode: str = "auto"
