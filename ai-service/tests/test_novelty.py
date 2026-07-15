@@ -120,6 +120,36 @@ def test_false_new_suppressed_but_genuine_new_preserved():
     assert not is_known_law("Australia", "Identity Verification Services Act 2023", index)
 
 
+def test_round2_baseline_wired_with_bilingual_and_split_acts():
+    # The seven Round 2 economies must have a KNOWN baseline (from the Round 2
+    # Database inventory), else every discovered law is spuriously NEW.
+    index = known_law_index()
+    for code in ("CHN", "IND", "IDN", "LAO", "MNG", "RUS", "THA"):
+        assert any(k[0] == code for k in index), f"no Round 2 baseline for {code}"
+    # Bilingual titles reconcile from the English name alone...
+    assert is_known_law("China", "Cybersecurity Law of the People's Republic of China", index)
+    assert is_known_law("China", "Personal Information Protection Law of the People's Republic of China", index)
+    # ...and from the native-script original alone.
+    assert is_known_law("China", "中华人民共和国网络安全法", index)
+    # Acts concatenated into one inventory cell are split and each is KNOWN.
+    assert is_known_law("China", "Measures for Cybersecurity Review", index)
+    # A law absent from every baseline is still NEW.
+    assert not is_known_law("China", "Zzz Nonexistent Data Localization Act 2099", index)
+
+
+def test_inventory_identity_keys_splits_and_delanguages():
+    from submission.novelty import _inventory_identity_keys
+
+    raw = ("Cybersecurity Law of the People's Republic of China《中华人民共和国网络安全法》;\n\n"
+           "Measures for Cybersecurity Review《网络安全审查办法》")
+    keys = _inventory_identity_keys("CHN", raw)
+    normed = {k[1] for k in keys}
+    assert "cybersecurity law of the people s republic of china" in normed  # English-only
+    assert "measures for cybersecurity review" in normed                    # split second act
+    assert "中华人民共和国网络安全法" in normed                                 # native-script only
+    assert all(k[0] == "CHN" for k in keys)
+
+
 def test_known_index_matches_baseline_and_rejects_unseen():
     index = known_law_index()
     # Laws in the KNOWN baseline (library), across title variants.

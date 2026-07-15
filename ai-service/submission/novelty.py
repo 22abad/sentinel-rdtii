@@ -36,6 +36,12 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 # in this inventory (or in our curated library) is KNOWN; anything else the tool
 # finds in force is a genuine NEW discovery.
 KNOWN_INVENTORY_PATH = _REPO_ROOT / "data" / "known_inventory.jsonl"
+# The Round 2 baseline: the official ESCAP RDTII 2.1 Round 2 Database distilled
+# to one row per (economy, indicator, act) for the seven Round 2 economies
+# (CHN/IND/IDN/LAO/MNG/RUS/THA). Without it those economies have no KNOWN set,
+# so every discovered law would be spuriously "NEW". Built by
+# tools/build_round2_baseline.py.
+ROUND2_INVENTORY_PATH = _REPO_ROOT / "data" / "round2_inventory.jsonl"
 GOLDEN_CASES_PATH = _REPO_ROOT / "evaluation" / "golden" / "cases.jsonl"
 GOLDEN_DOCUMENTS_PATH = _REPO_ROOT / "evaluation" / "golden" / "documents.jsonl"
 
@@ -88,6 +94,12 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "AUS": ("legislation.gov.au", "oaic.gov.au", "cyber.gov.au", "legislation.qld.gov.au",
             "legislation.nsw.gov.au", "legislation.sa.gov.au", "legislation.vic.gov.au",
             "legislation.wa.gov.au"),
+    # Round 2 economies with a discovery registry. Suffix entries ("gov.cn",
+    # "go.th") match every government subdomain via the endswith check below;
+    # Thai statutory regulators publish on .or.th and are listed explicitly.
+    "CHN": ("gov.cn", "npc.gov.cn", "cac.gov.cn", "mofcom.gov.cn", "moj.gov.cn", "samr.gov.cn"),
+    "THA": ("go.th", "mdes.go.th", "nbtc.go.th", "ipthailand.go.th", "dbd.go.th",
+            "ratchakitcha.soc.go.th", "bot.or.th", "etda.or.th", "ncsa.or.th"),
 }
 
 
@@ -325,11 +337,54 @@ def known_evidence_index(
     return index
 
 
-def load_known_inventory(path: Path | str = KNOWN_INVENTORY_PATH) -> set[tuple[str, str]]:
-    """Load the official ESCAP Legal Inventory as ``(economy, normalized law)`` keys.
+# A single Round 2 inventory cell often lists several acts joined by ";" or
+# newlines, and each carries a bilingual title — the English name followed by
+# the native-script original in 《…》 / （…） brackets. A discovery result names a
+# law in one language only, so we index every act under both its English-only
+# and its native-script identity.
+_INVENTORY_SEP = re.compile(r"[;\n•]+")
+_CJK_BRACKET = re.compile(r"《([^》]*)》|〈([^〉]*)〉")
+_NATIVE_RUN = re.compile(r"[　-〿㐀-䶿一-鿿가-힯฀-๿]+")
 
-    Returns an empty set if the distilled inventory is absent, so tagging degrades
-    to the curated library baseline rather than erroring.
+
+def _inventory_identity_keys(economy: str, raw_law_name: str) -> set[tuple[str, str]]:
+    """Expand one inventory ``law_name`` cell into every (economy, identity) key.
+
+    Splits concatenated acts and, per act, yields the full, English-only, and
+    native-script normalized identities so a single-language discovery result
+    still reconciles against the bilingual baseline.
+    """
+
+    econ = economy.upper()
+    keys: set[tuple[str, str]] = set()
+    for part in _INVENTORY_SEP.split(raw_law_name):
+        part = part.strip()
+        if not part:
+            continue
+        # Full bilingual form.
+        full = normalize_law_name(part)
+        if full:
+            keys.add((econ, full))
+        # English-only: drop bracketed native titles and any native-script runs.
+        english = _CJK_BRACKET.sub(" ", part)
+        english = _NATIVE_RUN.sub(" ", english)
+        english_norm = normalize_law_name(english)
+        if english_norm:
+            keys.add((econ, english_norm))
+        # Native-script only: each bracketed original title on its own.
+        for match in _CJK_BRACKET.finditer(part):
+            native = normalize_law_name(match.group(1) or match.group(2) or "")
+            if native:
+                keys.add((econ, native))
+    return keys
+
+
+def load_known_inventory(path: Path | str = KNOWN_INVENTORY_PATH) -> set[tuple[str, str]]:
+    """Load an official Legal Inventory as ``(economy, normalized law)`` keys.
+
+    Handles both the Round 1 inventory (one clean English act per row) and the
+    Round 2 Database inventory (bilingual, multi-act cells). Returns an empty set
+    if the file is absent, so tagging degrades to the library baseline.
     """
 
     path = Path(path)
@@ -340,7 +395,10 @@ def load_known_inventory(path: Path | str = KNOWN_INVENTORY_PATH) -> set[tuple[s
         if not line.strip():
             continue
         record = json.loads(line)
-        keys.add((record["economy"].upper(), normalize_law_name(record["law_name"])))
+        law_name = (record.get("law_name") or "").strip()
+        if not law_name:  # indicator rows with no act carry no identity
+            continue
+        keys |= _inventory_identity_keys(record["economy"], law_name)
     return keys
 
 
@@ -360,7 +418,14 @@ def known_law_index(entries: list[LawEntry] | None = None) -> set[tuple[str, str
         for entry in pool
         if getattr(entry, "origin", "known") != "discovered"
     }
-    return library_keys | load_known_inventory()
+    # Union both authoritative inventories: the Round 1 ESCAP Legal Inventory
+    # (SGP/MYS/AUS) and the Round 2 Database baseline (the other seven
+    # economies), so a law counts as KNOWN if any source already has it.
+    return (
+        library_keys
+        | load_known_inventory(KNOWN_INVENTORY_PATH)
+        | load_known_inventory(ROUND2_INVENTORY_PATH)
+    )
 
 
 def is_known_law(economy: str, law_name: str, index: set[tuple[str, str]]) -> bool:
