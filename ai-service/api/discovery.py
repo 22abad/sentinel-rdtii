@@ -28,7 +28,7 @@ class DiscoveryRegistryUpdateRequest(BaseModel):
 @router.post("/api/discovery/search")
 async def discovery_search(req: DiscoverySearchRequest):
     try:
-        return await _discovery_service.search(req)
+        result = await _discovery_service.search(req)
     except KeyError:
         raise HTTPException(status_code=404, detail=f"No discovery sources configured for {req.country_code}.")
     except discovery_source_persistence.DiscoverySourcePersistenceError as exc:
@@ -37,6 +37,20 @@ async def discovery_search(req: DiscoverySearchRequest):
         raise HTTPException(status_code=503, detail=f"Discovery source configuration invalid: {exc}") from exc
     except StrictLiveDiscoveryError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+    try:
+        from services.activity_log import record_activity
+
+        n = len(getattr(result, "candidates", []) or [])
+        record_activity(
+            "discover", target_type="economy", target_id=req.country_code,
+            economy=req.country_code,
+            summary=f"Discovery search for {req.country_code}: {n} candidate(s)",
+            detail={"pillars": list(getattr(req, "pillars", []) or []), "candidates": n},
+        )
+    except Exception:  # noqa: BLE001 — logging must never break discovery
+        pass
+    return result
 
 
 @router.get("/api/discovery/sources/{country_code}")

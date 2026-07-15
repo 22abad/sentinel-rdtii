@@ -159,7 +159,19 @@ async def extract(
     except ExtractionError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
 
-    return await run_extraction(text, llm_provider, pdf_metadata=pdf_meta)
+    result = await run_extraction(text, llm_provider, pdf_metadata=pdf_meta)
+    try:
+        from services.activity_log import record_activity
+
+        n = len(getattr(result, "mappings", []) or [])
+        record_activity(
+            "extract", target_type="document", target_id=(source_url or None),
+            summary=f"Extracted {n} indicator mapping(s)",
+            detail={"mappings": n, "source_url": source_url or None},
+        )
+    except Exception:  # noqa: BLE001 — logging must never break extraction
+        pass
+    return result
 
 
 @router.post("/api/extract/stream")
