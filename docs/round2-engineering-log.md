@@ -337,3 +337,44 @@ inventory + library are comprehensive for these); the real leads are in AUS
 (Identity Verification Services Act 2023, Privacy Amendment (Public Health
 Contact Information) Act 2020). Not padding the NEW list with mislabels is
 itself the accuracy win.
+
+### Round 2 discovery: baseline built, live sweep gated on a search backend (#143)
+**Done.** Wired the official Round 2 Database (`round2_inventory.jsonl`) into
+`known_law_index` as the KNOWN baseline for the seven Round 2 economies, with
+multi-act cell splitting and bilingual (English + native-script) identity keys,
+plus CHN/THA official domains for candidate triage. NEW/KNOWN reconciliation for
+these economies is now correct.
+**Blocker found.** The actual CHN/THA NEW-law *sweep* returns 0 live candidates
+in this environment: `discover_and_extract` only accepts `retrieval_mode ==
+"live"` candidates, but (1) the generic `search_engine` adapter needs
+`SERPAPI_API_KEY` (unset) and otherwise returns fixture fallback; (2) the
+`china_flk` adapter falls back because the FLK national-law database is a
+JS-rendered SPA the crawler cannot render; (3) the `thailand_ocs` adapter hangs
+(2-min timeout). So without a search backend the sweep can only re-surface the 3
+registered seed URLs — all already-KNOWN flagship laws.
+**Resolution path.** A `SERPAPI_API_KEY` unblocks it: the search_engine adapter
+then does site-scoped Google search over `*.gov.cn` / `*.go.th`, bypassing both
+the JS FLK portal and the hanging OCS adapter. Re-run
+`tools/discover_new_laws.py --economy China/Thailand --pillar all` once set.
+
+### R1 structured-output audit + fragment-quote filter (#150)
+**Problem.** Generating the R1 mandatory-scope output (SGP/MYS/AUS × P6/P7) and
+auditing it rigorously revealed quality issues invisible to the test suite: the
+default/live path pulls in trade agreements, off-topic statutes (Fire Safety,
+Petroleum) and a blog title ("Mastering the must-dos of data protection"); the
+offline path has mid-sentence fragment quotes ("data processor", "personal
+data", "Exemption—compromise to cybersecurity") and is dominated for AUS by ~35
+Queensland state-law provisions.
+**Caught my own error.** Initially flagged the P7-I1 title-quotes (quote == law
+name, e.g. "Privacy Act 1988") as garbage — but the golden set carries exactly
+these as the legitimate "framework exists" evidence pattern (score 0.0 for
+"lack of framework"). The fix had to preserve them.
+**Fix (#150).** validate_submission_rows drops a row whose verbatim quote is a
+fragment: `< 45` chars AND not the law title (token-subset match, so a country
+prefix / "(PDPA)" acronym is tolerated). Verified 0/29 golden cases dropped.
+**Reverted a bad idea.** Enriching the thin MYS curated library with PDPA
+Section 9/10 excerpts backfired — the pipeline mapped them to fragment quotes and
+a wrong indicator (Retention Principle → P7-I5). Reverted; kept the clean 2-row
+MYS. Lesson: adding library text does not guarantee a good mapping.
+**Still open.** AUS QLD-state over-representation and thin MYS coverage remain —
+a library-curation decision, not a code fix.

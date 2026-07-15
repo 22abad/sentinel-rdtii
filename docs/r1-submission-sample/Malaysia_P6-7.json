@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "economy": "Malaysia",
+    "pillars": [
+      6,
+      7
+    ],
+    "retrieval_mode": "seed",
+    "evidence_counts": {
+      "seed": 2,
+      "live_discovered": 0,
+      "fixture": 0
+    },
+    "runs": [
+      {
+        "economy": "Malaysia",
+        "economy_code": "MYS",
+        "pillar": 6,
+        "provider": "deepseek-v4-flash",
+        "source": "local_library",
+        "retrieval_mode": "seed",
+        "offline": true,
+        "laws_available": 1,
+        "documents_processed": 1,
+        "usage": {
+          "llm_calls": 7,
+          "input_tokens": 5308,
+          "output_tokens": 5244,
+          "cost_usd": 0.007202
+        },
+        "provisions_mapped": 1,
+        "evidence_counts": {
+          "seed": 1,
+          "live_discovered": 0,
+          "fixture": 0
+        },
+        "warnings": []
+      },
+      {
+        "economy": "Malaysia",
+        "economy_code": "MYS",
+        "pillar": 7,
+        "provider": "deepseek-v4-flash",
+        "source": "local_library",
+        "retrieval_mode": "seed",
+        "offline": true,
+        "laws_available": 2,
+        "documents_processed": 2,
+        "usage": {
+          "llm_calls": 2,
+          "input_tokens": 1062,
+          "output_tokens": 836,
+          "cost_usd": 0.001206
+        },
+        "provisions_mapped": 1,
+        "evidence_counts": {
+          "seed": 1,
+          "live_discovered": 0,
+          "fixture": 0
+        },
+        "warnings": []
+      }
+    ]
+  },
+  "provisions": [
+    {
+      "economy": "Malaysia",
+      "law_name": "Personal Data Protection Act 2010 (Act 709)",
+      "law_number_ref": "Act 709",
+      "last_amended": "",
+      "indicator_id": "P6-I4",
+      "article": "Section 129(1)",
+      "discovery_tag": "KNOWN",
+      "location_reference": "https://lom.agc.gov.my/act-detail.php?act=709",
+      "verbatim_snippet": "A data user shall not transfer any personal data of a data subject to a place outside Malaysia unless to such place as specified by the Minister, upon the recommendation of the Commissioner, by notification published in the Gazette.",
+      "mapping_rationale": "[Section 129(1)] Section 129(1) of Malaysia's Personal Data Protection Act (PDPA) 2010 imposes a general prohibition on the cross-border transfer of personal data unless the destination is a place expressly specified by the Minister via a notification published in the Gazette, following a…",
+      "source_url": "https://lom.agc.gov.my/act-detail.php?act=709",
+      "confidence": 1.0,
+      "notes": "requires human review",
+      "novelty_type": "NEW_PROVISION",
+      "canonical_law_id": "mys-pdpa-2010",
+      "amendment_version_date": "",
+      "normalized_article": "section 129 1",
+      "normalized_quote_hash": "a800a5fa04907ea61aabb599452f126ec47c4e6bced6ec1fbb089190c94a21b0",
+      "ocr_quality_cer": null,
+      "processing_time_seconds": null,
+      "raw_context_before": "Personal Data Protection Act 2010 (Act 709)\n\nSection 129  Transfer of personal data to places outside Malaysia\n\n(1) ",
+      "raw_context_after": "\n(2) For the purposes of subsection (1), the Minister may specify any place outside Malaysia if— (a) there is in that place in force any law which is substantia",
+      "pdf_is_scanned": false,
+      "retrieval_method": "known_mapping",
+      "retrieval_mode": "unknown",
+      "final_url": "",
+      "http_status": null,
+      "fetch_method": "",
+      "model_version": "",
+      "source_file_sha256": "",
+      "source_pdf_path": "",
+      "pdf_type": "unknown",
+      "confidence_type": "discovery_confidence"
+    },
+    {
+      "economy": "Malaysia",
+      "law_name": "Companies Act 2016 (Act 777)",
+      "law_number_ref": "Act 777",
+      "last_amended": "",
+      "indicator_id": "P7-I3",
+      "article": "Section 245",
+      "discovery_tag": "KNOWN",
+      "location_reference": "https://www.ssm.com.my/pages/legal_framework/document/act%20777%20reprint.pdf",
+      "verbatim_snippet": "The company shall retain the records referred to in subsection (1) for seven years after the completion of the transactions or operations to which the entries relate.",
+      "mapping_rationale": "[Section 245] Section 245 of the relevant legislation imposes a mandatory data retention obligation on companies, requiring them to preserve records of transactions or operations for a minimum period of seven years following their completion. The scope of application is horizontal, meaning it…",
+      "source_url": "https://www.ssm.com.my/pages/legal_framework/document/act%20777%20reprint.pdf",
+      "confidence": 1.0,
+      "notes": "requires human review",
+      "novelty_type": "NEW_PROVISION",
+      "canonical_law_id": "mys-companies-act-2016",
+      "amendment_version_date": "",
+      "normalized_article": "section 245",
+      "normalized_quote_hash": "81929e579c595f9928d3b52ee258435ed6daa36af8f3b711f18b0e298723bb81",
+      "ocr_quality_cer": null,
+      "processing_time_seconds": null,
+      "raw_context_before": "Companies Act 2016 (Act 777)\n\nSection 245. Accounts to be kept\n\n",
+      "raw_context_after": "\n",
+      "pdf_is_scanned": false,
+      "retrieval_method": "known_mapping",
+      "retrieval_mode": "unknown",
+      "final_url": "",
+      "http_status": null,
+      "fetch_method": "",
+      "model_version": "",
+      "source_file_sha256": "",
+      "source_pdf_path": "",
+      "pdf_type": "unknown",
+      "confidence_type": "discovery_confidence"
+    }
+  ]
+}
