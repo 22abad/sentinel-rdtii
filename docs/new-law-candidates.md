@@ -71,6 +71,23 @@ tagged NEW (they remain usable as KNOWN evidence for their provisions):
 - 🇦🇺 **Privacy Regulations 2025** (F2025L01377): commences 1 Apr 2026 (in force as of today, but exact prescribing text not yet copied).
 - 🇲🇾 **Financial Services Act 2013 s 133** (secrecy): the BNM PDF was blocked; verbatim text not captured → not promoted.
 
+### Deepen wave (same day) — 4 more promoted (library NEW 8 → 12)
+
+A second parallel pass went deeper on the 3 R1 economies (plus a China control
+pass). After the same hand-verification + `is_known_law` gate:
+
+**🟢 Promoted (verified verbatim + genuinely NEW):**
+- 🇸🇬 **Healthcare Services (General) Regulations 2021** (S 1035/2021) reg 37 — patient-health-record keeping/retention → P7.3 (curl, sso.agc.gov.sg).
+- 🇲🇾 **Personal Data Protection Regulations 2013** (P.U. (A) 335) reg 6/7/12 — security-policy + retention duty with a RM250k criminal penalty → P7.1/7.3 (official PDF).
+- 🇲🇾 **PDPA (Amendment) Act 2024, Act A1727 — new s 43A** (data-portability right) → P7 (official PDF; in force 1 Jun 2025).
+- 🇦🇺 **Identity Verification Services Act 2023 s 10** (destroy facial images when no longer needed) → P7.3 (browser fetch, legislation.gov.au).
+
+**🔴 Rejected by `is_known_law` (already baseline — NOT tagged NEW):** SGP Electronic Transactions Act 2010; MYS PDP Standard 2015; AUS Data Availability and Transparency Act 2022, AML/CTF Act 2006, Security of Critical Infrastructure Act 2018, Information Privacy Act 2014 (ACT), My Health Records Act 2012. (Several carry strong P6 localization / P7 retention text — usable as KNOWN evidence.)
+
+**🟡 Held — could not independently verify (rigor):** 🇦🇺 **Privacy and Data Protection Act 2014 (VIC) IPP 9.1** and **Information Act 2002 (NT) IPP 9.1** — both are genuinely-NEW state cross-border (P6.4) leads and would fill the AUS P6 gap, but the VIC/NT portals serve only a landing page to curl/headless (real text behind a PDF link). The NSW PPIP/HRIP Acts are similarly behind a Cloudflare JS challenge. **Fetch these in a real browser to promote.** Also firmed-verbatim but parent-known (KNOWN evidence, not NEW): AUS Telecommunications Act 1997 s 276; Privacy Act 1988 Sch 2 cl 7 statutory tort (in force 10 Jun 2025) and APP 8.1 / APP 11.2.
+
+**⛔ Excluded on timing:** 🇦🇺 Privacy Amendment (Public Health Contact Information / COVIDSafe) Act 2020 — Part VIIIA is now spent/removed from the current Privacy Act compilation; do NOT present as in force.
+
 ---
 
 ## 🇦🇺 Australia — 1 new principal Act + 1 new amendment Act (both verified in force)
