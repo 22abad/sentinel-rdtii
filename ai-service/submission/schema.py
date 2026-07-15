@@ -373,6 +373,41 @@ def dedupe_submission_rows(rows: list["SubmissionRow"]) -> list["SubmissionRow"]
 # Anything shorter that is NOT the title is a mid-sentence fragment the extractor
 # emitted by mistake ("data processor", "personal data") and is dropped.
 _MIN_PROVISION_QUOTE_LEN = 45
+# An international instrument is not a domestic measure the RDTII scores at the
+# national level (the official assessment records e.g. "binding commitments"
+# as an assessment note, not by extracting clauses from the FTA). The golden set
+# contains no such source. Dropping these clears the trade-agreement over-
+# extraction the live-discovery path pulls in (13 of 26 SGP rows in one run).
+_OUT_OF_SCOPE_INSTRUMENT = re.compile(
+    r"\b(free trade agreement|digital economy agreement|trade agreement|"
+    r"partnership agreement|comprehensive and progressive agreement|"
+    r"economic partnership|\bfta\b|\bdea\b|\bcptpp\b|\brcep\b|\bdepa\b|"
+    r"treaty|convention|protocol)\b",
+    re.IGNORECASE,
+)
+# A blog / news / press page is not authoritative legal text even on an official
+# domain (e.g. an IMDA blog article surfaced as a "law"). Matches by URL path.
+_NON_AUTHORITATIVE_URL = re.compile(
+    r"/(blog|blog-articles|news|newsroom|press|press-releases?|article|articles|"
+    r"media-release|speeches?)(/|$)",
+    re.IGNORECASE,
+)
+
+
+def _is_out_of_scope_source(law_name: str, source_url: str) -> bool:
+    """True if the row's source is not a domestic statutory measure.
+
+    Filters (a) international instruments (FTAs, digital-economy agreements —
+    not national measures) and (b) non-authoritative pages (blog/news/press),
+    both of which the live-discovery path over-extracts. Verified against the
+    golden set: neither pattern hits any approved case.
+    """
+
+    if _OUT_OF_SCOPE_INSTRUMENT.search(law_name or ""):
+        return True
+    if _NON_AUTHORITATIVE_URL.search(source_url or ""):
+        return True
+    return False
 _STATUTE_WORD = re.compile(
     r"\b(act|law|regulation|regulations|ordinance|decree|code|rules|bill|"
     r"constitution|notification)\b",
@@ -467,6 +502,16 @@ def validate_submission_rows(
                 "or a title-quote on a non-framework indicator (%s: %r)",
                 index, getattr(row, "indicator_id", ""),
                 str(getattr(row, "verbatim_snippet", ""))[:40],
+            )
+            continue
+        if _is_out_of_scope_source(
+            str(getattr(row, "law_name", "") or ""),
+            str(getattr(row, "source_url", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: out-of-scope source (international "
+                "instrument or non-authoritative page): %r",
+                index, str(getattr(row, "law_name", ""))[:50],
             )
             continue
         valid.append(row)
