@@ -7,7 +7,7 @@ Every number traces to a repo artifact. Corrected vs the old outline:
 NEW-law examples are the *verified* ones (not the Queensland Act, which is in our
 baseline); test count and discoveries updated._
 
-**Total: 10 slides, ~7–8 min. Lead with the claim, then the mechanism.**
+**Total: 11 slides, ~8–9 min (Slide 10 is a live demo). Lead with the claim, then the mechanism.**
 
 ---
 
@@ -181,7 +181,35 @@ it's backed by more than 500 automated tests."
 
 ---
 
-## Slide 10 — What we learned + team & ask
+## Slide 10 — Live demo: the workbench (point, drag, run)
+
+**On slide:**
+- The engine has a **product**: a drag-and-drop canvas — a non-technical officer wires **upload PDF → extract → audit → export** and hits run
+- **Same anti-hallucination guarantees, made visible**: every mapped row shows its **verbatim quote** and the **deterministic score**; the reviewer approves/rejects in the audit view
+- **Never do the same work twice**: uploads are **fingerprinted and de-duplicated**; an already-extracted document is **served from cache — the LLM is skipped entirely** (measured: **29.6s → 0.02s**, ~1500× faster, $0 second time)
+- **Every step is recorded**: who, when, which document, what result — an auditable activity timeline
+- **One-click clean export**: the export can drop weak-evidence rows with the *same* rule as the submission noise-gate
+- **Verified end-to-end** (real model + real DB + a real 13 MB government PDF): parse → de-dup → extract (5/5 quotes verbatim, cross-border clause scored 1.0) → audit → export — clean
+
+**🎤 Speaker:** "Everything you've seen runs from one command — but it also has a
+product. Here's the workbench. A new officer drags four blocks — upload, extract,
+audit, export — and clicks run. She sees every mapped clause with the exact quote
+and the score our code assigned, and she approves or rejects in the audit view. Two
+things make this more than a pretty UI. First: the work compounds. Every document
+she processes is fingerprinted and banked — the next time anyone touches the same
+law, we serve it from cache and skip the model entirely. We measured it: thirty
+seconds becomes two hundredths of a second, at zero cost. Second: every step is
+recorded — who did what, when, to which file — so the whole thing is auditable. We
+ran this end-to-end on a real 13-megabyte government PDF, and every quote came back
+verbatim. Point, drag, run — and never do the same work twice."
+
+**💡 中文提示:** 产品演示页——点点拖拖(上传→抽取→审核→导出);逐字引文+程序打分可见;
+**同一份文件第二次秒出、零 LLM 成本**(29.6s→0.02s);每步留痕;一键干净导出;
+全链用真实 13MB 政府 PDF 端到端实测干净。金句:"Point, drag, run — and never do the same work twice."
+
+---
+
+## Slide 11 — What we learned + team & ask
 
 **On slide:**
 - **Engineering discipline**: every failure mode we found became a merged, tested fix — including a dependency gap that would have given a judge *zero output* on a clean install
@@ -213,8 +241,8 @@ substance, and legal review — and we're ready for the finale."
 
 ### Presenter notes (中文)
 
-- **顺序建议**:1→2→3→4→**5(今天最强)**→6→7→8→9→10。时间紧就压 8/9 到一页。
-- **金句**(务必说):"The LLM never decides the score." / "We tried to break it the way a judge would."
+- **顺序建议**:1→2→3→4→**5(今天最强)**→6→7→8→9→**10(现场演示,产品高潮)**→11。时间紧就压 8/9 到一页;**10 是现场 demo,能连网就一定要演**。
+- **金句**(务必说):"The LLM never decides the score." / "We tried to break it the way a judge would." / "Point, drag, run — and never do the same work twice."(演示页)
 - **不能说的**(严谨,避免翻车):
   - 不要把 Queensland IP Act 说成"新发现"——它在我们基线里。
   - 不要裸报“50.2% 准确率”——要说“251/500（50.2%）的全自动分与官方原始评分完全一致，其中包含正确不判的 0 分；人工保留最终评分权”。

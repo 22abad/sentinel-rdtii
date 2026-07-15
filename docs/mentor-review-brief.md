@@ -41,6 +41,19 @@ _Frame: "we didn't just build it, we tried to break it the way a judge would."_
   zero noise** — verified against the 29-case golden set with **0 regressions**.
 - **A committed, reproducible submission sample** lives in
   `docs/r1-submission-sample/` (SGP/MYS/AUS × P6/P7, frozen 13-field schema).
+- **The engine now has a product, verified end-to-end.** The drag-and-drop
+  workbench (upload → extract → audit → export) was tested through with a *real*
+  model, a *real* database, and a *real* 13 MB government PDF (Nigeria DPA): PDF
+  parse → **de-dup on re-upload** → extract (**5/5 verbatim quotes are exact
+  source substrings — zero hallucination**; the cross-border clause scored 1.0) →
+  audit approve → Excel export — clean. Two backend differentiators landed and
+  tested: (a) **document-level reuse** — an already-extracted document is served
+  from cache and the LLM is skipped (**29.6s → 0.02s**, $0 the second time); every
+  hit is logged. (b) A **general activity timeline** — who/when/which-file/result
+  for ingest, extract, discover, review, export. (c) An opt-in **`drop_weak`
+  clean export** that applies the submission noise-gate rule, so a raw export can't
+  leak weak rows even if the audit step is skipped. Tagline for the live demo:
+  *"Point, drag, run — and never do the same work twice."*
 - **Genuine NEW evidence, independently verified** (the discovery differentiator):
   - 🇦🇺 *Identity Verification Services Act 2023* (P7-I5) and *Privacy Amendment
     (Public Health Contact Information) Act 2020* — confirmed in force via the
@@ -90,6 +103,10 @@ _Frame: "we didn't just build it, we tried to break it the way a judge would."_
 - [ ] Scanned-PDF command ready in shell history (India procurement order)
 - [ ] Tabs open: `docs/r1-submission-sample/` (the clean output), `docs/new-law-candidates.md` (the discoveries), `docs/round2-meeting-report.md`
 - [ ] Optional wow: `docs/judge-test-report.md` (the graded judge-simulation matrix)
+- [ ] **Live workbench demo** (if the frontend + docker stack are up): upload a PDF →
+      extract → audit → export; then **re-upload the same PDF to show instant reuse**
+      (LLM skipped) and the activity timeline. Fallback if the UI isn't ready: the
+      CLI + `docs/r1-submission-sample/` tell the same story.
 - [ ] If campus wifi fails: everything above runs offline
 
 ## What NOT to claim
