@@ -25,15 +25,26 @@ class ExtractMappingsExecutor(NodeExecutor):
         context: WorkflowContext,
     ) -> NodeResult:
         text, pdf_metadata = await self._resolve_text(node, inputs)
+
+        # Reuse: if we've already extracted this exact content, serve it from the
+        # cache and skip the LLM entirely ("干过的活不重跑").
+        cached = _cache_get(text)
+        if cached is not None:
+            _log_reuse(text, cached)
+            cached = {**cached, "reused": True}
+            return NodeResult(node_id=node.id, status="success", outputs=cached)
+
         provider = configured_provider(
             node.config.get("provider") or context.runtime.get("provider"),
             node.config.get("model") or context.runtime.get("model"),
         )
         response = await run_extraction(text, provider, pdf_metadata=pdf_metadata)
+        outputs = response.model_dump()
+        _cache_put(text, outputs, provider=getattr(provider, "name", None))
         return NodeResult(
             node_id=node.id,
             status="success",
-            outputs=response.model_dump(),
+            outputs=outputs,
         )
 
     async def stream(
@@ -62,6 +73,25 @@ class ExtractMappingsExecutor(NodeExecutor):
                 event="error",
                 status="failed",
                 payload={"detail": _error_detail(exc)},
+            )
+            return
+
+        # Reuse: replay a cached extraction as events and skip the LLM.
+        cached = _cache_get(text)
+        if cached is not None:
+            _log_reuse(text, cached)
+            for mapping in cached.get("mappings", []) or []:
+                yield WorkflowRunEvent(
+                    run_id=context.run_id, node_id=node.id,
+                    event="mapping", status="running", payload=mapping,
+                )
+            yield WorkflowRunEvent(
+                run_id=context.run_id, node_id=node.id,
+                event="node_output", status="success",
+                payload=NodeResult(
+                    node_id=node.id, status="success",
+                    outputs={**cached, "reused": True},
+                ).model_dump(),
             )
             return
 
@@ -102,6 +132,14 @@ class ExtractMappingsExecutor(NodeExecutor):
             )
             return
 
+        outputs = {
+            "mappings": mappings,
+            "rejected": rejected,
+            "provider": provider_name,
+            "source_text": source_text or text,
+            "usage": usage,
+        }
+        _cache_put(text, outputs, provider=provider_name)
         yield WorkflowRunEvent(
             run_id=context.run_id,
             node_id=node.id,
@@ -110,13 +148,7 @@ class ExtractMappingsExecutor(NodeExecutor):
             payload=NodeResult(
                 node_id=node.id,
                 status="success",
-                outputs={
-                    "mappings": mappings,
-                    "rejected": rejected,
-                    "provider": provider_name,
-                    "source_text": source_text or text,
-                    "usage": usage,
-                },
+                outputs=outputs,
             ).model_dump(),
         )
 
@@ -168,3 +200,39 @@ def _error_detail(exc: Exception) -> str | Any:
     if isinstance(exc, HTTPException):
         return exc.detail
     return str(exc)
+
+
+def _cache_get(text: str) -> dict[str, Any] | None:
+    try:
+        from services.extraction_cache import get_cached
+
+        return get_cached(text)
+    except Exception:  # noqa: BLE001 — cache must never break extraction
+        return None
+
+
+def _cache_put(text: str, outputs: dict[str, Any], *, provider: str | None) -> None:
+    try:
+        from services.extraction_cache import put_cached
+
+        put_cached(text, outputs, provider=provider)
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def _log_reuse(text: str, cached: dict[str, Any]) -> None:
+    """Record a reuse hit so the activity timeline shows the LLM was skipped."""
+    try:
+        from services.activity_log import record_activity
+        from services.extraction_cache import source_hash
+
+        n = len(cached.get("mappings", []) or [])
+        record_activity(
+            "reuse",
+            target_type="document",
+            target_id=source_hash(text)[:16],
+            summary=f"Reused cached extraction ({n} mapping(s)) — LLM skipped",
+            detail={"mappings": n, "source": "extraction_cache"},
+        )
+    except Exception:  # noqa: BLE001 — logging must never break extraction
+        pass
