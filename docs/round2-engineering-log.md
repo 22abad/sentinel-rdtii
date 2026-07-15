@@ -280,3 +280,60 @@ improves not only the data but the tooling around it.
    per economy and per pillar (`docs/round2-meeting-report.md`).
 3. **Every failure mode found became a shipped fix** (#72–#82), and the
    fixes are regression-tested (482-test suite green).
+
+### Tier 6 edge cases + the "offline matrix is not hermetic" insight (#137)
+**Problem.** The judge matrix had no coverage for malformed *arguments* (as
+opposed to malformed documents) — duplicate pillars, a text file renamed `.pdf`,
+`--pillar 0`. These were validated by hand but nothing locked them in.
+Separately, a matrix run flagged the mixed-case-economy case as FAIL (exit 2, 0
+rows, 15.2s).
+**Fix / finding.** Added Tier 6 (3 deterministic offline cases, all green).
+Investigating the "failure": `economy_code()` already lowercases input, and
+re-running `--economy sInGaPoRe --pillar 6 --offline` writes 3 provisions
+cleanly. The FAIL was a single DeepSeek API blip during extraction — because
+**offline matrix cases still call the live LLM** (retrieval is local; mapping is
+live). Documented in the harness/PR that the matrix is a pre-submission *gate*,
+not a hermetic unit test, so a lone API timeout can flake one case; re-run to
+confirm. No code defect.
+
+### NEW-discovery false-positive: an economy's own flagship law flagged NEW (#138)
+**Problem.** Sweeping for NEW laws (`tools/discover_new_laws.py`) on Malaysia
+reported **Malaysia's own PDPA 2010 as a NEW discovery**, plus hallucinated
+siblings where a Malaysia PDPA page was relabelled "Singapore PDPA 2012" /
+"Hong Kong PDPO 1996". Root cause: live discovery emits verbose titles
+(`Malaysia Personal Data Protection Act (PDPA), 2010, No. 709`) and
+`normalize_law_name` stripped parenthesised numbers + years but not a leading
+country word or a bare `No. 709`, so the title never reconciled to the KNOWN
+baseline. Submitting a country's flagship statute as a "new find" is exactly the
+kind of error that torches the 40% accuracy score.
+**Fix.** `normalize_law_name` now also strips a leading economy/nationality
+prefix (keys are already `(economy, name)`-scoped) and bare `No./Act/Cap./
+Chapter N` tokens. Malaysia PDPA + its mislabelled variants reconcile to KNOWN;
+genuine finds (Spam Control Act 2007, Identity Verification Services Act 2023)
+stay NEW. +3 regression tests, 519 pass.
+**Method note.** Discovery candidates (law name/url/quote/indicator) are
+code-version-independent; only NEW/KNOWN *classification* changed, so in-flight
+sweeps can be re-reconciled with the fixed `is_known_law` instead of re-run.
+
+### NEW-discovery triage: turn a noise dump into ranked leads (#140, #141)
+**Problem.** After the false-NEW normalization fixes, the sweep still dumped
+~100 undifferentiated rows on a legal reviewer: international agreements (CPTPP,
+SAFTA), off-topic legislation a broad crawl dragged in (customs charges,
+pasture-seed levies mapped to P7), foreign-relabelled hallucinations (a Malaysia
+PDPA page tagged "Hong Kong PDPO"), and — subtlest — a quote from one statute
+labelled with a *different, already-known* statute's name (SGP "PDPA 2012" whose
+source URL was `/Act/FSA1993`, the Financial Services Act).
+**Fix.** `build_discovery_report` now attaches a reviewer verdict — CANDIDATE /
+REVIEW / REJECT with a reason — to every NEW candidate and sorts strong leads
+first (#140). `classify_new_candidate` rejects international instruments,
+foreign-name-on-home-domain mislabels, and off-topic finds (via an optional
+pillar-topical regex), and REVIEW-flags off-official-domain provenance. A
+follow-up (#141) demotes any NEW_PROVISION of an already-KNOWN law — the shape
+the FSA-mislabelled-as-PDPA garbage takes — from CANDIDATE to REVIEW. Verdicts
+rank and explain; they never drop a row.
+**Finding (honest).** With the mandatory economies triaged: MYS and SGP surface
+**no genuine new P6/P7 domestic law** beyond the KNOWN baseline (the ESCAP
+inventory + library are comprehensive for these); the real leads are in AUS
+(Identity Verification Services Act 2023, Privacy Amendment (Public Health
+Contact Information) Act 2020). Not padding the NEW list with mislabels is
+itself the accuracy win.
