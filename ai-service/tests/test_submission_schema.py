@@ -75,7 +75,7 @@ def test_submission_validator_drops_incomplete_rows_but_keeps_output():
 
 
 def test_validator_drops_fragment_quotes_but_keeps_title_and_provision():
-    from submission.schema import _is_fragment_quote
+    from submission.schema import _is_fragment_quote, _is_weak_evidence
 
     # Mid-sentence fragments the extractor emits by mistake -> dropped.
     assert _is_fragment_quote("Personal Data Protection Act 2012", "personal data")
@@ -89,6 +89,16 @@ def test_validator_drops_fragment_quotes_but_keeps_title_and_provision():
     # A substantive provision -> kept.
     assert not _is_fragment_quote(
         "PDPA", "An organisation must not transfer any personal data outside Singapore unless"
+    )
+
+    # A bare title-quote is evidence only for the framework indicator (P7-I1);
+    # mapped to a provision-specific indicator it is too weak and is dropped.
+    assert not _is_weak_evidence("Privacy Act 1988", "Privacy Act 1988", "P7-I1")
+    assert _is_weak_evidence("Privacy Act 1988", "Privacy Act 1988", "P7-I5")
+    assert _is_weak_evidence("Personal Data Protection Act 2012", "Personal Data Protection Act 2012", "P7-I3")
+    # A substantive provision is valid for any indicator, title or not.
+    assert not _is_weak_evidence(
+        "PDPA", "An organisation must cease to retain documents containing personal data.", "P7-I3"
     )
 
     # End-to-end: a fragment row is dropped from the submission, a good row kept.

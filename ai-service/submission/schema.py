@@ -385,14 +385,23 @@ def _quote_key(value: str) -> str:
     return " ".join("".join(c if c.isalnum() else " " for c in text).split())
 
 
-def _is_fragment_quote(law_name: str, quote: str) -> bool:
-    """True if the quote is a short mid-sentence fragment, not a real provision.
+# A short quote that is just the law's title is legitimate evidence ONLY for the
+# comprehensive-framework indicator (P7-I1): "this data-protection law exists".
+# The golden set carries such title-quotes for P7-I1 and no other indicator, so
+# a title-quote mapped to a provision-specific indicator (retention, DPO,
+# government access, cross-border) is weak evidence and is dropped.
+_FRAMEWORK_INDICATOR = "P7-I1"
 
-    Kept when the quote is long enough to be a provision, OR reads as the law's
-    own title — the framework-existence evidence pattern (e.g. "Privacy Act
-    1988"): it carries a statute-type word AND overlaps the law name. A short
-    quote with neither trait ("data processor", "personal data") is extractor
-    noise and is dropped.
+
+def _is_weak_evidence(law_name: str, quote: str, indicator_id: str = "") -> bool:
+    """True if the quote is too weak to stand as evidence for the row.
+
+    Rejects (a) short mid-sentence fragments that are neither a provision nor the
+    law's title ("data processor", "personal data"), and (b) a bare title-quote
+    ("Privacy Act 1988") mapped to any indicator other than the comprehensive-
+    framework one — the only indicator for which a law's mere existence is the
+    accepted evidence (per the golden set). A substantive provision quote is
+    always kept.
     """
 
     q = (quote or "").strip()
@@ -406,7 +415,15 @@ def _is_fragment_quote(law_name: str, quote: str) -> bool:
     looks_like_title = bool(_STATUTE_WORD.search(q)) and bool(qt) and bool(lt) and (
         qt <= lt or lt <= qt
     )
-    return not looks_like_title
+    if not looks_like_title:
+        return True  # short mid-sentence fragment
+    # A title-quote is valid evidence only for the framework indicator.
+    return (indicator_id or "").strip().upper() != _FRAMEWORK_INDICATOR
+
+
+# Backwards-compatible alias (indicator-agnostic fragment check).
+def _is_fragment_quote(law_name: str, quote: str) -> bool:
+    return _is_weak_evidence(law_name, quote, _FRAMEWORK_INDICATOR)
 
 
 def validate_submission_rows(
@@ -440,14 +457,16 @@ def validate_submission_rows(
                 index, ", ".join(missing),
             )
             continue
-        if _is_fragment_quote(
+        if _is_weak_evidence(
             str(getattr(row, "law_name", "") or ""),
             str(getattr(row, "verbatim_snippet", "") or ""),
+            str(getattr(row, "indicator_id", "") or ""),
         ):
             logger.warning(
-                "Dropping submission row %d: verbatim quote is a fragment, not a "
-                "provision (%r)",
-                index, str(getattr(row, "verbatim_snippet", ""))[:40],
+                "Dropping submission row %d: weak evidence — quote is a fragment, "
+                "or a title-quote on a non-framework indicator (%s: %r)",
+                index, getattr(row, "indicator_id", ""),
+                str(getattr(row, "verbatim_snippet", ""))[:40],
             )
             continue
         valid.append(row)
