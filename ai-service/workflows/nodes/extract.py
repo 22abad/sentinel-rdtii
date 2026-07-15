@@ -27,8 +27,9 @@ class ExtractMappingsExecutor(NodeExecutor):
         text, pdf_metadata = await self._resolve_text(node, inputs)
 
         # Reuse: if we've already extracted this exact content, serve it from the
-        # cache and skip the LLM entirely ("干过的活不重跑").
-        cached = _cache_get(text)
+        # cache and skip the LLM entirely ("干过的活不重跑"). A force_refresh flag
+        # skips the read (but still re-caches) so a demo can re-extract on demand.
+        cached = None if _force_refresh(node, inputs) else _cache_get(text)
         if cached is not None:
             _log_reuse(text, cached)
             cached = {**cached, "reused": True}
@@ -77,7 +78,7 @@ class ExtractMappingsExecutor(NodeExecutor):
             return
 
         # Reuse: replay a cached extraction as events and skip the LLM.
-        cached = _cache_get(text)
+        cached = None if _force_refresh(node, inputs) else _cache_get(text)
         if cached is not None:
             _log_reuse(text, cached)
             for mapping in cached.get("mappings", []) or []:
@@ -200,6 +201,14 @@ def _error_detail(exc: Exception) -> str | Any:
     if isinstance(exc, HTTPException):
         return exc.detail
     return str(exc)
+
+
+def _force_refresh(node: WorkflowNode, inputs: dict) -> bool:
+    """True when the caller explicitly asks to bypass the cache read."""
+    val = node.config.get("force_refresh")
+    if val is None:
+        val = inputs.get("force_refresh")
+    return bool(val)
 
 
 def _cache_get(text: str) -> dict[str, Any] | None:
