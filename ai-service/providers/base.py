@@ -226,18 +226,27 @@ class LLMProvider(ABC):
 
     @staticmethod
     def _get_recent_corrections() -> str:
-        """Fetch the latest 5 rejected extractions with reviewer notes to use as negative few-shot examples."""
+        """Fetch the latest 5 rejected extractions with reviewer notes to use as negative few-shot examples.
+
+        Optional prompt enhancement backed by Postgres. The judge CLI is DB-free
+        and its lean install ships no psycopg2, so BOTH the driver import and the
+        connection must degrade to "no corrections" instead of breaking
+        extraction. The import lives inside the try for that reason — a
+        ModuleNotFoundError here previously zeroed every batch on a fresh install.
+        """
         import os
-        import psycopg2
-        db_config = {
-            "dbname": os.getenv("POSTGRES_DB", "rdtii"),
-            "user": os.getenv("POSTGRES_USER", "rdtii_user"),
-            "password": os.getenv("POSTGRES_PASSWORD", "rdtii_password"),
-            "host": os.getenv("POSTGRES_HOST", "postgres"),
-            "port": os.getenv("POSTGRES_PORT", "5432"),
-        }
+
         conn = None
         try:
+            import psycopg2
+
+            db_config = {
+                "dbname": os.getenv("POSTGRES_DB", "rdtii"),
+                "user": os.getenv("POSTGRES_USER", "rdtii_user"),
+                "password": os.getenv("POSTGRES_PASSWORD", "rdtii_password"),
+                "host": os.getenv("POSTGRES_HOST", "postgres"),
+                "port": os.getenv("POSTGRES_PORT", "5432"),
+            }
             conn = psycopg2.connect(**db_config)
             cur = conn.cursor()
             cur.execute(

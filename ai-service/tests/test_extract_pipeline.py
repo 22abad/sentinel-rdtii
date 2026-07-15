@@ -897,3 +897,20 @@ def test_stream_pdf_parse_error_returns_sse_error(monkeypatch):
     assert response.status_code == 200
     assert "event: error" in response.text
     assert "PDF parsing failed: cannot parse pdf" in response.text
+
+
+def test_recent_corrections_degrades_without_psycopg2(monkeypatch):
+    # The judge CLI's lean install has no psycopg2; the negative-few-shot
+    # helper must return "" instead of crashing every extraction batch.
+    import builtins
+    from providers.base import LLMProvider
+
+    real_import = builtins.__import__
+
+    def no_psycopg2(name, *a, **k):
+        if name == "psycopg2":
+            raise ModuleNotFoundError("No module named 'psycopg2'")
+        return real_import(name, *a, **k)
+
+    monkeypatch.setattr(builtins, "__import__", no_psycopg2)
+    assert LLMProvider._get_recent_corrections() == ""
