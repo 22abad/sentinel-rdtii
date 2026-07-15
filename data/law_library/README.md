@@ -23,7 +23,7 @@ tagged **NEW**.
 
 - `manifest.jsonl` — one JSON record per law: economy, law name, official URL,
   in-force status, pillars, indicator hints, `text_path`, `sha256`, retrieval date,
-  and **version/currency** fields (`version`, `currency_source`,
+  `last_amended`, and **version/currency** fields (`version`, `currency_source`,
   `currency_checked_at`).
 - `text/*.txt` — the official provision texts referenced by the manifest.
 

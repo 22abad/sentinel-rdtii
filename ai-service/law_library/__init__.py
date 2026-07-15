@@ -49,6 +49,7 @@ class LawEntry:
     sha256: str
     retrieved_at: str
     discovery_tag: str
+    last_amended: str = ""
     version: str = ""
     currency_source: str = ""
     currency_checked_at: str = ""
@@ -121,6 +122,7 @@ def load_library(
                 sha256=record["sha256"],
                 retrieved_at=record.get("retrieved_at", ""),
                 discovery_tag=record.get("discovery_tag", "KNOWN"),
+                last_amended=record.get("last_amended", ""),
                 version=record.get("version", ""),
                 currency_source=record.get("currency_source", ""),
                 currency_checked_at=record.get("currency_checked_at", ""),

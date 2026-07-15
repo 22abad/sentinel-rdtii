@@ -45,13 +45,13 @@ def test_submission_validator_allows_explicit_research_empty_results():
 
 
 def test_submission_validator_drops_incomplete_rows_but_keeps_output():
-    # article is best-effort (not required); source_url IS required.
     assert REQUIRED_SUBMISSION_FIELDS == (
-        "law_name", "indicator_id", "verbatim_snippet", "source_url",
+        "law_name", "last_amended", "indicator_id", "article",
+        "verbatim_snippet", "source_url",
     )
     good = SubmissionRow(
         economy="Singapore", law_name="Good Act 2026", indicator_id="P6-I1",
-        article="",
+        article="Section 1", location_reference="p. 1",
         verbatim_snippet="A complete provision that reads like a real statutory clause.",
         source_url="https://sso.agc.gov.sg/Act/PDPA2012",
     )
@@ -61,7 +61,6 @@ def test_submission_validator_drops_incomplete_rows_but_keeps_output():
         verbatim_snippet="A provision with enough substance to be a real clause.",
         source_url="",
     )
-    # An empty article no longer suppresses the row.
     kept = validate_submission_rows([good])
     assert [r.law_name for r in kept] == ["Good Act 2026"]
     # One bad row is dropped, the good one survives — never zero output.
@@ -165,16 +164,19 @@ def test_cap_and_dedupe_merge_law_name_variants():
     # End-to-end: agreement + blog rows drop, the statute row survives.
     agreement = SubmissionRow(
         economy="Singapore", law_name="Singapore-Australia Free Trade Agreement",
-        indicator_id="P6-I5", verbatim_snippet="binding commitments to allow cross-border data flows apply",
+        indicator_id="P6-I5", article="Article 14.2",
+        verbatim_snippet="binding commitments to allow cross-border data flows apply",
         source_url="https://isomer-user-content.by.gov.sg/166/safta",
     )
     blog = SubmissionRow(
         economy="Singapore", law_name="Personal Data Protection Act 2012", indicator_id="P7-I1",
+        article="Whole Act (framework-level evidence)",
         verbatim_snippet="Singapore put into place the PDPA to regulate the collection of data.",
         source_url="https://www.imda.gov.sg/resources/blog/blog-articles/2021/11/mastering",
     )
     statute = SubmissionRow(
         economy="Singapore", law_name="Personal Data Protection Act 2012", indicator_id="P6-I4",
+        article="Section 26",
         verbatim_snippet="An organisation must not transfer any personal data outside Singapore unless",
         source_url="https://sso.agc.gov.sg/Act/PDPA2012",
     )
@@ -312,6 +314,7 @@ def test_build_row_maps_all_fields():
     assert row.indicator_id == "P6-I4"
     assert row.discovery_tag == "KNOWN"
     assert row.article == "Section 26"
+    assert row.last_amended == "2020"
     assert row.source_url.endswith("PDPA2012")
     assert row.confidence == pytest.approx(0.91)
     assert row.amendment_version_date == "Amended 2020"
@@ -374,6 +377,23 @@ def test_html_location_prefers_anchor_then_dom_path_then_legal_section():
         doc_meta={"final_url": "https://official.example/act"},
     )
     assert section.location_reference.endswith("(Section 26)")
+
+
+def test_framework_title_quote_gets_explicit_whole_act_citation():
+    mapping = _sample_mapping().model_copy(update={
+        "indicator": "7.1",
+        "article_clause": "",
+        "verbatim_quote": "Personal Data Protection Act 2012",
+        "source_legislation": "Personal Data Protection Act 2012",
+    })
+    row = build_row(
+        mapping,
+        economy_display="Singapore",
+        doc_meta={"location_reference": "https://sso.agc.gov.sg/Act/PDPA2012"},
+    )
+    assert row.article == "Whole Act (framework-level evidence)"
+    assert row.location_reference.endswith("(Whole Act (framework-level evidence))")
+    assert row.last_amended == "2020"
 
 
 def test_detailed_novelty_fields_are_json_only():

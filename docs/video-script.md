@@ -62,8 +62,8 @@ Voice-over beats:
 Show `data/law_library/manifest.jsonl` (or the discovery report):
 
 - The tool independently found **5 genuine NEW laws** beyond the sample kit
-  (e.g. Queensland Information Privacy Act 2009 — a state statute absent
-  from the federal inventory), each cached with URL + SHA-256 + pending
+  (e.g. Australia's Identity Verification Services Act 2023), each cached with
+  URL + SHA-256 + pending
   legal-review flag. "Discovery of new evidence" is the judges' stated
   differentiator.
 
