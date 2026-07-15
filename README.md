@@ -202,6 +202,32 @@ touching the network.
 
 ---
 
+## Reproducibility & testing
+
+The submission is guarded by two runnable checks:
+
+```bash
+# 1. Reproducibility gate — reproduces the judge setup in a clean virtualenv
+#    (fresh `pip install -r requirements.txt`) and asserts the headline command
+#    writes output. Catches "works on my machine" dependency gaps.
+bash tools/check_reproducibility.sh
+
+# 2. Judge-simulation matrix — graded main.py runs from easy to hard, scored
+#    the way a judge grades output (ran? wrote files? verbatim + source +
+#    article present? no hallucinated names? no duplicates? honest empties?).
+python tools/judge_test_matrix.py          # tiers 1-3 + 5 (offline/robustness)
+python tools/judge_test_matrix.py --live   # also tier 4 (live network)
+```
+
+The matrix report (`docs/judge-test-report.md`) covers 5 difficulty tiers:
+the headline command, the full mandatory scope + scanned-PDF OCR, adversarial
+inputs (mis-spelt economy, invalid pillar, malformed/blank PDF), the live
+network path a judge actually uses, and honesty stress (a mismatched-pillar
+PDF must return nothing rather than hallucinate). Dependencies are pinned;
+`pip install` runs in a few minutes with no PostgreSQL required.
+
+---
+
 ## Round 2 — all 12 pillars × 7 economies
 
 Round 2 (final) spans the **full RDTII 2.1 methodology: 61 indicators across
