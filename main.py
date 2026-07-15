@@ -267,7 +267,44 @@ async def _run(args: argparse.Namespace) -> int:
     print(f"\n✅ {len(all_rows)} provisions written for {display} (Pillar {_pillar_label(args.pillar)}):")
     for fmt, path in written.items():
         print(f"   {fmt.upper()}: {path}")
+
+    _report_new_laws(all_rows, display)
     return 0
+
+
+def _report_new_laws(rows, economy_display: str) -> None:
+    """Surface NEW laws (found beyond the KNOWN baseline) inline after a run.
+
+    Every row is already tagged NEW/KNOWN by reconcile_submission_tags; this just
+    makes the independent finds visible instead of buried in the CSV, grouping a
+    law's title variants and its indicators. Marked as a lead for legal review.
+    """
+
+    from submission.novelty import normalize_law_name
+
+    grouped: dict[str, dict] = {}
+    for r in rows:
+        if (getattr(r, "discovery_tag", "") or "").upper() != "NEW":
+            continue
+        law = (r.law_name or "").strip()
+        if not law:
+            continue
+        key = normalize_law_name(law)
+        g = grouped.setdefault(key, {"law": law, "indicators": set(), "url": r.source_url})
+        g["indicators"].add(r.indicator_id)
+        if len(law) > len(g["law"]):  # keep the fullest title variant
+            g["law"] = law
+
+    if not grouped:
+        return
+    print(f"\n🆕 {len(grouped)} law(s) discovered BEYOND the known baseline for "
+          f"{economy_display} — independent NEW finds (a lead for legal review):")
+    for g in grouped.values():
+        inds = ", ".join(sorted(g["indicators"]))
+        print(f"   • {g['law']}  [{inds}]")
+        if g.get("url"):
+            print(f"       {g['url']}")
+    print("   (Verify each against the official source before relying on it.)")
 
 
 def main(argv: list[str] | None = None) -> int:
