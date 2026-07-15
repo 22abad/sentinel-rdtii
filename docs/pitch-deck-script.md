@@ -125,18 +125,18 @@ lead is verified before we make it."
 
 **On slide:**
 - **All 61 RDTII indicators (12 pillars) executable** — specs + deterministic rules generated from the official methodology; adding an indicator is a *data* change
-- Benchmarked against the **official Round 2 database itself**: **464 rows · 78% evidence yield · 46% exact score agreement — fully automated**
-- Consistent **41–57% across 7 languages** incl. Thai, Mongolian (Cyrillic), Russian
+- Benchmarked against the **official Round 2 database itself**: **500 rows · 351 evidence-backed (70.2%) · 251 exact score matches (50.2%) — fully automated**
+- A **36–60% exact-match band across 7 languages** incl. Thai, Mongolian (Cyrillic), Russian
 - (per-economy table from `docs/round2-meeting-report.md`)
 
 **🎤 Speaker:** "Round 1 only asks for two pillars and three economies. We built the
 whole thing — all 61 indicators across 12 pillars — and benchmarked it against the
-UN's own Round 2 database: 464 rows, 78% of them evidence-backed, 46% matching the
-official human score exactly, fully automated, and it holds up across seven
+UN's own Round 2 database: 500 rows, 351 evidence-backed (70.2%), and 251 matching
+the official raw score exactly (50.2%), fully automated, across seven
 languages including Thai and Cyrillic. Adding a new indicator or a new country is a
 data change, not a rebuild."
 
-**💡 中文提示:** wow 点——61 指标全能跑,对官方 R2 数据库基准 464 行/78% 证据/46% 精确,7 语种稳定。
+**💡 中文提示:** wow 点——61 指标全能跑；对官方 R2 数据库基准 500 行，351 行有证据（70.2%），251 行与官方原始评分完全一致（50.2%）；覆盖 7 种语言。
 
 ---
 
@@ -168,16 +168,16 @@ every step, so it never looks frozen."
 **On slide:**
 - Swap the LLM by one env var (`RDTII_LLM_PROVIDER`): DeepSeek / OpenAI / Gemini / Claude / **Ollama open-weight, no API key**; automatic failover provider
 - Modular: crawler · OCR · extraction · scoring · submission are separable services; **DB-free CLI for judges**
-- **Cost: $0.01–0.05 per economy-pillar** (measured, DeepSeek); ~530 automated tests, green
+- **Cost: $0.01–0.05 per economy-pillar** (measured, DeepSeek); 500+ automated tests, green
 
 **🎤 Speaker:** "On architecture and the No-Vendor-Lock-in requirement: you change
 the entire AI provider with one environment variable — DeepSeek, OpenAI, Claude, or
 a fully open-weight local model with no API key at all, plus an automatic failover.
 Every stage — crawling, OCR, extraction, scoring — is a separable service, and the
 judge's CLI needs no database. It costs one to five cents per economy-pillar, and
-it's backed by about 530 automated tests."
+it's backed by more than 500 automated tests."
 
-**💡 中文提示:** 30% 架构 + 无厂商锁定——一个环境变量换 AI(含开源本地),模块化,判委 CLI 免数据库,1-5 分/次,~530 测试。
+**💡 中文提示:** 30% 架构 + 无厂商锁定——一个环境变量换 AI(含开源本地),模块化,判委 CLI 免数据库,1-5 分/次,500+ 测试。
 
 ---
 
@@ -204,7 +204,7 @@ substance, and legal review — and we're ready for the finale."
 ## Q&A appendix slides (have ready, do NOT present)
 
 - **A1** — Full per-pillar accuracy rollup table (`docs/round2-meeting-report.md`)
-- **A2** — LAO / IDN caveats: LAO's 53% = 15 evidence-backed + 18 correct abstentions; IDN dense-doc timeouts
+- **A2** — LAO / IDN caveats: exact matches include correct abstentions; LAO's 37/62 exact (60%) should be read alongside 31/62 evidence yield; IDN dense-doc timeouts
 - **A3** — Cost breakdown per economy (measured)
 - **A4** — NEW-law dossiers: AUS IVS Act 2023 & THA decrees provenance chain (`docs/new-law-candidates.md`)
 - **A5** — The judge-simulation matrix report (`docs/judge-test-report.md`)
@@ -217,5 +217,5 @@ substance, and legal review — and we're ready for the finale."
 - **金句**(务必说):"The LLM never decides the score." / "We tried to break it the way a judge would."
 - **不能说的**(严谨,避免翻车):
   - 不要把 Queensland IP Act 说成"新发现"——它在我们基线里。
-  - 不要裸报"46% 准确"——要说"46% 的全自动分与官方精确一致,人工保留最终评分权"。
+  - 不要裸报“50.2% 准确率”——要说“251/500（50.2%）的全自动分与官方原始评分完全一致，其中包含正确不判的 0 分；人工保留最终评分权”。
   - CLI 里没有 RAG 检索——RAG 在网页版;CLI 集成是决赛阶段升级。

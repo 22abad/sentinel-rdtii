@@ -79,8 +79,9 @@ python tools/run_round2_eval.py --economy IND --pillar 7 --limit 2
 Voice-over beats:
 - Beyond the mandatory scope we executed the **full RDTII methodology — all
   61 indicators — across 7 additional economies**, and benchmarked against
-  the official database itself: **464 rows, 78% evidence yield, 46% exact
-  score agreement, fully automated**, consistent across seven languages
+  the official database itself: **500 rows, 351 evidence-backed (70.2%),
+  251 exact score matches (50.2%), fully automated**, with a 36–60%
+  exact-match band across seven languages
   including Thai, Mongolian and Russian.
 - Every number in this table traces to a JSON report in the repo.
 

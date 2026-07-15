@@ -36,6 +36,13 @@ cannot be verified is rejected, not shown.
 **Economies covered (Pillar 6 & 7, live-smoke verified):** Australia, Malaysia,
 Singapore. Experimental discovery adapters also exist for China and Thailand.
 
+**Round 2 benchmark snapshot:** across 500 evaluated official-baseline rows in
+seven economies, the pipeline found evidence for **351 rows (70.2%)** and
+matched the official raw score exactly on **251 rows (50.2%)**. Exact matches
+include correct abstentions where both scores are zero, so this is not presented
+as a standalone accuracy rate. See the reproducible
+[per-economy report](docs/round2-meeting-report.md).
+
 ---
 
 ## Quick Start
