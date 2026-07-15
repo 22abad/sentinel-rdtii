@@ -68,3 +68,5 @@ downloads/
 data/round2_corpus/*/
 data/fetch_cache/*/
 outputs/judge_matrix/
+
+.DS_Store
