@@ -50,13 +50,19 @@ _ACT_NUMBER = re.compile(r"\b(?:no|act|cap|chapter)\.?\s*[a-z]?\d+\b", re.IGNORE
 # Data Protection Act", "Singapore PDPA"). Identity keys are already scoped by
 # (economy, name), so a leading country word is redundant noise that must not
 # defeat KNOWN-baseline reconciliation of an economy's own flagship statute.
-_LEADING_GEO = re.compile(
-    r"^(?:the\s+)?(?:singapore|malaysia|malaysian|australia|australian|china|chinese|"
+_GEO_ALT = (
+    r"singapore|malaysia|malaysian|australia|australian|china|chinese|"
     r"thailand|thai|india|indian|indonesia|indonesian|lao(?:\s+pdr)?|mongolia|mongolian|"
     r"russia(?:n\s+federation)?|hong\s+kong|viet\s*nam|vietnamese|korea|korean|japan|"
-    r"japanese|new\s+zealand|united\s+kingdom|united\s+states)\s+",
-    re.IGNORECASE,
+    r"japanese|new\s+zealand|united\s+kingdom|united\s+states"
 )
+_LEADING_GEO = re.compile(rf"^(?:the\s+)?(?:{_GEO_ALT})\s+", re.IGNORECASE)
+# The ESCAP inventory tags multilateral instruments with a " - <Economy>"
+# jurisdiction suffix (e.g. "...Trans-Pacific Partnership - Malaysia") that a
+# live-discovery title never carries, so CPTPP/RCEP would mis-classify as NEW.
+# Only the dash-separated suffix is stripped — a statute title never ends in
+# " - Malaysia", so "Bank Negara Malaysia" and friends are untouched.
+_TRAILING_JURISDICTION = re.compile(rf"\s+[-–—]\s*(?:{_GEO_ALT})\s*$", re.IGNORECASE)
 _ARTICLE_PREFIX = re.compile(r"\b(?:sections?|secs?|s)\b", re.IGNORECASE)
 _ARTICLE_WORD = re.compile(r"\b(?:articles?|arts?)\b", re.IGNORECASE)
 _ISO_DATE = re.compile(r"\b(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])\b")
@@ -103,6 +109,7 @@ def normalize_law_name(name: str) -> str:
     lowered = _PAREN.sub(" ", lowered)
     lowered = _YEAR.sub(" ", lowered)
     lowered = _ACT_NUMBER.sub(" ", lowered)
+    lowered = _TRAILING_JURISDICTION.sub("", lowered.strip())
     lowered = _LEADING_GEO.sub("", lowered.strip())
     return _normalize_words(lowered)
 
