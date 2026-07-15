@@ -139,7 +139,14 @@ def _features_for_scoring(
 ) -> dict[str, Any]:
     features = {k: data[k] for k in feature_spec.keys() if k in data}
     if pdf_metadata:
-        features.update(pdf_metadata)
+        # pdf_metadata now carries per-page provenance lists (page_sources,
+        # page_char_spans, vision_usage, ...) alongside the scalar OCR hints.
+        # Only scalars are valid IndicatorMapping.features values — merging
+        # the lists fails schema validation for every mapping.
+        features.update({
+            k: v for k, v in pdf_metadata.items()
+            if isinstance(v, (bool, int, float, str))
+        })
     return features
 
 

@@ -377,15 +377,19 @@ function toCanvasViewport(viewport: Viewport): WorkbenchCanvasViewport {
   return { x: viewport.x, y: viewport.y, zoom: viewport.zoom };
 }
 
+export type LinkedFile = { id: string; fileName?: string; previewUrl?: string };
+
 export function WorkbenchCanvas({
   panels,
   onExit,
-  onFileLink,
+  onLinkedFilesChange,
 }: {
   panels: CanvasPanel[];
   onExit: () => void;
-  /** Called when a file node is linked to a workbench panel (e.g. "source"). */
-  onFileLink?: (panelId: string, file: File) => void | Promise<void>;
+  /** Reports which live file nodes are edge-linked to each panel — linking
+      registers a file as an available source; the panel decides when to
+      actually consume it (e.g. Source's Run button). */
+  onLinkedFilesChange?: (linksByPanel: Record<string, LinkedFile[]>) => void;
 }) {
   const restoredState = useMemo(() => restoreCanvasState(readSavedCanvasLayout()), []);
   const flowRef = useRef<ReactFlowInstance | null>(null);
@@ -403,15 +407,22 @@ export function WorkbenchCanvas({
   const noteCounter = useRef(restoredState.noteCounter);
   const spawnCounter = useRef(restoredState.spawnCounter);
   const chatCounter = useRef(restoredState.chatCounter);
-  const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string; ingestStatus?: "uploading" | "ingested" | "failed" | "extracting" | "extracted" }[]>([]);
+  const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string; ingestStatus?: "uploading" | "ingested" | "failed" | "extracting" | "extracted" | "stale" }[]>([]);
   const fileCounter = useRef(0);
   // Files live in the browser (blob URLs) until a file node is linked to the
   // RAG chat node — that connection triggers the upload/ingest to the backend.
   const filesRef = useRef(files);
   filesRef.current = files;
 
+  const markFileStale = useCallback((fileId: string) => {
+    // The node survived a refresh but its blob URL didn't — there are no
+    // bytes to send. Surface it instead of silently doing nothing.
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, ingestStatus: "stale" as const } : f)));
+  }, []);
+
   const ingestFileToRag = useCallback(async (fileId: string) => {
     const entry = filesRef.current.find((f) => f.id === fileId);
+    if (entry && !entry.previewUrl) return markFileStale(fileId);
     if (!entry?.previewUrl || entry.ingestStatus === "uploading" || entry.ingestStatus === "ingested") return;
     const setStatus = (ingestStatus: "uploading" | "ingested" | "failed") =>
       setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, ingestStatus } : f)));
@@ -426,28 +437,47 @@ export function WorkbenchCanvas({
       console.error("Canvas file ingest failed:", err);
       setStatus("failed");
     }
-  }, []);
+  }, [markFileStale]);
 
-  /** Linking a file node to a panel hands the file to that panel's pipeline.
-      Separate from ingestFileToRag — file→chat (RAG) keeps working unchanged. */
-  const linkFileToPanel = useCallback(async (fileId: string, panelId: string) => {
-    if (!onFileLink) return;
-    const entry = filesRef.current.find((f) => f.id === fileId);
-    if (!entry?.previewUrl || entry.ingestStatus === "extracting") return;
-    const setStatus = (ingestStatus: "extracting" | "extracted" | "failed") =>
-      setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, ingestStatus } : f)));
-    setStatus("extracting");
-    try {
-      // Recover the original bytes from the browser-held blob URL.
-      const blob = await fetch(entry.previewUrl).then((r) => r.blob());
-      const file = new File([blob], entry.fileName ?? "upload", { type: entry.fileType || blob.type });
-      await Promise.resolve(onFileLink(panelId, file));
-      setStatus("extracted");
-    } catch (err) {
-      console.error("Canvas file → panel link failed:", err);
-      setStatus("failed");
+  // Report which live file nodes are linked to each panel. Linking only
+  // registers availability — no upload/extraction happens until the panel
+  // consumes the files (e.g. Source's Run). Ghost nodes (blob lost after a
+  // refresh) are excluded so panels never see sources they can't read.
+  const lastLinksRef = useRef("");
+  useEffect(() => {
+    if (!onLinkedFilesChange) return;
+    const byPanel: Record<string, LinkedFile[]> = {};
+    for (const p of panels) {
+      // A panel's spawned copies (e.g. "source-copy-6") count as the same
+      // logical panel — files linked to any of them register under the base id.
+      const nodeIds = [
+        p.id,
+        ...spawned.filter((s) => s.panelId === p.id && !removed[s.id]).map((s) => s.id),
+      ];
+      const linked = files.filter(
+        (f) =>
+          !removed[f.id] &&
+          f.previewUrl &&
+          edges.some((e) =>
+            nodeIds.some(
+              (pid) =>
+                (e.source === f.id && e.target === pid) ||
+                (e.source === pid && e.target === f.id),
+            ),
+          ),
+      );
+      if (linked.length) {
+        byPanel[p.id] = linked.map(({ id, fileName, previewUrl }) => ({ id, fileName, previewUrl }));
+      }
     }
-  }, [onFileLink]);
+    // Only notify on real changes — `panels` gets a fresh identity every
+    // parent render, so without this the effect would ping-pong with the
+    // parent's setState forever.
+    const serialized = JSON.stringify(byPanel);
+    if (serialized === lastLinksRef.current) return;
+    lastLinksRef.current = serialized;
+    onLinkedFilesChange(byPanel);
+  }, [onLinkedFilesChange, panels, spawned, files, edges, removed]);
 
 
   const handleFile = useCallback(async (id: string, file: File) => {
@@ -814,20 +844,26 @@ export function WorkbenchCanvas({
       markCanvasDirty();
       setEdges((es) => addEdge(c, es));
       // Edges from a file node act as data wires:
-      //   file ↔ chat-N   → RAG ingest (extract → chunk → embed)
-      //   file ↔ <panel>  → hand the file to that panel's pipeline
+      //   file ↔ chat-N   → RAG ingest fires immediately (extract → chunk → embed)
+      //   file ↔ <panel>  → registers the file as an available source; the
+      //                     panel consumes it on demand (see onLinkedFilesChange)
       const ids = [c.source, c.target];
       const fileId = ids.find((id) => id?.startsWith("file-"));
       if (!fileId) return;
       const otherId = ids.find((id) => id !== fileId);
       if (!otherId) return;
+      const entry = filesRef.current.find((f) => f.id === fileId);
+      if (entry && !entry.previewUrl) {
+        // Ghost node (blob died on refresh) — flag it instead of silently
+        // linking a source that can't be read.
+        markFileStale(fileId);
+        return;
+      }
       if (otherId.startsWith("chat-")) {
         void ingestFileToRag(fileId);
-      } else if (panels.some((p) => p.id === otherId)) {
-        void linkFileToPanel(fileId, otherId);
       }
     },
-    [markCanvasDirty, ingestFileToRag, linkFileToPanel, panels],
+    [markCanvasDirty, ingestFileToRag, markFileStale],
   );
 
   const handleReset = useCallback(() => {

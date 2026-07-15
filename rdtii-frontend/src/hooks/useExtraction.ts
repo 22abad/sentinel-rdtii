@@ -495,9 +495,15 @@ export function useExtraction() {
     extractionAbortRef.current.abort();
   }
 
-  async function extract(nextSourceUrl?: string) {
-    const runSourceUrl = (nextSourceUrl ?? sourceUrl).trim();
-    if (nextSourceUrl !== undefined) {
+  async function extract(nextSourceUrl?: string, nextText?: string) {
+    // nextText: run the streaming extraction on injected text (e.g. parsed
+    // from file nodes linked to the Source panel) instead of current state.
+    const runSourceUrl = nextText !== undefined ? "" : (nextSourceUrl ?? sourceUrl).trim();
+    if (nextText !== undefined) {
+      setText(nextText);
+      setSourceUrl("");
+      triggerCountryDetect("", nextText);
+    } else if (nextSourceUrl !== undefined) {
       setSourceUrl(runSourceUrl);
       setText("");
       triggerCountryDetect(runSourceUrl, "");
@@ -518,7 +524,7 @@ export function useExtraction() {
     try {
       await runExtractionStream({
         runSourceUrl,
-        requestText: nextSourceUrl !== undefined ? "" : text,
+        requestText: nextText !== undefined ? nextText : nextSourceUrl !== undefined ? "" : text,
         signal: controller.signal,
       });
     } catch (err) {
@@ -663,69 +669,114 @@ export function useExtraction() {
     setExtractionProgress({ current: 0, total: 0, phase: "" });
   }
 
+  /** Upload one file to the ingest endpoint and return the cleaned response
+      (no state changes — callers decide how to apply single/merged results). */
+  async function requestFileIngest(file: File): Promise<ExtractionResponse> {
+    const form = new FormData();
+    form.append("file", file);
+
+    // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
+    let actualProvider = selectedProvider;
+    let actualModel = "";
+    if (selectedProvider === "ollama") {
+      actualModel = selectedOllamaModel;
+    } else if (selectedProvider === "gemini") {
+      if (vertexModels.includes(selectedGeminiModel)) {
+        actualProvider = "vertex-ai";
+      }
+      actualModel = selectedGeminiModel;
+    } else if (selectedProvider === "deepseek") {
+      actualModel = selectedDeepSeekModel;
+    }
+
+    form.append("provider", actualProvider);
+    if (actualModel) {
+      form.append("model", actualModel);
+    }
+
+    const res = await fetch(INGEST_API_URL, {
+      method: "POST",
+      headers: authHeaders(),
+      body: form,
+    });
+
+    if (!res.ok) {
+      throw new Error(
+        await readErrorMessage(
+          res,
+          t("error.ingestFailedStatus", { status: res.status }),
+        ),
+      );
+    }
+
+    const data = (await res.json()) as ExtractionResponse;
+
+    data.mappings = data.mappings.map((m: IndicatorMapping) => {
+      const isHallucinatedUrl =
+        !m.source_url ||
+        m.source_url.toLowerCase().includes("n/a") ||
+        m.source_url.toLowerCase().includes("not specified");
+      const isHallucinatedDate =
+        !m.last_update ||
+        m.last_update.toLowerCase().includes("n/a") ||
+        m.last_update.toLowerCase().includes("not specified");
+      return {
+        ...m,
+        source_url: isHallucinatedUrl ? "" : m.source_url,
+        last_update: isHallucinatedDate
+          ? new Date().toISOString().split("T")[0]
+          : m.last_update,
+      };
+    });
+    return data;
+  }
+
   async function ingestFile(file: File) {
     setStatus("loading");
     setError("");
     try {
-      const form = new FormData();
-      form.append("file", file);
-
-      // Unify Vertex AI under Gemini brand in frontend, and handle DeepSeek options
-      let actualProvider = selectedProvider;
-      let actualModel = "";
-      if (selectedProvider === "ollama") {
-        actualModel = selectedOllamaModel;
-      } else if (selectedProvider === "gemini") {
-        if (vertexModels.includes(selectedGeminiModel)) {
-          actualProvider = "vertex-ai";
-        }
-        actualModel = selectedGeminiModel;
-      } else if (selectedProvider === "deepseek") {
-        actualModel = selectedDeepSeekModel;
-      }
-
-      form.append("provider", actualProvider);
-      if (actualModel) {
-        form.append("model", actualModel);
-      }
-
-      const res = await fetch(INGEST_API_URL, {
-        method: "POST",
-        headers: authHeaders(),
-        body: form,
-      });
-
-      if (!res.ok) {
-        throw new Error(
-          await readErrorMessage(
-            res,
-            t("error.ingestFailedStatus", { status: res.status }),
-          ),
-        );
-      }
-
-      const data = (await res.json()) as ExtractionResponse;
-
-      data.mappings = data.mappings.map((m: IndicatorMapping) => {
-        const isHallucinatedUrl =
-          !m.source_url ||
-          m.source_url.toLowerCase().includes("n/a") ||
-          m.source_url.toLowerCase().includes("not specified");
-        const isHallucinatedDate =
-          !m.last_update ||
-          m.last_update.toLowerCase().includes("n/a") ||
-          m.last_update.toLowerCase().includes("not specified");
-        return {
-          ...m,
-          source_url: isHallucinatedUrl ? "" : m.source_url,
-          last_update: isHallucinatedDate
-            ? new Date().toISOString().split("T")[0]
-            : m.last_update,
-        };
-      });
-
+      const data = await requestFileIngest(file);
       if (data.source_text) setText(data.source_text);
       setResponse(data);
+      setActiveKey(null);
+      setDecisions({});
+      setStatus("ready");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : t("error.fileIngestFailed"),
+      );
+      setResponse(null);
+      setStatus("error");
+    }
+  }
+
+  /** Extract from several files (e.g. every file node linked to the Source
+      panel). Runs sequentially and merges mappings/rejected into one
+      response; source texts are joined with per-file headers. */
+  async function ingestFiles(files: { file: File; label?: string }[]) {
+    if (files.length === 0) return;
+    if (files.length === 1) return ingestFile(files[0].file);
+    setStatus("loading");
+    setError("");
+    try {
+      let merged: ExtractionResponse | null = null;
+      const texts: string[] = [];
+      for (const { file, label } of files) {
+        const data = await requestFileIngest(file);
+        if (data.source_text) {
+          texts.push(`=== ${label ?? file.name} ===\n${data.source_text}`);
+        }
+        merged = merged
+          ? {
+              ...data,
+              mappings: [...merged.mappings, ...data.mappings],
+              rejected: [...(merged.rejected ?? []), ...(data.rejected ?? [])],
+            }
+          : data;
+      }
+      if (!merged) return;
+      if (texts.length) setText(texts.join("\n\n"));
+      setResponse({ ...merged, source_text: texts.join("\n\n") });
       setActiveKey(null);
       setDecisions({});
       setStatus("ready");
@@ -859,6 +910,7 @@ export function useExtraction() {
     stopExtraction,
     extractShortlist,
     ingestFile,
+    ingestFiles,
     loadDemoAuditData,
     selectMapping,
     setDecision,

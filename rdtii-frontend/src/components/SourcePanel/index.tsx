@@ -36,6 +36,9 @@ type SourcePanelProps = {
   activeMapping: IndicatorMapping | null;
   setActiveKey: (key: string | null) => void;
   extract: () => void;
+  /** File nodes edge-linked to this panel on the canvas — count as available
+      sources, so Run enables even with empty text/URL. */
+  linkedSourceCount?: number;
   status: Status;
   error: string;
   warning?: string;
@@ -66,6 +69,7 @@ export function SourcePanel({
   activeMapping,
   setActiveKey,
   extract,
+  linkedSourceCount = 0,
   status,
   error,
   warning,
@@ -144,7 +148,7 @@ export function SourcePanel({
             if (sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim())) return;
             extract();
           }}
-          disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim()) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
+          disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim() && linkedSourceCount === 0) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
           className={`nodrag group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-300 text-white ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#10B981]"}`}
           style={{ minHeight: 0, border: "none" }}
         >
