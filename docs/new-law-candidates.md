@@ -84,7 +84,15 @@ pass). After the same hand-verification + `is_known_law` gate:
 
 **🔴 Rejected by `is_known_law` (already baseline — NOT tagged NEW):** SGP Electronic Transactions Act 2010; MYS PDP Standard 2015; AUS Data Availability and Transparency Act 2022, AML/CTF Act 2006, Security of Critical Infrastructure Act 2018, Information Privacy Act 2014 (ACT), My Health Records Act 2012. (Several carry strong P6 localization / P7 retention text — usable as KNOWN evidence.)
 
-**🟡 Held — could not independently verify (rigor):** 🇦🇺 **Privacy and Data Protection Act 2014 (VIC) IPP 9.1** and **Information Act 2002 (NT) IPP 9.1** — both are genuinely-NEW state cross-border (P6.4) leads and would fill the AUS P6 gap, but the VIC/NT portals serve only a landing page to curl/headless (real text behind a PDF link). The NSW PPIP/HRIP Acts are similarly behind a Cloudflare JS challenge. **Fetch these in a real browser to promote.** Also firmed-verbatim but parent-known (KNOWN evidence, not NEW): AUS Telecommunications Act 1997 s 276; Privacy Act 1988 Sch 2 cl 7 statutory tort (in force 10 Jun 2025) and APP 8.1 / APP 11.2.
+**🟢 VIC + NT now promoted (P6.4) — the AUS P6 gap is filled.** A follow-up pass
+reached the **authorised PDFs** (VIC `content.legislation.vic.gov.au/.../14-60aa033-authorised.pdf`;
+NT `legislation.nt.gov.au/api/sitecore/Act/PDF?id=11860`) via WebFetch, and the IPP 9.1
+transborder-flow text was independently re-verified by extracting those same PDFs.
+🇦🇺 **Privacy and Data Protection Act 2014 (VIC) Sch 1 IPP 9.1** and **Information Act
+2002 (NT) Sch 2 IPP 9.1** — both genuine conditional-flow (adequacy-test) provisions.
+**Still held (browser-only):** NSW **PPIP Act 1998 s 19(2)** — every official route
+(legislation.nsw.gov.au, AustLII, IPC NSW) is behind a Cloudflare JS challenge that
+blocks automated clients; a teammate on a residential browser should copy it directly. Also firmed-verbatim but parent-known (KNOWN evidence, not NEW): AUS Telecommunications Act 1997 s 276; Privacy Act 1988 Sch 2 cl 7 statutory tort (in force 10 Jun 2025) and APP 8.1 / APP 11.2.
 
 **⛔ Excluded on timing:** 🇦🇺 Privacy Amendment (Public Health Contact Information / COVIDSafe) Act 2020 — Part VIIIA is now spent/removed from the current Privacy Act compilation; do NOT present as in force.
 
