@@ -68,20 +68,36 @@ _P67_TOPICAL = re.compile(
 
 
 async def _sweep(args: argparse.Namespace) -> dict:
+    from cli_progress import make_progress_ui
     from submission import build_discovery_report
     from submission.pipeline import discover_and_extract
     from submission.schema import economy_display_name
 
+    # Live dual progress bar (overall = pillars, step = documents) so a sweep
+    # narrates what it's discovering instead of sitting silent. Falls back to
+    # plain lines when not a TTY.
+    ui = make_progress_ui(len(args.pillar), "pillars")
+
+    def narrate(message: str, current=None, total=None) -> None:
+        if ui is not None:
+            ui.on_progress(message, current, total)
+
     rows = []
     warnings: list[str] = []
     for pillar in args.pillar:
+        if ui is not None:
+            ui.start_unit(f"Pillar {pillar}")
         pillar_rows, meta = await discover_and_extract(
             args.economy, pillar,
             provider_name=args.provider, indicators=args.indicators,
-            limit=args.limit,
+            limit=args.limit, progress=narrate,
         )
         rows.extend(pillar_rows)
         warnings.extend(meta.get("warnings", []))
+        if ui is not None:
+            ui.unit_done()
+    if ui is not None:
+        ui.close()
 
     report = build_discovery_report(
         economy_display_name(args.economy), rows, topical=_P67_TOPICAL
