@@ -35,7 +35,6 @@ import {
   type WorkbenchCanvasViewport,
 } from "../../components/Canvas";
 import { AIChatInput } from "../../components/Workbench/ChatInput";
-import { PanelLinkGuard } from "../../components/Canvas/PanelLinkGuard";
 import { uploadCanvasFile } from "../../services/canvasFiles";
 import {
   loadWorkbenchCanvasLayout,
@@ -379,17 +378,25 @@ function toCanvasViewport(viewport: Viewport): WorkbenchCanvasViewport {
 
 export type LinkedFile = { id: string; fileName?: string; previewUrl?: string };
 
+export type CanvasGraph = {
+  /** Live file nodes edge-linked to each panel INSTANCE (original or copy). */
+  filesByInstance: Record<string, LinkedFile[]>;
+  /** For panels declaring `upstreamId`: instance id → the upstream panel
+      instance it is edge-bound to (null when unwired). */
+  bindings: Record<string, string | null>;
+};
+
 export function WorkbenchCanvas({
   panels,
   onExit,
-  onLinkedFilesChange,
+  onGraphChange,
 }: {
   panels: CanvasPanel[];
   onExit: () => void;
-  /** Reports which live file nodes are edge-linked to each panel — linking
-      registers a file as an available source; the panel decides when to
-      actually consume it (e.g. Source's Run button). */
-  onLinkedFilesChange?: (linksByPanel: Record<string, LinkedFile[]>) => void;
+  /** Reports the data-wire graph: which live file nodes feed which panel
+      instance, and which audit-style instances bind to which upstream
+      instance. Linking registers availability; panels consume on demand. */
+  onGraphChange?: (graph: CanvasGraph) => void;
 }) {
   const restoredState = useMemo(() => restoreCanvasState(readSavedCanvasLayout()), []);
   const flowRef = useRef<ReactFlowInstance | null>(null);
@@ -439,45 +446,51 @@ export function WorkbenchCanvas({
     }
   }, [markFileStale]);
 
-  // Report which live file nodes are linked to each panel. Linking only
-  // registers availability — no upload/extraction happens until the panel
-  // consumes the files (e.g. Source's Run). Ghost nodes (blob lost after a
-  // refresh) are excluded so panels never see sources they can't read.
-  const lastLinksRef = useRef("");
+  // Report the data-wire graph. Linking only registers availability — no
+  // upload/extraction happens until a panel consumes its wires (e.g. Run).
+  // Ghost file nodes (blob lost after a refresh) are excluded so panels
+  // never see sources they can't read.
+  const lastGraphRef = useRef("");
   useEffect(() => {
-    if (!onLinkedFilesChange) return;
-    const byPanel: Record<string, LinkedFile[]> = {};
+    if (!onGraphChange) return;
+
+    // Every live canvas instance of a base panel: the original + spawned copies.
+    const instancesOf = (panelId: string): string[] => [
+      ...(!removed[panelId] ? [panelId] : []),
+      ...spawned.filter((s) => s.panelId === panelId && !removed[s.id]).map((s) => s.id),
+    ];
+    const connected = (a: string, b: string) =>
+      edges.some((e) => (e.source === a && e.target === b) || (e.source === b && e.target === a));
+
+    const filesByInstance: Record<string, LinkedFile[]> = {};
+    const bindings: Record<string, string | null> = {};
     for (const p of panels) {
-      // A panel's spawned copies (e.g. "source-copy-6") count as the same
-      // logical panel — files linked to any of them register under the base id.
-      const nodeIds = [
-        p.id,
-        ...spawned.filter((s) => s.panelId === p.id && !removed[s.id]).map((s) => s.id),
-      ];
-      const linked = files.filter(
-        (f) =>
-          !removed[f.id] &&
-          f.previewUrl &&
-          edges.some((e) =>
-            nodeIds.some(
-              (pid) =>
-                (e.source === f.id && e.target === pid) ||
-                (e.source === pid && e.target === f.id),
-            ),
-          ),
-      );
-      if (linked.length) {
-        byPanel[p.id] = linked.map(({ id, fileName, previewUrl }) => ({ id, fileName, previewUrl }));
+      for (const instanceId of instancesOf(p.id)) {
+        const linked = files.filter(
+          (f) => !removed[f.id] && f.previewUrl && connected(f.id, instanceId),
+        );
+        if (linked.length) {
+          filesByInstance[instanceId] = linked.map(({ id, fileName, previewUrl }) => ({
+            id,
+            fileName,
+            previewUrl,
+          }));
+        }
+        if (p.upstreamId) {
+          const upstream = instancesOf(p.upstreamId).find((uid) => connected(uid, instanceId));
+          bindings[instanceId] = upstream ?? null;
+        }
       }
     }
+
     // Only notify on real changes — `panels` gets a fresh identity every
     // parent render, so without this the effect would ping-pong with the
     // parent's setState forever.
-    const serialized = JSON.stringify(byPanel);
-    if (serialized === lastLinksRef.current) return;
-    lastLinksRef.current = serialized;
-    onLinkedFilesChange(byPanel);
-  }, [onLinkedFilesChange, panels, spawned, files, edges, removed]);
+    const serialized = JSON.stringify({ filesByInstance, bindings });
+    if (serialized === lastGraphRef.current) return;
+    lastGraphRef.current = serialized;
+    onGraphChange({ filesByInstance, bindings });
+  }, [onGraphChange, panels, spawned, files, edges, removed]);
 
 
   const handleFile = useCallback(async (id: string, file: File) => {
@@ -690,41 +703,22 @@ export function WorkbenchCanvas({
       [
         ...panels
           .filter((p) => !removed[p.id])
-          .map((p, i) => {
-            // Edges are data wires: a panel that declares an upstream only
-            // shows its content while an edge to that node exists.
-            const connected =
-              !p.upstreamId ||
-              edges.some(
-                (e) =>
-                  (e.source === p.upstreamId && e.target === p.id) ||
-                  (e.source === p.id && e.target === p.upstreamId),
-              );
-            return {
-              id: p.id,
-              type: "panel",
-              dragHandle: p.dragHandle,
-              position: positions[p.id] ?? { x: 40 + i * 48, y: 40 + i * 48 },
-              data: {
-                title: p.title,
-                element: p.upstreamId ? (
-                  <PanelLinkGuard
-                    connected={connected}
-                    upstreamLabel={panelById[p.upstreamId]?.title ?? p.upstreamId}
-                    panelLabel={p.title}
-                  >
-                    {p.element}
-                  </PanelLinkGuard>
-                ) : (
-                  p.element
-                ),
-                width: sizes[p.id]?.width ?? p.width,
-                height: sizes[p.id]?.height,
-                onResize: (size: WorkbenchCanvasSize) => resizeNode(p.id, size),
-                onDelete: () => removeNode(p.id),
-              } satisfies PanelNodeData,
-            };
-          }),
+          .map((p, i) => ({
+            id: p.id,
+            type: "panel",
+            dragHandle: p.dragHandle,
+            position: positions[p.id] ?? { x: 40 + i * 48, y: 40 + i * 48 },
+            data: {
+              title: p.title,
+              // Per-instance element when the panel supports it (extraction
+              // threads); unbound/disconnected states are the panel's job.
+              element: p.renderElement ? p.renderElement(p.id) : p.element,
+              width: sizes[p.id]?.width ?? p.width,
+              height: sizes[p.id]?.height,
+              onResize: (size: WorkbenchCanvasSize) => resizeNode(p.id, size),
+              onDelete: () => removeNode(p.id),
+            } satisfies PanelNodeData,
+          })),
         ...spawned
           .filter((s) => !removed[s.id] && panelById[s.panelId])
           .map((s) => {
@@ -736,7 +730,10 @@ export function WorkbenchCanvas({
               position: positions[s.id] ?? { x: 160, y: 160 },
               data: {
                 title: src.title,
-                element: src.element,
+                // Spawned copies get their OWN element instance — this is
+                // what makes copies independent extraction threads instead
+                // of mirrors of the original panel.
+                element: src.renderElement ? src.renderElement(s.id) : src.element,
                 width: sizes[s.id]?.width ?? src.width,
                 height: sizes[s.id]?.height,
                 onResize: (size: WorkbenchCanvasSize) => resizeNode(s.id, size),
@@ -796,7 +793,7 @@ export function WorkbenchCanvas({
           } satisfies FileNodeData,
         })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, files, positions, sizes, removed, edges, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds],
+    [panels, spawned, panelById, customNotes, chatIds, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds],
   );
 
   const renderedEdges = useMemo(() => {

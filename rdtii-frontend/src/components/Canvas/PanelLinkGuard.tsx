@@ -21,12 +21,13 @@ export function PanelLinkGuard({
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <div
+        // Visual-only dim — pointer events stay live so the panel header
+        // remains a valid React Flow drag handle while disconnected.
         style={
           connected
             ? undefined
-            : { filter: "blur(2px) grayscale(0.6)", opacity: 0.45, pointerEvents: "none", userSelect: "none" }
+            : { filter: "blur(2px) grayscale(0.6)", opacity: 0.45 }
         }
-        aria-hidden={!connected}
       >
         {children}
       </div>
@@ -44,6 +45,8 @@ export function PanelLinkGuard({
             padding: 24,
             textAlign: "center",
             background: "rgba(255,255,255,0.55)",
+            // Let drags/clicks pass through the veil to the panel beneath.
+            pointerEvents: "none",
           }}
         >
           <div

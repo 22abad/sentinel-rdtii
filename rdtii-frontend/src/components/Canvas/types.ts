@@ -7,13 +7,19 @@ export type CanvasMode = "select" | "hand";
 export type CanvasPanel = {
   id: string;
   title: string;
-  element: React.ReactNode;
+  /** Shared element — used when `renderElement` is not provided. */
+  element?: React.ReactNode;
+  /** Per-instance rendering: when set, each canvas instance of this panel
+      (the original and every spawned copy) gets its own element built from
+      its node id — the basis of independent extraction threads. Falls back
+      to the shared `element` when omitted. */
+  renderElement?: (instanceId: string) => React.ReactNode;
   width?: number;
   /** Optional selector limiting where React Flow may start dragging the panel. */
   dragHandle?: string;
-  /** Edges are data wires: when set, this panel's content only renders while
-      an edge connects it to the named node — otherwise a "disconnected"
-      guard is shown (e.g. audit requires its link to source). */
+  /** Edges are data wires: instances of this panel bind to an instance of
+      the named upstream panel via edges (copy-aware). Reported through
+      onCanvasGraphChange; unbound instances should render a guard. */
   upstreamId?: string;
 };
 
