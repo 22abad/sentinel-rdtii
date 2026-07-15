@@ -91,6 +91,10 @@ CASES = [
     Case(5, "Malformed PDF -> clean error", ["--economy", "India", "--pillar", "6", "--pdf", str(FIXTURES / "malformed.pdf")], "clean_error"),
     Case(5, "Blank PDF -> empty, honest", ["--economy", "India", "--pillar", "6", "--pdf", str(FIXTURES / "blank.pdf"), "--allow-empty"], "empty_ok", is_pdf=True),
     Case(5, "Huge --limit does not crash", ["--economy", "Singapore", "--pillar", "6", "--offline", "--limit", "500"], "output"),
+    # Tier 6 — malformed-arg edge cases (deterministic, offline).
+    Case(6, "Duplicate pillars 6,6,7 -> deduped", ["--economy", "Singapore", "--pillar", "6,6,7", "--offline"], "output"),
+    Case(6, "Text file renamed .pdf -> clean error", ["--economy", "India", "--pillar", "6", "--pdf", str(FIXTURES / "fake.pdf")], "clean_error"),
+    Case(6, "Zero pillar -> clean error", ["--economy", "Singapore", "--pillar", "0", "--offline"], "clean_error"),
 ]
 
 
@@ -162,7 +166,7 @@ def render(results: list[Result]) -> str:
     for tier in sorted({r.case.tier for r in results}):
         trs = [r for r in results if r.case.tier == tier]
         label = {1: "Trivial (headline command)", 2: "Mandatory scope + OCR",
-                 3: "Robustness / adversarial", 4: "Live / network", 5: "Hard / honesty stress"}.get(tier, str(tier))
+                 3: "Robustness / adversarial", 4: "Live / network", 5: "Hard / honesty stress", 6: "Malformed-argument edge cases"}.get(tier, str(tier))
         passed = sum(1 for r in trs if r.passed)
         lines += [f"## Tier {tier} — {label}  ({passed}/{len(trs)} pass)", "",
                   "| Case | Result | Rows | Quality | Notes |", "|---|---|---|---|---|"]
@@ -190,6 +194,7 @@ def main(argv: list[str] | None = None) -> int:
     # Self-contained adversarial fixtures (no binaries in the repo).
     FIXTURES.mkdir(parents=True, exist_ok=True)
     (FIXTURES / "malformed.pdf").write_bytes(b"%PDF-1.4\n garbage not a real pdf body\n")
+    (FIXTURES / "fake.pdf").write_bytes(b"This is plain text, not a PDF. Section 1. Data must stay local.\n")
     try:
         import fitz  # pymupdf
         doc = fitz.open(); doc.new_page(); doc.save(str(FIXTURES / "blank.pdf")); doc.close()
