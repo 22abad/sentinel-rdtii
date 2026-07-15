@@ -63,6 +63,73 @@ _LEADING_GEO = re.compile(rf"^(?:the\s+)?(?:{_GEO_ALT})\s+", re.IGNORECASE)
 # Only the dash-separated suffix is stripped — a statute title never ends in
 # " - Malaysia", so "Bank Negara Malaysia" and friends are untouched.
 _TRAILING_JURISDICTION = re.compile(rf"\s+[-–—]\s*(?:{_GEO_ALT})\s*$", re.IGNORECASE)
+
+# --- Discovery-candidate triage -------------------------------------------
+# A live sweep surfaces three recurring kinds of non-finding: international
+# instruments (not domestic statutes), an economy's own document relabelled
+# with a foreign law name (LLM mislabel), and off-topic legislation. These
+# heuristics let build_discovery_report attach a reviewer verdict so the
+# candidate list is triaged, not a raw dump. Verdicts never *drop* a row — a
+# lawyer still sees everything — they only rank and explain.
+_INSTRUMENT = re.compile(
+    r"\b(agreement|partnership|treaty|convention|protocol|arrangement|levy|charges?)\b",
+    re.IGNORECASE,
+)
+_FOREIGN_JURISDICTION = re.compile(
+    r"\b(hong\s+kong|viet\s*nam|korea|korean|japan|japanese|new\s+zealand|"
+    r"united\s+kingdom|united\s+states|european\s+union|eu)\b",
+    re.IGNORECASE,
+)
+# Official government domains per economy — a genuine NEW *domestic law* lives on
+# one of these. Used to spot foreign-name-on-home-domain hallucinations.
+OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
+    "SGP": ("agc.gov.sg", "sso.agc.gov.sg", "pdpc.gov.sg", "imda.gov.sg", "mas.gov.sg", "csa.gov.sg"),
+    "MYS": ("agc.gov.my", "lom.agc.gov.my", "pdp.gov.my", "mcmc.gov.my", "nacsa.gov.my"),
+    "AUS": ("legislation.gov.au", "oaic.gov.au", "cyber.gov.au", "legislation.qld.gov.au",
+            "legislation.nsw.gov.au", "legislation.sa.gov.au", "legislation.vic.gov.au",
+            "legislation.wa.gov.au"),
+}
+
+
+def _url_domain(url: str) -> str:
+    match = re.match(r"https?://([^/]+)", url or "")
+    return match.group(1).lower().replace("www.", "") if match else ""
+
+
+def classify_new_candidate(
+    candidate: dict,
+    *,
+    economy_code: str,
+    topical: re.Pattern[str] | None = None,
+) -> tuple[str, str]:
+    """Triage one NEW candidate into CANDIDATE / REVIEW / REJECT with a reason.
+
+    - REJECT an international instrument (agreement/treaty/levy) — not a statute.
+    - REJECT a foreign law name served from this economy's own official domain
+      (the LLM relabelled a domestic document).
+    - REJECT / down-rank when a topical filter is supplied and neither the name
+      nor the evidence touches it (off-topic for the pillar under review).
+    - CANDIDATE when it is an on-topic domestic statute on an official domain;
+      otherwise REVIEW (on-topic but provenance needs a human check).
+
+    The verdict ranks and explains; it never removes the row from the report.
+    """
+
+    name = candidate.get("law_name", "") or ""
+    quote = candidate.get("verbatim_snippet", "") or ""
+    domain = _url_domain(candidate.get("source_url", ""))
+    official = OFFICIAL_DOMAINS.get((economy_code or "").upper(), ())
+    on_official = any(domain == d or domain.endswith("." + d) for d in official)
+
+    if _INSTRUMENT.search(name):
+        return "REJECT", "international instrument, not a domestic statute"
+    if _FOREIGN_JURISDICTION.search(name) and on_official:
+        return "REJECT", "foreign law name on this economy's official domain (likely LLM mislabel)"
+    if topical is not None and not (topical.search(name) or topical.search(quote)):
+        return "REJECT", "name/evidence off-topic for the pillar under review"
+    if not on_official:
+        return "REVIEW", "on-topic but not on a recognised official government domain"
+    return "CANDIDATE", "on-topic domestic statute on an official domain"
 _ARTICLE_PREFIX = re.compile(r"\b(?:sections?|secs?|s)\b", re.IGNORECASE)
 _ARTICLE_WORD = re.compile(r"\b(?:articles?|arts?)\b", re.IGNORECASE)
 _ISO_DATE = re.compile(r"\b(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])\b")
@@ -453,11 +520,18 @@ def build_discovery_report(
     rows: list[SubmissionRow],
     *,
     entries: list[LawEntry] | None = None,
+    topical: re.Pattern[str] | None = None,
 ) -> dict:
     """Reconcile tags, summarize, and attach the human-review gate.
 
     The returned ``rows`` are tag-reconciled; ``summary`` counts NEW vs KNOWN; and
     ``review_gate`` states that each NEW find is a draft for legal verification.
+
+    Each NEW candidate is triaged with a ``verdict`` (CANDIDATE / REVIEW /
+    REJECT) so the reviewer sees the strong domestic-statute leads first and the
+    trade-agreement / mislabel / off-topic noise last. Pass ``topical`` (a
+    compiled regex of the pillar's subject vocabulary) to also reject off-topic
+    finds; without it, only instrument/mislabel noise is flagged.
     """
 
     reconciled = reconcile_discovery_tags(rows, entries=entries)
@@ -498,11 +572,16 @@ def build_discovery_report(
             if not cand["source_url"] and r.source_url:
                 cand["source_url"] = r.source_url
 
-    new_candidates = sorted(
-        grouped.values(), key=lambda c: (-c["evidence_rows"], c["law_name"].lower())
-    )
+    new_candidates = list(grouped.values())
+    code = economy_code(economy) if economy else ""
     for c in new_candidates:
         c["indicators"].sort()
+        verdict, reason = classify_new_candidate(c, economy_code=code, topical=topical)
+        c["verdict"], c["verdict_reason"] = verdict, reason
+    # Strong domestic-statute leads first, then rows needing provenance review,
+    # then flagged noise; within a verdict, the most-cited law leads.
+    _rank = {"CANDIDATE": 0, "REVIEW": 1, "REJECT": 2}
+    new_candidates.sort(key=lambda c: (_rank[c["verdict"]], -c["evidence_rows"], c["law_name"].lower()))
 
     return {
         "economy": economy,
