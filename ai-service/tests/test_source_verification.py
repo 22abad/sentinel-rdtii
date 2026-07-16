@@ -26,12 +26,17 @@ _PROVISION = (
 
 def test_strategy_order_uses_site_hints():
     sso, _ = strategy_order("https://sso.agc.gov.sg/Act/BA1970?ProvIds=pr47-")
-    assert sso == ["http_ua"]  # SSO: curl+UA only
+    # SSO went behind an AWS WAF (2026-07): HTML endpoint 202s, so the browser
+    # cascade (which falls back to the un-challenged ?ViewType=Pdf) leads now.
+    assert sso == ["browser", "http_ua"]
     vic, hint = strategy_order("https://www.legislation.vic.gov.au/in-force/acts/x")
     assert vic[0] == "pdf"  # VIC text lives in the authorised PDF
     # A .pdf URL is always tried as a PDF first, whatever the domain.
     order, _ = strategy_order("https://example.gov/some/act.pdf")
     assert order[0] == "pdf"
+    # ...and so is a "/pdf"-suffixed path (AU Federal Register endpoint).
+    au_pdf, _ = strategy_order("https://www.legislation.gov.au/C2024A00098/asmade/2024-11-29/text/original/pdf")
+    assert au_pdf[0] == "pdf"
 
 
 def test_nsw_uses_the_browser_strategy(monkeypatch):
