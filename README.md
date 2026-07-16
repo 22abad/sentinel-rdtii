@@ -136,6 +136,24 @@ retrieval, and mapping, process only the first accepted document:
 python main.py --economy Singapore --pillar 6 --max-documents 1
 ```
 
+### Expected runtimes
+
+The official 10-minute requirement covers **setup** (clone → install → run),
+which the steps above fit comfortably. How long the run itself takes depends on
+the mode — measured on 2026-07-16 with DeepSeek; **your hardware, network, and
+the live portals' responsiveness will shift these**:
+
+| Command | Measured | Character |
+|---|---|---|
+| `--economy Singapore --pillar 6 --offline` | **67 s** | deterministic, no network |
+| `--economy Singapore --pillar 6,7 --offline` | **3 min 09 s** | deterministic, no network |
+| `--economy Singapore --pillar 6,7` (default: seeds + live discovery) | **27 min** (single measured run) | live-search results vary run to run; the cost guardrails cap noise documents, measured LLM spend ≈ $0.67 |
+| add `--max-documents 1` to the default | a few minutes | quickest way to see real live discovery |
+
+For a short, predictable reviewer session: run `--offline` first (seconds to
+minutes, fully reproducible), then the default command in the background if you
+want to watch live discovery find and report NEW laws.
+
 > To try the pipeline with **no discovery or browser**, point at a local PDF
 > instead: `--pdf path/to/law.pdf`. Mapping still uses the configured model.
 > Three ready-made demos (born-digital statute, scanned-PDF OCR, and an
