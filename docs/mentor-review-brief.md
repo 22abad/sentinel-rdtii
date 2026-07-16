@@ -11,7 +11,7 @@ before the July 20 submission. Print this; assign presenters at the top._
 |---|---|---|---|
 | 0–3 | Problem & architecture in one picture | Dong | deck outline §1–3 |
 | 3–8 | **Live demo**: `python main.py --economy Singapore --pillar 6` + scanned-PDF run | Dong | terminal (offline mode as backup) |
-| 8–12 | Round 1 status: golden set signed off, 12 verified NEW laws, 550+ tests | Abel | deck §4–5 |
+| 8–12 | Round 1 status: golden set signed off, 14 verified NEW laws, 570 tests | Abel | deck §4–5 |
 | 12–18 | **The benchmark**: 500 rows vs official DB, 251 exact (50.2%) / 351 evidence-backed (70.2%), 7 languages | Dong | `round2-meeting-report.md` |
 | 18–22 | Legal-in-the-loop: Katie's verification session + adjudication findings | Katie | her exported results |
 | 22–25 | Engineering war stories (pick 2: reasoning-budget starvation, prefix-cap blindness) | Eric/Abel | engineering log §5–6 |
@@ -56,7 +56,8 @@ _Frame: "we didn't just build it, we tried to break it the way a judge would."_
   *"Point, drag, run — and never do the same work twice."*
 - **Genuine NEW evidence, independently verified** (the discovery differentiator —
   this is the explicit **20-point "Discovery of New Evidence"** item at Stage 2):
-  - **12 verified NEW laws now in the library** (SGP 3 · MYS 5 · AUS 4), each with a
+  - **14 verified NEW laws now in the library** (SGP 3 · MYS 5 · AUS 6 — incl. the VIC/NT/NSW
+    state cross-border acts that fill Australia's P6 gap), each with a
     verbatim provision fetched from the official government portal and a
     machine-checked SHA-256. Highlights: 🇸🇬 Banking Act 1970 s 47 (secrecy),
     Healthcare Services (General) Regs 2021 (retention), PDP Reg 2021; 🇲🇾 PDPA
