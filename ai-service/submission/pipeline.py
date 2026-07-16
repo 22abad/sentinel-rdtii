@@ -13,6 +13,7 @@ network/LLM orchestration lives in :func:`discover_and_extract` and
 from __future__ import annotations
 
 import hashlib
+import os
 import re
 import time
 from pathlib import Path
@@ -154,6 +155,8 @@ def _notes(mapping: IndicatorMapping, candidate: Any, doc_meta: dict) -> str:
     quality = (doc_meta or {}).get("quality")
     if quality and quality != "good":
         parts.append(f"document quality: {quality}")
+    if (doc_meta or {}).get("partial_document_note"):
+        parts.append(str(doc_meta["partial_document_note"]))
     # De-duplicate while preserving order.
     seen: set[str] = set()
     unique = [p for p in parts if not (p in seen or seen.add(p))]
@@ -492,6 +495,25 @@ async def discover_and_extract(
                 warnings.append(f"strict-live rejected {candidate.url}: {reason}")
                 continue
 
+        # Cost/latency guardrail for LIVE-DISCOVERED documents only (seeds and
+        # judge-provided --pdf documents are never capped): a 250K-char statute
+        # pulled in by live search can burn hundreds of LLM calls and blow the
+        # judge's ~10-minute window. Cap extraction at RDTII_MAX_LIVE_DOC_CHARS
+        # (default 150K; 0 disables) and say so honestly — the official notes
+        # column explicitly anticipates "partial doc".
+        doc_text = document.text
+        _max_chars = int(os.getenv("RDTII_MAX_LIVE_DOC_CHARS", "150000") or 0)
+        partial_note = ""
+        if _max_chars and len(doc_text) > _max_chars:
+            partial_note = (
+                f"partial doc: extraction capped at {_max_chars:,} of "
+                f"{len(doc_text):,} chars (set RDTII_MAX_LIVE_DOC_CHARS=0 to disable)"
+            )
+            say(f"large document ({len(doc_text):,} chars) — capping extraction at {_max_chars:,} chars…",
+                min(_pos, _total_docs), _total_docs)
+            warnings.append(f"{candidate.url}: {partial_note}")
+            doc_text = doc_text[:_max_chars]
+
         crawl_meta = dict(getattr(document, "crawl_metadata", {}) or {})
         pdf_meta = dict(getattr(document, "pdf_metadata", {}) or {})
         ocr_ratio = float(pdf_meta.get("ocr_ratio") or 0.0)
@@ -524,11 +546,12 @@ async def discover_and_extract(
             "http_status": crawl_meta.get("http_status"),
             "fetch_method": crawl_meta.get("fetch_method") or "",
             "html_selector": crawl_meta.get("selector") or "",
+            "partial_document_note": partial_note,
         }
 
         extraction_started = time.perf_counter()
         try:
-            result = await run_extraction(document.text, provider)
+            result = await run_extraction(doc_text, provider)
         except Exception as exc:  # noqa: BLE001
             warnings.append(f"extraction failed for {candidate.url}: {exc}")
             continue
@@ -555,7 +578,7 @@ async def discover_and_extract(
                     mapping,
                     economy_display=display,
                     candidate=candidate,
-                    source_text=document.text,
+                    source_text=doc_text,
                     doc_meta=doc_meta,
                 )
             )
