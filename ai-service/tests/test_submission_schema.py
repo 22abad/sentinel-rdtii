@@ -703,3 +703,30 @@ def test_non_statute_instruments_dropped():
         allow_empty=True,
     )
     assert [r.law_name for r in kept] == ["Personal Data Protection Act 2012"]
+
+
+def test_p6_rows_without_data_language_are_flagged_not_dropped():
+    """A P6 row quoting a licence/asset 'transfer' provision (no data language)
+    is KEPT but loudly flagged for human review — the semantic call is the
+    reviewer's, never silently decided either way."""
+    from submission.schema import SubmissionRow, validate_submission_rows
+
+    gas = SubmissionRow(
+        economy="Singapore", law_name="Gas Act 2001", indicator_id="P6-I4",
+        article="Section 43(5)",
+        verbatim_snippet=("The transfer of the whole or any part of the undertaking "
+                          "of a licensee requires the prior written approval of the Authority."),
+        source_url="https://sso.agc.gov.sg/Act/GA2001",
+    )
+    pdpa = SubmissionRow(
+        economy="Singapore", law_name="Personal Data Protection Act 2012", indicator_id="P6-I4",
+        article="Section 26",
+        verbatim_snippet=("An organisation must not transfer any personal data to a "
+                          "country or territory outside Singapore except in accordance "
+                          "with requirements prescribed under this Act."),
+        source_url="https://sso.agc.gov.sg/Act/PDPA2012",
+    )
+    kept = validate_submission_rows([gas, pdpa], allow_empty=True)
+    assert len(kept) == 2, "flag, never drop"
+    assert "topic check" in kept[0].notes and "needs human review" in kept[0].notes
+    assert "topic check" not in (kept[1].notes or "")
