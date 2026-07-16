@@ -8,7 +8,7 @@ import { SideBar } from "../../components/SideBar";
 import { useExtractionThread } from "../../hooks/useExtraction";
 import { PanelLinkGuard } from "../../components/Canvas/PanelLinkGuard";
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Menu, X, Home, Map, User } from "lucide-react";
+import { Plus, Menu, X, Home, Map, User, LayoutDashboard } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
 import { WorkbenchCanvas, type CanvasPanel, type CanvasGraph, type LinkedFile } from "./WorkbenchCanvas";
@@ -199,6 +199,17 @@ export function WorkbenchPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Canvas (multi-thread, free layout) vs classic (traditional stacked view
+  // of the main thread). Both render the same thread components against the
+  // shared store, so switching preserves all state — even mid-extraction.
+  const [viewMode, setViewMode] = useState<"canvas" | "classic">(() =>
+    localStorage.getItem("workbenchViewMode") === "classic" ? "classic" : "canvas",
+  );
+  const switchView = (mode: "canvas" | "classic") => {
+    setViewMode(mode);
+    localStorage.setItem("workbenchViewMode", mode);
+  };
 
   // Main-thread view for the page furniture (SideBar, Found PDFs presence).
   const {
@@ -408,12 +419,63 @@ export function WorkbenchPage() {
         </motion.button>
       </div>
 
-      {/* The workbench is now the free-canvas — the classic stacked layout is retired */}
-      <WorkbenchCanvas
-        panels={canvasPanels}
-        onExit={() => navigate("/")}
-        onGraphChange={handleGraphChange}
-      />
+      {/* Canvas (multi-thread) or classic stacked view — user's choice */}
+      {viewMode === "canvas" ? (
+        <WorkbenchCanvas
+          panels={canvasPanels}
+          onExit={() => navigate("/")}
+          onSwitchView={() => switchView("classic")}
+          onGraphChange={handleGraphChange}
+        />
+      ) : (
+        <>
+          {/* White dot-grid backdrop — matches the canvas page's background */}
+          <div
+            className="fixed inset-0"
+            style={{
+              zIndex: 0,
+              background: "#ffffff",
+              backgroundImage: "radial-gradient(#c2c8d0 1.5px, transparent 1.5px)",
+              backgroundSize: "28px 28px",
+            }}
+          />
+        <main className="flex-1 overflow-auto px-5 pb-8 pt-12" style={{ position: "relative", zIndex: 1 }}>
+          <section className="workspace">
+            <div className="flex flex-col gap-4 min-w-0 self-start">
+              <DiscoveryThreadPanel />
+              <SourceThreadPanel threadId={MAIN_THREAD_ID} linkedFiles={[]} />
+              {foundPdfs.length > 0 && <FoundPdfsThreadPanel />}
+            </div>
+            <div className="flex flex-col gap-4 min-w-0 self-start">
+              <AuditThreadPanel threadId={MAIN_THREAD_ID} />
+            </div>
+          </section>
+
+          {/* Switch back to the canvas — mirrors the canvas toolbar position */}
+          <div className="fixed bottom-6 left-0 right-0 z-40 flex justify-center pointer-events-none">
+            <button
+              onClick={() => switchView("canvas")}
+              className="pointer-events-auto flex items-center gap-2"
+              title="Switch to the canvas layout"
+              style={{
+                minHeight: 0,
+                padding: "8px 16px",
+                borderRadius: 9999,
+                border: "1px solid #e5e7eb",
+                background: "#ffffff",
+                color: "#0f766e",
+                fontSize: "0.82rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 8px 30px rgba(0,0,0,0.18)",
+              }}
+            >
+              <LayoutDashboard size={15} /> Canvas
+            </button>
+          </div>
+        </main>
+        </>
+      )}
 
     </div>
   );

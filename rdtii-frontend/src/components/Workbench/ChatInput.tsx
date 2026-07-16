@@ -42,10 +42,12 @@ interface AIChatInputProps {
   onActiveChange?: (active: boolean) => void;
   /** Fired the moment the user submits a question, before the answer arrives. */
   onSend?: (question: string) => void;
+  /** Fired when the RAG query fails (lets listeners clear pending state). */
+  onError?: (message: string) => void;
   provider?: string;
 }
 
-const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, countryCode, onResponse, onActiveChange, onSend, provider }: AIChatInputProps) => {
+const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, countryCode, onResponse, onActiveChange, onSend, onError, provider }: AIChatInputProps) => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [isActive, setIsActive] = useState(false);
@@ -92,7 +94,9 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
         onResponse?.(data.answer);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "RAG query failed.");
+      const message = err instanceof Error ? err.message : "RAG query failed.";
+      setError(message);
+      onError?.(message);
     } finally {
       setIsLoading(false);
     }

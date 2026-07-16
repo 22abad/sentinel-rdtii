@@ -1,6 +1,6 @@
 import React from "react";
 import { Panel, useReactFlow, type XYPosition } from "@xyflow/react";
-import { X, StickyNote, Plus, MousePointer2, Lock, RotateCcw, MessageSquare } from "lucide-react";
+import { X, StickyNote, Plus, MousePointer2, Lock, RotateCcw, MessageSquare, LayoutList } from "lucide-react";
 import type { CanvasMode, SpawnType } from "./types";
 
 /**
@@ -23,6 +23,7 @@ export function CanvasToolbar({
   onAddPanel,
   onAddChat,
   onReset,
+  onSwitchView,
   onExit,
 }: {
   mode?: CanvasMode;
@@ -32,6 +33,8 @@ export function CanvasToolbar({
   onAddPanel?: (position: XYPosition) => void;
   onAddChat?: (position: XYPosition) => void;
   onReset?: () => void;
+  /** Switch to the traditional (stacked) workbench layout. */
+  onSwitchView?: () => void;
   onExit: () => void;
 }) {
   const { screenToFlowPosition } = useReactFlow();
@@ -144,6 +147,15 @@ export function CanvasToolbar({
           <>
             <button style={textBtn("#6b7280")} title="Reset layout" onClick={onReset}>
               <RotateCcw size={15} /> Reset
+            </button>
+            {divider}
+          </>
+        )}
+
+        {onSwitchView && (
+          <>
+            <button style={textBtn("#0f766e")} title="Switch to the traditional layout" onClick={onSwitchView}>
+              <LayoutList size={15} /> Classic
             </button>
             {divider}
           </>

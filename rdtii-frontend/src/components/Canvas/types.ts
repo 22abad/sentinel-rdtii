@@ -26,7 +26,10 @@ export type CanvasPanel = {
 /** A spawnable panel type shown as a button in the toolbar palette. */
 export type SpawnType = { id: string; label: string };
 
-export type WorkbenchCanvasNodeKind = "panel" | "note" | "rag" | "material";
+export type WorkbenchCanvasNodeKind = "panel" | "note" | "rag" | "material" | "session";
+
+/** One message in a RAG chat session thread. */
+export type ChatMessage = { role: "user" | "assistant"; text: string };
 
 export type WorkbenchCanvasPosition = {
   x: number;

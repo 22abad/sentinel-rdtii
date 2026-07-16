@@ -1,0 +1,190 @@
+import { useEffect, useRef } from "react";
+import { Handle, NodeResizer, Position } from "@xyflow/react";
+import { motion } from "motion/react";
+import { Trash2, MessagesSquare } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { RESIZER_HANDLE_STYLE, RESIZER_LINE_STYLE } from "./resize";
+import type { ChatMessage, WorkbenchCanvasSize } from "./types";
+
+export type SessionNodeData = {
+  title?: string;
+  messages: ChatMessage[];
+  /** True while the linked RAG chat awaits an answer for this session. */
+  pending?: boolean;
+  width?: number;
+  height?: number;
+  onResize?: (size: WorkbenchCanvasSize) => void;
+  onDelete: () => void;
+};
+
+const SESSION_MIN_SIZE = { width: 300, height: 200 };
+
+/**
+ * A chat session thread on the canvas — Discord-thread style. Spawned by a
+ * RAG chat node on its first message; holds the conversation history
+ * (persisted in the canvas layout) and renders replies as markdown.
+ */
+export function SessionNode({ id, data, selected }: { id: string; data: SessionNodeData; selected?: boolean }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const nodeWidth = data.width ?? 380;
+  const nodeHeight = data.height ?? 340;
+
+  // Pin the thread to the latest message.
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [data.messages, data.pending]);
+
+  return (
+    <div style={{ position: "relative", width: nodeWidth, height: nodeHeight }}>
+      <NodeResizer
+        nodeId={id}
+        isVisible={selected}
+        minWidth={SESSION_MIN_SIZE.width}
+        minHeight={SESSION_MIN_SIZE.height}
+        color="#10B981"
+        handleStyle={RESIZER_HANDLE_STYLE}
+        lineStyle={RESIZER_LINE_STYLE}
+        onResize={(_event, params) => data.onResize?.({ width: params.width, height: params.height })}
+      />
+
+      {selected && (
+        <button
+          className="nodrag"
+          title="Delete session"
+          onClick={(e) => {
+            e.stopPropagation();
+            data.onDelete();
+          }}
+          style={{
+            position: "absolute",
+            bottom: "100%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            marginBottom: 12,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            height: 24,
+            minHeight: 0,
+            padding: "0 10px",
+            borderRadius: 9999,
+            border: "none",
+            background: "#b91c1c",
+            color: "white",
+            fontSize: "0.7rem",
+            fontWeight: 600,
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+          }}
+        >
+          <Trash2 size={12} /> Delete
+        </button>
+      )}
+
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 16,
+          overflow: "hidden",
+          background: "#ffffff",
+          border: "1px solid #d8dee6",
+          boxShadow: selected ? "0 12px 36px rgba(0,0,0,0.22)" : "0 12px 36px rgba(0,0,0,0.12)",
+        }}
+      >
+        <Handle type="target" position={Position.Left} style={{ background: "#7c3aed" }} />
+
+        {/* Header */}
+        <div
+          className="panel-header"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 12px",
+            background: "#f5f3ff",
+            borderBottom: "1px solid rgba(0,0,0,0.08)",
+            flexShrink: 0,
+          }}
+        >
+          <MessagesSquare size={14} color="#7c3aed" />
+          <span style={{ flex: 1, fontSize: "0.82rem", fontWeight: 700, color: "#26303d" }}>
+            {data.title ?? "Session"}
+          </span>
+          <span style={{ fontSize: "0.68rem", color: "#8a94a3" }}>
+            {data.messages.length} message{data.messages.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+
+        {/* Thread */}
+        <div
+          ref={scrollRef}
+          className="nodrag nowheel chat-md-session"
+          onMouseDown={(e) => e.stopPropagation()}
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: 12,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            userSelect: "text",
+          }}
+        >
+          {data.messages.length === 0 && (
+            <p style={{ margin: "auto", fontSize: "0.75rem", color: "#8a94a3", textAlign: "center" }}>
+              Messages from the linked RAG chat will appear here.
+            </p>
+          )}
+          {data.messages.map((m, i) => (
+            <div
+              key={i}
+              className={m.role === "assistant" ? "chat-md" : undefined}
+              style={{
+                maxWidth: "85%",
+                alignSelf: m.role === "user" ? "flex-end" : "flex-start",
+                borderRadius: 14,
+                padding: "8px 12px",
+                fontSize: "0.8rem",
+                lineHeight: 1.5,
+                whiteSpace: m.role === "user" ? "pre-wrap" : undefined,
+                ...(m.role === "user"
+                  ? { background: "#10B981", color: "#fff", borderBottomRightRadius: 5 }
+                  : { background: "#f4f6f8", color: "#1a2e26", borderBottomLeftRadius: 5, border: "1px solid rgba(0,0,0,0.05)" }),
+              }}
+            >
+              {m.role === "assistant" ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+              ) : (
+                m.text
+              )}
+            </div>
+          ))}
+          {data.pending && (
+            <div
+              style={{
+                alignSelf: "flex-start",
+                borderRadius: 14,
+                padding: "8px 12px",
+                fontSize: "0.8rem",
+                background: "#f4f6f8",
+                color: "#9ca3af",
+                borderBottomLeftRadius: 5,
+              }}
+            >
+              <span style={{ display: "inline-flex", gap: 3 }}>
+                <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0 }}>●</motion.span>
+                <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0.2 }}>●</motion.span>
+                <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.2, repeat: Infinity, delay: 0.4 }}>●</motion.span>
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
