@@ -462,7 +462,7 @@ def _is_foreign_law_for_economy(economy: str, law_name: str) -> bool:
 # "laws" via a multi-jurisdiction compendium document.)
 _NON_STATUTE_INSTRUMENT = re.compile(
     r"\b(bill|draft|consultation( paper)?|white paper|green paper|digest|"
-    r"handbook|compendium|proposed)\b",
+    r"handbook|compendium|proposed|at a glance|fact\s?sheet|faq)\b",
     re.IGNORECASE,
 )
 
