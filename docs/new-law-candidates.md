@@ -90,9 +90,15 @@ NT `legislation.nt.gov.au/api/sitecore/Act/PDF?id=11860`) via WebFetch, and the 
 transborder-flow text was independently re-verified by extracting those same PDFs.
 🇦🇺 **Privacy and Data Protection Act 2014 (VIC) Sch 1 IPP 9.1** and **Information Act
 2002 (NT) Sch 2 IPP 9.1** — both genuine conditional-flow (adequacy-test) provisions.
-**Still held (browser-only):** NSW **PPIP Act 1998 s 19(2)** — every official route
-(legislation.nsw.gov.au, AustLII, IPC NSW) is behind a Cloudflare JS challenge that
-blocks automated clients; a teammate on a residential browser should copy it directly. Also firmed-verbatim but parent-known (KNOWN evidence, not NEW): AUS Telecommunications Act 1997 s 276; Privacy Act 1988 Sch 2 cl 7 statutory tort (in force 10 Jun 2025) and APP 8.1 / APP 11.2.
+**🟢 NSW s 19(2) now captured too — by our own tooling.** The earlier "needs a human
+browser" conclusion was wrong: Cloudflare blocks plain HTTP/curl/WebFetch, but the
+project's **Playwright browser fallback gets through**. s 19(2) (conditional
+cross-border disclosure, adequacy test → **P6.4**) was fetched verbatim from
+legislation.nsw.gov.au and merged into the existing NSW PPIPA library entry
+(pillars now 6+7). `source_verification` was updated accordingly: NSW routes to the
+`browser` strategy, and when *every* strategy fails the tool now reports a loud,
+specific note telling the user the portal blocks automated clients and to verify in
+a regular browser — a blocked portal is never silently skipped. Also firmed-verbatim but parent-known (KNOWN evidence, not NEW): AUS Telecommunications Act 1997 s 276; Privacy Act 1988 Sch 2 cl 7 statutory tort (in force 10 Jun 2025) and APP 8.1 / APP 11.2.
 
 **⛔ Excluded on timing:** 🇦🇺 Privacy Amendment (Public Health Contact Information / COVIDSafe) Act 2020 — Part VIIIA is now spent/removed from the current Privacy Act compilation; do NOT present as in force.
 
