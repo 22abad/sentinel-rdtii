@@ -243,3 +243,44 @@ Cybersecurity Act 2018 s 23). Verified live: the CMA1993 TOC has no s 15A.
 exists yet (LOM's newest is "As at 1 July 2023", pre-amendment; A1727 is a
 piecemeal amendment). Keep citing "PDPA 2010 s 129 as amended by Act A1727 s 12";
 any "consolidated s 129" in circulation is an unofficial splice.
+
+## 2026-07-16 night — P6 data-localization sweep (SGP + MYS): 0 promoted, an honest negative
+
+Targeted the empty P6 localization/infrastructure indicators (6.1/6.2/6.3) for
+Singapore and Malaysia via two research passes (SGP statute portal + MAS; MYS
+BNM + sectoral regulators). **After the double gate, nothing was bankable as a
+NEW law — and that is itself the finding, rigorously reached:**
+
+- 🇸🇬 **Companies Act 1967 s 199(4)** is the one genuine hard local-STORAGE rule
+  ("there must be sent to and **kept at a place in Singapore**…" — verbatim
+  re-verified by hand at SSO) → **6.2**. But `is_known_law` flags the Act as
+  already in the baseline, so it is **KNOWN evidence, not a NEW discovery**.
+  This is the correct SGP 6.2 citation to use — tagged KNOWN.
+- 🇸🇬 **IM8 DP-1 "Data residency in Singapore must be enforced"** — a
+  *parameterised* government control (agency sets country + data types), public
+  surface only; the binding perimeter lives in the restricted full IM8. Not a
+  statute; not banked. Lead for the finale, not a Round-1 claim.
+- 🇸🇬 **MAS Guidelines on Outsourcing** (banks + non-banks eds.) — **not
+  localization**: offshore outsourcing is expressly permitted subject to MAS
+  retaining prompt access (an access-preservation rule → 6.4/7.3). Non-binding
+  guidelines. The already-banked binding **MAS Notice 658** covers this space.
+- 🇸🇬 **Confirmed negatives** (legitimate "no hard localization" evidence): MAS
+  Notice 634 (cancelled), MAS BCM Guidelines (zone separation only), Income Tax
+  Act s 67 / GST Act s 46 (pure retention, no location), IRAS e-Tax guides,
+  Cybersecurity CCoP 2.0 (service-of-process agent, not hosting), Health
+  Information Act circular. Cybersecurity Act 2018 s 7(1A) (2024) now reaches CII
+  *outside* Singapore — the opposite of localization.
+- 🇲🇾 **BNM RMiT S 10.51** (consult BNM before public cloud for critical systems)
+  and **BNM Outsourcing S 9.9(d)** are binding standards under FSA 2013 s 47/143,
+  but both are **conditional-flow (6.4), not localization**, and the verbatim we
+  could open is the **2020/2019 version** — RMiT was revised **28 Nov 2025** and
+  the current PDF is behind an AWS WAF that defeated curl, WebFetch, and the
+  project's Playwright fallback (empty download). **Not banked** — presenting
+  superseded text as in-force would be an over-claim. Lead: a residential
+  browser can capture `bnm.gov.my/.../pd-rmit-nov25.pdf`.
+
+**Bottom line for the submission:** Singapore and Malaysia have **no bankable
+NEW hard-localization law**; their cross-border regimes are conditional-flow
+(6.4) or secrecy (7.3). SGP's genuine 6.2 evidence is Companies Act s 199(4)
+(KNOWN). Padding the NEW list with a control catalog or superseded policy text
+was explicitly declined.
