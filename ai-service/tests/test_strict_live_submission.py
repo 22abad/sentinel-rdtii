@@ -144,3 +144,87 @@ async def test_live_submission_populates_pdf_audit_metadata(monkeypatch):
     assert row.source_file_sha256 == "a" * 64
     assert row.source_pdf_path == "/evidence/data.pdf"
     assert row.confidence_type == "discovery_confidence"
+
+
+@pytest.mark.anyio
+async def test_out_of_scope_candidates_are_skipped_before_fetch(monkeypatch):
+    """A candidate the submission noise-gate would drop anyway (trade agreement,
+    blog) is skipped BEFORE the expensive fetch + LLM extraction — and the skip
+    is loudly reported (warning + meta count), never silent."""
+    agreement = LegalCandidate(
+        id="dea",
+        country_code="SGP",
+        title="Australia-Singapore Digital Economy Agreement",
+        url="https://www.mti.gov.sg/Trade/Digital-Economy-Agreements",
+        source_domain="mti.gov.sg",
+        official_domains=["mti.gov.sg"],
+        source_name="MTI",
+        source_grade="primary",
+        matched_pillars=[6],
+        matched_indicators=["6.4"],
+        retrieval_mode="live",
+        discovery_method="portal_search",
+    )
+
+    class FakeDiscoveryService:
+        async def search(self, _request):
+            return SimpleNamespace(
+                candidates=[agreement],
+                diagnostics={"mode": "auto"},
+            )
+
+    async def forbidden(*_args, **_kwargs):
+        raise AssertionError("out-of-scope candidates must not be fetched or extracted")
+
+    monkeypatch.setattr(discovery, "DiscoveryService", FakeDiscoveryService)
+    monkeypatch.setattr(providers, "resolve_provider", lambda _name: SimpleNamespace(name="fake"))
+    monkeypatch.setattr(document_fetch, "fetch_document_text", forbidden)
+    monkeypatch.setattr(extraction, "run_extraction", forbidden)
+
+    rows, meta = await discover_and_extract("Singapore", 6)
+
+    assert rows == []
+    assert meta["candidates_skipped_out_of_scope"] == 1
+    assert meta["documents_processed"] == 0
+    # Loud, not silent: the skip is recorded as a warning naming the candidate.
+    assert any("out-of-scope" in w and "Digital Economy Agreement" in w
+               for w in meta.get("warnings", []))
+
+
+@pytest.mark.anyio
+async def test_domestic_statute_candidates_are_not_prefiltered(monkeypatch):
+    """The pre-filter must NOT touch a genuine domestic statute — it reaches
+    the fetch stage (here mocked to fail, proving fetch was attempted)."""
+    statute = LegalCandidate(
+        id="pdpa",
+        country_code="SGP",
+        title="Personal Data Protection Act 2012",
+        url="https://sso.agc.gov.sg/Act/PDPA2012",
+        source_domain="sso.agc.gov.sg",
+        official_domains=["sso.agc.gov.sg"],
+        source_name="Singapore Statutes Online",
+        source_grade="primary",
+        matched_pillars=[6],
+        matched_indicators=["6.4"],
+        retrieval_mode="live",
+        discovery_method="portal_search",
+    )
+
+    class FakeDiscoveryService:
+        async def search(self, _request):
+            return SimpleNamespace(candidates=[statute], diagnostics={"mode": "auto"})
+
+    fetch_attempted = {"n": 0}
+
+    async def failing_fetch(*_args, **_kwargs):
+        fetch_attempted["n"] += 1
+        raise RuntimeError("network down (test)")
+
+    monkeypatch.setattr(discovery, "DiscoveryService", FakeDiscoveryService)
+    monkeypatch.setattr(providers, "resolve_provider", lambda _name: SimpleNamespace(name="fake"))
+    monkeypatch.setattr(document_fetch, "fetch_document_text", failing_fetch)
+
+    rows, meta = await discover_and_extract("Singapore", 6)
+
+    assert fetch_attempted["n"] == 1, "a real statute must reach the fetch stage"
+    assert meta["candidates_skipped_out_of_scope"] == 0
