@@ -103,7 +103,7 @@ That's the difference between a demo and a submission."
 ## Slide 6 — Discovery of NEW evidence (the differentiator)
 
 **On slide:** (the explicit **20-point "Discovery of New Evidence"** item)
-- Beyond the sample kit, we find **genuine, in-force laws absent from the official inventory** — **12 verified NEW laws** now banked (🇸🇬 3 · 🇲🇾 5 · 🇦🇺 4), each with a verbatim provision + SHA-256
+- Beyond the sample kit, we find **genuine, in-force laws absent from the official inventory** — **14 verified NEW laws** now banked (🇸🇬 3 · 🇲🇾 5 · 🇦🇺 6), each with a verbatim provision + SHA-256 — incl. NSW's cross-border s 19(2), captured **through a Cloudflare-blocked portal by our own browser fallback**
 - Found by **parallel research across 5 angles** (subsidiary legislation · sectoral/adjacent laws · recent amendments · other pillars · cross-references)
 - **A double rigor gate**: hand-verify against the official portal **+** an automated `is_known_law` check — it **rejected ~10 would-be finds** as already-known or not-in-force (e.g. China's PIPL/DSL/CSL, the spent COVIDSafe ban)
 - 🇲🇾 **PDPA Amendment 2024 (A1727)** breach-notification / DPO / data-portability (in force 2025) · 🇦🇺 **Digital ID Act 2024** biometrics · 🇹🇭 two PDPA-exemption Royal Decrees — full audit trail in `docs/new-law-candidates.md`
@@ -120,7 +120,7 @@ would-be finds — including China's flagship laws and a COVID-era ban that's si
 been repealed — so we ship only what survives both. We'd rather find fewer and be
 right."
 
-**💡 中文提示:** 差异化 + 对应 20 分——已入库 **12 条已核实新法**(SGP3/MYS5/AUS4),5 思路并行挖 + **双重闸(人工核实 + is_known_law 自动过滤,拒掉约 10 条已知/失效)**;宁可少而准。
+**💡 中文提示:** 差异化 + 对应 20 分——已入库 **14 条已核实新法**(SGP3/MYS5/AUS6,含 NSW s19(2)——**Cloudflare 挡住的门户,我们自己的浏览器兜底穿过去拿到的**,顺带证明韧性),5 思路并行挖 + **双重闸(人工核实 + is_known_law 自动过滤,拒掉约 10 条已知/失效)**;宁可少而准。
 
 ---
 
