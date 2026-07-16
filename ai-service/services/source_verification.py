@@ -52,9 +52,10 @@ SITE_HINTS: dict[str, dict] = {
                 "provision bodies are lazy-loaded — request ?ProvIds=prNN- to force them.",
     },
     "legislation.gov.au": {
-        "order": ["http_ua", "browser"],
-        "note": "AU Federal Register: the /latest/text page embeds the full HTML body "
-                "(large Acts may truncate — grab the EPUB if a late section is missing).",
+        "order": ["browser"],
+        "note": "AU Federal Register: plain HTTP returns a JS shell page (long enough to "
+                "look 'usable' but without the statute body) — go straight to the full "
+                "document_fetch cascade, which resolves the embedded HTML/EPUB body.",
     },
     "pdp.gov.my": {"order": ["pdf", "http_ua"], "note": "Malaysia PDP: Acts/standards are PDFs."},
     "lom.agc.gov.my": {"order": ["pdf", "http_ua"], "note": "Malaysia AGC: statute PDFs."},

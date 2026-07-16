@@ -205,3 +205,41 @@ an indicator mapping — it is flagged as such, not asserted.** A short, correct
 list is worth more than a long one a reviewer cannot trust.
 
 Reproduce (AUS): `RDTII_LLM_PROVIDER=deepseek python tools/discover_new_laws.py --economy Australia --pillar all --limit 35`
+
+## 2026-07-16 evening — gov-access + MAS sweep (+3 promoted, library NEW 14 → 17)
+
+Targeted the under-mined **P7-I5 (government access)** indicator and MAS binding
+instruments. Two research passes; every promoted row independently re-verified
+(the promoter's `--verify` gate confirmed each verbatim quote at the official
+source) and passed `is_known_law`:
+
+**🟢 Promoted:**
+- 🇸🇬 **MAS Notice 658** (Management of Outsourced Relevant Services, binding under
+  s 47A Banking Act 1970) → **P6.4**: a conditional cross-border regime for bank
+  outsourcing (offshore permitted subject to confidentiality-jurisdiction
+  screening + MAS/auditor access). Verbatim from the mas.gov.sg PDF.
+- 🇦🇺 **Crimes Act 1914 s 3LA** (assistance orders) → **P7.5**: government access
+  via *magistrate* order (judicial authorisation present). legislation.gov.au.
+- 🇦🇺 **Surveillance Devices Act 2004 s 27KA** (data disruption warrants, SLAID Act
+  2021) → **P7.5**: warrant-based data disruption. legislation.gov.au.
+
+**🔴 Rejected by `is_known_law` (already baseline — the gate working):** SGP
+Criminal Procedure Code 2010, MYS Criminal Procedure Code (Act 593),
+MYS Security Offences (Special Measures) Act 2012, AUS Telecommunications
+(Interception and Access) Act 1979. All are genuine strong P7-I5 evidence in
+their own right — usable as KNOWN, not counted as NEW.
+
+**🟡 Held (NEW_PROVISION / commencement caveats):** MYS CPC s 116B, SOSMA s 6 and
+CMA 1998 s 252/252B/265 are strong government-access provisions of already-KNOWN
+parent acts (present as NEW_PROVISION, not new laws); CMA amendment **A1743**
+(s 252B communications-data disclosure) is gazetted but commences on a
+ministerially-appointed date not yet confirmed — do not present as in force yet.
+
+**❌ Corrected (do NOT ship):** our tool had surfaced **SGP Computer Misuse Act
+1993 s 15A** — that provision **does not exist** in current law (superseded by
+Cybersecurity Act 2018 s 23). Verified live: the CMA1993 TOC has no s 15A.
+
+**📌 Standing note — MYS PDPA s 129:** no consolidated post-amendment reprint
+exists yet (LOM's newest is "As at 1 July 2023", pre-amendment; A1727 is a
+piecemeal amendment). Keep citing "PDPA 2010 s 129 as amended by Act A1727 s 12";
+any "consolidated s 129" in circulation is an unofficial splice.
