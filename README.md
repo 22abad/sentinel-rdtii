@@ -138,6 +138,9 @@ python main.py --economy Singapore --pillar 6 --max-documents 1
 
 > To try the pipeline with **no discovery or browser**, point at a local PDF
 > instead: `--pdf path/to/law.pdf`. Mapping still uses the configured model.
+> Three ready-made demos (born-digital statute, scanned-PDF OCR, and an
+> honesty check that returns empty on a mismatched pillar) live in
+> [`data/demo_pdfs/`](data/demo_pdfs/).
 
 ---
 
