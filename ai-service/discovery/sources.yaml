@@ -248,3 +248,143 @@ MYS:
         '14\._Electronic_Commerce_\.pdf': Chapter 14 Electronic Commerce
       priority: 85
       notes: Official electronic commerce agreement text with an Article 14.11 cross-border transfer of information commitment.
+
+IND:
+  label: India
+  languages: [en, hi]
+  sources:
+    - name: India Code
+      base_url: https://www.indiacode.nic.in
+      domains: [indiacode.nic.in, www.indiacode.nic.in]
+      adapter: search_engine
+      source_grade: primary
+      source_type: statute_portal
+      languages: [en, hi]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Ministry of Electronics and Information Technology
+      base_url: https://www.meity.gov.in
+      domains: [meity.gov.in, www.meity.gov.in]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [en]
+      pillars: [6, 7]
+      priority: 85
+
+    - name: eGazette of India
+      base_url: https://egazette.gov.in
+      domains: [egazette.gov.in, egazette.nic.in]
+      adapter: search_engine
+      source_grade: primary
+      source_type: gazette
+      languages: [en, hi]
+      pillars: [6, 7]
+      priority: 80
+
+IDN:
+  label: Indonesia
+  languages: [id, en]
+  sources:
+    - name: JDIH Nasional (Database Peraturan)
+      base_url: https://peraturan.go.id
+      domains: [peraturan.go.id, www.peraturan.go.id]
+      adapter: search_engine
+      source_grade: primary
+      source_type: statute_portal
+      languages: [id]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: JDIH BPK (Badan Pemeriksa Keuangan)
+      base_url: https://peraturan.bpk.go.id
+      domains: [peraturan.bpk.go.id]
+      adapter: search_engine
+      source_grade: primary
+      source_type: statute_portal
+      languages: [id]
+      pillars: [6, 7]
+      priority: 90
+
+    - name: Kementerian Komunikasi dan Digital (JDIH)
+      base_url: https://jdih.komdigi.go.id
+      domains: [jdih.komdigi.go.id, jdih.kominfo.go.id]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [id]
+      pillars: [6, 7]
+      priority: 85
+
+LAO:
+  label: Lao PDR
+  languages: [lo, en]
+  sources:
+    - name: Lao Official Gazette
+      base_url: https://laoofficialgazette.gov.la
+      domains: [laoofficialgazette.gov.la, www.laoofficialgazette.gov.la]
+      adapter: search_engine
+      source_grade: primary
+      source_type: gazette
+      languages: [lo, en]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Ministry of Technology and Communications
+      base_url: https://www.mtc.gov.la
+      domains: [mtc.gov.la, www.mtc.gov.la]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [lo]
+      pillars: [6, 7]
+      priority: 85
+
+MNG:
+  label: Mongolia
+  languages: [mn]
+  sources:
+    - name: Legalinfo (Unified Legal Information System)
+      base_url: https://legalinfo.mn
+      domains: [legalinfo.mn, www.legalinfo.mn]
+      adapter: search_engine
+      source_grade: primary
+      source_type: statute_portal
+      languages: [mn]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Communications Regulatory Commission
+      base_url: https://crc.gov.mn
+      domains: [crc.gov.mn, www.crc.gov.mn]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [mn]
+      pillars: [6, 7]
+      priority: 85
+
+RUS:
+  label: Russian Federation
+  languages: [ru]
+  sources:
+    - name: Official Internet Portal of Legal Information
+      base_url: http://pravo.gov.ru
+      domains: [pravo.gov.ru, publication.pravo.gov.ru]
+      adapter: search_engine
+      source_grade: primary
+      source_type: statute_portal
+      languages: [ru]
+      pillars: [6, 7]
+      priority: 100
+
+    - name: Roskomnadzor
+      base_url: https://rkn.gov.ru
+      domains: [rkn.gov.ru, www.rkn.gov.ru]
+      adapter: search_engine
+      source_grade: primary
+      source_type: regulator
+      languages: [ru]
+      pillars: [6, 7]
+      priority: 85

@@ -38,10 +38,14 @@ cannot be verified is rejected, not shown.
 - **Tier 1 — live crawl + offline (reviewers can run directly):** Singapore,
   Malaysia, Australia (Round 1 mandatory, live-smoke verified), plus Thailand
   and China (live discovery registries configured).
-- **Tier 2 — offline / corpus-verified:** India, Indonesia, Lao PDR, Mongolia,
-  Russian Federation — benchmarked against 500 official baseline rows (see
-  below); live-crawl registries are a finale-stage addition. Do not expect
-  `--no-seed` live discovery for these five yet.
+- **Tier 2 — live registries configured + corpus-verified:** India, Indonesia,
+  Lao PDR, Mongolia, Russian Federation — each now has an official-portal
+  discovery registry (India Code / JDIH / Lao Gazette / Legalinfo.mn /
+  pravo.gov.ru + the sector regulator) with local-language query terms, and is
+  benchmarked against 500 official baseline rows. Live discovery is smoke-tested
+  (e.g. `--economy India --pillar 7` finds the Digital Personal Data Protection
+  Act 2023 on indiacode.nic.in); depth and text-fetch reliability vary by portal
+  and are still being hardened for the finale.
 
 **Round 2 benchmark snapshot:** across 500 evaluated official-baseline rows in
 seven economies, the pipeline found evidence for **351 rows (70.2%)** and

@@ -73,7 +73,40 @@ LOCAL_TERMS: dict[str, dict[str, list[str]]] = {
         "7.3": ["数据 保留期限", "至少保存"],
         "7.4": ["个人信息保护负责人", "个人信息保护影响评估"],
         "7.5": ["国家安全 个人信息", "执法 数据 提供"],
-    }
+    },
+    # Tier-2 economies (added 2026-07-16): a few high-value local-language
+    # terms per indicator; English PILLAR_QUERY_TERMS still apply everywhere.
+    "IDN": {
+        "6.4": ["transfer data pribadi ke luar wilayah", "pemindahan data pribadi"],
+        "7.1": ["undang-undang pelindungan data pribadi", "UU PDP 27 2022"],
+        "7.2": ["keamanan siber undang-undang"],
+        "7.3": ["retensi data", "penyimpanan data jangka waktu"],
+        "7.5": ["akses pemerintah data pribadi"],
+    },
+    "RUS": {
+        "6.1": ["локализация персональных данных", "хранение персональных данных на территории"],
+        "6.2": ["базы данных на территории Российской Федерации 152-ФЗ"],
+        "6.4": ["трансграничная передача персональных данных"],
+        "7.1": ["федеральный закон о персональных данных 152-ФЗ"],
+        "7.2": ["закон о безопасности критической информационной инфраструктуры"],
+        "7.3": ["срок хранения данных закон"],
+        "7.5": ["СОРМ доступ к данным", "оперативно-розыскная деятельность данные"],
+    },
+    "MNG": {
+        "7.1": ["хувь хүний мэдээлэл хамгаалах тухай хууль"],
+        "7.2": ["кибер аюулгүй байдлын тухай хууль"],
+        "7.5": ["төрийн байгууллага мэдээлэл авах"],
+    },
+    "LAO": {
+        "7.1": ["ກົດໝາຍວ່າດ້ວຍການປົກປ້ອງຂໍ້ມູນເອເລັກໂຕຣນິກ", "electronic data protection law Lao"],
+        "7.2": ["cyber security law Lao PDR"],
+    },
+    "IND": {
+        "6.4": ["transfer of personal data outside India DPDP"],
+        "7.1": ["Digital Personal Data Protection Act 2023"],
+        "7.4": ["significant data fiduciary data protection officer DPDP"],
+        "7.5": ["section 36 DPDP Act government access"],
+    },
 }
 
 

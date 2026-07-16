@@ -152,8 +152,10 @@ _我们把仓库和官方 README 模板逐行对了一遍。结论:**管线本�
 
 - **Economies covered — two honest tiers.** Tier 1 (live crawl + offline; judges
   can run directly): **SGP, MYS, AUS + THA, CHN** (the five in the live discovery
-  registry). Tier 2 (offline/corpus-verified, benchmarked on 500 official rows):
-  **IND, IDN, LAO, MNG, RUS**. Finale plan: promote Tier 2 by adding registries.
+  registry). Tier 2 (live registries now configured + corpus-verified on 500 official
+  rows): **IND, IDN, LAO, MNG, RUS** — each has an official-portal discovery
+  registry with local-language terms (India Code / JDIH / Lao Gazette /
+  Legalinfo.mn / pravo.gov.ru); depth still hardening for the finale.
 
   中文:覆盖经济体诚实分两档——第一档(实时爬取+离线,可直接跑):新马澳+泰中;
   第二档(仅离线/语料,已做 500 行基准):印度/印尼/老挝/蒙古/俄罗斯。决赛前补注册表升级第二档。
