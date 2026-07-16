@@ -413,6 +413,64 @@ _AGREEMENT_URL = re.compile(
 # these are economies the tool runs (a Malaysia PDPA page was tagged "Hong Kong
 # Personal Data (Privacy) Ordinance" / "Singapore PDPA" by the extractor). The
 # golden set contains no such source.
+# Economy-aware jurisdiction markers: a row produced in a run for economy X is
+# dropped when its law name carries the marker of a DIFFERENT covered economy
+# (e.g. "China Personal Information Protection Law" surfacing in a Singapore
+# run via a multi-jurisdiction digest document). Static _FOREIGN_JURISDICTION
+# below stays for jurisdictions we never cover; this map handles the covered
+# ten, where a blanket blacklist would break their own runs.
+_ECONOMY_MARKERS: dict[str, "re.Pattern[str]"] = {
+    "SGP": re.compile(r"\bsingapore\b", re.IGNORECASE),
+    "MYS": re.compile(r"\bmalaysia|malaysian\b", re.IGNORECASE),
+    "AUS": re.compile(r"\baustralia|australian\b", re.IGNORECASE),
+    "CHN": re.compile(r"\bchina|chinese|people's republic of china|\bprc\b", re.IGNORECASE),
+    "IND": re.compile(r"\bindia\b|\bindian\b", re.IGNORECASE),
+    "IDN": re.compile(r"\bindonesia|indonesian\b", re.IGNORECASE),
+    "LAO": re.compile(r"\blao\b|\blaos\b", re.IGNORECASE),
+    "MNG": re.compile(r"\bmongolia|mongolian\b", re.IGNORECASE),
+    "RUS": re.compile(r"\brussia|russian\b", re.IGNORECASE),
+    "THA": re.compile(r"\bthailand\b|\bthai\b", re.IGNORECASE),
+}
+
+
+def _is_foreign_law_for_economy(economy: str, law_name: str) -> bool:
+    """True when the law name names a DIFFERENT covered economy than the run's.
+
+    Deterministic and conservative: fires only when the name carries another
+    covered economy's marker AND does not carry the run economy's own marker
+    (so "Australia-Singapore ..." in a Singapore run is left to the instrument
+    gate rather than guessed at here)."""
+    name = law_name or ""
+    if not name:
+        return False
+    try:
+        code = economy_code(economy)
+    except Exception:  # noqa: BLE001 — unknown economy: do not guess
+        return False
+    own = _ECONOMY_MARKERS.get(code)
+    if own is not None and own.search(name):
+        return False
+    return any(
+        marker.search(name)
+        for other, marker in _ECONOMY_MARKERS.items()
+        if other != code
+    )
+
+
+# A bill / draft / consultation / digest is not an in-force statutory measure.
+# ("PERSONAL DATA PROTECTION DIGEST" and the India DPDP *Bill* both surfaced as
+# "laws" via a multi-jurisdiction compendium document.)
+_NON_STATUTE_INSTRUMENT = re.compile(
+    r"\b(bill|draft|consultation( paper)?|white paper|green paper|digest|"
+    r"handbook|compendium|proposed)\b",
+    re.IGNORECASE,
+)
+
+
+def _is_non_statute_instrument(law_name: str) -> bool:
+    return bool(_NON_STATUTE_INSTRUMENT.search(law_name or ""))
+
+
 _FOREIGN_JURISDICTION = re.compile(
     r"\b(hong\s*kong|viet\s*nam|vietnam|south\s*korea|korea|japan|"
     r"european\s+union|united\s+kingdom|united\s+states|new\s+zealand)\b",
@@ -541,6 +599,25 @@ def validate_submission_rows(
             logger.warning(
                 "Dropping submission row %d: out-of-scope source (international "
                 "instrument or non-authoritative page): %r",
+                index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _is_foreign_law_for_economy(
+            str(getattr(row, "economy", "") or ""),
+            str(getattr(row, "law_name", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: names a different jurisdiction than "
+                "the run economy (%s): %r — likely extracted from a "
+                "multi-jurisdiction document",
+                index, getattr(row, "economy", ""),
+                str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _is_non_statute_instrument(str(getattr(row, "law_name", "") or "")):
+            logger.warning(
+                "Dropping submission row %d: not an in-force statutory measure "
+                "(bill/draft/consultation/digest): %r",
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue

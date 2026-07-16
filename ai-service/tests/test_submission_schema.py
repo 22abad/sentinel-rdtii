@@ -644,3 +644,62 @@ def test_cap_rows_per_law_balances_a_dominant_statute_across_indicators():
     assert len(fed) == 1                          # small law untouched
     # The 8 kept QLD rows are spread across its indicators, not one indicator's tail.
     assert len({r.indicator_id for r in qld}) == 4
+
+
+def test_foreign_jurisdiction_rows_dropped_for_run_economy():
+    """A multi-jurisdiction digest can make the extractor emit e.g. China PIPL
+    rows inside a Singapore run — the validator must drop them, while the same
+    laws stay valid in their OWN economy's runs (Round 2)."""
+    from submission.schema import SubmissionRow, validate_submission_rows
+
+    def row(economy, law):
+        return SubmissionRow(
+            economy=economy, law_name=law, indicator_id="P6-I4",
+            article="Art 38",
+            verbatim_snippet=("Personal information handlers shall meet one of the "
+                              "following conditions to provide data outside the borders."),
+            source_url="https://official.example/x",
+        )
+
+    kept = validate_submission_rows(
+        [
+            row("Singapore", "China Personal Information Protection Law (PIPL)"),
+            row("Singapore", "India Digital Personal Data Protection Bill, 2022"),
+            row("Singapore", "Personal Data Protection Act 2012"),
+        ],
+        allow_empty=True,
+    )
+    assert [r.law_name for r in kept] == ["Personal Data Protection Act 2012"]
+
+    # Same PIPL row in a CHINA run is legitimate and must survive.
+    kept_chn = validate_submission_rows(
+        [row("China", "Personal Information Protection Law of the People's Republic of China")],
+        allow_empty=True,
+    )
+    assert len(kept_chn) == 1
+
+
+def test_non_statute_instruments_dropped():
+    """Bills, drafts, consultations and digests are not in-force statutory
+    measures — never valid evidence rows."""
+    from submission.schema import SubmissionRow, validate_submission_rows
+
+    def row(law):
+        return SubmissionRow(
+            economy="Singapore", law_name=law, indicator_id="P6-I4",
+            article="Cl 5",
+            verbatim_snippet=("An organisation must not transfer personal data outside "
+                              "Singapore except in accordance with prescribed requirements."),
+            source_url="https://official.example/x",
+        )
+
+    kept = validate_submission_rows(
+        [
+            row("PERSONAL DATA PROTECTION DIGEST - Singapore Academy of Law"),
+            row("Singapore Consultation Approaches to Managing Data Flows"),
+            row("Personal Data Protection (Amendment) Bill"),
+            row("Personal Data Protection Act 2012"),
+        ],
+        allow_empty=True,
+    )
+    assert [r.law_name for r in kept] == ["Personal Data Protection Act 2012"]
