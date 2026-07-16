@@ -730,3 +730,32 @@ def test_p6_rows_without_data_language_are_flagged_not_dropped():
     assert len(kept) == 2, "flag, never drop"
     assert "topic check" in kept[0].notes and "needs human review" in kept[0].notes
     assert "topic check" not in (kept[1].notes or "")
+
+
+def test_names_without_statute_words_are_dropped():
+    """'Executive Summary' / 'MOU with ...' are documents, not legislation."""
+    from submission.schema import SubmissionRow, validate_submission_rows
+
+    def row(law):
+        return SubmissionRow(
+            economy="Australia", law_name=law, indicator_id="P7-I5",
+            article="Part 2",
+            verbatim_snippet=("An agency may disclose personal information where the "
+                              "disclosure is required or authorised by or under law."),
+            source_url="https://official.example/x",
+        )
+
+    kept = validate_submission_rows(
+        [row("Executive Summary"),
+         row("MOU with the Data Protection Commissioner"),
+         row("Privacy Act 1988"),
+         row("Royal Decree Exempting Data Controllers B.E. 2563")],
+        allow_empty=True,
+    )
+    assert [r.law_name for r in kept] == [
+        "Privacy Act 1988",
+        "Royal Decree Exempting Data Controllers B.E. 2563",
+    ]
+    # (Bonus check that surfaced while writing this test: a "Singapore TRM
+    # Notices" row inside an AUSTRALIA run is dropped too — by the
+    # foreign-jurisdiction gate, exactly as designed.)
