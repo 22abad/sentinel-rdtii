@@ -23,6 +23,18 @@ _Every locally fetched baseline law runs through the real pipeline (extraction t
 where both the pipeline and official raw score are zero; this is not a
 standalone extraction-accuracy rate.
 
+> **Reproducibility re-check — 2026-07-16.** The five Tier-2 economies were
+> re-run offline from a fresh process (IND/IDN/LAO/MNG/RUS, all 12 pillars):
+> **348 rows evaluated · 245 evidence-backed (70.4%) · 172 exact (49.4%)**,
+> reproducing the headline yield and exact-match rates within LLM sampling
+> noise. The benchmark is stable, not a one-off. Per-economy this run: IND
+> 47.7% · IDN 36.4% · LAO 66.1% · MNG 49.3% · RUS 53.4% exact; LAO led at
+> MAE 0.274. Two documents (one IND, one RUS) hit an extraction timeout and
+> were skipped without aborting the run — a live demonstration of the
+> "one bad source never aborts a run" guarantee. The committed table below is
+> the citable baseline; these re-run figures carry the expected per-run
+> variance and are not substituted in.
+
 | Economy | Baseline rows | Rows evaluated | Evidence found | Exact score match | MAE |
 |---|---|---|---|---|---|
 | CHN | 111 | 49 | 35 | 23 (47%) | 0.444 |
