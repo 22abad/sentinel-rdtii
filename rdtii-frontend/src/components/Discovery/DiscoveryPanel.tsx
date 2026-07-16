@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
 import {
   CheckSquare,
   Download,
@@ -295,17 +296,20 @@ export function DiscoveryPanel({
           <p>Search official legal sources before extraction.</p>
         </div>
         <div className="nodrag discovery-header-actions">
-          <button
+          <motion.button
             type="button"
             className="secondary discovery-source-menu-button"
             onClick={() => setSourceManagerOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={sourceManagerOpen}
             title="Source manager"
+            whileHover={{ scale: 1.04, y: -1, boxShadow: "0 6px 18px rgba(15, 118, 110, 0.18)" }}
+            whileTap={{ scale: 0.96, y: 0 }}
+            transition={{ type: "spring", stiffness: 320, damping: 22 }}
           >
             <Settings2 size={16} />
             <span>Sources</span>
-          </button>
+          </motion.button>
           <button
             type="button"
             onClick={() => {

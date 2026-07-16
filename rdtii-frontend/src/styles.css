@@ -613,6 +613,35 @@ h3 {
   inset: 0;
   z-index: 80;
   background: rgba(15, 23, 42, 0.22);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Soften the drawer entrance: fade the scrim, glide the panel in. */
+.right-drawer-backdrop[data-state="open"] {
+  animation: right-drawer-fade 0.28s ease;
+}
+
+.right-drawer[data-state="open"] {
+  animation: right-drawer-slide 0.3s cubic-bezier(0.32, 0.72, 0.28, 1);
+}
+
+@keyframes right-drawer-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes right-drawer-slide {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Classic (stacked) workbench view — float the panels off the dot-grid
+   backdrop with the same shadow language as the canvas panel nodes. */
+.workbench-classic .input-panel,
+.workbench-classic .discovery-panel,
+.workbench-classic .review-panel {
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.14);
 }
 
 .right-drawer {

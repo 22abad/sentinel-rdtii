@@ -439,7 +439,7 @@ export function WorkbenchPage() {
               backgroundSize: "28px 28px",
             }}
           />
-        <main className="flex-1 overflow-auto px-5 pb-8 pt-12" style={{ position: "relative", zIndex: 1 }}>
+        <main className="workbench-classic flex-1 overflow-auto px-5 pb-8 pt-12" style={{ position: "relative", zIndex: 1 }}>
           <section className="workspace">
             <div className="flex flex-col gap-4 min-w-0 self-start">
               <DiscoveryThreadPanel />
