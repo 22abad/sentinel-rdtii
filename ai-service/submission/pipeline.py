@@ -24,6 +24,7 @@ from schemas import IndicatorMapping
 
 from .schema import (
     SubmissionRow,
+    _is_out_of_scope_source,
     discovery_tag_for_method,
     economy_code,
     economy_display_name,
@@ -445,12 +446,30 @@ async def discover_and_extract(
 
     _total_docs = min(len(eligible_candidates), max_documents) if max_documents else len(eligible_candidates)
     say(f"found {len(eligible_candidates)} candidate document(s); fetching and extracting…", 0, _total_docs)
+    skipped_out_of_scope = 0
     for _pos, candidate in enumerate(eligible_candidates, start=1):
         if max_documents is not None and documents_processed >= max_documents:
             break
         if candidate.url in seen_urls:
             continue
         seen_urls.add(candidate.url)
+
+        # Pre-filter: skip candidates the submission noise-gate would drop
+        # anyway (international agreements/instruments, non-authoritative
+        # pages). This is the same rule (`_is_out_of_scope_source`) the final
+        # validator applies to every output row — checking it against the
+        # candidate's title/URL *before* the expensive fetch + LLM extraction
+        # saves minutes per noise document on the judge's default command.
+        # Loudly reported (progress line + warning), never a silent skip.
+        _title = str(getattr(candidate, "title", "") or "")
+        if _is_out_of_scope_source(_title, candidate.url):
+            skipped_out_of_scope += 1
+            say(f"skipping out-of-scope candidate (agreement/non-official): {_title or candidate.url}",
+                min(_pos, _total_docs), _total_docs)
+            warnings.append(
+                f"skipped out-of-scope candidate pre-fetch: {_title or candidate.url} ({candidate.url})"
+            )
+            continue
 
         say(f"fetching & reading: {getattr(candidate, 'title', None) or candidate.url}",
             min(_pos, _total_docs), _total_docs)
@@ -544,6 +563,7 @@ async def discover_and_extract(
         "candidates_found": len(discovery.candidates),
         "live_candidates": len(eligible_candidates),
         "fixture_candidates_excluded": excluded_non_live,
+        "candidates_skipped_out_of_scope": skipped_out_of_scope,
         "documents_processed": documents_processed,
         "usage": usage_totals,
         "provisions_mapped": len(rows),
