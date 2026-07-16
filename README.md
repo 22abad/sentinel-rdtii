@@ -178,6 +178,13 @@ python main.py --economy Singapore --pillar 6 --offline
 | `--max-documents` | Stop after processing this many documents |
 | `--registry-backend` | Source registry: `file` (CLI default) or `database` (full app) |
 
+Two run-cost guardrails keep the default command inside a reviewer's time
+budget, both loud and honest: candidates that the submission noise-gate would
+reject anyway (trade agreements, blogs) are **skipped before fetching**, and
+live-discovered documents larger than `RDTII_MAX_LIVE_DOC_CHARS` (default
+150K chars; `0` disables) are extracted **truncated with a "partial doc" note
+on every affected row**. Seeds and `--pdf` documents are never capped.
+
 ---
 
 ## Offline mode & the local law library
