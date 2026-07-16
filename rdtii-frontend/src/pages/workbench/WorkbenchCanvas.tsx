@@ -20,9 +20,12 @@ import {
   PanelNode,
   NoteNode,
   FileNode,
+  SessionNode,
   CanvasToolbar,
   type CanvasMode,
   type CanvasPanel,
+  type ChatMessage,
+  type SessionNodeData,
   type SpawnType,
   type PanelNodeData,
   type NoteNodeData,
@@ -46,7 +49,7 @@ import { clampSize, hasCustomSize, minSizeForNode } from "../../components/Canva
 
 export type { CanvasPanel } from "../../components/Canvas";
 
-const nodeTypes = { panel: PanelNode, note: NoteNode, file: FileNode };
+const nodeTypes = { panel: PanelNode, note: NoteNode, file: FileNode, session: SessionNode };
 
 /** Panel types offered in the toolbar palette. */
 const SPAWN_TYPES: SpawnType[] = [
@@ -72,7 +75,7 @@ const INITIAL_EDGES: Edge[] = [
   { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" }, 
 ];
 
-const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material"]);
+const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material", "session"]);
 const PANEL_FALLBACKS: Record<string, { id: string; title: string; width?: number }> = {
   discovery: { id: "discovery", title: "Discovery", width: 800 },
   source: { id: "source", title: "Source", width: 460 },
@@ -83,6 +86,9 @@ const PANEL_FALLBACKS: Record<string, { id: string; title: string; width?: numbe
 type CanvasNote = { id: string; title: string; text: string };
 type SpawnedPanel = { id: string; panelId: string };
 type PanelMeta = { id: string; title: string; width?: number };
+/** A RAG chat's conversation thread — Discord-thread style node, spawned by
+    the chat's first message and persisted in the canvas layout. */
+type CanvasSession = { id: string; chatId: string; messages: ChatMessage[] };
 
 type RestoredCanvasState = {
   positions: Record<string, XYPosition>;
@@ -92,10 +98,12 @@ type RestoredCanvasState = {
   customNotes: CanvasNote[];
   spawned: SpawnedPanel[];
   chatIds: string[];
+  sessions: CanvasSession[];
   viewport?: Viewport;
   noteCounter: number;
   spawnCounter: number;
   chatCounter: number;
+  sessionCounter: number;
 };
 
 function readSavedCanvasLayout(): WorkbenchCanvasLayout | null {
@@ -184,9 +192,11 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
       customNotes: [],
       spawned: [],
       chatIds: [],
+      sessions: [],
       noteCounter: 0,
       spawnCounter: 0,
       chatCounter: 0,
+      sessionCounter: 0,
     };
   }
 
@@ -199,6 +209,8 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
   let noteCounter = 0;
   let spawnCounter = 0;
   let chatCounter = 0;
+  const sessions: CanvasSession[] = [];
+  let sessionCounter = 0;
 
   for (const node of layout.nodes) {
     positions[node.id] = node.position;
@@ -214,6 +226,13 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
     } else if (node.kind === "rag") {
       chatIds.push(node.id);
       chatCounter = Math.max(chatCounter, numericSuffix(node.id, "chat-"));
+    } else if (node.kind === "session") {
+      sessions.push({
+        id: node.id,
+        chatId: typeof node.config?.chatId === "string" ? node.config.chatId : "",
+        messages: restoreSessionMessages(node.config?.messages),
+      });
+      sessionCounter = Math.max(sessionCounter, numericSuffix(node.id, "session-"));
     } else if (node.kind === "panel" && node.panelId && node.id !== node.panelId) {
       spawned.push({ id: node.id, panelId: node.panelId });
       spawnCounter = Math.max(spawnCounter, numericSuffix(node.id, `${node.panelId}-copy-`));
@@ -234,11 +253,21 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
     customNotes,
     spawned,
     chatIds,
+    sessions,
     viewport: layout.viewport,
     noteCounter,
     spawnCounter,
     chatCounter,
+    sessionCounter,
   };
+}
+
+function restoreSessionMessages(value: unknown): ChatMessage[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (m): m is ChatMessage =>
+      isRecord(m) && (m.role === "user" || m.role === "assistant") && typeof m.text === "string",
+  );
 }
 
 function normalizeRestoredSize(node: WorkbenchCanvasNode): WorkbenchCanvasSize | undefined {
@@ -278,6 +307,7 @@ function toCanvasLayout({
   customNotes,
   spawned,
   chatIds,
+  sessions,
   viewport,
 }: {
   panelMeta: Record<string, PanelMeta>;
@@ -288,6 +318,7 @@ function toCanvasLayout({
   customNotes: CanvasNote[];
   spawned: SpawnedPanel[];
   chatIds: string[];
+  sessions: CanvasSession[];
   viewport?: Viewport;
 }): WorkbenchCanvasLayout {
   const nodes: WorkbenchCanvasNode[] = [];
@@ -352,6 +383,20 @@ function toCanvasLayout({
     });
   }
 
+  for (const session of sessions.filter((entry) => !removed[entry.id])) {
+    nodes.push({
+      id: session.id,
+      kind: "session",
+      title: "Session",
+      position: positions[session.id] ?? { x: 260, y: 260 },
+      width: sizes[session.id]?.width,
+      height: sizes[session.id]?.height,
+      removed: !!removed[session.id],
+      // Conversation history rides in the layout — sessions survive refresh.
+      config: { chatId: session.chatId, messages: session.messages },
+    });
+  }
+
   const activeNodeIds = new Set(nodes.filter((node) => !node.removed).map((node) => node.id));
 
   return {
@@ -389,10 +434,13 @@ export type CanvasGraph = {
 export function WorkbenchCanvas({
   panels,
   onExit,
+  onSwitchView,
   onGraphChange,
 }: {
   panels: CanvasPanel[];
   onExit: () => void;
+  /** Switch to the traditional (stacked) workbench layout. */
+  onSwitchView?: () => void;
   /** Reports the data-wire graph: which live file nodes feed which panel
       instance, and which audit-style instances bind to which upstream
       instance. Linking registers availability; panels consume on demand. */
@@ -407,6 +455,9 @@ export function WorkbenchCanvas({
   const [customNotes, setCustomNotes] = useState<CanvasNote[]>(restoredState.customNotes);
   const [spawned, setSpawned] = useState<SpawnedPanel[]>(restoredState.spawned);
   const [chatIds, setChatIds] = useState<string[]>(restoredState.chatIds);
+  const [sessions, setSessions] = useState<CanvasSession[]>(restoredState.sessions);
+  // Typing indicator per session — transient, deliberately not persisted.
+  const [pendingSessions, setPendingSessions] = useState<Record<string, boolean>>({});
   const [viewport, setViewport] = useState<Viewport | undefined>(restoredState.viewport);
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [mode, setMode] = useState<CanvasMode>("select");
@@ -414,8 +465,13 @@ export function WorkbenchCanvas({
   const noteCounter = useRef(restoredState.noteCounter);
   const spawnCounter = useRef(restoredState.spawnCounter);
   const chatCounter = useRef(restoredState.chatCounter);
+  const sessionCounter = useRef(restoredState.sessionCounter);
   const [files, setFiles] = useState<{ id: string; fileName?: string; fileSize?: number; previewUrl?: string; fileType?: string; ingestStatus?: "uploading" | "ingested" | "failed" | "extracting" | "extracted" | "stale" }[]>([]);
   const fileCounter = useRef(0);
+  const markCanvasDirty = useCallback(() => {
+    backendDirtyRef.current = true;
+  }, []);
+
   // Files live in the browser (blob URLs) until a file node is linked to the
   // RAG chat node — that connection triggers the upload/ingest to the backend.
   const filesRef = useRef(files);
@@ -445,6 +501,72 @@ export function WorkbenchCanvas({
       setStatus("failed");
     }
   }, [markFileStale]);
+
+  // ── RAG chat sessions — Discord-thread style ────────────────────────────
+  // The first message on a chat node spawns its session node (beside it,
+  // edge-wired); later messages append. Users never create sessions manually.
+  const sessionsRef = useRef(sessions);
+  sessionsRef.current = sessions;
+
+  const latestSessionFor = (chatId: string) =>
+    [...sessionsRef.current].reverse().find((s) => s.chatId === chatId)?.id;
+
+  const ensureSessionForChat = useCallback(
+    (chatId: string): string => {
+      const existing = [...sessionsRef.current]
+        .reverse()
+        .find((s) => s.chatId === chatId && !removed[s.id]);
+      if (existing) return existing.id;
+      const id = `session-${(sessionCounter.current += 1)}`;
+      const base = positions[chatId] ?? { x: 200, y: 200 };
+      setSessions((prev) => [...prev, { id, chatId, messages: [] }]);
+      setPositions((prev) => ({ ...prev, [id]: { x: base.x + 520, y: base.y - 60 } }));
+      setEdges((es) => [
+        ...es,
+        { id: `e-${chatId}-${id}`, source: chatId, target: id, animated: true },
+      ]);
+      markCanvasDirty();
+      return id;
+    },
+    [positions, removed, markCanvasDirty],
+  );
+
+  const appendToSession = useCallback(
+    (sessionId: string, message: ChatMessage) => {
+      setSessions((prev) =>
+        prev.map((s) => (s.id === sessionId ? { ...s, messages: [...s.messages, message] } : s)),
+      );
+      markCanvasDirty();
+    },
+    [markCanvasDirty],
+  );
+
+  const handleChatSend = useCallback(
+    (chatId: string, question: string) => {
+      const sessionId = ensureSessionForChat(chatId);
+      appendToSession(sessionId, { role: "user", text: question });
+      setPendingSessions((prev) => ({ ...prev, [sessionId]: true }));
+    },
+    [ensureSessionForChat, appendToSession],
+  );
+
+  const handleChatResponse = useCallback(
+    (chatId: string, answer: string) => {
+      const sessionId = latestSessionFor(chatId);
+      if (!sessionId) return;
+      appendToSession(sessionId, { role: "assistant", text: answer });
+      setPendingSessions((prev) => ({ ...prev, [sessionId]: false }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [appendToSession],
+  );
+
+  const handleChatError = useCallback((chatId: string) => {
+    const sessionId = latestSessionFor(chatId);
+    if (!sessionId) return;
+    setPendingSessions((prev) => ({ ...prev, [sessionId]: false }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Report the data-wire graph. Linking only registers availability — no
   // upload/extraction happens until a panel consumes its wires (e.g. Run).
@@ -522,9 +644,6 @@ export function WorkbenchCanvas({
   }, [handleFile]);
 
 
-  const markCanvasDirty = useCallback(() => {
-    backendDirtyRef.current = true;
-  }, []);
 
   const applyCanvasState = useCallback((state: RestoredCanvasState) => {
     setPositions(state.positions);
@@ -534,10 +653,12 @@ export function WorkbenchCanvas({
     setCustomNotes(state.customNotes);
     setSpawned(state.spawned);
     setChatIds(state.chatIds);
+    setSessions(state.sessions);
     setViewport(state.viewport);
     noteCounter.current = state.noteCounter;
     spawnCounter.current = state.spawnCounter;
     chatCounter.current = state.chatCounter;
+    sessionCounter.current = state.sessionCounter;
     if (state.viewport) {
       flowRef.current?.setViewport(state.viewport);
     }
@@ -593,6 +714,7 @@ export function WorkbenchCanvas({
         customNotes,
         spawned,
         chatIds,
+        sessions,
         viewport,
       });
       saveLocalWorkbenchCanvasLayout(layout);
@@ -602,7 +724,7 @@ export function WorkbenchCanvas({
       }
     }, 250);
     return () => window.clearTimeout(timeout);
-  }, [positions, sizes, removed, edges, customNotes, spawned, chatIds, viewport]);
+  }, [positions, sizes, removed, edges, customNotes, spawned, chatIds, sessions, viewport]);
 
   const resizeNode = useCallback(
     (id: string, size: WorkbenchCanvasSize) => {
@@ -765,13 +887,35 @@ export function WorkbenchCanvas({
             position: positions[id] ?? { x: 200, y: 200 },
             data: {
               title: "RAG Chat",
-              element: <AIChatInput />,
+              element: (
+                <AIChatInput
+                  onSend={(question) => handleChatSend(id, question)}
+                  onResponse={(answer) => handleChatResponse(id, answer)}
+                  onError={() => handleChatError(id)}
+                />
+              ),
               width: sizes[id]?.width ?? 460,
               height: sizes[id]?.height,
               transparent: true,
               onResize: (size: WorkbenchCanvasSize) => resizeNode(id, size),
               onDelete: () => removeNode(id),
             } satisfies PanelNodeData,
+          })),
+        ...sessions
+          .filter((s) => !removed[s.id])
+          .map((s) => ({
+            id: s.id,
+            type: "session",
+            position: positions[s.id] ?? { x: 260, y: 260 },
+            data: {
+              title: `Session · ${s.chatId.replace("chat-", "thread #")}`,
+              messages: s.messages,
+              pending: !!pendingSessions[s.id],
+              width: sizes[s.id]?.width,
+              height: sizes[s.id]?.height,
+              onResize: (size: WorkbenchCanvasSize) => resizeNode(s.id, size),
+              onDelete: () => removeNode(s.id),
+            } satisfies SessionNodeData,
           })),
         ...files
         .filter((f) => !removed[f.id])
@@ -793,7 +937,7 @@ export function WorkbenchCanvas({
           } satisfies FileNodeData,
         })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds],
+    [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds, handleChatSend, handleChatResponse, handleChatError],
   );
 
   const renderedEdges = useMemo(() => {
@@ -872,6 +1016,9 @@ export function WorkbenchCanvas({
     setCustomNotes([]);
     setSpawned([]);
     setChatIds([]);
+    setSessions([]);
+    setPendingSessions({});
+    sessionCounter.current = 0;
     setSelectedIds({});
     setViewport(undefined);
     noteCounter.current = 0;
@@ -933,6 +1080,7 @@ export function WorkbenchCanvas({
           onAddPanel={addNote}
           onAddChat={spawnChat}
           onReset={handleReset}
+          onSwitchView={onSwitchView}
           onExit={onExit}
         />
       </ReactFlow>
