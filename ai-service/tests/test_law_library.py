@@ -18,7 +18,7 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 21
+    assert len(entries) == 24
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
@@ -35,7 +35,7 @@ def test_discovered_new_laws_are_tagged_and_not_treated_as_known():
 
     entries = load_library()
     discovered = [e for e in entries if e.origin == "discovered"]
-    assert len(discovered) == 14
+    assert len(discovered) == 17
     assert {e.economy for e in discovered} == {"AUS", "MYS", "SGP"}
     index = known_law_index()  # unions inventory + KNOWN-baseline library entries
     for e in discovered:
@@ -146,10 +146,10 @@ async def test_run_library_offline_tags_rows_known(monkeypatch):
 
     assert meta["offline"] is True
     assert meta["source"] == "local_library"
-    # SGP pillar 6 now has the PDPA 2012 (KNOWN baseline) and the PDP
-    # Regulations 2021 (a cached NEW discovery) — origin drives the tag.
-    assert meta["laws_available"] == 2
-    assert len(rows) == 2
+    # SGP pillar 6 now has the PDPA 2012 (KNOWN baseline) plus two cached NEW
+    # discoveries (PDP Regulations 2021, MAS Notice 658) — origin drives the tag.
+    assert meta["laws_available"] == 3
+    assert len(rows) == 3
     assert all(r.indicator_id == "P6-I4" for r in rows)
     assert {r.discovery_tag for r in rows} == {"KNOWN", "NEW"}
     by_url = {r.source_url: r.discovery_tag for r in rows}

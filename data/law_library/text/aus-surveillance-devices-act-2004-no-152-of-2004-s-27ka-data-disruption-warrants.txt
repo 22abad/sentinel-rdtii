@@ -1,0 +1,3 @@
+Surveillance Devices Act 2004 (No. 152 of 2004) — section 27KA (data disruption warrants, inserted by the Surveillance Legislation Amendment (Identify and Disrupt) Act 2021)
+
+A law enforcement officer of the Australian Federal Police or the Australian Crime Commission (or another person on the law enforcement officer’s behalf) may apply for the issue of a data disruption warrant if the law enforcement officer suspects on reasonable grounds that: (a) one or more relevant offences of a particular kind have been, are being, are about to be, or are likely to be, committed; and (b) those offences involve, or are likely to involve, data held in a computer (the target computer )
