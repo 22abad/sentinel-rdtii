@@ -146,7 +146,10 @@ def strategy_order(url: str) -> tuple[list[str], dict]:
     """Return the strategy order for a URL plus its site-hint dict.
 
     A domain listed in SITE_HINTS uses its curated order; otherwise the default
-    cascade. A URL ending in .pdf is always tried as a PDF first."""
+    cascade. A URL that points at a PDF is always tried as a PDF first — even on
+    a browser-only domain — because a curl+UA download beats a Playwright render
+    of a JS shell. (legislation.gov.au serves the real statute body only via its
+    ``/text/original/pdf`` endpoint; the HTML routes return a JS shell.)"""
     host = _domain(url)
     hint = {}
     for dom, h in SITE_HINTS.items():
@@ -156,7 +159,11 @@ def strategy_order(url: str) -> tuple[list[str], dict]:
     if hint.get("blocked"):
         return [], hint
     order = list(hint.get("order") or _DEFAULT_ORDER)
-    if url.lower().split("?")[0].endswith(".pdf") and "pdf" in order:
+    # A PDF endpoint may end in ".pdf" or in a trailing "/pdf" path segment
+    # (Australia's Federal Register uses ".../text/original/pdf"). Force the pdf
+    # strategy to the front regardless of the site hint — a PDF URL is a PDF.
+    path = url.lower().split("?")[0].rstrip("/")
+    if path.endswith(".pdf") or path.endswith("/pdf"):
         order = ["pdf"] + [s for s in order if s != "pdf"]
     return order, hint
 
