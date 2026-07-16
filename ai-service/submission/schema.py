@@ -467,6 +467,37 @@ _NON_STATUTE_INSTRUMENT = re.compile(
 )
 
 
+# Pillar 6 is about DATA flows. A P6 row whose quote contains no data-ish
+# language at all is usually the extractor mis-reading a licence/asset/permit
+# "transfer" provision (Gas Act, aviation Acts...). We FLAG, never drop — the
+# call is semantic and belongs to the human reviewer. Verified: all 13 golden
+# P6 quotes contain at least one of these terms.
+_P6_DATA_TOPIC = re.compile(
+    r"(data|information|personal|record|database|server|network|comput|"
+    r"electronic|privacy|storage)",
+    re.IGNORECASE,
+)
+
+_P6_TOPIC_FLAG = (
+    "topic check: quote contains no data/information language — possible "
+    "non-data 'transfer' (licence/asset/permit); needs human review"
+)
+
+
+def _flag_p6_topic_mismatch(row) -> None:
+    """Append a loud human-review note to off-topic-looking P6 rows (in place)."""
+    ind = str(getattr(row, "indicator_id", "") or "")
+    quote = str(getattr(row, "verbatim_snippet", "") or "")
+    if not ind.startswith("P6") or not quote:
+        return
+    if _P6_DATA_TOPIC.search(quote):
+        return
+    notes = str(getattr(row, "notes", "") or "")
+    if _P6_TOPIC_FLAG in notes:
+        return
+    row.notes = f"{notes}; {_P6_TOPIC_FLAG}" if notes else _P6_TOPIC_FLAG
+
+
 def _is_non_statute_instrument(law_name: str) -> bool:
     return bool(_NON_STATUTE_INSTRUMENT.search(law_name or ""))
 
@@ -621,6 +652,7 @@ def validate_submission_rows(
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue
+        _flag_p6_topic_mismatch(row)
         valid.append(row)
 
     if not valid and not allow_empty:
