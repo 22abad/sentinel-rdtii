@@ -5,7 +5,7 @@
 
 UN Global Hackathon on AI for Digital Trade Regulatory Analysis
 Team: **SENTINEL** (Maynooth University) | Round: **1**
-Last updated: **2026-07-11**
+Last updated: **2026-07-16**
 
 **Round 1 requirement:** the [Quick Start](#quick-start) below lets a reviewer
 set up and run the tool. Mandatory scope: **RDTII 2.1 Pillar 6 (Cross-border
@@ -33,8 +33,15 @@ quote → the quote is verified character-for-character against the source → a
 deterministic Python scorer assigns the RDTII score. Any mapping whose quote
 cannot be verified is rejected, not shown.
 
-**Economies covered (Pillar 6 & 7, live-smoke verified):** Australia, Malaysia,
-Singapore. Experimental discovery adapters also exist for China and Thailand.
+**Economies covered** — two honest tiers:
+
+- **Tier 1 — live crawl + offline (reviewers can run directly):** Singapore,
+  Malaysia, Australia (Round 1 mandatory, live-smoke verified), plus Thailand
+  and China (live discovery registries configured).
+- **Tier 2 — offline / corpus-verified:** India, Indonesia, Lao PDR, Mongolia,
+  Russian Federation — benchmarked against 500 official baseline rows (see
+  below); live-crawl registries are a finale-stage addition. Do not expect
+  `--no-seed` live discovery for these five yet.
 
 **Round 2 benchmark snapshot:** across 500 evaluated official-baseline rows in
 seven economies, the pipeline found evidence for **351 rows (70.2%)** and
@@ -297,6 +304,24 @@ Reconciliation is reusable in code: `submission.reconcile_discovery_tags(rows)`
 re-tags any result set against the baseline, and `build_discovery_report(...)`
 produces the gated report.
 
+**Current discovery record: 14 verified NEW laws banked** (SGP 3 · MYS 5 ·
+AUS 6), each with a verbatim provision fetched from the official portal and a
+SHA-256-verified library entry — including NSW's cross-border s 19(2), captured
+through a Cloudflare-guarded portal by the browser fallback. Every candidate
+passed a **double rigor gate**: hand re-verification against the official source
+plus an automated `is_known_law` novelty check (which rejected ~12 would-be
+finds as already-known or not-in-force). Full audit trail:
+[`docs/new-law-candidates.md`](docs/new-law-candidates.md).
+
+Banking a verified find is one command — it re-fetches the official URL,
+confirms the provision verbatim, refuses anything already KNOWN or too weak,
+and can push the text straight into the searchable vector store:
+
+```bash
+python tools/promote_new_law.py --economy AUS --law-name "..." --url "..." \
+    --pillars 6 --indicators 6.4 --text-file provision.txt --verify --embed
+```
+
 ---
 
 ## Architecture Overview
@@ -324,6 +349,38 @@ The LLM provider is fully abstracted (`ai-service/providers/`), so the model can
 be swapped with one config value (see below). The submission adapter that maps
 the internal engine to the judges' output contract lives in
 `ai-service/submission/` and is driven by the root `main.py`.
+
+> **One honest divergence from the template diagram:** hybrid RAG retrieval
+> (chunk + embed + pgvector search) powers the **web workbench**, not this CLI —
+> the CLI maps full statute text through the multi-agent pipeline directly.
+> CLI-side RAG is a finale-stage upgrade.
+
+### Key modules
+
+| Module | File | Description |
+|---|---|---|
+| Portal crawler | `ai-service/legal_crawler/` | Official-portal fetch cascade: HTTP → Playwright browser → Wayback/Google-cache fallbacks |
+| Discovery service | `ai-service/discovery/` | Portal adapters + pillar→topic query builder (`query_builder.py`) |
+| OCR processor | `ai-service/pdf_reader/` | PyMuPDF text layer; Tesseract on scanned pages; per-row CER estimate |
+| Chunker | `ai-service/chunker.py` | Regex legal chunker — article/section-level slices |
+| Mapper (multi-agent) | `ai-service/agents/` + `ai-service/extraction_pipeline.py` | Classifier → Extractor → Analyst → Critic; verbatim verify + deterministic score |
+| Source verification | `ai-service/services/source_verification.py` | Per-portal fetch strategies + verbatim-quote gate + `is_known_law` triage for NEW finds |
+| Output writer | `ai-service/submission/writer.py` | 13-field CSV/JSON contract |
+| Provider layer | `ai-service/providers/` | Swappable LLM backends + automatic failover |
+
+---
+
+## Supported Economies & Portals
+
+| Economy | Official portal(s) | Language | Notes |
+|---|---|---|---|
+| Singapore | sso.agc.gov.sg | English | Machine-readable HTML/PDF; provision bodies lazy-loaded (`?ProvIds=` handled) |
+| Malaysia | lom.agc.gov.my · pdp.gov.my · mcmc.gov.my | English / Malay | Statute PDFs; commencement gazettes on pdp.gov.my |
+| Australia (federal) | legislation.gov.au | English | Embedded-HTML text pages; EPUB for very large Acts |
+| Australia (states) | legislation.vic.gov.au · legislation.nt.gov.au · legislation.nsw.gov.au | English | VIC/NT text lives in authorised PDFs; **NSW is Cloudflare-guarded — captured via the Playwright browser fallback** |
+| Thailand | searchlaw.ocs.go.th (Council of State) | Thai | Native-script statutes; B.E. era handling |
+| China | npc.gov.cn / cac.gov.cn registry | Chinese | Registry configured; flagship laws reconcile as KNOWN |
+| Tier 2 (IND · IDN · LAO · MNG · RUS) | official corpus (809 baseline laws, 1,707 URLs) | 7 languages | Offline/corpus path; live registries are finale-stage |
 
 ---
 
@@ -454,6 +511,24 @@ OCR and embedding cost are $0 here (born-digital PDF; RAG embeddings are not on
 the mapping path). Cloud rows apply each vendor's published per-token price to
 the **same measured token counts** — reproducible from `cost_report_50pages.json`.
 
+### Per-component breakdown (template format)
+
+| Component | Engine used | Measured cost |
+|---|---|---|
+| OCR | Tesseract (local; only pages without a text layer) | $0.000 |
+| Embedding | not on the CLI mapping path (local MiniLM in the web app) | $0.000 |
+| LLM mapping | DeepSeek (measured tokens × published rate) | ≈ $0.017 |
+| Crawling | self-hosted (httpx + Playwright) | $0.000 |
+| **Total (current stack)** | | **≈ $0.017 per 50-page document** |
+| **Total (open-weight swap)** | Ollama `qwen2.5:14b` + Tesseract | **$0.000 per document** |
+
+**Measured on:** 2026-07-11 (token counts) / 2026-07-16 (wall-clock re-check)
+**Benchmark document:** Malaysia Companies Act 2016 (Act 777) excerpt, 50 pages
+**Token counts:** input 41,907 | output 4,968 (37 LLM calls)
+**Wall-clock:** 220.7 s on the local open-weight model; a full economy-pillar
+offline run (`--economy Singapore --pillar 6 --offline`, DeepSeek) completes in
+**67 s** end-to-end.
+
 ---
 
 ## Running the Test Suite
@@ -497,12 +572,26 @@ Transparency builds credibility — we are honest about the current state.
   the Pillar 6/7 structural coverage target, but broader economy and language
   coverage is still needed before treating the benchmark as globally
   representative; see `docs/golden-set-expansion-review.md`.
-- **JavaScript-only portals:** the crawler falls back to OpenCLI for heavily
-  rendered pages; some dynamic portals may still fail.
+- **JavaScript-only portals:** the crawler escalates to a Playwright browser for
+  heavily rendered pages (proven against NSW's Cloudflare-guarded portal). A
+  portal that defeats even the browser fallback is **reported loudly to the
+  user** — which strategies were tried, and that manual browser verification is
+  needed — never silently skipped.
 - **Bilingual documents:** non-English sections of mixed-language PDFs may be
-  under-extracted.
+  under-extracted. Our Thai Royal-Decree English translations are unofficial and
+  pending Thai-reading legal review (the Thai text is verbatim from the official
+  portal).
 - **Delegated legislation:** primary statutes are retrieved; subordinate
-  regulations are not automatically followed.
+  regulations are not *automatically* followed, though several subsidiary
+  instruments (e.g. Singapore S 63/2021, Malaysia P.U.(A) 335) were discovered
+  and banked via the NEW-law workflow.
+- **Confidence calibration:** the `confidence` column is a *discovery*
+  confidence, not a calibrated probability. Rows below **0.80** should be
+  flagged for human review; final scoring authority stays with the human
+  researcher (official Zone 3 guidance).
+- **Sub-national instruments:** the VIC/NT/NSW state cross-border acts are
+  banked as state-level evidence; whether sub-national law scores a
+  national-level indicator is a methodology question pending expert input.
 - **OCR engines:** only Tesseract + an OpenAI-vision fallback are wired today.
 
 ---
