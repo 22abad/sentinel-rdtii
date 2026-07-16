@@ -228,3 +228,62 @@ async def test_domestic_statute_candidates_are_not_prefiltered(monkeypatch):
 
     assert fetch_attempted["n"] == 1, "a real statute must reach the fetch stage"
     assert meta["candidates_skipped_out_of_scope"] == 0
+
+
+@pytest.mark.anyio
+async def test_oversized_live_document_is_capped_and_noted(monkeypatch):
+    """A live-discovered document over RDTII_MAX_LIVE_DOC_CHARS is truncated
+    before extraction, and every resulting row carries an honest 'partial doc'
+    note (the official template's notes column anticipates exactly this)."""
+    monkeypatch.setenv("RDTII_MAX_LIVE_DOC_CHARS", "1000")
+
+    head = "Section 9. Personal data must not be transferred overseas. "
+    text = head + ("filler sentence about unrelated administrative matters. " * 200)
+    quote = "Personal data must not be transferred overseas."
+
+    statute = LegalCandidate(
+        id="big", country_code="SGP", title="Official Data Act 2020",
+        url="https://official.example/big-act",
+        source_domain="official.example", official_domains=["official.example"],
+        source_name="Official Gazette", source_grade="primary",
+        matched_pillars=[6], matched_indicators=["6.4"],
+        retrieval_mode="live", discovery_method="portal_search",
+    )
+
+    class FakeDiscoveryService:
+        async def search(self, _request):
+            return SimpleNamespace(candidates=[statute], diagnostics={"mode": "auto"})
+
+    async def fake_fetch(url, **_kw):
+        return DocumentText(source_url=url, text=text, content_type="html")
+
+    seen_text_len = {}
+
+    async def fake_extraction(doc_text, _provider, **_kw):
+        seen_text_len["n"] = len(doc_text)
+        return ExtractionResponse(
+            mappings=[IndicatorMapping(
+                pillar=6, indicator="6.4", score=1.0,
+                verbatim_quote=quote,
+                quote_start=text.index(quote), quote_end=text.index(quote) + len(quote),
+                article_clause="Section 9",
+                source_legislation="Official Data Act 2020",
+                source_url=url_of(statute),
+            )],
+            provider="fake",
+        )
+
+    def url_of(c):
+        return c.url
+
+    monkeypatch.setattr(discovery, "DiscoveryService", FakeDiscoveryService)
+    monkeypatch.setattr(providers, "resolve_provider", lambda _name: SimpleNamespace(name="fake"))
+    monkeypatch.setattr(document_fetch, "fetch_document_text", fake_fetch)
+    monkeypatch.setattr(extraction, "run_extraction", fake_extraction)
+
+    rows, meta = await discover_and_extract("Singapore", 6)
+
+    assert seen_text_len["n"] == 1000, "extraction must receive the capped text"
+    assert any("partial doc" in w for w in meta.get("warnings", []))
+    assert rows, "the capped document still yields its rows"
+    assert "partial doc" in (rows[0].notes or "")
