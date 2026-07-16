@@ -377,3 +377,55 @@ a wrong indicator (Retention Principle → P7-I5). Reverted; kept the clean 2-ro
 MYS. Lesson: adding library text does not guarantee a good mapping.
 **Still open.** AUS QLD-state over-representation and thin MYS coverage remain —
 a library-curation decision, not a code fix.
+
+### The reuse cache we shipped broke our own test suite — on the second run (#177 → #179)
+
+The document-level extraction cache (#177: fingerprint the source text, serve a
+repeat extraction from cache, skip the LLM — 29.6s → 0.02s measured) passed its
+own tests and the full suite... once. On the *second* consecutive full-suite run,
+an unrelated streaming test failed: the cache had written the test's content to
+the live DB during run one, so run two replayed from cache — which emits no
+`rejected` events — and the assertion died. CI on a fresh DB would never have
+caught it. Fix (#179): an autouse conftest fixture no-ops the cache helpers for
+every test (the dedicated cache tests re-enable them locally), verified by
+running the full suite twice back-to-back. **Lesson: any feature that writes to
+a live store must be quarantined from the test suite, and "hermetic" is only
+proven by the second run.**
+
+### The rigor gate caught *us* — twice (#184, #185)
+
+The NEW-law sweeps produced 20+ plausible finds. Before banking, each ran
+through the double gate: hand re-verification against the official portal +
+the automated `is_known_law` novelty check. The gate rejected ~12 of our own
+candidates — including Singapore's Electronic Transactions Act, Malaysia's PDP
+Standard 2015, Australia's DAT/AML-CTF/SOCI Acts, and China's PIPL/DSL/CSL
+(all already in the official baseline), plus the spent COVIDSafe cross-border
+ban (repealed — "in force" would have been an over-claim). The library
+snapshot tests then caught the first promotion batch red-handed: two entries
+(CCA 2010, CMA 1998) were already KNOWN, and the count assertions refused to
+pass until they were retracted. **Lesson: after the July over-claim
+embarrassment, the anti-embarrassment machinery is now infrastructure — the
+gate rejecting our own work is it functioning, not failing.**
+
+### "Needs a human browser" was wrong — our own fallback got through (#190)
+
+Three research passes concluded NSW's legislation portal (Cloudflare JS
+challenge) required manual browser work: curl 403, WebFetch 403, AustLII 403.
+Wrong conclusion — the sweeps had only tried *plain HTTP*. The project's own
+Playwright fallback (the same cascade behind the Mongolia 15%→100% story)
+walked through the challenge, fetched 164K chars, and PPIP s 19(2) was captured
+verbatim and banked (P6.4). Per Dong's directive, the fetch layer now reports
+loudly when *every* strategy fails — which strategies were tried and that a
+manual browser is needed — instead of silently skipping. **Lesson: exhaust your
+own tool cascade before declaring defeat; and when the tools truly fail, tell
+the user — a silent skip is a lie of omission.**
+
+### The research agent corrected our own brief (Act A1354 → A1727)
+
+The Malaysia deep-dive was briefed to fetch "PDPA Amendment Act 2024 (Act
+A1354)" — a number we supplied from memory. The agent checked the official
+gazette, found no such act, and came back with the correct **Act A1727** plus
+the commencement gazette (P.U.(B) 522) pinning each section's in-force date.
+The wrong number never reached a document. **Lesson: identifiers (act numbers,
+section numbers, dates) get verified against primary sources like everything
+else — including the ones we wrote ourselves.**
