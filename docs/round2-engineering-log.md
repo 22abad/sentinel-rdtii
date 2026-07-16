@@ -429,3 +429,35 @@ the commencement gazette (P.U.(B) 522) pinning each section's in-force date.
 The wrong number never reached a document. **Lesson: identifiers (act numbers,
 section numbers, dates) get verified against primary sources like everything
 else — including the ones we wrote ourselves.**
+
+### The judge's command was a lottery — and one draw flooded Singapore with Chinese law (#196, #199, #201)
+
+We ran the judge's exact default command three times. Draw one: 40 minutes,
+7 clean rows. Draw two: live search surfaced a multi-jurisdiction legal digest
+plus two giant statutes (a 252K-char Act among them) — Pillar 6 alone burned
+1,825 LLM calls ($2.06), the run took 67 minutes, and the output claimed
+"18 NEW laws" for Singapore that included China's PIPL, India's DPDP *Bill*,
+an ASEAN framework, and a consultation paper. Nothing in the old gates could
+catch China or India by name — they are covered Round-2 economies that cannot
+be blanket-blacklisted. Three fixes, all deterministic and loud, all
+golden-verified (29/29, 0 false positives): (1) candidates the noise-gate
+would reject anyway are skipped BEFORE the expensive fetch+extract; (2)
+live-discovered documents are capped at RDTII_MAX_LIVE_DOC_CHARS with an
+honest "partial doc" note per affected row; (3) an economy-aware
+foreign-jurisdiction gate (China PIPL dies in a Singapore run, survives in a
+China run) plus a non-statute gate (bill/draft/consultation/digest).
+**Lesson: run the judge's command more than once — variance is where the
+embarrassment hides.**
+
+### Our own banked NEW law silently missed the formal run (#198)
+
+The banked Banking Act 1970 s.47 entry produced no output row on the judge's
+command. Root causes: the banked text was a single sentence (217 chars) — too
+thin for the extractor to map reliably — and the citation depended on the
+model volunteering an article. Fixed by enriching the entry to the full
+s.47(1)–(5) verbatim from SSO (re-verified at the official URL) and adding a
+promoter-verified `article_hint` manifest field that build_row uses as a
+deterministic fallback, so a banked law can never drop on "missing: article".
+The promote tool now warns on thin texts and takes --article. Offline P7:
+5 → 7 provisions, Banking Act back with "Section 47". **Lesson: bank the full
+section, not a sentence — and never let a citation depend on model output.**
