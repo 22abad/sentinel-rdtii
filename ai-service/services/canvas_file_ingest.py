@@ -141,9 +141,12 @@ def _save_to_db(document_id: str) -> dict:
                 )
                 section_id = cur.fetchone()[0]
 
-                model = _get_model()
-                from sklearn.preprocessing import normalize
-                vecs = normalize(model.encode([c.text for c in chunks]))
+                # Embed through the pluggable backend (EMBEDDING_PROVIDER):
+                # default 'local' keeps the current open-weight, offline model;
+                # 'gemini' routes to the free-tier cloud embedder. Returns
+                # L2-normalised vectors, same as before.
+                from services.embeddings import embed as _embed_texts
+                vecs = _embed_texts([c.text for c in chunks])
 
                 for idx, (chunk, vec) in enumerate(zip(chunks, vecs)):
                     cur.execute(

@@ -80,6 +80,9 @@ def parse_args(argv=None) -> argparse.Namespace:
                         "reject if the law is already KNOWN or the quote is weak evidence.")
     p.add_argument("--force", action="store_true",
                    help="Bank even if --verify returns a non-PROMOTE verdict (records the verdict).")
+    p.add_argument("--embed", action="store_true",
+                   help="Also embed the NEW law into the searchable vector store via the active "
+                        "EMBEDDING_PROVIDER (local/gemini). Needs a database; best-effort.")
     return p.parse_args(argv)
 
 
@@ -176,7 +179,31 @@ def main(argv=None) -> int:
     print(f"✅ Promoted '{args.law_name}' ({code}) to the library as NEW (law_id={law_id}).")
     print("   Future runs will serve it and tag it NEW:")
     print(f"     python main.py --economy {args.economy} --pillar {args.pillars.replace(',', ',')}")
+
+    if args.embed:
+        _embed_into_store(code, args.law_name, text)
     return 0
+
+
+def _embed_into_store(code: str, law_name: str, text: str) -> None:
+    """Also push the NEW law into the searchable vector store (knowledge base),
+    embedded via the active EMBEDDING_PROVIDER (local / gemini). Best-effort:
+    needs a database, so it prints a note and moves on if one isn't reachable."""
+    try:
+        from services.canvas_file_ingest import _save_to_db, register_upload
+        from services.embeddings import active_provider
+
+        reg = register_upload(f"{law_name}.txt", text.encode("utf-8"), country_code=code)
+        doc_id = reg["document_id"]
+        if reg.get("deduplicated"):
+            print(f"   ↪ vector store: already ingested (doc {doc_id[:8]}) — skipped.")
+            return
+        _save_to_db(doc_id)
+        print(f"   ↪ vector store: embedded via '{active_provider()}' provider "
+              f"(doc {doc_id[:8]}) — now searchable in the web RAG.")
+    except Exception as exc:  # noqa: BLE001 — embedding is a bonus, never fail the promote
+        print(f"   ↪ vector store: skipped ({type(exc).__name__}: {str(exc)[:80]}). "
+              f"The library entry is banked; run with a database up to embed it.")
 
 
 if __name__ == "__main__":
