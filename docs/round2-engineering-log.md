@@ -461,3 +461,71 @@ deterministic fallback, so a banked law can never drop on "missing: article".
 The promote tool now warns on thin texts and takes --article. Offline P7:
 5 → 7 provisions, Banking Act back with "Section 47". **Lesson: bank the full
 section, not a sentence — and never let a citation depend on model output.**
+
+## 2026-07-16 overnight — beyond-6/7 discovery, and two portals that changed under us
+
+### The P6/P7 NEW space is largely exhausted — and that is the honest finding
+
+We hunted the empty localization indicators (6.1/6.2/6.3) for Singapore and
+Malaysia with two deep research passes. After the double gate (verbatim
+re-verify + `is_known_law`), **zero were bankable as NEW** — and that is the
+rigorous result, not a miss. Singapore's one genuine hard-storage rule is
+Companies Act 1967 s.199(4) ("...sent to and **kept at a place in Singapore**"),
+but the Act is KNOWN, so it is KNOWN evidence, not a discovery. Everything else
+(MAS Outsourcing, BCM, CCoP, tax record-keeping) is conditional-access, not
+localization; Malaysia's BNM RMiT/Outsourcing are conditional-flow (6.4) and the
+only openable verbatim is the superseded 2020/2019 text (the current RMiT is
+behind an AWS WAF that beat curl, WebFetch, and Playwright). We declined to pad
+the NEW list with a control catalog or superseded policy text. **Lesson: an
+honest "no new law here" beats a padded one — the discovery count is a claim we
+have to defend row by row.**
+
+### The one P6/P7 NEW left standing — and a fetch bug it exposed (#213)
+
+Australia's **Cyber Security Act 2024 (No. 98, 2024)** — the country's first
+dedicated, standalone cyber Act (device security standards, ransomware payment
+reporting s.27, Cyber Incident Review Board) — is genuinely NEW (distinct from
+the KNOWN SOCI 2018) and fills the empty **7.2** slot. Banking it surfaced a
+real bug: our source-verification fetcher forced `legislation.gov.au` to the
+browser strategy, which only ever gets a JS shell — so it could *never* verify
+an Australian quote. The statute body lives only at the `.../text/original/pdf`
+endpoint. Fix: any URL whose path ends in `/pdf` (not just `.pdf`) now forces
+the pdf strategy first, on any domain. Clean PROMOTE, verbatim re-confirmed by
+hand against the Authorised Version PDF. **Lesson: a "usable enough" JS shell is
+the most dangerous fetch result — long enough to look fine, empty of the law.**
+
+### Beyond-6/7 capability, made tangible (#214)
+
+To show the tool scales past the mandatory pillars with something judges can
+click, we banked one rock-solid NEW subsidiary instrument: Malaysia's **Consumer
+Protection (Electronic Trade Transaction) Regulations 2024** [P.U. (A) 449/2024]
+→ **12.9** (online consumer-protection framework), verbatim-verified at the
+official AGC gazette PDF. Two other candidates were deliberately NOT banked:
+AUS BOSE Determination 2022 (`is_known` → KNOWN, Online Safety Act family) and
+MYS Income Tax Act s.82C e-invoicing (a real 2023/24 provision, but no clean
+RDTII P12 indicator — 12.4.x are payment limits, not tax admin). SGP Online
+Criminal Harms Act 2023 was also dropped: `is_known` → KNOWN. **Lesson: quality
+over quantity — three verified rows beat ten that a legal reviewer would strike.**
+
+### Singapore SSO went behind an AWS WAF — a silent break we caught (#215)
+
+Mid-session, verbatim verification started failing for *every* Singapore entry.
+Root cause: `sso.agc.gov.sg` now sits behind an AWS WAF — the HTML endpoint
+returns **HTTP 202 with an empty body** to curl / WebFetch (0 bytes,
+`x-amzn-waf-action: challenge`). This is a portal that worked yesterday and
+stopped today; left unnoticed it would have quietly disabled our
+anti-hallucination gate for Singapore right before submission. The `?ViewType=Pdf`
+endpoint is *not* challenged, and the browser cascade already falls back to it —
+so reordering the SSO hint to `["browser", "http_ua"]` restores verification
+(full PDPA 191KB; Banking Act s.47 re-verified). **Lesson: portals change under
+you. When a crawl that used to work stops, that is a finding to surface loudly,
+not a transient to retry — and the fix belongs in the SITE_HINTS registry with a
+date.**
+
+### A discipline slip, recorded honestly (#216)
+
+While shipping the SSO fix I merged the PR before noticing it broke a hard-coded
+strategy-order assertion. Caught it immediately after, updated the test to the
+new expected order (and added an assertion for the `/pdf` routing fix), re-ran
+the full suite green. **Lesson: the test suite is the gate, not a formality —
+read the pytest tail before `gh pr merge`, every time.**

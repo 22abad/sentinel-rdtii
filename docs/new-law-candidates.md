@@ -284,3 +284,24 @@ NEW hard-localization law**; their cross-border regimes are conditional-flow
 (6.4) or secrecy (7.3). SGP's genuine 6.2 evidence is Companies Act s 199(4)
 (KNOWN). Padding the NEW list with a control catalog or superseded policy text
 was explicitly declined.
+
+## 2026-07-16 night — beyond-localization results
+
+**Banked (double-gate clean):**
+- 🇦🇺 **Cyber Security Act 2024 (No. 98, 2024)** → **7.2** (dedicated cyber
+  framework). NEW, distinct from SOCI 2018. Verbatim re-confirmed at Authorised
+  Version PDF C2024A00098. (#213)
+- 🇲🇾 **Consumer Protection (Electronic Trade Transaction) Regulations 2024**
+  [P.U. (A) 449/2024] → **12.9** (online consumer protection). NEW subsidiary
+  2024 instrument; verbatim at official AGC gazette PDF. Beyond-6/7 capability
+  demo. (#214)
+
+**Held / rejected (rigor gate):**
+- 🇦🇺 Online Safety (Basic Online Safety Expectations) Determination 2022 —
+  `is_known` → KNOWN (Online Safety Act family). Not NEW.
+- 🇸🇬 Online Criminal Harms Act 2023 (P8 takedown directions) — `is_known` →
+  KNOWN. Genuine P8 evidence but not a discovery.
+- 🇲🇾 Income Tax Act 1967 s.82C (MyInvois e-invoicing mandate, inserted by
+  Finance (No. 2) Act 2023) — real 2023/24 provision, but no clean RDTII P12
+  indicator fit (12.4.x are payment limitations, not tax administration). Held
+  as a lead; do not bank without an agreed indicator.
