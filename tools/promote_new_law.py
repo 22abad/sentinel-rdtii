@@ -39,8 +39,8 @@ TEXT_DIR = REPO_ROOT / "data" / "law_library" / "text"
 _MANIFEST_ORDER = [
     "law_id", "economy", "law_name", "official_url", "source_status", "pillars",
     "indicator_hints", "language_codes", "text_path", "sha256", "retrieved_at",
-    "discovery_tag", "origin", "version", "currency_source", "currency_checked_at",
-    "notes",
+    "discovery_tag", "origin", "article_hint", "version", "currency_source",
+    "currency_checked_at", "notes",
 ]
 
 
@@ -70,6 +70,10 @@ def parse_args(argv=None) -> argparse.Namespace:
     p.add_argument("--indicators", required=True, help="Comma list, e.g. 7.5 or 6.4,7.1")
     p.add_argument("--text-file", required=True, help="Path to the verified verbatim provision text")
     p.add_argument("--law-id", default=None, help="Override the auto-generated law_id slug")
+    p.add_argument("--article", default="",
+                   help='Authoritative article/section for this provision (e.g. "Section 47"). '
+                        "Stored as article_hint — a deterministic fallback so the banked law "
+                        "never drops on 'missing: article' when the model omits the clause.")
     p.add_argument("--version", default="", help="Version/compilation string")
     p.add_argument("--language", default="en")
     p.add_argument("--notes", default="")
@@ -122,6 +126,14 @@ def main(argv=None) -> int:
     if len(text.strip()) < 40:
         print("Error: provision text is too short to be a real provision.", file=sys.stderr)
         return 2
+    if len(text.strip()) < 400:
+        # Field-learned (Banking Act s.47): a single-sentence provision text can
+        # be too thin for the extractor to map reliably — the banked law then
+        # silently misses formal runs. Bank the full section, not one sentence.
+        print("⚠ Provision text is thin (<400 chars). Thin texts map unreliably — "
+              "prefer the FULL section verbatim (all subsections), not a single "
+              "sentence. Also pass --article so the citation never depends on "
+              "inference.", file=sys.stderr)
 
     law_id = args.law_id or _slug(code, args.law_name)
     if law_id in _existing_law_ids():
@@ -154,6 +166,7 @@ def main(argv=None) -> int:
         "retrieved_at": today,
         "discovery_tag": "NEW",   # a formal run tags it NEW
         "origin": "discovered",   # ...because it was independently found, not in the baseline
+        "article_hint": args.article,
         "version": args.version,
         "currency_source": args.url,
         "currency_checked_at": today,

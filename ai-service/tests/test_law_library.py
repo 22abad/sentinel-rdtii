@@ -173,3 +173,35 @@ async def test_run_library_reports_empty_economy(monkeypatch):
     assert rows == []
     assert meta["laws_available"] == 0
     assert any("no cached laws" in w for w in meta["warnings"])
+
+
+def test_article_hint_loads_from_manifest():
+    entries = load_library()
+    banking = next(e for e in entries if e.law_id == "sgp-banking-act-1970-2020-revised-edition-s-47")
+    assert banking.article_hint == "Section 47"
+    # KNOWN sample-kit entries without the field default to empty — no crash.
+    pdpa = next(e for e in entries if e.law_id == "sgp-pdpa-2012")
+    assert pdpa.article_hint == ""
+
+
+def test_build_row_falls_back_to_curated_article_hint():
+    """A thin single-provision library text where the LLM omits article_clause
+    and inference finds no heading must still carry the promoter-verified
+    section — banked NEW laws never drop on 'missing: article'."""
+    from schemas import IndicatorMapping
+    from submission.pipeline import build_row
+
+    text = "Customer information must not be disclosed by a bank except as provided."
+    mapping = IndicatorMapping(
+        pillar=7, indicator="7.1", score=1.0,
+        verbatim_quote=text, quote_start=0, quote_end=len(text),
+        article_clause="",  # the LLM omitted it
+        source_legislation="Banking Act 1970",
+        source_url="https://sso.agc.gov.sg/Act/BA1970",
+    )
+    row = build_row(
+        mapping, economy_display="Singapore", source_text=text,
+        doc_meta={"retrieval_method": "local_library", "article_hint": "Section 47"},
+    )
+    assert row.article == "Section 47"
+    assert "curated library metadata" in (row.notes or "")
