@@ -56,6 +56,10 @@ class LawEntry:
     # "known" = sample-kit / KNOWN baseline; "discovered" = an independent NEW find
     # (cached for reproducibility, but must still surface as NEW, not KNOWN).
     origin: str = "known"
+    # Authoritative article/section for single-provision entries (e.g. "Section 47").
+    # Set by the promoter, who verified the provision — used as a deterministic
+    # fallback when the LLM omits article_clause and text inference finds nothing.
+    article_hint: str = ""
     text: str = field(repr=False, default="")
 
     def covers_pillar(self, pillar: int | None) -> bool:
@@ -127,6 +131,7 @@ def load_library(
                 currency_source=record.get("currency_source", ""),
                 currency_checked_at=record.get("currency_checked_at", ""),
                 origin=record.get("origin", "known"),
+                article_hint=record.get("article_hint", ""),
                 text=text,
             )
         )

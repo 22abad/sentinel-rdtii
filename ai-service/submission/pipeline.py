@@ -198,6 +198,11 @@ def build_row(
         article = infer_article_reference(source_text, mapping.quote_start)
         if article:
             inferred_note = "article inferred from document structure"
+    if not article and doc_meta.get("article_hint"):
+        # Curated library entries carry the promoter-verified section — a
+        # deterministic, authoritative fallback (never invented by the model).
+        article = str(doc_meta["article_hint"])
+        inferred_note = "article from curated library metadata"
 
     # Title-quote guard: five legal-review findings were quotes that are
     # merely the document's own name/heading — no operative content. A title
@@ -638,6 +643,10 @@ async def run_library(
             "retrieval_method": "local_library",
             "pdf_is_scanned": False,
             "location_reference": entry.official_url,
+            # Authoritative section for single-provision entries — deterministic
+            # fallback so a banked law never drops on "missing: article" just
+            # because the LLM omitted the clause on a thin text.
+            "article_hint": entry.article_hint,
         }
         try:
             result = await run_extraction(entry.text, provider)
