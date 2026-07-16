@@ -47,9 +47,13 @@ _BROWSER_UA = (
 # "pdf" (download + text-extract), "browser" (heavy Playwright/OpenCLI cascade).
 SITE_HINTS: dict[str, dict] = {
     "sso.agc.gov.sg": {
-        "order": ["http_ua"],
-        "note": "Singapore SSO serves curl+browser-UA fine but 403s naive fetchers; "
-                "provision bodies are lazy-loaded — request ?ProvIds=prNN- to force them.",
+        "order": ["browser", "http_ua"],
+        "note": "Singapore SSO went behind an AWS WAF (2026-07: the HTML endpoint now "
+                "returns HTTP 202 with an empty body to curl/WebFetch). The ?ViewType=Pdf "
+                "endpoint is NOT challenged, and the browser strategy's document_fetch "
+                "cascade auto-falls back to it (verified 2026-07-16: full PDPA 191KB). "
+                "Still request ?ProvIds=prNN- to anchor the provision. Plain http_ua is a "
+                "last resort now that the WAF is live.",
     },
     "legislation.gov.au": {
         "order": ["browser"],
