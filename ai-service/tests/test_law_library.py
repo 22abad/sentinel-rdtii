@@ -92,6 +92,14 @@ def test_lookup_indicator_hint_narrows_results():
     }
 
 
+def test_pillar7_dpo_indicator_74_is_covered():
+    # MYS PDPA (Amendment) Act 2024 s.12A mandates a data protection officer for
+    # all data controllers -> RDTII 7.4 (DPO requirement, all sectors). This
+    # fills the previously-empty 7.4 slot with a NEW discovery.
+    names = {e.law_name for e in lookup("MYS", indicators=["7.4"])}
+    assert any("Personal Data Protection (Amendment) Act 2024" in n for n in names)
+
+
 def test_missing_manifest_returns_empty(tmp_path):
     assert load_library(library_root=tmp_path, repo_root=tmp_path) == []
 
