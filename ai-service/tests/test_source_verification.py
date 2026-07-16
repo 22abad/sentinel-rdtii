@@ -34,11 +34,30 @@ def test_strategy_order_uses_site_hints():
     assert order[0] == "pdf"
 
 
-def test_nsw_is_marked_blocked():
+def test_nsw_uses_the_browser_strategy(monkeypatch):
+    # NSW blocks plain HTTP, but the Playwright browser fallback gets through
+    # (proven live) — the site hint routes straight to the browser strategy.
     order, hint = strategy_order("https://legislation.nsw.gov.au/view/whole/html/act-1998-133")
-    assert order == [] and hint.get("blocked") is True
+    assert order == ["browser"] and not hint.get("blocked")
+
+    monkeypatch.setitem(sv._STRATEGY_FUNCS, "browser", lambda url, **kw: "x" * 500)
     outcome = sv.fetch_text_resilient("https://legislation.nsw.gov.au/view/whole/html/act-1998-133")
-    assert outcome.blocked is True and not outcome.ok
+    assert outcome.ok and outcome.method == "browser"
+
+
+def test_total_failure_reports_a_loud_note(monkeypatch):
+    """When every strategy fails, the outcome must TELL the user what happened
+    and what to do — a blocked portal is reported, never silently skipped."""
+    monkeypatch.setitem(sv._STRATEGY_FUNCS, "http_ua", lambda url, **kw: None)
+    monkeypatch.setitem(sv._STRATEGY_FUNCS, "pdf", lambda url, **kw: None)
+    monkeypatch.setitem(sv._STRATEGY_FUNCS, "browser", lambda url, **kw: None)
+    outcome = sv.fetch_text_resilient("https://example.gov/some/act")
+    assert not outcome.ok
+    assert "Could not fetch" in outcome.note
+    assert "browser" in outcome.note  # points the user at manual verification
+    # verify_quote_at_source passes the note through to its verdict detail
+    qv = verify_quote_at_source(_PROVISION, "https://example.gov/some/act")
+    assert qv.found is False and "Could not fetch" in qv.detail
 
 
 def test_verify_quote_found_when_present(monkeypatch):
@@ -61,9 +80,12 @@ def test_verify_quote_absent(monkeypatch):
     assert qv.found is False
 
 
-def test_verify_reports_blocked_portal():
+def test_verify_finds_quote_via_browser_strategy(monkeypatch):
+    # A quote on a Cloudflare-guarded portal verifies through the browser path.
+    body = ("padding " * 60) + _PROVISION + (" tail" * 40)
+    monkeypatch.setitem(sv._STRATEGY_FUNCS, "browser", lambda url, **kw: body)
     qv = verify_quote_at_source(_PROVISION, "https://legislation.nsw.gov.au/view/act-1998-133")
-    assert qv.found is False and qv.blocked is True
+    assert qv.found is True and qv.method == "browser"
 
 
 def test_triage_rejects_known_law(monkeypatch):

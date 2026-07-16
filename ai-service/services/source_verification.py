@@ -69,10 +69,11 @@ SITE_HINTS: dict[str, dict] = {
         "note": "NT: landing page is a version table; real text at /api/sitecore/Act/PDF?id=NNNN.",
     },
     "legislation.nsw.gov.au": {
-        "order": [],
-        "blocked": True,
-        "note": "NSW: Cloudflare JS challenge blocks curl/headless/WebFetch/AustLII alike. "
-                "Needs a real residential browser — flag for a human, do NOT paraphrase.",
+        "order": ["browser"],
+        "note": "NSW: Cloudflare blocks plain HTTP / curl / WebFetch — but the project's "
+                "Playwright browser fallback gets through (verified 2026-07-16, s19(2) "
+                "captured verbatim). Use the browser strategy; only if that also fails, "
+                "tell the user a manual browser is needed.",
     },
     "oaic.gov.au": {"order": ["pdf", "http_ua"], "note": "OAIC guidance PDFs are reachable."},
 }
@@ -206,14 +207,38 @@ def _fetch_pdf(url: str, timeout: float = 60.0) -> str | None:
         return None
 
 
-_STRATEGY_FUNCS = {"http_ua": _fetch_http_ua, "pdf": _fetch_pdf}
+def _fetch_browser(url: str, timeout: float = 120.0) -> str | None:
+    """Last-resort strategy: the project's full fetch cascade (Playwright
+    browser included). Gets through Cloudflare-style JS challenges that block
+    plain HTTP — proven on legislation.nsw.gov.au. Sync wrapper; returns None
+    inside a running event loop (callers there should await document_fetch
+    directly)."""
+    try:
+        import asyncio
+
+        try:
+            asyncio.get_running_loop()
+            return None  # can't nest asyncio.run — async callers go direct
+        except RuntimeError:
+            pass
+        from services.document_fetch import fetch_document_text
+
+        doc = asyncio.run(
+            asyncio.wait_for(fetch_document_text(url, browser_mode="auto"), timeout=timeout)
+        )
+        return getattr(doc, "text", None)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+_STRATEGY_FUNCS = {"http_ua": _fetch_http_ua, "pdf": _fetch_pdf, "browser": _fetch_browser}
 
 
 def fetch_text_resilient(url: str, *, order: list[str] | None = None) -> FetchOutcome:
     """Try fetch strategies in the site-appropriate order until one returns
-    usable text. Never raises. The heavy ``browser`` strategy is intentionally
-    NOT run here (it is async + expensive) — request it explicitly via the
-    async escalation in a caller that has an event loop."""
+    usable text. Never raises. When every strategy fails, the outcome carries a
+    human-readable ``note`` explaining what was tried and what the user should
+    do — a blocked portal must be REPORTED, never silently skipped."""
     strategies, hint = strategy_order(url)
     if hint.get("blocked"):
         return FetchOutcome(url=url, blocked=True, note=hint.get("note", ""))
@@ -223,7 +248,7 @@ def fetch_text_resilient(url: str, *, order: list[str] | None = None) -> FetchOu
     outcome = FetchOutcome(url=url, note=hint.get("note", ""))
     for name in strategies:
         fn = _STRATEGY_FUNCS.get(name)
-        if fn is None:  # e.g. "browser" — skipped in the sync path
+        if fn is None:
             continue
         outcome.tried.append(name)
         text = fn(url)
@@ -231,6 +256,13 @@ def fetch_text_resilient(url: str, *, order: list[str] | None = None) -> FetchOu
             outcome.text = text
             outcome.method = name
             return outcome
+    # All strategies failed — tell the user, loudly and specifically.
+    tried = ", ".join(outcome.tried) or "none"
+    outcome.note = (
+        f"Could not fetch {url} (tried: {tried}). The portal may block automated "
+        f"clients — open it in a regular browser and verify manually. "
+        + (hint.get("note", "") and f"Site note: {hint['note']}")
+    ).strip()
     return outcome
 
 
@@ -249,8 +281,9 @@ def verify_quote_at_source(quote: str, url: str, *, fetch=fetch_text_resilient) 
         return QuoteVerdict(found=False, url=url, blocked=True,
                             detail="portal blocks automated clients — verify in a browser")
     if not outcome.ok:
-        return QuoteVerdict(found=False, url=url,
-                            detail=f"could not fetch usable text (tried: {', '.join(outcome.tried) or 'none'})")
+        # Surface the full failure note — the user must be told why the crawl
+        # failed and what to do (e.g. open the portal in a regular browser).
+        return QuoteVerdict(found=False, url=url, detail=outcome.note or "could not fetch usable text")
     found = q in _normalize(outcome.text)
     return QuoteVerdict(found=found, method=outcome.method, url=url,
                         detail="verbatim match" if found else "quote not present in fetched text")
