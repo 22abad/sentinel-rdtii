@@ -10,13 +10,23 @@ Launched via `stn tui`. Sidebar (1-4) switches panes:
 from __future__ import annotations
 
 import json
+import re
+from pathlib import Path
+from urllib.parse import unquote, urlparse
 
 import httpx
+from rich.markup import escape
+from rich.segment import Segment
+from rich.style import Style
 from textual import events, work
 from textual.app import App, ComposeResult
 from textual.message import Message
+from textual.reactive import reactive
+from textual.screen import ModalScreen
+from textual.strip import Strip
 from textual.theme import Theme
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.widget import Widget
 from textual.widgets import (
     ContentSwitcher,
     DataTable,
@@ -26,17 +36,20 @@ from textual.widgets import (
     Label,
     ListItem,
     ListView,
-    ProgressBar,
     RichLog,
     Select,
+    Static,
     TextArea,
 )
+
+from .main import BANNER
 
 # Processors the extract pane can request; blank = backend default
 # (RDTII_LLM_PROVIDER). Model per provider follows its env config.
 PROVIDERS = ["ollama", "deepseek", "claude", "gemini", "openai", "groq"]
 
 PANES = [
+    ("home", "Welcome"),
     ("docs", "Documents"),
     ("discovery", "Discovery"),
     ("extract", "Extract"),
@@ -58,6 +71,259 @@ SENTINEL_THEME = Theme(
     panel="#182721",
     dark=True,
 )
+
+
+# Same key groupings as the browser's ReasoningReport.tsx — doc/OCR quality
+# and provenance metadata are context, everything else is a scoring input.
+DOC_QUALITY_KEYS = {
+    "mean_confidence",
+    "ocr_ratio",
+    "pdf_type",
+    "total_pages",
+    "ocr_pages",
+    "text_pages",
+    "_ocr_mean_confidence",
+    "_ocr_ratio",
+    "_pdf_type",
+}
+PROVENANCE_KEYS = {
+    "source_file_sha256",
+    "source_pdf_path",
+    "_source_grade",
+    "_source_grade_confidence",
+    "_timeframe_status",
+    "_timeframe_column",
+}
+
+
+def _h(title: str, color: str = "#e7efec") -> str:
+    """Section subtitle: accent side-bar + bright title, set off from body."""
+    return f"[bold #10B981]\u258d[/][bold {color}] {title}[/]"
+
+
+def _chip(value: object) -> str:
+    if value is True or value == "true":
+        return "[#10B981]yes[/]"
+    if value is False or value == "false":
+        return "[red]no[/]"
+    return escape(str(value))
+
+
+def _percent(value: object) -> str | None:
+    try:
+        return f"{round(float(value) * 100)}%"
+    except (TypeError, ValueError):
+        return None
+
+
+def _reasoning_markup(kind: str, m: dict) -> str:
+    """TUI edition of the browser Reasoning Report for one table row."""
+    out: list[str] = []
+    if kind == "rejected":
+        out.append(_h("Rejected extraction", "#dc2626"))
+        out.append("")
+        out.append(f"[bold]Reason[/]  {escape(str(m.get('reason', '—')))}")
+        preview = str(m.get("chunk_preview") or "")
+        if preview:
+            out.append("")
+            out.append(_h("Chunk preview (raw text)"))
+            out.append(f"[dim]{escape(preview)}[/]")
+        return "\n".join(out)
+
+    features = m.get("features") or {}
+    score = m.get("score", "—")
+    out.append(
+        f"[bold #10B981]P{m.get('pillar')} · {m.get('indicator')}[/]"
+        f"  score [bold]{score}[/]  · scope {escape(str(m.get('scope', '—')))}"
+        f" · via {escape(str(m.get('extraction_provider', '—')))}"
+    )
+    if m.get("source_legislation") or m.get("source_url"):
+        out.append(
+            f"[dim]{escape(str(m.get('source_legislation') or ''))}"
+            f"  {escape(str(m.get('source_url') or ''))}[/]"
+        )
+
+    flags = m.get("flag_reasons") or []
+    if m.get("requires_human_review"):
+        out.append("")
+        out.append(_h("Flagged for human review", "#f59e0b"))
+        for reason in flags or ["(no reason recorded)"]:
+            out.append(f"  [#f59e0b]-[/] {escape(str(reason))}")
+
+    quote = str(m.get("verbatim_quote") or "")
+    if quote:
+        out.append("")
+        out.append(_h("Verbatim quote (raw text)"))
+        out.append("  " + escape(quote))
+
+    if m.get("impact"):
+        out.append("")
+        out.append(_h("Score justification"))
+        out.append("  " + escape(str(m["impact"])))
+
+    scoring = {
+        k: v
+        for k, v in features.items()
+        if k not in DOC_QUALITY_KEYS and k not in PROVENANCE_KEYS
+    }
+    if scoring:
+        out.append("")
+        out.append(_h("Scoring inputs (static check rules)"))
+        pad = max(len(k.lstrip("_")) for k in scoring)
+        for k, v in scoring.items():
+            label = k.lstrip("_").replace("_", " ")
+            out.append(f"  {escape(label.ljust(pad))}  {_chip(v)}")
+
+    stats: list[str] = []
+    pdf_type = features.get("_pdf_type", features.get("pdf_type"))
+    if pdf_type is not None:
+        stats.append(f"document type {escape(str(pdf_type))}")
+    if features.get("total_pages") is not None:
+        pages = features["total_pages"]
+        ocr_pages = features.get("ocr_pages")
+        stats.append(
+            f"OCR coverage {ocr_pages}/{pages} pp"
+            if ocr_pages is not None
+            else f"{pages} pp"
+        )
+    conf = _percent(
+        features.get("_ocr_mean_confidence", features.get("mean_confidence"))
+    )
+    if conf:
+        stats.append(f"OCR confidence {conf}")
+    if stats:
+        out.append("")
+        out.append(_h("Document quality"))
+        out.append("  " + " · ".join(stats))
+
+    prov: list[str] = []
+    grade = features.get("_source_grade")
+    if grade is not None:
+        grade_conf = _percent(features.get("_source_grade_confidence"))
+        prov.append(
+            f"source grade  {escape(str(grade))}"
+            + (f" · {grade_conf} confidence" if grade_conf else "")
+        )
+    tf_col = features.get("_timeframe_column")
+    tf_status = features.get("_timeframe_status")
+    if tf_col or tf_status:
+        prov.append(
+            "timeframe  "
+            + " ".join(
+                filter(
+                    None,
+                    [str(tf_col or "")] + ([f"({tf_status})"] if tf_status else []),
+                )
+            )
+        )
+    if features.get("source_file_sha256"):
+        prov.append(f"sha-256  {escape(str(features['source_file_sha256']))}")
+    if features.get("source_pdf_path"):
+        prov.append(f"file  {escape(str(features['source_pdf_path']))}")
+    if prov:
+        out.append("")
+        out.append(_h("Provenance"))
+        for line in prov:
+            out.append(f"  [dim]{line}[/]")
+    return "\n".join(out)
+
+
+class ReportScreen(ModalScreen):
+    """Inner window: reasoning report for a selected extract row."""
+
+    BINDINGS = [
+        ("escape", "dismiss", "Close"),
+        ("q", "dismiss", "Close"),
+    ]
+
+    CSS = """
+    ReportScreen {
+        align: center middle;
+    }
+    #report-window {
+        width: 84%;
+        height: 80%;
+        border: solid #10B981;
+        background: $panel;
+        padding: 1 2;
+    }
+    #report-window Static {
+        color: #bec7c3;
+    }
+    """
+
+    def __init__(self, kind: str, mapping: dict) -> None:
+        super().__init__()
+        self._kind = kind
+        self._mapping = mapping
+
+    def compose(self) -> ComposeResult:
+        with VerticalScroll(id="report-window"):
+            yield Static(_reasoning_markup(self._kind, self._mapping))
+
+
+class BlockBar(Widget):
+    """Solid full-height progress block (ProgressBar's Bar is 1 line tall).
+
+    percentage None = indeterminate: a block marches across the width.
+    """
+
+    percentage: reactive[float | None] = reactive(None)
+
+    _FILLED = Style(bgcolor="#10B981")
+    _EMPTY = Style(bgcolor="#13201b")
+
+    def on_mount(self) -> None:
+        self._march = 0
+        self.set_interval(0.12, self._tick)
+
+    def _tick(self) -> None:
+        if self.percentage is None and self.styles.display != "none":
+            self._march += 2
+            self.refresh()
+
+    def render_line(self, y: int) -> Strip:
+        width = self.size.width
+        if width <= 0:
+            return Strip.blank(width)
+        if self.percentage is None:
+            block = max(4, width // 5)
+            start = self._march % (width + block) - block
+            left = min(max(start, 0), width)
+            right = min(max(start + block, 0), width)
+            segments = [
+                Segment(" " * left, self._EMPTY),
+                Segment(" " * (right - left), self._FILLED),
+                Segment(" " * (width - right), self._EMPTY),
+            ]
+        else:
+            filled = round(width * min(1.0, max(0.0, self.percentage)))
+            segments = [
+                Segment(" " * filled, self._FILLED),
+                Segment(" " * (width - filled), self._EMPTY),
+            ]
+        return Strip(segments, width)
+
+
+def _resolve_local_file(raw: str) -> Path | None:
+    """Interpret the input as a dragged-in local file path, if it is one.
+
+    Dragging a file onto the terminal pastes its path — possibly as a
+    file:// URI, quoted, or with backslash-escaped spaces — not the file.
+    """
+    candidate = raw.strip()
+    if not candidate or "\n" in candidate:
+        return None
+    if candidate.startswith("file://"):
+        candidate = unquote(urlparse(candidate).path)
+    if len(candidate) > 1 and candidate[0] == candidate[-1] and candidate[0] in "'\"":
+        candidate = candidate[1:-1]
+    candidate = re.sub(r"\\(.)", r"\1", candidate)
+    path = Path(candidate).expanduser()
+    try:
+        return path if path.is_file() else None
+    except OSError:
+        return None
 
 
 class ExtractInput(TextArea):
@@ -120,7 +386,8 @@ class SentinelTUI(App):
     }
     #extract-bar {
         width: 1fr;
-        margin: 1 2;
+        height: 1fr;
+        margin: 0 0 0 2;
         display: none;
     }
     #extract-bar.running {
@@ -128,6 +395,12 @@ class SentinelTUI(App):
     }
     RichLog {
         border: none;
+    }
+    #home {
+        align: center middle;
+    }
+    #home-banner {
+        width: auto;
     }
     """
 
@@ -145,6 +418,7 @@ class SentinelTUI(App):
         super().__init__()
         self._api = api
         self._token = token
+        self._extract_rows: list[tuple[str, dict]] = []
 
     # ── layout ───────────────────────────────────────────────────────────
 
@@ -159,7 +433,15 @@ class SentinelTUI(App):
                     ]
                 )
                 yield Label("", id="status")
-            with ContentSwitcher(initial="docs", id="switcher"):
+            with ContentSwitcher(initial="home", id="switcher"):
+                with Vertical(id="home"):
+                    yield Static(
+                        f"[bold #10B981]{BANNER}[/]\n"
+                        "  SENTINEL — More scientific law observation tool.\n\n"
+                        "[#bec7c3] 1 Documents \n 2 Discovery \n 3 Extract \n 4 Chat\n"
+                        " \n r refresh \n q quit[/]",
+                        id="home-banner",
+                    )
                 yield DataTable(id="docs")
                 with Vertical(id="discovery"):
                     yield DataTable(id="discovery-table")
@@ -169,7 +451,7 @@ class SentinelTUI(App):
                     )
                 with Vertical(id="extract"):
                     yield Label(
-                        "Paste a URL or legal text below · Enter extracts · Shift+Enter newline",
+                        "Paste a URL, legal text, or drag a file below · Enter extracts · Shift+Enter newline",
                         id="extract-status",
                     )
                     with Horizontal(id="extract-controls"):
@@ -178,9 +460,7 @@ class SentinelTUI(App):
                             prompt="processor: backend default",
                             id="extract-provider",
                         )
-                        yield ProgressBar(
-                            id="extract-bar", show_eta=False
-                        )
+                        yield BlockBar(id="extract-bar")
                     yield DataTable(id="extract-table")
                     yield ExtractInput(id="extract-input")
                 with Vertical(id="rag"):
@@ -199,6 +479,7 @@ class SentinelTUI(App):
         disc.add_columns("Title", "Indicators", "URL")
         ext = self.query_one("#extract-table", DataTable)
         ext.add_columns("Indicator", "Score", "Review", "Quote")
+        ext.cursor_type = "row"  # row select opens the reasoning report
         self.query_one("#rag-log", RichLog).write(
             "[dim]Ask something — answers are grounded in the knowledge base.[/]"
         )
@@ -267,6 +548,14 @@ class SentinelTUI(App):
     async def on_extract_input_submitted(self, event: ExtractInput.Submitted) -> None:
         await self.action_run_extract()
 
+    async def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
+        if event.data_table.id != "extract-table":
+            return
+        idx = event.cursor_row
+        if 0 <= idx < len(self._extract_rows):
+            kind, payload = self._extract_rows[idx]
+            self.push_screen(ReportScreen(kind, payload))
+
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         text = event.value.strip()
         if not text:
@@ -302,28 +591,69 @@ class SentinelTUI(App):
         except httpx.HTTPError as exc:
             log.write(f"[red]request failed: {exc}[/]")
 
+    async def _parse_local_file(self, local: Path, status: Label) -> str | None:
+        """Turn a dragged-in file into extractable text; None on failure.
+
+        PDFs go through the backend's /api/parse-file (same parser the web
+        canvas Run flow uses); plain-text files are read directly.
+        """
+        suffix = local.suffix.lower()
+        try:
+            if suffix == ".pdf":
+                status.update(f"parsing {local.name} on backend…")
+                async with self._client(timeout=300.0) as client:
+                    res = await client.post(
+                        "/api/parse-file",
+                        files={
+                            "file": (local.name, local.read_bytes(), "application/pdf")
+                        },
+                    )
+                if res.status_code != 200:
+                    detail = res.json().get("detail", res.text[:100])
+                    status.update(f"[red]parse failed: {detail}[/]")
+                    return None
+                return res.json().get("text", "")
+            if suffix in (".txt", ".md", ""):
+                return local.read_text(errors="replace")
+            status.update(f"[red]unsupported file type: {suffix}[/] (pdf/txt/md)")
+            return None
+        except (OSError, httpx.HTTPError) as exc:
+            status.update(f"[red]could not read {local.name}: {exc}[/]")
+            return None
+
     @work(exclusive=True, group="extract")
     async def _run_extract(self, source: str) -> None:
         """Stream the extraction: each mapping's quote lands as it's found."""
         status = self.query_one("#extract-status", Label)
         table = self.query_one("#extract-table", DataTable)
         table.clear()
-        is_url = source.startswith(("http://", "https://"))
-        form = {"source_url": source} if is_url else {"text": source}
+        self._extract_rows.clear()
+        form: dict[str, str] = {}
         chosen = self.query_one("#extract-provider", Select).value
         if isinstance(chosen, str):  # unselected is a Select.NULL sentinel
             form["provider"] = chosen
-        status.update(
-            f"starting extraction stream via {form.get('provider', 'backend default')}…"
-        )
         # Indeterminate pulse until the first progress event — covers the
-        # silent crawl/PDF-parse phase of URL extractions.
-        bar = self.query_one("#extract-bar", ProgressBar)
+        # silent crawl/parse phase of URL and file extractions.
+        bar = self.query_one("#extract-bar", BlockBar)
         bar.add_class("running")
-        bar.update(total=None)
+        bar.percentage = None
         mapped = rejected = 0
         provider = "?"
         try:
+            local = _resolve_local_file(source)
+            if local is not None:
+                text = await self._parse_local_file(local, status)
+                if text is None:
+                    return
+                form["text"] = text
+            elif source.startswith(("http://", "https://")):
+                form["source_url"] = source
+            else:
+                form["text"] = source
+            status.update(
+                f"starting extraction stream via "
+                f"{form.get('provider', 'backend default')}…"
+            )
             async with self._client(timeout=600.0) as client:
                 async with client.stream(
                     "POST", "/api/extract/stream", data=form
@@ -346,10 +676,8 @@ class SentinelTUI(App):
                         if event == "progress":
                             total = payload.get("total") or 0
                             if total:
-                                bar.update(
-                                    total=total,
-                                    progress=max(0, (payload.get("current") or 1) - 1),
-                                )
+                                done = max(0, (payload.get("current") or 1) - 1)
+                                bar.percentage = done / total
                             status.update(
                                 f"extracting chunk {payload.get('current')}/{payload.get('total')} "
                                 f"· candidates: {', '.join(payload.get('indicators', []))} "
@@ -357,6 +685,7 @@ class SentinelTUI(App):
                             )
                         elif event == "mapping":
                             mapped += 1
+                            self._extract_rows.append(("mapping", payload))
                             table.add_row(
                                 f"P{payload.get('pillar')} · {payload.get('indicator')}",
                                 str(payload.get("score", "—")),
@@ -367,6 +696,7 @@ class SentinelTUI(App):
                             )
                         elif event == "rejected":
                             rejected += 1
+                            self._extract_rows.append(("rejected", payload))
                             table.add_row(
                                 "[dim]rejected[/]",
                                 "[dim]—[/]",
