@@ -36,7 +36,9 @@ app = typer.Typer(
     name="stn",
     # The \b paragraph marker tells the help formatter to keep the ASCII
     # art's line breaks instead of reflowing it to terminal width.
-    help="\b" + BANNER + "\n\nSENTINEL — operate discovery, RAG, and the knowledge base.",
+    help="\b"
+    + BANNER
+    + "\n\nSENTINEL — operate discovery, RAG, and the knowledge base.",
     no_args_is_help=True,
 )
 console = Console()
@@ -57,6 +59,7 @@ def _save_credentials(data: dict) -> None:
     CREDENTIALS_PATH.parent.mkdir(parents=True, exist_ok=True)
     CREDENTIALS_PATH.write_text(json.dumps(data, indent=2))
     CREDENTIALS_PATH.chmod(0o600)  # bearer credential — owner-only
+
 
 def _auth_token() -> str:
     # Explicit env wins (CI/scripts); otherwise the stored login.
@@ -88,16 +91,20 @@ def _die(message: str) -> None:
 
 @app.command()
 def login(email: str = typer.Option(..., prompt=True, help="Account email")) -> None:
-    """Log in and store the token locally (~/.config/stn/credentials.json)."""
+    """Log in and save your token."""
     password = typer.prompt("Password", hide_input=True)
     try:
         with _client(timeout=15.0) as client:
-            res = client.post("/auth/login", json={"email": email, "password": password})
+            res = client.post(
+                "/auth/login", json={"email": email, "password": password}
+            )
     except httpx.HTTPError as exc:
         _die(f"Backend unreachable at {API} — is `make dev` running? ({exc})")
         return
     if res.status_code != 200:
-        detail = res.json().get("detail", res.status_code) if res.text else res.status_code
+        detail = (
+            res.json().get("detail", res.status_code) if res.text else res.status_code
+        )
         _die(f"Login failed: {detail}")
         return
     data = res.json()
@@ -109,12 +116,14 @@ def login(email: str = typer.Option(..., prompt=True, help="Account email")) -> 
             "api": API,
         }
     )
-    console.print(f"[bold green]✓[/] Logged in as [bold]{data.get('username', email)}[/] — token stored.")
+    console.print(
+        f"[bold green]✓[/] Logged in as [bold]{data.get('username', email)}[/] — token stored."
+    )
 
 
 @app.command()
 def logout() -> None:
-    """Forget the stored login."""
+    """Log out."""
     if CREDENTIALS_PATH.exists():
         CREDENTIALS_PATH.unlink()
         console.print("[green]✓[/] Logged out — stored token removed.")
@@ -124,7 +133,7 @@ def logout() -> None:
 
 @app.command()
 def whoami() -> None:
-    """Show the current identity and token expiry."""
+    """Show who is logged in."""
     token = _auth_token()
     if not token:
         _die("Not logged in — run `stn login` (or export STN_TOKEN).")
@@ -133,22 +142,36 @@ def whoami() -> None:
     claims = _jwt_claims(token)
     exp = claims.get("exp")
     expires = (
-        datetime.fromtimestamp(exp, tz=timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
+        datetime.fromtimestamp(exp, tz=timezone.utc)
+        .astimezone()
+        .strftime("%Y-%m-%d %H:%M")
         if isinstance(exp, (int, float))
         else "unknown"
     )
-    expired = isinstance(exp, (int, float)) and datetime.now(tz=timezone.utc).timestamp() > exp
+    expired = (
+        isinstance(exp, (int, float))
+        and datetime.now(tz=timezone.utc).timestamp() > exp
+    )
     table = Table(show_header=False, box=None)
-    table.add_row("[bold]User[/]", claims.get("username") or creds.get("username") or "—")
+    table.add_row(
+        "[bold]User[/]", claims.get("username") or creds.get("username") or "—"
+    )
     table.add_row("[bold]Email[/]", creds.get("email", "—"))
-    table.add_row("[bold]Token expires[/]", f"[red]{expires} (expired)[/]" if expired else expires)
-    table.add_row("[bold]Source[/]", "STN_TOKEN env" if os.getenv("STN_TOKEN") else str(CREDENTIALS_PATH))
-    console.print(Panel(table, title="stn whoami", border_style="red" if expired else "cyan"))
+    table.add_row(
+        "[bold]Token expires[/]", f"[red]{expires} (expired)[/]" if expired else expires
+    )
+    table.add_row(
+        "[bold]Source[/]",
+        "STN_TOKEN env" if os.getenv("STN_TOKEN") else str(CREDENTIALS_PATH),
+    )
+    console.print(
+        Panel(table, title="stn whoami", border_style="red" if expired else "cyan")
+    )
 
 
 @app.command()
 def status() -> None:
-    """Backend health: reachable, active provider, available providers."""
+    """Backend health and providers."""
     try:
         with _client(timeout=5.0) as client:
             data = client.get("/health").json()
@@ -158,7 +181,9 @@ def status() -> None:
     table = Table(show_header=False, box=None)
     table.add_row("[bold]Backend[/]", f"[green]up[/] · {API}")
     table.add_row("[bold]Active provider[/]", str(data.get("active_provider", "—")))
-    table.add_row("[bold]Available[/]", ", ".join(data.get("available_providers", []) or ["—"]))
+    table.add_row(
+        "[bold]Available[/]", ", ".join(data.get("available_providers", []) or ["—"])
+    )
     console.print(Panel(table, title="stn status", border_style="green"))
 
 
@@ -170,13 +195,15 @@ def discovery(
     limit: int = typer.Option(10, min=1, max=50),
     browser_mode: str = typer.Option("auto", help="auto | playwright | opencli"),
 ) -> None:
-    """Search official legal sources for a country (the Discovery panel, headless)."""
+    """Search official legal sources for a country."""
     # Resolve names / loose input against the configured country list, so
     # `stn discovery Singapore` works, not just `stn discovery SGP`.
     code = country.strip().upper()
     try:
         with _client(timeout=10.0) as client:
-            configured = client.get("/api/discovery/countries").json().get("countries", [])
+            configured = (
+                client.get("/api/discovery/countries").json().get("countries", [])
+            )
     except httpx.HTTPError:
         configured = []
     if configured:
@@ -191,7 +218,9 @@ def discovery(
             table.add_column("Country")
             table.add_column("Sources")
             for c in sorted(configured, key=lambda x: x["country_code"]):
-                table.add_row(c["country_code"], c["label"], str(c.get("source_count", "—")))
+                table.add_row(
+                    c["country_code"], c["label"], str(c.get("source_count", "—"))
+                )
             console.print(table)
             raise typer.Exit(code=1)
 
@@ -237,7 +266,7 @@ def rag(
     question: str = typer.Argument(..., help="Question for the knowledge base"),
     country: str = typer.Option("", help="Optional ISO-3 country filter"),
 ) -> None:
-    """Ask the RAG knowledge base (grounded answer + retrieval count)."""
+    """Ask the knowledge base."""
     inputs: dict = {"question": question}
     if country:
         inputs["country_code"] = country.upper()
@@ -268,7 +297,7 @@ def rag(
 
 @app.command()
 def docs() -> None:
-    """List the RAG knowledge base (run `stn login` first)."""
+    """List ingested documents."""
     try:
         with _client(timeout=15.0) as client:
             res = client.get("/api/canvas-files")
@@ -304,10 +333,14 @@ def docs() -> None:
 
 @app.command("audit-countries")
 def audit_countries(
-    fix: bool = typer.Option(False, "--fix", help="Repair MISMATCH/missing rows (documents + embeddings)"),
+    fix: bool = typer.Option(
+        False, "--fix", help="Repair MISMATCH/missing rows (documents + embeddings)"
+    ),
 ) -> None:
-    """Audit stored country codes against text detection (run `stn login` first)."""
-    if fix and not typer.confirm("Apply high-confidence country corrections to the database?"):
+    """Audit stored country codes."""
+    if fix and not typer.confirm(
+        "Apply high-confidence country corrections to the database?"
+    ):
         raise typer.Exit()
     try:
         with _client(timeout=120.0) as client:
@@ -355,6 +388,14 @@ def audit_countries(
         f"[magenta]{s.get('not_in_registry', 0)} outside registry[/]"
         + (f" · [bold green]{s.get('fixed', 0)} fixed[/]" if fix else "")
     )
+
+
+@app.command()
+def tui() -> None:
+    """Launch the SENTINEL terminal dashboard."""
+    from .tui import run_tui
+
+    run_tui(api=API, token=_auth_token())
 
 
 if __name__ == "__main__":
