@@ -139,6 +139,70 @@ def report_adjudication(doc: dict) -> list[str]:
     return lines
 
 
+def apply_scoring_console(doc: dict, manifest: list[dict], apply: bool) -> list[str]:
+    """Batch 'rdtii-new-law-scoring' (the unified console): applies banked-law
+    indicator decisions back to the manifest, and prints promote commands for
+    accepted live-discovery candidates. Section is on each decision."""
+    actions: list[str] = []
+    by_id = {r["law_id"]: r for r in manifest}
+    today = date.today().isoformat()
+    for d in doc.get("decisions", []):
+        verdict = d.get("verdict")
+        if verdict in (None, "(not reviewed)"):
+            continue
+        section = d.get("section", "banked")
+        note = (d.get("note") or "").strip()
+        revind = sorted({_rdtii_to_hint(c) for c in (d.get("reviewer_indicators") or []) if c})
+
+        if section == "banked":
+            entry = by_id.get(d.get("law_id", ""))
+            if entry is None:
+                actions.append(f"SKIP (no library entry): {d.get('law_name','')[:55]}")
+                continue
+            if verdict == "valid":
+                old = sorted(entry.get("indicator_hints", []))
+                if revind and revind != old:
+                    actions.append(f"HINTS  {entry['law_id']}: {old} -> {revind}")
+                    if apply:
+                        entry["indicator_hints"] = revind
+                        entry["pillars"] = sorted({int(h.split('.')[0]) for h in revind if h.split('.')[0].isdigit()})
+                        entry["notes"] = (entry.get("notes", "") +
+                                          f" Indicator confirmed by legal review {today}: {revind}.").strip()
+                else:
+                    actions.append(f"CONFIRM {entry['law_id']} (hints unchanged)")
+                if apply and note:
+                    entry["notes"] = (entry.get("notes", "") + f" Legal review: {note}").strip()
+            elif verdict == "flag":
+                actions.append(f"FLAG   {entry['law_id']}: {note or '(no note)'}")
+                if apply:
+                    entry["notes"] = (entry.get("notes", "") +
+                                      f" FLAGGED by legal review {today}: {note or 'see reviewer'}.").strip()
+            elif verdict == "reject":
+                actions.append(f"⚠ REJECT {entry['law_id']} — reviewer says NOT valid evidence "
+                               f"(banking/unbanking is a human action; not auto-removed). Note: {note or '—'}")
+                if apply:
+                    entry["notes"] = (entry.get("notes", "") +
+                                      f" REJECTED by legal review {today}: {note or 'not valid evidence'} "
+                                      f"(kept in library pending team decision).").strip()
+        else:  # live-discovery candidate — not yet banked
+            if verdict in ("valid", "reassign"):
+                inds = revind or [_rdtii_to_hint(d.get("engine_indicator", ""))]
+                inds = [i for i in inds if i]
+                pillars = sorted({i.split(".")[0] for i in inds}) or ["?"]
+                actions.append(
+                    "LIVE ACCEPT" + (" (reassigned)" if verdict == "reassign" else "")
+                    + f": {d.get('law_name','')[:55]}\n"
+                    f"    python tools/promote_new_law.py --economy \"{d.get('economy','')}\" "
+                    f"--law-name \"{d.get('law_name','')}\" --url \"{d.get('official_url','')}\" "
+                    f"--pillars {','.join(pillars)} --indicators {','.join(inds) or '?'} "
+                    f"--article \"{d.get('article','')}\" --text-file <verbatim.txt> --verify")
+            elif verdict == "reject":
+                actions.append(f"LIVE REJECT: {d.get('law_name','')[:55]} — {note or 'not indicator evidence'}")
+            elif verdict == "unsure":
+                actions.append(f"LIVE UNSURE: {d.get('law_name','')[:55]} — needs discussion")
+    return actions
+
+
 def append_ledger(doc: dict, source: str, apply: bool) -> int:
     entries = []
     for d in doc.get("decisions", []):
@@ -178,6 +242,10 @@ def main(argv=None) -> int:
         elif batch == "live-discovery-adjudication":
             for line in report_adjudication(doc):
                 print("  " + line)
+        elif batch == "rdtii-new-law-scoring":
+            for a in apply_scoring_console(doc, manifest, args.apply):
+                print("  " + a)
+            changed = True
         else:
             print(f"  ({len(doc.get('decisions', []))} decision(s) recorded to the ledger)")
         n = append_ledger(doc, Path(f).name, args.apply)
