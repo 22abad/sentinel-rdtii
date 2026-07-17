@@ -70,3 +70,5 @@ data/fetch_cache/*/
 outputs/judge_matrix/
 
 .DS_Store
+
+*.egg-info/
