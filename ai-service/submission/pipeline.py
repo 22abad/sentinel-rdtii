@@ -158,6 +158,15 @@ def _notes(mapping: IndicatorMapping, candidate: Any, doc_meta: dict) -> str:
         parts.append(f"document quality: {quality}")
     if (doc_meta or {}).get("partial_document_note"):
         parts.append(str(doc_meta["partial_document_note"]))
+    # Currency provenance: show the reviewer this is the current consolidated
+    # version and when that was verified (curated seeds only).
+    law_version = str((doc_meta or {}).get("law_version") or "").strip()
+    if law_version:
+        checked = str((doc_meta or {}).get("currency_checked_at") or "").strip()
+        parts.append(
+            f"current version: {law_version}"
+            + (f" (currency verified {checked})" if checked else "")
+        )
     # De-duplicate while preserving order.
     seen: set[str] = set()
     unique = [p for p in parts if not (p in seen or seen.add(p))]
@@ -721,6 +730,11 @@ async def run_library(
             # fallback so a banked law never drops on "missing: article" just
             # because the LLM omitted the clause on a thin text.
             "article_hint": entry.article_hint,
+            # Curated currency provenance — surfaced in the row note so a reviewer
+            # can see this is the current consolidated version as verified on a
+            # given date, not a stale point-in-time copy.
+            "law_version": getattr(entry, "version", ""),
+            "currency_checked_at": getattr(entry, "currency_checked_at", ""),
         }
         try:
             result = await run_extraction(entry.text, provider)

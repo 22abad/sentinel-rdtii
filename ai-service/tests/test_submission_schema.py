@@ -440,6 +440,28 @@ def test_build_row_fills_last_amended_from_document_text():
     assert row2.last_amended == "Not stated in source"
 
 
+def test_build_row_surfaces_curated_currency_version_in_notes():
+    # A curated seed carries a verified "current version" label + check date;
+    # the row note must surface it so a reviewer sees we are on the current
+    # consolidated version, not a stale copy.
+    text = "x" * 100 + _sample_mapping().verbatim_quote + "y" * 100
+    row = build_row(
+        _sample_mapping(),
+        economy_display="Singapore",
+        source_text=text,
+        doc_meta={
+            "law_version": "2020 Revised Edition (Act 26 of 2012)",
+            "currency_checked_at": "2026-07-13",
+        },
+    )
+    assert "current version: 2020 Revised Edition (Act 26 of 2012)" in row.notes
+    assert "currency verified 2026-07-13" in row.notes
+
+    # A live find with no curated version adds no currency note.
+    live = build_row(_sample_mapping(), economy_display="Singapore", source_text=text)
+    assert "current version:" not in live.notes
+
+
 def test_pdf_offsets_resolve_to_page_and_cross_page_range():
     text, spans = _join_pdf_pages(["first page", "second page quote", "third page"])
     quote_start = text.index("page quote")
