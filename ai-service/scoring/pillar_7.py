@@ -140,8 +140,13 @@ def score_7_4(features: dict) -> tuple[Score, str]:
         return 0.5, "Score 0.5: Requirements for having a DPO are applied only to a specific sector."
         
     if has_dpia:
-        return 0.25, "Score 0.25: Only a Data Protection Impact Assessment (DPIA) is required, without a DPO."
-        
+        # The official 7.4 scale is strictly DPO-based — 1 (DPO, all sectors),
+        # 0.5 (DPO, specific sector), 0 (no DPO requirement). There is no
+        # DPIA-only tier, so a DPIA requirement without a DPO does not earn
+        # partial credit. (A fabricated 0.25 here produced an off-spec score the
+        # official key never uses in Pillars 6-7.)
+        return 0.0, "Score 0: A DPIA requirement without a DPO requirement does not meet the DPO-based criteria for this indicator (official scale: 1 / 0.5 / 0)."
+
     return 0.0, "Score 0: No requirement for DPO or DPIA."
 
 

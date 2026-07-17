@@ -403,8 +403,10 @@ class TestIndicator7_4:
             == 0.5
         )
 
-    def test_only_dpia_scores_quarter(self):
-        # Theoretical edge case from the guide.
+    def test_only_dpia_scores_zero(self):
+        # The official 7.4 scale is strictly DPO-based (1 / 0.5 / 0). A DPIA
+        # requirement without a DPO is NOT a scored tier — it must not earn a
+        # fabricated 0.25 (that value only exists officially for indicator 3.4).
         assert (
             score_7_4(
                 {
@@ -412,7 +414,7 @@ class TestIndicator7_4:
                     "has_dpia_requirement": True,
                 }
             )
-            == 0.25
+            == 0.0
         )
 
     def test_no_requirement_scores_zero(self):
@@ -490,6 +492,62 @@ class TestConsentGateVeto:
         features = {"has_government_access_without_judicial_oversight": True}
         assert veto_consent_gated_government_access("7.1", self._PDPA_S59, features) == []
         assert features["has_government_access_without_judicial_oversight"] is True
+
+
+class TestNoScoreHallucination:
+    """Every P6/P7 scorer may only ever return an official methodology value.
+
+    Enforces the standing rule: scores are hard-coded to the official scale, with
+    no fabricated in-between tier (this is what the score_7_4 0.25 bug violated).
+    """
+
+    import itertools as _it
+
+    # The boolean feature keys each bespoke scorer reads.
+    _FEATURE_KEYS = {
+        "6.1": ["has_ban", "has_local_processing", "horizontal_scope", "personal_data"],
+        "6.2": ["has_local_storage", "horizontal_scope", "personal_data"],
+        "6.3": ["has_infrastructure_req"],
+        "6.4": ["has_conditional_flow", "horizontal_scope", "personal_data"],
+        "7.1": ["has_comprehensive_framework", "has_sectoral_framework_only"],
+        "7.2": ["has_dedicated_cybersecurity_law", "has_sectoral_cybersecurity_only"],
+        "7.3": ["has_minimum_retention_period"],
+        "7.4": ["has_dpo_requirement", "has_dpia_requirement", "horizontal_scope"],
+        "7.5": ["has_government_access_without_judicial_oversight"],
+    }
+
+    def test_every_score_is_official(self):
+        from scoring import OFFICIAL_ALLOWED_SCORES, score_indicator
+
+        for ind, keys in self._FEATURE_KEYS.items():
+            allowed = OFFICIAL_ALLOWED_SCORES[ind]
+            for combo in self._it.product([True, False], repeat=len(keys)):
+                features = dict(zip(keys, combo))
+                score, _ = score_indicator(ind, features)
+                assert score in allowed, (
+                    f"{ind} returned off-spec {score} for {features}; "
+                    f"official allows {sorted(allowed)}"
+                )
+
+    def test_guard_snaps_off_spec_score(self):
+        # A fabricated tier (like the old 7.4 0.25) is snapped to an official value.
+        from scoring import _enforce_official_score
+
+        score, note = _enforce_official_score("7.4", 0.25, "x")
+        assert score in {0.0, 0.5}
+        assert "off-spec" in note
+
+    def test_guard_passes_through_unknown_indicator(self):
+        # Indicators without a hard-coded official set are untouched.
+        from scoring import _enforce_official_score
+
+        assert _enforce_official_score("3.1", 0.8, "x") == (0.8, "x")
+
+    def test_no_official_indicator_uses_fabricated_tiers(self):
+        from scoring import OFFICIAL_ALLOWED_SCORES
+
+        for ind, allowed in OFFICIAL_ALLOWED_SCORES.items():
+            assert allowed <= {0.0, 0.5, 1.0}, f"{ind} lists a non-R1 tier: {allowed}"
 
 
 # ──────────────────────────────────────────────────────────────────────────
