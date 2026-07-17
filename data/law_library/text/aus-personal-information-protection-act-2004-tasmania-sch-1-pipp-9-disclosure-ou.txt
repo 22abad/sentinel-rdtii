@@ -1,0 +1,11 @@
+Personal Information Protection Act 2004 (Tasmania) — Schedule 1, Personal Information Protection Principle 9 (Disclosure of information outside Tasmania)
+
+9. Disclosure of information outside Tasmania
+A personal information custodian may disclose personal information about an individual to another person or other body who is outside Tasmania only if:
+(a) the personal information custodian reasonably believes that the recipient of the information is subject to a law, binding scheme or contract that has principles for fair handling of the information that are substantially similar to the personal information protection principles; or
+(b) the individual consents to the disclosure; or
+(c) the disclosure is necessary for
+(i) the performance of a contract between the individual and the personal information custodian; or
+(ii) the conclusion or performance of a contract concluded in the interest of the individual between the personal information custodian and a third party; or
+(d) the personal information custodian has taken reasonable steps to ensure that the information which it has disclosed is not to be held, used or disclosed by the recipient of the information inconsistently with the personal information protection principles; or
+(e) the disclosure is authorised or required by any other law.
