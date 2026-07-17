@@ -477,6 +477,27 @@ _NON_STATUTE_INSTRUMENT = re.compile(
 _REPEALED_LAW_NAME = re.compile(r"[\(\[]\s*repealed\s*[\)\]]", re.IGNORECASE)
 
 
+# RDTII rule (framework guide, confirmed): "A measure applied to the Government
+# data should not be scored, because the indicator focuses on a measure
+# potentially affecting commercial transactions" — named explicitly for Pillar 6.
+# So a provision that regulates GOVERNMENT records (their destruction, retention,
+# access) is not scoreable evidence. We match the government-record OBJECT, and
+# guard with a personal/commercial-data check so a personal-data law that merely
+# mentions government (e.g. the Identity Verification Services Act's "facial image"
+# obligations that reference a Commonwealth record) is NOT dropped.
+_GOVERNMENT_DATA_OBJECT = re.compile(
+    r"\bcommonwealth record|\bgovernment record|\bpublic record|\bstate records?\b"
+    r"|\bofficial records?\s+relating to (?:affairs of )?state"
+    r"|\bpublic[- ]sector record",
+    re.IGNORECASE,
+)
+_PERSONAL_DATA_SUBJECT = re.compile(
+    r"personal (?:data|information)|facial image|biometric|identification information"
+    r"|individual'?s?\s+(?:data|information|image)|data subject",
+    re.IGNORECASE,
+)
+
+
 # Pillar 6 is about DATA flows. A P6 row whose quote contains no data-ish
 # language at all is usually the extractor mis-reading a licence/asset/permit
 # "transfer" provision (Gas Act, aviation Acts...). We FLAG, never drop — the
@@ -550,6 +571,13 @@ def _is_non_statute_instrument(law_name: str) -> bool:
 def _is_repealed_law(law_name: str) -> bool:
     """True when the law's title carries the explicit "(Repealed)" status marker."""
     return bool(_REPEALED_LAW_NAME.search(law_name or ""))
+
+
+def _is_government_data_measure(law_name: str, quote: str) -> bool:
+    """True when a provision regulates GOVERNMENT records (not scoreable per the
+    methodology), and is not really about personal/commercial data."""
+    blob = f"{law_name or ''} {quote or ''}"
+    return bool(_GOVERNMENT_DATA_OBJECT.search(blob)) and not _PERSONAL_DATA_SUBJECT.search(blob)
 
 
 # A law name must contain SOME statutory-instrument word (multi-language). The
@@ -792,6 +820,17 @@ def validate_submission_rows(
             logger.warning(
                 "Dropping submission row %d: law is marked repealed — the "
                 "methodology excludes repealed measures: %r",
+                index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _is_government_data_measure(
+            str(getattr(row, "law_name", "") or ""),
+            str(getattr(row, "verbatim_snippet", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: measure regulates government records, "
+                "not commercial data — the methodology does not score government "
+                "data: %r",
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue
