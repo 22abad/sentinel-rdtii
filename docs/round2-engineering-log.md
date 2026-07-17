@@ -722,3 +722,44 @@ exact-match rate can't see a consent clause read as surveillance, a fabricated
 0.25, or the right law filed under the wrong indicator — only a human reading the
 evidence catches those. Deterministic scoring must be pinned to the official
 scale, value by value.
+
+## 2026-07-18 — a forensic review of four Australian laws (external research, verified)
+
+The legal lead ran four Australian provisions through an external deep-research
+model, then had us verify each claim against the official guide before acting.
+Two produced real fixes; both were then re-confirmed by a second, sourced
+research pass quoting the guide verbatim.
+
+**7.5 under a judicial warrant is not "without oversight" (#265).** Crimes Act
+1914 s3LA ("a constable may apply to a **magistrate** for an order ... to access
+data") was read as unfettered government access. The official 7.5 criterion:
+*"Score of 1 ... if the government is allowed to access personal data **without a
+court order** ... Requiring a court order ... gets a score of 0."* Extended the
+#259 veto (which only handled consent) to judicial authorisation — warrant /
+court / judge / magistrate order → feature cleared → 0. Negations ("without a
+warrant") and genuine warrantless police access (SGP CPC s39, official 7.5 = 1)
+are untouched.
+
+**Government-data measures are not scored (#266).** Archives Act 1983 s24 (bars
+destroying a "Commonwealth record") was scored at 7.3. The guide: *"any
+regulatory measure that is applied to **government data does not get scored** ...
+the indicators are ... designed to focus on ... **commercial transactions**."* A
+latent `_excluded_if_gov_only` feature existed but relied on an LLM flag the
+model never set for the Archives Act. Added a deterministic validator drop
+(government-record object, guarded by a personal/commercial-data check), verified
+on live output: drops Archives Act s24 + the Evidence Act "official records of
+State" clause, keeps the Identity Verification Act's facial-image duties and PDPA.
+
+**Verified-but-not-adopted.** Indicator WEIGHTS are official (12 pillars
+equal-weighted and averaged; within-pillar weights, e.g. P7 = 31/31/16/16/6) but
+we compute no aggregate index score (we emit evidence rows + per-indicator
+scores; judges aggregate), so weights stay documentation only. Indicator **6.5**
+is absent from the Round-1 database and methodology sheet (P6 = 6.1-6.4), but the
+guide's Pillar-6 indicator figure was not accessible to confirm the full
+framework — so the phantom `score_6_5` is flagged, not ripped out, pending a
+scope decision. Full verified/not-adopted table lives in the vault.
+
+Lesson: **external research is a lead, not a source.** Every claim was quoted
+back to the official guide before it touched code; the two that survived were
+real, the weights/6.5/DTRS specifics that couldn't be sourced were logged as
+"reference only."
