@@ -62,12 +62,14 @@ def retrieve(
     *,
     top_k: int = DEFAULT_TOP_K,
     country_code: str | None = None,
+    document_ids: list[str] | None = None,
     min_score: float = 0.0,
 ) -> list[RetrievedChunk]:
     """Embed *query* and return the top_k most similar chunks.
 
     Optionally filter by country_code (display name or ISO-3, normalised)
-    and drop hits below min_score.
+    and/or restrict to specific documents (session-scoped retrieval);
+    drop hits below min_score.
     """
     if not query or not query.strip():
         return []
@@ -78,11 +80,15 @@ def retrieve(
     vec = normalize(_get_model().encode([query]))[0]
     qvec = _to_pgvector(vec)
 
-    where = ""
+    conditions: list[str] = []
     params: list = [qvec]                      # SELECT score
     if country_code:
-        where = "WHERE ce.country_code = %s"
+        conditions.append("ce.country_code = %s")
         params.append(country_code)
+    if document_ids:
+        conditions.append("ce.document_id = ANY(%s::uuid[])")
+        params.append(document_ids)
+    where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
     params.append(qvec)                        # ORDER BY
     params.append(top_k)                       # LIMIT
 

@@ -64,3 +64,14 @@ async def canvas_file_status(
     if status is None:
         raise HTTPException(status_code=404, detail="Unknown document.")
     return StatusResponse(document_id=document_id, status=status)
+
+
+@router.delete("/{document_id}", response_model=StatusResponse)
+async def delete_canvas_file(
+    document_id: str,
+    current_user: dict = Depends(get_current_user),
+) -> StatusResponse:
+    """Delete an ingested document (and its chunks/embeddings) from the KB."""
+    if not ingest.delete_document(document_id):
+        raise HTTPException(status_code=404, detail="Unknown document.")
+    return StatusResponse(document_id=document_id, status="deleted")

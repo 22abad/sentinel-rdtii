@@ -244,6 +244,8 @@ class RAGQueryRequest(BaseModel):
     source_text: str = ""
     country_code: str = ""
     provider: str = ""
+    # Session-scoped retrieval: restrict to these ingested documents.
+    document_ids: list[str] = []
 
 
 class RAGQueryResponse(BaseModel):

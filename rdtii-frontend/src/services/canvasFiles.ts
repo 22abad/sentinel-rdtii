@@ -38,6 +38,15 @@ export async function getCanvasFileStatus(documentId: string): Promise<string> {
   return payload.status;
 }
 
+/** Permanently delete an ingested document (chunks + embeddings cascade). */
+export async function deleteCanvasFile(documentId: string): Promise<void> {
+  const res = await fetch(`${CANVAS_FILES_API_URL}/${encodeURIComponent(documentId)}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error(`Delete failed (HTTP ${res.status}).`);
+}
+
 /** Upload a canvas file to the backend for RAG ingestion (extract → chunk → embed). */
 export async function uploadCanvasFile(
   file: File,

@@ -105,6 +105,8 @@ export type RagQueryRequest = {
   source_text?: string;
   country_code?: string;
   provider?: string;
+  /** Session-scoped retrieval: restrict to these ingested documents. */
+  document_ids?: string[];
 };
 
 export type RagQueryResponse = {

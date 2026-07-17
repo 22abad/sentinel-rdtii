@@ -1,17 +1,25 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Handle, NodeResizer, Position } from "@xyflow/react";
 import { motion } from "motion/react";
-import { Trash2, MessagesSquare } from "lucide-react";
+import { Trash2, MessagesSquare, ChevronDown, Send, FileText } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { RESIZER_HANDLE_STYLE, RESIZER_LINE_STYLE } from "./resize";
 import type { ChatMessage, WorkbenchCanvasSize } from "./types";
+import { FileCardStack } from "../Workbench/FileCardStack";
 
 export type SessionNodeData = {
   title?: string;
   messages: ChatMessage[];
   /** True while the linked RAG chat awaits an answer for this session. */
   pending?: boolean;
+  /** Continue this session directly from the node's own input. */
+  onSend?: (question: string) => void;
+  /** Documents attached to this session — answers are scoped to them. */
+  files?: { documentId: string; fileName: string }[];
+  onRemoveFile?: (documentId: string) => void;
+  /** Permanently delete the ingested document from the knowledge base. */
+  onDeleteFile?: (documentId: string, fileName: string) => void;
   width?: number;
   height?: number;
   onResize?: (size: WorkbenchCanvasSize) => void;
@@ -27,8 +35,18 @@ const SESSION_MIN_SIZE = { width: 300, height: 200 };
  */
 export function SessionNode({ id, data, selected }: { id: string; data: SessionNodeData; selected?: boolean }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [minimized, setMinimized] = useState(false);
+  const [dataOpen, setDataOpen] = useState(false);
+  const [draft, setDraft] = useState("");
+
+  const submitDraft = () => {
+    const question = draft.trim();
+    if (!question || data.pending || !data.onSend) return;
+    data.onSend(question);
+    setDraft("");
+  };
   const nodeWidth = data.width ?? 380;
-  const nodeHeight = data.height ?? 340;
+  const nodeHeight = minimized ? undefined : data.height ?? 340;
 
   // Pin the thread to the latest message.
   useEffect(() => {
@@ -36,10 +54,10 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
   }, [data.messages, data.pending]);
 
   return (
-    <div style={{ position: "relative", width: nodeWidth, height: nodeHeight }}>
+    <div style={{ position: "relative", width: nodeWidth, height: nodeHeight ?? "auto" }}>
       <NodeResizer
         nodeId={id}
-        isVisible={selected}
+        isVisible={selected && !minimized}
         minWidth={SESSION_MIN_SIZE.width}
         minHeight={SESSION_MIN_SIZE.height}
         color="#10B981"
@@ -89,7 +107,7 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          borderRadius: 16,
+          borderRadius: 32,
           overflow: "hidden",
           background: "#ffffff",
           border: "1px solid #d8dee6",
@@ -118,9 +136,82 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
           <span style={{ fontSize: "0.68rem", color: "#8a94a3" }}>
             {data.messages.length} message{data.messages.length !== 1 ? "s" : ""}
           </span>
+          <button
+            className="nodrag"
+            title={minimized ? "Expand session" : "Minimize session"}
+            aria-expanded={!minimized}
+            onClick={(e) => {
+              e.stopPropagation();
+              setMinimized((v) => !v);
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 20,
+              height: 20,
+              minHeight: 0,
+              padding: 0,
+              borderRadius: 9999,
+              border: "none",
+              background: "transparent",
+              color: "#5a6573",
+              cursor: "pointer",
+            }}
+          >
+            <motion.span
+              animate={{ rotate: minimized ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+              style={{ display: "flex" }}
+            >
+              <ChevronDown size={14} />
+            </motion.span>
+          </button>
         </div>
 
-        {/* Thread */}
+        {/* Session data bar — expands a management tray hanging below the node */}
+        {!minimized && (data.files?.length ?? 0) > 0 && (
+          <button
+            type="button"
+            className="nodrag"
+            aria-expanded={dataOpen}
+            title="Documents attached to this session — answers are scoped to them."
+            onClick={(e) => {
+              e.stopPropagation();
+              setDataOpen((v) => !v);
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 7,
+              padding: "7px 12px",
+              minHeight: 0,
+              border: "none",
+              borderBottom: "1px solid #eef2f4",
+              borderRadius: 0,
+              background: "#fbfcfd",
+              color: "#116149",
+              fontSize: "0.72rem",
+              fontWeight: 750,
+              cursor: "pointer",
+              flexShrink: 0,
+              textAlign: "left",
+            }}
+          >
+            <FileText size={12} />
+            {data.files?.length} document{(data.files?.length ?? 0) !== 1 ? "s" : ""} in this session
+            <motion.span
+              animate={{ rotate: dataOpen ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+              style={{ display: "flex", marginLeft: "auto" }}
+            >
+              <ChevronDown size={13} />
+            </motion.span>
+          </button>
+        )}
+
+        {/* Thread — hidden while minimized (header keeps title + count) */}
+        {!minimized && (
         <div
           ref={scrollRef}
           className="nodrag nowheel chat-md-session"
@@ -184,7 +275,151 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
             </div>
           )}
         </div>
+        )}
+
+        {/* Session-local input — continue this thread without the chat node */}
+        {!minimized && data.onSend && (
+          <div
+            className="nodrag"
+            style={{
+              display: "flex",
+              gap: 8,
+              padding: "8px 10px",
+              borderTop: "1px solid #eef2f4",
+              background: "#fbfcfd",
+              flexShrink: 0,
+            }}
+          >
+            <input
+              type="text"
+              value={draft}
+              placeholder="Reply in this session…"
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  submitDraft();
+                }
+              }}
+              onMouseDown={(e) => e.stopPropagation()}
+              style={{
+                flex: 1,
+                minWidth: 0,
+                border: "1px solid #e4eaee",
+                borderRadius: 9999,
+                padding: "6px 12px",
+                fontSize: "0.8rem",
+                background: "#ffffff",
+                outline: "none",
+              }}
+            />
+            <button
+              type="button"
+              title="Send"
+              onClick={(e) => {
+                e.stopPropagation();
+                submitDraft();
+              }}
+              disabled={!draft.trim() || data.pending}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 32,
+                height: 32,
+                minHeight: 0,
+                padding: 0,
+                borderRadius: "50%",
+                border: "none",
+                background: "#10B981",
+                color: "#ffffff",
+                cursor: "pointer",
+              }}
+            >
+              <Send size={14} className={data.pending ? "animate-pulse" : undefined} />
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Data tray — hangs below the node when expanded */}
+      {!minimized && dataOpen && (data.files?.length ?? 0) > 0 && (
+        <div
+          className="nodrag nowheel"
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            marginTop: 10,
+            zIndex: 20,
+            background: "transparent",
+          }}
+        >
+          <FileCardStack
+            items={(data.files ?? []).map((f) => ({
+              id: f.documentId,
+              name: f.fileName,
+              subtitle: "in knowledge base",
+              actions: (
+                <span style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                  {data.onRemoveFile && (
+                    <button
+                      type="button"
+                      title="Remove from this session (keeps the document in the knowledge base)"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        data.onRemoveFile?.(f.documentId);
+                      }}
+                      style={{
+                        minHeight: 0,
+                        padding: "3px 9px",
+                        borderRadius: 9999,
+                        border: "1px solid #d5dde2",
+                        background: "#ffffff",
+                        color: "#52606d",
+                        fontSize: "0.68rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Unlink
+                    </button>
+                  )}
+                  {data.onDeleteFile && (
+                    <button
+                      type="button"
+                      title="Delete the ingested data from the knowledge base (permanent)"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Delete “${f.fileName}” from the knowledge base? This removes its ingested data for everyone.`)) {
+                          data.onDeleteFile?.(f.documentId, f.fileName);
+                        }
+                      }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        minHeight: 0,
+                        padding: "3px 9px",
+                        borderRadius: 9999,
+                        border: "none",
+                        background: "#fee2e2",
+                        color: "#991b1b",
+                        fontSize: "0.68rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Trash2 size={11} /> Delete
+                    </button>
+                  )}
+                </span>
+              ),
+            }))}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { Lightbulb, Mic, Globe, Paperclip, Send, X } from "lucide-react";
+import { MessageSquarePlus, Mic, Globe, Paperclip, Send, X } from "lucide-react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { runRagQueryNode } from "../../services/workflowNodes";
+import { FileCardStack, CARD_H, CARD_GAP } from "./FileCardStack";
 
 const PLACEHOLDERS = [
   "Summarise the cross-border data flow obligations...",
@@ -17,48 +18,39 @@ const TEXT_SUB_INPUTS = [
   { key: "context", label: "Context", placeholder: "e.g. Reviewing Singapore's PDPA amendments..." },
 ];
 
-const CARD_H = 56;
-const CARD_GAP = 10;
-
-function extColor(filename: string): string {
-  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
-  if (ext === "pdf") return "#ef4444";
-  if (["txt", "md"].includes(ext)) return "#3b82f6";
-  if (["jpg", "jpeg", "png"].includes(ext)) return "#8b5cf6";
-  return "#10B981";
-}
-
-function extLabel(filename: string): string {
-  return filename.split(".").pop()?.toUpperCase() ?? "FILE";
-}
-
 interface AIChatInputProps {
-  onFileSelect?: (file: File) => void;
+  /** opts.newSession: the 'New' toggle was armed — route the FIRST file of
+      the batch into a fresh session; the rest follow it. */
+  onFileSelect?: (file: File, opts?: { newSession?: boolean }) => void | Promise<void>;
   isIngesting?: boolean;
   expandUp?: boolean;
   countryCode?: string;
   onResponse?: (answer: string) => void;
   /** Fired when the chat bar activates/deactivates (click / focus / click-away). */
   onActiveChange?: (active: boolean) => void;
-  /** Fired the moment the user submits a question, before the answer arrives. */
-  onSend?: (question: string) => void;
+  /** Fired the moment the user submits a question, before the answer arrives.
+      opts.newSession is set when the 'New' toggle was active (start a fresh
+      session thread instead of appending to the latest). */
+  onSend?: (question: string, opts?: { newSession?: boolean }) => void;
   /** Fired when the RAG query fails (lets listeners clear pending state). */
   onError?: (message: string) => void;
+  /** Show the 'New' session toggle (canvas chat nodes only — pages with a
+      single conversation thread should leave this off). */
+  enableNewSession?: boolean;
   provider?: string;
 }
 
-const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, countryCode, onResponse, onActiveChange, onSend, onError, provider }: AIChatInputProps) => {
+const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, countryCode, onResponse, onActiveChange, onSend, onError, enableNewSession = false, provider }: AIChatInputProps) => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [isActive, setIsActive] = useState(false);
-  const [thinkActive, setThinkActive] = useState(false);
+  const [newSessionActive, setNewSessionActive] = useState(false);
   const [deepSearchActive, setDeepSearchActive] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [subValues, setSubValues] = useState<Record<string, string>>({ role: "", context: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<{ id: number; file: File }[]>([]);
-  const [filesExpanded, setFilesExpanded] = useState(false);
   const fileIdRef = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -68,17 +60,18 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
 
     // Files take priority — ingest each queued file, then clear the list
     if (uploadedFiles.length > 0 && onFileSelect) {
-      for (const { file } of uploadedFiles) {
-        await onFileSelect(file);
+      for (const [index, { file }] of uploadedFiles.entries()) {
+        await onFileSelect(file, { newSession: newSessionActive && index === 0 });
       }
+      setNewSessionActive(false); // one-shot, same as text sends
       setUploadedFiles([]);
-      setFilesExpanded(false);
       return;
     }
 
     if (!inputValue.trim()) return;
     const question = inputValue.trim();
-    onSend?.(question);      // show the user's bubble immediately (WhatsApp-style)
+    onSend?.(question, { newSession: newSessionActive }); // bubble shows immediately
+    setNewSessionActive(false); // one-shot: the toggle arms a single send
     setInputValue("");
     setIsLoading(true);
     setError("");
@@ -188,12 +181,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
     flexShrink: 0,
   };
 
-  // Stacked card geometry
   const n = uploadedFiles.length;
-  const peek = Math.min(n - 1, 2); // how many ghost cards peek behind
-  const collapsedContainerH = n === 0 ? 24 : CARD_H + peek * 8;
-  const expandedContainerH = n === 0 ? 24 : n * CARD_H + (n - 1) * CARD_GAP;
-  const containerH = filesExpanded ? expandedContainerH : collapsedContainerH;
 
   return (
     <div ref={wrapperRef} className={`w-full text-black flex gap-2 ${expandUp ? "flex-col-reverse" : "flex-col"}`}>
@@ -295,14 +283,16 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
             style={{ marginTop: 8 }}
           >
             <div className="flex gap-3 items-center">
+              {enableNewSession && (
               <button
-                className={`flex items-center gap-1 px-4 py-2 rounded-full transition-all font-medium group ${thinkActive ? "bg-[#10B981]/10 outline outline-[#10B981]/60 text-[#065f46]" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
-                title="Think" type="button"
-                onClick={(e) => { e.stopPropagation(); setThinkActive((a) => !a); }}
+                className={`flex items-center gap-1 px-4 py-2 rounded-full transition-all font-medium group ${newSessionActive ? "bg-[#10B981]/10 outline outline-[#10B981]/60 text-[#065f46]" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                title="Start a new session thread with the next message" type="button"
+                onClick={(e) => { e.stopPropagation(); setNewSessionActive((a) => !a); }}
               >
-                <Lightbulb className="group-hover:fill-yellow-300 transition-all" size={18} />
-                Think
+                <MessageSquarePlus size={18} />
+                New
               </button>
+              )}
 
               <motion.button
                 className={`flex items-center px-4 gap-1 py-2 rounded-full transition font-medium whitespace-nowrap overflow-hidden justify-start ${deepSearchActive ? "bg-[#10B981]/10 outline outline-[#10B981]/60 text-[#065f46]" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
@@ -364,104 +354,35 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
             {/* Stacked file cards — wrapper always mounted, collapses when empty */}
             <div style={{
               overflow: "hidden",
-              maxHeight: n > 0 ? "600px" : 0,
+              // Generous cap so many files (and the toggle's shadow) never clip.
+              maxHeight: n > 0 ? `${n * (CARD_H + CARD_GAP) + 140}px` : 0,
               opacity: n > 0 ? 1 : 0,
               transition: "max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease",
             }}>
-              {(
-                <motion.div
-                  custom={TEXT_SUB_INPUTS.length}
-                  variants={subInputItemVariants}
-                  initial="hidden"
-                  animate={n > 0 ? "visible" : "hidden"}
-                  style={{ display: "flex", flexDirection: "column", gap: 0 }}
-                >
-                  {/* Stacked cards area */}
-                  <div
-                    style={{ position: "relative", width: "100%", height: containerH, transition: "height 0.35s cubic-bezier(0.4,0,0.2,1)" }}
-                  >
-                    <AnimatePresence>
-                      {uploadedFiles.map(({ id, file }, i) => {
-                        const color = extColor(file.name);
-                        const label = extLabel(file.name);
-                        const expandedY = i * (CARD_H + CARD_GAP);
-                        const translateY = filesExpanded ? expandedY : i * 8;
-                        const scale = filesExpanded ? 1 : Math.max(1 - i * 0.04, 0.88);
-                        const opacity = filesExpanded ? 1 : i > 2 ? 0 : 1 - i * 0.15;
-
-                        return (
-                          <motion.div
-                            key={id}
-                            style={{ position: "absolute", left: 0, right: 0, height: CARD_H, zIndex: n - i }}
-                            initial={{ x: 40, opacity: 0 }}
-                            animate={{ x: 0, y: translateY, scale, opacity }}
-                            exit={{ x: 60, opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
-                            transition={{ type: "spring", stiffness: 260, damping: 26, delay: filesExpanded ? i * 0.04 : (n - 1 - i) * 0.04 }}
-                          >
-                            <div style={{ height: "100%", background: "#fff", border: "1px solid #e4eaee", borderRadius: 9999, padding: "10px 14px", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.07)" }}>
-                              <div style={{ width: 36, height: 36, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "0.6rem", fontWeight: 800, color: "#fff" }}>{label}</div>
-                              <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#1f2933", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{file.name}</div>
-                                <div style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 1 }}>{(file.size / 1024).toFixed(0)} KB</div>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => setUploadedFiles((prev) => prev.filter((entry) => entry.id !== id))}
-                                style={{ flexShrink: 0, padding: 4, borderRadius: "50%", border: "none", background: "transparent", cursor: "pointer", color: "#9ca3af", display: "flex", alignItems: "center", justifyContent: "center" }}
-                                className="hover:text-red-400 transition"
-                              >
-                                <X size={14} />
-                              </button>
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Expand / collapse toggle */}
-                  <motion.button
-                    type="button"
-                    onClick={() => setFilesExpanded((v) => !v)}
-                    style={{
-                      marginTop: 10,
-                      alignSelf: "center",
-                      position: "relative",
-                      padding: "8px 36px 8px 20px",
-                      background: "#fff",
-                      borderRadius: 9999,
-                      border: "none",
-                      boxShadow: "0px 3px 3.5px rgba(119,113,113,0.35)",
-                      fontSize: "0.75rem",
-                      fontWeight: 600,
-                      color: "#1f2933",
-                      cursor: "pointer",
-                    }}
-                    whileHover={{ y: -2, boxShadow: "0px 5px 5px rgba(119,113,113,0.4)" }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    layout
-                  >
-                    {filesExpanded ? "Collapse" : `Show all ${n} file${n !== 1 ? "s" : ""}`}
-                    <motion.span
-                      style={{
-                        position: "absolute",
-                        right: 14,
-                        top: "50%",
-                        marginTop: -5,
-                        width: 7,
-                        height: 7,
-                        borderTop: "2px solid #1f2933",
-                        borderLeft: "2px solid #1f2933",
-                        display: "block",
-                      }}
-                      initial={false}
-                      animate={{ rotate: filesExpanded ? 45 : 225, y: filesExpanded ? 2 : -2 }}
-                      transition={{ duration: 0.3, ease: "linear" }}
-                    />
-                  </motion.button>
-                </motion.div>
-              )}
+              <motion.div
+                custom={TEXT_SUB_INPUTS.length}
+                variants={subInputItemVariants}
+                initial="hidden"
+                animate={n > 0 ? "visible" : "hidden"}
+              >
+                <FileCardStack
+                  items={uploadedFiles.map(({ id, file }) => ({
+                    id: String(id),
+                    name: file.name,
+                    subtitle: `${(file.size / 1024).toFixed(0)} KB`,
+                    actions: (
+                      <button
+                        type="button"
+                        onClick={() => setUploadedFiles((prev) => prev.filter((entry) => entry.id !== id))}
+                        style={{ flexShrink: 0, padding: 4, minHeight: 0, borderRadius: "50%", border: "none", background: "transparent", cursor: "pointer", color: "#9ca3af", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        className="hover:text-red-400 transition"
+                      >
+                        <X size={14} />
+                      </button>
+                    ),
+                  }))}
+                />
+              </motion.div>
             </div>
           </motion.div>
         )}
