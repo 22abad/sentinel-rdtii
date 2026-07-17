@@ -175,6 +175,37 @@ async def test_run_library_offline_tags_rows_known(monkeypatch):
 
 
 @pytest.mark.anyio
+async def test_seed_honours_indicator_hint_via_targeted_topup(monkeypatch):
+    # The broad pass mis-routes every provision to 7.1 (as the real classifier
+    # did with the Criminal Procedure Code s39 "access computer" clause). The
+    # curated 7.5 hint must still surface via a targeted top-up extraction.
+    def _mapping(indicator):
+        return SimpleNamespace(
+            pillar=7, indicator=indicator, article_clause="Section 39",
+            verbatim_quote="a police officer may access any computer and data",
+            quote_start=0, quote_end=48,
+            source_legislation="Criminal Procedure Code 2010",
+            last_update="", source_url="",
+            impact="Government computer-access power.",
+            requires_human_review=False, flag_reasons=[],
+        )
+
+    async def fake_extraction(text, provider, target_indicators=None, pdf_metadata=None):
+        # Targeted call for the missed hint returns the correct indicator;
+        # the broad call mis-routes to 7.1.
+        indicator = "7.5" if target_indicators and "7.5" in target_indicators else "7.1"
+        return SimpleNamespace(mappings=[_mapping(indicator)])
+
+    monkeypatch.setattr("services.extraction.run_extraction", fake_extraction)
+    monkeypatch.setattr("providers.get_provider", lambda name, model=None: SimpleNamespace(name="fake"))
+    monkeypatch.delenv("RDTII_LLM_FALLBACK_PROVIDER", raising=False)
+
+    rows, _ = await run_library("SGP", 7, indicators=["7.5"])
+    # Broad pass alone would yield zero 7.5 rows; the top-up recovers it.
+    assert any(r.indicator_id == "P7-I5" for r in rows)
+
+
+@pytest.mark.anyio
 async def test_run_library_reports_empty_economy(monkeypatch):
     async def unused_extraction(text, provider):  # pragma: no cover - must not run
         raise AssertionError("extraction should not run when no cached laws match")
