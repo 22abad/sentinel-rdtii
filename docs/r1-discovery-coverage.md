@@ -12,11 +12,23 @@ cell is backed by a verbatim provision + SHA-256 + an official-source URL._
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | 🇸🇬 SGP | · | · | ○ | 🆕 | 🆕 | · | 🆕 | · | · |
 | 🇲🇾 MYS | · | · | ○ | · | 🆕 | · | 🆕 | 🆕 | · |
-| 🇦🇺 AUS | · | · | ○ | 🆕 | 🆕 | 🆕 | 🆕 | · | 🆕 |
+| 🇦🇺 AUS | · | · | ○ | 🆕 | 🆕 | ⚑ | 🆕 | · | 🆕 |
 
 **Legend** — 🆕 NEW verified discovery banked · KNOWN baseline law covers this
 indicator (found by the seeded/live pipeline, not a discovery) · ○ no
-requirement in this economy (a legitimate score-0, not a gap).
+requirement in this economy (a legitimate score-0, not a gap) · ⚑ flagged for
+legal review (see mapping-validation note below).
+
+> **Mapping-validation note (2026-07-17) — AUS 7.2.** We banked the Cyber
+> Security Act 2024 as a NEW dedicated cybersecurity framework (RDTII 7.2). A
+> live end-to-end extraction check showed the pipeline maps the provision's
+> content (device security standards, ransomware payment reporting) to **11.1
+> (Standards)**, not 7.2 — because 7.2 is a *framework-existence* judgment, not a
+> content indicator our extractor reproduces from a single provision. The law is
+> genuine and in force; it is now dual-hinted **11.1 (pipeline) + 7.2 (analyst,
+> flagged for Katie)**, and counts as a **beyond-6/7 (Pillar 11)** find at the
+> pipeline level. This catch is the anti-over-claim gate working — we do not
+> assert a clean 7.2 row the tool does not produce.
 
 **11 (economy × indicator) cells carry a NEW discovery**, spread across 6 of the
 9 indicators: 6.4 (×2 economies — Australia's cell alone is backed by **five**
@@ -47,7 +59,8 @@ sub-national statutes: VIC, NT, NSW, TAS, WA), 7.1 (×3), 7.2 (×1), 7.3 (×3),
   & Responsible Information Sharing Act 2024 (WA) IPP 9 (commenced 1 Jul 2026)** ·
   Archives Act 1983 · Digital ID Act 2024 · Identity Verification Services Act
   2023 · Crimes Act 1914 s 3LA · Surveillance Devices Act 2004 s 27KA · **Cyber
-  Security Act 2024 (7.2 — dedicated cyber framework)**.
+  Security Act 2024 (pipeline maps to 11.1 Standards; 7.2 dedicated-framework
+  reading flagged for legal review)**.
 - **🇲🇾 Malaysia (6):** Credit Reporting Agencies Act 2010 · PDPA (Amendment) Act
   2024 s 12A (**DPO → 7.4**) / s 12B / s 43A · PDP Regulations 2013 · Consumer
   Protection (Electronic Trade Transaction) Regulations 2024 (**12.9**, a
@@ -55,6 +68,8 @@ sub-national statutes: VIC, NT, NSW, TAS, WA), 7.1 (×3), 7.2 (×1), 7.3 (×3),
 - **🇸🇬 Singapore (4):** PDP Regulations 2021 · MAS Notice 658 · Banking Act 1970
   s 47 · Healthcare Services (General) Regulations 2021.
 
-_(20 of the 21 sit in the mandatory Pillars 6/7 across all three provided
-economies; the odd one out, MYS CP(ETT) Regs 2024, is a Pillar 12 find that
-demonstrates the tool scales to additional pillars.)_
+_(19 of the 21 map firmly inside the mandatory Pillars 6/7 by pipeline
+extraction; two are beyond-6/7 capability demonstrations — MYS CP(ETT) Regs 2024
+(Pillar 12) and AUS Cyber Security Act 2024 (Pillar 11 by the pipeline, with 7.2
+flagged for legal review). All three provided economies are covered in the
+mandatory pillars.)_

@@ -38,7 +38,7 @@ Katie 讲法务复核;最后 5 分钟把我们的问题抛给导师——**问�
   fully automated, across 7 languages (36–60% exact-match band, incl.
   Cyrillic Mongolian and Russian).**
 - Every row: verbatim quote (char-verified), article ref, official URL, SHA-256 provenance.
-- Discovery: **21 verified NEW laws** banked (AUS 11 · MYS 6 · SGP 4; 20 in P6/7 + 1 in P12) — incl. NSW's
+- Discovery: **21 verified NEW laws** banked (AUS 11 · MYS 6 · SGP 4; 19 firmly in P6/7 + 2 beyond (P11, P12)) — incl. NSW's
   cross-border s 19(2), captured **through a Cloudflare-blocked portal by our own
   browser fallback**.
 

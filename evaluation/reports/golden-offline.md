@@ -1,8 +1,8 @@
 # RDTII golden-set evaluation
 
 - Mode: `offline`
-- Commit: `fec4cc1947237f9d9b42c15a5aabcc9878701c75`
-- Generated: `2026-07-17T01:06:40+01:00` (IST)
+- Commit: `f0ad4f8dc5255685542d36a6a557bfbfe724a6a0`
+- Generated: `2026-07-17T01:16:40+01:00` (IST)
 - Provider/model: `offline-fixture` / `offline-fixture-v1`
 - Case-set SHA-256: `499cce05e40aed671202dd9be8189785d87a5700fdf5627e330e465a82d6fe25`
 - Cases evaluated: 29 across 10 documents
@@ -66,11 +66,11 @@
 - Discovery: 0.000 seconds
 - Fetch: 0.000 seconds
 - PDF processing/OCR: 0.000 seconds
-- Mapping: 0.153 seconds
+- Mapping: 0.145 seconds
 
 ## Reproducibility
 
-- Runtime: 0.171 seconds
+- Runtime: 0.162 seconds
 - Document-set SHA-256: `e368f59449194ab7db4640e57353a043f0ad8c8a53d3be046c2394021900f125`
 - Command: `python scripts/evaluate_golden_set.py --mode offline --output evaluation/reports/golden-offline.json`
 - Machine-readable details are stored in the sibling JSON report.
