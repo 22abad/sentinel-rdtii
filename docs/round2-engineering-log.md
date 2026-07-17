@@ -680,3 +680,45 @@ repeal (precision over recall: dropping a valid law costs more).
 Lesson: **a graveyard of capable-but-unwired helpers is its own failure mode** —
 the currency logic existed for weeks and did nothing because nothing called it.
 Audit that the code you *rely on* is actually on the call path, not just present.
+
+## 2026-07-17 (night) — scoring integrity: right number, wrong reason, fabricated tier
+
+Three defects, all surfaced by the legal lead reading actual extractions — the
+kind a numeric benchmark hides because the *score* looks fine.
+
+**Right score, wrong law (#259).** A 7.5 row ("government access to personal data
+without judicial oversight") scored 1 citing **PDPA 2012 s59(5)** — but that is
+the data-protection Commission's own *"Preservation of secrecy"* clause, which
+permits it to disclose information "(a) where the consent of the person ... has
+been obtained". A consent-gated safeguard, and the wrong actor (the DPA, not law
+enforcement). The correct basis is the Criminal Procedure Code 2010 s39/40.
+Fixed with a deterministic veto at the single feature-assembly point: if a 7.5
+access/disclosure is conditioned on the subject's consent, the government-access
+feature is cleared (→ 0). Precise — real police-access quotes and "without
+consent" phrasing are untouched.
+
+**A fabricated score tier (#260).** A 7.4 row scored **0.25**. The official 7.4
+scale is strictly 1 / 0.5 / 0 (DPO all sectors / DPO one sector / no DPO) — there
+is no DPIA-only tier; `score_7_4` invented the 0.25. Verified against the
+methodology sheet: the whole official Round-1 key uses only {0, 0.25, 0.5, 1};
+**0.25 belongs to exactly one indicator, 3.4** (Pillar 3), and **0.75 appears
+nowhere**. Fix: DPIA-only → 0; and, per the lead's new standing rule ("every
+score hard-coded to official, zero scoring hallucination"), added
+`OFFICIAL_ALLOWED_SCORES` + a runtime guard that snaps any off-spec score to the
+nearest official value and logs it, plus a test that exhausts every P6/P7
+scorer's feature space against the official set. (Also flagged: official P6 has
+6.1-6.4 only, yet a `score_6_5` exists — returns 0/1 so no fabricated tier, but
+possibly out of scope; left for review.)
+
+**A coverage hole behind it (#261).** SGP 7.5 came back empty even though the
+CPC s39 seed (hint 7.5) was loaded — the broad keyword classifier re-derived the
+indicator and mis-routed the "access computer" clause to 7.1. `indicator_hints`
+only ever *selected* seeds, never steered the mapping. Fix: when a curated hint
+in scope produces no mapping, run a targeted extraction for exactly that
+indicator (`target_indicators` bypasses the classifier). Verified live.
+
+Lesson: **a matching score is not a correct score.** The benchmark's
+exact-match rate can't see a consent clause read as surveillance, a fabricated
+0.25, or the right law filed under the wrong indicator — only a human reading the
+evidence catches those. Deterministic scoring must be pinned to the official
+scale, value by value.
