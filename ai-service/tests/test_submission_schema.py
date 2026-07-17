@@ -127,6 +127,28 @@ def test_validator_drops_repealed_but_keeps_repeal_acts_and_quotes():
     assert [r.law_name for r in kept] == ["Privacy Act 1988"]
 
 
+def test_validator_drops_non_regulatory_indicator_rows():
+    from submission.schema import NON_REGULATORY_INDICATORS
+
+    # 6.5 (not in a binding data-transfer agreement) is non-regulatory — derived
+    # from treaty membership, not a law — so a law-derived P6-I5 row is dropped.
+    assert "P6-I5" in NON_REGULATORY_INDICATORS
+    good = SubmissionRow(
+        economy="Singapore", law_name="Personal Data Protection Act 2012",
+        indicator_id="P6-I4", article="s 26", location_reference="p. 1",
+        verbatim_snippet="An organisation must not transfer personal data outside Singapore except as prescribed.",
+        source_url="https://sso.agc.gov.sg/Act/PDPA2012",
+    )
+    non_reg = SubmissionRow(
+        economy="Singapore", law_name="Some Free Trade Agreement Act",
+        indicator_id="P6-I5", article="Art 14.2", location_reference="p. 2",
+        verbatim_snippet="The parties commit to allowing cross-border transfer of information by electronic means.",
+        source_url="https://sso.agc.gov.sg/Act/FTA",
+    )
+    kept = validate_submission_rows([good, non_reg])
+    assert [r.indicator_id for r in kept] == ["P6-I4"]
+
+
 def test_validator_drops_government_data_measures_but_keeps_personal_data():
     from submission.schema import _is_government_data_measure
 

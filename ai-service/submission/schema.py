@@ -13,6 +13,18 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+# RDTII 2.1 "Non-regulatory indicators" (official framework doc): these are
+# derived from EXTERNAL databases / treaty-membership checks (WITS tariffs,
+# V-Dem shutdowns, WTO/WIPO/UNCITRAL participation), NOT from extracting a law —
+# "an automated data retrieval method is not required". So a law-derived evidence
+# row for one of these is misconceived and must not enter the submission. In
+# Round-1 scope (P6/P7) the only one is 6.5 ("not in a binding data-transfer
+# agreement"). Stored in the judges' "Pn-Im" code form used by indicator_id.
+NON_REGULATORY_INDICATORS: frozenset[str] = frozenset({
+    "P1-I1", "P1-I2", "P1-I3", "P2-I4", "P4-I4", "P4-I7", "P4-I8", "P5-I6",
+    "P6-I5", "P9-I2", "P12-I10", "P12-I11", "P12-I12", "P12-I13",
+})
+
 # ── Frozen 13-column CSV contract (exact order) ──────────────────────────────
 # Source: requirements/README_template.md → "Output Format" table.
 CSV_COLUMNS: tuple[str, ...] = (
@@ -832,6 +844,15 @@ def validate_submission_rows(
                 "not commercial data — the methodology does not score government "
                 "data: %r",
                 index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if str(getattr(row, "indicator_id", "") or "") in NON_REGULATORY_INDICATORS:
+            logger.warning(
+                "Dropping submission row %d: indicator %s is NON-REGULATORY "
+                "(derived from external databases / treaty-membership checks, not "
+                "from a law) — a law-derived evidence row does not belong here: %r",
+                index, str(getattr(row, "indicator_id", "")),
+                str(getattr(row, "law_name", ""))[:50],
             )
             continue
         if _lacks_statute_word(str(getattr(row, "law_name", "") or "")):
