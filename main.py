@@ -245,6 +245,12 @@ async def _run(args: argparse.Namespace) -> int:
     # the final submission boundary, after rows from every pillar/path have
     # been combined and immediately before CSV/JSON serialization.
     all_rows = reconcile_submission_tags(all_rows)
+    # Collapse the one-URL-many-names hallucination before dedupe: every provision
+    # from one document/URL is the SAME law, so force one canonical name (the
+    # authoritative seed name if present) — the fabricated variants then merge away.
+    from submission.schema import canonicalize_law_names_per_url
+
+    all_rows = canonicalize_law_names_per_url(all_rows)
     all_rows = dedupe_submission_rows(all_rows)
     all_rows = cap_rows_per_law_indicator(all_rows)
     all_rows = cap_rows_per_law(all_rows)

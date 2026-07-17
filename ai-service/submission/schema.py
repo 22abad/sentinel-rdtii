@@ -634,6 +634,59 @@ def _is_fragment_quote(law_name: str, quote: str) -> bool:
     return _is_weak_evidence(law_name, quote, _FRAMEWORK_INDICATOR)
 
 
+def _canonical_name_key(name: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", re.split(r"[—–]", name or "")[0].lower())
+
+
+def canonicalize_law_names_per_url(rows: list[SubmissionRow]) -> list[SubmissionRow]:
+    """Collapse the many law names the extractor can attach to ONE source URL.
+
+    A single document (URL) is a single law, but the LLM fills source_legislation
+    from what a quote *talks about* — so a provision inside the IVS Act that
+    references the Privacy Act gets mislabelled "Privacy Act 1988". That is the
+    one-URL-many-names hallucination. Force every row sharing a URL to one
+    canonical name: an authoritative library/seed name if any row on that URL has
+    one (cached_discovery / known_mapping), else the most common name (tie-broken
+    by the longest name carrying a statutory-instrument word). Renamed rows get a
+    note; the downstream dedupe then merges the true duplicates. Runs before
+    dedupe, at the final submission boundary.
+    """
+    from collections import Counter, defaultdict
+
+    groups: dict[str, list] = defaultdict(list)
+    for r in rows:
+        url = str(getattr(r, "source_url", "") or "").strip()
+        if url:
+            groups[url].append(r)
+
+    for url, group in groups.items():
+        names = [str(getattr(r, "law_name", "") or "").strip() for r in group]
+        names = [n for n in names if n]
+        if len({_canonical_name_key(n) for n in names}) < 2:
+            continue  # already consistent — nothing to collapse
+        seed = [
+            str(getattr(r, "law_name", "") or "").strip()
+            for r in group
+            if str(getattr(r, "retrieval_method", "") or "") in ("cached_discovery", "known_mapping")
+            and getattr(r, "law_name", "")
+        ]
+        if seed:
+            canonical = Counter(seed).most_common(1)[0][0]
+        else:
+            counts = Counter(names)
+            best = counts.most_common(1)[0][1]
+            tied = [n for n, c in counts.items() if c == best]
+            canonical = max(tied, key=lambda n: (bool(_STATUTE_INSTRUMENT_WORD.search(n)), len(n)))
+        for r in group:
+            if _canonical_name_key(str(getattr(r, "law_name", "") or "")) != _canonical_name_key(canonical):
+                note = str(getattr(r, "notes", "") or "")
+                add = f"law name normalised to the source document: {canonical}"
+                r.notes = f"{note}; {add}" if note else add
+                r.law_name = canonical
+                r.law_number_ref = extract_law_number_ref(canonical, getattr(r, "law_number_ref", "") or "")
+    return rows
+
+
 def validate_submission_rows(
     rows: list[SubmissionRow],
     *,

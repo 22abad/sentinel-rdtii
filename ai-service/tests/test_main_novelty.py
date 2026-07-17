@@ -23,7 +23,8 @@ def _load_main_module():
     return module
 
 
-def _row(law_name: str, *, retrieval_method: str = "official_search") -> SubmissionRow:
+def _row(law_name: str, *, retrieval_method: str = "official_search",
+         source_url: str = "https://example.gov.test/law") -> SubmissionRow:
     return SubmissionRow(
         economy="Singapore",
         law_name=law_name,
@@ -31,7 +32,7 @@ def _row(law_name: str, *, retrieval_method: str = "official_search") -> Submiss
         article="Section 1",
         discovery_tag="NEW",
         verbatim_snippet="Exact provision text stating a substantive statutory obligation.",
-        source_url="https://example.gov.test/law",
+        source_url=source_url,
         retrieval_method=retrieval_method,
     )
 
@@ -41,8 +42,11 @@ async def test_cli_reconciles_provision_and_fixture_tags_before_writing(monkeypa
     main_cli = _load_main_module()
     pipeline_rows = [
         # The law is inventoried, but this provision is not in the evidence baseline.
-        _row("Cybersecurity Act 2018"),
-        _row("Configured Fixture Act 2099", retrieval_method="fixture"),
+        # Distinct laws sit at distinct URLs (a shared URL would be the one-URL-
+        # many-names hallucination that canonicalisation deliberately collapses).
+        _row("Cybersecurity Act 2018", source_url="https://example.gov.test/ca2018"),
+        _row("Configured Fixture Act 2099", retrieval_method="fixture",
+             source_url="https://example.gov.test/fixture"),
     ]
 
     async def fake_run_seed_first(*args, **kwargs):

@@ -99,6 +99,44 @@ def test_validator_drops_off_topic_goods_laws_from_p6_p7():
     assert [r.law_name for r in kept] == ["Privacy Act 1988"]
 
 
+def test_canonicalize_collapses_one_url_many_names():
+    from submission.schema import canonicalize_law_names_per_url
+
+    url = "https://www.legislation.gov.au/C2023A00115/latest/text"
+    seed = SubmissionRow(
+        economy="Australia", law_name="Identity Verification Services Act 2023", indicator_id="P7-I1",
+        article="s 10", location_reference="p. 1", retrieval_method="cached_discovery",
+        verbatim_snippet="A complete provision reading like a real statutory clause.", source_url=url)
+    mislabel1 = SubmissionRow(
+        economy="Australia", law_name="Australia Privacy Act, 1988", indicator_id="P7-I1",
+        article="s 9", location_reference="p. 2", retrieval_method="official_search",
+        verbatim_snippet="Another complete provision reading like a real clause.", source_url=url)
+    mislabel2 = SubmissionRow(
+        economy="Australia", law_name="Participation Agreement Act, 2020", indicator_id="P7-I4",
+        article="(2)", location_reference="p. 3", retrieval_method="official_search",
+        verbatim_snippet="A third distinct provision reading like a real clause.", source_url=url)
+    out = canonicalize_law_names_per_url([seed, mislabel1, mislabel2])
+    # the authoritative seed name wins for every row on that URL
+    assert {r.law_name for r in out} == {"Identity Verification Services Act 2023"}
+    assert "normalised to the source document" in (mislabel1.notes or "")
+
+    # no seed on the URL -> the most common name wins
+    u2 = "https://gov.example/actX"
+    rows = [
+        SubmissionRow(economy="Australia", law_name="Data Act 2021", indicator_id="P6-I4",
+                      article="s 1", location_reference="p.1", retrieval_method="official_search",
+                      verbatim_snippet="A complete provision reading like a real clause.", source_url=u2),
+        SubmissionRow(economy="Australia", law_name="Data Act 2021", indicator_id="P6-I4",
+                      article="s 2", location_reference="p.2", retrieval_method="official_search",
+                      verbatim_snippet="Another complete provision reading like a real clause.", source_url=u2),
+        SubmissionRow(economy="Australia", law_name="Some Other Act 1999", indicator_id="P7-I1",
+                      article="s 3", location_reference="p.3", retrieval_method="official_search",
+                      verbatim_snippet="A third complete provision reading like a real clause.", source_url=u2),
+    ]
+    canonicalize_law_names_per_url(rows)
+    assert {r.law_name for r in rows} == {"Data Act 2021"}
+
+
 def test_validator_flags_url_reused_by_three_law_names():
     url = "https://www.legislation.gov.au/C2023A00115/latest/text"
     names = ["Identity Verification Services Act 2023", "Identity Verification Act 2023",
