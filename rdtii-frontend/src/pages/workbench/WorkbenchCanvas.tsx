@@ -56,7 +56,7 @@ const SPAWN_TYPES: SpawnType[] = [
   { id: "discovery", label: "Discovery" },
   { id: "source", label: "Source" },
   { id: "audit", label: "Audit" },
-  { id: "documents", label: "Documents"},
+  { id: "documents", label: "Documents" },
 ];
 
 /** Default landing positions; anything not listed falls back to a cascade. */
@@ -72,7 +72,7 @@ const DEFAULT_POSITIONS: Record<string, XYPosition> = {
 const INITIAL_EDGES: Edge[] = [
   { id: "e-discovery-source", source: "discovery", target: "source", animated: true },
   { id: "e-source-audit", source: "source", target: "audit", animated: true },
-  { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" }, 
+  { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" },
 ];
 
 const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material", "session"]);
@@ -616,7 +616,8 @@ export function WorkbenchCanvas({
 
 
   const handleFile = useCallback(async (id: string, file: File) => {
-    setFiles((prev) => prev.map((f) => f.id === id ? { ...f,
+    setFiles((prev) => prev.map((f) => f.id === id ? {
+      ...f,
       fileName: file.name, fileSize: file.size
     } : f));
     //    const form = new FormData(); form.append("file", file);
@@ -632,13 +633,13 @@ export function WorkbenchCanvas({
 
   const onCanvasDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    if(!flowRef.current) return;
+    if (!flowRef.current) return;
     const position = flowRef.current.screenToFlowPosition({ x: e.clientX, y: e.clientY });
-    for(const file of Array.from(e.dataTransfer.files)) {
+    for (const file of Array.from(e.dataTransfer.files)) {
       const id = `file-${(fileCounter.current += 1)}`;
       const previewUrl = URL.createObjectURL(file);
-      setFiles((prev) => [...prev, {id, fileName: file.name, fileSize: file.size, previewUrl }]);
-      setPositions((p) => ({...p, [id]: { x: position.x, y: position.y}}));
+      setFiles((prev) => [...prev, { id, fileName: file.name, fileSize: file.size, previewUrl }]);
+      setPositions((p) => ({ ...p, [id]: { x: position.x, y: position.y } }));
       handleFile(id, file);
     }
   }, [handleFile]);
@@ -918,24 +919,24 @@ export function WorkbenchCanvas({
             } satisfies SessionNodeData,
           })),
         ...files
-        .filter((f) => !removed[f.id])
-        .map((f) => ({
-          id: f.id,
-          type: "file",
-          position: positions[f.id] ?? { x: 240, y: 240 },
-          data: {
-            fileName: f.fileName,
-            fileSize: f.fileSize,
-            previewUrl: f.previewUrl,
-            fileType: f.fileType,
-            ingestStatus: f.ingestStatus,
-            width: sizes[f.id]?.width,
-            height: sizes[f.id]?.height,
-            onResize: (size: WorkbenchCanvasSize) => resizeNode(f.id, size),
-            onResetSize: () => resetNodeSize(f.id),
-            onDelete: () => removeNode(f.id),
-          } satisfies FileNodeData,
-        })),
+          .filter((f) => !removed[f.id])
+          .map((f) => ({
+            id: f.id,
+            type: "file",
+            position: positions[f.id] ?? { x: 240, y: 240 },
+            data: {
+              fileName: f.fileName,
+              fileSize: f.fileSize,
+              previewUrl: f.previewUrl,
+              fileType: f.fileType,
+              ingestStatus: f.ingestStatus,
+              width: sizes[f.id]?.width,
+              height: sizes[f.id]?.height,
+              onResize: (size: WorkbenchCanvasSize) => resizeNode(f.id, size),
+              onResetSize: () => resetNodeSize(f.id),
+              onDelete: () => removeNode(f.id),
+            } satisfies FileNodeData,
+          })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
     [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds, handleChatSend, handleChatResponse, handleChatError],
   );
@@ -1032,8 +1033,8 @@ export function WorkbenchCanvas({
   const handMode = mode === "hand";
 
   return (
-    <div className={`fixed inset-0 z-30 wb-canvas ${handMode ? "wb-hand" : "wb-select"}`} 
-      style={{ 
+    <div className={`fixed inset-0 z-30 wb-canvas ${handMode ? "wb-hand" : "wb-select"}`}
+      style={{
         height: "100dvh"
       }}
       onDragOver={onCanvasDragOver}
@@ -1061,7 +1062,7 @@ export function WorkbenchCanvas({
         }}
         onMoveEnd={(_event: MouseEvent | TouchEvent | null, nextViewport: Viewport) => setViewport(nextViewport)}
         deleteKeyCode={["Delete", "Backspace"]}
-        minZoom={0.2}
+        minZoom={0.8}
         fitView={!restoredState.viewport}
         defaultViewport={restoredState.viewport}
         fitViewOptions={{ maxZoom: 1, padding: 0.2 }}
