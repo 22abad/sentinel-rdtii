@@ -38,7 +38,7 @@ app = typer.Typer(
     # art's line breaks instead of reflowing it to terminal width.
     help="\b"
     + BANNER
-    + "\n\nSENTINEL — operate discovery, RAG, and the knowledge base.",
+    + "\n\nSENTINEL — More scientific law observation tool.\n\nWhat's on your mind today?",
     no_args_is_help=True,
 )
 console = Console()
@@ -392,7 +392,7 @@ def audit_countries(
 
 @app.command()
 def tui() -> None:
-    """Launch the SENTINEL terminal dashboard."""
+    """Better for file Management."""
     from .tui import run_tui
 
     run_tui(api=API, token=_auth_token())

@@ -9,8 +9,12 @@ Launched via `stn tui`. Sidebar (1-4) switches panes:
 
 from __future__ import annotations
 
+import json
+
 import httpx
+from textual import events, work
 from textual.app import App, ComposeResult
+from textual.message import Message
 from textual.theme import Theme
 from textual.containers import Horizontal, Vertical
 from textual.widgets import (
@@ -30,7 +34,7 @@ PANES = [
     ("docs", "Documents"),
     ("discovery", "Discovery"),
     ("extract", "Extract"),
-    ("rag", "RAG chat"),
+    ("rag", "Chat"),
 ]
 
 # SENTINEL palette — the app's emerald/teal, not Textual's default accent.
@@ -48,6 +52,31 @@ SENTINEL_THEME = Theme(
     panel="#182721",
     dark=True,
 )
+
+
+class ExtractInput(TextArea):
+    """TextArea where Enter submits and Shift+Enter inserts a newline.
+
+    Enter must be intercepted here — the focused TextArea eats it for a
+    newline before any app-level binding can see it. Ctrl+J also inserts
+    a newline, for terminals that can't tell Shift+Enter from Enter.
+    """
+
+    class Submitted(Message):
+        pass
+
+    async def _on_key(self, event: events.Key) -> None:
+        if event.key == "enter":
+            event.stop()
+            event.prevent_default()
+            self.post_message(self.Submitted())
+            return
+        if event.key in ("shift+enter", "ctrl+j"):
+            event.stop()
+            event.prevent_default()
+            self.insert("\n")
+            return
+        await super()._on_key(event)
 
 
 class SentinelTUI(App):
@@ -104,21 +133,32 @@ class SentinelTUI(App):
         with Horizontal():
             with Vertical(id="sidebar"):
                 yield ListView(
-                    *[ListItem(Label(label), id=f"nav-{pane_id}") for pane_id, label in PANES]
+                    *[
+                        ListItem(Label(label), id=f"nav-{pane_id}")
+                        for pane_id, label in PANES
+                    ]
                 )
                 yield Label("", id="status")
             with ContentSwitcher(initial="docs", id="switcher"):
                 yield DataTable(id="docs")
                 with Vertical(id="discovery"):
                     yield DataTable(id="discovery-table")
-                    yield Input(placeholder="ISO3-or-name [keywords] + Enter, e.g. SGP data localisation", id="discovery-input")
+                    yield Input(
+                        placeholder="ISO3-or-name [keywords] + Enter, e.g. SGP data localisation",
+                        id="discovery-input",
+                    )
                 with Vertical(id="extract"):
-                    yield Label("Paste a URL or legal text below, then Ctrl+R to extract.", id="extract-status")
+                    yield Label(
+                        "Paste a URL or legal text below · Enter extracts · Shift+Enter newline",
+                        id="extract-status",
+                    )
                     yield DataTable(id="extract-table")
-                    yield TextArea(id="extract-input")
+                    yield ExtractInput(id="extract-input")
                 with Vertical(id="rag"):
                     yield RichLog(id="rag-log", wrap=True, markup=True)
-                    yield Input(placeholder="Ask the knowledge base + Enter", id="rag-input")
+                    yield Input(
+                        placeholder="Ask the knowledge base + Enter", id="rag-input"
+                    )
         yield Footer()
 
     async def on_mount(self) -> None:
@@ -130,7 +170,9 @@ class SentinelTUI(App):
         disc.add_columns("Title", "Indicators", "URL")
         ext = self.query_one("#extract-table", DataTable)
         ext.add_columns("Indicator", "Score", "Review", "Quote")
-        self.query_one("#rag-log", RichLog).write("[dim]Ask something — answers are grounded in the knowledge base.[/]")
+        self.query_one("#rag-log", RichLog).write(
+            "[dim]Ask something — answers are grounded in the knowledge base.[/]"
+        )
         await self._load_status()
         await self._load_docs()
 
@@ -145,7 +187,9 @@ class SentinelTUI(App):
         try:
             async with self._client(timeout=5.0) as client:
                 data = (await client.get("/health")).json()
-            status.update(f"[green]up[/] {data.get('active_provider', '?')} · {self._api}")
+            status.update(
+                f"[green]up[/] {data.get('active_provider', '?')} · {self._api}"
+            )
         except httpx.HTTPError:
             status.update(f"[red]down[/] · {self._api}")
 
@@ -177,7 +221,7 @@ class SentinelTUI(App):
         self.action_pane("extract")
         source = self.query_one("#extract-input", TextArea).text.strip()
         if source:
-            await self._run_extract(source)
+            self._run_extract(source)
 
     async def action_refresh(self) -> None:
         await self._load_status()
@@ -188,18 +232,22 @@ class SentinelTUI(App):
         if pane_id:
             self.action_pane(pane_id)
 
+    async def on_extract_input_submitted(self, event: ExtractInput.Submitted) -> None:
+        await self.action_run_extract()
+
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         text = event.value.strip()
         if not text:
             return
         event.input.value = ""
         if event.input.id == "rag-input":
-            await self._ask_rag(text)
+            self._ask_rag(text)
         elif event.input.id == "discovery-input":
-            await self._run_discovery(text)
+            self._run_discovery(text)
 
     # ── features ─────────────────────────────────────────────────────────
 
+    @work(exclusive=True, group="rag")
     async def _ask_rag(self, question: str) -> None:
         log = self.query_one("#rag-log", RichLog)
         log.write(f"\n[bold green]you >[/] {question}")
@@ -212,43 +260,84 @@ class SentinelTUI(App):
                 )
             outputs = res.json().get("outputs", {})
             retrieved = outputs.get("retrieval_count", 0)
-            grounding = f"[dim]({retrieved} chunk(s) retrieved)[/]" if retrieved else "[yellow]ungrounded[/]"
+            grounding = (
+                f"[dim]({retrieved} chunk(s) retrieved)[/]"
+                if retrieved
+                else "[yellow]ungrounded[/]"
+            )
             log.write(f"[bold cyan]stn >[/] {grounding}")
             log.write(outputs.get("answer", "(no answer)"))
         except httpx.HTTPError as exc:
             log.write(f"[red]request failed: {exc}[/]")
 
+    @work(exclusive=True, group="extract")
     async def _run_extract(self, source: str) -> None:
+        """Stream the extraction: each mapping's quote lands as it's found."""
         status = self.query_one("#extract-status", Label)
         table = self.query_one("#extract-table", DataTable)
         table.clear()
         is_url = source.startswith(("http://", "https://"))
         form = {"source_url": source} if is_url else {"text": source}
-        status.update("extracting — this runs the full LLM pipeline…")
+        status.update("starting extraction stream…")
+        mapped = rejected = 0
+        provider = "?"
         try:
             async with self._client(timeout=600.0) as client:
-                res = await client.post("/api/extract", data=form)
+                async with client.stream(
+                    "POST", "/api/extract/stream", data=form
+                ) as res:
+                    if res.status_code != 200:
+                        body = (await res.aread()).decode()[:120]
+                        status.update(f"[red]HTTP {res.status_code}[/] {body}")
+                        return
+                    event = ""
+                    async for line in res.aiter_lines():
+                        if line.startswith("event: "):
+                            event = line[7:].strip()
+                            continue
+                        if not line.startswith("data: "):
+                            continue
+                        try:
+                            payload = json.loads(line[6:])
+                        except ValueError:
+                            continue
+                        if event == "progress":
+                            status.update(
+                                f"extracting chunk {payload.get('current')}/{payload.get('total')} "
+                                f"· candidates: {', '.join(payload.get('indicators', []))} "
+                                f"· {mapped} mapped, {rejected} rejected"
+                            )
+                        elif event == "mapping":
+                            mapped += 1
+                            table.add_row(
+                                f"P{payload.get('pillar')} · {payload.get('indicator')}",
+                                str(payload.get("score", "—")),
+                                "[yellow]review[/]"
+                                if payload.get("requires_human_review")
+                                else "ok",
+                                (payload.get("verbatim_quote") or "")[:70],
+                            )
+                        elif event == "rejected":
+                            rejected += 1
+                            table.add_row(
+                                "[dim]rejected[/]",
+                                "[dim]—[/]",
+                                "[dim]—[/]",
+                                f"[dim]{str(payload.get('reason', ''))[:70]}[/]",
+                            )
+                        elif event == "error":
+                            status.update(f"[red]{str(payload.get('detail'))[:100]}[/]")
+                            return
+                        elif event == "done":
+                            provider = payload.get("provider", provider)
         except httpx.HTTPError as exc:
-            status.update(f"[red]request failed: {exc}[/]")
+            status.update(f"[red]stream failed: {exc}[/]")
             return
-        if res.status_code != 200:
-            detail = res.json().get("detail", "") if res.text else ""
-            status.update(f"[red]HTTP {res.status_code}[/] {str(detail)[:90]}")
-            return
-        data = res.json()
-        mappings = data.get("mappings", [])
-        rejected = data.get("rejected", [])
-        for m in mappings:
-            table.add_row(
-                f"P{m.get('pillar')} · {m.get('indicator')}",
-                str(m.get("score", "—")),
-                "[yellow]review[/]" if m.get("requires_human_review") else "ok",
-                (m.get("verbatim_quote") or "")[:70],
-            )
         status.update(
-            f"[bold]{len(mappings)}[/] mapping(s) · {len(rejected)} rejected · via {data.get('provider', '?')}"
+            f"[bold]{mapped}[/] mapping(s) · {rejected} rejected · via {provider}"
         )
 
+    @work(exclusive=True, group="discovery")
     async def _run_discovery(self, text: str) -> None:
         parts = text.split(maxsplit=1)
         country, keywords = parts[0], parts[1] if len(parts) > 1 else ""
@@ -259,7 +348,11 @@ class SentinelTUI(App):
             async with self._client(timeout=180.0) as client:
                 res = await client.post(
                     "/api/discovery/search",
-                    json={"country_code": country.upper(), "keywords": keywords, "limit": 10},
+                    json={
+                        "country_code": country.upper(),
+                        "keywords": keywords,
+                        "limit": 10,
+                    },
                 )
             table.clear()
             if res.status_code != 200:
