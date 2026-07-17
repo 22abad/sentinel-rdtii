@@ -71,6 +71,19 @@ async def _build(args: argparse.Namespace) -> dict:
     if args.limit:
         laws = laws[: args.limit]
 
+    # Load the EXISTING manifest so a per-economy run merges into it instead of
+    # overwriting the other economies' rows. Keyed by (economy, law_name).
+    manifest_path = CORPUS_DIR / "manifest.jsonl"
+    existing: dict[tuple, dict] = {}
+    if manifest_path.exists():
+        for line in manifest_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                try:
+                    e = json.loads(line)
+                    existing[(e.get("economy"), e.get("law_name"))] = e
+                except Exception:  # noqa: BLE001
+                    pass
+
     mode = "auto" if args.browser else "http"
     results = []
     for i, law in enumerate(laws, 1):
@@ -78,11 +91,24 @@ async def _build(args: argparse.Namespace) -> dict:
         econ_dir.mkdir(parents=True, exist_ok=True)
         text_path = econ_dir / f"{_slug(law['law_name'])}.txt"
         row = {**law, "text_path": str(text_path.relative_to(REPO_ROOT))}
-        if text_path.exists() and text_path.stat().st_size > 0:  # resumable
-            body = text_path.read_text(encoding="utf-8")
-            row.update(status="cached", char_count=len(body),
-                       sha256=hashlib.sha256(body.encode()).hexdigest())
-            results.append(row)
+        # Resumable: honour an already-cached text at the slug path OR whatever
+        # text_path the existing manifest recorded (e.g. a Wayback-recovered file
+        # under a different name) — never re-fetch, and never clobber a good entry.
+        prev = existing.get((law["economy"], law["law_name"]))
+        prev_path = REPO_ROOT / prev["text_path"] if (prev and prev.get("text_path")) else None
+        cached_path = None
+        if text_path.exists() and text_path.stat().st_size > 0:
+            cached_path = text_path
+        elif prev_path and prev_path.exists() and prev_path.stat().st_size > 0:
+            cached_path = prev_path
+        if cached_path is not None:
+            body = cached_path.read_text(encoding="utf-8")
+            keep = {**(prev or row), **law, "text_path": str(cached_path.relative_to(REPO_ROOT)),
+                    "status": "cached", "char_count": len(body),
+                    "sha256": hashlib.sha256(body.encode()).hexdigest()}
+            if prev and prev.get("note"):
+                keep["note"] = prev["note"]
+            results.append(keep)
             continue
         try:
             doc = await asyncio.wait_for(fetch_document_text(law["url"], browser_mode=mode), timeout=args.timeout)
@@ -98,11 +124,17 @@ async def _build(args: argparse.Namespace) -> dict:
             print(f"  [{i}/{len(laws)}] FAIL {law['economy']} {law['law_name'][:55]} — {row['error'][:50]}")
         results.append(row)
 
+    # Merge: keep every existing entry, override only the laws processed this run.
+    merged = dict(existing)
+    for r in results:
+        merged[(r.get("economy"), r.get("law_name"))] = r
     CORPUS_DIR.mkdir(parents=True, exist_ok=True)
     (CORPUS_DIR / "manifest.jsonl").write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False) for r in results) + "\n", encoding="utf-8")
+        "\n".join(json.dumps(r, ensure_ascii=False) for r in merged.values()) + "\n",
+        encoding="utf-8")
     ok = sum(r["status"] in ("ok", "cached") for r in results)
-    return {"total": len(results), "fetched_or_cached": ok, "failed": len(results) - ok}
+    return {"total": len(results), "fetched_or_cached": ok, "failed": len(results) - ok,
+            "manifest_total": len(merged)}
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
