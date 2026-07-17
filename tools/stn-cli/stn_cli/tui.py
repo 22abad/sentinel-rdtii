@@ -26,9 +26,15 @@ from textual.widgets import (
     Label,
     ListItem,
     ListView,
+    ProgressBar,
     RichLog,
+    Select,
     TextArea,
 )
+
+# Processors the extract pane can request; blank = backend default
+# (RDTII_LLM_PROVIDER). Model per provider follows its env config.
+PROVIDERS = ["ollama", "deepseek", "claude", "gemini", "openai", "groq"]
 
 PANES = [
     ("docs", "Documents"),
@@ -106,6 +112,20 @@ class SentinelTUI(App):
         height: 6;
         border: solid $secondary;
     }
+    #extract-controls {
+        height: 3;
+    }
+    #extract-provider {
+        width: 34;
+    }
+    #extract-bar {
+        width: 1fr;
+        margin: 1 2;
+        display: none;
+    }
+    #extract-bar.running {
+        display: block;
+    }
     RichLog {
         border: none;
     }
@@ -117,7 +137,7 @@ class SentinelTUI(App):
         ("1", "pane('docs')", "Documents"),
         ("2", "pane('discovery')", "Discovery"),
         ("3", "pane('extract')", "Extract"),
-        ("4", "pane('rag')", "RAG"),
+        ("4", "pane('rag')", "Chat"),
         ("ctrl+r", "run_extract", "Run extract"),
     ]
 
@@ -152,6 +172,15 @@ class SentinelTUI(App):
                         "Paste a URL or legal text below · Enter extracts · Shift+Enter newline",
                         id="extract-status",
                     )
+                    with Horizontal(id="extract-controls"):
+                        yield Select(
+                            [(p, p) for p in PROVIDERS],
+                            prompt="processor: backend default",
+                            id="extract-provider",
+                        )
+                        yield ProgressBar(
+                            id="extract-bar", show_eta=False
+                        )
                     yield DataTable(id="extract-table")
                     yield ExtractInput(id="extract-input")
                 with Vertical(id="rag"):
@@ -173,8 +202,9 @@ class SentinelTUI(App):
         self.query_one("#rag-log", RichLog).write(
             "[dim]Ask something — answers are grounded in the knowledge base.[/]"
         )
-        await self._load_status()
-        await self._load_docs()
+        self.query_one("#status", Label).update("[dim]connecting…[/]")
+        self._load_status()
+        self._load_docs()
 
     # ── http ─────────────────────────────────────────────────────────────
 
@@ -182,6 +212,7 @@ class SentinelTUI(App):
         headers = {"Authorization": f"Bearer {self._token}"} if self._token else {}
         return httpx.AsyncClient(base_url=self._api, timeout=timeout, headers=headers)
 
+    @work(exclusive=True, group="load-status")
     async def _load_status(self) -> None:
         status = self.query_one("#status", Label)
         try:
@@ -193,6 +224,7 @@ class SentinelTUI(App):
         except httpx.HTTPError:
             status.update(f"[red]down[/] · {self._api}")
 
+    @work(exclusive=True, group="load-docs")
     async def _load_docs(self) -> None:
         table = self.query_one("#docs", DataTable)
         table.clear()
@@ -224,8 +256,8 @@ class SentinelTUI(App):
             self._run_extract(source)
 
     async def action_refresh(self) -> None:
-        await self._load_status()
-        await self._load_docs()
+        self._load_status()
+        self._load_docs()
 
     async def on_list_view_selected(self, event: ListView.Selected) -> None:
         pane_id = (event.item.id or "").removeprefix("nav-")
@@ -278,7 +310,17 @@ class SentinelTUI(App):
         table.clear()
         is_url = source.startswith(("http://", "https://"))
         form = {"source_url": source} if is_url else {"text": source}
-        status.update("starting extraction stream…")
+        chosen = self.query_one("#extract-provider", Select).value
+        if isinstance(chosen, str):  # unselected is a Select.NULL sentinel
+            form["provider"] = chosen
+        status.update(
+            f"starting extraction stream via {form.get('provider', 'backend default')}…"
+        )
+        # Indeterminate pulse until the first progress event — covers the
+        # silent crawl/PDF-parse phase of URL extractions.
+        bar = self.query_one("#extract-bar", ProgressBar)
+        bar.add_class("running")
+        bar.update(total=None)
         mapped = rejected = 0
         provider = "?"
         try:
@@ -302,6 +344,12 @@ class SentinelTUI(App):
                         except ValueError:
                             continue
                         if event == "progress":
+                            total = payload.get("total") or 0
+                            if total:
+                                bar.update(
+                                    total=total,
+                                    progress=max(0, (payload.get("current") or 1) - 1),
+                                )
                             status.update(
                                 f"extracting chunk {payload.get('current')}/{payload.get('total')} "
                                 f"· candidates: {', '.join(payload.get('indicators', []))} "
@@ -333,6 +381,8 @@ class SentinelTUI(App):
         except httpx.HTTPError as exc:
             status.update(f"[red]stream failed: {exc}[/]")
             return
+        finally:
+            bar.remove_class("running")
         status.update(
             f"[bold]{mapped}[/] mapping(s) · {rejected} rejected · via {provider}"
         )
