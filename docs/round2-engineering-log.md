@@ -568,3 +568,50 @@ depends on a flagged one. **Lesson: separate the two claims — "we discovered a
 verbatim-verified a NEW law" (rock-solid) from "the pipeline auto-maps it to
 indicator X" (only for 16/21). Report each honestly; the indicator for subtle
 provisions is a human-review call, not an automated fact.**
+
+## 2026-07-17 (pm) — official scoring, live-run pollution, and fetch resilience
+
+### The official answer key reframed everything
+Located the official RDTII Round-1 database (`…/ESCAP-RDTII-2.1_ Round 1
+Database.xlsx`): **one raw score (0/0.5/1) per indicator per economy**, with the
+law it cites — AUS/MYS/SGP P6/7 is only **~11 rows each**, not the 47/70/17 our
+runs emit. So the judge scores per-INDICATOR; our many provisions collapse into
+9 indicator scores. Built `tools/score_vs_official.py` to fold any run into that
+shape and diff it, flagging three things: **NEW-evidence divergence** (a NEW law
+we found changes the score vs the official basis — a Stage-2 discovery win if
+real, e.g. AUS 7.2=0.5 on the 2018 SOCI Act vs our Cyber Security Act 2024; an
+over-claim to drop if hallucinated), **hallucination**, and **gaps**.
+
+### Live discovery is 40–75% hallucination — offline library is clean
+The comparator immediately exposed that the live judge command produces garbage:
+one URL claimed by 3–5 different law names (the model inventing names on a real
+register page), plus out-of-scope goods laws ("Wine Export Charge Act" → 7.5).
+AUS 20/47, SGP 33/70 rows hallucination-flagged; the **offline library run is
+0**. Lesson: **the raw live output is a lead list to verify, not a submission —
+the clean core is the verified library.** Two new validator gates: drop a
+goods/agriculture law mapped to P6/P7, and flag (never drop) 3+ distinct law
+names on one URL.
+
+### A hallucination metric that cried wolf
+First cut counted ROWS per URL — but one law legitimately maps to several
+indicators (several rows, one URL), so a clean offline run showed 16/17
+"hallucinated". Fixed to count **distinct BASE-act names** (dropping "— s.12A"
+section suffixes, normalised to alphanumerics): the three A1727 provisions on one
+URL are one act, not three. Offline MYS 16→0; live runs still show the real
+pollution. Lesson: **a false-positive safety signal is worse than none — it
+trains you to ignore it.**
+
+### Resilience: never silently miss a KNOWN law during judging
+SGP 7.2 (official 0, basis Cybersecurity Act 2018) was an uncovered gap; banked
+s.7 as KNOWN, verbatim from the official SSO PDF — which required routing
+`?ViewType=Pdf` *query* URLs to the pdf strategy (they'd fallen through to
+Playwright, which can't render a download), and noting SSO's AWS WAF fingerprints
+httpx but passes curl. Then wired the pre-downloaded KNOWN corpus
+(`data/known_corpus/`, ~175 laws) as a **last-resort run-time fallback**: official
+site → Wayback → Google Cache → local cache. Re-fetching the gaps recovered the
+**MYS Income Tax Act** (official hasil.gov.my URL now 404s) from a **Wayback
+snapshot** — 1.37 M chars, the official basis for MYS 6.2 + 7.3 — exactly the
+"work like a human, fetch from the archive" the brief anticipates. Also fixed a
+data-loss footgun: the corpus builder rewrote the whole manifest on a
+per-economy run; it now merges. Lesson: **the archive fallback isn't a nicety —
+official URLs rot, and a judge's run must degrade gracefully to it.**
