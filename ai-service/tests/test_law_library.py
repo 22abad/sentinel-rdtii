@@ -74,6 +74,8 @@ def test_lookup_filters_by_economy_and_pillar():
         "Information Act 2002 (Northern Territory) — Sch 2 IPP 9 (Transborder Data Flows)",
         # s19(2) cross-border captured via the Playwright browser fallback (Cloudflare-blocked portal)
         "Privacy and Personal Information Protection Act 1998 (NSW)",
+        # Tasmania's sub-national transborder principle (PIPP 9)
+        "Personal Information Protection Act 2004 (Tasmania) — Sch 1 PIPP 9 (Disclosure outside Tasmania)",
     }
     # SGP PDPA is tagged for pillars 6 and 7; Income Tax Act only pillar 7.
     p7 = {e.law_name for e in lookup("SGP", pillar=7)}
