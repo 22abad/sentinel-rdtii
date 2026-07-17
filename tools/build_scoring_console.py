@@ -78,6 +78,15 @@ def pipeline_got(law_id: str) -> list[str]:
     return []
 
 
+def _dotted(code: str) -> str:
+    """'P6-I4' -> '6.4'; pass through anything already dotted."""
+    code = (code or "").strip().upper()
+    if code.startswith("P") and "-I" in code:
+        p, i = code[1:].split("-I", 1)
+        return f"{p}.{i}"
+    return code
+
+
 def build() -> None:
     meth = json.loads((REPO / "data" / "rdtii21_methodology.json").read_text())
     indicators = {}
@@ -106,11 +115,28 @@ def build() -> None:
         })
     laws.sort(key=lambda x: (x["priority"] == "", x["economy"]))
 
-    data_json = json.dumps({"laws": laws, "indicators": indicators}, ensure_ascii=False)
+    # Section B: live-discovery candidates (not yet banked) needing valid/reject/
+    # reassign triage. Dotted-indicator form for chip matching; suspect first.
+    live = []
+    live_path = REPO / "data" / "review" / "live_discovery_candidates.jsonl"
+    if live_path.exists():
+        for l in live_path.read_text().splitlines():
+            if not l.strip():
+                continue
+            c = json.loads(l)
+            live.append({
+                "economy": c.get("economy", ""), "law_name": c.get("law_name", ""),
+                "indicator": _dotted(c.get("indicator", "")), "article": c.get("article", ""),
+                "quote": c.get("quote", ""), "url": c.get("url", ""),
+                "tag": c.get("tag", ""), "suspect": bool(c.get("suspect_topic")),
+            })
+        live.sort(key=lambda x: (not x["suspect"], x["economy"]))
+
+    data_json = json.dumps({"laws": laws, "live": live, "indicators": indicators}, ensure_ascii=False)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(_TEMPLATE.replace("__DATA__", data_json), encoding="utf-8")
     n_pri = sum(1 for l in laws if l["priority"])
-    print(f"wrote {OUT.relative_to(REPO)} | {len(laws)} laws | {n_pri} priority")
+    print(f"wrote {OUT.relative_to(REPO)} | {len(laws)} banked ({n_pri} priority) | {len(live)} live candidates")
 
 
 _TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
@@ -178,7 +204,11 @@ textarea,input[type=text]{width:100%;font-size:13px;border:1px solid var(--bd);b
 </ol>
 <p class="crithint">Chip legend: <span class="tag hint">our suggestion</span> <span class="tag got">pipeline extracted</span> <span class="tag gotnone">pipeline found nothing</span>. Trust the text, not the pre-marks.</p>
 </details>
+<h2 id="secA" style="border-bottom:2px solid #12203a;padding-bottom:4px">Section A — banked NEW laws (indicator confirmation)</h2>
 <div id="cards"></div>
+<h2 id="secB" style="border-bottom:2px solid #7a1fa2;padding-bottom:4px;margin-top:26px">Section B — live-discovery candidates (valid / reassign / reject triage)</h2>
+<p class="crithint">These are candidate hits surfaced by a live crawl — <b>not yet banked</b>. Decide whether each is genuine evidence for the stated indicator. Rows flagged <span style="color:#b26a00">⚠ topic-suspect</span> are where the quote may not match the indicator's topic — look closely.</p>
+<div id="livecards"></div>
 </div>
 <div class="exportbar">
   <span class="cnt" id="cnt"></span>
@@ -238,42 +268,93 @@ function render(){
     root.appendChild(card);
     card.querySelector('[data-score="'+i+'"]').value = st.score||"";
   });
-  bind(); progress();
+  renderLive(); bind(); progress();
+}
+function ensureV(i){const id="V"+i; if(!state[id]) state[id]={ind:[],verdict:"",note:""}; return state[id];}
+function renderLive(){
+  const root=document.getElementById('livecards'); if(!root) return; root.innerHTML="";
+  (DATA.live||[]).forEach((c,i)=>{
+    const id="V"+i, st=state[id]||{ind:[],verdict:"",note:""};
+    const card=document.createElement('div'); card.className="card"+(c.suspect?" pri":"")+(st.verdict?" done":"");
+    const susp = c.suspect? '<div class="pribox"><b>&#9888; Topic-suspect:</b> the quote may not match the indicator&#39;s topic — confirm the mapping is genuine.</div>':'';
+    const pil = (c.indicator||"").split('.')[0];
+    const chipset = Array.from(new Set([c.indicator, ...rdtiiOrder().filter(x=>x.split('.')[0]==pil)].filter(Boolean)));
+    const chips = chipset.map(x=>{
+      const on=st.ind.includes(x)?" on":""; const mark = x==c.indicator?" ·engine":"";
+      return '<span class="chip'+on+'" data-vi="'+i+'" data-c="'+x+'" title="'+critText(x).replace(/"/g,'&quot;')+'">'+x+mark+'</span>';
+    }).join('');
+    card.innerHTML =
+      '<span class="eco">'+esc(c.economy)+'</span> <span class="line" style="color:#888">engine: '+esc(c.indicator)+' · '+esc(c.tag)+'</span>'+
+      '<div class="lawname">'+esc(c.law_name)+'</div>'+
+      '<div class="meta">Art. '+esc(c.article||'—')+' &nbsp;·&nbsp; <a href="'+esc(c.url)+'" target="_blank">📄 Open official source</a></div>'+
+      susp+
+      '<div class="prov">'+esc(c.quote)+'</div>'+
+      '<div class="line"><b>Is this genuine evidence — and for which indicator?</b></div>'+
+      '<div class="chips">'+chips+'</div>'+
+      '<div class="verdicts">'+
+        '<button class="vbtn'+(st.verdict=="valid"?" on-valid":"")+'" data-vv="valid" data-vi="'+i+'">✓ Valid</button>'+
+        '<button class="vbtn'+(st.verdict=="reassign"?" on-flag":"")+'" data-vv="reassign" data-vi="'+i+'">↔ Reassign indicator</button>'+
+        '<button class="vbtn'+(st.verdict=="reject"?" on-reject":"")+'" data-vv="reject" data-vi="'+i+'">✗ Reject</button>'+
+        '<button class="vbtn'+(st.verdict=="unsure"?" on-flag":"")+'" data-vv="unsure" data-vi="'+i+'">? Unsure</button>'+
+      '</div>'+
+      '<textarea data-vnote="'+i+'" rows="2" placeholder="Optional note…">'+esc(st.note||"")+'</textarea>';
+    root.appendChild(card);
+  });
 }
 function bind(){
-  document.querySelectorAll('.chip').forEach(el=>el.onclick=()=>{
+  document.querySelectorAll('.chip[data-i]').forEach(el=>el.onclick=()=>{
     const i=el.dataset.i, c=el.dataset.c, st=ensure(i);
     const k=st.ind.indexOf(c); if(k>=0) st.ind.splice(k,1); else st.ind.push(c);
     el.classList.toggle('on'); save();
   });
-  document.querySelectorAll('.vbtn').forEach(el=>el.onclick=()=>{
+  document.querySelectorAll('.chip[data-vi]').forEach(el=>el.onclick=()=>{
+    const i=el.dataset.vi, c=el.dataset.c, st=ensureV(i);
+    const k=st.ind.indexOf(c); if(k>=0) st.ind.splice(k,1); else st.ind.push(c);
+    el.classList.toggle('on'); save();
+  });
+  document.querySelectorAll('.vbtn[data-v]').forEach(el=>el.onclick=()=>{
     const i=el.dataset.i, v=el.dataset.v, st=ensure(i);
     st.verdict = st.verdict==v? "" : v; save(); render();
   });
+  document.querySelectorAll('.vbtn[data-vv]').forEach(el=>el.onclick=()=>{
+    const i=el.dataset.vi, v=el.dataset.vv, st=ensureV(i);
+    st.verdict = st.verdict==v? "" : v; save(); render();
+  });
   document.querySelectorAll('[data-note]').forEach(el=>el.oninput=()=>{ensure(el.dataset.note).note=el.value; save(); progress();});
+  document.querySelectorAll('[data-vnote]').forEach(el=>el.oninput=()=>{ensureV(el.dataset.vnote).note=el.value; save(); progress();});
   document.querySelectorAll('[data-score]').forEach(el=>el.onchange=()=>{ensure(el.dataset.score).score=el.value; save();});
 }
 function progress(){
-  const done=DATA.laws.filter((_,i)=>state["L"+i]&&state["L"+i].verdict).length;
-  document.getElementById('prog').style.width=(100*done/DATA.laws.length)+"%";
-  document.getElementById('cnt').textContent=done+" / "+DATA.laws.length+" scored";
+  const nb=DATA.laws.length, nl=(DATA.live||[]).length, tot=nb+nl;
+  const db=DATA.laws.filter((_,i)=>state["L"+i]&&state["L"+i].verdict).length;
+  const dv=(DATA.live||[]).filter((_,i)=>state["V"+i]&&state["V"+i].verdict).length;
+  document.getElementById('prog').style.width=(100*(db+dv)/tot)+"%";
+  document.getElementById('cnt').textContent=(db+dv)+" / "+tot+" scored  ("+db+" banked · "+dv+" live)";
 }
 function decisions(){
-  return DATA.laws.map((law,i)=>{const st=state["L"+i]||{};
-    return {economy:law.economy, law_name:law.law_name, law_id:law.law_id, official_url:law.url,
+  const banked=DATA.laws.map((law,i)=>{const st=state["L"+i]||{};
+    return {section:"banked", economy:law.economy, law_name:law.law_name, law_id:law.law_id, official_url:law.url,
       our_suggested_indicators:law.hints, pipeline_extracted:law.pipeline_got,
       reviewer_indicators:st.ind||[], reviewer_score:st.score||"", verdict:st.verdict||"(not reviewed)", note:st.note||""};});
+  const live=(DATA.live||[]).map((c,i)=>{const st=state["V"+i]||{};
+    return {section:"live", economy:c.economy, law_name:c.law_name, official_url:c.url, article:c.article,
+      engine_indicator:c.indicator, engine_tag:c.tag,
+      reviewer_indicators:st.ind||[], verdict:st.verdict||"(not reviewed)", note:st.note||""};});
+  return banked.concat(live);
 }
 document.getElementById('expjson').onclick=()=>{
   const payload={reviewer:state.__rev||"", batch:"rdtii-new-law-scoring", exported_at:new Date().toISOString(),
-    schema:"1.0", decisions:decisions()};
+    schema:"1.1", decisions:decisions()};
   dl(JSON.stringify(payload,null,2), "rdtii-scoring-decisions.json", "application/json");
 };
 document.getElementById('expcsv').onclick=()=>{
-  const hdr=["reviewer","economy","law_name","official_url","our_suggested","pipeline_extracted","reviewer_indicators","reviewer_score","verdict","note"];
+  const hdr=["section","reviewer","economy","law_name","official_url","our_suggested","pipeline_or_engine","reviewer_indicators","reviewer_score","verdict","note"];
   const rev=state.__rev||"";
-  const rows=decisions().map(d=>[rev,d.economy,d.law_name,d.official_url,(d.our_suggested_indicators||[]).join("|"),
-    (d.pipeline_extracted||[]).join("|"),(d.reviewer_indicators||[]).join("|"),d.reviewer_score,d.verdict,(d.note||"").replace(/\n/g," ")]);
+  const rows=decisions().map(d=>{
+    const pipe = d.section=="banked" ? (d.pipeline_extracted||[]).join("|") : (d.engine_indicator||"");
+    const sugg = d.section=="banked" ? (d.our_suggested_indicators||[]).join("|") : (d.engine_tag||"");
+    return [d.section,rev,d.economy,d.law_name,d.official_url,sugg,pipe,
+      (d.reviewer_indicators||[]).join("|"),d.reviewer_score||"",d.verdict,(d.note||"").replace(/\n/g," ")];});
   const csv=[hdr,...rows].map(r=>r.map(c=>'"'+String(c==null?"":c).replace(/"/g,'""')+'"').join(",")).join("\n");
   dl("﻿"+csv, "rdtii-scoring-decisions.csv", "text/csv");
 };
