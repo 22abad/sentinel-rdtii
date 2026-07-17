@@ -81,6 +81,7 @@ const PANEL_FALLBACKS: Record<string, { id: string; title: string; width?: numbe
   source: { id: "source", title: "Source", width: 460 },
   foundPdfs: { id: "foundPdfs", title: "Found PDFs", width: 420 },
   audit: { id: "audit", title: "Audit", width: 520 },
+  documents: { id: "documents", title: "Documents", width: 420 },
 };
 
 type CanvasNote = { id: string; title: string; text: string };

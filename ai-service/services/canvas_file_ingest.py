@@ -213,3 +213,29 @@ def delete_document(document_id: str) -> bool:
     except OSError:
         pass  # DB rows are gone — a stray file on disk is acceptable
     return True
+
+
+def list_documents(limit: int = 100) -> list[dict]:
+    """Recent ingested documents for the knowledge-base browser panel."""
+    with _db_connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, filename, status, country_code, created_at
+                FROM   documents
+                ORDER  BY created_at DESC
+                LIMIT  %s
+                """,
+                (limit,),
+            )
+            rows = cur.fetchall()
+    return [
+        {
+            "document_id": str(r[0]),
+            "filename": r[1],
+            "status": r[2],
+            "country_code": r[3],
+            "created_at": r[4].isoformat() if r[4] else None,
+        }
+        for r in rows
+    ]

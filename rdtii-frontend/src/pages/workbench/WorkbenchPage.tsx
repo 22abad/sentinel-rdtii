@@ -14,6 +14,8 @@ import { t } from "../../lib/i18n";
 import { WorkbenchCanvas, type CanvasPanel, type CanvasGraph, type LinkedFile } from "./WorkbenchCanvas";
 import { fetchSourceTextNode } from "../../services/workflowNodes";
 import { parseFile } from "../../services/canvasFiles";
+import { DocumentsPanel } from "../../components/Workbench/DocumentsPanel";
+import { useAuth } from "../../hooks/useAuth";
 
 /** The original Source panel's node id doubles as the "main" thread id —
     Discovery, Found PDFs, and the SideBar pin to it. Source copies get their
@@ -199,17 +201,16 @@ export function WorkbenchPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth();
+  const [shareHint, setShareHint] = useState(false);
 
   // Canvas (multi-thread, free layout) vs classic (traditional stacked view
   // of the main thread). Both render the same thread components against the
   // shared store, so switching preserves all state — even mid-extraction.
-  const [viewMode, setViewMode] = useState<"canvas" | "classic">(() =>
-    localStorage.getItem("workbenchViewMode") === "classic" ? "classic" : "canvas",
-  );
-  const switchView = (mode: "canvas" | "classic") => {
-    setViewMode(mode);
-    localStorage.setItem("workbenchViewMode", mode);
-  };
+  // Classic is ALWAYS the landing view; canvas is a per-visit mode
+  // (deliberately not persisted — leaving and returning resets to classic).
+  const [viewMode, setViewMode] = useState<"canvas" | "classic">("classic");
+  const switchView = setViewMode;
 
   // Main-thread view for the page furniture (SideBar, Found PDFs presence).
   const {
@@ -265,6 +266,7 @@ export function WorkbenchPage() {
       dragHandle: ".panel-header",
       upstreamId: "source",
     },
+    { id: "documents", title: "Documents", element: <DocumentsPanel />, width: 420, dragHandle: ".panel-header" },
   ];
 
   return (
@@ -418,6 +420,84 @@ export function WorkbenchPage() {
           </AnimatePresence>
         </motion.button>
       </div>
+
+      {/* Figma-style collaboration bar (dummy) — avatar + Share, left of the nav circle */}
+      {viewMode === "canvas" && (
+        <div
+          className="fixed z-50 flex items-center gap-2"
+          style={{ top: 22, right: 76 }}
+        >
+          <div
+            title={user?.username ?? "Not signed in"}
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              background: "#0f766e",
+              color: "#ffffff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.8rem",
+              fontWeight: 800,
+              border: "2px solid #ffffff",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.2)",
+              textTransform: "uppercase",
+            }}
+          >
+            {(user?.username ?? "?").slice(0, 1)}
+          </div>
+          <div style={{ position: "relative" }}>
+            <motion.button
+              type="button"
+              onClick={() => {
+                setShareHint(true);
+                window.setTimeout(() => setShareHint(false), 2000);
+              }}
+              whileHover={{ scale: 1.04, y: -1 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 320, damping: 22 }}
+              style={{
+                minHeight: 0,
+                padding: "8px 18px",
+                borderRadius: 10,
+                border: "none",
+                background: "#10B981",
+                color: "#ffffff",
+                fontSize: "0.82rem",
+                fontWeight: 750,
+                cursor: "pointer",
+                boxShadow: "0 6px 18px rgba(16,185,129,0.35)",
+              }}
+            >
+              Share
+            </motion.button>
+            <AnimatePresence>
+              {shareHint && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  style={{
+                    position: "absolute",
+                    top: "calc(100% + 8px)",
+                    right: 0,
+                    padding: "6px 12px",
+                    borderRadius: 8,
+                    background: "#111827",
+                    color: "#f9fafb",
+                    fontSize: "0.72rem",
+                    whiteSpace: "nowrap",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                  }}
+                >
+                  Canvas sharing is coming soon ✨
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      )}
 
       {/* Canvas (multi-thread) or classic stacked view — user's choice */}
       {viewMode === "canvas" ? (
