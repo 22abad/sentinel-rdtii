@@ -20,14 +20,14 @@ _为校内评审准备(付教授、Timoney 教授、肖倩教授、助教,以及
 | 3–8 | **Live demo**: `python main.py --economy Singapore --pillar 6` + scanned-PDF run | Dong | terminal (offline mode as backup) |
 | 8–12 | Round 1 status: golden set signed off, 21 verified NEW laws, 582 tests | Abel | deck §4–5 |
 | 12–18 | **The benchmark**: 500 rows vs official DB, 251 exact (50.2%) / 351 evidence-backed (70.2%), 7 languages | Dong | `round2-meeting-report.md` |
-| 18–22 | Legal-in-the-loop: Katie's verification session + adjudication findings | Katie | her exported results |
+| 18–22 | Legal-in-the-loop: the legal reviewer's verification session + adjudication findings | the legal reviewer | her exported results |
 | 22–25 | Engineering war stories (pick 2: reasoning-budget starvation, prefix-cap blindness) | Eric/Abel | engineering log §5–6 |
 | 25–30 | Our questions to you (below) | all | — |
 
 中文提示:前 3 分钟一张图讲完问题与架构;3–8 分钟现场演示(离线模式做备份,断网也能跑);
 8–12 分钟报 Round 1 状态(**14 条已核实新法、570 个测试全绿**);12–18 分钟讲基准
 (对官方数据库 500 行:251 行打分完全一致 50.2%、351 行有证据 70.2%,7 种语言);
-Katie 讲法务复核;最后 5 分钟把我们的问题抛给导师——**问问题的 5 分钟才是今天的正餐**。
+the legal reviewer 讲法务复核;最后 5 分钟把我们的问题抛给导师——**问问题的 5 分钟才是今天的正餐**。
 
 ## The one-slide numbers (memorize)
 ## 一页数字(背下来)
@@ -261,7 +261,7 @@ _Coaching note for Dong(中文,只给你看):他是国际私营贸易法方向,�
 
    中文②(豁免法令的计分方向):泰国两个皇家法令把大类主体豁免出 PDPA。我们的读法是
    豁免文书应当**降低**框架完整度得分——它是"覆盖范围"的证据,不是"保护"的证据。您怎么看?
-   ——泰国 2 条发现的计分方向就卡在这,Katie 的复核也在等。
+   ——泰国 2 条发现的计分方向就卡在这,the legal reviewer 的复核也在等。
 
 3. **Constitutional right without implementing law.** "Timor-Leste's Constitution
    Article 38 guarantees personal-data protection and mandates a law to implement

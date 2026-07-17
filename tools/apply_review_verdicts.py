@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Apply the legal reviewer's exported verdicts back into the project.
 
-Katie's three review pages (outputs/katie-session/) each export a JSON file.
-This tool closes the loop so her decisions actually change the system instead
+The review console pages (outputs/legal-review/) each export a JSON file.
+This tool closes the loop so those decisions actually change the system instead
 of sitting in a download folder:
 
-    python tools/apply_katie_verdicts.py katie-*.json            # dry-run (plan)
-    python tools/apply_katie_verdicts.py katie-*.json --apply    # write changes
+    python tools/apply_review_verdicts.py review-*.json            # dry-run (plan)
+    python tools/apply_review_verdicts.py review-*.json --apply    # write changes
 
 What each batch does:
 
@@ -224,7 +224,7 @@ def append_ledger(doc: dict, source: str, apply: bool) -> int:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("files", nargs="+", help="Katie's exported JSON file(s)")
+    ap.add_argument("files", nargs="+", help="the reviewer's exported JSON file(s)")
     ap.add_argument("--apply", action="store_true",
                     help="Write manifest updates + ledger entries (default: dry-run plan)")
     args = ap.parse_args(argv)

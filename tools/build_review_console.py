@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Regenerate outputs/katie-session/review.html from the task CSVs."""
+"""Regenerate outputs/legal-review/review.html from the task CSVs."""
 import csv, json, html
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parents[1] / "outputs" / "katie-session"
+BASE = Path(__file__).resolve().parents[1] / "outputs" / "legal-review"
 
 def load(name):
     return list(csv.DictReader(open(BASE / name, encoding="utf-8-sig")))
@@ -95,7 +95,7 @@ STYLE = """
 
 SCRIPT = """
 const DATA = __DATA__;
-const KEY = "katie-review-v1";
+const KEY = "review-session-v1";
 let state = JSON.parse(localStorage.getItem(KEY) || "{}");
 function save() { localStorage.setItem(KEY, JSON.stringify(state)); render(); }
 function render() {
@@ -138,16 +138,16 @@ document.getElementById("export").onclick = () => {
   });
   const blob = new Blob(["\\ufeff"+lines.join("\\n")], {type:"text/csv"});
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob); a.download = "katie-review-results.csv"; a.click();
+  a.href = URL.createObjectURL(blob); a.download = "review-results.csv"; a.click();
 };
 render();
 """
 
 page = ("<!doctype html><html><head><meta charset=\"utf-8\">"
-        "<title>SENTINEL — Legal Review Session (Katie)</title>"
+        "<title>SENTINEL — Legal Review Session</title>"
         f"<style>{STYLE}</style></head><body>"
         "<header><h1>SENTINEL — Legal Review Session</h1>"
-        "<p>Hi Katie — five focused review tasks, ~100 minutes total (A–C core, D–E quick add-ons). "
+        "<p>Hi — five focused review tasks, ~100 minutes total (A–C core, D–E quick add-ons). "
         "Everything is click-based: read the card, open the source link if needed, click one verdict, "
         "optionally add a note. Progress saves automatically in your browser — close and resume anytime. "
         "When done, hit <b>Export results</b> (bottom bar) and send the downloaded file back.</p></header>"
