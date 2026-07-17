@@ -1,0 +1,37 @@
+Privacy and Responsible Information Sharing Act 2024 (Western Australia) — Schedule 1, Information Privacy Principle 9 (Disclosures outside Australia)
+
+9. Principle 9: Disclosures outside Australia
+9.1   An IPP entity must not disclose personal information that relates to an
+individual to a person (other than the individual) outside Australia
+unless —
+(a)   the IPP entity reasonably believes that the person to whom
+the information is disclosed is subject to a law, binding
+administrative scheme, or contract, that requires the person to
+comply with principles for handling the information that are
+substantially similar to the information privacy principles; or
+(b)   the individual consents to the disclosure; or
+(c)   the disclosure is required or authorised by or under law; or
+(d)   the disclosure is necessary for the performance of a contract
+between the individual and the IPP entity or for the
+implementation of pre-contractual measures taken in response
+to the individual’s request; or
+(e)   the disclosure is necessary for the conclusion or performance
+of a contract that is concluded in the interest of the individual
+between the IPP entity and a third party; or
+(f)   all of the following apply —
+(i) the disclosure is for the benefit of the individual;
+(ii)    it is impracticable to obtain the consent of the
+individual to the disclosure;
+(iii)    if it were practicable to obtain that consent, the
+individual would be likely to give it;
+or
+(g)   the IPP entity has taken reasonable steps to ensure that the
+information will not be held, used or disclosed by the
+cl. 10
+recipient inconsistently with the information privacy
+principles.
+9.2   An IPP entity must not disclose de-identified information that relates
+to an individual to a person (other than the individual) outside
+Australia unless the IPP entity takes reasonable steps to ensure that
+the person to whom the de-identified information is disclosed —
+(a)   protects the de-identified information from misuse and loss
