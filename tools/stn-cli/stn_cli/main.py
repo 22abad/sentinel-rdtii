@@ -171,14 +171,38 @@ def discovery(
     browser_mode: str = typer.Option("auto", help="auto | playwright | opencli"),
 ) -> None:
     """Search official legal sources for a country (the Discovery panel, headless)."""
+    # Resolve names / loose input against the configured country list, so
+    # `stn discovery Singapore` works, not just `stn discovery SGP`.
+    code = country.strip().upper()
+    try:
+        with _client(timeout=10.0) as client:
+            configured = client.get("/api/discovery/countries").json().get("countries", [])
+    except httpx.HTTPError:
+        configured = []
+    if configured:
+        by_code = {c["country_code"].upper(): c for c in configured}
+        by_label = {c["label"].upper(): c for c in configured}
+        resolved = by_code.get(code) or by_label.get(code)
+        if resolved:
+            code = resolved["country_code"]
+        else:
+            table = Table(title="No discovery sources for that country — configured:")
+            table.add_column("Code")
+            table.add_column("Country")
+            table.add_column("Sources")
+            for c in sorted(configured, key=lambda x: x["country_code"]):
+                table.add_row(c["country_code"], c["label"], str(c.get("source_count", "—")))
+            console.print(table)
+            raise typer.Exit(code=1)
+
     payload = {
-        "country_code": country.upper(),
+        "country_code": code,
         "pillars": pillars,
         "keywords": keywords,
         "limit": limit,
         "browser_mode": browser_mode,
     }
-    console.print(f"[dim]Searching {country.upper()} · pillars {pillars} · limit {limit}…[/]")
+    console.print(f"[dim]Searching {code} · pillars {pillars} · limit {limit}…[/]")
     try:
         with _client(timeout=180.0) as client:
             res = client.post("/api/discovery/search", json=payload)
@@ -193,7 +217,7 @@ def discovery(
     if not candidates:
         console.print("[yellow]No candidates found.[/]")
         return
-    table = Table(title=f"Discovery · {country.upper()} · {len(candidates)} candidate(s)")
+    table = Table(title=f"Discovery · {code} · {len(candidates)} candidate(s)")
     table.add_column("Title", max_width=48, overflow="fold")
     table.add_column("Indicators")
     table.add_column("Grade")
