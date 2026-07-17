@@ -18,7 +18,7 @@ _为校内评审准备(付教授、Timoney 教授、肖倩教授、助教,以及
 |---|---|---|---|
 | 0–3 | Problem & architecture in one picture | Dong | deck outline §1–3 |
 | 3–8 | **Live demo**: `python main.py --economy Singapore --pillar 6` + scanned-PDF run | Dong | terminal (offline mode as backup) |
-| 8–12 | Round 1 status: golden set signed off, 19 verified NEW laws, 581 tests | Abel | deck §4–5 |
+| 8–12 | Round 1 status: golden set signed off, 21 verified NEW laws, 582 tests | Abel | deck §4–5 |
 | 12–18 | **The benchmark**: 500 rows vs official DB, 251 exact (50.2%) / 351 evidence-backed (70.2%), 7 languages | Dong | `round2-meeting-report.md` |
 | 18–22 | Legal-in-the-loop: Katie's verification session + adjudication findings | Katie | her exported results |
 | 22–25 | Engineering war stories (pick 2: reasoning-budget starvation, prefix-cap blindness) | Eric/Abel | engineering log §5–6 |
@@ -38,7 +38,7 @@ Katie 讲法务复核;最后 5 分钟把我们的问题抛给导师——**问�
   fully automated, across 7 languages (36–60% exact-match band, incl.
   Cyrillic Mongolian and Russian).**
 - Every row: verbatim quote (char-verified), article ref, official URL, SHA-256 provenance.
-- Discovery: **19 verified NEW laws** banked (AUS 9 · MYS 6 · SGP 4; 18 in P6/7 + 1 in P12) — incl. NSW's
+- Discovery: **21 verified NEW laws** banked (AUS 11 · MYS 6 · SGP 4; 20 in P6/7 + 1 in P12) — incl. NSW's
   cross-border s 19(2), captured **through a Cloudflare-blocked portal by our own
   browser fallback**.
 
@@ -95,7 +95,7 @@ _定调一句:"我们不只是把它做出来,我们还用评委的方式去弄�
 
 - **Genuine NEW evidence, independently verified** (the explicit **20-point
   "Discovery of New Evidence"** item at Stage 2):
-  - **19 verified NEW laws now in the library** (AUS 9 · MYS 6 · SGP 4 — incl. the
+  - **21 verified NEW laws now in the library** (AUS 11 · MYS 6 · SGP 4 — incl. the
     VIC/NT/NSW state cross-border acts that fill Australia's P6 gap), each with a
     verbatim provision fetched from the official government portal and a
     machine-checked SHA-256. Highlights: 🇸🇬 Banking Act 1970 s 47 (secrecy),
