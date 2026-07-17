@@ -182,3 +182,12 @@ def _save_to_db(document_id: str) -> dict:
         raise CanvasIngestError(str(exc)) from exc
 
     return {"document_id": document_id, "status": "processed", "chunks": len(chunks)}
+
+
+def get_status(document_id: str) -> str | None:
+    """Current ingestion status of a document ('processing'/'processed'/'failed')."""
+    with _db_connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT status FROM documents WHERE id = %s", (document_id,))
+            row = cur.fetchone()
+    return row[0] if row else None

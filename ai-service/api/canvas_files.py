@@ -52,3 +52,15 @@ async def upload_canvas_file(
         background_tasks.add_task(ingest._save_to_db, result["document_id"])
 
     return UploadResponse(**result)
+
+
+@router.get("/{document_id}", response_model=StatusResponse)
+async def canvas_file_status(
+    document_id: str,
+    current_user: dict = Depends(get_current_user),
+) -> StatusResponse:
+    """Poll ingestion state — processing happens in a background task."""
+    status = ingest.get_status(document_id)
+    if status is None:
+        raise HTTPException(status_code=404, detail="Unknown document.")
+    return StatusResponse(document_id=document_id, status=status)

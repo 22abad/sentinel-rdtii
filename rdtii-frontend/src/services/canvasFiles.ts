@@ -28,6 +28,16 @@ export type CanvasFileUploadResponse = {
   deduplicated: boolean;
 };
 
+/** Poll a document's ingestion status ('processing' / 'processed' / 'failed'). */
+export async function getCanvasFileStatus(documentId: string): Promise<string> {
+  const res = await fetch(`${CANVAS_FILES_API_URL}/${encodeURIComponent(documentId)}`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error(`Status check failed (HTTP ${res.status}).`);
+  const payload = (await res.json()) as { status: string };
+  return payload.status;
+}
+
 /** Upload a canvas file to the backend for RAG ingestion (extract → chunk → embed). */
 export async function uploadCanvasFile(
   file: File,
