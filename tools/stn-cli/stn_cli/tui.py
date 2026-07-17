@@ -37,7 +37,6 @@ from textual.widgets import (
     Label,
     ListItem,
     ListView,
-    RichLog,
     Select,
     Static,
     TextArea,
@@ -234,6 +233,28 @@ def _row_plaintext(kind: str, m: dict) -> str:
     return Text.from_markup(_reasoning_markup(kind, m)).plain
 
 
+def _verification_markup(data: dict) -> str:
+    """Forensic timestamp-verification block (crawler.verify_law_timeline)."""
+    out = [_h("Timestamp verification (forensic)")]
+    verified = data.get("verified")
+    badge = "[#10B981]✓ corroborated[/]" if verified else "[#f59e0b]unconfirmed[/]"
+    best = data.get("best_date") or "—"
+    out.append(
+        f"  {badge}  best date [bold]{escape(str(best))}[/]"
+        f"  · {data.get('sources_checked', 0)} source(s) checked"
+    )
+    for sd in data.get("source_details", []):
+        out.append(
+            f"  [dim]{escape(str(sd.get('source', '')))}: "
+            f"{escape(str(sd.get('date') or '—'))} "
+            f"({escape(str(sd.get('status', '')))})[/]"
+        )
+    log = data.get("verification_log")
+    if log:
+        out.append(f"  [dim]{escape(str(log))}[/]")
+    return "\n".join(out)
+
+
 class ReportScreen(ModalScreen):
     """Inner window: reasoning report for a selected extract row."""
 
@@ -266,7 +287,49 @@ class ReportScreen(ModalScreen):
 
     def compose(self) -> ComposeResult:
         with VerticalScroll(id="report-window"):
-            yield Static(_reasoning_markup(self._kind, self._mapping))
+            yield Static(_reasoning_markup(self._kind, self._mapping), id="report-body")
+
+    def on_mount(self) -> None:
+        if self._kind != "mapping":
+            return
+        # Already verified upstream (agent pipeline populates it)? Show inline.
+        existing = self._mapping.get("timestamp_verification") or {}
+        if existing.get("source_details") or existing.get("verification_log"):
+            self._append_verification(_verification_markup(existing))
+            return
+        # Streaming extractions leave it empty — fetch on demand.
+        url = self._mapping.get("source_url")
+        if url:
+            self._verify(url, self._mapping.get("last_update", ""))
+
+    def _append_verification(self, markup: str) -> None:
+        body = self.query_one("#report-body", Static)
+        body.update(_reasoning_markup(self._kind, self._mapping) + "\n\n" + markup)
+
+    @work(exclusive=True, group="verify")
+    async def _verify(self, url: str, claimed: str) -> None:
+        self._append_verification(
+            _h("Timestamp verification (forensic)")
+            + "\n  [dim]cross-checking Wayback + HTTP Last-Modified…[/]"
+        )
+        try:
+            async with self.app._client(timeout=30.0) as client:
+                res = await client.post(
+                    "/api/verify/timestamp",
+                    json={"url": url, "last_update": claimed},
+                )
+            if res.status_code == 200:
+                self._append_verification(_verification_markup(res.json()))
+            else:
+                self._append_verification(
+                    _h("Timestamp verification (forensic)")
+                    + f"\n  [red]HTTP {res.status_code}[/]"
+                )
+        except httpx.HTTPError as exc:
+            self._append_verification(
+                _h("Timestamp verification (forensic)")
+                + f"\n  [red]unavailable: {exc}[/]"
+            )
 
     def action_copy_report(self) -> None:
         selection = self.get_selected_text()
@@ -367,6 +430,36 @@ class ExtractInput(TextArea):
         await super()._on_key(event)
 
 
+class ChatMessage(Static):
+    """One chat turn, as its own selectable block.
+
+    A Static (unlike RichLog) so its text is mouse-selectable; users select
+    and copy with the terminal's own selection/copy.
+    """
+
+    def __init__(self, role: str, text: str, meta: str = "") -> None:
+        super().__init__()
+        self.role = role
+        self.raw = text
+        self._meta = meta
+
+    def on_mount(self) -> None:
+        self.refresh_body()
+
+    def refresh_body(self) -> None:
+        marker = (
+            "[bold #10B981]you ›[/]" if self.role == "you" else "[bold cyan]stn ›[/]"
+        )
+        head = f"{marker} {self._meta}".rstrip()
+        self.update(f"{head}\n{escape(self.raw)}" if self.raw else head)
+
+    def set_answer(self, text: str, meta: str = "") -> None:
+        self.role = "stn"
+        self.raw = text
+        self._meta = meta
+        self.refresh_body()
+
+
 class SentinelTUI(App):
     TITLE = "SENTINEL"
     SUB_TITLE = "RDTII AI Mapper"
@@ -409,8 +502,13 @@ class SentinelTUI(App):
     #extract-bar.running {
         display: block;
     }
-    RichLog {
-        border: none;
+    #rag-log {
+        height: 1fr;
+    }
+    ChatMessage {
+        height: auto;
+        padding: 0 1;
+        margin: 0 0 1 0;
     }
     #home {
         align: center middle;
@@ -439,6 +537,7 @@ class SentinelTUI(App):
         self._discovery_rows: list[dict] = []
         self._docs_rows: list[str] = []
         self._last_rag_answer: str = ""
+        self._rag_msgs: list[tuple[str, str]] = []  # (role, text) for transcript
 
     # ── layout ───────────────────────────────────────────────────────────
 
@@ -477,14 +576,15 @@ class SentinelTUI(App):
                     with Horizontal(id="extract-controls"):
                         yield Select(
                             [(p, p) for p in PROVIDERS],
-                            prompt="processor: backend default",
+                            value=PROVIDERS[0],
+                            allow_blank=False,
                             id="extract-provider",
                         )
                         yield BlockBar(id="extract-bar")
                     yield DataTable(id="extract-table")
                     yield ExtractInput(id="extract-input")
                 with Vertical(id="rag"):
-                    yield RichLog(id="rag-log", wrap=True, markup=True)
+                    yield VerticalScroll(id="rag-log")
                     yield Input(
                         placeholder="Ask the knowledge base + Enter", id="rag-input"
                     )
@@ -500,8 +600,12 @@ class SentinelTUI(App):
         ext = self.query_one("#extract-table", DataTable)
         ext.add_columns("Indicator", "Score", "Review", "Quote")
         ext.cursor_type = "row"  # row select opens the reasoning report
-        self.query_one("#rag-log", RichLog).write(
-            "[dim]Ask something — answers are grounded in the knowledge base.[/]"
+        await self.query_one("#rag-log", VerticalScroll).mount(
+            Static(
+                "[dim]Ask something — answers are grounded in the knowledge base."
+                "  ·  select text with the mouse to copy.[/]",
+                id="rag-hint",
+            )
         )
         self.query_one("#status", Label).update("[dim]connecting…[/]")
         self._load_status()
@@ -589,7 +693,7 @@ class SentinelTUI(App):
     def action_copy_result(self) -> None:
         """Copy to the clipboard: a live text selection if any, else the row.
 
-        Mouse-dragged text selection wins (RichLog, Static, inputs); otherwise
+        Mouse-dragged text selection wins (chat blocks, Static, inputs); otherwise
         fall back to the current result row (tables can't text-select).
         """
         selection = self.screen.get_selected_text()
@@ -614,7 +718,7 @@ class SentinelTUI(App):
             if 0 <= idx < len(self._docs_rows):
                 text, label = self._docs_rows[idx], "filename"
         elif pane == "rag":
-            text, label = self._last_rag_answer, "answer"
+            text, label = (self._rag_transcript() or self._last_rag_answer), "conversation"
         if text:
             self._copy(text)
             self.notify(f"Copied {label} to clipboard", timeout=2)
@@ -649,11 +753,22 @@ class SentinelTUI(App):
 
     # ── features ─────────────────────────────────────────────────────────
 
+    def _rag_transcript(self) -> str:
+        """The whole conversation as plain text (for 'copy conversation')."""
+        return "\n\n".join(f"{role} > {text}" for role, text in self._rag_msgs)
+
+    async def _mount_msg(self, message: ChatMessage) -> None:
+        log = self.query_one("#rag-log", VerticalScroll)
+        await log.mount(message)
+        log.scroll_end(animate=False)
+
     @work(exclusive=True, group="rag")
     async def _ask_rag(self, question: str) -> None:
-        log = self.query_one("#rag-log", RichLog)
-        log.write(f"\n[bold green]you >[/] {question}")
-        log.write("[dim]thinking…[/]")
+        log = self.query_one("#rag-log", VerticalScroll)
+        self._rag_msgs.append(("you", question))
+        await self._mount_msg(ChatMessage("you", question))
+        pending = ChatMessage("stn", "", "[dim]thinking…[/]")
+        await self._mount_msg(pending)
         try:
             async with self._client(timeout=300.0) as client:
                 res = await client.post(
@@ -669,10 +784,11 @@ class SentinelTUI(App):
             )
             answer = outputs.get("answer", "(no answer)")
             self._last_rag_answer = answer
-            log.write(f"[bold cyan]stn >[/] {grounding}")
-            log.write(answer)
+            self._rag_msgs.append(("stn", answer))
+            pending.set_answer(answer, grounding)
         except httpx.HTTPError as exc:
-            log.write(f"[red]request failed: {exc}[/]")
+            pending.set_answer(f"request failed: {exc}", "[red]error[/]")
+        log.scroll_end(animate=False)
 
     async def _parse_local_file(self, local: Path, status: Label) -> str | None:
         """Turn a dragged-in file into extractable text; None on failure.
