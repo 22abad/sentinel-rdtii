@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "metadata": {
-    "commit_sha": "b1063866aaf50a6c1371da152eaaf5f620b5cf41",
-    "generated_at": "2026-07-17T01:00:12+01:00",
+    "commit_sha": "fec4cc1947237f9d9b42c15a5aabcc9878701c75",
+    "generated_at": "2026-07-17T01:06:40+01:00",
     "timezone": "IST",
     "mode": "offline",
     "provider": "offline-fixture",
@@ -422,7 +422,7 @@
     "cost_usd": 0.0,
     "known_cost_usd": 0.0,
     "latency_sum_ms": 0,
-    "wall_clock_ms": 140,
+    "wall_clock_ms": 137,
     "operations": {}
   },
   "ocr_usage": {
@@ -447,12 +447,12 @@
     "total": 0.0
   },
   "timing_seconds": {
-    "dataset_load": 0.001146,
+    "dataset_load": 0.001307,
     "discovery": 0.0,
     "fetch": 0.0,
     "pdf_processing": 0.0,
-    "mapping": 0.151957,
-    "total": 0.16766
+    "mapping": 0.15335,
+    "total": 0.170597
   },
-  "runtime_seconds": 0.167662
+  "runtime_seconds": 0.1706
 }
