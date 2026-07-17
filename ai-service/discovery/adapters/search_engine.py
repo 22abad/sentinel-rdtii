@@ -215,14 +215,76 @@ class SerpApiSearchBackend:
         return hits
 
 
+class DuckDuckGoSearchBackend:
+    """Free, no-API-key web search via DuckDuckGo's HTML endpoint.
+
+    This is the out-of-the-box default so a reviewer can run live discovery with
+    ZERO paid credentials. Quality is good for legal queries — it reliably
+    surfaces official government portals (legislation.gov.au, sso.agc.gov.sg,
+    pdp.gov.my, ...). It is a little less broad than SerpApi/Google and can be
+    rate-limited, so on any failure it degrades to the fixture fallback like any
+    other backend. No extra dependency: it parses the plain HTML endpoint.
+    """
+
+    endpoint = "https://html.duckduckgo.com/html/"
+    _UA = (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+    )
+
+    async def search(self, query: str, limit: int) -> list[RawSearchHit]:
+        import html as _html
+
+        import httpx
+
+        timeout = httpx.Timeout(12.0, connect=4.0)
+        async with httpx.AsyncClient(
+            timeout=timeout, follow_redirects=True, headers={"User-Agent": self._UA}
+        ) as client:
+            response = await client.post(self.endpoint, data={"q": query, "kl": "us-en"})
+            response.raise_for_status()
+            body = response.text
+
+        hits: list[RawSearchHit] = []
+        for idx, match in enumerate(
+            re.finditer(r'<a[^>]*class="result__a"[^>]*href="([^"]+)"[^>]*>(.*?)</a>', body, re.S),
+            start=1,
+        ):
+            url = _html.unescape(match.group(1).strip())
+            if not url.startswith("http"):
+                continue
+            title = _html.unescape(re.sub(r"<[^>]+>", "", match.group(2)).strip()) or url
+            hits.append(RawSearchHit(
+                title=title,
+                url=url,
+                snippet="",
+                position=idx,
+                raw={"url": url, "title": title},
+                retrieval_mode="live",
+                discovery_method="web_search",
+            ))
+            if len(hits) >= limit:
+                break
+        return hits
+
+
 def _configured_search_backend() -> str:
     value = os.getenv("DISCOVERY_SEARCH_BACKEND", "").strip().lower()
-    return "" if value in {"", "none", "off", "fixture"} else value
+    if value in {"none", "off", "fixture"}:
+        return ""
+    if value:
+        return value
+    # Default when unset: SerpApi if a key is present (best quality), otherwise
+    # the free, no-key DuckDuckGo backend — so a reviewer with no search
+    # credentials still gets live web search out of the box.
+    return "serpapi" if os.getenv("SERPAPI_API_KEY", "").strip() else "duckduckgo"
 
 
 def _build_search_backend(name: str) -> SearchBackend:
     if name == "serpapi":
         return SerpApiSearchBackend()
+    if name in {"duckduckgo", "ddg"}:
+        return DuckDuckGoSearchBackend()
     raise SearchBackendConfigError(f"unsupported DISCOVERY_SEARCH_BACKEND: {name}")
 
 

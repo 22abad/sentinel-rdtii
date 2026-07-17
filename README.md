@@ -106,6 +106,30 @@ OLLAMA_BASE_URL=http://localhost:11434/v1
 **Option B — cloud provider:** set `RDTII_LLM_PROVIDER=deepseek` (or `openai`,
 `gemini`, `claude`) and the matching API key. See [Swapping the LLM](#swapping-the-llm).
 
+#### Live search backend — free, no key required
+
+Live discovery finds NEW laws two ways: **dedicated official-portal adapters**
+(e.g. Australia's legislation.gov.au API, China's national law database
+`flk.npc.gov.cn`) that need no search engine at all, plus a **generic web-search
+backend** for everything else. That generic backend is **free out of the box** —
+if you set nothing, it uses [DuckDuckGo](https://duckduckgo.com) HTML search,
+which needs **no API key, no signup, and no quota**. We verified it returns the
+right official sources for legal queries (e.g. Singapore PDPA → `sso.agc.gov.sg`,
+Australia Privacy Act → `legislation.gov.au`).
+
+| `DISCOVERY_SEARCH_BACKEND` | Needs a key? | When to use |
+|---|---|---|
+| *(unset — the default)* | **No** | Free DuckDuckGo. Recommended for reviewers. |
+| `serpapi` (+ `SERPAPI_API_KEY`) | Yes (free tier) | Slightly broader Google-backed results. Auto-selected if a key is present. |
+| `none` | No | Disable live web search; run on the local library only. |
+
+> **Running from inside mainland China?** DuckDuckGo and Google are blocked by
+> the Great Firewall, but China discovery does **not** depend on them: the
+> `china_flk` adapter queries the official national database `flk.npc.gov.cn`
+> directly (reachable inside China) and ships hardcoded seeds for the headline
+> data laws (PIPL, Cybersecurity Law). So Chinese-law discovery works behind the
+> firewall without a VPN.
+
 ### 4. Run
 
 ```bash

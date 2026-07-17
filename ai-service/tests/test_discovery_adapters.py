@@ -447,9 +447,28 @@ async def test_china_flk_live_failure_marks_fixture_fallback(monkeypatch):
     assert any("driver down" in warning for warning in rows[0].warnings)
 
 
+def test_configured_search_backend_defaults_to_free_duckduckgo(monkeypatch):
+    from discovery.adapters.search_engine import _build_search_backend, _configured_search_backend
+
+    # explicit off -> no backend (fixtures)
+    monkeypatch.setenv("DISCOVERY_SEARCH_BACKEND", "none")
+    assert _configured_search_backend() == ""
+    # unset + no SerpApi key -> free DuckDuckGo default (judges get live search)
+    monkeypatch.delenv("DISCOVERY_SEARCH_BACKEND", raising=False)
+    monkeypatch.delenv("SERPAPI_API_KEY", raising=False)
+    assert _configured_search_backend() == "duckduckgo"
+    # unset + SerpApi key present -> SerpApi (best quality)
+    monkeypatch.setenv("SERPAPI_API_KEY", "test-key")
+    assert _configured_search_backend() == "serpapi"
+    assert type(_build_search_backend("duckduckgo")).__name__ == "DuckDuckGoSearchBackend"
+
+
 @pytest.mark.anyio
 async def test_generic_search_adapter_non_mock_marks_fixture_fallback(monkeypatch):
-    monkeypatch.delenv("DISCOVERY_SEARCH_BACKEND", raising=False)
+    # Explicitly disable the live backend so this exercises the fixture-fallback
+    # path hermetically (the default is now free DuckDuckGo, which would hit the
+    # network).
+    monkeypatch.setenv("DISCOVERY_SEARCH_BACKEND", "none")
     monkeypatch.delenv("DISCOVERY_USE_FIXTURES", raising=False)
     source = get_sources("SGP")[1]
     rows = await SearchEngineAdapter().search(
