@@ -73,6 +73,51 @@ def test_submission_validator_drops_incomplete_rows_but_keeps_output():
         validate_submission_rows([bad])
 
 
+def test_validator_drops_off_topic_goods_laws_from_p6_p7():
+    from submission.schema import _is_off_topic_law
+
+    # goods/agriculture law mapped to P6/P7 -> out of scope
+    assert _is_off_topic_law("Wine Export Charge Act", "P7-I5")
+    assert _is_off_topic_law("Primary Industries (Customs) Charges Regulations", "P7-I3")
+    # a real data law is fine; the same goods law under Pillar 1 is not our concern
+    assert not _is_off_topic_law("Personal Data Protection Act 2012", "P6-I4")
+    assert not _is_off_topic_law("Wine Export Charge Act", "P1-I1")
+
+    good = SubmissionRow(
+        economy="Australia", law_name="Privacy Act 1988", indicator_id="P7-I1",
+        article="s 6", location_reference="p. 1",
+        verbatim_snippet="A complete data-protection provision that reads like a clause.",
+        source_url="https://www.legislation.gov.au/C2004A03712/latest/text",
+    )
+    wine = SubmissionRow(
+        economy="Australia", law_name="Wine Export Charge Act", indicator_id="P7-I5",
+        article="s 5", location_reference="p. 2",
+        verbatim_snippet="A charge is imposed on the export of grape products from Australia.",
+        source_url="https://www.legislation.gov.au/C2025G00364/latest/text",
+    )
+    kept = validate_submission_rows([good, wine])
+    assert [r.law_name for r in kept] == ["Privacy Act 1988"]
+
+
+def test_validator_flags_url_reused_by_three_law_names():
+    url = "https://www.legislation.gov.au/C2023A00115/latest/text"
+    names = ["Identity Verification Services Act 2023", "Identity Verification Act 2023",
+             "National Driver Licence Facial Recognition Act"]
+    rows = [
+        SubmissionRow(
+            economy="Australia", law_name=n, indicator_id="P7-I1", article="s 10",
+            location_reference="p. 1",
+            verbatim_snippet="A complete data-handling provision reading like a real clause.",
+            source_url=url,
+        )
+        for n in names
+    ]
+    kept = validate_submission_rows(rows)
+    # none dropped (one name is the real law), but every row carries the note flag
+    assert len(kept) == 3
+    assert all("hallucination check" in (r.notes or "") for r in kept)
+
+
 def test_validator_drops_fragment_quotes_but_keeps_title_and_provision():
     from submission.schema import _is_fragment_quote, _is_weak_evidence
 
