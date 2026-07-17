@@ -1,0 +1,13 @@
+Cybersecurity Act 2018 (No. 9 of 2018) — Section 7 (Designation of critical information infrastructure)
+
+7.—(1) The Commissioner may, by written notice to the owner of a
+computer or computer system, designate the computer or computer
+system as a provider-owned critical information infrastructure for the
+purposes of this Act, if the Commissioner is satisfied that —
+(a) the computer or computer system is necessary for the
+continuous delivery of an essential service, and the loss or
+compromise of the computer or computer system will have
+a debilitating effect on the availability of the essential
+service in Singapore; and
+(b) the computer or computer system is located wholly or
+partly in Singapore.

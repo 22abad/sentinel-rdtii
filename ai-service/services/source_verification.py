@@ -166,8 +166,12 @@ def strategy_order(url: str) -> tuple[list[str], dict]:
     # A PDF endpoint may end in ".pdf" or in a trailing "/pdf" path segment
     # (Australia's Federal Register uses ".../text/original/pdf"). Force the pdf
     # strategy to the front regardless of the site hint — a PDF URL is a PDF.
-    path = url.lower().split("?")[0].rstrip("/")
-    if path.endswith(".pdf") or path.endswith("/pdf"):
+    low = url.lower()
+    path = low.split("?")[0].rstrip("/")
+    # Also a ?ViewType=Pdf query (Singapore SSO's un-WAF'd PDF endpoint) is a PDF:
+    # Playwright can't render it (it triggers a download), but curl+UA + pdftotext
+    # gets the real statute body.
+    if path.endswith(".pdf") or path.endswith("/pdf") or "viewtype=pdf" in low:
         order = ["pdf"] + [s for s in order if s != "pdf"]
     return order, hint
 
