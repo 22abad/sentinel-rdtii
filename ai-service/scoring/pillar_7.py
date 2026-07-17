@@ -7,9 +7,41 @@ per `features.py`) and returns a tuple (Score, Justification).
 
 from __future__ import annotations
 
+import re
 from typing import Literal
 
 Score = Literal[0.0, 0.25, 0.5, 1.0]
+
+# 7.5 asks whether the government can access personal data WITHOUT a judicial
+# warrant / independent oversight. A provision that permits access or disclosure
+# only when the data subject's CONSENT has been obtained is the opposite — a
+# safeguard — and must not trigger the "government access without oversight"
+# feature. This guards a real false positive: PDPA 2012 s59(5) ("Preservation of
+# secrecy") lets the data-protection Commission disclose information it holds
+# "(a) where the consent of the person ... has been obtained", which the LLM
+# misread as unfettered government access to personal data.
+_CONSENT_GRANTED = re.compile(
+    r"consent\b[^.;:]{0,60}?\b(?:has been|have been|is|was|been|are)\b"
+    r"[^.;:]{0,20}?\b(?:obtained|given|granted|provided|secured)\b"
+    r"|with (?:the )?(?:express |written |prior )?consent of\b"
+    r"|where consent (?:has been|is)\b",
+    re.IGNORECASE,
+)
+_CONSENT_NEGATED = re.compile(
+    r"without (?:the )?(?:express |written |prior )?(?:individual'?s?|data subject'?s?|"
+    r"person'?s?|its|his|her|their|the )?\s*consent"
+    r"|consent (?:is|was|shall|need|does) not"
+    r"|no consent"
+    r"|notwithstanding[^.;:]{0,40}consent",
+    re.IGNORECASE,
+)
+
+
+def is_consent_gated_access(quote: str) -> bool:
+    """True when a provision's access/disclosure is conditioned on the data
+    subject's consent (a safeguard) rather than being an unfettered power."""
+    q = quote or ""
+    return bool(_CONSENT_GRANTED.search(q)) and not _CONSENT_NEGATED.search(q)
 
 
 def _excluded_if_gov_only(features: dict) -> bool:
@@ -120,6 +152,29 @@ def score_7_5(features: dict) -> tuple[Score, str]:
     return 0.0, "Score 0: No requirement allowing government access without judicial oversight."
 
 
+def veto_consent_gated_government_access(
+    indicator_id: str, quote: str, features: dict
+) -> list[str]:
+    """Deterministic guard against a 7.5 false positive.
+
+    Mutates ``features`` in place: if the 7.5 government-access feature is set but
+    the evidence quote shows the access/disclosure is gated on the data subject's
+    consent, the feature is cleared (consent is a safeguard, not unfettered
+    access). Returns a list of human-readable veto reasons (empty if none)."""
+    if indicator_id != "7.5":
+        return []
+    if not features.get("has_government_access_without_judicial_oversight"):
+        return []
+    if not is_consent_gated_access(quote):
+        return []
+    features["has_government_access_without_judicial_oversight"] = False
+    return [
+        "7.5 government-access feature vetoed: the quoted access/disclosure is "
+        "conditioned on the data subject's consent (a safeguard), not unfettered "
+        "government access without judicial oversight."
+    ]
+
+
 # ── Dispatcher ─────────────────────────────────────────────────────────────
 _SCORERS = {
     "7.1": score_7_1,
@@ -144,4 +199,6 @@ __all__ = [
     "score_7_3",
     "score_7_4",
     "score_7_5",
+    "is_consent_gated_access",
+    "veto_consent_gated_government_access",
 ]

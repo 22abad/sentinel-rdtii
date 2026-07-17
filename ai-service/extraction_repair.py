@@ -216,7 +216,12 @@ async def prepare_extraction_with_repair(
             errors.append("verbatim_quote is empty")
 
         features = _features_for_scoring(current, feature_spec, pdf_metadata)
-        validation_reasons: list[str] = []
+        # Deterministic guard: a 7.5 "government access" feature must not fire on
+        # a consent-gated disclosure (a safeguard, not unfettered access).
+        from scoring.pillar_7 import veto_consent_gated_government_access
+
+        veto_reasons = veto_consent_gated_government_access(indicator_id, quote, features)
+        validation_reasons: list[str] = list(veto_reasons)
         if not errors and is_valid:
             vr = validate_mapping(
                 {},
@@ -230,7 +235,7 @@ async def prepare_extraction_with_repair(
             if vr.level == "reject":
                 errors.extend(f"Validation reject: {reason}" for reason in vr.reasons)
             elif vr.level == "flag":
-                validation_reasons = vr.reasons
+                validation_reasons = [*validation_reasons, *vr.reasons]
 
         if not errors:
             return {
