@@ -127,6 +127,46 @@ def test_validator_drops_repealed_but_keeps_repeal_acts_and_quotes():
     assert [r.law_name for r in kept] == ["Privacy Act 1988"]
 
 
+def test_validator_drops_government_data_measures_but_keeps_personal_data():
+    from submission.schema import _is_government_data_measure
+
+    # Archives Act s24 regulates Commonwealth records → not scoreable.
+    assert _is_government_data_measure(
+        "Archives Act 1983",
+        "the destruction or other disposal of a Commonwealth record",
+    )
+    # Evidence Act "official records relating to affairs of State" → government data.
+    assert _is_government_data_measure(
+        "Evidence Act",
+        "produce any unpublished official records relating to affairs of State",
+    )
+    # Identity Verification Act mentions a Commonwealth record but regulates
+    # facial images / personal data → KEEP.
+    assert not _is_government_data_measure(
+        "Identity Verification Services Act 2023",
+        "take reasonable steps to destroy each facial image of an individual",
+    )
+    assert not _is_government_data_measure(
+        "Personal Data Protection Act 2012",
+        "an organisation must not transfer personal data outside Singapore",
+    )
+
+    good = SubmissionRow(
+        economy="Australia", law_name="Privacy Act 1988", indicator_id="P7-I1",
+        article="s 6", location_reference="p. 1",
+        verbatim_snippet="A complete data-protection provision that reads like a clause.",
+        source_url="https://www.legislation.gov.au/C2004A03712/latest/text",
+    )
+    gov = SubmissionRow(
+        economy="Australia", law_name="Archives Act 1983", indicator_id="P7-I3",
+        article="s 24", location_reference="p. 2",
+        verbatim_snippet="A person must not engage in the destruction or other disposal of a Commonwealth record.",
+        source_url="https://www.legislation.gov.au/C2004A02796/latest/text",
+    )
+    kept = validate_submission_rows([good, gov])
+    assert [r.law_name for r in kept] == ["Privacy Act 1988"]
+
+
 def test_canonicalize_collapses_one_url_many_names():
     from submission.schema import canonicalize_law_names_per_url
 
