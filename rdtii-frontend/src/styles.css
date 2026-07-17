@@ -636,6 +636,26 @@ h3 {
   to { transform: translateX(0); opacity: 1; }
 }
 
+/* Exit — Radix delays unmount until the closed-state animation finishes,
+   so the scrim fades away and the drawer glides back out for ALL drawers. */
+.right-drawer-backdrop[data-state="closed"] {
+  animation: right-drawer-fade-out 0.22s ease forwards;
+}
+
+.right-drawer[data-state="closed"] {
+  animation: right-drawer-slide-out 0.26s cubic-bezier(0.4, 0, 0.68, 0.06) forwards;
+}
+
+@keyframes right-drawer-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes right-drawer-slide-out {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(28px); opacity: 0; }
+}
+
 /* Classic (stacked) workbench view — float the panels off the dot-grid
    backdrop with the same shadow language as the canvas panel nodes. */
 .workbench-classic .input-panel,
@@ -1751,8 +1771,7 @@ textarea {
 .chat-md th, .chat-md td { border: 1px solid rgba(0,0,0,0.12); padding: 0.25em 0.5em; }
 .chat-md a { color: #0f766e; text-decoration: underline; }
 
-/* Pillar Reasoning Report — grouped view of scoring features, validation
-   flags, document quality, and provenance on an audit mapping card. */
+/* Pillar Reasoning Report — card toggle button. */
 .reasoning-toggle-row {
   margin: 6px 0 2px;
 }
@@ -1765,72 +1784,12 @@ textarea {
   border-radius: 9999px;
 }
 
-.reasoning-report {
-  margin-top: 10px;
-  padding: 12px 14px;
-  border: 1px solid #e4eaee;
-  border-radius: 14px;
-  background: #fafcfc;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.reasoning-section h4 {
-  margin: 0 0 6px;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #6b7a76;
-}
-
-.reasoning-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.74rem;
-}
-
-.reasoning-table th {
-  text-align: left;
-  font-weight: 600;
-  color: #52606d;
-  padding: 3px 10px 3px 0;
-  white-space: nowrap;
-  vertical-align: top;
-  width: 42%;
-}
-
-.reasoning-table td {
-  padding: 3px 0;
-  color: #1f2933;
-  word-break: break-word;
-}
-
-.reasoning-table code {
-  font-size: 0.7rem;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 1px 5px;
-  border-radius: 4px;
-}
-
-.reasoning-flags {
-  margin: 0;
-  padding-left: 18px;
-  font-size: 0.74rem;
-  color: #92400e;
-}
-
-.reasoning-flags li {
-  margin: 2px 0;
-}
-
-/* Reasoning report inside the right drawer — slimmer than the source
-   manager, scrollable, with roomier type than the card-inline version. */
+/* Reasoning report drawer — stat tiles, value chips, and callouts instead
+   of dense key/value tables. Crisp, dark, reading-size type. */
 .reasoning-drawer {
-  width: min(520px, calc(100vw - 44px));
+  width: min(680px, calc(100vw - 44px));
   overflow-y: auto;
-  padding: 26px 28px 32px;
+  padding: 30px 34px 38px;
 }
 
 .reasoning-drawer-header {
@@ -1838,39 +1797,166 @@ textarea {
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 4px 44px 18px 0; /* clear the drawer close button */
+  margin: 4px 44px 22px 0; /* clear the drawer close button */
 }
 
 .reasoning-drawer-header h3 {
   flex-basis: 100%;
-  margin: 4px 0 0;
-  font-size: 1.05rem;
-  color: #1f2933;
+  margin: 6px 0 0;
+  font-size: 1.3rem;
+  font-weight: 800; /* Tailwind preflight strips heading bold — restore it */
+  color: #111827;
 }
 
-.reasoning-drawer .reasoning-report {
-  border: none;
-  background: transparent;
-  padding: 0;
-  margin-top: 0;
-  gap: 20px;
+.reasoning-report {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
 }
 
-.reasoning-drawer .reasoning-section h4 {
-  font-size: 0.74rem;
+.rr-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  font-size: 0.84rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0f766e;
 }
 
-.reasoning-drawer .reasoning-table {
-  font-size: 0.86rem;
+/* Hairline rule trailing each section subtitle — anchors the eye. */
+.rr-section h4::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #dbe5e2;
 }
 
-.reasoning-drawer .reasoning-table th,
-.reasoning-drawer .reasoning-table td {
-  padding-top: 5px;
-  padding-bottom: 5px;
+/* Flags — amber callout */
+.rr-callout {
+  border: 1px solid #fcd34d;
+  background: #fffbeb;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.rr-callout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 750;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.rr-callout ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #78350f;
+}
+
+.rr-callout li {
+  margin: 4px 0;
+}
+
+/* Scoring inputs — name + value chip per row */
+.rr-feature-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.rr-feature-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 2px;
   border-bottom: 1px solid #eef2f4;
+  font-size: 1rem;
+  color: #111827;
 }
 
-.reasoning-drawer .reasoning-flags {
-  font-size: 0.86rem;
+.rr-feature-line:last-child {
+  border-bottom: none;
+}
+
+.rr-feature-name {
+  text-transform: capitalize;
+}
+
+.rr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rr-chip-yes { background: #d1fae5; color: #065f46; }
+.rr-chip-no { background: #fee2e2; color: #991b1b; }
+.rr-chip-neutral { background: #eef2f4; color: #1f2933; }
+
+/* Document quality — stat tiles */
+.rr-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.rr-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid #e4eaee;
+  border-radius: 14px;
+  background: #fafcfc;
+}
+
+.rr-stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #111827;
+  text-transform: capitalize;
+}
+
+.rr-stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7a76;
+}
+
+/* Provenance — muted footer rows */
+.rr-provenance-line {
+  display: flex;
+  gap: 14px;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  align-items: baseline;
+}
+
+.rr-provenance-label {
+  flex: 0 0 110px;
+  color: #6b7a76;
+  font-weight: 600;
+}
+
+.rr-provenance-value {
+  color: #374151;
+  word-break: break-word;
+}
+
+.rr-provenance-value code {
+  font-size: 0.82rem;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 5px;
 }
