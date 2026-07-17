@@ -498,6 +498,41 @@ def _flag_p6_topic_mismatch(row) -> None:
     row.notes = f"{notes}; {_P6_TOPIC_FLAG}" if notes else _P6_TOPIC_FLAG
 
 
+# A law whose NAME is squarely a non-digital, goods/agriculture/charges domain
+# cannot be P6/P7 (cross-border data / data protection) evidence. The live path
+# occasionally maps such a law onto a P6/P7 indicator ("Wine Export Charge Act"
+# -> 7.5). These terms never appear in a genuine data/privacy statute name, so a
+# P6/P7 row named for one is dropped. (Terms like tariff/levy/excise are left out
+# — those belong to Pillar 1 and would be legitimate there.)
+_OFF_TOPIC_DOMAIN = re.compile(
+    r"\b(wine|dairy|livestock|fisher\w*|agricultur\w*|horticultur\w*|wool|"
+    r"poultry|forestry|primary\s+industr\w*|export\s+charge|customs\s+charge|"
+    r"grain|sugar|meat|seafood|viticultur\w*)\b",
+    re.IGNORECASE,
+)
+
+
+def _is_off_topic_law(law_name: str, indicator_id: str = "") -> bool:
+    """A goods/agriculture-domain law mapped to P6/P7 is out of scope."""
+    ind = (indicator_id or "").upper()
+    if not (ind.startswith("P6") or ind.startswith("P7") or ind.startswith(("6.", "7."))):
+        return False
+    return bool(_OFF_TOPIC_DOMAIN.search(law_name or ""))
+
+
+# When one source URL is claimed by THREE OR MORE distinct law names in a single
+# run, that is the tell-tale of a fabricated discovery — the model invented names
+# and hung them on whatever URL it had (e.g. five "laws" all pointing at the one
+# IVS Act 2023 register page). We FLAG every such row (never drop — one of the
+# names is the real law at that URL) so the reviewer and score_vs_official can
+# see it. Threshold 3: two names on one URL (an Act + its amendment) is normal.
+_URL_REUSE_THRESHOLD = 3
+_URL_REUSE_FLAG = (
+    "hallucination check: this source URL is claimed by 3+ different law names "
+    "in this run — likely a fabricated name on a real URL; verify at the source"
+)
+
+
 def _is_non_statute_instrument(law_name: str) -> bool:
     return bool(_NON_STATUTE_INSTRUMENT.search(law_name or ""))
 
@@ -617,6 +652,14 @@ def validate_submission_rows(
 
     logger = logging.getLogger(__name__)
 
+    # Pre-count distinct law names per source URL, for the hallucination flag.
+    _names_per_url: dict[str, set] = {}
+    for r in rows:
+        url = str(getattr(r, "source_url", "") or "").strip()
+        name = str(getattr(r, "law_name", "") or "").strip().lower()
+        if url and name:
+            _names_per_url.setdefault(url, set()).add(name)
+
     valid: list[SubmissionRow] = []
     for index, row in enumerate(rows, start=1):
         missing = [
@@ -678,7 +721,26 @@ def validate_submission_rows(
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue
+        if _is_off_topic_law(
+            str(getattr(row, "law_name", "") or ""),
+            str(getattr(row, "indicator_id", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: goods/agriculture-domain law mapped to "
+                "P6/P7 (out of scope): %r",
+                index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
         _flag_p6_topic_mismatch(row)
+        # Hallucination flag: 3+ distinct law names on one URL (never drop — one
+        # of them is the real law at that URL; surface it for review).
+        _url = str(getattr(row, "source_url", "") or "").strip()
+        if len(_names_per_url.get(_url, ())) >= _URL_REUSE_THRESHOLD:
+            _notes = str(getattr(row, "notes", "") or "")
+            if _URL_REUSE_FLAG not in _notes:
+                row.notes = f"{_notes}; {_URL_REUSE_FLAG}" if _notes else _URL_REUSE_FLAG
+            if hasattr(row, "requires_human_review"):
+                row.requires_human_review = True
         valid.append(row)
 
     if not valid and not allow_empty:
