@@ -213,8 +213,11 @@ def extract_timeframe(
 
     # Step 3: Check for amendment date
     amend_patterns = [
-        r"amended\s+(?:as of|on|in|by)\s+(\w+\s+\d{4})",
-        r"last amended\s+(\w+\s+\d{4})",
+        # Capture a short trailing window and let _find_date parse the year, so
+        # "amended on 1 July 2019", "last amended in March 2022", and
+        # "amended by Act 5 of 2020" are all handled — not just "<Month> <year>".
+        r"amended\s+(?:as of|on|in|by)\s+([^.;\n]{0,40})",
+        r"last amended\s+([^.;\n]{0,40})",
         r"修订[于于]?\s*(\d{4})年",
         r"修正[于于]?\s*(\d{4})年",
     ]

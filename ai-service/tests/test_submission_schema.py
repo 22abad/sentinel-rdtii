@@ -408,6 +408,38 @@ def test_build_row_maps_all_fields():
     assert row.confidence_type == "discovery_confidence"
 
 
+def test_amendment_year_from_text_is_amendment_specific():
+    from submission.pipeline import amendment_year_from_text
+
+    # Explicit amendment language -> year is picked up.
+    assert amendment_year_from_text("This Act was last amended in March 2022.") == "2022"
+    assert amendment_year_from_text("amended on 1 July 2019 by Act 5") == "2019"
+    # A bare enactment year is NOT an amendment -> stays empty.
+    assert amendment_year_from_text("Personal Data Protection Act 2012. Section 1 ...") == ""
+    # A "current as at" consolidation date must NOT be read as an amendment year.
+    assert amendment_year_from_text("Act 2009 No. 14, current as at 1 July 2026") == ""
+    assert amendment_year_from_text("") == ""
+
+
+def test_build_row_fills_last_amended_from_document_text():
+    # Live finds usually carry no candidate last_update; the amendment year then
+    # comes from the document's own text rather than being left blank.
+    mapping = _sample_mapping().model_copy(update={"last_update": ""})
+    text = (
+        "x" * 100
+        + mapping.verbatim_quote
+        + "y" * 50
+        + " This Act was last amended in 2023. "
+    )
+    row = build_row(mapping, economy_display="Singapore", source_text=text)
+    assert row.last_amended == "2023"
+
+    # No amendment language anywhere -> honest blank, never a guessed year.
+    plain = "z" * 100 + mapping.verbatim_quote + "w" * 100
+    row2 = build_row(mapping, economy_display="Singapore", source_text=plain)
+    assert row2.last_amended == "Not stated in source"
+
+
 def test_pdf_offsets_resolve_to_page_and_cross_page_range():
     text, spans = _join_pdf_pages(["first page", "second page quote", "third page"])
     quote_start = text.index("page quote")

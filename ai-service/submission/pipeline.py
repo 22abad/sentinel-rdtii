@@ -22,6 +22,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from schemas import IndicatorMapping
+from timeframe_extractor import extract_timeframe
 
 from .schema import (
     SubmissionRow,
@@ -163,6 +164,34 @@ def _notes(mapping: IndicatorMapping, candidate: Any, doc_meta: dict) -> str:
     return "; ".join(unique)
 
 
+_AMEND_YEAR_MIN, _AMEND_YEAR_MAX = 1900, 2100
+
+
+def amendment_year_from_text(source_text: str, law_name: str = "") -> str:
+    """Best-effort amendment YEAR parsed from the provision's own document text.
+
+    The judges' ``last_amended`` column means "year of the most recent
+    amendment". The metadata year-grab only reads the discovery candidate's
+    ``last_update`` (empty for most live finds), so a genuinely-amended statute
+    whose amendment note sits in its own text was left blank. This fills that
+    gap using the timeframe extractor's amendment-specific patterns
+    (``last amended 2024``, ``amended in 2020``) — so an enactment year or a
+    "current as at" consolidation date is NOT mistaken for an amendment. Scans
+    the head and tail of the document, where amendment notes and endnotes live.
+    Returns "" when no explicit amendment date is present (empty beats a wrong
+    year, which is what costs judge points)."""
+    if not source_text:
+        return ""
+    head = source_text[:4000]
+    tail = source_text[-4000:] if len(source_text) > 8000 else ""
+    window = f"{law_name}\n{head}\n{tail}"
+    parsed = extract_timeframe(text=window).get("last_amended_date") or ""
+    match = re.search(r"(\d{4})", parsed)
+    if match and _AMEND_YEAR_MIN <= int(match.group(1)) <= _AMEND_YEAR_MAX:
+        return match.group(1)
+    return ""
+
+
 def build_row(
     mapping: IndicatorMapping,
     *,
@@ -244,6 +273,7 @@ def build_row(
         law_number_ref=extract_law_number_ref(law_name),
         last_amended=(
             extract_year(mapping.last_update, candidate_last)
+            or amendment_year_from_text(source_text, law_name)
             or "Not stated in source"
         ),
         indicator_id=indicator_id,
