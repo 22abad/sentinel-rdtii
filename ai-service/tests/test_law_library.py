@@ -18,7 +18,7 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 29
+    assert len(entries) == 31
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
@@ -158,10 +158,10 @@ async def test_run_library_offline_tags_rows_known(monkeypatch):
 
     assert meta["offline"] is True
     assert meta["source"] == "local_library"
-    # SGP pillar 6 now has the PDPA 2012 (KNOWN baseline) plus two cached NEW
-    # discoveries (PDP Regulations 2021, MAS Notice 658) — origin drives the tag.
-    assert meta["laws_available"] == 3
-    assert len(rows) == 3
+    # SGP pillar 6: PDPA 2012 + Companies Act s.199 (both KNOWN baseline) plus two
+    # cached NEW discoveries (PDP Regulations 2021, MAS Notice 658) — origin tags.
+    assert meta["laws_available"] == 4
+    assert len(rows) == 4
     assert all(r.indicator_id == "P6-I4" for r in rows)
     assert {r.discovery_tag for r in rows} == {"KNOWN", "NEW"}
     by_url = {r.source_url: r.discovery_tag for r in rows}
