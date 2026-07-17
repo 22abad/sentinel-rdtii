@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { IndicatorMapping, Score } from "../types";
+import { t } from "./i18n";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,10 +18,21 @@ export function scoreClass(score: Score): string {
 }
 
 export function formatScore(score: Score): string {
-  if (score === 0) return "0";
-  if (score === 1) return "1";
-  if (score === 0.25) return "0.25";
-  return "0.5";
+  // Render the exact score — the valid set is {0, 0.25, 0.5, 0.75, 0.8, 1}.
+  return String(score);
+}
+
+/** Hover explanation for a mapping's RDTII score. */
+export function scoreDescription(score: Score): string {
+  const level =
+    score === 0
+      ? t("score.open")
+      : score === 1
+        ? t("score.max")
+        : score <= 0.5
+          ? t("score.moderate")
+          : t("score.high");
+  return `${score} — ${level}\n${t("score.scale")}`;
 }
 
 export function formatFeatureValue(v: boolean | number | string): string {

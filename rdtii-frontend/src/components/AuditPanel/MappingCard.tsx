@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { QUOTE_TRUNCATE } from "../../lib/constants";
-import { formatScore, scoreClass } from "../../lib/utils";
+import { formatScore, scoreClass, scoreDescription } from "../../lib/utils";
 import { t } from "../../lib/i18n";
 import type { IndicatorMapping, ReviewDecision } from "../../types";
 import { ReasoningReport } from "./ReasoningReport";
@@ -56,7 +56,10 @@ export function MappingCard({
         <span className="indicator-badge">
           P{mapping.pillar} · {mapping.indicator}
         </span>
-        <span className={`score-badge ${scoreClass(mapping.score)}`}>
+        <span
+          className={`score-badge ${scoreClass(mapping.score)}`}
+          data-tooltip={scoreDescription(mapping.score)}
+        >
           {formatScore(mapping.score)}
         </span>
       </div>
@@ -118,7 +121,10 @@ export function MappingCard({
               <span className="indicator-badge">
                 P{mapping.pillar} · {mapping.indicator}
               </span>
-              <span className={`score-badge ${scoreClass(mapping.score)}`}>
+              <span
+                className={`score-badge ${scoreClass(mapping.score)}`}
+                data-tooltip={scoreDescription(mapping.score)}
+              >
                 {formatScore(mapping.score)}
               </span>
               <h3>{mapping.source_legislation || t("mapping.untitled")}</h3>
