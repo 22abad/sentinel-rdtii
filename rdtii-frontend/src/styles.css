@@ -636,6 +636,26 @@ h3 {
   to { transform: translateX(0); opacity: 1; }
 }
 
+/* Exit — Radix delays unmount until the closed-state animation finishes,
+   so the scrim fades away and the drawer glides back out for ALL drawers. */
+.right-drawer-backdrop[data-state="closed"] {
+  animation: right-drawer-fade-out 0.22s ease forwards;
+}
+
+.right-drawer[data-state="closed"] {
+  animation: right-drawer-slide-out 0.26s cubic-bezier(0.4, 0, 0.68, 0.06) forwards;
+}
+
+@keyframes right-drawer-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes right-drawer-slide-out {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(28px); opacity: 0; }
+}
+
 /* Classic (stacked) workbench view — float the panels off the dot-grid
    backdrop with the same shadow language as the canvas panel nodes. */
 .workbench-classic .input-panel,
@@ -1750,3 +1770,220 @@ textarea {
 .chat-md table { border-collapse: collapse; margin: 0.4em 0; font-size: 0.85em; }
 .chat-md th, .chat-md td { border: 1px solid rgba(0,0,0,0.12); padding: 0.25em 0.5em; }
 .chat-md a { color: #0f766e; text-decoration: underline; }
+
+/* Pillar Reasoning Report — card toggle button. */
+.reasoning-toggle-row {
+  margin: 6px 0 2px;
+}
+
+.reasoning-toggle {
+  min-height: 0;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 9999px;
+}
+
+/* Reasoning report drawer — stat tiles, value chips, and callouts instead
+   of dense key/value tables. Crisp, dark, reading-size type. */
+.reasoning-drawer {
+  width: min(680px, calc(100vw - 44px));
+  overflow-y: auto;
+  padding: 30px 34px 38px;
+}
+
+.reasoning-drawer-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 44px 22px 0; /* clear the drawer close button */
+}
+
+.reasoning-drawer-header h3 {
+  flex-basis: 100%;
+  margin: 6px 0 0;
+  font-size: 1.3rem;
+  font-weight: 800; /* Tailwind preflight strips heading bold — restore it */
+  color: #111827;
+}
+
+.reasoning-report {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.rr-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  font-size: 0.84rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0f766e;
+}
+
+/* Hairline rule trailing each section subtitle — anchors the eye. */
+.rr-section h4::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #dbe5e2;
+}
+
+/* Flags — amber callout */
+.rr-callout {
+  border: 1px solid #fcd34d;
+  background: #fffbeb;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.rr-callout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 750;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.rr-callout ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #78350f;
+}
+
+.rr-callout li {
+  margin: 4px 0;
+}
+
+/* Scoring inputs — name + value chip per row */
+.rr-feature-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.rr-feature-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 2px;
+  border-bottom: 1px solid #eef2f4;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.rr-feature-line:last-child {
+  border-bottom: none;
+}
+
+.rr-feature-name {
+  text-transform: capitalize;
+}
+
+.rr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rr-chip-yes { background: #d1fae5; color: #065f46; }
+.rr-chip-no { background: #fee2e2; color: #991b1b; }
+.rr-chip-neutral { background: #eef2f4; color: #1f2933; }
+
+/* Document quality — stat tiles */
+.rr-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.rr-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid #e4eaee;
+  border-radius: 14px;
+  background: #fafcfc;
+}
+
+.rr-stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #111827;
+  text-transform: capitalize;
+}
+
+.rr-stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7a76;
+}
+
+/* Provenance — muted footer rows */
+.rr-provenance-line {
+  display: flex;
+  gap: 14px;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  align-items: baseline;
+}
+
+.rr-provenance-label {
+  flex: 0 0 110px;
+  color: #6b7a76;
+  font-weight: 600;
+}
+
+.rr-provenance-value {
+  color: #374151;
+  word-break: break-word;
+}
+
+.rr-provenance-value code {
+  font-size: 0.82rem;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+/* Instant styled tooltip for score badges (native title is slow/unreliable). */
+.score-badge[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+.score-badge[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 60;
+  width: max-content;
+  max-width: 280px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #111827;
+  color: #f9fafb;
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: left;
+  white-space: pre-line;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}

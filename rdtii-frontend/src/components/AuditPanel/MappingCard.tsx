@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { QUOTE_TRUNCATE } from "../../lib/constants";
-import { formatFeatureValue, formatScore, scoreClass } from "../../lib/utils";
+import { formatScore, scoreClass, scoreDescription } from "../../lib/utils";
 import { t } from "../../lib/i18n";
 import type { IndicatorMapping, ReviewDecision } from "../../types";
+import { ReasoningReport } from "./ReasoningReport";
+import { RightDrawer } from "../ui/RightDrawer";
 
 type MappingCardProps = {
   mapping: IndicatorMapping;
@@ -22,7 +24,10 @@ export function MappingCard({
   onDecision,
 }: MappingCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const featureEntries = Object.entries(mapping.features);
+  const [reportOpen, setReportOpen] = useState(false);
+  const hasReport =
+    Object.keys(mapping.features ?? {}).length > 0 ||
+    (mapping.flag_reasons?.length ?? 0) > 0;
 
   const quoteIsLong = mapping.verbatim_quote.length > QUOTE_TRUNCATE;
   const visibleQuote =
@@ -51,7 +56,10 @@ export function MappingCard({
         <span className="indicator-badge">
           P{mapping.pillar} · {mapping.indicator}
         </span>
-        <span className={`score-badge ${scoreClass(mapping.score)}`}>
+        <span
+          className={`score-badge ${scoreClass(mapping.score)}`}
+          data-tooltip={scoreDescription(mapping.score)}
+        >
           {formatScore(mapping.score)}
         </span>
       </div>
@@ -89,14 +97,40 @@ export function MappingCard({
         ) : null}
       </blockquote>
 
-      {featureEntries.length > 0 ? (
-        <div className="feature-row">
-          {featureEntries.map(([k, v]) => (
-            <span key={k} className="feature-chip">
-              <span className="chip-key">{k}</span>
-              <span className="chip-val">{formatFeatureValue(v)}</span>
-            </span>
-          ))}
+      {hasReport ? (
+        <div className="reasoning-toggle-row">
+          <button
+            type="button"
+            className="secondary reasoning-toggle"
+            aria-haspopup="dialog"
+            aria-expanded={reportOpen}
+            onClick={(e) => {
+              e.stopPropagation();
+              setReportOpen(true);
+            }}
+          >
+            {t("mapping.reasoningReport")}
+          </button>
+          <RightDrawer
+            open={reportOpen}
+            onOpenChange={setReportOpen}
+            title={t("mapping.reasoningReport")}
+            className="reasoning-drawer"
+          >
+            <div className="reasoning-drawer-header">
+              <span className="indicator-badge">
+                P{mapping.pillar} · {mapping.indicator}
+              </span>
+              <span
+                className={`score-badge ${scoreClass(mapping.score)}`}
+                data-tooltip={scoreDescription(mapping.score)}
+              >
+                {formatScore(mapping.score)}
+              </span>
+              <h3>{mapping.source_legislation || t("mapping.untitled")}</h3>
+            </div>
+            <ReasoningReport mapping={mapping} />
+          </RightDrawer>
         </div>
       ) : null}
 

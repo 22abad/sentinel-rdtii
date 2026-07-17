@@ -31,7 +31,7 @@ dev-sidecar:
 	export DATABASE_URL=$$(grep '^DATABASE_URL=' .env | cut -d= -f2-) SIDECAR_API_KEY=$$(grep '^SIDECAR_API_KEY=' .env | cut -d= -f2-) SIDECAR_ADDR=$$(grep '^SIDECAR_ADDR=' .env | cut -d= -f2-) && cd extract_sidecar && cargo run
 
 install:
-	cd ai-service && $(PYTHON) -m pip install -r requirements.txt && $(PYTHON) -m playwright install webkit
+	cd ai-service && $(PYTHON) -m pip install -r requirements.txt && $(PYTHON) -m playwright install chromium webkit
 
 install-sidecar:
 	cd extract_sidecar && cargo build --release

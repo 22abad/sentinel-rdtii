@@ -453,10 +453,13 @@ export function WorkbenchPage() {
 
           {/* Switch back to the canvas — mirrors the canvas toolbar position */}
           <div className="fixed bottom-6 left-0 right-0 z-40 flex justify-center pointer-events-none">
-            <button
+            <motion.button
               onClick={() => switchView("canvas")}
               className="pointer-events-auto flex items-center gap-2"
               title="Switch to the canvas layout"
+              whileHover={{ scale: 1.04, y: -1, boxShadow: "0 10px 30px rgba(15, 118, 110, 0.28)" }}
+              whileTap={{ scale: 0.96, y: 0 }}
+              transition={{ type: "spring", stiffness: 320, damping: 22 }}
               style={{
                 minHeight: 0,
                 padding: "8px 16px",
@@ -471,7 +474,7 @@ export function WorkbenchPage() {
               }}
             >
               <LayoutDashboard size={15} /> Canvas
-            </button>
+            </motion.button>
           </div>
         </main>
         </>
