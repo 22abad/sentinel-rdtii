@@ -744,12 +744,13 @@ async def run_library(
 
         _merge_usage(usage_totals, getattr(result, "usage", None))
         laws_processed += 1
-        for mapping in result.mappings:
+
+        def _emit(mapping) -> str | None:
             if mapping.pillar != pillar:
-                continue
+                return None
             code_id = indicator_to_rdtii_code(mapping.indicator)
             if wanted is not None and code_id not in wanted:
-                continue
+                return None
             rows.append(
                 build_row(
                     mapping,
@@ -759,6 +760,37 @@ async def run_library(
                     doc_meta=doc_meta,
                 )
             )
+            return code_id
+
+        covered = {c for c in (_emit(m) for m in result.mappings) if c}
+
+        # Honour the curated indicator hint. Seeds are banked as evidence for a
+        # SPECIFIC indicator, but the broad pass re-derives indicators via the
+        # keyword classifier, which can mis-route (e.g. the SGP Criminal
+        # Procedure Code s39 "power to access computer" landed on 7.1 instead of
+        # its curated 7.5). If a hinted indicator in scope produced nothing, run
+        # a targeted extraction for exactly that indicator (target_indicators
+        # bypasses the classifier) and emit what it finds. Additive — never
+        # drops the broad finds.
+        missing_hints = [
+            h for h in entry.indicator_hints
+            if h.split(".")[0] == str(pillar)
+            and indicator_to_rdtii_code(h) not in covered
+            and (wanted is None or indicator_to_rdtii_code(h) in wanted)
+        ]
+        if missing_hints:
+            try:
+                topup = await run_extraction(
+                    entry.text, provider, target_indicators=missing_hints
+                )
+            except Exception as exc:  # noqa: BLE001 — top-up is best-effort
+                warnings.append(f"hint top-up failed for {entry.law_id}: {exc}")
+            else:
+                _merge_usage(usage_totals, getattr(topup, "usage", None))
+                wanted_hint_codes = {indicator_to_rdtii_code(h) for h in missing_hints}
+                for mapping in topup.mappings:
+                    if indicator_to_rdtii_code(mapping.indicator) in wanted_hint_codes:
+                        _emit(mapping)
 
     if not entries:
         warnings.append(
