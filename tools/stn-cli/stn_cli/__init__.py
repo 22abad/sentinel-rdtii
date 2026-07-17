@@ -1,0 +1,1 @@
+"""SENTINEL CLI package."""

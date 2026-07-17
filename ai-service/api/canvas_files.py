@@ -83,3 +83,12 @@ async def list_canvas_files(
 ) -> list[dict]:
     """List ingested documents (newest first) for the Documents panel."""
     return ingest.list_documents()
+
+
+@router.post("/audit-countries")
+async def audit_countries(
+    fix: bool = False,
+    current_user: dict = Depends(get_current_user),
+) -> dict:
+    """Audit (and optionally repair) stored country codes against detection."""
+    return ingest.audit_country_codes(fix=fix)

@@ -133,6 +133,26 @@ def _save_to_db(document_id: str) -> dict:
                 if not chunks:
                     raise CanvasIngestError("no extractable text")
 
+                # Country verification — never trust the uploader's preset
+                # blindly (the Source panel defaults to CHN and that default
+                # was historically stamped onto every ingest).
+                detected, confidence = _detect_country(text)
+                if detected and confidence >= 0.7:
+                    if not country_code and detected in _registered_country_codes(cur):
+                        # FK guard: only registered (ESCAP) codes are storable.
+                        country_code = detected
+                        cur.execute(
+                            "UPDATE documents SET country_code = %s WHERE id = %s",
+                            (country_code, document_id),
+                        )
+                    elif country_code != detected:
+                        # Keep the preset (it may be deliberate) but leave an
+                        # audit trail — `stn audit-countries` surfaces these.
+                        print(
+                            f"[canvas-ingest] country mismatch for {filename}: "
+                            f"stored={country_code} detected={detected} ({confidence:.2f})"
+                        )
+
                 cur.execute(
                     "INSERT INTO document_sections "
                     "(document_id, section_number, raw_text) "
@@ -239,3 +259,95 @@ def list_documents(limit: int = 100) -> list[dict]:
         }
         for r in rows
     ]
+
+
+# ── Country verification ─────────────────────────────────────────────────
+
+
+def _detect_country(text: str, source_url: str = "") -> tuple[str | None, float]:
+    """Detect the document's country (ISO-3, confidence) — URL first, then text."""
+    try:
+        from country_detector import detect_country
+
+        result = detect_country(text=text[:8000], source_url=source_url)
+        return result.get("code"), float(result.get("confidence") or 0.0)
+    except Exception:  # noqa: BLE001 — detection must never break ingest
+        return None, 0.0
+
+
+def _registered_country_codes(cur) -> set[str]:
+    cur.execute("SELECT code FROM countries")
+    return {r[0] for r in cur.fetchall()}
+
+
+def audit_country_codes(fix: bool = False, confidence_threshold: float = 0.7) -> dict:
+    """Compare every document's stored country_code against text detection.
+
+    The Source panel's CHN default was historically stamped onto ingests
+    unchecked; this measures (and with fix=True repairs) the damage. Fixes
+    propagate to chunk_embeddings.country_code, which retrieval filters on.
+    Detected codes outside the `countries` registry (e.g. NGA) are reported
+    but never written — the FK would reject them.
+    """
+    report: list[dict] = []
+    with _db_connect() as conn:
+        with conn.cursor() as cur:
+            valid_codes = _registered_country_codes(cur)
+            cur.execute(
+                """
+                SELECT d.id, d.filename, d.country_code, d.source_url,
+                       COALESCE(
+                         (SELECT ds.raw_text FROM document_sections ds
+                          WHERE ds.document_id = d.id LIMIT 1), ''
+                       )
+                FROM documents d
+                ORDER BY d.created_at DESC
+                """
+            )
+            rows = cur.fetchall()
+            for doc_id, filename, stored, source_url, text in rows:
+                url = source_url if source_url and not source_url.startswith("canvas://") else ""
+                detected, confidence = _detect_country(text or "", url)
+                entry = {
+                    "document_id": str(doc_id),
+                    "filename": filename,
+                    "stored": stored,
+                    "detected": detected,
+                    "confidence": round(confidence, 2),
+                    "verdict": "",
+                    "fixed": False,
+                }
+                confident = bool(detected) and confidence >= confidence_threshold
+                if not confident:
+                    entry["verdict"] = "undetected"
+                elif detected == stored:
+                    entry["verdict"] = "match"
+                elif detected not in valid_codes:
+                    entry["verdict"] = "detected-not-in-registry"
+                elif not stored:
+                    entry["verdict"] = "missing-stored"
+                else:
+                    entry["verdict"] = "MISMATCH"
+                if fix and entry["verdict"] in ("MISMATCH", "missing-stored"):
+                    cur.execute(
+                        "UPDATE documents SET country_code = %s WHERE id = %s",
+                        (detected, doc_id),
+                    )
+                    cur.execute(
+                        "UPDATE chunk_embeddings SET country_code = %s WHERE document_id = %s",
+                        (detected, doc_id),
+                    )
+                    entry["fixed"] = True
+                report.append(entry)
+        if fix:
+            conn.commit()
+    summary = {
+        "documents": len(report),
+        "match": sum(1 for e in report if e["verdict"] == "match"),
+        "mismatch": sum(1 for e in report if e["verdict"] == "MISMATCH"),
+        "missing_stored": sum(1 for e in report if e["verdict"] == "missing-stored"),
+        "undetected": sum(1 for e in report if e["verdict"] == "undetected"),
+        "not_in_registry": sum(1 for e in report if e["verdict"] == "detected-not-in-registry"),
+        "fixed": sum(1 for e in report if e["fixed"]),
+    }
+    return {"summary": summary, "report": report}
