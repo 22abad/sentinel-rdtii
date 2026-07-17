@@ -103,7 +103,7 @@ That's the difference between a demo and a submission."
 ## Slide 6 — Discovery of NEW evidence (the differentiator)
 
 **On slide:** (the explicit **20-point "Discovery of New Evidence"** item)
-- Beyond the sample kit, we find **genuine, in-force laws absent from the official inventory** — **19 verified NEW laws** now banked (🇦🇺 9 · 🇲🇾 6 · 🇸🇬 4; 18 in Pillars 6/7 + 1 beyond in P12), each with a verbatim provision + SHA-256 — incl. NSW's cross-border s 19(2), captured **through a Cloudflare-blocked portal by our own browser fallback**
+- Beyond the sample kit, we find **genuine, in-force laws absent from the official inventory** — **21 verified NEW laws** now banked (🇦🇺 11 · 🇲🇾 6 · 🇸🇬 4; 20 in Pillars 6/7 + 1 beyond in P12), each with a verbatim provision + SHA-256 — incl. NSW's cross-border s 19(2), captured **through a Cloudflare-blocked portal by our own browser fallback**
 - Found by **parallel research across 5 angles** (subsidiary legislation · sectoral/adjacent laws · recent amendments · other pillars · cross-references)
 - **A double rigor gate**: hand-verify against the official portal **+** an automated `is_known_law` check — it **rejected ~10 would-be finds** as already-known or not-in-force (e.g. China's PIPL/DSL/CSL, the spent COVIDSafe ban)
 - 🇲🇾 **PDPA Amendment 2024 (A1727)** breach-notification / DPO / data-portability (in force 2025) · 🇦🇺 **Digital ID Act 2024** biometrics · 🇹🇭 two PDPA-exemption Royal Decrees — full audit trail in `docs/new-law-candidates.md`

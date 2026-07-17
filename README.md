@@ -336,7 +336,7 @@ Reconciliation is reusable in code: `submission.reconcile_discovery_tags(rows)`
 re-tags any result set against the baseline, and `build_discovery_report(...)`
 produces the gated report.
 
-**Current discovery record: 19 verified NEW laws banked** (AUS 9 · MYS 6 ·
+**Current discovery record: 21 verified NEW laws banked** (AUS 11 · MYS 6 ·
 SGP 4 — 18 in the mandatory Pillars 6/7 across all three provided economies,
 plus 1 beyond-6/7 in Pillar 12), each with a verbatim provision fetched from the official portal and a
 SHA-256-verified library entry — including NSW's cross-border s 19(2), captured
