@@ -182,3 +182,34 @@ def _save_to_db(document_id: str) -> dict:
         raise CanvasIngestError(str(exc)) from exc
 
     return {"document_id": document_id, "status": "processed", "chunks": len(chunks)}
+
+
+def get_status(document_id: str) -> str | None:
+    """Current ingestion status of a document ('processing'/'processed'/'failed')."""
+    with _db_connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT status FROM documents WHERE id = %s", (document_id,))
+            row = cur.fetchone()
+    return row[0] if row else None
+
+
+def delete_document(document_id: str) -> bool:
+    """Remove an ingested document from the knowledge base.
+
+    Sections, chunks, and embeddings cascade via FK; the stored upload file
+    is removed best-effort. Returns False when the id is unknown.
+    """
+    with _db_connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT file_path FROM documents WHERE id = %s", (document_id,))
+            row = cur.fetchone()
+            if not row:
+                return False
+            cur.execute("DELETE FROM documents WHERE id = %s", (document_id,))
+        conn.commit()
+    try:
+        if row[0]:
+            Path(row[0]).unlink(missing_ok=True)
+    except OSError:
+        pass  # DB rows are gone — a stray file on disk is acceptable
+    return True

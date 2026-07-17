@@ -109,6 +109,7 @@ async def _retrieve(req: RAGQueryRequest):
         retrieve,
         req.question,
         country_code=req.country_code or None,
+        document_ids=req.document_ids or None,
     )
     return hits, build_context(hits)
 

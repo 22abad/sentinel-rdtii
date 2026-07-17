@@ -56,7 +56,7 @@ const SPAWN_TYPES: SpawnType[] = [
   { id: "discovery", label: "Discovery" },
   { id: "source", label: "Source" },
   { id: "audit", label: "Audit" },
-  { id: "documents", label: "Documents"},
+  { id: "documents", label: "Documents" },
 ];
 
 /** Default landing positions; anything not listed falls back to a cascade. */
@@ -72,7 +72,7 @@ const DEFAULT_POSITIONS: Record<string, XYPosition> = {
 const INITIAL_EDGES: Edge[] = [
   { id: "e-discovery-source", source: "discovery", target: "source", animated: true },
   { id: "e-source-audit", source: "source", target: "audit", animated: true },
-  { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" }, 
+  { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" },
 ];
 
 const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material", "session"]);
@@ -88,7 +88,8 @@ type SpawnedPanel = { id: string; panelId: string };
 type PanelMeta = { id: string; title: string; width?: number };
 /** A RAG chat's conversation thread — Discord-thread style node, spawned by
     the chat's first message and persisted in the canvas layout. */
-type CanvasSession = { id: string; chatId: string; messages: ChatMessage[] };
+type SessionFile = { documentId: string; fileName: string };
+type CanvasSession = { id: string; chatId: string; messages: ChatMessage[]; files: SessionFile[] };
 
 type RestoredCanvasState = {
   positions: Record<string, XYPosition>;
@@ -231,6 +232,7 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
         id: node.id,
         chatId: typeof node.config?.chatId === "string" ? node.config.chatId : "",
         messages: restoreSessionMessages(node.config?.messages),
+        files: restoreSessionFiles(node.config?.files),
       });
       sessionCounter = Math.max(sessionCounter, numericSuffix(node.id, "session-"));
     } else if (node.kind === "panel" && node.panelId && node.id !== node.panelId) {
@@ -260,6 +262,14 @@ function restoreCanvasState(layout: WorkbenchCanvasLayout | null): RestoredCanva
     chatCounter,
     sessionCounter,
   };
+}
+
+function restoreSessionFiles(value: unknown): SessionFile[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (f): f is SessionFile =>
+      isRecord(f) && typeof f.documentId === "string" && typeof f.fileName === "string",
+  );
 }
 
 function restoreSessionMessages(value: unknown): ChatMessage[] {
@@ -393,7 +403,7 @@ function toCanvasLayout({
       height: sizes[session.id]?.height,
       removed: !!removed[session.id],
       // Conversation history rides in the layout — sessions survive refresh.
-      config: { chatId: session.chatId, messages: session.messages },
+      config: { chatId: session.chatId, messages: session.messages, files: session.files },
     });
   }
 
@@ -512,15 +522,22 @@ export function WorkbenchCanvas({
     [...sessionsRef.current].reverse().find((s) => s.chatId === chatId)?.id;
 
   const ensureSessionForChat = useCallback(
-    (chatId: string): string => {
-      const existing = [...sessionsRef.current]
-        .reverse()
-        .find((s) => s.chatId === chatId && !removed[s.id]);
-      if (existing) return existing.id;
+    (chatId: string, forceNew = false): string => {
+      if (!forceNew) {
+        const existing = [...sessionsRef.current]
+          .reverse()
+          .find((s) => s.chatId === chatId && !removed[s.id]);
+        if (existing) return existing.id;
+      }
       const id = `session-${(sessionCounter.current += 1)}`;
       const base = positions[chatId] ?? { x: 200, y: 200 };
-      setSessions((prev) => [...prev, { id, chatId, messages: [] }]);
-      setPositions((prev) => ({ ...prev, [id]: { x: base.x + 520, y: base.y - 60 } }));
+      // Cascade siblings so a chat's sessions don't stack on one spot.
+      const siblings = sessionsRef.current.filter((s) => s.chatId === chatId && !removed[s.id]).length;
+      setSessions((prev) => [...prev, { id, chatId, messages: [], files: [] }]);
+      setPositions((prev) => ({
+        ...prev,
+        [id]: { x: base.x + 520 + siblings * 32, y: base.y - 60 + siblings * 44 },
+      }));
       setEdges((es) => [
         ...es,
         { id: `e-${chatId}-${id}`, source: chatId, target: id, animated: true },
@@ -541,13 +558,142 @@ export function WorkbenchCanvas({
     [markCanvasDirty],
   );
 
+  const attachFileToSession = useCallback(
+    (sessionId: string, file: SessionFile) => {
+      setSessions((prev) =>
+        prev.map((s) =>
+          s.id === sessionId && !s.files.some((f) => f.documentId === file.documentId)
+            ? { ...s, files: [...s.files, file] }
+            : s,
+        ),
+      );
+      markCanvasDirty();
+    },
+    [markCanvasDirty],
+  );
+
+  // Permanently delete an ingested document from the knowledge base, then
+  // drop it from the session's scope and narrate the outcome.
+  const deleteIngestedFile = useCallback(
+    async (sessionId: string, documentId: string, fileName: string) => {
+      try {
+        const { deleteCanvasFile } = await import("../../services/canvasFiles");
+        await deleteCanvasFile(documentId);
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.id === sessionId
+              ? { ...s, files: s.files.filter((f) => f.documentId !== documentId) }
+              : s,
+          ),
+        );
+        appendToSession(sessionId, {
+          role: "assistant",
+          text: `🗑 **${fileName}** has been deleted from the knowledge base.`,
+        });
+      } catch (err) {
+        appendToSession(sessionId, {
+          role: "assistant",
+          text: `❌ Could not delete **${fileName}**: ${err instanceof Error ? err.message : "delete failed"}`,
+        });
+      }
+    },
+    [appendToSession],
+  );
+
+  const removeFileFromSession = useCallback(
+    (sessionId: string, documentId: string) => {
+      setSessions((prev) =>
+        prev.map((s) =>
+          s.id === sessionId
+            ? { ...s, files: s.files.filter((f) => f.documentId !== documentId) }
+            : s,
+        ),
+      );
+      markCanvasDirty();
+    },
+    [markCanvasDirty],
+  );
+
   const handleChatSend = useCallback(
-    (chatId: string, question: string) => {
-      const sessionId = ensureSessionForChat(chatId);
+    (chatId: string, question: string, opts?: { newSession?: boolean }) => {
+      const sessionId = ensureSessionForChat(chatId, opts?.newSession);
       appendToSession(sessionId, { role: "user", text: question });
       setPendingSessions((prev) => ({ ...prev, [sessionId]: true }));
     },
     [ensureSessionForChat, appendToSession],
+  );
+
+  // Paperclip uploads on a chat node: ingest into the RAG store and narrate
+  // progress inside the chat's session thread.
+  const [chatIngesting, setChatIngesting] = useState<Record<string, boolean>>({});
+  const handleChatFileUpload = useCallback(
+    async (chatId: string, file: File, opts?: { newSession?: boolean }) => {
+      const sessionId = ensureSessionForChat(chatId, opts?.newSession);
+      const say = (text: string) => appendToSession(sessionId, { role: "assistant", text });
+      setChatIngesting((prev) => ({ ...prev, [chatId]: true }));
+      say(`📎 Adding **${file.name}** to the knowledge base…`);
+      try {
+        const { uploadCanvasFile, getCanvasFileStatus } = await import("../../services/canvasFiles");
+        const result = await uploadCanvasFile(file);
+        if (result.deduplicated && result.status === "processed") {
+          attachFileToSession(sessionId, { documentId: result.document_id, fileName: file.name });
+          say(`✅ **${file.name}** is already in the knowledge base — ask me about it.`);
+          return;
+        }
+        for (let i = 0; i < 20; i++) {
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+          const status = await getCanvasFileStatus(result.document_id);
+          if (status === "processed") {
+            attachFileToSession(sessionId, { documentId: result.document_id, fileName: file.name });
+            say(`✅ **${file.name}** is in the knowledge base — ask me about it.`);
+            return;
+          }
+          if (status === "failed") {
+            say(`❌ Ingestion of **${file.name}** failed on the server.`);
+            return;
+          }
+        }
+        say(`⏳ **${file.name}** is still processing — it should become searchable shortly.`);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "upload failed";
+        say(
+          /401|not authenticated/i.test(message)
+            ? "🔒 Please log in to add documents to the knowledge base."
+            : `❌ Could not add **${file.name}**: ${message}`,
+        );
+      } finally {
+        setChatIngesting((prev) => ({ ...prev, [chatId]: false }));
+      }
+    },
+    [ensureSessionForChat, appendToSession, attachFileToSession],
+  );
+
+  // Continue a specific session from its own input (bypasses the chat node).
+  const sendToSession = useCallback(
+    (sessionId: string, question: string) => {
+      appendToSession(sessionId, { role: "user", text: question });
+      setPendingSessions((prev) => ({ ...prev, [sessionId]: true }));
+      void (async () => {
+        try {
+          const { runRagQueryNode } = await import("../../services/workflowNodes");
+          const files = sessionsRef.current.find((s) => s.id === sessionId)?.files ?? [];
+          const data = await runRagQueryNode({
+            question,
+            // Scope answers to this session's documents when it has any.
+            document_ids: files.length ? files.map((f) => f.documentId) : undefined,
+          });
+          appendToSession(sessionId, { role: "assistant", text: data.answer });
+        } catch (err) {
+          appendToSession(sessionId, {
+            role: "assistant",
+            text: `❌ ${err instanceof Error ? err.message : "RAG query failed."}`,
+          });
+        } finally {
+          setPendingSessions((prev) => ({ ...prev, [sessionId]: false }));
+        }
+      })();
+    },
+    [appendToSession],
   );
 
   const handleChatResponse = useCallback(
@@ -616,7 +762,8 @@ export function WorkbenchCanvas({
 
 
   const handleFile = useCallback(async (id: string, file: File) => {
-    setFiles((prev) => prev.map((f) => f.id === id ? { ...f,
+    setFiles((prev) => prev.map((f) => f.id === id ? {
+      ...f,
       fileName: file.name, fileSize: file.size
     } : f));
     //    const form = new FormData(); form.append("file", file);
@@ -632,13 +779,13 @@ export function WorkbenchCanvas({
 
   const onCanvasDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    if(!flowRef.current) return;
+    if (!flowRef.current) return;
     const position = flowRef.current.screenToFlowPosition({ x: e.clientX, y: e.clientY });
-    for(const file of Array.from(e.dataTransfer.files)) {
+    for (const file of Array.from(e.dataTransfer.files)) {
       const id = `file-${(fileCounter.current += 1)}`;
       const previewUrl = URL.createObjectURL(file);
-      setFiles((prev) => [...prev, {id, fileName: file.name, fileSize: file.size, previewUrl }]);
-      setPositions((p) => ({...p, [id]: { x: position.x, y: position.y}}));
+      setFiles((prev) => [...prev, { id, fileName: file.name, fileSize: file.size, previewUrl }]);
+      setPositions((p) => ({ ...p, [id]: { x: position.x, y: position.y } }));
       handleFile(id, file);
     }
   }, [handleFile]);
@@ -889,9 +1036,12 @@ export function WorkbenchCanvas({
               title: "RAG Chat",
               element: (
                 <AIChatInput
-                  onSend={(question) => handleChatSend(id, question)}
+                  enableNewSession
+                  onSend={(question, opts) => handleChatSend(id, question, opts)}
                   onResponse={(answer) => handleChatResponse(id, answer)}
                   onError={() => handleChatError(id)}
+                  onFileSelect={(file, opts) => handleChatFileUpload(id, file, opts)}
+                  isIngesting={!!chatIngesting[id]}
                 />
               ),
               width: sizes[id]?.width ?? 460,
@@ -911,6 +1061,11 @@ export function WorkbenchCanvas({
               title: `Session · ${s.chatId.replace("chat-", "thread #")}`,
               messages: s.messages,
               pending: !!pendingSessions[s.id],
+              onSend: (question: string) => sendToSession(s.id, question),
+              files: s.files,
+              onRemoveFile: (documentId: string) => removeFileFromSession(s.id, documentId),
+              onDeleteFile: (documentId: string, fileName: string) =>
+                deleteIngestedFile(s.id, documentId, fileName),
               width: sizes[s.id]?.width,
               height: sizes[s.id]?.height,
               onResize: (size: WorkbenchCanvasSize) => resizeNode(s.id, size),
@@ -918,26 +1073,26 @@ export function WorkbenchCanvas({
             } satisfies SessionNodeData,
           })),
         ...files
-        .filter((f) => !removed[f.id])
-        .map((f) => ({
-          id: f.id,
-          type: "file",
-          position: positions[f.id] ?? { x: 240, y: 240 },
-          data: {
-            fileName: f.fileName,
-            fileSize: f.fileSize,
-            previewUrl: f.previewUrl,
-            fileType: f.fileType,
-            ingestStatus: f.ingestStatus,
-            width: sizes[f.id]?.width,
-            height: sizes[f.id]?.height,
-            onResize: (size: WorkbenchCanvasSize) => resizeNode(f.id, size),
-            onResetSize: () => resetNodeSize(f.id),
-            onDelete: () => removeNode(f.id),
-          } satisfies FileNodeData,
-        })),
+          .filter((f) => !removed[f.id])
+          .map((f) => ({
+            id: f.id,
+            type: "file",
+            position: positions[f.id] ?? { x: 240, y: 240 },
+            data: {
+              fileName: f.fileName,
+              fileSize: f.fileSize,
+              previewUrl: f.previewUrl,
+              fileType: f.fileType,
+              ingestStatus: f.ingestStatus,
+              width: sizes[f.id]?.width,
+              height: sizes[f.id]?.height,
+              onResize: (size: WorkbenchCanvasSize) => resizeNode(f.id, size),
+              onResetSize: () => resetNodeSize(f.id),
+              onDelete: () => removeNode(f.id),
+            } satisfies FileNodeData,
+          })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds, handleChatSend, handleChatResponse, handleChatError],
+    [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds, handleChatSend, handleChatResponse, handleChatError, sendToSession, handleChatFileUpload, chatIngesting, removeFileFromSession, deleteIngestedFile],
   );
 
   const renderedEdges = useMemo(() => {
@@ -1032,8 +1187,8 @@ export function WorkbenchCanvas({
   const handMode = mode === "hand";
 
   return (
-    <div className={`fixed inset-0 z-30 wb-canvas ${handMode ? "wb-hand" : "wb-select"}`} 
-      style={{ 
+    <div className={`fixed inset-0 z-30 wb-canvas ${handMode ? "wb-hand" : "wb-select"}`}
+      style={{
         height: "100dvh"
       }}
       onDragOver={onCanvasDragOver}
@@ -1061,7 +1216,7 @@ export function WorkbenchCanvas({
         }}
         onMoveEnd={(_event: MouseEvent | TouchEvent | null, nextViewport: Viewport) => setViewport(nextViewport)}
         deleteKeyCode={["Delete", "Backspace"]}
-        minZoom={0.2}
+        minZoom={0.8}
         fitView={!restoredState.viewport}
         defaultViewport={restoredState.viewport}
         fitViewOptions={{ maxZoom: 1, padding: 0.2 }}

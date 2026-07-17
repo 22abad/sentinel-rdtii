@@ -65,6 +65,49 @@ export function MapSearchPage() {
   const [chatActive, setChatActive] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; text: string }[]>([]);
   const [pending, setPending] = useState(false);
+  const [ingesting, setIngesting] = useState(false);
+
+  // Paperclip uploads feed the real RAG store: /api/canvas-files runs
+  // extract → chunk → embed in a background task; we poll until the document
+  // is retrievable and narrate progress in the chat thread.
+  const appendChat = (text: string) =>
+    setMessages((m) => [...m, { role: "assistant" as const, text }]);
+
+  const handleFileUpload = async (file: File) => {
+    setIngesting(true);
+    appendChat(`📎 Adding **${file.name}** to the knowledge base…`);
+    try {
+      const { uploadCanvasFile, getCanvasFileStatus } = await import("../../services/canvasFiles");
+      const result = await uploadCanvasFile(file);
+      if (result.deduplicated && result.status === "processed") {
+        appendChat(`✅ **${file.name}** is already in the knowledge base — ask me about it.`);
+        return;
+      }
+      // Poll the background ingestion (small docs finish in seconds).
+      for (let i = 0; i < 20; i++) {
+        await new Promise((r) => setTimeout(r, 1500));
+        const status = await getCanvasFileStatus(result.document_id);
+        if (status === "processed") {
+          appendChat(`✅ **${file.name}** is in the knowledge base — ask me about it.`);
+          return;
+        }
+        if (status === "failed") {
+          appendChat(`❌ Ingestion of **${file.name}** failed on the server.`);
+          return;
+        }
+      }
+      appendChat(`⏳ **${file.name}** is still processing — it should become searchable shortly.`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "upload failed";
+      appendChat(
+        /401|not authenticated/i.test(message)
+          ? `🔒 Please log in to add documents to the knowledge base.`
+          : `❌ Could not add **${file.name}**: ${message}`,
+      );
+    } finally {
+      setIngesting(false);
+    }
+  };
   const [selectedCountry, setSelectedCountry] = useState<{ code: string; name: string } | null>(null);
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   // State for rendering; refs mirror state so event handlers always read fresh values
@@ -589,6 +632,8 @@ export function MapSearchPage() {
           <AIChatInput
             expandUp
             onActiveChange={setChatActive}
+            onFileSelect={handleFileUpload}
+            isIngesting={ingesting}
             onSend={(q) => { setMessages((m) => [...m, { role: "user", text: q }]); setPending(true); }}
             onResponse={(a) => { setMessages((m) => [...m, { role: "assistant", text: a }]); setPending(false); }}
           />
