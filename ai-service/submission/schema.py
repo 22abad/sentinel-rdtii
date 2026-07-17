@@ -467,6 +467,16 @@ _NON_STATUTE_INSTRUMENT = re.compile(
 )
 
 
+# The RDTII methodology "excludes pending draft and repealed measures" (internal
+# guide p.8). Official portals (legislation.gov.au, SSO, AustLII) mark a repealed
+# instrument in its very title — "Foo Act 1990 (Repealed)". We match ONLY that
+# explicit parenthetical/bracketed status marker: high precision, so a valid
+# statute is never dropped for merely quoting a repeal clause, and a live-in-force
+# "Statute Law (Repeals) Act" or "... Repeal Act" is untouched (those say
+# "repeals"/"repeal", not the "(repealed)" status).
+_REPEALED_LAW_NAME = re.compile(r"[\(\[]\s*repealed\s*[\)\]]", re.IGNORECASE)
+
+
 # Pillar 6 is about DATA flows. A P6 row whose quote contains no data-ish
 # language at all is usually the extractor mis-reading a licence/asset/permit
 # "transfer" provision (Gas Act, aviation Acts...). We FLAG, never drop — the
@@ -535,6 +545,11 @@ _URL_REUSE_FLAG = (
 
 def _is_non_statute_instrument(law_name: str) -> bool:
     return bool(_NON_STATUTE_INSTRUMENT.search(law_name or ""))
+
+
+def _is_repealed_law(law_name: str) -> bool:
+    """True when the law's title carries the explicit "(Repealed)" status marker."""
+    return bool(_REPEALED_LAW_NAME.search(law_name or ""))
 
 
 # A law name must contain SOME statutory-instrument word (multi-language). The
@@ -770,6 +785,13 @@ def validate_submission_rows(
             logger.warning(
                 "Dropping submission row %d: not an in-force statutory measure "
                 "(bill/draft/consultation/digest): %r",
+                index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _is_repealed_law(str(getattr(row, "law_name", "") or "")):
+            logger.warning(
+                "Dropping submission row %d: law is marked repealed — the "
+                "methodology excludes repealed measures: %r",
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue
