@@ -235,6 +235,10 @@ tqdm==4.68.1
     #   transformers
 transformers==5.10.2
     # via sentence-transformers
+einops==0.8.1
+    # optional transformers backend used by trust_remote_code models
+    # (nomic-embed via sentence-transformers). Pinned so transformers does not
+    # log a scary "No module named 'einops'" advisory during a run.
 typer==0.25.1
     # via
     #   huggingface-hub
