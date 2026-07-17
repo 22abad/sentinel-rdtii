@@ -438,6 +438,60 @@ class TestIndicator7_5:
         assert score_7_5({}) == 0.0
 
 
+class TestConsentGateVeto:
+    """A consent-gated disclosure must not read as unfettered government access."""
+
+    # PDPA 2012 s59(5) — the data-protection Commission's own consent-gated
+    # disclosure, previously misread as "government access without oversight".
+    _PDPA_S59 = (
+        "the Commission may disclose, or authorise any specified person to "
+        "disclose, any information relating to any matter referred to in "
+        "subsection (1) in any of the following circumstances: (a) where the "
+        "consent of the person to whom the information relates has been obtained"
+    )
+    # A genuine 7.5 provision — police access, not consent-based.
+    _CPC_S39 = (
+        "A police officer may access any computer and any data stored therein "
+        "for the purposes of an investigation."
+    )
+
+    def test_detects_consent_gate(self):
+        from scoring.pillar_7 import is_consent_gated_access
+
+        assert is_consent_gated_access(self._PDPA_S59)
+        assert is_consent_gated_access("disclosure with the consent of the individual")
+        # real access powers and negated consent are NOT consent-gated
+        assert not is_consent_gated_access(self._CPC_S39)
+        assert not is_consent_gated_access(
+            "the authority may access data without the individual's consent"
+        )
+
+    def test_veto_clears_feature_and_drops_score_to_zero(self):
+        from scoring.pillar_7 import veto_consent_gated_government_access
+
+        features = {"has_government_access_without_judicial_oversight": True}
+        reasons = veto_consent_gated_government_access("7.5", self._PDPA_S59, features)
+        assert reasons and "consent" in reasons[0].lower()
+        assert features["has_government_access_without_judicial_oversight"] is False
+        assert score_7_5(features) == 0.0
+
+    def test_veto_leaves_real_government_access_untouched(self):
+        from scoring.pillar_7 import veto_consent_gated_government_access
+
+        features = {"has_government_access_without_judicial_oversight": True}
+        reasons = veto_consent_gated_government_access("7.5", self._CPC_S39, features)
+        assert reasons == []
+        assert features["has_government_access_without_judicial_oversight"] is True
+        assert score_7_5(features) == 1.0
+
+    def test_veto_only_applies_to_7_5(self):
+        from scoring.pillar_7 import veto_consent_gated_government_access
+
+        features = {"has_government_access_without_judicial_oversight": True}
+        assert veto_consent_gated_government_access("7.1", self._PDPA_S59, features) == []
+        assert features["has_government_access_without_judicial_oversight"] is True
+
+
 # ──────────────────────────────────────────────────────────────────────────
 # Dispatcher wiring
 # ──────────────────────────────────────────────────────────────────────────
