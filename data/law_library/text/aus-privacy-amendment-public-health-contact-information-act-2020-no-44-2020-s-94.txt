@@ -1,0 +1,19 @@
+Privacy Amendment (Public Health Contact Information) Act 2020 (No. 44, 2020) — Privacy Act 1988 Part VIIIA, s.94F (COVID app data in the National COVIDSafe Data Store)
+
+(1) A person commits an offence if:
+(a) the person retains data on a database outside Australia; and
+(b) the data is COVID app data that has been uploaded from a
+communication device to the National COVIDSafe Data
+Store.
+(2) A person commits an offence if:
+(a) the person discloses data to another person who is outside
+Australia; and
+(b) the data is COVID app data that has been uploaded from a
+communication device to the National COVIDSafe Data
+Store; and
+(c) the person is not a person who:
+(i) is employed by, or in the service of, a State or Territory
+health authority; and
+(ii) discloses the data for the purpose of, and only to the
+extent required for the purpose of, undertaking contact
+tracing.
