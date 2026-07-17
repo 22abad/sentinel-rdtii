@@ -644,3 +644,39 @@ snapshot** — 1.37 M chars, the official basis for MYS 6.2 + 7.3 — exactly th
 data-loss footgun: the corpus builder rewrote the whole manifest on a
 per-economy run; it now merges. Lesson: **the archive fallback isn't a nicety —
 official URLs rot, and a judge's run must degrade gracefully to it.**
+
+## 2026-07-17 (pm) — law-currency audit: are we citing the latest, in-force version?
+
+Checked our currency handling against the methodology (internal guide p.8:
+"excludes pending draft and repealed measures"; output template col.4
+`last_amended` = "year of most recent amendment"). Three defects found and fixed.
+
+**A "current as at" date was masquerading as an amendment year (#255).** The QLD
+Information Privacy Act 2009 seed stored `last_amended: 2026-07-01` — that is the
+consolidation's *currency* date, not an amendment. Every QLD row reported
+`last_amended=2026` for a **2009** Act. Root of the low fill-rate was deeper: two
+capable helpers were **built, unit-tested, and never wired in** —
+`timeframe_extractor` (status + amendment-date parsing) and `assess_currency`
+(version-fingerprint drift). Output's `last_amended` was a dumb year-grab over
+two metadata fields, blind to the document body. Fix: cleared the QLD field
+(verified against the QLD portal — amendment history is in external endnotes we
+don't cache, so we do **not** guess a year), and wired `timeframe_extractor` into
+`build_row` as a body-text fallback using amendment-specific patterns, so an
+enactment year or a currency date is never promoted. Empty beats a wrong year.
+
+**Currency was invisible in the output (#256).** SSO / legislation.gov.au / FLK
+canonical URLs already serve the current consolidated version by default (AUS is
+explicit: `/latest/text`), so we weren't shipping stale law — but a reviewer
+couldn't *see* that. Threaded the curated `version` label + `currency_checked_at`
+into the seed row note: "current version: 2020 Revised Edition (currency verified
+2026-07-13)".
+
+**Repealed laws weren't excluded (#257).** Drafts/bills were already dropped;
+repealed weren't. Added a high-precision validator drop on the explicit
+`(Repealed)` title marker that official portals stamp — while deliberately
+keeping in-force "Statute Law (Repeals) Act" and quotes that merely mention
+repeal (precision over recall: dropping a valid law costs more).
+
+Lesson: **a graveyard of capable-but-unwired helpers is its own failure mode** —
+the currency logic existed for weeks and did nothing because nothing called it.
+Audit that the code you *rely on* is actually on the call path, not just present.
