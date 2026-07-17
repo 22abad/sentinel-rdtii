@@ -653,10 +653,16 @@ def validate_submission_rows(
     logger = logging.getLogger(__name__)
 
     # Pre-count distinct law names per source URL, for the hallucination flag.
+    # Normalise names to alphanumerics only, so the same law named with an
+    # invisible variant (nbsp, a stray dash) across its own provisions is NOT
+    # miscounted as several laws — only genuinely different names trip the flag.
     _names_per_url: dict[str, set] = {}
     for r in rows:
         url = str(getattr(r, "source_url", "") or "").strip()
-        name = str(getattr(r, "law_name", "") or "").strip().lower()
+        # base act name only (drop a "— s.12A" section suffix) — several provisions
+        # of one act on one URL are legitimate, only different acts trip the flag.
+        base = re.split(r"[—–]", str(getattr(r, "law_name", "") or ""))[0]
+        name = re.sub(r"[^a-z0-9]", "", base.lower())
         if url and name:
             _names_per_url.setdefault(url, set()).add(name)
 

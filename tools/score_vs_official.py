@@ -94,9 +94,21 @@ def _get(row: dict, *names: str) -> str:
 
 
 def analyze(run: list[dict], official: dict) -> dict:
-    # group run rows by indicator; detect hallucination by URL reuse
+    # group run rows by indicator; detect hallucination by URL reuse. The tell is
+    # DISTINCT LAW NAMES per URL (one law legitimately maps to several indicators
+    # = several rows on one URL — that is NOT hallucination), matching the
+    # validator gate. 3+ distinct names on one URL = a fabricated name.
     by_ind: dict[str, list[dict]] = defaultdict(list)
-    url_counts = Counter(_get(r, "source_url", "final_url") for r in run)
+    names_per_url: dict[str, set] = defaultdict(set)
+    for r in run:
+        u = _get(r, "source_url", "final_url")
+        # Count by BASE act name (drop a "— s.12A" section suffix): several
+        # provisions of the same act on one URL are legitimate, not a hallucination.
+        base = re.split(r"[—–]", _get(r, "law_name"))[0]
+        n = _norm(base)
+        if u and n:
+            names_per_url[u].add(n)
+    url_counts = {u: len(names) for u, names in names_per_url.items()}
     for r in run:
         ind = _dotted(_get(r, "indicator_id", "indicator"))
         if ind.startswith(("6.", "7.")):
