@@ -18,6 +18,7 @@ import httpx
 from rich.markup import escape
 from rich.segment import Segment
 from rich.style import Style
+from rich.text import Text
 from textual import events, work
 from textual.app import App, ComposeResult
 from textual.message import Message
@@ -228,12 +229,18 @@ def _reasoning_markup(kind: str, m: dict) -> str:
     return "\n".join(out)
 
 
+def _row_plaintext(kind: str, m: dict) -> str:
+    """Clipboard-ready plain text of a result row (markup stripped)."""
+    return Text.from_markup(_reasoning_markup(kind, m)).plain
+
+
 class ReportScreen(ModalScreen):
     """Inner window: reasoning report for a selected extract row."""
 
     BINDINGS = [
         ("escape", "dismiss", "Close"),
         ("q", "dismiss", "Close"),
+        ("c", "copy_report", "Copy"),
     ]
 
     CSS = """
@@ -260,6 +267,15 @@ class ReportScreen(ModalScreen):
     def compose(self) -> ComposeResult:
         with VerticalScroll(id="report-window"):
             yield Static(_reasoning_markup(self._kind, self._mapping))
+
+    def action_copy_report(self) -> None:
+        selection = self.get_selected_text()
+        if selection:
+            self.app._copy(selection)
+            self.app.notify("Copied selection to clipboard", timeout=2)
+            return
+        self.app._copy(_row_plaintext(self._kind, self._mapping))
+        self.app.notify("Report copied to clipboard", timeout=2)
 
 
 class BlockBar(Widget):
@@ -412,6 +428,7 @@ class SentinelTUI(App):
         ("3", "pane('extract')", "Extract"),
         ("4", "pane('rag')", "Chat"),
         ("ctrl+r", "run_extract", "Run extract"),
+        ("c", "copy_result", "Copy row"),
     ]
 
     def __init__(self, api: str, token: str) -> None:
@@ -419,6 +436,9 @@ class SentinelTUI(App):
         self._api = api
         self._token = token
         self._extract_rows: list[tuple[str, dict]] = []
+        self._discovery_rows: list[dict] = []
+        self._docs_rows: list[str] = []
+        self._last_rag_answer: str = ""
 
     # ── layout ───────────────────────────────────────────────────────────
 
@@ -509,6 +529,7 @@ class SentinelTUI(App):
     async def _load_docs(self) -> None:
         table = self.query_one("#docs", DataTable)
         table.clear()
+        self._docs_rows.clear()
         try:
             async with self._client(timeout=15.0) as client:
                 res = await client.get("/api/canvas-files")
@@ -516,6 +537,7 @@ class SentinelTUI(App):
                 table.add_row("(run `stn login` first)", "", "", "")
                 return
             for d in res.json():
+                self._docs_rows.append(d.get("filename") or "—")
                 table.add_row(
                     (d.get("filename") or "—")[:60],
                     d.get("status", "—"),
@@ -539,6 +561,65 @@ class SentinelTUI(App):
     async def action_refresh(self) -> None:
         self._load_status()
         self._load_docs()
+
+    def _copy(self, text: str) -> None:
+        """Copy to clipboard via OSC 52 AND the local OS tool.
+
+        OSC 52 covers most terminals + SSH but is silently ignored by some
+        (e.g. macOS Terminal.app); the OS command (pbcopy/wl-copy/xclip)
+        covers local use where OSC 52 fails. Belt and suspenders.
+        """
+        self.copy_to_clipboard(text)  # OSC 52
+        import shutil
+        import subprocess
+
+        for cmd in (
+            ["pbcopy"],
+            ["wl-copy"],
+            ["xclip", "-selection", "clipboard"],
+            ["xsel", "--clipboard", "--input"],
+        ):
+            if shutil.which(cmd[0]):
+                try:
+                    subprocess.run(cmd, input=text.encode(), timeout=2, check=False)
+                except (OSError, subprocess.SubprocessError):
+                    pass
+                break
+
+    def action_copy_result(self) -> None:
+        """Copy to the clipboard: a live text selection if any, else the row.
+
+        Mouse-dragged text selection wins (RichLog, Static, inputs); otherwise
+        fall back to the current result row (tables can't text-select).
+        """
+        selection = self.screen.get_selected_text()
+        if selection:
+            self._copy(selection)
+            self.notify("Copied selection to clipboard", timeout=2)
+            return
+        pane = self.query_one("#switcher", ContentSwitcher).current
+        text, label = None, "result"
+        if pane == "extract":
+            idx = self.query_one("#extract-table", DataTable).cursor_row
+            if 0 <= idx < len(self._extract_rows):
+                kind, payload = self._extract_rows[idx]
+                text, label = _row_plaintext(kind, payload), "mapping report"
+        elif pane == "discovery":
+            idx = self.query_one("#discovery-table", DataTable).cursor_row
+            if 0 <= idx < len(self._discovery_rows):
+                text = (self._discovery_rows[idx].get("url") or "").strip()
+                label = "source URL"
+        elif pane == "docs":
+            idx = self.query_one("#docs", DataTable).cursor_row
+            if 0 <= idx < len(self._docs_rows):
+                text, label = self._docs_rows[idx], "filename"
+        elif pane == "rag":
+            text, label = self._last_rag_answer, "answer"
+        if text:
+            self._copy(text)
+            self.notify(f"Copied {label} to clipboard", timeout=2)
+        else:
+            self.notify("Nothing to copy here", severity="warning", timeout=2)
 
     async def on_list_view_selected(self, event: ListView.Selected) -> None:
         pane_id = (event.item.id or "").removeprefix("nav-")
@@ -586,8 +667,10 @@ class SentinelTUI(App):
                 if retrieved
                 else "[yellow]ungrounded[/]"
             )
+            answer = outputs.get("answer", "(no answer)")
+            self._last_rag_answer = answer
             log.write(f"[bold cyan]stn >[/] {grounding}")
-            log.write(outputs.get("answer", "(no answer)"))
+            log.write(answer)
         except httpx.HTTPError as exc:
             log.write(f"[red]request failed: {exc}[/]")
 
@@ -735,10 +818,12 @@ class SentinelTUI(App):
                     },
                 )
             table.clear()
+            self._discovery_rows.clear()
             if res.status_code != 200:
                 table.add_row(f"HTTP {res.status_code}: {res.text[:80]}", "", "")
                 return
             for c in res.json().get("candidates", []):
+                self._discovery_rows.append(c)
                 table.add_row(
                     (c.get("title") or "—")[:60],
                     ",".join(c.get("matched_indicators", [])),
