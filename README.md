@@ -355,6 +355,46 @@ python tools/promote_new_law.py --economy AUS --law-name "..." --url "..." \
     --pillars 6 --indicators 6.4 --text-file provision.txt --verify --embed
 ```
 
+### Checking a run against the official answer key — and NEW-evidence divergence
+
+The official RDTII Round-1 database holds **one raw score (0 / 0.5 / 1) per
+indicator per economy**, with the law it cites. `score_vs_official.py` folds any
+run into per-indicator coverage and lines it up against that key:
+
+```bash
+python tools/score_vs_official.py --economy Singapore          # newest run in outputs/
+python tools/score_vs_official.py outputs/Australia_P6-7_*.json --md report.md
+```
+
+It flags three things a reviewer must act on:
+
+- **⚠️ NEW-EVIDENCE DIVERGENCE — when a NEW law we discovered changes the score
+  vs the official baseline, it is marked, both in this report and (via
+  `discovery_tag = NEW`) in the run output.** This is *deliberate and important*:
+  if the NEW law is **real**, a differing score is legitimate — it is the
+  Stage-2 "Discovery of New Evidence" the framework rewards, and **it must be
+  called out in the submission** so a judge sees we refined the baseline (e.g.
+  Australia's official 7.2 = 0.5 rests on the 2018 SOCI Act; our discovered
+  **Cyber Security Act 2024** is a dedicated framework that would move it to 0).
+  If the NEW law is **hallucinated**, that same divergence is an over-claim and
+  the row must be dropped. Either way the divergence is never silent.
+- **💀 HALLUCINATION** — three or more different law names sharing one source URL
+  (a fabricated name hung on a real URL). The validator now writes a loud
+  `hallucination check` note onto every such row; `score_vs_official` tallies
+  them per indicator. On the raw live runs this was **31/47 (AUS)** and
+  **52/70 (SGP)** rows — the live-discovery output is a *lead list to verify*,
+  not submission-ready.
+- **❌ GAP** — the official has a non-zero score but the run found nothing.
+
+Two validator gates back this up: a **goods/agriculture law mapped to P6/P7**
+(e.g. "Wine Export Charge Act") is dropped as out of scope, and the
+one-URL-many-names rows are flagged. Note one honest limitation: **indicator 7.2
+(dedicated cybersecurity framework) is a *framework-existence* judgement the
+content extractor maps to Pillar 11 (Standards), not 7.2** — so a cyber Act is
+flagged for legal-review indicator confirmation rather than auto-scored at 7.2
+(this is why AUS Cyber Security Act 2024 is dual-hinted 11.1 / 7.2, and SGP 7.2 —
+official 0 via Cybersecurity Act 2018 — is confirmed by a reviewer).
+
 ---
 
 ## Architecture Overview
