@@ -44,6 +44,37 @@ def is_consent_gated_access(quote: str) -> bool:
     return bool(_CONSENT_GRANTED.search(q)) and not _CONSENT_NEGATED.search(q)
 
 
+# 7.5 scores 1 ONLY when the government can access data WITHOUT independent
+# judicial authorisation. A provision that requires a warrant / court order /
+# magistrate's or judge's order before access is therefore a safeguard, not a
+# violation — score 0. Guards e.g. Australia Crimes Act 1914 s3LA ("a constable
+# may apply to a magistrate for an order ..."), which the LLM read as unfettered
+# access. The negation guard keeps "without a warrant" firmly a 7.5 hit.
+_JUDICIAL_AUTH = re.compile(
+    r"\b(?:a |an |the )?(?:search |production )?warrant\b"
+    r"|\b(?:court|judicial|judge'?s?|magistrate'?s?|the court)\b[^.;:]{0,40}?\border\b"
+    r"|\border of (?:a |the )?(?:court|judge|magistrate)\b"
+    r"|\bapply(?:ing)? to (?:a |the )?(?:court|judge|magistrate)\b"
+    r"|\bauthoris(?:ed|ation) by (?:a |the )?(?:court|judge|magistrate)\b"
+    r"|\bwith the (?:approval|authorisation) of (?:a |the )?court\b",
+    re.IGNORECASE,
+)
+_JUDICIAL_NEGATED = re.compile(
+    r"without (?:a |an |the )?(?:search |production )?(?:warrant|court order|judicial"
+    r"[^.;:]{0,20}?(?:order|authorisation|warrant)|order of (?:a |the )?court)"
+    r"|no warrant"
+    r"|notwithstanding[^.;:]{0,40}(?:warrant|court order)",
+    re.IGNORECASE,
+)
+
+
+def is_judicially_authorised_access(quote: str) -> bool:
+    """True when access requires a warrant / court / judge / magistrate order —
+    i.e. independent judicial authorisation is present (a safeguard)."""
+    q = quote or ""
+    return bool(_JUDICIAL_AUTH.search(q)) and not _JUDICIAL_NEGATED.search(q)
+
+
 def _excluded_if_gov_only(features: dict) -> bool:
     return bool(features.get("applies_to_government_data_only"))
 
@@ -170,14 +201,21 @@ def veto_consent_gated_government_access(
         return []
     if not features.get("has_government_access_without_judicial_oversight"):
         return []
-    if not is_consent_gated_access(quote):
-        return []
-    features["has_government_access_without_judicial_oversight"] = False
-    return [
-        "7.5 government-access feature vetoed: the quoted access/disclosure is "
-        "conditioned on the data subject's consent (a safeguard), not unfettered "
-        "government access without judicial oversight."
-    ]
+    if is_judicially_authorised_access(quote):
+        features["has_government_access_without_judicial_oversight"] = False
+        return [
+            "7.5 government-access feature vetoed: the quoted access requires "
+            "independent judicial authorisation (warrant / court / magistrate "
+            "order), so it is not access WITHOUT judicial oversight."
+        ]
+    if is_consent_gated_access(quote):
+        features["has_government_access_without_judicial_oversight"] = False
+        return [
+            "7.5 government-access feature vetoed: the quoted access/disclosure is "
+            "conditioned on the data subject's consent (a safeguard), not unfettered "
+            "government access without judicial oversight."
+        ]
+    return []
 
 
 # ── Dispatcher ─────────────────────────────────────────────────────────────
@@ -205,5 +243,6 @@ __all__ = [
     "score_7_4",
     "score_7_5",
     "is_consent_gated_access",
+    "is_judicially_authorised_access",
     "veto_consent_gated_government_access",
 ]

@@ -493,6 +493,36 @@ class TestConsentGateVeto:
         assert veto_consent_gated_government_access("7.1", self._PDPA_S59, features) == []
         assert features["has_government_access_without_judicial_oversight"] is True
 
+    # Australia Crimes Act 1914 s3LA — access requires a magistrate's order, so a
+    # judicial lock is present: 7.5 → 0, not 1.
+    _CRIMES_S3LA = (
+        "A constable may apply to a magistrate for an order requiring a specified "
+        "person to provide information or assistance to access data on a computer."
+    )
+
+    def test_judicial_warrant_vetoes_7_5(self):
+        from scoring.pillar_7 import is_judicially_authorised_access, veto_consent_gated_government_access
+
+        assert is_judicially_authorised_access(self._CRIMES_S3LA)
+        assert is_judicially_authorised_access("access is permitted only under a search warrant")
+        # genuine unfettered access is NOT judicially authorised
+        assert not is_judicially_authorised_access(self._CPC_S39)
+        assert not is_judicially_authorised_access(
+            "the agency may access data without a warrant where security requires"
+        )
+
+        features = {"has_government_access_without_judicial_oversight": True}
+        reasons = veto_consent_gated_government_access("7.5", self._CRIMES_S3LA, features)
+        assert reasons and "judicial" in reasons[0].lower()
+        assert score_7_5(features) == 0.0
+
+    def test_warrantless_access_still_scores_one(self):
+        from scoring.pillar_7 import veto_consent_gated_government_access
+
+        features = {"has_government_access_without_judicial_oversight": True}
+        assert veto_consent_gated_government_access("7.5", self._CPC_S39, features) == []
+        assert score_7_5(features) == 1.0
+
 
 class TestNoScoreHallucination:
     """Every P6/P7 scorer may only ever return an official methodology value.
