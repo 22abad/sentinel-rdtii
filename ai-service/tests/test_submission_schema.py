@@ -99,6 +99,34 @@ def test_validator_drops_off_topic_goods_laws_from_p6_p7():
     assert [r.law_name for r in kept] == ["Privacy Act 1988"]
 
 
+def test_validator_drops_repealed_but_keeps_repeal_acts_and_quotes():
+    from submission.schema import _is_repealed_law
+
+    # explicit "(Repealed)" status marker -> excluded per the methodology
+    assert _is_repealed_law("Spam Act 2003 (Repealed)")
+    assert _is_repealed_law("Data Protection Act 1998 [REPEALED]")
+    # an in-force "Repeal(s) Act" is NOT a repealed law; a quote mentioning repeal
+    # is not a status marker either
+    assert not _is_repealed_law("Statute Law (Repeals) Act 2016")
+    assert not _is_repealed_law("Privacy Amendment (Repeal) Act 2024")
+    assert not _is_repealed_law("Personal Data Protection Act 2012")
+
+    good = SubmissionRow(
+        economy="Australia", law_name="Privacy Act 1988", indicator_id="P7-I1",
+        article="s 6", location_reference="p. 1",
+        verbatim_snippet="A complete data-protection provision that reads like a clause.",
+        source_url="https://www.legislation.gov.au/C2004A03712/latest/text",
+    )
+    repealed = SubmissionRow(
+        economy="Australia", law_name="Spam Act 2003 (Repealed)", indicator_id="P7-I3",
+        article="s 5", location_reference="p. 2",
+        verbatim_snippet="This provision governs the handling of electronic messages and data.",
+        source_url="https://www.legislation.gov.au/C2004A01214/latest/text",
+    )
+    kept = validate_submission_rows([good, repealed])
+    assert [r.law_name for r in kept] == ["Privacy Act 1988"]
+
+
 def test_canonicalize_collapses_one_url_many_names():
     from submission.schema import canonicalize_law_names_per_url
 
