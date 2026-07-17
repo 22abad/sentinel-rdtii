@@ -26,7 +26,7 @@ legal review (see mapping-validation note below).
 > (Standards)**, not 7.2 — because 7.2 is a *framework-existence* judgment, not a
 > content indicator our extractor reproduces from a single provision. The law is
 > genuine and in force; it is now dual-hinted **11.1 (pipeline) + 7.2 (analyst,
-> flagged for Katie)**, and counts as a **beyond-6/7 (Pillar 11)** find at the
+> flagged for the legal reviewer)**, and counts as a **beyond-6/7 (Pillar 11)** find at the
 > pipeline level. This catch is the anti-over-claim gate working — we do not
 > assert a clean 7.2 row the tool does not produce.
 
@@ -82,7 +82,7 @@ pipeline reproduces the analyst-assigned indicator hint:
 
 - **16 of 21 auto-reproduce** — extraction lands on a pillar overlapping the hint.
 - **5 need legal-review indicator confirmation** (the human-in-the-loop step by
-  design — this is what Katie's console is for). These are subtle provisions
+  design — this is what the review console is for). These are subtle provisions
   whose indicator the content extractor does not reproduce from the banked
   excerpt: MYS Credit Reporting Agencies Act (security-of-information → 7.1),
   AUS Digital ID Act s48 (biometric restrictions → 7.1; fuller context maps to

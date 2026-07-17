@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TOOL = REPO_ROOT / "tools" / "apply_katie_verdicts.py"
+TOOL = REPO_ROOT / "tools" / "apply_review_verdicts.py"
 
 
 def _run(files):
@@ -20,7 +20,7 @@ def test_banked_review_hint_update_plan(tmp_path):
     """A confirmed card with a different indicator set plans a HINTS update
     against the real manifest entry (dry-run: nothing written)."""
     export = {
-        "reviewer": "Katie",
+        "reviewer": "Reviewer",
         "decisions": [{
             "economy": "MYS",
             "law_name": "Personal Data Protection (Amendment) Act 2024 (Act A1727) — s.12A",
@@ -42,7 +42,7 @@ def test_banked_review_hint_update_plan(tmp_path):
 
 def test_adjudication_prints_promote_commands(tmp_path):
     export = {
-        "reviewer": "Katie", "batch": "live-discovery-adjudication",
+        "reviewer": "Reviewer", "batch": "live-discovery-adjudication",
         "decisions": [
             {"law_name": "Singapore Computer Misuse and Cybersecurity Act",
              "indicator": "P7-I2", "article": "Section 15A",

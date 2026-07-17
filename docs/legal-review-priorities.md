@@ -1,8 +1,8 @@
-# Legal-review priorities for Katie — indicator confirmation
+# Legal-review priorities for the legal reviewer — indicator confirmation
 
 _The discovery engine finds and verbatim-verifies NEW laws; the **indicator**
 each provision maps to is confirmed by a legal reviewer. This is the list that
-needs Katie's call before Round 1 submission. Every law below is genuine,
+needs the reviewer's call before Round 1 submission. Every law below is genuine,
 in-force, and verbatim-verified at an official source — only the RDTII indicator
 assignment is open._
 
@@ -12,7 +12,7 @@ These were caught by the 2026-07-17 extraction-reproducibility audit: the
 content-extraction pipeline does not reproduce our analyst-assigned indicator, so
 a human legal call decides the correct RDTII indicator.
 
-| Law (economy) | Provision | Our analyst hint | Pipeline extracts | Katie's call |
+| Law (economy) | Provision | Our analyst hint | Pipeline extracts | the reviewer's call |
 |---|---|---|---|---|
 | **Cyber Security Act 2024 (AUS)** | s3 objects; s27 ransomware reporting | 7.2 (dedicated cyber framework) | **11.1 (Standards)** | 7.2 vs 11.1 vs both? |
 | **Digital ID Act 2024 (AUS)** | s48 biometric restrictions | 7.1 | empty / 7.4 (fuller) | 7.1 vs 7.4? |
@@ -31,8 +31,8 @@ open a coverage gap — it just removes a supplementary row.
 
 The 15 laws that auto-reproduce their indicator still want a legal sign-off on
 the exact indicator (the engine over-tags — it maps one provision to several
-indicators). These are in Katie's console
-(`outputs/katie-session/new-law-indicator-review.html`, 18 P6/7 cards) plus the
+indicators). These are in the review console
+(the unified scoring console (`outputs/legal-review/rdtii-scoring-console.html`), 18 P6/7 cards) plus the
 P12 CP(ETT) Regs 2024. Standard "confirm which indicator(s) the text genuinely
 supports" review.
 

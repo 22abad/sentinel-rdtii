@@ -8,7 +8,7 @@ corpus texts of the baseline laws mapped to those indicators and writes the
 standard CSV/JSON via the submission writer.
 
     python tools/build_evidence_pack.py --economies CHN IND THA \
-        --indicators 6.1 6.2 7.3 9.3 12.2 12.4.1 12.4.2 --label katie
+        --indicators 6.1 6.2 7.3 9.3 12.2 12.4.1 12.4.2 --label review
 """
 
 from __future__ import annotations

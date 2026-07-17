@@ -561,7 +561,7 @@ retention) yields an empty or divergent mapping. Enriching one (Digital ID s48)
 to fuller context changed it from empty to 7.4 — still not the hinted 7.1 —
 confirming the divergence is about *which subtle indicator*, not just excerpt
 size. Rather than fabricate alignment, I flagged all five with a manifest
-reproducibility note: their indicator is a legal reading pending Katie's review,
+reproducibility note: their indicator is a legal reading pending legal review,
 which is the designed human-in-the-loop step. Crucially, every RDTII cell they
 touch is independently covered by an auto-reproducing law, so no coverage claim
 depends on a flagged one. **Lesson: separate the two claims — "we discovered and

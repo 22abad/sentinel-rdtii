@@ -16,7 +16,7 @@ re-checked against the actual quote and the RDTII indicator definition.**_
 > provision text supports it.
 
 **A NEW find is a lead for attorney verification, not a settled legal
-conclusion** (the project's draft-for-review guardrail). Katie / the trade-law
+conclusion** (the project's draft-for-review guardrail). the legal reviewer / the trade-law
 mentor makes the final call.
 
 ## Verdict legend
@@ -45,7 +45,7 @@ extract) and confirmed present, and each candidate was run through
 | 🇲🇾 MYS | **PDPA (Amendment) Act 2024, Act A1727** — new s 12A | mandatory appointment of a Data Protection Officer | P7 (7.1) | pdp.gov.my Act-A1727 PDF | 1 Jun 2025 (P.U.(B) 522) |
 | 🇸🇬 SGP | **Banking Act 1970** (2020 Rev Ed) — s 47 | banking secrecy — customer information must not be disclosed except as provided | P7 (7.1) | sso.agc.gov.sg (curl) | in force |
 
-> **Indicator hints are conservative (all P7-framework) and pending Katie's
+> **Indicator hints are conservative (all P7-framework) and pending legal
 > sign-off** — the extraction pipeline assigns the precise sub-indicator and the
 > deterministic score at run time. Do not hard-claim a specific P7 sub-indicator
 > for these until the provision→indicator mapping is confirmed.
