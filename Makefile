@@ -1,5 +1,5 @@
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage golden-coverage db db-reset image
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-opencli-bridge install-sidecar test eval-setup eval-golden smoke-discovery discovery-coverage db db-reset image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage golden-coverage db db-reset image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar test eval-setup eval-golden smoke-discovery discovery-coverage db db-reset image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
 SMOKE_ARGS ?=
@@ -35,6 +35,10 @@ install:
 
 install-sidecar:
 	cd extract_sidecar && cargo build --release
+
+install-cli:
+	$(PYTHON) -m pip install -e tools/stn-cli
+	echo "Installed. Try: stn --help"
 
 install-frontend:
 	cd rdtii-frontend && npm install
