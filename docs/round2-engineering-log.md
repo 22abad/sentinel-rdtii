@@ -529,3 +529,23 @@ strategy-order assertion. Caught it immediately after, updated the test to the
 new expected order (and added an assertion for the `/pdf` routing fix), re-ran
 the full suite green. **Lesson: the test suite is the gate, not a formality —
 read the pytest tail before `gh pr merge`, every time.**
+
+## 2026-07-17 — a validation catch: "7.2" was really 11.1 (the anti-over-claim gate earning its keep)
+
+Overnight I banked the AUS **Cyber Security Act 2024** as NEW evidence for RDTII
+**7.2** (dedicated cybersecurity framework), and updated the README / brief /
+heatmap to claim the empty 7.2 slot was filled. Before finalising, I ran a live
+end-to-end extraction over the four laws banked that night. Three mapped as
+expected (MYS CP(ETT) → 12.9; TAS PIPP 9 → 6.4; WA IPP 9 → 6.4/7.1). The Cyber
+Security Act did **not**: the pipeline mapped its provision content (device
+security standards s.14, ransomware payment reporting s.27) to **11.1
+(Standards)**. Root cause: 7.2 is a *framework-existence* judgment, not a
+content indicator the extractor reproduces from a single provision — and
+`run_library` passes no indicator hint to `run_extraction`, so content decides.
+
+Corrected honestly rather than shipping the claim: the law is re-hinted **11.1
+(pipeline) + 7.2 (analyst, flagged for legal review)**, counted as a beyond-6/7
+(Pillar 11) find, and the docs now say so — no clean 7.2 row is asserted that the
+tool does not produce. **Lesson: a manifest indicator hint is a retrieval label,
+not a mapping guarantee — validate a banked law's indicator with a real
+extraction before writing it into the pitch. Verify before presenting.**
