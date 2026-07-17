@@ -5,6 +5,35 @@ behind them: every material problem hit while standing up the 12-pillar ×
 7-economy pipeline, its root cause, the fix, and the verification. PR numbers
 link every claim to code._
 
+---
+
+## 📌 PINNED — open questions to raise with the teacher (if we advance)
+
+**1. Search backend for judges: SerpApi vs. free DuckDuckGo.**
+Live discovery's generic web search can run on SerpApi (Google-backed, needs a
+free-tier API key) or, by default, on **DuckDuckGo HTML search — free, no key,
+no signup, no quota**. We ship DuckDuckGo as the zero-config default so judges
+who don't have a SerpApi key still get real live discovery out of the box
+(verified: DDG returns the correct official sources — sso.agc.gov.sg for the
+Singapore PDPA, legislation.gov.au for the Australia Privacy Act, and npc.gov.cn
+for Chinese laws). SerpApi is marginally broader. **Question for teacher:** is a
+free-tier third-party search API acceptable to the judges, or must discovery use
+only key-free/open endpoints? If the latter, DuckDuckGo default already satisfies
+it — SerpApi stays opt-in.
+
+**2. China / Great Firewall.** Verified 2026-07: DuckDuckGo and Google are
+blocked inside mainland China, but the `china_flk` adapter does **not** need
+them — it hits the official national law database `flk.npc.gov.cn` directly
+(reachable inside China) plus hardcoded seeds for PIPL and the Cybersecurity Law,
+so Chinese-law discovery works behind the firewall. Known limitation: FLK detail
+pages are JS-rendered and its JSON API is locked to browser sessions (plain HTTP
+gets a 405 / SPA shell), so live *self-verification* of a seed's title needs the
+browser driver; without it the seed still surfaces the correct law but tagged
+`fallback` (unverified). **Question for teacher:** is browser-rendered fetching
+acceptable in the judged environment, or should we pre-cache verified FLK text?
+
+---
+
 ## The plan (and where it stands)
 
 | Step | Deliverable | Status |
