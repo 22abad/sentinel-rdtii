@@ -28,6 +28,21 @@ export type CanvasFileUploadResponse = {
   deduplicated: boolean;
 };
 
+export type CanvasFileInfo = {
+  document_id: string;
+  filename: string;
+  status: string;
+  country_code: string | null;
+  created_at: string | null;
+};
+
+/** List ingested documents (newest first). */
+export async function listCanvasFiles(): Promise<CanvasFileInfo[]> {
+  const res = await fetch(CANVAS_FILES_API_URL, { headers: authHeaders() });
+  if (!res.ok) throw new Error(`List failed (HTTP ${res.status}).`);
+  return (await res.json()) as CanvasFileInfo[];
+}
+
 /** Poll a document's ingestion status ('processing' / 'processed' / 'failed'). */
 export async function getCanvasFileStatus(documentId: string): Promise<string> {
   const res = await fetch(`${CANVAS_FILES_API_URL}/${encodeURIComponent(documentId)}`, {

@@ -75,3 +75,11 @@ async def delete_canvas_file(
     if not ingest.delete_document(document_id):
         raise HTTPException(status_code=404, detail="Unknown document.")
     return StatusResponse(document_id=document_id, status="deleted")
+
+
+@router.get("", response_model=list[dict])
+async def list_canvas_files(
+    current_user: dict = Depends(get_current_user),
+) -> list[dict]:
+    """List ingested documents (newest first) for the Documents panel."""
+    return ingest.list_documents()
