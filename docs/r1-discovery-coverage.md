@@ -73,3 +73,28 @@ extraction; two are beyond-6/7 capability demonstrations — MYS CP(ETT) Regs 20
 (Pillar 12) and AUS Cyber Security Act 2024 (Pillar 11 by the pipeline, with 7.2
 flagged for legal review). All three provided economies are covered in the
 mandatory pillars.)_
+
+## Extraction-reproducibility audit (2026-07-17)
+
+Every banked NEW law was re-run through the live content-extraction step
+(`run_extraction`, DeepSeek, 3× each for flagged cases) to check whether the
+pipeline reproduces the analyst-assigned indicator hint:
+
+- **16 of 21 auto-reproduce** — extraction lands on a pillar overlapping the hint.
+- **5 need legal-review indicator confirmation** (the human-in-the-loop step by
+  design — this is what Katie's console is for). These are subtle provisions
+  whose indicator the content extractor does not reproduce from the banked
+  excerpt: MYS Credit Reporting Agencies Act (security-of-information → 7.1),
+  AUS Digital ID Act s48 (biometric restrictions → 7.1; fuller context maps to
+  7.4), SGP MAS Notice 658 (offshore outsourcing → 6.4), AUS Crimes Act s3LA
+  (assistance orders → 7.5), and AUS Archives Act (retention → 7.3, extractor
+  says 6.1).
+
+**Why this does not weaken the heatmap:** every indicator cell that a flagged
+law touches is *independently* covered by an auto-reproducing law
+(SGP 6.4 ← PDP Regs 2021; MYS 7.1 ← A1727/PDP Regs; AUS 7.1 ← NSW PPIP;
+AUS 7.3 ← IVS Act; AUS 7.5 ← Surveillance Devices Act). **No 🆕 cell rests
+solely on a flagged law.** The flagged five are supplementary evidence whose
+precise indicator is a legal call — exactly the discovery-then-legal-review
+split the workflow was built around. The discovery itself (verbatim + official
+source + SHA-256) is not in question for any of them.

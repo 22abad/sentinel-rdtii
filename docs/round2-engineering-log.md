@@ -549,3 +549,22 @@ Corrected honestly rather than shipping the claim: the law is re-hinted **11.1
 tool does not produce. **Lesson: a manifest indicator hint is a retrieval label,
 not a mapping guarantee — validate a banked law's indicator with a real
 extraction before writing it into the pitch. Verify before presenting.**
+
+## 2026-07-17 — extraction-reproducibility audit of all 21 banked NEW laws
+
+After the Cyber Security Act 7.2→11.1 catch, I re-ran every banked NEW law
+through `run_extraction` (3× for flagged cases) to see whether the pipeline
+reproduces the hinted indicator. 16 of 21 auto-reproduce; 5 do not — the banked
+excerpt of a subtle provision (biometric restrictions, offshore outsourcing,
+computer-access assistance orders, credit-information security, record
+retention) yields an empty or divergent mapping. Enriching one (Digital ID s48)
+to fuller context changed it from empty to 7.4 — still not the hinted 7.1 —
+confirming the divergence is about *which subtle indicator*, not just excerpt
+size. Rather than fabricate alignment, I flagged all five with a manifest
+reproducibility note: their indicator is a legal reading pending Katie's review,
+which is the designed human-in-the-loop step. Crucially, every RDTII cell they
+touch is independently covered by an auto-reproducing law, so no coverage claim
+depends on a flagged one. **Lesson: separate the two claims — "we discovered and
+verbatim-verified a NEW law" (rock-solid) from "the pipeline auto-maps it to
+indicator X" (only for 16/21). Report each honestly; the indicator for subtle
+provisions is a human-review call, not an automated fact.**
