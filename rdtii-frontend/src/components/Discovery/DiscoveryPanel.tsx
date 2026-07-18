@@ -555,11 +555,7 @@ export function DiscoveryPanel({
           className="discovery-run group flex items-center justify-center gap-2 h-14 cursor-pointer uppercase tracking-[0.2em] font-bold text-white transition-all duration-300"
           style={{ minHeight: 0, border: "none" }}
         >
-          {loading ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : (
-            <Search size={16} />
-          )}
+          {loading && <Loader2 size={16} className="animate-spin" />}
           <span>{loading ? "Searching" : "Discover"}</span>
           {!loading && (
             <svg className="w-5 h-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -616,80 +612,32 @@ function CandidateCard({
   onExtract: () => void;
 }) {
   return (
-    <article
-      className={selected ? "candidate-card selected" : "candidate-card"}
-    >
-      <div className="candidate-topline">
-        <button
-          type="button"
-          className="candidate-select"
-          onClick={onToggleSelected}
-          disabled={extracting}
-          aria-label={selected ? "Remove from shortlist" : "Add to shortlist"}
-        >
-          {selected ? <CheckSquare size={18} /> : <Square size={18} />}
-        </button>
-        <div className="candidate-title-group">
-          <h3>{candidate.title}</h3>
-          <p>{candidate.source_domain}</p>
-        </div>
-        <span className="candidate-score">
-          {Math.round(candidate.rank_score)}
-        </span>
-      </div>
-
-      <div className="candidate-badges">
-        <span>{candidate.source_grade}</span>
-        <span>{candidate.document_type}</span>
-        <span className={`candidate-retrieval ${candidate.retrieval_mode}`}>
-          {retrievalModeLabel(candidate.retrieval_mode)}
-        </span>
-        {candidate.validation_status &&
-          candidate.validation_status !== "unverified" && (
-            <span>{validationStatusLabel(candidate.validation_status)}</span>
-          )}
-        {candidate.matched_indicators.slice(0, 4).map((indicator) => (
-          <span key={indicator}>{indicator}</span>
-        ))}
-      </div>
-
-      {candidate.snippet && (
-        <p className="candidate-snippet">{candidate.snippet}</p>
-      )}
-
-      {candidate.reasons.length > 0 && (
-        <p className="candidate-reasons">
-          {candidate.reasons.slice(0, 3).join(" · ")}
-        </p>
-      )}
-
-      {candidate.warnings.length > 0 && (
-        <div className="candidate-warnings">
-          {candidate.warnings.slice(0, 2).map((warning) => (
-            <span key={warning}>{warning}</span>
-          ))}
-        </div>
-      )}
-
-      <div className="candidate-actions">
-        <a href={candidate.url} target="_blank" rel="noreferrer">
-          <ExternalLink size={14} />
-          Open
-        </a>
-        <button
-          type="button"
-          className="secondary"
-          onClick={onUse}
-          disabled={extracting}
-        >
-          <FileInput size={14} />
-          Use URL
-        </button>
-        <button type="button" onClick={onExtract} disabled={extracting}>
-          <Search size={14} />
-          Extract
-        </button>
-      </div>
+    <article className={selected ? "candidate-row selected" : "candidate-row"}>
+      <button
+        type="button"
+        className="candidate-select"
+        onClick={onToggleSelected}
+        disabled={extracting}
+        aria-label={selected ? "Remove from shortlist" : "Add to shortlist"}
+      >
+        {selected ? <CheckSquare size={18} /> : <Square size={18} />}
+      </button>
+      <h3 className="candidate-title" title={candidate.title}>
+        {candidate.title}
+      </h3>
+      <span className="candidate-pillars">
+        {candidate.matched_pillars.length
+          ? candidate.matched_pillars.map((p) => `P${p}`).join(" · ")
+          : "—"}
+      </span>
+      <button
+        type="button"
+        className="candidate-extract"
+        onClick={onExtract}
+        disabled={extracting}
+      >
+        Extract
+      </button>
     </article>
   );
 }

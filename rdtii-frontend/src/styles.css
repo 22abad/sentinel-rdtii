@@ -2164,3 +2164,82 @@ textarea {
   border-color: #111827;
   color: #f3f1ea;
 }
+
+/* results: Swiss index list — click box · title · pillars · Extract */
+.swiss-form .candidate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.swiss-form .candidate-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1.5px solid #111827;
+  background: transparent;
+}
+.swiss-form .candidate-row:last-child {
+  border-bottom: 1.5px solid #111827;
+}
+.swiss-form .candidate-row:hover {
+  background: rgba(17, 24, 39, 0.05);
+}
+.swiss-form .candidate-row.selected {
+  background: rgba(17, 24, 39, 0.08);
+}
+.swiss-form .candidate-select {
+  display: inline-flex;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .candidate-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.swiss-form .candidate-pillars {
+  flex-shrink: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #6b675c;
+  white-space: nowrap;
+}
+.swiss-form .candidate-extract {
+  flex-shrink: 0;
+  min-height: 0;
+  height: 34px;
+  padding: 0 14px;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.swiss-form .candidate-extract:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .candidate-extract:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
