@@ -143,3 +143,46 @@ def test_long_article_still_respects_budget_after_heading_split(monkeypatch):
     assert chunks[-1].text.startswith("Article 2")
     for c in chunks:
         assert text[c.start : c.end] == c.text
+
+
+# ── reflow_legal_text ─────────────────────────────────────────────────────
+
+from chunker import reflow_legal_text  # noqa: E402
+
+
+def test_reflow_joins_wrapped_lines_and_dehyphenates():
+    messy = (
+        "No prosecution for an offence under this Act shall be\n"
+        "instituted except by or with the authorisation of the Public Pros-\n"
+        "ecutor."
+    )
+    out = reflow_legal_text(messy)
+    assert "shall be instituted" in out
+    assert "Public Prosecutor." in out
+    assert "\n" not in out  # one flowing sentence now
+
+
+def test_reflow_strips_inline_amendment_markers():
+    assert "[40/2020]" not in reflow_legal_text("text [40/2020] more")
+    assert "[Act 26 of 2012]" not in reflow_legal_text("x [Act 26 of 2012] y")
+
+
+def test_reflow_preserves_headings_and_paragraph_breaks():
+    clean = "Section 25. Retention of personal data\n\nAn organisation must cease to retain."
+    # next line starts uppercase / after a blank line -> not joined
+    assert reflow_legal_text(clean) == clean
+
+
+def test_reflow_is_idempotent():
+    messy = "shall be\ninstituted with the Pros-\necutor [40/2020]."
+    once = reflow_legal_text(messy)
+    assert reflow_legal_text(once) == once
+
+
+def test_reflow_noop_on_clean_text():
+    for clean in [
+        "The company shall retain the records for seven years.",
+        "Section 77  Requirement not to hold records outside Australia",  # double space kept
+        "第十条 关键信息基础设施运营者严禁向境外提供受管制数据。",  # CJK untouched
+    ]:
+        assert reflow_legal_text(clean) == clean

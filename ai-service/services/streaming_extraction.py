@@ -49,10 +49,14 @@ async def _stream_extraction_impl(
     from validation import reset_quote_registry
 
     import main as main_module
-    from chunker import regex_legal_chunker
+    from chunker import reflow_legal_text, regex_legal_chunker
     from features import get_feature_spec
 
     reset_quote_registry()
+
+    # Mend PDF/OCR line damage before anything reads the text — so source_text,
+    # chunk offsets and quote-locating all operate on the same clean text.
+    text = reflow_legal_text(text)
 
     def _sse(event: str, payload: object) -> str:
         return f"event: {event}\ndata: {json.dumps(payload, default=str)}\n\n"
