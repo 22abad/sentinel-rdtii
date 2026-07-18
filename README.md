@@ -106,6 +106,14 @@ OLLAMA_BASE_URL=http://localhost:11434/v1
 **Option B — cloud provider:** set `RDTII_LLM_PROVIDER=deepseek` (or `openai`,
 `gemini`, `claude`) and the matching API key. See [Swapping the LLM](#swapping-the-llm).
 
+> **Speed vs. reproducibility.** The local Ollama model (Option A) is key-free
+> and fully reproducible, but a full-pillar run maps many provisions and can take
+> several minutes on CPU. If you have a key, a cloud provider (Option B, e.g.
+> DeepSeek) is much faster. For a quick check either way, narrow the run with
+> `--indicators` (e.g. `--indicators 6.4`); note that restricting to an indicator
+> with no matching source in the local library returns 0 rows by design, not an
+> error.
+
 #### Live search backend — free, no key required
 
 Live discovery finds NEW laws two ways: **dedicated official-portal adapters**
