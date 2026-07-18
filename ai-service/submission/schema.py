@@ -596,6 +596,15 @@ def _is_repealed_law(law_name: str) -> bool:
     return bool(_REPEALED_LAW_NAME.search(law_name or ""))
 
 
+# The government-data exclusion is NOT a blanket rule. The methodology states it
+# only for the data-localization indicators 6.1-6.4 ("Not score data localization
+# measure applied to government data") and the retention indicator 7.3 ("Not score
+# requirement applied to government data"). It does NOT apply to 7.1/7.2/7.4/7.5.
+_GOV_DATA_EXCLUDED_INDICATORS: frozenset[str] = frozenset(
+    {"P6-I1", "P6-I2", "P6-I3", "P6-I4", "P7-I3"}
+)
+
+
 def _is_government_data_measure(law_name: str, quote: str) -> bool:
     """True when a provision regulates GOVERNMENT records (not scoreable per the
     methodology), and is not really about personal/commercial data."""
@@ -846,14 +855,14 @@ def validate_submission_rows(
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue
-        if _is_government_data_measure(
+        if str(getattr(row, "indicator_id", "") or "") in _GOV_DATA_EXCLUDED_INDICATORS and _is_government_data_measure(
             str(getattr(row, "law_name", "") or ""),
             str(getattr(row, "verbatim_snippet", "") or ""),
         ):
             logger.warning(
                 "Dropping submission row %d: measure regulates government records, "
                 "not commercial data — the methodology does not score government "
-                "data: %r",
+                "data for this indicator: %r",
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue

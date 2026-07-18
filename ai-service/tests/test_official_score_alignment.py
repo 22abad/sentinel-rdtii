@@ -60,6 +60,10 @@ CASES = [
     # 6.2: local storage limited to a specific NON-personal sector (SGP Companies
     # Act accounting records) -> 0.5.
     ("6.2", {"has_local_storage": True, "personal_data": False, "horizontal_scope": False}, "", 0.5),
+    # 6.1/6.2: local storage/processing of PERSONAL data limited to ONE SECTOR
+    # (AUS My Health Records, "Personal Health Data") -> 0.5, NOT 1.
+    ("6.1", {"has_local_processing": True, "personal_data": True, "horizontal_scope": False}, "", 0.5),
+    ("6.2", {"has_local_storage": True, "personal_data": True, "horizontal_scope": False}, "", 0.5),
 ]
 
 
@@ -68,14 +72,11 @@ def test_scorer_matches_official(ind, features, quote, expected):
     assert _score(ind, features, quote) == expected
 
 
-@pytest.mark.xfail(
-    reason="Open interpretation question: a SECTOR-SPECIFIC personal-data local-"
-    "storage measure (AUS My Health Records, health sector). Official = 0.5 "
-    "(specific sector) but our logic scores personal_data -> 1. May also be a "
-    "government-data case. Pending official clarification — see vault.",
-    strict=False,
-)
-def test_sector_specific_personal_data_open_question():
-    # My Health Records: local storage of health-sector personal data.
+def test_sector_specific_personal_data_scores_half():
+    # RESOLVED (was an open question): the official answer key scores AUS 6.1/6.2
+    # (My Health Records, Coverage "Personal Health Data") = 0.5 — a personal-data
+    # measure limited to a specific sector is tier 2, not 1. score_6_1/6_2 now
+    # require HORIZONTAL scope for a 1. (Gemini claimed 1; the answer key says 0.5.)
     assert _score("6.2", {"has_local_storage": True, "personal_data": True,
                           "horizontal_scope": False}) == 0.5
+    assert _score("6.2", {"has_local_storage": True, "horizontal_scope": True}) == 1.0

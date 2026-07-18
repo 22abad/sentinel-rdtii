@@ -71,12 +71,20 @@ class TestIndicator6_1:
         # transferred freely without any requirement."
         assert score_6_1({"personal_data": True}) == 0.0
 
-    def test_personal_data_with_ban_scores_1(self):
-        assert score_6_1({"personal_data": True, "has_ban": True}) == 1.0
-
-    def test_personal_data_with_local_processing_scores_1(self):
+    def test_sector_specific_personal_data_scores_half(self):
+        # Official key: a personal-data measure limited to a SPECIFIC SECTOR
+        # (AUS My Health Records, Coverage "Personal Health Data") = 0.5, NOT 1.
+        # personal_data alone (no horizontal scope) is tier 2.
+        assert score_6_1({"personal_data": True, "has_ban": True}) == 0.5
         assert (
-            score_6_1({"personal_data": True, "has_local_processing": True}) == 1.0
+            score_6_1({"personal_data": True, "has_local_processing": True}) == 0.5
+        )
+
+    def test_horizontal_personal_data_scores_1(self):
+        # Economy-wide personal data (Coverage "Horizontal") = 1.
+        assert (
+            score_6_1({"personal_data": True, "has_ban": True, "horizontal_scope": True})
+            == 1.0
         )
 
     def test_horizontal_scope_without_requirement_scores_zero(self):
@@ -165,8 +173,10 @@ class TestIndicator6_1:
 class TestIndicator6_2:
     """Local storage requirements."""
 
-    def test_personal_data_with_storage_scores_1(self):
-        assert score_6_2({"personal_data": True, "has_local_storage": True}) == 1.0
+    def test_sector_specific_personal_storage_scores_half(self):
+        # AUS 6.2 (My Health Records, "Personal Health Data") = 0.5: a personal-
+        # data local-storage measure limited to one sector is tier 2, not 1.
+        assert score_6_2({"personal_data": True, "has_local_storage": True}) == 0.5
 
     def test_horizontal_scope_with_storage_scores_1(self):
         assert (
@@ -591,10 +601,10 @@ class TestDispatcher:
     @pytest.mark.parametrize(
         "indicator_id,features,expected",
         [
-            ("6.1", {"personal_data": True, "has_ban": True}, 1.0),
+            ("6.1", {"personal_data": True, "has_ban": True, "horizontal_scope": True}, 1.0),
             ("2.1", {"procurement_preference": True}, 1.0),
             ("5.1", {"has_competition": True}, 0.0),
-            ("6.2", {"has_local_storage": True, "personal_data": True}, 1.0),
+            ("6.2", {"has_local_storage": True, "horizontal_scope": True}, 1.0),
             ("6.3", {"has_infrastructure_req": True}, 1.0),
             ("6.4", {"has_conditional_flow": True, "horizontal_scope": True}, 1.0),
             ("6.5", {"has_binding_agreement": False}, 1.0),
