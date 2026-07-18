@@ -92,23 +92,29 @@ export function BrandSpecimen() {
   return (
     <section className="relative w-full overflow-hidden text-white" style={BRAND_BG}>
       <div className="relative mx-auto flex min-h-[74vh] max-w-6xl items-center justify-center px-6 py-20">
-        {/* corner labels */}
-        <div className="absolute left-6 top-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        {/* full-height margin rules; corner labels align to them (wide margin) */}
+        <span aria-hidden className={`${LINE} bottom-0 left-16 top-0 w-px`} />
+        <span aria-hidden className={`${LINE} bottom-0 right-16 top-0 w-px`} />
+
+        {/* corner labels — aligned to the margin rules, raised (z-20) above the
+            glyph restriction lines so the green text doesn't clash with them
+            (the lines pass behind the text, unchanged) */}
+        <div className="absolute left-16 top-20 z-20 pl-3 font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Legal-Evidence
           <br />
           Mapper
         </div>
-        <div className="absolute right-6 top-20 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute right-16 top-20 z-20 pr-3 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Cross-Border Data
           <br />
           &amp; Cybersecurity
         </div>
-        <div className="absolute bottom-20 left-6 font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute bottom-20 left-16 z-20 pl-3 font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Team
           <br />
           Sentinel
         </div>
-        <div className="absolute bottom-20 right-6 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute bottom-20 right-16 z-20 pr-3 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
           RDTII 2.1
           <br />
           Framework
@@ -131,9 +137,9 @@ export function BrandSpecimen() {
               ))}
             </h2>
 
-            {/* boxed superscript tag at the cap-height line */}
-            <span className="absolute left-full top-0 ml-2 shrink-0 border border-white/80 px-2 py-0.5 font-sans text-xs tracking-widest">
-              2.1
+            {/* superscript tag at the cap-height line (no box) */}
+            <span className="absolute left-full top-0 ml-3 shrink-0 font-sans text-xs tracking-widest">
+              (2.1)
             </span>
 
             {/* per-glyph restriction lines: each correct ink edge projected
