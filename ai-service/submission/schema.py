@@ -612,6 +612,37 @@ def _is_government_data_measure(law_name: str, quote: str) -> bool:
     return bool(_GOVERNMENT_DATA_OBJECT.search(blob)) and not _PERSONAL_DATA_SUBJECT.search(blob)
 
 
+# The verbatim must be the OPERATIVE provision text, not the law's name or a bare
+# section heading. The LLM sometimes returns "Cyber Security Act 2024: Section 3
+# Objects" or just "Credit Reporting Agencies Act 2010 (Act 710)" as the quote —
+# judges paste the verbatim next to the source and such a row reads as garbage.
+_OPERATIVE_LANGUAGE = re.compile(
+    r"\b(shall|must|may|required?|prohibit|prohibited|liable|entitled|obliged|"
+    r"obligation|no person|any person|an? organisation|means|includes?|access|"
+    r"disclose|retain|store|transfer|process|collect|appoint|designate|ensure|"
+    r"comply|provide|impose|permit|restrict)\b"
+    r"|应当|不得|必须|禁止|ต้อง|ห้าม|wajib|dilarang|обязан|запрещ",
+    re.IGNORECASE,
+)
+
+
+def _norm_alnum(s: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", (s or "").lower())
+
+
+def _is_nonsubstantive_quote(law_name: str, quote: str) -> bool:
+    """True when the verbatim is the law's NAME / a section heading rather than an
+    operative clause (no operative or definitional language). High precision: a
+    real provision that merely opens with the statute name but then states an
+    obligation is kept (it contains operative language)."""
+    q = (quote or "").strip()
+    if len(q) < 15:
+        return True
+    base = _norm_alnum(re.split(r"[—–:(]", law_name or "")[0])
+    starts_with_name = len(base) >= 12 and _norm_alnum(q).startswith(base[:22])
+    return starts_with_name and not _OPERATIVE_LANGUAGE.search(q)
+
+
 # A law name must contain SOME statutory-instrument word (multi-language). The
 # live path occasionally names a row after a document that is not legislation
 # at all ("Executive Summary", "MOU with ...", "RDTII 2.1 ... assessment").
@@ -864,6 +895,16 @@ def validate_submission_rows(
                 "not commercial data — the methodology does not score government "
                 "data for this indicator: %r",
                 index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _is_nonsubstantive_quote(
+            str(getattr(row, "law_name", "") or ""),
+            str(getattr(row, "verbatim_snippet", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: verbatim is the law name / a section "
+                "heading, not an operative provision: %r",
+                index, str(getattr(row, "verbatim_snippet", ""))[:60],
             )
             continue
         if str(getattr(row, "indicator_id", "") or "") in NON_REGULATORY_INDICATORS:

@@ -140,6 +140,45 @@ def test_validator_drops_repealed_but_keeps_repeal_acts_and_quotes():
     assert [r.law_name for r in kept] == ["Privacy Act 1988"]
 
 
+def test_validator_drops_name_or_heading_quotes_but_keeps_real_provisions():
+    from submission.schema import _is_nonsubstantive_quote
+
+    # verbatim = law name / a bare section heading -> not an operative provision
+    assert _is_nonsubstantive_quote(
+        "Credit Reporting Agencies Act 2010 (Act 710)",
+        "Credit Reporting Agencies Act 2010 (Act 710)",
+    )
+    assert _is_nonsubstantive_quote(
+        "Cyber Security Act 2024 (No. 98, 2024)",
+        "Cyber Security Act 2024 (No. 98, 2024): Section 3 Objects",
+    )
+    # a real provision that opens with the statute name but states an obligation
+    # is KEPT (it has operative language)
+    assert not _is_nonsubstantive_quote(
+        "Privacy Act 1988",
+        "A personal information custodian may disclose personal information only where...",
+    )
+    assert not _is_nonsubstantive_quote(
+        "Personal Data Protection Act 2012",
+        "An organisation must not transfer personal data outside Singapore except as prescribed.",
+    )
+
+    good = SubmissionRow(
+        economy="Australia", law_name="Privacy Act 1988", indicator_id="P7-I1",
+        article="s 6", location_reference="p. 1",
+        verbatim_snippet="An organisation must take reasonable steps to protect personal information it holds.",
+        source_url="https://www.legislation.gov.au/C2004A03712/latest/text",
+    )
+    heading = SubmissionRow(
+        economy="Malaysia", law_name="Credit Reporting Agencies Act 2010 (Act 710)",
+        indicator_id="P7-I1", article="title", location_reference="p. 1",
+        verbatim_snippet="Credit Reporting Agencies Act 2010 (Act 710)",
+        source_url="https://lom.agc.gov.my/act-710",
+    )
+    kept = validate_submission_rows([good, heading])
+    assert [r.law_name for r in kept] == ["Privacy Act 1988"]
+
+
 def test_validator_drops_non_regulatory_indicator_rows():
     from submission.schema import NON_REGULATORY_INDICATORS
 
