@@ -145,3 +145,35 @@ def regex_legal_chunker(text: str) -> list[Chunk]:
     _flush()
 
     return chunks or [Chunk(text=text.strip(), start=0, end=len(text))]
+
+
+def sentence_span(text: str, start: int, end: int) -> tuple[int, int]:
+    """The full UAX #29 sentence(s) span containing [start, end).
+
+    DISPLAY ONLY — grows a clipped quote out to complete sentences so a
+    reviewer sees the whole provision. Never feed this back into scoring or
+    validation: it can cross clause boundaries (fine for reading, not for
+    scoring — that regressed the golden set when the extractor used it).
+    """
+    if start < 0 or end <= start or end > len(text):
+        return start, end
+
+    spans: list[tuple[int, int]] = []
+    pos = 0
+    for sent in _uax29_sentences(text):
+        s = text.find(sent, pos)
+        if s < 0:
+            s = pos
+        spans.append((s, s + len(sent)))
+        pos = s + len(sent)
+
+    new_start, new_end = start, end
+    for s, e in spans:
+        if s < end and e > start:  # sentence overlaps the quote → include it
+            new_start = min(new_start, s)
+            new_end = max(new_end, e)
+
+    snapped = text[new_start:new_end]
+    lead = len(snapped) - len(snapped.lstrip())
+    trail = len(snapped) - len(snapped.rstrip())
+    return new_start + lead, new_end - trail

@@ -151,7 +151,23 @@ def _reasoning_markup(kind: str, m: dict) -> str:
             out.append(f"  [#f59e0b]-[/] {escape(str(reason))}")
 
     quote = str(m.get("verbatim_quote") or "")
-    if quote:
+    context = str(m.get("quote_context") or "")
+    if context and quote and context.strip() != quote.strip():
+        # Display-only completion: show the whole sentence, with the model's
+        # actual quote in bold and the recovered context dimmed. Scoring still
+        # uses the model's clip (verbatim_quote).
+        out.append("")
+        out.append(_h("Provision (model quote in bold)"))
+        idx = context.find(quote)
+        if idx >= 0:
+            before, after = context[:idx], context[idx + len(quote):]
+            out.append(
+                f"  [dim]{escape(before)}[/][bold]{escape(quote)}[/]"
+                f"[dim]{escape(after)}[/]"
+            )
+        else:
+            out.append("  " + escape(context))
+    elif quote:
         out.append("")
         out.append(_h("Verbatim quote (raw text)"))
         out.append("  " + escape(quote))

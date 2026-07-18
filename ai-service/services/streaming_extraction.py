@@ -224,6 +224,13 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
     features = prepared["features"]
     pre_flag_reasons = prepared.get("pre_flag_reasons", [])
 
+    # DISPLAY ONLY: full sentence(s) around the quote, so a reviewer sees a
+    # clipped half-sentence in context. Not used for scoring (see chunker note).
+    from chunker import sentence_span
+
+    _cs, _ce = sentence_span(chunk.text, local_start, local_end)
+    quote_context = chunk.text[_cs:_ce]
+
     try:
         score, justification = score_indicator(ind_id, features)
         score_not_implemented = False
@@ -287,6 +294,7 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
         verbatim_quote=quote,
         quote_start=chunk.start + local_start,
         quote_end=chunk.start + local_end,
+        quote_context=quote_context,
         source_legislation=source_legislation_val,
         last_update=ts_verification.get("best_date") or last_update_val,
         source_url=source_url_val,
