@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero/Hero";
 import { Label } from "@/components/Label/Label";
 import { Description } from "@/components/Description/Description";
 import { Placeholder } from "@/components/Placeholder";
+import { BrandSpecimen } from "@/components/BrandSpecimen/BrandSpecimen";
 
 
 export function LandingPage() {
@@ -13,6 +14,7 @@ export function LandingPage() {
             <Label/>
             <Description />
             <Placeholder />
+            <BrandSpecimen />
             <Footer/>
         </div>
     </main>
