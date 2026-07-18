@@ -541,13 +541,14 @@ def test_build_row_maps_all_fields():
     assert row.article == "Section 26"
     assert row.last_amended == "2020"
     assert row.source_url.endswith("PDPA2012")
-    assert row.confidence == pytest.approx(0.91)
+    assert row.confidence == pytest.approx(0.8)
+    assert row.source_confidence == pytest.approx(0.91)
     assert row.amendment_version_date == "Amended 2020"
     assert "requires human review" in row.notes
     assert "bilingual source" in row.notes
     # Context windows populated for the JSON audit view.
     assert row.raw_context_before or row.raw_context_after
-    assert row.confidence_type == "discovery_confidence"
+    assert row.confidence_type == "mapping_confidence"
 
 
 def test_amendment_year_from_text_is_amendment_specific():
@@ -704,7 +705,7 @@ def test_audit_metadata_fields_are_json_only():
         source_file_sha256="a" * 64,
         source_pdf_path="/evidence/test.pdf",
         pdf_type="mixed",
-        confidence_type="discovery_confidence",
+        confidence_type="mapping_confidence",
     )
 
     json_record = row.json_record()
@@ -755,7 +756,7 @@ def test_csv_and_json_round_trip(tmp_path):
         assert len(header) == len(CSV_COLUMNS)
         first = next(reader)
         assert first[list(CSV_COLUMNS).index("indicator_id")] == "P6-I4"
-        assert first[list(CSV_COLUMNS).index("confidence")] == "0.91"
+        assert first[list(CSV_COLUMNS).index("confidence")] == "0.80"
 
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert payload["meta"]["economy"] == "Singapore"
@@ -1011,7 +1012,9 @@ def test_p6_rows_without_data_language_are_flagged_not_dropped():
     kept = validate_submission_rows([gas, pdpa], allow_empty=True)
     assert len(kept) == 2, "flag, never drop"
     assert "topic check" in kept[0].notes and "needs human review" in kept[0].notes
+    assert kept[0].requires_human_review is True
     assert "topic check" not in (kept[1].notes or "")
+    assert kept[1].requires_human_review is False
 
 
 def test_names_without_statute_words_are_dropped():
@@ -1070,3 +1073,25 @@ def test_drop_zero_confidence_rows_removes_unscoreable_noise():
         "My Health Records Act 2012",
         "Privacy Act 1988",
     ]
+
+
+def test_formal_submission_filter_excludes_review_and_low_confidence_rows():
+    from submission.schema import filter_formal_submission_rows
+
+    def row(law, confidence, *, review=False, decision="supported"):
+        return SubmissionRow(
+            economy="Australia", law_name=law, indicator_id="P7-I3",
+            article="s 17", verbatim_snippet="Records must be retained for seven years.",
+            source_url="https://official.example/x", confidence=confidence,
+            requires_human_review=review, mapping_decision=decision,
+        )
+
+    accepted = row("Accepted Act 2024", 0.8)
+    review = row("Review Act 2024", 0.8, review=True)
+    weak = row("Weak Act 2024", 0.5)
+    contradicted = row("Wrong Act 2024", 0.9, decision="contradicted")
+
+    assert filter_formal_submission_rows([accepted, review, weak, contradicted]) == [accepted]
+    assert filter_formal_submission_rows(
+        [accepted, review, weak, contradicted], include_review=True
+    ) == [accepted, review, weak, contradicted]

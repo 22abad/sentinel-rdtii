@@ -324,6 +324,9 @@ ABSOLUTE RULES:
 - Output ONLY valid JSON. No prose, no markdown fences, no explanations.
 - "verbatim_quote" MUST be an EXACT substring of the input text.
   - FOR NON-ENGLISH TEXTS: Copy the text character-for-character including all spaces and special characters. DO NOT attempt to normalize or reformat.
+- A keyword or general topic reference is NOT evidence that this indicator is
+  satisfied. If the article does not itself establish or negate the indicator's
+  legal measure, set "verbatim_quote" to "" and all feature values to defaults.
 - "article_clause" MUST be the specific article, clause, or section number (e.g. "Article 18", "Section 5(2)", "Paragraph 10"). Output an empty string if not explicitly mentioned in the text.
 - "source_legislation" MUST be the official title of the law/regulation, EXCLUDING any article, section, or clause numbers. Format it exactly as: [Country/Economy Name] [Law Name] ([Optional Abbreviation]), [Year], [Law Number] (e.g., "Singapore Personal Data Protection Act (PDPA), 2012, No. 26", "Malaysia Personal Data Protection Act (PDPA), 2010, No. 709").
 - If a feature cannot be determined from the text, set it to its type's default (false / 0 / "").
@@ -384,7 +387,11 @@ Evaluate ALL of these indicators from the same article below:
 
 ABSOLUTE RULES:
 - Output ONLY valid JSON. No prose, no markdown fences, no explanations.
-- Each indicator MUST have a "verbatim_quote" that is an EXACT substring of the input — do NOT paraphrase.
+- For each indicator with qualifying evidence, "verbatim_quote" MUST be an EXACT
+  substring of the input — do NOT paraphrase.
+- If an indicator has no qualifying evidence, return it with
+  "verbatim_quote": "" and default feature values. Never select a merely topical
+  sentence just to fill the schema.
 - "article_clause" MUST be the specific article, clause, or section number (e.g. "Article 18", "Section 5(2)", "Paragraph 10"). Output an empty string if not explicitly mentioned in the text.
 - "source_legislation" MUST be the official title of the law/regulation, EXCLUDING any article, section, or clause numbers. Format it exactly as: [Country/Economy Name] [Law Name] ([Optional Abbreviation]), [Year], [Law Number] (e.g., "Singapore Personal Data Protection Act (PDPA), 2012, No. 26", "Malaysia Personal Data Protection Act (PDPA), 2010, No. 709").
 - If a feature cannot be determined, set to its type default (false / 0 / "").

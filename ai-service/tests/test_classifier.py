@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from classifier import classify_indicator
+from classifier import classify_indicator, classify_indicator_candidates
 
 
 # ── Pillar 6 ────────────────────────────────────────────────────
@@ -202,3 +202,21 @@ def test_transfer_only_prohibition_does_not_imply_local_storage():
     text = "An operator must not take personal data outside Australia."
 
     assert "6.2" not in classify_indicator(text)
+
+
+def test_multiword_phrase_does_not_join_words_across_sentences():
+    text = (
+        "The public consultation closed yesterday. The authority publishes an annual report. "
+        "Employees may access the building during office hours."
+    )
+    assert "7.5" not in classify_indicator(text)
+
+
+def test_ranked_candidate_records_auditable_local_span():
+    candidates = classify_indicator_candidates(
+        "Police may obtain subscriber records through law enforcement access without warrant."
+    )
+    candidate = next(item for item in candidates if item.indicator_id == "7.5")
+    assert candidate.matched_span in "Police may obtain subscriber records through law enforcement access without warrant."
+    assert candidate.matched_rule
+    assert 0 < candidate.retrieval_score <= 1

@@ -226,7 +226,11 @@ def build_row(
     retrieval_mode = (
         getattr(candidate, "retrieval_mode", "") if candidate is not None else ""
     )
-    confidence = float(getattr(candidate, "confidence", 0.0) or 0.0) if candidate else 0.0
+    source_confidence = float(getattr(candidate, "confidence", 0.0) or 0.0) if candidate else 0.0
+    legally_approved = bool(getattr(candidate, "legal_review_approved", False))
+    mapping_confidence = 1.0 if legally_approved else float(
+        getattr(mapping, "mapping_confidence", 0.5) or 0.0
+    )
 
     before, after = _context_windows(
         source_text, mapping.quote_start, mapping.quote_end
@@ -304,7 +308,7 @@ def build_row(
             or doc_meta.get("source_pdf_path")
             or doc_meta.get("location_reference", "")
         ),
-        confidence=confidence,
+        confidence=mapping_confidence,
         notes="; ".join(x for x in (
             _notes(mapping, candidate, doc_meta), inferred_note, attribution_note, title_note) if x),
         # Extended (JSON-only) metadata
@@ -329,7 +333,19 @@ def build_row(
         source_file_sha256=doc_meta.get("source_file_sha256", ""),
         source_pdf_path=doc_meta.get("source_pdf_path", ""),
         pdf_type=doc_meta.get("pdf_type", "unknown"),
-        confidence_type="discovery_confidence" if candidate is not None else "not_available",
+        confidence_type="human_review_approved" if legally_approved else "mapping_confidence",
+        source_confidence=source_confidence,
+        mapping_decision=getattr(mapping, "mapping_decision", "supported"),
+        mapping_confidence_type=(
+            "human_review_approved" if legally_approved
+            else getattr(mapping, "mapping_confidence_type", "rule_based_eligibility")
+        ),
+        eligibility_evidence_spans=getattr(mapping, "eligibility_evidence_spans", {}) or {},
+        eligibility_verifier_mode=getattr(mapping, "eligibility_verifier_mode", "deterministic"),
+        requires_human_review=(
+            bool(getattr(mapping, "requires_human_review", False))
+            or bool(title_note)
+        ),
     )
 
 
@@ -719,6 +735,7 @@ async def run_library(
             last_update=entry.last_amended,
             discovery_method="cached_discovery" if is_discovered else "known_mapping",
             confidence=1.0,
+            legal_review_approved=True,
             warnings=[],
         )
         doc_meta = {
@@ -736,8 +753,22 @@ async def run_library(
             "law_version": getattr(entry, "version", ""),
             "currency_checked_at": getattr(entry, "currency_checked_at", ""),
         }
+        # Curated library hints have already been checked by a legal reviewer.
+        # Treat them as the only routing authority for this document instead of
+        # running the broad keyword classifier first and then adding a hint
+        # top-up.  The old additive path retained both the correct hinted row
+        # and unrelated keyword-triggered rows from the same statute.
+        target_hints = [
+            hint for hint in entry.indicator_hints
+            if hint.split(".")[0] == str(pillar)
+            and (wanted is None or indicator_to_rdtii_code(hint) in wanted)
+        ]
+        if not target_hints:
+            continue
         try:
-            result = await run_extraction(entry.text, provider)
+            result = await run_extraction(
+                entry.text, provider, target_indicators=target_hints
+            )
         except Exception as exc:  # noqa: BLE001 — one bad entry must not abort the run
             warnings.append(f"extraction failed for {entry.law_id}: {exc}")
             continue
@@ -762,35 +793,8 @@ async def run_library(
             )
             return code_id
 
-        covered = {c for c in (_emit(m) for m in result.mappings) if c}
-
-        # Honour the curated indicator hint. Seeds are banked as evidence for a
-        # SPECIFIC indicator, but the broad pass re-derives indicators via the
-        # keyword classifier, which can mis-route (e.g. the SGP Criminal
-        # Procedure Code s39 "power to access computer" landed on 7.1 instead of
-        # its curated 7.5). If a hinted indicator in scope produced nothing, run
-        # a targeted extraction for exactly that indicator (target_indicators
-        # bypasses the classifier) and emit what it finds. Additive — never
-        # drops the broad finds.
-        missing_hints = [
-            h for h in entry.indicator_hints
-            if h.split(".")[0] == str(pillar)
-            and indicator_to_rdtii_code(h) not in covered
-            and (wanted is None or indicator_to_rdtii_code(h) in wanted)
-        ]
-        if missing_hints:
-            try:
-                topup = await run_extraction(
-                    entry.text, provider, target_indicators=missing_hints
-                )
-            except Exception as exc:  # noqa: BLE001 — top-up is best-effort
-                warnings.append(f"hint top-up failed for {entry.law_id}: {exc}")
-            else:
-                _merge_usage(usage_totals, getattr(topup, "usage", None))
-                wanted_hint_codes = {indicator_to_rdtii_code(h) for h in missing_hints}
-                for mapping in topup.mappings:
-                    if indicator_to_rdtii_code(mapping.indicator) in wanted_hint_codes:
-                        _emit(mapping)
+        for mapping in result.mappings:
+            _emit(mapping)
 
     if not entries:
         warnings.append(

@@ -76,6 +76,12 @@ JSON_EXTENDED_FIELDS: tuple[str, ...] = (
     "source_pdf_path",
     "pdf_type",
     "confidence_type",
+    "source_confidence",
+    "mapping_decision",
+    "mapping_confidence_type",
+    "eligibility_evidence_spans",
+    "eligibility_verifier_mode",
+    "requires_human_review",
 )
 
 MAPPING_RATIONALE_MAX = 300
@@ -262,7 +268,15 @@ class SubmissionRow(BaseModel):
     pdf_type: Literal[
         "scanned", "mixed", "pure_text", "not_pdf", "unknown"
     ] = "unknown"
-    confidence_type: Literal["discovery_confidence", "not_available"] = "not_available"
+    confidence_type: Literal[
+        "mapping_confidence", "human_review_approved", "not_available"
+    ] = "not_available"
+    source_confidence: float = 0.0
+    mapping_decision: Literal["supported", "insufficient", "contradicted"] = "supported"
+    mapping_confidence_type: str = "rule_based_eligibility"
+    eligibility_evidence_spans: dict[str, list[str]] = Field(default_factory=dict)
+    eligibility_verifier_mode: str = "deterministic"
+    requires_human_review: bool = False
 
     def csv_record(self) -> dict[str, str]:
         """Return an ordered dict of exactly the 13 CSV columns as strings."""
@@ -550,6 +564,8 @@ def _flag_p6_topic_mismatch(row) -> None:
     if _P6_TOPIC_FLAG in notes:
         return
     row.notes = f"{notes}; {_P6_TOPIC_FLAG}" if notes else _P6_TOPIC_FLAG
+    if hasattr(row, "requires_human_review"):
+        row.requires_human_review = True
 
 
 # A law whose NAME is squarely a non-digital, goods/agriculture/charges domain
@@ -982,6 +998,45 @@ def drop_zero_confidence_rows(rows: list[SubmissionRow]) -> list[SubmissionRow]:
                 "evidence: %r [%s]",
                 str(getattr(row, "law_name", ""))[:50],
                 str(getattr(row, "indicator_id", "")),
+            )
+            continue
+        kept.append(row)
+    return kept
+
+
+def filter_formal_submission_rows(
+    rows: list[SubmissionRow],
+    *,
+    include_review: bool = False,
+    minimum_mapping_confidence: float = 0.8,
+) -> list[SubmissionRow]:
+    """Keep only precision-first, formally submittable mappings by default.
+
+    Research/review runs may explicitly retain ambiguous rows.  The frozen CSV
+    contract is unchanged; this filter only controls which rows reach it.
+    """
+    if include_review:
+        return rows
+
+    import logging
+
+    logger = logging.getLogger(__name__)
+    kept: list[SubmissionRow] = []
+    for row in rows:
+        reasons: list[str] = []
+        if row.mapping_decision != "supported":
+            reasons.append(f"mapping decision is {row.mapping_decision}")
+        if row.requires_human_review:
+            reasons.append("mapping requires human review")
+        if float(row.confidence or 0.0) < minimum_mapping_confidence:
+            reasons.append(
+                f"mapping confidence {float(row.confidence or 0.0):.2f} < "
+                f"{minimum_mapping_confidence:.2f}"
+            )
+        if reasons:
+            logger.warning(
+                "Excluding row from formal submission (%s): %r [%s]",
+                "; ".join(reasons), row.law_name[:50], row.indicator_id,
             )
             continue
         kept.append(row)

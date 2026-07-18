@@ -70,6 +70,9 @@ def test_metrics_match_evidence_one_to_one_and_verify_offsets():
 
     aggregate = report["aggregate"]
     assert aggregate["mapping_precision"] == 1.0
+    assert aggregate["accepted_precision"] == 1.0
+    assert aggregate["abstention_rate"] == 0.0
+    assert aggregate["acceptance_rate"] == 1.0
     assert aggregate["mapping_recall"] == 1.0
     assert aggregate["mapping_f1"] == 1.0
     assert aggregate["citation_exact_match_rate"] == 1.0
@@ -106,6 +109,21 @@ def test_no_predictions_with_expected_mapping_has_zero_precision_and_recall():
     assert report["aggregate"]["mapping_precision"] == 0.0
     assert report["aggregate"]["mapping_recall"] == 0.0
     assert report["aggregate"]["mapping_f1"] == 0.0
+    assert report["aggregate"]["abstention_rate"] == 1.0
+    assert report["aggregate"]["acceptance_rate"] == 0.0
+
+
+def test_wrong_indicator_on_same_quote_populates_confusion_matrix():
+    quote = "Personal data may be transferred with comparable protection."
+    wrong = _prediction("wrong-indicator", quote).model_copy(
+        update={"indicator_id": "6.1"}
+    )
+    report = evaluate_predictions(
+        [_case("expected-6-4")],
+        [wrong],
+        _documents(f"Section 1. {quote}"),
+    )
+    assert report["confusion_matrix"] == {"6.4": {"6.1": 1}}
 
 
 def test_single_country_and_indicator_groups_contain_complete_metrics():

@@ -775,3 +775,28 @@ Lesson: **external research is a lead, not a source.** Every claim was quoted
 back to the official guide before it touched code; the two that survived were
 real, the weights/6.5/DTRS specifics that couldn't be sourced were logged as
 "reference only."
+
+## 2026-07-18 — precision-first mapping eligibility gate
+
+Legal review showed the remaining failure class was not fabricated text: the
+quote and keywords were real, but the indicator was wrong and the Analyst then
+wrote a plausible post-hoc explanation. The fix moves acceptance before scoring
+and rationale generation. Keyword routing now records local spans and refuses to
+join words across sentences; curated laws route only to reviewed indicator
+hints; and a deterministic boundary check plus an independent all-P6/P7
+verifier must select the candidate indicator with exact evidence spans or NONE.
+
+The CSV confidence column now means mapping confidence rather than discovery
+source confidence (the source value remains in JSON). Formal output excludes
+ambiguous, contradicted, flagged and sub-0.8 mappings unless the researcher uses
+`--include-review`. Rejections expose the candidate, verifier-supported labels,
+exact spans and exclusion reasons. Legal-review exports can be converted into
+pending golden hard negatives/positive reassignments, and evaluation now reports
+accepted precision, abstention, acceptance rate and indicator confusion.
+
+Regression result: 640 Python tests pass and the production frontend builds.
+The offline legal golden set accepts all 16 positive mappings, rejects all 13
+explicit negatives, and reports 1.0 accepted precision/recall with no indicator
+confusion. A fixed-model full-mode run remains an environment follow-up: all
+provider key entries in the local `.env` are empty, so no external model result
+was claimed or substituted with the offline score.

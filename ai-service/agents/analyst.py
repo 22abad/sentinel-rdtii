@@ -32,18 +32,20 @@ class AnalystAgent(Agent):
         chunk_text: str,
         indicator_id: str,
         extracted_data: dict[str, Any],
-        raw_score: float,
-        score_justification: str,
+        evidence_spans: dict[str, list[str]] | None = None,
     ) -> str:
-        """Asynchronously draft the multi-paragraph impact / comment analysis."""
-        prompt = f"""Draft a professional, multi-paragraph legal analysis for:
+        """Draft a grounded rationale only after eligibility has been accepted."""
+        prompt = f"""Draft a concise professional legal mapping rationale for:
 - Indicator: {indicator_id}
 - Source Law: {extracted_data.get('source_legislation', 'Unknown Law')} ({extracted_data.get('article_clause', 'Unknown Clause')})
 - Verbatim Quote: "{extracted_data.get('verbatim_quote', '')}"
 - Extracted Features: {extracted_data}
-- Assigned Score: {raw_score} (Justification: {score_justification})
+- Independently verified evidence spans: {evidence_spans or {}}
 
-Provide a comprehensive 2-3 paragraph legal comment explaining the scope of application, specific constraints, and the implications of this measure on digital trade. Do NOT include any markdown formatting, headers, or prefix/suffix chatter (e.g., "Here is the analysis:"). Return ONLY the multi-paragraph analysis text separated by double newlines.
+Explain only the legal subject, action, object, conditions/exceptions and why the
+verified language belongs to this indicator. Do not mention or justify an assigned
+numeric score. Do not infer facts outside the quote. Return 2-3 sentences only,
+with no markdown or prefix/suffix chatter.
 """
         try:
             with self.provider.usage_operation("analyst_comment", (indicator_id,)):

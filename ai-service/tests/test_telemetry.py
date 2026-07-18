@@ -199,6 +199,15 @@ async def test_run_extraction_returns_usage_without_writing_report_files(monkeyp
                 indicator_ids=indicator_ids,
                 cost_basis="actual_tokens_x_pricing_snapshot",
             )
+            if operation == "eligibility_verify":
+                return json.dumps({
+                    "decision": "supported",
+                    "supported_indicators": ["6.1"],
+                    "evidence_spans": {
+                        "6.1": ["Personal data shall not be transferred abroad"]
+                    },
+                    "exclusion_reasons": [],
+                })
             return "Measured legal analysis."
 
         def extract_features(self, article_text, indicator_id, feature_spec):
@@ -233,12 +242,13 @@ async def test_run_extraction_returns_usage_without_writing_report_files(monkeyp
     )
 
     assert response.usage is not None
-    assert response.usage.llm_calls == 2
-    assert response.usage.input_tokens == 150
-    assert response.usage.output_tokens == 30
-    assert response.usage.cost_usd == pytest.approx(0.003)
+    assert response.usage.llm_calls == 3
+    assert response.usage.input_tokens == 200
+    assert response.usage.output_tokens == 40
+    assert response.usage.cost_usd == pytest.approx(0.004)
     assert response.usage.operations == {
         "analyst_comment": 1,
+        "eligibility_verify": 1,
         "extract_single": 1,
     }
     assert list(tmp_path.glob("*.json")) == []

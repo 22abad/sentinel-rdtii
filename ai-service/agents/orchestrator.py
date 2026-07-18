@@ -41,6 +41,7 @@ SUPPORTED_MAPPING_INDICATORS = frozenset(get_args(IndicatorId))
 from agents.extractor import ExtractorAgent
 from agents.analyst import AnalystAgent
 from agents.critic import CriticAgent
+from agents.eligibility import EligibilityVerifier, rejected_from_eligibility
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +66,7 @@ class MASOrchestrator:
         self.extractor = ExtractorAgent(provider)
         self.analyst = AnalystAgent(provider)
         self.critic = CriticAgent()
+        self.eligibility = EligibilityVerifier(provider)
         self.repair_max_attempts = repair_max_attempts_from_env()
 
     async def run_pipeline(
@@ -166,7 +168,18 @@ class MASOrchestrator:
                     features = prepared["features"]
                     pre_flag_reasons = prepared.get("pre_flag_reasons", [])
 
-                    # 2. Critic Agent — Scoring
+                    # 2. Independent eligibility gate — before scoring or
+                    # rationale generation, and blind to both of them.
+                    eligibility = await self.eligibility.verify(quote, ind_id, features)
+                    if not eligibility.supported:
+                        results_list.append((None, rejected_from_eligibility(
+                            eligibility,
+                            chunk.text[:200],
+                            raw_output=data,
+                        )))
+                        continue
+
+                    # 3. Critic Agent — deterministic scoring
                     raw_score, score_justification = self.critic.evaluate_score(ind_id, features)
                     score_not_implemented = score_justification == "Scoring rules not implemented."
                     if score_not_implemented:
@@ -174,14 +187,9 @@ class MASOrchestrator:
                             f"Deterministic scoring for indicator {ind_id} is not implemented."
                         )
 
-                    # 3. Analyst Agent — Draft rich multi-paragraph comment
-                    impact_comments_val = await self.analyst.run(
-                        chunk_text=chunk.text,
-                        indicator_id=ind_id,
-                        extracted_data=data,
-                        raw_score=raw_score,
-                        score_justification=score_justification,
-                    )
+                    # Until all validation passes, use the deterministic
+                    # justification. The free-form Analyst runs last.
+                    impact_comments_val = score_justification
 
                     # Post-processing / cleaning metadata
                     source_url_val = data.get("source_url", "")
@@ -272,6 +280,11 @@ class MASOrchestrator:
                         requires_human_review=src_requires_review or score_not_implemented,
                         extraction_provider=self.provider.name,
                         timestamp_verification=ts_verification,
+                        mapping_decision="supported",
+                        mapping_confidence=0.8,
+                        mapping_confidence_type="rule_based_eligibility",
+                        eligibility_evidence_spans=eligibility.evidence_spans,
+                        eligibility_verifier_mode=eligibility.verifier_mode,
                         )
                     except Exception as exc:
                         logger.warning("Could not build mapping for %s: %s", ind_id, exc)
@@ -310,9 +323,9 @@ class MASOrchestrator:
                     mapping_obj.coverage = cov_display
                     
                     # Ensure impact is fully loaded with generated comments
-                    mapping_obj.Impact_or_comments = impact_comments_val
-                    mapping_obj.impact_or_comments = impact_comments_val
-                    mapping_obj.impact_comments = impact_comments_val
+                    mapping_obj.Impact_or_comments = mapping_obj.impact
+                    mapping_obj.impact_or_comments = mapping_obj.impact
+                    mapping_obj.impact_comments = mapping_obj.impact
                     
                     # Use timeframe display
                     from excel_exporter import _timeframe_display
@@ -334,6 +347,7 @@ class MASOrchestrator:
                         chunk_text=chunk.text,
                         indicator_id=ind_id,
                         features=features,
+                        include_semantic_check=False,
                     )
                     if vr.level == "reject":
                         results_list.append((None, RejectedExtraction(
@@ -347,6 +361,22 @@ class MASOrchestrator:
                     elif pre_flag_reasons:
                         mapping_obj.requires_human_review = True
                         mapping_obj.flag_reasons = pre_flag_reasons
+
+                    # 4. Analyst runs only for an accepted mapping and receives
+                    # neither the numeric score nor a conclusion to rationalise.
+                    impact_comments_val = await self.analyst.run(
+                        chunk_text=chunk.text,
+                        indicator_id=ind_id,
+                        extracted_data=data,
+                        evidence_spans=eligibility.evidence_spans,
+                    )
+                    mapping_obj.impact = impact_comments_val
+                    _runtime_hook(
+                        "format_and_clean_mapping", format_and_clean_mapping
+                    )(mapping_obj, data, chunk.text)
+                    mapping_obj.Impact_or_comments = impact_comments_val
+                    mapping_obj.impact_or_comments = impact_comments_val
+                    mapping_obj.impact_comments = impact_comments_val
 
                     results_list.append((mapping_obj, None))
 

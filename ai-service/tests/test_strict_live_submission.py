@@ -143,7 +143,8 @@ async def test_live_submission_populates_pdf_audit_metadata(monkeypatch):
     assert row.model_version == "model-v2"
     assert row.source_file_sha256 == "a" * 64
     assert row.source_pdf_path == "/evidence/data.pdf"
-    assert row.confidence_type == "discovery_confidence"
+    assert row.confidence_type == "mapping_confidence"
+    assert row.source_confidence == pytest.approx(0.88)
 
 
 @pytest.mark.anyio

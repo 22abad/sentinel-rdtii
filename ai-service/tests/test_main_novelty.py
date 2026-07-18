@@ -31,11 +31,14 @@ def _row(law_name: str, *, retrieval_method: str = "official_search",
         indicator_id="P6-I1",
         article="Section 1",
         discovery_tag="NEW",
-        verbatim_snippet="Exact provision text stating a substantive statutory obligation.",
+        verbatim_snippet=(
+            "No person shall require electronic data to be processed exclusively "
+            "within Singapore."
+        ),
         source_url=source_url,
         retrieval_method=retrieval_method,
-        # Real extracted rows carry an extraction confidence; the CLI now drops
-        # 0.00-confidence rows at assembly, so fixtures must be realistic.
+        # Real extracted rows carry mapping confidence; formal export requires
+        # supported, unflagged mappings at or above 0.8.
         confidence=0.8,
     )
 

@@ -123,6 +123,15 @@ def _reasoning_markup(kind: str, m: dict) -> str:
         out.append(_h("Rejected extraction", "#dc2626"))
         out.append("")
         out.append(f"[bold]Reason[/]  {escape(str(m.get('reason', '—')))}")
+        if m.get("candidate_indicator"):
+            supported = ", ".join(m.get("supported_indicators") or []) or "NONE"
+            out.append(
+                f"[bold]Candidate[/]  {escape(str(m['candidate_indicator']))}"
+                f"  · decision {escape(str(m.get('decision', 'insufficient')))}"
+                f"  · verifier supported {escape(supported)}"
+            )
+        for reason in m.get("exclusion_reasons") or []:
+            out.append(f"  [#f59e0b]-[/] {escape(str(reason))}")
         preview = str(m.get("chunk_preview") or "")
         if preview:
             out.append("")

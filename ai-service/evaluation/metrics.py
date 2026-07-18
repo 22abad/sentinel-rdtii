@@ -179,9 +179,15 @@ def _evaluate_core(
         "false_positives": fp,
         "false_negatives": fn,
         "mapping_precision": precision,
+        "accepted_precision": precision,
         "mapping_recall": recall,
         "mapping_f1": f1,
         "false_positive_rate": fp / len(prediction_list) if prediction_list else 0.0,
+        "abstention_rate": fn / len(positives) if positives else 0.0,
+        "acceptance_rate": (
+            len(prediction_list) / (len(prediction_list) + fn)
+            if prediction_list or fn else 1.0
+        ),
         "citation_exact_match_rate": _rate(exact_citations, tp),
         "article_citation_accuracy": _rate(article_correct, tp),
         "raw_score_accuracy": _rate(score_correct, tp),
@@ -209,6 +215,39 @@ def _evaluate_core(
         "false_negatives": [case.model_dump() for case in false_negatives],
         "negative_case_hits": negative_hits,
         "citation_failures": citation_failures,
+        "confusion_matrix": _indicator_confusion_matrix(
+            positives, false_positives, evidence_threshold=evidence_threshold
+        ),
+    }
+
+
+def _indicator_confusion_matrix(
+    positive_cases: list[GoldenCase],
+    false_positives: list[PredictionRecord],
+    *,
+    evidence_threshold: float,
+) -> dict[str, dict[str, int]]:
+    """Count wrong-indicator predictions on otherwise matching evidence."""
+    matrix: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    for prediction in false_positives:
+        candidates = [
+            case for case in positive_cases
+            if case.country_code == prediction.country_code
+            and case.document_id == prediction.document_id
+            and evidence_similarity(case.verbatim_quote, prediction.verbatim_quote)
+            >= evidence_threshold
+            and case.indicator_id != prediction.indicator_id
+        ]
+        if not candidates:
+            continue
+        expected = max(
+            candidates,
+            key=lambda case: evidence_similarity(case.verbatim_quote, prediction.verbatim_quote),
+        ).indicator_id
+        matrix[expected][prediction.indicator_id] += 1
+    return {
+        expected: dict(sorted(predicted.items()))
+        for expected, predicted in sorted(matrix.items())
     }
 
 

@@ -45,12 +45,22 @@ export type IndicatorMapping = {
   flag_reasons?: string[];
   extraction_provider: string;
   timestamp_verification?: Record<string, unknown>;
+  mapping_decision?: "supported" | "insufficient" | "contradicted";
+  mapping_confidence?: number;
+  mapping_confidence_type?: string;
+  eligibility_evidence_spans?: Record<string, string[]>;
+  eligibility_verifier_mode?: string;
 };
 
 export type RejectedExtraction = {
   reason: string;
   chunk_preview: string;
   raw_output: Record<string, unknown>;
+  decision?: "supported" | "insufficient" | "contradicted";
+  candidate_indicator?: string;
+  supported_indicators?: string[];
+  evidence_spans?: Record<string, string[]>;
+  exclusion_reasons?: string[];
 };
 
 export type RunUsageSummary = {

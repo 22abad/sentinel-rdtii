@@ -537,12 +537,15 @@ def test_runtime_feature_normalization_prevents_string_false_scoring_bug(monkeyp
     data = r.json()
 
     assert len(fake.repair_calls) == 0
-    assert len(data["mappings"]) == 1
-    m = data["mappings"][0]
-    assert m["score"] == 0.0
-    assert m["features"]["personal_data"] is True
-    assert m["features"]["has_ban"] is False
-    assert m["features"]["has_local_processing"] is False
+    # A topical transfer sentence with neither a ban nor local-processing
+    # requirement is now rejected before scoring; normalized booleans remain
+    # visible in the structured audit payload.
+    assert data["mappings"] == []
+    assert data["rejected"]
+    raw = data["rejected"][0]["raw_output"]
+    assert raw["personal_data"] is True
+    assert raw["has_ban"] is False
+    assert raw["has_local_processing"] is False
 
 
 def test_streaming_runtime_uses_same_feature_normalization(monkeypatch):
@@ -569,14 +572,16 @@ def test_streaming_runtime_uses_same_feature_normalization(monkeypatch):
     assert r.status_code == 200
 
     mapping_payloads = []
+    rejection_payloads = []
     for line in r.text.splitlines():
         if line.startswith("data: ") and '"score"' in line:
             mapping_payloads.append(json.loads(line.removeprefix("data: ")))
+        elif line.startswith("data: ") and '"candidate_indicator": "6.1"' in line:
+            rejection_payloads.append(json.loads(line.removeprefix("data: ")))
 
-    assert len(mapping_payloads) == 1
-    m = mapping_payloads[0]
-    assert m["score"] == 0.0
-    assert m["features"]["has_ban"] is False
+    assert mapping_payloads == []
+    assert len(rejection_payloads) == 1
+    assert rejection_payloads[0]["raw_output"]["has_ban"] is False
 
 
 def test_streaming_runtime_repair_loop_fixes_bad_quote(monkeypatch):
