@@ -117,7 +117,7 @@ export function BrandSpecimen() {
         {/* wordmark + per-glyph boxes + shared cap/baseline lines */}
         <div className="relative inline-flex flex-col items-stretch">
           <div className="relative" ref={boxRef}>
-            <h2 className="whitespace-nowrap tracking-tight" style={WORD_STYLE}>
+            <h2 className="relative z-10 whitespace-nowrap tracking-tight" style={WORD_STYLE}>
               {WORD.split("").map((ch, i) => (
                 <span
                   key={i}
