@@ -26,13 +26,18 @@ _BUDGET = int(os.getenv("CHUNK_CHAR_BUDGET", "3000"))
 _MIN_CHARS = int(os.getenv("CHUNK_MIN_CHARS", "200"))
 
 # ── Upstream reflow: mend PDF/OCR line damage BEFORE chunking ──────────────
-# PDF/OCR extraction shreds a legal sentence across physical lines and injects
-# inline markers, giving false sentence boundaries that break chunking, quote
-# selection, and display alike. These three transforms repair the *structural*
-# damage only — deliberately NOT general whitespace normalization, which would
-# alter clean text (e.g. double-spaced headings) and is a no-op-on-clean-text
-# guarantee we rely on to keep the golden set untouched.
-_AMENDMENT_MARKER_RE = re.compile(r"\[\s*(?:Act\s+)?\d+(?:\s+of)?[\s/]\d{2,4}\s*\]")
+# PDF/OCR extraction shreds a legal sentence across physical lines, giving false
+# sentence boundaries that break chunking, quote selection, and display alike.
+# These transforms repair that *structural* damage only — deliberately NOT
+# general whitespace normalization, which would alter clean text (e.g.
+# double-spaced headings), preserving the no-op-on-clean-text guarantee we rely
+# on to keep the golden set untouched.
+#
+# We deliberately DO NOT strip inline amendment markers ("[Act 26 of 2012]",
+# "[40/2020]"): those markers are part of the official consolidated source text
+# (SSO, legislation.gov.au). Removing them would make our submitted verbatim
+# diverge from the source, and judges verify each verbatim by pasting it next to
+# the original document. Verbatim-vs-source integrity outranks tidy chunking.
 _HYPHEN_WRAP_RE = re.compile(r"(\w)-\n(\w)")
 _WRAPPED_LINE_RE = re.compile(r"(?<=[^\n.;:!?])\n(?=[a-z(])")
 
@@ -40,17 +45,16 @@ _WRAPPED_LINE_RE = re.compile(r"(?<=[^\n.;:!?])\n(?=[a-z(])")
 def reflow_legal_text(text: str) -> str:
     """Repair PDF/OCR structural damage in legal text before chunking.
 
-    - strip inline amendment/citation markers ("[40/2020]", "[Act 26 of 2012]")
     - de-hyphenate words split across a line break ("Pros-\\necutor" -> "Prosecutor")
     - join a wrapped line whose next line continues the sentence (starts
       lowercase or "(") — never before an uppercase/numbered heading
 
-    No-op on already-clean text (verified against the golden corpus), so it
-    cannot regress curated documents. Idempotent.
+    Inline amendment markers are intentionally PRESERVED so the extracted
+    verbatim still matches the official source (see note above). No-op on
+    already-clean text, so it cannot regress curated documents. Idempotent.
     """
     if not text:
         return text
-    text = _AMENDMENT_MARKER_RE.sub(" ", text)
     text = _HYPHEN_WRAP_RE.sub(r"\1\2", text)
     text = _WRAPPED_LINE_RE.sub(" ", text)
     return text
