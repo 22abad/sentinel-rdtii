@@ -1176,3 +1176,24 @@ def test_flag_7_3_rows_without_minimum_retention_period():
                (_P7_I3_NO_PERIOD_FLAG in (r.notes or "")) for r in kept}
     assert flagged["period"] is False    # has "seven years"
     assert flagged["no-period"] is True  # no minimum period -> flagged
+
+
+def test_flag_p6_localization_rows_without_restriction():
+    """6.1/6.2/6.3 rows with no localization/restriction language are flagged."""
+    from submission.schema import validate_submission_rows, SubmissionRow, _P6_LOC_NO_RESTRICTION_FLAG
+
+    def row(quote):
+        return SubmissionRow(
+            economy="Singapore", law_name="Financial Services and Markets Act 2022",
+            indicator_id="P6-I1", article="s 28E", verbatim_snippet=quote,
+            mapping_rationale="[s 28E] disclosure provision.",
+            source_url="https://sso.agc.gov.sg/x", last_amended="2022", confidence=0.9,
+        )
+    restrictive = row("A data user shall not transfer personal data to a place outside Singapore.")
+    permissive = row("A prescribed financial institution may on its own motion disclose risk information to another institution.")
+    kept = validate_submission_rows([restrictive, permissive], allow_empty=True)
+    assert len(kept) == 2  # flag, never drop
+    flags = {("permissive" if "may on its own motion" in r.verbatim_snippet else "restrictive"):
+             (_P6_LOC_NO_RESTRICTION_FLAG in (r.notes or "")) for r in kept}
+    assert flags["restrictive"] is False   # "shall not transfer … outside"
+    assert flags["permissive"] is True     # permissive disclosure -> flagged
