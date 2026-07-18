@@ -26,7 +26,7 @@ const STIPPLE = {
 
 export function SchoolMap() {
   return (
-    <section className="relative w-full border-y border-black text-black" style={GRID_BG}>
+    <section className="relative w-full border-y border-[#10B981]/40 text-black" style={GRID_BG}>
       <div className="mx-auto max-w-6xl px-6 py-16">
         {/* top row: boxed wordmark + section tag */}
         <div className="flex items-start justify-between">
