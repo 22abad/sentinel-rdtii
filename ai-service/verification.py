@@ -49,4 +49,21 @@ def find_quote_offsets(quote: str, original_text: str) -> tuple[int, int]:
     if m:
         return m.start(), m.end()
 
+    # Whitespace-insensitive locate — bridges spaces INSIDE tokens too, which
+    # the \s+-join above cannot. Untidy PDF text has "( c )" where the model
+    # writes "(c)"; strip all whitespace, find, then map the match position
+    # back to real character offsets in the original. A genuinely stitched or
+    # reordered quote still fails here, so the anti-hallucination gate holds.
+    idx_map: list[int] = []
+    stripped: list[str] = []
+    for i, ch in enumerate(original_text):
+        if not ch.isspace():
+            stripped.append(ch)
+            idx_map.append(i)
+    stripped_quote = "".join(quote.split())
+    if stripped_quote:
+        pos = "".join(stripped).find(stripped_quote)
+        if pos >= 0:
+            return idx_map[pos], idx_map[pos + len(stripped_quote) - 1] + 1
+
     return (-1, -1)
