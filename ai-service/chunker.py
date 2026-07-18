@@ -25,6 +25,36 @@ from uniseg.sentencebreak import sentences as _uax29_sentences
 _BUDGET = int(os.getenv("CHUNK_CHAR_BUDGET", "3000"))
 _MIN_CHARS = int(os.getenv("CHUNK_MIN_CHARS", "200"))
 
+# ── Upstream reflow: mend PDF/OCR line damage BEFORE chunking ──────────────
+# PDF/OCR extraction shreds a legal sentence across physical lines and injects
+# inline markers, giving false sentence boundaries that break chunking, quote
+# selection, and display alike. These three transforms repair the *structural*
+# damage only — deliberately NOT general whitespace normalization, which would
+# alter clean text (e.g. double-spaced headings) and is a no-op-on-clean-text
+# guarantee we rely on to keep the golden set untouched.
+_AMENDMENT_MARKER_RE = re.compile(r"\[\s*(?:Act\s+)?\d+(?:\s+of)?[\s/]\d{2,4}\s*\]")
+_HYPHEN_WRAP_RE = re.compile(r"(\w)-\n(\w)")
+_WRAPPED_LINE_RE = re.compile(r"(?<=[^\n.;:!?])\n(?=[a-z(])")
+
+
+def reflow_legal_text(text: str) -> str:
+    """Repair PDF/OCR structural damage in legal text before chunking.
+
+    - strip inline amendment/citation markers ("[40/2020]", "[Act 26 of 2012]")
+    - de-hyphenate words split across a line break ("Pros-\\necutor" -> "Prosecutor")
+    - join a wrapped line whose next line continues the sentence (starts
+      lowercase or "(") — never before an uppercase/numbered heading
+
+    No-op on already-clean text (verified against the golden corpus), so it
+    cannot regress curated documents. Idempotent.
+    """
+    if not text:
+        return text
+    text = _AMENDMENT_MARKER_RE.sub(" ", text)
+    text = _HYPHEN_WRAP_RE.sub(r"\1\2", text)
+    text = _WRAPPED_LINE_RE.sub(" ", text)
+    return text
+
 # Structural heading patterns — used as preferred break points, not required.
 _HEADING_RE = re.compile(
     r"^\s*(?:"

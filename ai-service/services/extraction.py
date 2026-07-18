@@ -13,6 +13,11 @@ async def run_extraction(
     target_indicators: list[str] | None = None,
 ) -> ExtractionResponse:
     from agents.orchestrator import MASOrchestrator
+    from chunker import reflow_legal_text
+
+    # Mend PDF/OCR line damage before the pipeline reads it (mirrors the
+    # streaming path) — keeps chunk offsets against one clean text.
+    text = reflow_legal_text(text)
 
     collector = UsageCollector(run_id=f"extract-{uuid.uuid4().hex}")
     orchestrator = MASOrchestrator(llm_provider)
