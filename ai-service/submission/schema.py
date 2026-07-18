@@ -561,9 +561,91 @@ def _flag_p6_topic_mismatch(row) -> None:
 _OFF_TOPIC_DOMAIN = re.compile(
     r"\b(wine|dairy|livestock|fisher\w*|agricultur\w*|horticultur\w*|wool|"
     r"poultry|forestry|primary\s+industr\w*|export\s+charge|customs\s+charge|"
-    r"grain|sugar|meat|seafood|viticultur\w*)\b",
+    r"grain|sugar|meat|seafood|viticultur\w*|"
+    # Export-control-of-goods regimes (strategic/dual-use/military goods) are a
+    # trade-in-goods domain, NOT cross-border DATA (P6) or data protection (P7).
+    # The live path mapped Singapore's "Strategic Goods (Control) Act" onto 6.1
+    # ("'goods' means any movable property" read as data localization).
+    r"strategic\s+goods|export\s+control|dual[- ]use|munitions?|"
+    r"firearms?|weapons?|arms\s+(?:control|trade|export)|military\s+end)\b",
     re.IGNORECASE,
 )
+
+# Evidence quoted from an un-enacted DRAFT bill is not an in-force measure. The
+# live path sometimes hangs a draft-bill quote on an in-force law's name (e.g. a
+# "Draft Bill" cyber-notification clause labelled as the enacted PDPA). We catch
+# the draft-bill tell in the VERBATIM (the law-name gate already catches names
+# containing "bill"/"draft"); a genuine in-force provision says "this Act", never
+# "the Draft Bill".
+_DRAFT_EVIDENCE = re.compile(r"\bdraft bill\b|\bexposure draft\b", re.IGNORECASE)
+
+
+def _is_draft_evidence(quote: str) -> bool:
+    return bool(_DRAFT_EVIDENCE.search(quote or ""))
+
+
+# A payment / e-money statute mapped to a data-LOCALIZATION indicator (6.1-6.3)
+# is off-topic UNLESS the quote actually states a data-location requirement.
+# Payment-data localization is real in some economies, so we do NOT drop on the
+# law name alone — only when the quote carries no locality language at all (the
+# live path mapped Singapore's Payment Services Act e-money account rules onto
+# 6.1).
+_PAYMENT_LAW = re.compile(r"\bpayment\s+services?\b|\be-?money\b|\bpayment\s+systems?\b", re.IGNORECASE)
+_LOCALIZATION_LANGUAGE = re.compile(
+    r"localiz\w*|local\s+(?:storage|processing|copy)|stored?\s+(?:in|within|locally)|"
+    r"within\s+(?:the\s+)?(?:country|territory|singapore|malaysia|australia|jurisdiction)|"
+    r"data\s+cent|server\s+(?:located|s?\s+in)|reside\w*\s+(?:in|within)|"
+    r"kept\s+(?:in|within)|physically\s+(?:in|located|stored)|onshore|cross[- ]border\s+transfer",
+    re.IGNORECASE,
+)
+_P6_LOCALIZATION_INDICATORS = frozenset({"P6-I1", "P6-I2", "P6-I3"})
+
+
+def _is_payment_law_off_localization(law_name: str, quote: str, indicator_id: str) -> bool:
+    if (indicator_id or "").upper() not in _P6_LOCALIZATION_INDICATORS:
+        return False
+    if not _PAYMENT_LAW.search(law_name or ""):
+        return False
+    return not _LOCALIZATION_LANGUAGE.search(quote or "")
+
+
+# Rationale/law-name subject mismatch: a genuine rationale opens "[<ref>] Section
+# X of <the row's own law> …". The confabulated live rows open "[<ref>] Section X
+# of <a DIFFERENT statute>" — the model narrated a different law than the row is
+# labelled with (e.g. law_name "Identity Verification Services Act" but rationale
+# "Section 9 of Australia's Privacy Act 1988"). We extract the SUBJECT statute
+# named at the start of the rationale and drop when its core token set is
+# disjoint from the law-name's. High precision: a mere cross-reference later in
+# the rationale (My Health Records s5 "…also an authorisation for the purposes of
+# the Privacy Act 1988") is NOT the subject and does not trip it.
+_RATIONALE_SUBJECT = re.compile(
+    r"^\s*(?:\[[^\]]*\]\s*)?(?:the\s+(?:scope|measure|provision|analysis)[^.]*?\bunder\b\s+|"
+    r"(?:section|clause|regulation|paragraph|article|part)\s+[\w().-]+\s+of\s+)"
+    r"(?:the\s+)?(?:australia'?s?|singapore'?s?|malaysia'?s?|australian\s+)?\s*"
+    r"([A-Z][A-Za-z'()&/ ]+?(?:Act|Regulations?|Ordinance|Decree|Principles?|Instruction|Agreement))\b",
+    re.IGNORECASE,
+)
+_STOPWORDS = frozenset({"the", "of", "and", "act", "regulations", "regulation", "an",
+                        "australia", "australian", "singapore", "malaysia", "s"})
+
+
+def _core_tokens(name: str) -> set:
+    toks = re.findall(r"[a-z0-9]+", (name or "").lower())
+    return {t for t in toks if t not in _STOPWORDS and len(t) > 2}
+
+
+def _rationale_names_other_statute(law_name: str, rationale: str) -> bool:
+    m = _RATIONALE_SUBJECT.match(rationale or "")
+    if not m:
+        return False
+    subj = _core_tokens(m.group(1))
+    name = _core_tokens(law_name)
+    if not subj or not name:
+        return False
+    # Mismatch only when the rationale-subject shares NO substantive token with
+    # the row's law name (disjoint) — so "IVS Act" vs "Privacy Act" trips, but
+    # "My Health Records Act" vs "My Health Records Act 2012" does not.
+    return subj.isdisjoint(name)
 
 
 def _is_off_topic_law(law_name: str, indicator_id: str = "") -> bool:
@@ -928,8 +1010,37 @@ def validate_submission_rows(
             str(getattr(row, "indicator_id", "") or ""),
         ):
             logger.warning(
-                "Dropping submission row %d: goods/agriculture-domain law mapped to "
-                "P6/P7 (out of scope): %r",
+                "Dropping submission row %d: goods/agriculture/export-control-domain "
+                "law mapped to P6/P7 (out of scope): %r",
+                index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _is_draft_evidence(str(getattr(row, "verbatim_snippet", "") or "")):
+            logger.warning(
+                "Dropping submission row %d: verbatim quotes an un-enacted DRAFT "
+                "bill, not an in-force measure: %r",
+                index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _is_payment_law_off_localization(
+            str(getattr(row, "law_name", "") or ""),
+            str(getattr(row, "verbatim_snippet", "") or ""),
+            str(getattr(row, "indicator_id", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: payment/e-money law mapped to a data-"
+                "localization indicator but the quote states no locality "
+                "requirement: %r",
+                index, str(getattr(row, "law_name", ""))[:50],
+            )
+            continue
+        if _rationale_names_other_statute(
+            str(getattr(row, "law_name", "") or ""),
+            str(getattr(row, "mapping_rationale", "") or ""),
+        ):
+            logger.warning(
+                "Dropping submission row %d: rationale's subject statute differs "
+                "from the row's law name (confabulated mapping): %r",
                 index, str(getattr(row, "law_name", ""))[:50],
             )
             continue
