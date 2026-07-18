@@ -47,16 +47,23 @@ def score_6_1(features: dict) -> tuple[Score, str]:
     personal = bool(features.get("personal_data"))
     horizontal = bool(features.get("horizontal_scope"))
     num_economies = _safe_int(features.get("num_economies_affected"))
-    
+
+    # Score 1 requires HORIZONTAL scope (all sectors) or more than one measure.
+    # The official answer key scores a SECTOR-SPECIFIC measure 0.5 even when it
+    # covers personal data — e.g. Australia's My Health Records Act (Coverage:
+    # "Personal Health Data") = 0.5, vs Privacy Act 6.4 (Coverage: "Horizontal")
+    # = 1. So "personal data" in tier 1 means economy-wide personal data (which
+    # the answer key annotates "Horizontal"); a single-sector personal measure is
+    # tier 2. personal_data alone must NOT trigger 1.
     reasons = []
-    if personal: reasons.append("covers personal data")
     if horizontal: reasons.append("applies horizontally across sectors")
     if num_economies >= 2: reasons.append(f"applies to {num_economies} economies")
-    
+
     if reasons:
         return 1.0, f"Score 1: {req_type} requirement {' OR '.join(reasons)}."
 
-    return 0.5, f"Score 0.5: {req_type} requirement applies to non-personal data, a specific sector, or a single economy."
+    scope = "personal data in a specific sector" if personal else "non-personal data or a specific sector"
+    return 0.5, f"Score 0.5: {req_type} requirement applies to {scope} (not horizontally across all sectors)."
 
 
 # ── 6.2 Local storage requirements ─────────────────────────────────────────
@@ -69,12 +76,15 @@ def score_6_2(features: dict) -> tuple[Score, str]:
 
     personal = bool(features.get("personal_data"))
     horizontal = bool(features.get("horizontal_scope"))
-    
-    if personal or horizontal:
-        reason = "covers personal data" if personal else "applies horizontally across sectors"
-        return 1.0, f"Score 1: Local storage requirement {reason}."
-        
-    return 0.5, "Score 0.5: Local storage requirement applies to non-personal data or a specific sector."
+
+    # Score 1 requires HORIZONTAL (all-sectors) scope. A sector-specific measure
+    # is 0.5 even when it covers personal data — the official key scores AUS 6.2
+    # (My Health Records, "Personal Health Data") 0.5, not 1. See score_6_1.
+    if horizontal:
+        return 1.0, "Score 1: Local storage requirement applies horizontally across all sectors."
+
+    scope = "personal data in a specific sector" if personal else "non-personal data or a specific sector"
+    return 0.5, f"Score 0.5: Local storage requirement applies to {scope} (not horizontally across all sectors)."
 
 
 # ── 6.3 Infrastructure requirements ────────────────────────────────────────
