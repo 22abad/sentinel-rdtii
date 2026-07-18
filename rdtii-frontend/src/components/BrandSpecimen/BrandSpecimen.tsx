@@ -92,29 +92,25 @@ export function BrandSpecimen() {
   return (
     <section className="relative w-full overflow-hidden text-white" style={BRAND_BG}>
       <div className="relative mx-auto flex min-h-[74vh] max-w-6xl items-center justify-center px-6 py-20">
-        {/* full-height margin rules; corner labels align to them (wide margin) */}
-        <span aria-hidden className={`${LINE} bottom-0 left-16 top-0 w-px`} />
-        <span aria-hidden className={`${LINE} bottom-0 right-16 top-0 w-px`} />
-
-        {/* corner labels — aligned to the margin rules, raised (z-20) above the
-            glyph restriction lines so the green text doesn't clash with them
-            (the lines pass behind the text, unchanged) */}
-        <div className="absolute left-16 top-20 z-20 pl-3 font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        {/* corner labels — wide margin (labels only, no rule lines), raised
+            (z-20) above the glyph restriction lines so the green text doesn't
+            clash with them (the lines pass behind the text, unchanged) */}
+        <div className="absolute left-24 top-20 z-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Legal-Evidence
           <br />
           Mapper
         </div>
-        <div className="absolute right-16 top-20 z-20 pr-3 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute right-24 top-20 z-20 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Cross-Border Data
           <br />
           &amp; Cybersecurity
         </div>
-        <div className="absolute bottom-20 left-16 z-20 pl-3 font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute bottom-20 left-24 z-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Team
           <br />
           Sentinel
         </div>
-        <div className="absolute bottom-20 right-16 z-20 pr-3 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute bottom-20 right-24 z-20 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
           RDTII 2.1
           <br />
           Framework
