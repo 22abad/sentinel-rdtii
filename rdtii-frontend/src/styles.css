@@ -2115,3 +2115,12 @@ textarea {
   margin-top: 14px;
   border-radius: 0; /* override global button { border-radius: 999px } */
 }
+
+/* raw-text tracing view (active highlight): drop the rounded white box so it
+   sits flat on the cream ground like the other fields */
+.input-panel--form .source-view {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 8px 2px;
+}
