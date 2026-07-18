@@ -1,5 +1,5 @@
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar test smoke-discovery discovery-coverage golden-coverage db db-reset image
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar test eval-setup eval-golden smoke-discovery discovery-coverage db db-reset image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar stn test smoke-discovery discovery-coverage golden-coverage db db-reset image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar stn test eval-setup eval-golden smoke-discovery discovery-coverage db db-reset image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
 SMOKE_ARGS ?=
@@ -32,13 +32,20 @@ dev-sidecar:
 
 install:
 	cd ai-service && $(PYTHON) -m pip install -r requirements.txt && $(PYTHON) -m playwright install chromium webkit
+	$(MAKE) install-cli
 
 install-sidecar:
 	cd extract_sidecar && cargo build --release
 
+# Also runs as part of `make install`; kept standalone for a CLI-only install.
 install-cli:
 	$(PYTHON) -m pip install -e tools/stn-cli
 	echo "Installed. Try: stn --help"
+
+# Run the stn CLI inside Docker (talks to the ai-service container).
+#   make stn ARGS="status"   |   make stn ARGS="discovery SGP"
+stn:
+	docker compose run --rm stn $(ARGS)
 
 install-frontend:
 	cd rdtii-frontend && npm install
