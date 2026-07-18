@@ -11,6 +11,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@fontsource/roboto-slab": "^5.2.8",
     "@radix-ui/react-dialog": "^1.1.18",
     "@radix-ui/react-select": "^2.2.6",
     "@types/three": "^0.184.1",

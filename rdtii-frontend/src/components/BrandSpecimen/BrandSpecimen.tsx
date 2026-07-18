@@ -1,3 +1,5 @@
+import "@fontsource/roboto-slab/700.css";
+
 // Standalone brand-logo display — a type-specimen panel (the reference layout).
 // No background grid: instead, four registration lines are keyed to the
 // wordmark's bounding box — two full-width horizontals at cap-height and
@@ -44,7 +46,10 @@ export function BrandSpecimen() {
         {/* wordmark + registration lines + spec numbers */}
         <div className="relative inline-flex flex-col items-stretch">
           <div className="relative">
-            <h2 className="whitespace-nowrap font-serif text-6xl font-bold leading-none tracking-tight sm:text-8xl md:text-[8rem] lg:text-[10rem]">
+            <h2
+              className="whitespace-nowrap text-6xl font-bold leading-none tracking-tight sm:text-8xl md:text-[8rem] lg:text-[10rem]"
+              style={{ fontFamily: '"Roboto Slab", serif' }}
+            >
               Sentinel
             </h2>
             {/* boxed superscript tag at the cap-height line, right of the mark */}
