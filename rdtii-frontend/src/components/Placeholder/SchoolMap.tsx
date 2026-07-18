@@ -12,10 +12,10 @@ const COUNTRIES = [
 ];
 
 const GRID_BG = {
-  backgroundColor: "#f3f1ea",
+  backgroundColor: "#ffffff",
   backgroundImage:
-    "linear-gradient(#0000001f 1px, transparent 1px)," +
-    "linear-gradient(90deg, #0000001f 1px, transparent 1px)",
+    "linear-gradient(#10b98159 1px, transparent 1px)," +
+    "linear-gradient(90deg, #10b98159 1px, transparent 1px)",
   backgroundSize: "44px 44px",
 } as const;
 
@@ -38,7 +38,7 @@ export function SchoolMap() {
           </div>
           <a
             href="/mapsearch"
-            className="border border-black px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] underline underline-offset-4 hover:bg-black hover:text-[#f3f1ea]"
+            className="border border-black px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] underline underline-offset-4 hover:bg-black hover:text-white"
           >
             Global Search
           </a>
