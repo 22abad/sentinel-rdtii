@@ -1,8 +1,9 @@
 """CSV and JSON writers for the judge-validated submission contract.
 
-CSV is written with a frozen column order and a UTF-8 BOM (``utf-8-sig``) so
-Excel opens bilingual (e.g. Malay/Chinese) text correctly. JSON carries the
-same rows plus extended metadata and a small run header.
+CSV is written with a frozen column order in plain UTF-8 (no BOM) so the header
+matches the official Structured Output Template byte-for-byte under a strict
+comparison. JSON carries the same rows plus extended metadata and a small run
+header.
 """
 
 from __future__ import annotations
@@ -27,7 +28,7 @@ def write_csv(rows: list[SubmissionRow], path: str | Path) -> Path:
 
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8-sig") as handle:
+    with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle, lineterminator="\n")
         # The header row must match the official Structured Output Template
         # exactly (Title Case); data values stay in the frozen CSV_COLUMNS order.

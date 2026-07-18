@@ -9,7 +9,7 @@ thin, deterministic adapter so the same pipeline can also serve the judges' CLI:
 
 Modules:
 - schema.py  — SubmissionRow model, CSV column order, indicator-code + tag logic
-- writer.py  — CSV (utf-8-sig, fixed order) and JSON writers
+- writer.py  — CSV (plain UTF-8, no BOM, fixed order) and JSON writers
 - pipeline.py — orchestrates discovery -> fetch -> extract -> rows
 """
 
