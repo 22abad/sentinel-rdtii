@@ -162,9 +162,13 @@ def test_reflow_joins_wrapped_lines_and_dehyphenates():
     assert "\n" not in out  # one flowing sentence now
 
 
-def test_reflow_strips_inline_amendment_markers():
-    assert "[40/2020]" not in reflow_legal_text("text [40/2020] more")
-    assert "[Act 26 of 2012]" not in reflow_legal_text("x [Act 26 of 2012] y")
+def test_reflow_preserves_inline_amendment_markers():
+    # Amendment markers are part of the official consolidated source text (SSO,
+    # legislation.gov.au). Reflow must PRESERVE them so the extracted verbatim
+    # still matches the source that judges verify against — stripping them would
+    # break verbatim-vs-source integrity.
+    assert reflow_legal_text("text [40/2020] more") == "text [40/2020] more"
+    assert reflow_legal_text("x [Act 26 of 2012] y") == "x [Act 26 of 2012] y"
 
 
 def test_reflow_preserves_headings_and_paragraph_breaks():
