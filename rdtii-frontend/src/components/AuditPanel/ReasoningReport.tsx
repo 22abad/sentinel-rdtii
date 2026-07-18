@@ -1,5 +1,12 @@
 import { AlertTriangle, Check, X as XIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { IndicatorMapping } from "../../types";
+import {
+  verifyReleaseYear,
+  verifyTimestamp,
+  type ReleaseYear,
+  type TimestampVerification,
+} from "../../services/verification";
 
 /**
  * Grouped, scannable view of everything the pipeline computed for one
@@ -71,6 +78,30 @@ function FeatureChip({ value }: { value: FeatureValue }) {
 export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
   const features = mapping.features ?? {};
 
+  // Mirrors the TUI report: release year (4 signals, LLM-decided) + forensic
+  // timestamp, resolved on demand.
+  const [releaseYear, setReleaseYear] = useState<ReleaseYear | null>(null);
+  const [timestamp, setTimestamp] = useState<TimestampVerification | null>(null);
+  useEffect(() => {
+    let alive = true;
+    verifyReleaseYear(mapping)
+      .then((r) => alive && setReleaseYear(r))
+      .catch(() => {});
+    const existing = mapping.timestamp_verification as unknown as
+      | TimestampVerification
+      | undefined;
+    if (existing && (existing.source_details?.length || existing.verification_log)) {
+      setTimestamp(existing);
+    } else if (mapping.source_url) {
+      verifyTimestamp(mapping.source_url, mapping.last_update ?? "")
+        .then((t) => alive && setTimestamp(t))
+        .catch(() => {});
+    }
+    return () => {
+      alive = false;
+    };
+  }, [mapping]);
+
   const scoringEntries = Object.entries(features).filter(
     ([k]) => !DOC_QUALITY_KEYS.has(k) && !PROVENANCE_KEYS.has(k),
   );
@@ -134,6 +165,28 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
         </div>
       )}
 
+      {mapping.quote_context &&
+        mapping.quote_context.trim() !== mapping.verbatim_quote.trim() && (
+          <section className="rr-section">
+            <h4>Provision</h4>
+            <p className="rr-provision">
+              {(() => {
+                const ctx = mapping.quote_context as string;
+                const q = mapping.verbatim_quote;
+                const i = ctx.indexOf(q);
+                if (i < 0) return ctx;
+                return (
+                  <>
+                    <span className="rr-provision-context">{ctx.slice(0, i)}</span>
+                    <mark className="rr-provision-quote">{q}</mark>
+                    <span className="rr-provision-context">{ctx.slice(i + q.length)}</span>
+                  </>
+                );
+              })()}
+            </p>
+          </section>
+        )}
+
       {scoringEntries.length > 0 && (
         <section className="rr-section">
           <h4>Scoring inputs</h4>
@@ -169,6 +222,51 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
             <div key={row.label} className="rr-provenance-line">
               <span className="rr-provenance-label">{row.label}</span>
               <span className="rr-provenance-value">{row.value}</span>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {releaseYear && releaseYear.year && (
+        <section className="rr-section rr-provenance">
+          <h4>Release year (4 signals · LLM-decided)</h4>
+          <div className="rr-provenance-line">
+            <span className="rr-provenance-label">{releaseYear.year}</span>
+            <span className="rr-provenance-value">
+              {Math.round(releaseYear.confidence * 100)}% · decided by{" "}
+              {releaseYear.decided_by}
+            </span>
+          </div>
+          {Object.keys(releaseYear.candidates).length > 0 && (
+            <div className="rr-provenance-line">
+              <span className="rr-provenance-label">signals</span>
+              <span className="rr-provenance-value">
+                {Object.entries(releaseYear.candidates)
+                  .map(([m, y]) => `${m} ${y}`)
+                  .join(", ")}
+              </span>
+            </div>
+          )}
+        </section>
+      )}
+
+      {timestamp && (
+        <section className="rr-section rr-provenance">
+          <h4>Timestamp verification (forensic)</h4>
+          <div className="rr-provenance-line">
+            <span className="rr-provenance-label">
+              {timestamp.verified ? "✓ corroborated" : "unconfirmed"}
+            </span>
+            <span className="rr-provenance-value">
+              best date {timestamp.best_date || "—"}
+            </span>
+          </div>
+          {timestamp.source_details.map((s, i) => (
+            <div key={i} className="rr-provenance-line">
+              <span className="rr-provenance-label">{s.source}</span>
+              <span className="rr-provenance-value">
+                {s.date || "—"} ({s.status})
+              </span>
             </div>
           ))}
         </section>
