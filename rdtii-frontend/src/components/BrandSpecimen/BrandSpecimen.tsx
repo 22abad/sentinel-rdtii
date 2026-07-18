@@ -1,17 +1,22 @@
-import { type CSSProperties, useLayoutEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  Fragment,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import "@fontsource/boldonse/400.css";
 
 // Standalone brand-logo display — a type-specimen panel (the reference layout).
-// The wordmark is set at a fixed 200px. Each glyph gets its own tight bounding
-// box on all four sides: horizontal edges come from the Canvas TextMetrics ink
-// box (actualBoundingBox{Ascent,Descent,Left,Right}) measured at 200px; the
-// baseline/cap origin comes from the DOM box, which `text-box: trim-both cap
-// alphabetic` trims to the real cap-height (top) and alphabetic baseline
-// (bottom). Two full-width lines mark the shared cap/baseline; per-glyph advance
-// widths (per-mille of em) print under each column, like the reference.
+// The wordmark is set at a fixed 200px. For each glyph we measure the exact ink
+// edges — horizontal from the Canvas TextMetrics ink box
+// (actualBoundingBox{Ascent,Descent,Left,Right}) at 200px, vertical against the
+// DOM box that `text-box: trim-both cap alphabetic` trims to the real cap-height
+// and alphabetic baseline — then project each edge as a registration line across
+// the whole panel (verticals at left/right, horizontals at top/bottom). Per-glyph
+// advance widths (per-mille of em) print under each column, like the reference.
 
 const BRAND_BG = { backgroundColor: "#17593a" } as const;
-const GREEN = "#86efac";
 const LINE = "pointer-events-none absolute bg-[#86efac]/70";
 const WORD = "Sentinel";
 const FS = 200; // px
@@ -131,24 +136,32 @@ export function BrandSpecimen() {
               2.1
             </span>
 
-            {/* shared cap-height + baseline horizontals, bled to panel edges */}
-            <span aria-hidden className={`${LINE} left-[-100vw] right-[-100vw] top-0 h-px`} />
-            <span aria-hidden className={`${LINE} left-[-100vw] right-[-100vw] bottom-0 h-px`} />
-
-            {/* per-glyph tight bounding boxes (all four edges) */}
+            {/* per-glyph restriction lines: each correct ink edge projected
+                across the whole panel — verticals at the left/right edges,
+                horizontals at the top/bottom edges */}
             {boxes.map((b, i) => (
-              <div
-                key={i}
-                aria-hidden
-                className="pointer-events-none absolute"
-                style={{
-                  left: `${b.left}px`,
-                  top: `${b.top}px`,
-                  width: `${b.width}px`,
-                  height: `${b.height}px`,
-                  border: `1px solid ${GREEN}B3`,
-                }}
-              />
+              <Fragment key={i}>
+                <span
+                  aria-hidden
+                  className={`${LINE} bottom-[-100vh] top-[-100vh] w-px`}
+                  style={{ left: `${b.left}px` }}
+                />
+                <span
+                  aria-hidden
+                  className={`${LINE} bottom-[-100vh] top-[-100vh] w-px`}
+                  style={{ left: `${b.left + b.width}px` }}
+                />
+                <span
+                  aria-hidden
+                  className={`${LINE} left-[-100vw] right-[-100vw] h-px`}
+                  style={{ top: `${b.top}px` }}
+                />
+                <span
+                  aria-hidden
+                  className={`${LINE} left-[-100vw] right-[-100vw] h-px`}
+                  style={{ top: `${b.top + b.height}px` }}
+                />
+              </Fragment>
             ))}
           </div>
 
