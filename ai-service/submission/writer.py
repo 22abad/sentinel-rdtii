@@ -11,7 +11,7 @@ import csv
 import json
 from pathlib import Path
 
-from .schema import CSV_COLUMNS, SubmissionRow
+from .schema import CSV_COLUMNS, CSV_HEADERS, SubmissionRow
 
 
 def _timestamped_stem(economy: str, pillar: str, timestamp: str) -> str:
@@ -28,14 +28,13 @@ def write_csv(rows: list[SubmissionRow], path: str | Path) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
-        writer = csv.DictWriter(
-            handle,
-            fieldnames=list(CSV_COLUMNS),
-            lineterminator="\n",
-        )
-        writer.writeheader()
+        writer = csv.writer(handle, lineterminator="\n")
+        # The header row must match the official Structured Output Template
+        # exactly (Title Case); data values stay in the frozen CSV_COLUMNS order.
+        writer.writerow(CSV_HEADERS)
         for row in rows:
-            writer.writerow(row.csv_record())
+            record = row.csv_record()
+            writer.writerow([record[column] for column in CSV_COLUMNS])
     return path
 
 

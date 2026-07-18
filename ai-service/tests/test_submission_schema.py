@@ -12,6 +12,7 @@ from services.document_fetch import _join_pdf_pages
 from submission.pipeline import build_row, page_location_reference
 from submission.schema import (
     CSV_COLUMNS,
+    CSV_HEADERS,
     REQUIRED_SUBMISSION_FIELDS,
     SubmissionRow,
     discovery_tag_for_method,
@@ -33,6 +34,18 @@ def test_csv_columns_frozen_order():
         "mapping_rationale", "source_url", "confidence", "notes",
     )
     assert len(CSV_COLUMNS) == 13
+
+
+def test_csv_headers_match_official_output_template():
+    # The submission CSV's HEADER ROW must match the official Structured Output
+    # Template (OUTPUT_TEMPLATE_31MAY.xlsx) exactly — Title Case with spaces.
+    # Judges validate programmatically, so this is the header we write.
+    assert CSV_HEADERS == (
+        "Economy", "Law Name", "Law Number / Ref", "Last Amended", "Indicator ID",
+        "Article / Section", "Discovery Tag", "Location Reference", "Verbatim Snippet",
+        "Mapping Rationale", "Source URL", "Confidence", "Notes",
+    )
+    assert len(CSV_HEADERS) == len(CSV_COLUMNS)
 
 
 def test_submission_validator_rejects_empty_results_by_default():
@@ -697,10 +710,13 @@ def test_csv_and_json_round_trip(tmp_path):
     with csv_path.open(encoding="utf-8-sig", newline="") as handle:
         reader = csv.reader(handle)
         header = next(reader)
-        assert header == list(CSV_COLUMNS)
+        # The submission CSV header must match the official Structured Output
+        # Template exactly (Title Case), NOT the internal snake_case field keys.
+        assert header == list(CSV_HEADERS)
+        assert len(header) == len(CSV_COLUMNS)
         first = next(reader)
-        assert first[header.index("indicator_id")] == "P6-I4"
-        assert first[header.index("confidence")] == "0.91"
+        assert first[list(CSV_COLUMNS).index("indicator_id")] == "P6-I4"
+        assert first[list(CSV_COLUMNS).index("confidence")] == "0.91"
 
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert payload["meta"]["economy"] == "Singapore"
