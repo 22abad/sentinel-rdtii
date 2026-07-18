@@ -12,7 +12,7 @@ import logging
 import os
 from typing import Any
 
-from chunker import Chunk
+from chunker import Chunk, snap_to_sentence_start
 from validation import validate_mapping
 from verification import find_quote_offsets, verify_quote
 
@@ -208,8 +208,24 @@ async def prepare_extraction_with_repair(
             if is_valid:
                 local_start, local_end = find_quote_offsets(quote, chunk.text)
                 if local_start < 0 or local_end <= local_start:
-                    errors.append("verbatim_quote matched fuzzily but exact offsets unrecoverable")
+                    # (3) Verbatim gate: no exact contiguous location means the
+                    # model paraphrased or stitched — it is not a real quote.
+                    errors.append(
+                        "verbatim_quote is not a verbatim substring of the source "
+                        "(paraphrased or stitched) — quote the exact text"
+                    )
                     is_valid = False
+                else:
+                    # (2) Sentence-snap: if the LLM clipped mid-sentence, grow the
+                    # quote back to its sentence start so a material lead-in isn't
+                    # dropped. Verbatim (read from the chunk). Headings are caught
+                    # below by validate_mapping's is_section_header — the title
+                    # guard lives in one place.
+                    snapped = snap_to_sentence_start(chunk.text, local_start, local_end)
+                    if snapped < local_start:
+                        local_start = snapped
+                        quote = chunk.text[local_start:local_end]
+                        current["verbatim_quote"] = quote
             else:
                 errors.append("verbatim_quote not found in chunk shown to LLM")
         elif not quote_errors:

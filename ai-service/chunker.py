@@ -145,3 +145,34 @@ def regex_legal_chunker(text: str) -> list[Chunk]:
     _flush()
 
     return chunks or [Chunk(text=text.strip(), start=0, end=len(text))]
+
+
+# ── Quote repair helper (used by extraction_repair) ───────────────────────
+
+
+def snap_to_sentence_start(text: str, start: int, end: int) -> int:
+    """Return the start of the UAX #29 sentence that [start, end) begins in.
+
+    Used to complete a quote the LLM clipped mid-sentence — grow it *backward*
+    to the sentence start so a material lead-in ("On request of an individual,…")
+    isn't dropped. We only move the start: extending the end would just grab
+    trailing punctuation and churn otherwise-good quotes.
+    """
+    if start <= 0 or start > len(text):
+        return max(0, start)
+
+    pos = 0
+    sent_start = 0
+    for sent in _uax29_sentences(text):
+        s = text.find(sent, pos)
+        if s < 0:
+            s = pos
+        e = s + len(sent)
+        if s <= start < e:
+            sent_start = s
+            break
+        pos = e
+
+    # Trim leading whitespace of that sentence.
+    lead = len(text[sent_start:start]) - len(text[sent_start:start].lstrip())
+    return sent_start + lead

@@ -255,6 +255,28 @@ def _verification_markup(data: dict) -> str:
     return "\n".join(out)
 
 
+_YEAR_TITLE = "Release year (4 signals · weighted · LLM-decided)"
+
+
+def _release_year_markup(data: dict) -> str:
+    """Weighted release-year resolution block (crawler-free)."""
+    out = [_h(_YEAR_TITLE)]
+    year = data.get("year")
+    if not year:
+        out.append("  [dim]no year signal found (no title/manifest/timeframe hit)[/]")
+        return "\n".join(out)
+    conf = data.get("confidence") or 0.0
+    out.append(
+        f"  [bold #10B981]{year}[/]  · {round(conf * 100)}% weighted support"
+        f"  · decided by {escape(str(data.get('decided_by', '')))}"
+    )
+    cands = data.get("candidates") or {}
+    if cands:
+        parts = ", ".join(f"{escape(str(m))} {y}" for m, y in cands.items())
+        out.append(f"  [dim]signals: {parts}[/]")
+    return "\n".join(out)
+
+
 class ReportScreen(ModalScreen):
     """Inner window: reasoning report for a selected extract row."""
 
@@ -280,10 +302,13 @@ class ReportScreen(ModalScreen):
     }
     """
 
+    _EXTRA_ORDER = ["year", "timestamp"]
+
     def __init__(self, kind: str, mapping: dict) -> None:
         super().__init__()
         self._kind = kind
         self._mapping = mapping
+        self._extras: dict[str, str] = {}
 
     def compose(self) -> ComposeResult:
         with VerticalScroll(id="report-window"):
@@ -292,25 +317,52 @@ class ReportScreen(ModalScreen):
     def on_mount(self) -> None:
         if self._kind != "mapping":
             return
-        # Already verified upstream (agent pipeline populates it)? Show inline.
+        # Release year — resolvable from the citation, no URL needed.
+        self._resolve_year()
+        # Forensic timestamp — inline if the agent pipeline populated it, else
+        # fetch when there's a source URL to archive-check.
         existing = self._mapping.get("timestamp_verification") or {}
         if existing.get("source_details") or existing.get("verification_log"):
-            self._append_verification(_verification_markup(existing))
-            return
-        # Streaming extractions leave it empty — fetch on demand.
-        url = self._mapping.get("source_url")
-        if url:
-            self._verify(url, self._mapping.get("last_update", ""))
+            self._set_extra("timestamp", _verification_markup(existing))
+        elif self._mapping.get("source_url"):
+            self._verify(self._mapping["source_url"], self._mapping.get("last_update", ""))
 
-    def _append_verification(self, markup: str) -> None:
-        body = self.query_one("#report-body", Static)
-        body.update(_reasoning_markup(self._kind, self._mapping) + "\n\n" + markup)
+    def _set_extra(self, key: str, markup: str) -> None:
+        self._extras[key] = markup
+        ordered = [self._extras[k] for k in self._EXTRA_ORDER if k in self._extras]
+        self.query_one("#report-body", Static).update(
+            "\n\n".join([_reasoning_markup(self._kind, self._mapping), *ordered])
+        )
+
+    @work(exclusive=True, group="year")
+    async def _resolve_year(self) -> None:
+        m = self._mapping
+        feats = m.get("features") or {}
+        self._set_extra("year", _h(_YEAR_TITLE) + "\n  [dim]resolving…[/]")
+        try:
+            async with self.app._client(timeout=90.0) as client:
+                res = await client.post(
+                    "/api/verify/release-year",
+                    json={
+                        "source_legislation": m.get("source_legislation", ""),
+                        "quote": m.get("verbatim_quote", ""),
+                        "last_update": m.get("last_update", ""),
+                        "timeframe_column": str(feats.get("_timeframe_column", "")),
+                    },
+                )
+            if res.status_code == 200:
+                self._set_extra("year", _release_year_markup(res.json()))
+            else:
+                self._set_extra("year", _h(_YEAR_TITLE) + f"\n  [red]HTTP {res.status_code}[/]")
+        except httpx.HTTPError as exc:
+            self._set_extra("year", _h(_YEAR_TITLE) + f"\n  [red]unavailable: {exc}[/]")
 
     @work(exclusive=True, group="verify")
     async def _verify(self, url: str, claimed: str) -> None:
-        self._append_verification(
+        self._set_extra(
+            "timestamp",
             _h("Timestamp verification (forensic)")
-            + "\n  [dim]cross-checking Wayback + HTTP Last-Modified…[/]"
+            + "\n  [dim]cross-checking Wayback + HTTP Last-Modified…[/]",
         )
         try:
             async with self.app._client(timeout=30.0) as client:
@@ -319,16 +371,16 @@ class ReportScreen(ModalScreen):
                     json={"url": url, "last_update": claimed},
                 )
             if res.status_code == 200:
-                self._append_verification(_verification_markup(res.json()))
+                self._set_extra("timestamp", _verification_markup(res.json()))
             else:
-                self._append_verification(
-                    _h("Timestamp verification (forensic)")
-                    + f"\n  [red]HTTP {res.status_code}[/]"
+                self._set_extra(
+                    "timestamp",
+                    _h("Timestamp verification (forensic)") + f"\n  [red]HTTP {res.status_code}[/]",
                 )
         except httpx.HTTPError as exc:
-            self._append_verification(
-                _h("Timestamp verification (forensic)")
-                + f"\n  [red]unavailable: {exc}[/]"
+            self._set_extra(
+                "timestamp",
+                _h("Timestamp verification (forensic)") + f"\n  [red]unavailable: {exc}[/]",
             )
 
     def action_copy_report(self) -> None:

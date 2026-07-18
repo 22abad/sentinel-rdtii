@@ -70,6 +70,52 @@ async def verify_timestamp(req: TimestampVerificationRequest):
         raise HTTPException(status_code=500, detail=f"Timestamp verification failed: {str(exc)}")
 
 
+class ReleaseYearRequest(BaseModel):
+    source_legislation: str = ""
+    quote: str = ""
+    last_update: str = ""
+    timeframe_column: str = ""
+
+
+class ReleaseYearResponse(BaseModel):
+    year: int | None = None
+    confidence: float = 0.0
+    decided_by: str = ""
+    candidates: dict = {}
+    tally: dict = {}
+
+
+@router.post("/api/verify/release-year")
+async def verify_release_year(req: ReleaseYearRequest):
+    """Resolve a law's release year from 4 weighted signals; the LLM decides.
+
+    Needs no source URL — the enactment year usually sits in the citation.
+    """
+    import asyncio
+
+    from release_year import resolve_release_year
+
+    provider = None
+    try:  # the LLM levels are optional — degrade to title/manifest/timeframe
+        import main as main_module
+
+        provider = main_module._get_provider()
+    except Exception:  # noqa: BLE001
+        provider = None
+    try:
+        result = await asyncio.to_thread(
+            resolve_release_year,
+            source_legislation=req.source_legislation,
+            quote=req.quote,
+            last_update=req.last_update,
+            timeframe_column=req.timeframe_column,
+            provider=provider,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Release-year resolution failed: {str(exc)}")
+    return ReleaseYearResponse(**result)
+
+
 class CoverageRequest(BaseModel):
     provision_text: str = ""
     source_legislation: str = ""
