@@ -2113,4 +2113,5 @@ textarea {
 /* full-width black SEND bar at the bottom */
 .input-panel--form .source-send {
   margin-top: 14px;
+  border-radius: 0; /* override global button { border-radius: 999px } */
 }
