@@ -1070,3 +1070,65 @@ def test_drop_zero_confidence_rows_removes_unscoreable_noise():
         "My Health Records Act 2012",
         "Privacy Act 1988",
     ]
+
+
+def test_mapping_gate_drops_offtopic_and_confabulated_maps():
+    """Mapping-layer gate: real quote, wrong indicator/label must be dropped.
+
+    Covers the live-discovery mis-maps found in the 2026-07-18 verification:
+    export-control-of-goods laws on P6, payment laws on data-localization with no
+    locality language, draft-bill quotes, and rationales whose subject statute
+    differs from the row's law name. Legitimate rows (incl. a genuine
+    cross-reference to another Act) survive.
+    """
+    from submission.schema import validate_submission_rows, SubmissionRow
+
+    def row(law, ind, quote, rat, url="https://sso.agc.gov.sg/Act/x"):
+        return SubmissionRow(
+            economy="Singapore", law_name=law, indicator_id=ind, article="s 1",
+            verbatim_snippet=quote, mapping_rationale=rat, source_url=url,
+            last_amended="2020", confidence=0.9,
+        )
+
+    keeper = row(
+        "Personal Data Protection Act 2012", "P7-I3",
+        "An organisation must cease to retain personal data as soon as it is reasonable to assume the purpose has ceased.",
+        "[s 25] Section 25 of the Personal Data Protection Act 2012 imposes a retention-limitation duty.",
+    )
+    xref_keeper = row(
+        "My Health Records Act 2012", "P7-I1",
+        "An authorisation to collect health information under this Act is also an authorisation for the purposes of the Privacy Act 1988.",
+        "[Section 5] Section 5 of the My Health Records Act 2012 operates as a sectoral data protection measure linking to the Privacy Act 1988.",
+        url="https://legislation.gov.au/x",
+    )
+    strategic = row(
+        "Strategic Goods (Control) Act 2002", "P6-I2",
+        '"goods" means any movable or personal property but does not include choses in action or money.',
+        "[Section 2(1)] The definition of goods maps to local storage.",
+    )
+    payment = row(
+        "Payment Services Act 2019", "P6-I1",
+        "Restrictions on personal payment account that contains e-money.",
+        "[Section 24] Section 24 of the Monetary Authority of Singapore Act imposes restrictions on personal payment accounts.",
+    )
+    draft = row(
+        "Personal Data Protection Act 2012", "P7-I2",
+        "Under Sections 10 and 15 of the Draft Bill, CIIOs must notify the Commissioner of any significant cybersecurity incident.",
+        "[Sections 10 and 15] Draft cybersecurity notification obligations.",
+    )
+    confab = row(
+        "Identity Verification Services Act 2023", "P7-I1",
+        "General privacy obligations of parties to participation agreement apply to each party.",
+        "[Section 9] Section 9 of Australia's Privacy Act 1988 imposes general privacy obligations.",
+        url="https://legislation.gov.au/x",
+    )
+    kept = validate_submission_rows(
+        [keeper, xref_keeper, strategic, payment, draft, confab], allow_empty=True
+    )
+    names = [r.law_name for r in kept]
+    assert "Personal Data Protection Act 2012" in names       # retention keeper
+    assert "My Health Records Act 2012" in names              # legit cross-reference kept
+    assert "Strategic Goods (Control) Act 2002" not in names  # export-control dropped
+    assert "Payment Services Act 2019" not in names           # payment off-localization dropped
+    assert not any(r.indicator_id == "P7-I2" for r in kept)   # draft-bill dropped
+    assert not any(r.indicator_id == "P7-I1" and "Identity" in r.law_name for r in kept)  # confab dropped
