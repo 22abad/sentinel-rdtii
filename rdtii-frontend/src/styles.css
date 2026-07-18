@@ -2137,9 +2137,10 @@ textarea {
   color: #111827;
   background: #f3f1ea;
 }
-/* controls block: black hairline separator */
+/* controls block: black hairline separator; max two inputs per row */
 .swiss-form .discovery-controls {
   border-bottom: 1.5px solid #111827;
+  grid-template-columns: 1fr 1fr;
 }
 /* pillar toggles: square; active state as a black tag */
 .swiss-form .discovery-toggle {
