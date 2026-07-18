@@ -2027,7 +2027,6 @@ textarea {
   justify-content: flex-start;
   align-items: center;
   padding: 16px 18px;
-  border-bottom: 2px solid #111827;
 }
 .swiss-form .panel-header h2 {
   color: #111827;
@@ -2050,6 +2049,12 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.76rem;
+}
+
+/* row-dividing hairline above each field group (reference: line per row) */
+.swiss-form .control-grid,
+.swiss-form .stacked {
+  border-top: 1.5px solid #111827;
 }
 
 /* inputs & textarea — transparent, borderless; text sits on the cream */
@@ -2129,10 +2134,24 @@ textarea {
   color: #111827;
   background: #f3f1ea;
 }
-/* controls block: max two inputs per row (no extra divider) */
+/* controls block: two columns; a row hairline above each cell and a column
+   hairline between the two columns (reference grid) */
 .swiss-form .discovery-controls {
   border-bottom: none;
   grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+.swiss-form .discovery-controls > * {
+  border-top: 1.5px solid #111827;
+  padding-top: 12px;
+}
+.swiss-form .discovery-controls > *:nth-child(odd) {
+  padding-right: 16px;
+}
+.swiss-form .discovery-controls > *:nth-child(even) {
+  border-left: 1.5px solid #111827;
+  padding-left: 16px;
 }
 /* pillar toggles: square; active state as a black tag */
 .swiss-form .discovery-toggle {
