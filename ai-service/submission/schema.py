@@ -808,6 +808,20 @@ def _norm_alnum(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", (s or "").lower())
 
 
+# A verbatim that is only a citation + a parenthesised marginal heading, e.g.
+# "Criminal Procedure Code 2010 — Section 39 (Power to access computer)". These
+# slip the operative-language check because the heading itself contains an
+# operative word ("access"), yet there is no operative sentence — the quote ends
+# right after the bracketed heading. A real provision continues past it (a
+# subsection number like "(1)" is <3 chars and never matches).
+_CITATION_HEADING_ONLY = re.compile(
+    r"^.{0,70}?[—–:-]\s*"
+    r"(?:section|s\.?|art\.?|article|reg(?:ulation)?\.?|para(?:graph)?\.?|clause)\s*"
+    r"[\w().]+\s*\([^)]{3,70}\)\s*$",
+    re.IGNORECASE,
+)
+
+
 def _is_nonsubstantive_quote(law_name: str, quote: str) -> bool:
     """True when the verbatim is the law's NAME / a section heading rather than an
     operative clause (no operative or definitional language). High precision: a
@@ -815,6 +829,10 @@ def _is_nonsubstantive_quote(law_name: str, quote: str) -> bool:
     obligation is kept (it contains operative language)."""
     q = (quote or "").strip()
     if len(q) < 15:
+        return True
+    # A bare "<Law> — Section N (Heading)" citation is a heading, not a provision,
+    # even when the heading text contains an operative word.
+    if _CITATION_HEADING_ONLY.match(q):
         return True
     base = _norm_alnum(re.split(r"[—–:(]", law_name or "")[0])
     starts_with_name = len(base) >= 12 and _norm_alnum(q).startswith(base[:22])
