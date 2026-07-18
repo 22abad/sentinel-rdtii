@@ -139,34 +139,6 @@ export function SourcePanel({
           <h2>{t("source.title")}</h2>
           <p>{t("source.description")}</p>
         </div>
-        <button
-          onClick={() => {
-            if (status === "loading") {
-              stopExtraction();
-              return;
-            }
-            if (sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim())) return;
-            extract();
-          }}
-          disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim() && linkedSourceCount === 0) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
-          className={`nodrag group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-300 text-white ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#111827] hover:bg-black"}`}
-          style={{ minHeight: 0, border: "none" }}
-        >
-          <span>
-            {status === "loading"
-              ? isStopping ? t("status.stopping") : stopLabel
-              : extractionLabel}
-          </span>
-          {status === "loading" ? (
-            <span className="ml-2 inline-block h-2.5 w-2.5 rounded-[2px] bg-white" aria-hidden="true" />
-          ) : (
-            <span className="overflow-hidden w-0 group-hover:w-4 transition-all duration-300 flex items-center justify-center">
-              <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
-              </svg>
-            </span>
-          )}
-        </button>
       </div>
 
       {status === "loading" && (
@@ -326,6 +298,33 @@ export function SourcePanel({
         </p>
       )}
       {error ? <p className="error">{error}</p> : null}
+
+      <button
+        onClick={() => {
+          if (status === "loading") {
+            stopExtraction();
+            return;
+          }
+          if (sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim())) return;
+          extract();
+        }}
+        disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim() && linkedSourceCount === 0) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
+        className={`source-send nodrag group flex w-full items-center justify-center gap-3 h-14 cursor-pointer uppercase tracking-[0.2em] font-bold text-white transition-all duration-300 ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#111827] hover:bg-black"}`}
+        style={{ minHeight: 0, border: "none" }}
+      >
+        <span>
+          {status === "loading"
+            ? isStopping ? t("status.stopping") : stopLabel
+            : extractionLabel}
+        </span>
+        {status === "loading" ? (
+          <span className="inline-block h-2.5 w-2.5 rounded-[2px] bg-white" aria-hidden="true" />
+        ) : (
+          <svg className="w-5 h-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        )}
+      </button>
     </section>
   );
 }

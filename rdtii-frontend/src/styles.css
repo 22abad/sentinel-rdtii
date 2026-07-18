@@ -2014,28 +2014,41 @@ textarea {
 .input-panel--form {
   background: #f3f1ea;
   border: 2px solid #111827;
-  border-radius: 16px;
+  border-radius: 0; /* Swiss: sharp corners, no shadow */
+  box-shadow: none;
+}
+.workbench-classic .input-panel--form {
+  box-shadow: none;
 }
 
-/* header — section title as a black box tag; description in mono */
+/* header — black box tag (::before) on the left, big display title on the
+   right; description hidden (Swiss minimal) */
 .input-panel--form .panel-header {
-  border-bottom: 2px solid #111827;
+  justify-content: space-between;
   align-items: center;
+  padding: 16px 18px;
+  border-bottom: 2px solid #111827;
 }
-.input-panel--form .panel-header h2 {
-  display: inline-block;
+.input-panel--form .panel-header::before {
+  content: "RDTII";
   background: #111827;
   color: #f3f1ea;
   padding: 6px 12px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
+  font-size: 0.8rem;
+}
+.input-panel--form .panel-header h2 {
+  color: #111827;
+  font-weight: 800;
   text-transform: uppercase;
-  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  font-size: 2rem;
+  line-height: 1;
 }
 .input-panel--form .panel-header p {
-  color: #6b675c;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.8rem;
+  display: none;
 }
 
 /* field labels — mono, bold, uppercase */
@@ -2082,4 +2095,22 @@ textarea {
   border-radius: 0;
   padding-left: 2px;
   padding-right: 2px;
+}
+
+/* two-column row: even columns with a vertical hairline between them */
+.input-panel--form .control-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.input-panel--form .control-grid > label:first-child {
+  padding-right: 16px;
+}
+.input-panel--form .control-grid > label:nth-child(2) {
+  border-left: 1.5px solid #111827;
+  padding-left: 16px;
+}
+
+/* full-width black SEND bar at the bottom */
+.input-panel--form .source-send {
+  margin-top: 14px;
 }

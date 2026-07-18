@@ -252,6 +252,7 @@ export function WorkbenchPage() {
       ),
       width: 460,
       dragHandle: ".panel-header",
+      flat: true,
     },
     ...(foundPdfs.length > 0
       ? [{ id: "foundPdfs", title: "Found PDFs", element: <FoundPdfsThreadPanel />, width: 420 }]

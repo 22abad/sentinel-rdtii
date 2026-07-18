@@ -17,6 +17,8 @@ export type CanvasPanel = {
   width?: number;
   /** Optional selector limiting where React Flow may start dragging the panel. */
   dragHandle?: string;
+  /** Swiss/flat variant: render the node card square with no drop shadow. */
+  flat?: boolean;
   /** Edges are data wires: instances of this panel bind to an instance of
       the named upstream panel via edges (copy-aware). Reported through
       onCanvasGraphChange; unbound instances should render a guard. */
