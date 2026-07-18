@@ -1197,3 +1197,26 @@ def test_flag_p6_localization_rows_without_restriction():
              (_P6_LOC_NO_RESTRICTION_FLAG in (r.notes or "")) for r in kept}
     assert flags["restrictive"] is False   # "shall not transfer … outside"
     assert flags["permissive"] is True     # permissive disclosure -> flagged
+
+
+def test_drops_citation_plus_heading_verbatim():
+    """A '<Law> — Section N (Heading)' citation is a heading, dropped even when
+    the heading text contains an operative word like 'access'."""
+    from submission.schema import validate_submission_rows, SubmissionRow
+
+    def row(quote, ind="P7-I1"):
+        return SubmissionRow(
+            economy="Singapore", law_name="Criminal Procedure Code 2010",
+            indicator_id=ind, article="Section 39", verbatim_snippet=quote,
+            mapping_rationale="[s 39] x.", source_url="https://sso.agc.gov.sg/Act/CPC2010",
+            last_amended="2010", confidence=0.9,
+        )
+    heading = row("Criminal Procedure Code 2010 — Section 39 (Power to access computer)")
+    provision = row(
+        "a police officer investigating an arrestable offence may at any time access and inspect the operation of a computer in Singapore.",
+        ind="P7-I5",
+    )
+    kept = validate_submission_rows([heading, provision], allow_empty=True)
+    names_inds = {(r.law_name, r.indicator_id) for r in kept}
+    assert ("Criminal Procedure Code 2010", "P7-I1") not in names_inds  # heading dropped
+    assert ("Criminal Procedure Code 2010", "P7-I5") in names_inds       # real provision kept
