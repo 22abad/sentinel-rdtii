@@ -528,6 +528,53 @@ class ChatMessage(Static):
         self.refresh_body()
 
 
+# Extract result table: (header label, sort key) per column, in display order.
+EXTRACT_COLS = [
+    ("Indicator", "indicator"),
+    ("Score", "score"),
+    ("Review", "review"),
+    ("Quote", "quote"),
+]
+
+
+def _extract_row_cells(kind: str, p: dict) -> tuple[str, str, str, str]:
+    """The 4 display cells for one extract result row."""
+    if kind == "rejected":
+        return (
+            "[dim]rejected[/]",
+            "[dim]—[/]",
+            "[dim]—[/]",
+            f"[dim]{str(p.get('reason', ''))[:70]}[/]",
+        )
+    return (
+        f"P{p.get('pillar')} · {p.get('indicator')}",
+        str(p.get("score", "—")),
+        "[yellow]review[/]" if p.get("requires_human_review") else "ok",
+        (p.get("verbatim_quote") or "")[:70],
+    )
+
+
+def _extract_sort_key(col: str):
+    """Sort key over a (kind, payload) row for the given column."""
+
+    def key(row: tuple[str, dict]):
+        _kind, p = row
+        if col == "indicator":
+            return tuple(int(n) for n in re.findall(r"\d+", str(p.get("indicator") or "")))
+        if col == "score":
+            try:
+                return (float(p.get("score")),)
+            except (TypeError, ValueError):
+                return (-1.0,)
+        if col == "review":
+            return (0 if p.get("requires_human_review") else 1,)
+        if col == "quote":
+            return ((p.get("verbatim_quote") or "").lower(),)
+        return ()
+
+    return key
+
+
 class SentinelTUI(App):
     TITLE = "SENTINEL"
     SUB_TITLE = "RDTII AI Mapper"
@@ -595,6 +642,7 @@ class SentinelTUI(App):
         ("4", "pane('rag')", "Chat"),
         ("ctrl+r", "run_extract", "Run extract"),
         ("c", "copy_result", "Copy row"),
+        ("s", "sort_extract", "Sort"),
     ]
 
     def __init__(self, api: str, token: str) -> None:
@@ -602,6 +650,9 @@ class SentinelTUI(App):
         self._api = api
         self._token = token
         self._extract_rows: list[tuple[str, dict]] = []
+        self._extract_col_keys: list = []
+        self._sort_col: str | None = None
+        self._sort_reverse: bool = False
         self._discovery_rows: list[dict] = []
         self._docs_rows: list[str] = []
         self._last_rag_answer: str = ""
@@ -666,7 +717,7 @@ class SentinelTUI(App):
         disc = self.query_one("#discovery-table", DataTable)
         disc.add_columns("Title", "Indicators", "URL")
         ext = self.query_one("#extract-table", DataTable)
-        ext.add_columns("Indicator", "Score", "Review", "Quote")
+        self._extract_col_keys = list(ext.add_columns(*[c[0] for c in EXTRACT_COLS]))
         ext.cursor_type = "row"  # row select opens the reasoning report
         await self.query_one("#rag-log", VerticalScroll).mount(
             Static(
@@ -808,6 +859,65 @@ class SentinelTUI(App):
         if 0 <= idx < len(self._extract_rows):
             kind, payload = self._extract_rows[idx]
             self.push_screen(ReportScreen(kind, payload))
+
+    # ── extract sorting (click a column title, or press `s` to cycle) ────
+
+    def _add_extract_row(self, kind: str, payload: dict) -> None:
+        """Append a streamed result, keeping any active sort applied."""
+        self._extract_rows.append((kind, payload))
+        if self._sort_col:
+            self._apply_extract_sort()  # rows arrive out of order → re-sort
+        else:
+            self.query_one("#extract-table", DataTable).add_row(
+                *_extract_row_cells(kind, payload)
+            )
+
+    def _apply_extract_sort(self) -> None:
+        mappings = [r for r in self._extract_rows if r[0] == "mapping"]
+        rejected = [r for r in self._extract_rows if r[0] == "rejected"]
+        if self._sort_col:
+            mappings.sort(
+                key=_extract_sort_key(self._sort_col), reverse=self._sort_reverse
+            )
+        self._extract_rows = mappings + rejected  # rejected always last
+        table = self.query_one("#extract-table", DataTable)
+        table.clear()
+        for kind, payload in self._extract_rows:
+            table.add_row(*_extract_row_cells(kind, payload))
+        # arrow on the sorted header (+ a status line, in case the terminal
+        # doesn't re-render the header label).
+        for (label, col), key in zip(EXTRACT_COLS, self._extract_col_keys):
+            arrow = (" ▼" if self._sort_reverse else " ▲") if self._sort_col == col else ""
+            try:
+                table.columns[key].label = Text(label + arrow)
+            except Exception:  # noqa: BLE001
+                pass
+        table.refresh()
+
+    def _set_extract_sort(self, col: str) -> None:
+        if self._sort_col == col:
+            self._sort_reverse = not self._sort_reverse  # re-select toggles direction
+        else:
+            self._sort_col, self._sort_reverse = col, False
+        self._apply_extract_sort()
+        self.query_one("#extract-status", Label).update(
+            f"sorted by [bold]{col}[/] {'▼ desc' if self._sort_reverse else '▲ asc'}"
+        )
+
+    def action_sort_extract(self) -> None:
+        """Keyboard: cycle the sort to the next column (ascending)."""
+        cols = [c[1] for c in EXTRACT_COLS]
+        i = cols.index(self._sort_col) if self._sort_col in cols else -1
+        self._set_extract_sort(cols[(i + 1) % len(cols)])
+
+    def on_data_table_header_selected(self, event: DataTable.HeaderSelected) -> None:
+        if event.data_table.id != "extract-table":
+            return
+        try:
+            idx = list(self._extract_col_keys).index(event.column_key)
+        except ValueError:
+            return
+        self._set_extract_sort(EXTRACT_COLS[idx][1])
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         text = event.value.strip()
@@ -952,24 +1062,10 @@ class SentinelTUI(App):
                             )
                         elif event == "mapping":
                             mapped += 1
-                            self._extract_rows.append(("mapping", payload))
-                            table.add_row(
-                                f"P{payload.get('pillar')} · {payload.get('indicator')}",
-                                str(payload.get("score", "—")),
-                                "[yellow]review[/]"
-                                if payload.get("requires_human_review")
-                                else "ok",
-                                (payload.get("verbatim_quote") or "")[:70],
-                            )
+                            self._add_extract_row("mapping", payload)
                         elif event == "rejected":
                             rejected += 1
-                            self._extract_rows.append(("rejected", payload))
-                            table.add_row(
-                                "[dim]rejected[/]",
-                                "[dim]—[/]",
-                                "[dim]—[/]",
-                                f"[dim]{str(payload.get('reason', ''))[:70]}[/]",
-                            )
+                            self._add_extract_row("rejected", payload)
                         elif event == "error":
                             status.update(f"[red]{str(payload.get('detail'))[:100]}[/]")
                             return
