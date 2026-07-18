@@ -94,6 +94,32 @@ services:
       ai-service:
         condition: service_started
 
+  # stn CLI — on-demand, not started by `up` (profile "cli"). Talks to the
+  # ai-service container over the compose network.
+  #   docker compose run --rm stn status
+  #   docker compose run --rm stn discovery SGP
+  #   docker compose run --rm -it stn tui
+  # (or `make stn ARGS="status"`)
+  stn:
+    build:
+      context: ./tools/stn-cli
+      dockerfile: Dockerfile
+    image: rdtii-stn
+    profiles: ["cli"]
+    env_file:
+      - .env
+    environment:
+      STN_API: http://ai-service:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - ai-service
+    restart: "no"
+    # persist login across runs so `stn login` survives --rm
+    volumes:
+      - stn-config:/root/.config/stn
+
 volumes:
   redis-data:
   postgres_data:
+  stn-config:
