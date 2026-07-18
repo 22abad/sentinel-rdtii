@@ -2,14 +2,16 @@ import { type CSSProperties, useLayoutEffect, useRef, useState } from "react";
 import "@fontsource/boldonse/400.css";
 
 // Standalone brand-logo display — a type-specimen panel (the reference layout).
-// No background grid. The wordmark is set at a fixed 200px and each glyph is its
-// own inline-block cell, so a full-height registration line hangs at every
-// character boundary. `text-box: trim-both cap alphabetic` trims the box to the
-// true cap-height and baseline, so the two horizontal lines land exactly on the
-// glyph edges. Per-glyph advance widths (per-mille of em) print under each
-// column, like the reference. Four corner labels + a boxed superscript tag.
+// The wordmark is set at a fixed 200px. Each glyph gets its own tight bounding
+// box on all four sides: horizontal edges come from the Canvas TextMetrics ink
+// box (actualBoundingBox{Ascent,Descent,Left,Right}) measured at 200px; the
+// baseline/cap origin comes from the DOM box, which `text-box: trim-both cap
+// alphabetic` trims to the real cap-height (top) and alphabetic baseline
+// (bottom). Two full-width lines mark the shared cap/baseline; per-glyph advance
+// widths (per-mille of em) print under each column, like the reference.
 
 const BRAND_BG = { backgroundColor: "#17593a" } as const;
+const GREEN = "#86efac";
 const LINE = "pointer-events-none absolute bg-[#86efac]/70";
 const WORD = "Sentinel";
 const FS = 200; // px
@@ -18,32 +20,58 @@ const WORD_STYLE = {
   fontFamily: '"Boldonse", sans-serif',
   fontSize: `${FS}px`,
   lineHeight: 1,
-  // Trim the block box to cap-height (top) and alphabetic baseline (bottom) so
-  // the registration lines sit on the real glyph edges.
   textBox: "trim-both cap alphabetic",
 } as CSSProperties;
+
+type GlyphBox = { left: number; top: number; width: number; height: number };
+type Mark = { center: number; unit: number };
 
 export function BrandSpecimen() {
   const boxRef = useRef<HTMLDivElement>(null);
   const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const [marks, setMarks] = useState<{ center: number; unit: number }[]>([]);
+  const [boxes, setBoxes] = useState<GlyphBox[]>([]);
+  const [marks, setMarks] = useState<Mark[]>([]);
 
   useLayoutEffect(() => {
     let cancelled = false;
     const measure = () => {
       const box = boxRef.current;
       if (!box) return;
-      const base = box.getBoundingClientRect().left;
-      const next: { center: number; unit: number }[] = [];
+      const rect = box.getBoundingClientRect();
+      const baseLeft = rect.left;
+      const baselineY = rect.height; // trimmed box: bottom edge sits on baseline
+
+      const ctx = document.createElement("canvas").getContext("2d");
+      if (!ctx) return;
+      ctx.font = `${FS}px "Boldonse"`;
+      ctx.textBaseline = "alphabetic";
+
+      const nextBoxes: GlyphBox[] = [];
+      const nextMarks: Mark[] = [];
       letterRefs.current.forEach((el) => {
         if (!el) return;
         const r = el.getBoundingClientRect();
-        next.push({
-          center: (r.left + r.right) / 2 - base,
+        const penX = r.left - baseLeft; // glyph pen origin within the word box
+        const m = ctx.measureText(el.textContent ?? "");
+        const inkLeft = penX - (m.actualBoundingBoxLeft ?? 0);
+        const inkRight = penX + (m.actualBoundingBoxRight ?? r.width);
+        const top = baselineY - (m.actualBoundingBoxAscent ?? 0);
+        const bottom = baselineY + (m.actualBoundingBoxDescent ?? 0);
+        nextBoxes.push({
+          left: inkLeft,
+          top,
+          width: Math.max(1, inkRight - inkLeft),
+          height: Math.max(1, bottom - top),
+        });
+        nextMarks.push({
+          center: penX + r.width / 2,
           unit: Math.round((r.width / FS) * 1000),
         });
       });
-      if (!cancelled && next.length) setMarks(next);
+      if (!cancelled && nextBoxes.length) {
+        setBoxes(nextBoxes);
+        setMarks(nextMarks);
+      }
     };
     const ready = document.fonts?.ready ?? Promise.resolve();
     ready.then(() => {
@@ -81,7 +109,7 @@ export function BrandSpecimen() {
           Framework
         </div>
 
-        {/* wordmark + registration lines + per-glyph spec numbers */}
+        {/* wordmark + per-glyph boxes + shared cap/baseline lines */}
         <div className="relative inline-flex flex-col items-stretch">
           <div className="relative" ref={boxRef}>
             <h2 className="whitespace-nowrap tracking-tight" style={WORD_STYLE}>
@@ -91,21 +119,9 @@ export function BrandSpecimen() {
                   ref={(el) => {
                     letterRefs.current[i] = el;
                   }}
-                  className="relative inline-block align-baseline"
+                  className="inline-block align-baseline"
                 >
                   {ch}
-                  {/* left-edge line for this glyph cell, bled full panel height */}
-                  <span
-                    aria-hidden
-                    className={`${LINE} bottom-[-100vh] left-0 top-[-100vh] w-px`}
-                  />
-                  {/* right-edge line only after the last glyph */}
-                  {i === WORD.length - 1 && (
-                    <span
-                      aria-hidden
-                      className={`${LINE} bottom-[-100vh] right-0 top-[-100vh] w-px`}
-                    />
-                  )}
                 </span>
               ))}
             </h2>
@@ -115,15 +131,25 @@ export function BrandSpecimen() {
               2.1
             </span>
 
-            {/* cap-height + baseline horizontals, bled to panel edges */}
-            <span
-              aria-hidden
-              className={`${LINE} left-[-100vw] right-[-100vw] top-0 h-px`}
-            />
-            <span
-              aria-hidden
-              className={`${LINE} left-[-100vw] right-[-100vw] bottom-0 h-px`}
-            />
+            {/* shared cap-height + baseline horizontals, bled to panel edges */}
+            <span aria-hidden className={`${LINE} left-[-100vw] right-[-100vw] top-0 h-px`} />
+            <span aria-hidden className={`${LINE} left-[-100vw] right-[-100vw] bottom-0 h-px`} />
+
+            {/* per-glyph tight bounding boxes (all four edges) */}
+            {boxes.map((b, i) => (
+              <div
+                key={i}
+                aria-hidden
+                className="pointer-events-none absolute"
+                style={{
+                  left: `${b.left}px`,
+                  top: `${b.top}px`,
+                  width: `${b.width}px`,
+                  height: `${b.height}px`,
+                  border: `1px solid ${GREEN}B3`,
+                }}
+              />
+            ))}
           </div>
 
           {/* per-glyph advance widths (per-mille of em), centered under columns */}
