@@ -952,3 +952,37 @@ def validate_submission_rows(
             "key and network, try --pdf, or use --allow-empty for research runs."
         )
     return valid
+
+
+def drop_zero_confidence_rows(rows: list[SubmissionRow]) -> list[SubmissionRow]:
+    """Drop rows the extractor itself scored at 0.00 confidence.
+
+    Applied at final submission assembly — deliberately NOT inside
+    ``validate_submission_rows`` (whose unit fixtures leave ``confidence`` at its
+    0.0 default). At assembly time every row has been through real extraction, so
+    a 0.00 confidence is a genuine signal: the model had no basis for the mapping.
+    Live discovery surfaces marginal instruments — guidance notes ("entities
+    should be mindful…"), circular definitions ("has the meaning given under the
+    Privacy Act"), administrative instructions, contract clauses — that the
+    extractor honestly scores 0.00. These are un-scoreable noise, not evidence.
+    Seed / offline runs already carry no 0.00 rows, so this is a no-op there.
+    """
+    import logging
+
+    logger = logging.getLogger(__name__)
+    kept: list[SubmissionRow] = []
+    for row in rows:
+        try:
+            conf = float(getattr(row, "confidence", 0.0) or 0.0)
+        except (TypeError, ValueError):
+            conf = 0.0
+        if conf <= 0.0:
+            logger.warning(
+                "Dropping submission row: zero extractor confidence — not usable "
+                "evidence: %r [%s]",
+                str(getattr(row, "law_name", ""))[:50],
+                str(getattr(row, "indicator_id", "")),
+            )
+            continue
+        kept.append(row)
+    return kept
