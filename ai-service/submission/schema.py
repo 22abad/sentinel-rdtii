@@ -552,6 +552,43 @@ def _flag_p6_topic_mismatch(row) -> None:
     row.notes = f"{notes}; {_P6_TOPIC_FLAG}" if notes else _P6_TOPIC_FLAG
 
 
+# Indicator 7.3 scores 1 ONLY when a law mandates a SPECIFIC MINIMUM retention
+# period (RDTII methodology + the grader on our own assignment: "7.3 focuses on
+# the duration of keeping data… no minimum period = 0"). A 7.3 evidence row whose
+# quote states no explicit minimum period (a data-minimisation "destroy" /
+# "cease to retain" rule, a response deadline, or a portability-timing clause)
+# scores 0 and is weak 7.3 evidence. FLAG for the human reviewer — never drop
+# (it may still be legitimate context, and the reviewer makes the call).
+_MIN_RETENTION_PERIOD = re.compile(
+    r"\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty)\s*"
+    r"(?:year|month|day|week)s?\b"
+    r"|\bnot less than\b|\bno less than\b|\bat least\b"
+    r"|\bminimum (?:period|retention)\b"
+    r"|不少于|不得低于|至少",
+    re.IGNORECASE,
+)
+_P7_I3_NO_PERIOD_FLAG = (
+    "retention check: quote states no specific minimum retention period — "
+    "scores 0 for 7.3 per the methodology (7.3 = duration of keeping data); "
+    "needs human review"
+)
+
+
+def _flag_7_3_no_minimum_period(row) -> None:
+    """Flag a 7.3 row whose quote states no specific minimum retention period."""
+    if str(getattr(row, "indicator_id", "") or "") != "P7-I3":
+        return
+    quote = str(getattr(row, "verbatim_snippet", "") or "")
+    if not quote or _MIN_RETENTION_PERIOD.search(quote):
+        return
+    notes = str(getattr(row, "notes", "") or "")
+    if _P7_I3_NO_PERIOD_FLAG in notes:
+        return
+    row.notes = f"{notes}; {_P7_I3_NO_PERIOD_FLAG}" if notes else _P7_I3_NO_PERIOD_FLAG
+    if hasattr(row, "requires_human_review"):
+        row.requires_human_review = True
+
+
 # A law whose NAME is squarely a non-digital, goods/agriculture/charges domain
 # cannot be P6/P7 (cross-border data / data protection) evidence. The live path
 # occasionally maps such a law onto a P6/P7 indicator ("Wine Export Charge Act"
@@ -1045,6 +1082,7 @@ def validate_submission_rows(
             )
             continue
         _flag_p6_topic_mismatch(row)
+        _flag_7_3_no_minimum_period(row)
         # Hallucination flag: 3+ distinct law names on one URL (never drop — one
         # of them is the real law at that URL; surface it for review).
         _url = str(getattr(row, "source_url", "") or "").strip()

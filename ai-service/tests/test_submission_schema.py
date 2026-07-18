@@ -1132,3 +1132,24 @@ def test_mapping_gate_drops_offtopic_and_confabulated_maps():
     assert "Payment Services Act 2019" not in names           # payment off-localization dropped
     assert not any(r.indicator_id == "P7-I2" for r in kept)   # draft-bill dropped
     assert not any(r.indicator_id == "P7-I1" and "Identity" in r.law_name for r in kept)  # confab dropped
+
+
+def test_flag_7_3_rows_without_minimum_retention_period():
+    """7.3 rows without a specific minimum period are flagged (never dropped)."""
+    from submission.schema import validate_submission_rows, SubmissionRow, _P7_I3_NO_PERIOD_FLAG
+
+    def row(quote):
+        return SubmissionRow(
+            economy="Singapore", law_name="Personal Data Protection Act 2012",
+            indicator_id="P7-I3", article="s 25", verbatim_snippet=quote,
+            mapping_rationale="[s 25] retention rule.",
+            source_url="https://sso.agc.gov.sg/x", last_amended="2020", confidence=0.9,
+        )
+    with_period = row("The company shall retain the records for a period of seven years from the end of the year.")
+    no_period = row("An organisation must cease to retain personal data as soon as retention is no longer necessary.")
+    kept = validate_submission_rows([with_period, no_period], allow_empty=True)
+    assert len(kept) == 2  # flag, never drop
+    flagged = {("period" if "seven years" in r.verbatim_snippet else "no-period"):
+               (_P7_I3_NO_PERIOD_FLAG in (r.notes or "")) for r in kept}
+    assert flagged["period"] is False    # has "seven years"
+    assert flagged["no-period"] is True  # no minimum period -> flagged
