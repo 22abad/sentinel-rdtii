@@ -91,26 +91,28 @@ export function BrandSpecimen() {
 
   return (
     <section className="relative w-full overflow-hidden text-white" style={BRAND_BG}>
-      <div className="relative mx-auto flex min-h-[74vh] max-w-6xl items-center justify-center px-6 py-20">
+      <div className="relative mx-auto flex min-h-[74vh] max-w-6xl items-center justify-center px-6 py-30">
         {/* corner labels — wide margin (labels only, no rule lines), raised
             (z-20) above the glyph restriction lines so the green text doesn't
             clash with them (the lines pass behind the text, unchanged) */}
-        <div className="absolute left-24 top-20 z-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute -left-0.5 top-20 z-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Legal-Evidence
           <br />
           Mapper
         </div>
-        <div className="absolute right-24 top-20 z-20 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
-          Cross-Border Data
+        <div className="absolute -right-0.5 top-20 z-20 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
+          Cross-Border
           <br />
-          &amp; Cybersecurity
+          Data
+          <br />
+          Cybersecurity
         </div>
-        <div className="absolute bottom-20 left-24 z-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute bottom-20 -left-0.5 z-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
           Team
           <br />
           Sentinel
         </div>
-        <div className="absolute bottom-20 right-24 z-20 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
+        <div className="absolute bottom-20 -right-0.5 z-20 text-right font-sans text-sm leading-tight tracking-wide text-emerald-300">
           RDTII 2.1
           <br />
           Framework
