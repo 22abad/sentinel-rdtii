@@ -2052,14 +2052,6 @@ textarea {
   font-size: 0.76rem;
 }
 
-/* hairline row separators (the underline look between field groups) */
-.swiss-form .control-grid,
-.swiss-form .stacked {
-  border-top: 1.5px solid #111827;
-  margin-top: 4px;
-  padding-top: 14px;
-}
-
 /* inputs & textarea — transparent, borderless; text sits on the cream */
 .swiss-form input,
 .swiss-form textarea {
@@ -2137,9 +2129,9 @@ textarea {
   color: #111827;
   background: #f3f1ea;
 }
-/* controls block: black hairline separator; max two inputs per row */
+/* controls block: max two inputs per row (no extra divider) */
 .swiss-form .discovery-controls {
-  border-bottom: 1.5px solid #111827;
+  border-bottom: none;
   grid-template-columns: 1fr 1fr;
 }
 /* pillar toggles: square; active state as a black tag */
