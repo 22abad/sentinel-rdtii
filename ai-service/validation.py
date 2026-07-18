@@ -69,6 +69,26 @@ _SECTION_HEADER_PATTERNS: list[re.Pattern] = [
 ]
 
 
+# A provision carries an obligation verb; a heading is a topic label. We
+# require an auxiliary/modal so a bare participle in a heading ("Consent
+# required") does NOT count, while "consent is required" / "shall provide" do.
+_OPERATIVE_VERB_RE = re.compile(
+    r"\b(?:shall|must|may(?:\s+not)?|"
+    r"(?:is|are|be|been|were|was)\s+(?:not\s+)?"
+    r"(?:required|prohibited|permitted|entitled|liable|obliged|obligated|"
+    r"responsible|allowed|deemed|bound|restricted|guaranteed)|"
+    r"(?:shall|must|may)\s+not)\b",
+    re.IGNORECASE,
+)
+_SECTION_MARKER_RE = re.compile(
+    r"^\s*(?:(?i:section|article|art\.?|clause|regulation|part|schedule)\s*)?"
+    r"[\dIVXLC]+[.)\-\s]*",
+)
+_NUMBERED_START_RE = re.compile(
+    r"^\s*(?:(?i:section|article|art\.?|clause|part|regulation)\s+)?[\dIVXLC]+[.)]",
+)
+
+
 def is_section_header(quote: str) -> bool:
     """Heuristic: a line that looks like a Part / Section heading only."""
     t = quote.strip()
@@ -80,6 +100,14 @@ def is_section_header(quote: str) -> bool:
     # Single-line all-caps headings
     if t.isupper() and 5 < len(t) < 100 and not t.endswith("."):
         return True
+    # A short topic label with NO obligation verb ("21. Access to personal
+    # data", "Consent required", "Correction of personal data") — the marginal
+    # note, not the rule under it. Long verb-less text (a definition) is spared.
+    if not _OPERATIVE_VERB_RE.search(t):
+        body = _SECTION_MARKER_RE.sub("", t).strip()
+        words = re.findall(r"\w+", body)
+        if words and (len(words) <= 8 or bool(_NUMBERED_START_RE.match(t))):
+            return True
     return False
 
 
