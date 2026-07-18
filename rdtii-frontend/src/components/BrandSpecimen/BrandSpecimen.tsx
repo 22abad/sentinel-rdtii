@@ -1,4 +1,4 @@
-import "@fontsource/roboto-slab/700.css";
+import "@fontsource/boldonse/400.css";
 
 // Standalone brand-logo display — a type-specimen panel (the reference layout).
 // No background grid: instead, four registration lines are keyed to the
@@ -47,8 +47,8 @@ export function BrandSpecimen() {
         <div className="relative inline-flex flex-col items-stretch">
           <div className="relative">
             <h2
-              className="whitespace-nowrap text-6xl font-bold leading-none tracking-tight sm:text-8xl md:text-[8rem] lg:text-[10rem]"
-              style={{ fontFamily: '"Roboto Slab", serif' }}
+              className="whitespace-nowrap text-4xl leading-none tracking-tight sm:text-6xl md:text-[5rem] lg:text-[6.5rem]"
+              style={{ fontFamily: '"Boldonse", sans-serif' }}
             >
               Sentinel
             </h2>
