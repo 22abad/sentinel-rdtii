@@ -239,7 +239,7 @@ export function WorkbenchPage() {
   }, []);
 
   const canvasPanels: CanvasPanel[] = [
-    { id: "discovery", title: "Discovery", element: <DiscoveryThreadPanel />, width: 800, dragHandle: ".panel-header" },
+    { id: "discovery", title: "Discovery", element: <DiscoveryThreadPanel />, width: 800, dragHandle: ".panel-header", flat: true },
     {
       id: "source",
       title: "Source",

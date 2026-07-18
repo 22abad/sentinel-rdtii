@@ -2007,29 +2007,29 @@ textarea {
 }
 
 /* ── Workbench Source panel — "NDC2014 FORM" editorial restyle ──────────────
-   Scoped under .input-panel--form so ONLY the Source input panel changes;
+   Scoped under .swiss-form so ONLY the Source input panel changes;
    other panels (Documents, Discovery, Review) keep the default card look.
    Cream ground, hard black frame, mono uppercase labels, hairline row
    separators, borderless fields — mirroring the reference form. */
-.input-panel--form {
+.swiss-form {
   background: #f3f1ea;
   border: 2px solid #111827;
   border-radius: 0; /* Swiss: sharp corners, no shadow */
   box-shadow: none;
 }
-.workbench-classic .input-panel--form {
+.workbench-classic .swiss-form {
   box-shadow: none;
 }
 
 /* header — black box tag (::before) on the left, big display title on the
    right; description hidden (Swiss minimal) */
-.input-panel--form .panel-header {
+.swiss-form .panel-header {
   justify-content: space-between;
   align-items: center;
   padding: 16px 18px;
   border-bottom: 2px solid #111827;
 }
-.input-panel--form .panel-header::before {
+.swiss-form .panel-header::before {
   content: "RDTII";
   background: #111827;
   color: #f3f1ea;
@@ -2039,7 +2039,7 @@ textarea {
   letter-spacing: 0.16em;
   font-size: 0.8rem;
 }
-.input-panel--form .panel-header h2 {
+.swiss-form .panel-header h2 {
   color: #111827;
   font-weight: 800;
   text-transform: uppercase;
@@ -2047,13 +2047,13 @@ textarea {
   font-size: 2rem;
   line-height: 1;
 }
-.input-panel--form .panel-header p {
+.swiss-form .panel-header p {
   display: none;
 }
 
 /* field labels — mono, bold, uppercase */
-.input-panel--form label,
-.input-panel--form .source-bar {
+.swiss-form label,
+.swiss-form .source-bar {
   color: #111827;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-weight: 700;
@@ -2063,16 +2063,16 @@ textarea {
 }
 
 /* hairline row separators (the underline look between field groups) */
-.input-panel--form .control-grid,
-.input-panel--form .stacked {
+.swiss-form .control-grid,
+.swiss-form .stacked {
   border-top: 1.5px solid #111827;
   margin-top: 4px;
   padding-top: 14px;
 }
 
 /* inputs & textarea — transparent, borderless; text sits on the cream */
-.input-panel--form input,
-.input-panel--form textarea {
+.swiss-form input,
+.swiss-form textarea {
   background: transparent;
   border: none;
   border-radius: 0;
@@ -2080,8 +2080,8 @@ textarea {
   color: #1f2933;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
-.input-panel--form input:focus,
-.input-panel--form textarea:focus {
+.swiss-form input:focus,
+.swiss-form textarea:focus {
   outline: none;
   border: none;
   box-shadow: none;
@@ -2089,7 +2089,7 @@ textarea {
 }
 
 /* flat dropdown triggers to match the borderless fields */
-.input-panel--form [data-slot="select-trigger"] {
+.swiss-form [data-slot="select-trigger"] {
   background: transparent;
   border: none;
   border-radius: 0;
@@ -2098,29 +2098,60 @@ textarea {
 }
 
 /* two-column row: even columns with a vertical hairline between them */
-.input-panel--form .control-grid {
+.swiss-form .control-grid {
   grid-template-columns: 1fr 1fr;
   gap: 0;
 }
-.input-panel--form .control-grid > label:first-child {
+.swiss-form .control-grid > label:first-child {
   padding-right: 16px;
 }
-.input-panel--form .control-grid > label:nth-child(2) {
+.swiss-form .control-grid > label:nth-child(2) {
   border-left: 1.5px solid #111827;
   padding-left: 16px;
 }
 
 /* full-width black SEND bar at the bottom */
-.input-panel--form .source-send {
+.swiss-form .source-send {
   margin-top: 14px;
   border-radius: 0; /* override global button { border-radius: 999px } */
 }
 
 /* raw-text tracing view (active highlight): drop the rounded white box so it
    sits flat on the cream ground like the other fields */
-.input-panel--form .source-view {
+.swiss-form .source-view {
   background: transparent;
   border: none;
   border-radius: 0;
   padding: 8px 2px;
+}
+
+/* ── Discovery-panel specifics (shares the .swiss-form base) ──────────────── */
+/* header buttons: square; primary (Discover) to black, Sources to outline */
+.swiss-form .discovery-header-actions button {
+  border-radius: 0;
+}
+.swiss-form .discovery-header-actions button:not(.secondary) {
+  background: #111827;
+}
+.swiss-form .discovery-header-actions button:not(.secondary):hover {
+  background: #000;
+}
+.swiss-form .discovery-source-menu-button {
+  border: 1.5px solid #111827;
+  color: #111827;
+}
+/* controls block: black hairline separator */
+.swiss-form .discovery-controls {
+  border-bottom: 1.5px solid #111827;
+}
+/* pillar toggles: square; active state as a black tag */
+.swiss-form .discovery-toggle {
+  border-radius: 0;
+  border-color: #111827;
+  color: #111827;
+}
+.swiss-form .discovery-toggle.active {
+  background: #111827;
+  border-color: #111827;
+  color: #f3f1ea;
 }

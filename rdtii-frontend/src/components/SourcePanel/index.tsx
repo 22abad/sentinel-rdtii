@@ -136,7 +136,7 @@ export function SourcePanel({
     : t("status.stop");
 
   return (
-    <section className="input-panel input-panel--form" aria-label={t("source.aria")}>
+    <section className="input-panel swiss-form" aria-label={t("source.aria")}>
       <div className="panel-header">
         <div>
           <h2>{t("source.title")}</h2>

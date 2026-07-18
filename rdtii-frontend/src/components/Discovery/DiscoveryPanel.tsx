@@ -288,7 +288,7 @@ export function DiscoveryPanel({
   }
 
   return (
-    <section className="discovery-panel" aria-label="Discovery">
+    <section className="discovery-panel swiss-form" aria-label="Discovery">
       <div className="panel-header discovery-header">
         <div>
           <h2>Discovery</h2>
@@ -339,7 +339,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
               {countries.map((item) => (
                 <SelectItem key={item.country_code} value={item.country_code}>
                   {item.label}
@@ -360,7 +360,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
               {SOURCE_MODE_OPTIONS.map(({ value, label }) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -376,7 +376,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
               <SelectItem value="auto">Auto</SelectItem>
               <SelectItem value="en">English</SelectItem>
               {localLanguage !== "en" && (
