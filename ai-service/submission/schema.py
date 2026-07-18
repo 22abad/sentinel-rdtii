@@ -589,6 +589,49 @@ def _flag_7_3_no_minimum_period(row) -> None:
         row.requires_human_review = True
 
 
+# 6.1/6.2/6.3 are the data-LOCALIZATION indicators (ban / local storage /
+# infrastructure). A genuine row asserts a restriction on cross-border transfer
+# OR a local-storage/processing/infrastructure requirement. The live path
+# sometimes maps a PERMISSIVE disclosure/sharing provision onto them (e.g.
+# Singapore's Financial Services and Markets Act inter-institution information
+# sharing "may disclose to…" read as 6.1). A 6.1/6.2/6.3 quote with none of the
+# restriction/localization signals below is such a mis-map — FLAG for human
+# review (never drop; the reviewer confirms).
+_P6_RESTRICTION_LANGUAGE = re.compile(
+    r"shall not transfer|must not transfer|may not transfer|not be transferred"
+    r"|prohibit|restrict|\bban\b|localiz"
+    r"|local (?:storage|processing)|stored?\s+(?:in|within|locally)"
+    r"|kept\s+(?:in|within|by|at)|held?\s+(?:in|within)"
+    r"|within (?:the )?(?:country|territory|singapore|malaysia|australia|jurisdiction)"
+    r"|data\s+cent|server\s+(?:located|s?\s+in)|\breside|onshore"
+    r"|not\s+(?:be\s+)?(?:transfer|disclos|sen[dt]|hold|take|remov)\w*\s+(?:to|outside|out of)"
+    r"|(?:transfer|disclos)\w*[^.]{0,50}\b(?:only if|unless|where the|subject to)\b"
+    r"|outside\s+(?:the\s+)?(?:country|singapore|malaysia|australia)"
+    r"|不得(?:传输|转移|向境外)|本地(?:存储|处理)|境内",
+    re.IGNORECASE,
+)
+_P6_LOC_NO_RESTRICTION_FLAG = (
+    "topic check: 6.1/6.2/6.3 is a data-localization indicator but the quote "
+    "states no transfer-restriction / local-storage / infrastructure requirement "
+    "(may be a permissive disclosure/sharing provision) — needs human review"
+)
+
+
+def _flag_p6_localization_missing(row) -> None:
+    """Flag a 6.1/6.2/6.3 row whose quote asserts no localization/restriction."""
+    if str(getattr(row, "indicator_id", "") or "") not in _P6_LOCALIZATION_INDICATORS:
+        return
+    quote = str(getattr(row, "verbatim_snippet", "") or "")
+    if not quote or _P6_RESTRICTION_LANGUAGE.search(quote):
+        return
+    notes = str(getattr(row, "notes", "") or "")
+    if _P6_LOC_NO_RESTRICTION_FLAG in notes:
+        return
+    row.notes = f"{notes}; {_P6_LOC_NO_RESTRICTION_FLAG}" if notes else _P6_LOC_NO_RESTRICTION_FLAG
+    if hasattr(row, "requires_human_review"):
+        row.requires_human_review = True
+
+
 # A law whose NAME is squarely a non-digital, goods/agriculture/charges domain
 # cannot be P6/P7 (cross-border data / data protection) evidence. The live path
 # occasionally maps such a law onto a P6/P7 indicator ("Wine Export Charge Act"
@@ -1082,6 +1125,7 @@ def validate_submission_rows(
             )
             continue
         _flag_p6_topic_mismatch(row)
+        _flag_p6_localization_missing(row)
         _flag_7_3_no_minimum_period(row)
         # Hallucination flag: 3+ distinct law names on one URL (never drop — one
         # of them is the real law at that URL; surface it for review).
