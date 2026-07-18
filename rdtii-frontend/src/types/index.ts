@@ -9,6 +9,8 @@ export type IndicatorMapping = {
   verbatim_quote: string;
   quote_start: number;
   quote_end: number;
+  // Display-only: full sentence(s) the quote sits in (backend fills it in).
+  quote_context?: string;
   article_clause?: string;
   source_legislation: string;
   last_update: string;

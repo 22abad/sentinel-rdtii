@@ -22,6 +22,12 @@ export const EXCEL_EXPORT_API_URL =
 export const WORKFLOW_API_URL =
   import.meta.env.VITE_WORKFLOW_API_URL ?? "/api/workflows";
 
+export const RELEASE_YEAR_API_URL =
+  import.meta.env.VITE_RELEASE_YEAR_API_URL ?? "/api/verify/release-year";
+
+export const TIMESTAMP_API_URL =
+  import.meta.env.VITE_TIMESTAMP_API_URL ?? "/api/verify/timestamp";
+
 export const DISCOVERY_SEARCH_TIMEOUT_MS = envNumber(
   import.meta.env.VITE_DISCOVERY_SEARCH_TIMEOUT_MS,
   60_000,

@@ -46,7 +46,7 @@ from .main import BANNER
 
 # Processors the extract pane can request; blank = backend default
 # (RDTII_LLM_PROVIDER). Model per provider follows its env config.
-PROVIDERS = ["ollama", "deepseek", "claude", "gemini", "openai", "groq"]
+PROVIDERS = ["deepseek", "ollama", "claude", "gemini", "openai", "groq"]
 
 PANES = [
     ("home", "Welcome"),
@@ -169,7 +169,7 @@ def _reasoning_markup(kind: str, m: dict) -> str:
         out.append(_h("Provision (model quote in bold)"))
         idx = context.find(quote)
         if idx >= 0:
-            before, after = context[:idx], context[idx + len(quote):]
+            before, after = context[:idx], context[idx + len(quote) :]
             out.append(
                 f"  [dim]{escape(before)}[/][bold]{escape(quote)}[/]"
                 f"[dim]{escape(after)}[/]"
@@ -350,7 +350,9 @@ class ReportScreen(ModalScreen):
         if existing.get("source_details") or existing.get("verification_log"):
             self._set_extra("timestamp", _verification_markup(existing))
         elif self._mapping.get("source_url"):
-            self._verify(self._mapping["source_url"], self._mapping.get("last_update", ""))
+            self._verify(
+                self._mapping["source_url"], self._mapping.get("last_update", "")
+            )
 
     def _set_extra(self, key: str, markup: str) -> None:
         self._extras[key] = markup
@@ -378,7 +380,9 @@ class ReportScreen(ModalScreen):
             if res.status_code == 200:
                 self._set_extra("year", _release_year_markup(res.json()))
             else:
-                self._set_extra("year", _h(_YEAR_TITLE) + f"\n  [red]HTTP {res.status_code}[/]")
+                self._set_extra(
+                    "year", _h(_YEAR_TITLE) + f"\n  [red]HTTP {res.status_code}[/]"
+                )
         except httpx.HTTPError as exc:
             self._set_extra("year", _h(_YEAR_TITLE) + f"\n  [red]unavailable: {exc}[/]")
 
@@ -400,12 +404,14 @@ class ReportScreen(ModalScreen):
             else:
                 self._set_extra(
                     "timestamp",
-                    _h("Timestamp verification (forensic)") + f"\n  [red]HTTP {res.status_code}[/]",
+                    _h("Timestamp verification (forensic)")
+                    + f"\n  [red]HTTP {res.status_code}[/]",
                 )
         except httpx.HTTPError as exc:
             self._set_extra(
                 "timestamp",
-                _h("Timestamp verification (forensic)") + f"\n  [red]unavailable: {exc}[/]",
+                _h("Timestamp verification (forensic)")
+                + f"\n  [red]unavailable: {exc}[/]",
             )
 
     def action_copy_report(self) -> None:
@@ -543,23 +549,42 @@ EXTRACT_COLS = [
     ("Score", "score"),
     ("Review", "review"),
     ("Quote", "quote"),
+    ("Year", "year"),
 ]
 
+_YEAR_RE = re.compile(r"\b(1[89]\d{2}|20\d{2})\b")
 
-def _extract_row_cells(kind: str, p: dict) -> tuple[str, str, str, str]:
-    """The 4 display cells for one extract result row."""
+
+def _title_year_int(p: dict) -> int | None:
+    """Earliest plausible year in the legislation citation (fast, no LLM).
+
+    The title-year is the release-year resolver's strongest signal; the full
+    4-signal, LLM-decided resolution still lives in the row's report.
+    """
+    for src in (p.get("source_legislation"), p.get("verbatim_quote")):
+        years = [int(y) for y in _YEAR_RE.findall(str(src or ""))]
+        if years:
+            return min(years)
+    return None
+
+
+def _extract_row_cells(kind: str, p: dict) -> tuple[str, str, str, str, str]:
+    """The 5 display cells for one extract result row."""
     if kind == "rejected":
         return (
             "[dim]rejected[/]",
             "[dim]—[/]",
             "[dim]—[/]",
             f"[dim]{str(p.get('reason', ''))[:70]}[/]",
+            "[dim]—[/]",
         )
+    year = _title_year_int(p)
     return (
         f"P{p.get('pillar')} · {p.get('indicator')}",
         str(p.get("score", "—")),
         "[yellow]review[/]" if p.get("requires_human_review") else "ok",
         (p.get("verbatim_quote") or "")[:70],
+        str(year) if year else "[dim]—[/]",
     )
 
 
@@ -569,7 +594,9 @@ def _extract_sort_key(col: str):
     def key(row: tuple[str, dict]):
         _kind, p = row
         if col == "indicator":
-            return tuple(int(n) for n in re.findall(r"\d+", str(p.get("indicator") or "")))
+            return tuple(
+                int(n) for n in re.findall(r"\d+", str(p.get("indicator") or ""))
+            )
         if col == "score":
             try:
                 return (float(p.get("score")),)
@@ -579,6 +606,8 @@ def _extract_sort_key(col: str):
             return (0 if p.get("requires_human_review") else 1,)
         if col == "quote":
             return ((p.get("verbatim_quote") or "").lower(),)
+        if col == "year":
+            return (_title_year_int(p) or 0,)
         return ()
 
     return key
@@ -684,7 +713,7 @@ class SentinelTUI(App):
                 with Vertical(id="home"):
                     yield Static(
                         f"[bold #10B981]{BANNER}[/]\n"
-                        "  SENTINEL — More scientific law observation tool.\n\n"
+                        "  SENTINEL — Aimed for RDTII 2.1.\n\n"
                         "[#bec7c3] 1 Documents \n 2 Discovery \n 3 Extract \n 4 Chat\n"
                         " \n r refresh \n q quit[/]",
                         id="home-banner",
@@ -846,7 +875,10 @@ class SentinelTUI(App):
             if 0 <= idx < len(self._docs_rows):
                 text, label = self._docs_rows[idx], "filename"
         elif pane == "rag":
-            text, label = (self._rag_transcript() or self._last_rag_answer), "conversation"
+            text, label = (
+                (self._rag_transcript() or self._last_rag_answer),
+                "conversation",
+            )
         if text:
             self._copy(text)
             self.notify(f"Copied {label} to clipboard", timeout=2)
@@ -896,7 +928,9 @@ class SentinelTUI(App):
         # arrow on the sorted header (+ a status line, in case the terminal
         # doesn't re-render the header label).
         for (label, col), key in zip(EXTRACT_COLS, self._extract_col_keys):
-            arrow = (" ▼" if self._sort_reverse else " ▲") if self._sort_col == col else ""
+            arrow = (
+                (" ▼" if self._sort_reverse else " ▲") if self._sort_col == col else ""
+            )
             try:
                 table.columns[key].label = Text(label + arrow)
             except Exception:  # noqa: BLE001

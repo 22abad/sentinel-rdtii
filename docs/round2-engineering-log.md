@@ -19,6 +19,92 @@ link every claim to code._
 
 ---
 
+## 2026-07-18 — row-by-row verification, mapping-gate, stable+effective re-run
+
+Live re-run of the three economies → independent row-by-row verification → clean
+submission `outputs/final_submission_20260718_v2/` (SGP 12, MYS 14, AUS 32 = 58).
+
+- **Verbatim integrity: 33/33 NEW quotes** independently re-fetched from source and
+  confirmed as exact substrings — 0 fabricated. Structural: 0 conf-0.00, 0 empty
+  rationale, all official gov domains, 0 URL-reuse flags, no BOM (Title-Case).
+- **Mapping-layer mis-maps found (real quote, wrong indicator)** — the verbatim
+  gate cannot catch these because the quote is genuine: SGP Strategic Goods
+  (Control) Act → 6.x (export-control-of-goods), SGP Payment Services → 6.1
+  (e-money rules), SGP PDPA → 7.2 (quote from an un-enacted Draft Bill), AUS
+  Identity Verification Services Act conf-0.40 cluster (law-name/rationale
+  mismatch). Fixed by the mapping gate (#285): four rules — export-control
+  domain, payment-law-off-localization, draft-bill verbatim, rationale/law-name
+  subject mismatch.
+- **Coverage vs the official answer key:** the "missing" cells are correct
+  absences — SGP/MYS/AUS 6.3 = 0 (no infrastructure requirement), SGP 6.1 = 0,
+  SGP/MYS 7.2 = 0. MYS 6.2 = 0.5 WAS a real gap (ITA 1967 s82) → seeded (#286).
+- **Re-run comparison (run1 raw vs run2 gate-tightened): STABLE + EFFECTIVE.**
+  Counts SGP 19→12, MYS 13→13, AUS 40→32. AUS NEW families 11/11 present in BOTH
+  runs (discovery is consistent on substance; only marginal rows vary — the
+  hallmark of real live discovery, not a canned list). Mis-maps: SGP 7→0, AUS
+  IVS 8→1 (the 1 remaining is the GOOD conf-1.00 s10→7.3 row). run2 needs zero
+  manual cleanup — the gate auto-produces what was hand-cleaned from run1.
+  Deterministic core still reproducible; DeepSeek temp=0 verified byte-stable.
+
+## 2026-07-18 — "fresh run ≠ FINAL" investigation + reproducibility architecture
+
+Dong ran the three economies with `--offline` and got fewer rows than the curated
+`outputs/final_submission_20260718_FINAL/` (SGP 11 vs 23, AUS 22 vs 40, MYS 7 vs
+14) and asked why — judges will re-run the tool, so a hand-curated FINAL they
+can't reproduce is worthless. Full diagnosis:
+
+- **The tool IS deterministic.** Two `--offline` MYS runs produced byte-identical
+  row sets (same 7 rows, same drops). DeepSeek at `temperature=0` is stable here
+  (the extraction path `_call_llm` uses `temperature=0`; only the generic
+  `query()` uses 0.3 and is not on the verbatim path). So the gap is NOT run
+  variance — no extraction cache needed.
+- **`--offline` is a thin-seed SUBSET, not the intended submission mode.** The
+  banked seeds are single-section excerpts (e.g. My Health Records seed = only
+  s77, 1471 B; COVID-app seed = only s94F, 877 B). FINAL's rich rows (My Health
+  s17/s69, COVID s94K/94ZC, NSW s40) came from **live full-text fetch**, never
+  banked — so `--offline` structurally cannot produce them.
+- **The DEFAULT (seed + live) run over-reproduces FINAL.** `python main.py
+  --economy Australia --pillar 6,7` → **Seed 99 + Live-discovered 134 → 44 clean
+  rows, NEW=20, all 8 indicators** (vs FINAL 40/NEW19, vs offline 22). Live crawl
+  is what judges actually run and what the 30% Technical-Resilience + 20-pt
+  Discovery scores reward. So the "judges can't reproduce it" worry dissolves:
+  in the mode judges use, the tool produces MORE than FINAL.
+- **Reproducibility architecture (locked in, per Dong):** `--offline` seed pass =
+  deterministic, byte-reproducible KNOWN backbone (27/27 official cells). Live =
+  genuine on-the-spot NEW discovery, variable by nature — and that variability is
+  the *proof it's real discovery, not a hardcoded list*. Official Q&A never
+  requires live output to be byte-identical ("repeatably" = the capability works
+  on unseen jurisdictions, not identical bytes). Corollary: do NOT bake NEW
+  discoveries into offline seeds to force reproducibility — that would be the
+  FAIL anti-pattern (hardcoded discovery). Judges audit each NEW row by verbatim
+  vs Source URL, not by re-run diffing.
+- **Scope check vs official Q&A (April 28 2026):** Round 1 is P6+P7 only
+  ("non-negotiable"); P11 is NOT a scored pillar (scaling to more pillars is only
+  an architecture *bonus*). Discovery of New Evidence = **20 pts at Stage 2** but
+  must be P6/P7-relevant. ⇒ **Cyber Security Act 2024 dropped from the P7 rows**:
+  its true home is 11.1 (its own manifest note says 7.2 is not auto-produced),
+  mislabelling it 7.2 would cost Substantive-Accuracy points; it survives only as
+  a demo talking point ("our engine even finds cross-pillar P11 laws").
+
+**Quality gate (#284): drop zero-confidence rows at final assembly.** The FINAL's
+garbage (a *Pasture Seeds Levy Agreement* contract clause mapped to 7.3, circular
+"has the meaning given under the Privacy Act" definitions, "entities should be
+mindful" guidance notes) was hand-assembled — a fresh **offline** run emits none
+of it (0 conf-0.00, 0 empty-rationale across SGP/AUS/MYS). But a **live** run
+surfaces ~5 such rows (marginal SA-admin instruments the extractor honestly
+scores 0.00). Fix: new `drop_zero_confidence_rows()` applied in `main.py` AFTER
+`validate_submission_rows` (kept OUT of the validator itself — its unit fixtures
+leave `confidence` at the 0.0 default, so a floor there dropped 13 legit
+fixtures). Live AUS 44 → 39, dropping exactly the 5 noise rows, all 20 NEW laws
+kept. A UTF-8-BOM-removal for the CSV header is a separate open PR (#283).
+
+## 2026-07-18 — pre-recording de-risk pass (Tasks A–D, "等 Eric 期间")
+
+Ran a demo-readiness sweep so recording doesn't fail live. Findings:
+- **A — demo-critical paths:** CLI paths all work in `.venv-eval` (live SSO fetch, search, OCR, scoring, tests). **Web UI (Workbench) does NOT run from `.venv-eval`** — it lacks `uvicorn`/FastAPI; the backend runs in the `ai-service` container. Full stack = `docker-compose up` (`docker-compose.yaml`, note `.yaml`). **Action: Eric must `docker-compose up`-smoke the full stack (landing→workbench→cards→highlight→export) before recording.**
+- **D — Quick Start clean-clone smoke:** deps present (`requirements.txt`, `.env.example`, `main.py`, `SETUP.md`); `main.py --help` OK; **`--offline --provider deepseek` on SGP 6.4 produced 3 provisions + CSV/JSON** — reproducible path verified end-to-end. Two judge-facing notes: (1) local Ollama is slow on a full pillar (multi-seed × ~20s) → README should say "cloud provider is faster; offline local model is reproducible but slow"; (2) `--offline --indicators 6.1` returning 0 is **correct, not a bug** — verified against `manifest.jsonl`: no SGP seed is hinted to 6.1 (SGP P6 seeds hint 6.2/6.4).
+- **B/C — deliverables:** interview Q&A prep + 5-deliverable checklist written to the vault (`interview-qa-prep.md`, `deliverables-checklist.md`). Only open blocker for recording is the Eric docker-compose smoke.
+
 ## 📌 PINNED — open questions to raise with the teacher (if we advance)
 
 **1. Search backend for judges: SerpApi vs. free DuckDuckGo.**

@@ -1961,6 +1961,24 @@ textarea {
   border-radius: 5px;
 }
 
+/* Provision: full sentence with the model's clip highlighted. */
+.rr-provision {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.rr-provision-context {
+  color: #9ca3af;
+}
+
+.rr-provision-quote {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
 /* Instant styled tooltip for score badges (native title is slow/unreliable). */
 .score-badge[data-tooltip] {
   position: relative;
