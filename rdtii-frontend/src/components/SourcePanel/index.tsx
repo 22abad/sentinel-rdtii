@@ -22,6 +22,9 @@ const PROVIDER_LABELS: Record<string, string> = {
   "llama-3-local": "Llama 3 (Local)",
 };
 
+// Swiss/flat dropdown popup: square corners, hard black border, no shadow.
+const SQUARE_DROPDOWN = "rounded-none border-2 border-[#111827] shadow-none";
+
 type SourcePanelProps = {
   sourceRef: React.RefObject<HTMLDivElement>;
   country: string;
@@ -173,7 +176,7 @@ export function SourcePanel({
           ) : (
             <Select value={country} onValueChange={setCountry}>
               <SelectTrigger><SelectValue placeholder={t("source.autoDetect")} /></SelectTrigger>
-              <SelectContent>
+              <SelectContent className={SQUARE_DROPDOWN}>
                 <SelectItem value="CHN">{t("country.chn")}</SelectItem>
                 <SelectItem value="SGP">{t("country.sgp")}</SelectItem>
                 <SelectItem value="MYS">{t("country.mys")}</SelectItem>
@@ -186,7 +189,7 @@ export function SourcePanel({
           {t("source.filter")}
           <Select value={pillarFilter} onValueChange={setPillarFilter}>
             <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
+            <SelectContent className={SQUARE_DROPDOWN}>
               <SelectItem value="all">{t("taxonomy.allPillars")}</SelectItem>
               <SelectSeparator />
               <SelectGroup>
@@ -210,24 +213,21 @@ export function SourcePanel({
       </div>
 
       {availableProviders.length > 0 && (
-        <div className="stacked">
-          <label style={{ display: "block" }}>
-            {t("source.aiProvider")}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
+        <label className="stacked" style={{ display: "block" }}>
+          {t("source.aiProvider")}
+          <Select value={selectedProvider} onValueChange={setSelectedProvider}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("source.aiProvider")} />
+            </SelectTrigger>
+            <SelectContent className={SQUARE_DROPDOWN}>
               {availableProviders.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setSelectedProvider(p)}
-                  className={selectedProvider === p ? "" : "secondary"}
-                  style={{ minHeight: 32, padding: "0 14px", fontSize: "0.82rem", borderRadius: 9999 }}
-                >
+                <SelectItem key={p} value={p}>
                   {PROVIDER_LABELS[p] ?? p}
-                </button>
+                </SelectItem>
               ))}
-            </div>
-          </label>
-        </div>
+            </SelectContent>
+          </Select>
+        </label>
       )}
 
       <label className="stacked">
