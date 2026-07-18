@@ -87,6 +87,21 @@ _SECTION_MARKER_RE = re.compile(
 _NUMBERED_START_RE = re.compile(
     r"^\s*(?:(?i:section|article|art\.?|clause|part|regulation)\s+)?[\dIVXLC]+[.)]",
 )
+# CJK / Japanese / Korean / Thai. The short-label heading heuristic below is
+# English-designed (word counting via \w+ and English obligation verbs), so it
+# must NOT run on these scripts — a CJK provision has no spaces (one giant
+# "word") and no "shall/must", and would be wrongly flagged as a heading.
+_NON_LATIN_RE = re.compile(r"[぀-ヿ㐀-鿿가-힯฀-๿]")
+# A statute *name* ("Personal Data Protection Act 2012", "Privacy Act 1988",
+# "… (Act 709)") is a proper-noun citation, not a section heading — and is
+# legitimate evidence for framework-existence indicators. Statute word + a year
+# (or an "(Act NNN)" number) distinguishes it from a topic heading like
+# "Application of this Act".
+_STATUTE_TITLE_RE = re.compile(
+    r"\b(?:Act|Law|Ordinance|Regulations?|Decree|Code|Statute)\b[^,;.]*\b(?:19|20)\d{2}\b"
+    r"|\(\s*Act\s+\d+\s*\)",
+    re.IGNORECASE,
+)
 
 
 def is_section_header(quote: str) -> bool:
@@ -100,10 +115,15 @@ def is_section_header(quote: str) -> bool:
     # Single-line all-caps headings
     if t.isupper() and 5 < len(t) < 100 and not t.endswith("."):
         return True
-    # A short topic label with NO obligation verb ("21. Access to personal
-    # data", "Consent required", "Correction of personal data") — the marginal
-    # note, not the rule under it. Long verb-less text (a definition) is spared.
-    if not _OPERATIVE_VERB_RE.search(t):
+    # A short Latin-script topic label with NO obligation verb ("21. Access to
+    # personal data", "Consent required") — the marginal note, not the rule
+    # under it. Long verb-less text (a definition) is spared by the length
+    # guard; non-Latin scripts are skipped entirely (see _NON_LATIN_RE).
+    if (
+        not _NON_LATIN_RE.search(t)
+        and not _OPERATIVE_VERB_RE.search(t)
+        and not _STATUTE_TITLE_RE.search(t)
+    ):
         body = _SECTION_MARKER_RE.sub("", t).strip()
         words = re.findall(r"\w+", body)
         if words and (len(words) <= 8 or bool(_NUMBERED_START_RE.match(t))):
