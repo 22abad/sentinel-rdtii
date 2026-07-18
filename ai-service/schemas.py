@@ -78,6 +78,13 @@ class IndicatorMapping(BaseModel):
         ge=0,
         description="End character offset (exclusive) within the original text.",
     )
+    # DISPLAY ONLY: the full sentence(s) the verbatim_quote sits in, so a
+    # reviewer sees a clipped half-sentence in complete context. Never used for
+    # scoring/validation — those stay on verbatim_quote.
+    quote_context: str = Field(
+        default="",
+        description="Full sentence(s) containing verbatim_quote — for display, not scoring.",
+    )
 
     # Legal-text metadata (the 6 mandatory fields from Witada PPT)
     article_clause: str = Field(default="", description="Specific article, section, or clause number")
