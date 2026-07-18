@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 
 from terminology import expand_phrases
 
@@ -190,34 +191,99 @@ _STRUCTURED_INDICATOR_PATTERNS = {
     ),
 }
 
-def _phrase_in_text(phrase: str, text: str) -> bool:
-    if phrase in text:
-        return True
-    words = phrase.split()
-    if len(words) > 1:
-        return all(w in text for w in words)
-    return False
+@dataclass(frozen=True)
+class IndicatorCandidate:
+    """Auditable shortlist evidence for one indicator.
 
-def classify_indicator(article_text: str) -> list[str]:
+    Keyword routing is recall-only: this score is never treated as mapping
+    confidence.  Keeping the exact matched span/rule makes false-positive
+    routing diagnosable without asking an LLM to explain itself afterwards.
+    """
+
+    indicator_id: str
+    matched_span: str
+    matched_rule: str
+    retrieval_score: float
+
+
+_SENTENCE_RE = re.compile(r"[^.!?。！？;；\n]+(?:[.!?。！？;；]|$)")
+
+
+def _bounded_phrase_pattern(phrase: str) -> re.Pattern:
+    """Compile an exact phrase with ASCII word boundaries where applicable."""
+    escaped = re.escape(phrase)
+    left = r"(?<![A-Za-z0-9_])" if phrase[:1].isascii() and phrase[:1].isalnum() else ""
+    right = r"(?![A-Za-z0-9_])" if phrase[-1:].isascii() and phrase[-1:].isalnum() else ""
+    return re.compile(left + escaped + right, re.IGNORECASE)
+
+
+def _phrase_match(phrase: str, text: str) -> tuple[str, str, float] | None:
+    """Return a local, boundary-aware match; never join words across sentences.
+
+    Exact phrases are preferred.  A conservative proximity fallback handles
+    harmless punctuation/word-order damage, but all words must occur in the
+    same sentence and within a 120-character window.  The former implementation
+    used ``all(word in whole_chunk)`` and therefore routed unrelated paragraphs.
+    """
+    phrase = phrase.strip()
+    if not phrase:
+        return None
+    exact = _bounded_phrase_pattern(phrase).search(text)
+    if exact:
+        score = min(1.0, 0.55 + 0.04 * len(phrase.split()) + min(len(phrase), 40) / 200)
+        return exact.group(0), f'exact phrase: "{phrase}"', round(score, 3)
+
+    words = [word for word in re.findall(r"[A-Za-z0-9]+", phrase) if len(word) > 1]
+    if len(words) < 2:
+        return None
+    patterns = [_bounded_phrase_pattern(word) for word in words]
+    for sentence_match in _SENTENCE_RE.finditer(text):
+        sentence = sentence_match.group(0)
+        hits = [pattern.search(sentence) for pattern in patterns]
+        if not all(hits):
+            continue
+        starts = [hit.start() for hit in hits if hit]
+        ends = [hit.end() for hit in hits if hit]
+        start, end = min(starts), max(ends)
+        if end - start > 120:
+            continue
+        span = sentence[start:end]
+        score = min(0.74, 0.42 + 0.05 * len(words))
+        return span, f'same-sentence proximity: "{phrase}"', round(score, 3)
+    return None
+
+
+def classify_indicator_candidates(article_text: str) -> list[IndicatorCandidate]:
+    """Return ranked, auditable recall candidates for an article/chunk."""
     if not article_text or not article_text.strip():
         return []
 
-    lowered = article_text.lower()
-    matched: set[str] = set()
-
+    best: dict[str, IndicatorCandidate] = {}
     for indicator, phrases in _INDICATOR_PHRASES.items():
         for phrase in phrases:
-            if _phrase_in_text(phrase.lower(), lowered):
-                matched.add(indicator)
-                break
+            match = _phrase_match(phrase, article_text)
+            if not match:
+                continue
+            span, rule, score = match
+            candidate = IndicatorCandidate(indicator, span, rule, score)
+            if indicator not in best or candidate.retrieval_score > best[indicator].retrieval_score:
+                best[indicator] = candidate
 
-    prohibition_clauses = (
-        match.group(0)
-        for match in _NORMATIVE_PROHIBITION_CLAUSE.finditer(article_text)
-    )
-    for clause in prohibition_clauses:
+    for clause_match in _NORMATIVE_PROHIBITION_CLAUSE.finditer(article_text):
+        clause = clause_match.group(0)
         for indicator, patterns in _STRUCTURED_INDICATOR_PATTERNS.items():
             if any(pattern.search(clause) for pattern in patterns):
-                matched.add(indicator)
+                candidate = IndicatorCandidate(
+                    indicator_id=indicator,
+                    matched_span=clause,
+                    matched_rule="structured normative prohibition",
+                    retrieval_score=0.95,
+                )
+                if indicator not in best or candidate.retrieval_score > best[indicator].retrieval_score:
+                    best[indicator] = candidate
 
-    return sorted(matched)
+    return sorted(best.values(), key=lambda item: (-item.retrieval_score, item.indicator_id))
+
+def classify_indicator(article_text: str) -> list[str]:
+    """Compatibility wrapper returning the historical sorted indicator IDs."""
+    return sorted(candidate.indicator_id for candidate in classify_indicator_candidates(article_text))

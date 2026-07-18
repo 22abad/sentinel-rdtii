@@ -31,6 +31,7 @@ from .schema import (
     indicator_to_rdtii_code,
     validate_submission_rows,
     drop_zero_confidence_rows,
+    filter_formal_submission_rows,
 )
 from .writer import write_csv, write_json, write_outputs
 
@@ -47,6 +48,7 @@ __all__ = [
     "indicator_to_rdtii_code",
     "validate_submission_rows",
     "drop_zero_confidence_rows",
+    "filter_formal_submission_rows",
     "reconcile_discovery_tags",
     "reconcile_submission_tags",
     "summarize_discovery",

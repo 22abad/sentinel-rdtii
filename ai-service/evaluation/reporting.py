@@ -45,7 +45,10 @@ def render_markdown(report: dict) -> str:
             "| Metric | Result |",
             "| --- | ---: |",
             f"| Mapping precision | {_percent(aggregate['mapping_precision'])} |",
+            f"| Accepted precision | {_percent(aggregate['accepted_precision'])} |",
             f"| Mapping recall | {_percent(aggregate['mapping_recall'])} |",
+            f"| Abstention rate | {_percent(aggregate['abstention_rate'])} |",
+            f"| Acceptance rate | {_percent(aggregate['acceptance_rate'])} |",
             f"| Mapping F1 | {_percent(aggregate['mapping_f1'])} |",
             f"| Citation exact-match | {_percent(aggregate['citation_exact_match_rate'])} |",
             f"| Article citation accuracy | {_percent(aggregate['article_citation_accuracy'])} |",
@@ -63,6 +66,12 @@ def render_markdown(report: dict) -> str:
         ])
         lines.extend(_dimension_table("Per-country metrics", evaluation["per_country"]))
         lines.extend(_dimension_table("Per-indicator metrics", evaluation["per_indicator"]))
+        if evaluation.get("confusion_matrix"):
+            lines.extend(["### Indicator confusion matrix", "", "| Expected | Predicted | Count |", "| --- | --- | ---: |"])
+            for expected, predicted_values in evaluation["confusion_matrix"].items():
+                for predicted, count in predicted_values.items():
+                    lines.append(f"| {expected} | {predicted} | {count} |")
+            lines.append("")
         for failure in evaluation["false_negatives"]:
             lines.append(f"- FN `{failure['case_id']}`")
         for failure in evaluation["false_positives"]:

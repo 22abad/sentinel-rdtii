@@ -135,7 +135,7 @@ def test_sha_mismatch_raises(tmp_path):
 
 @pytest.mark.anyio
 async def test_run_library_offline_tags_rows_known(monkeypatch):
-    async def fake_extraction(text, provider):
+    async def fake_extraction(text, provider, target_indicators=None):
         mapping = SimpleNamespace(
             pillar=6,
             indicator="6.4",
@@ -201,7 +201,7 @@ async def test_seed_honours_indicator_hint_via_targeted_topup(monkeypatch):
     monkeypatch.delenv("RDTII_LLM_FALLBACK_PROVIDER", raising=False)
 
     rows, _ = await run_library("SGP", 7, indicators=["7.5"])
-    # Broad pass alone would yield zero 7.5 rows; the top-up recovers it.
+    # Curated routing goes directly to the reviewed 7.5 hint.
     assert any(r.indicator_id == "P7-I5" for r in rows)
 
 

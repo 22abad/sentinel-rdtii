@@ -226,6 +226,7 @@ python main.py --economy Singapore --pillar 6 --offline
 | `--offline` | Map cached official texts from the local law library (no network) |
 | `--no-seed` | Skip the seed pass; go straight to live discovery (default is seed-first) |
 | `--strict-live` | Reviewer mode: verified official live evidence only; fail instead of using fixtures |
+| `--include-review` | Research mode: include ambiguous/flagged mappings; formal output excludes them by default |
 | `--provider` | Override `RDTII_LLM_PROVIDER` for this run |
 | `--format` | `csv`, `json`, or `both` (default) |
 | `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |

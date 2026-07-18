@@ -99,6 +99,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Allow empty output files for research/debugging. By default, a run "
              "with no verified provisions fails without writing output.",
     )
+    parser.add_argument(
+        "--include-review",
+        action="store_true",
+        help="Research mode: include ambiguous/flagged mappings in output. "
+             "Formal submissions exclude them by default.",
+    )
     parser.add_argument("--provider", default=None, help="Override RDTII_LLM_PROVIDER for this run")
     parser.add_argument("--limit", type=int, default=20, help="Max discovery candidates per pillar")
     parser.add_argument("--max-documents", type=int, default=None, help="Cap documents processed per pillar")
@@ -140,7 +146,11 @@ async def _run(args: argparse.Namespace) -> int:
         run_pdf,
         run_seed_first,
     )
-    from submission.schema import economy_display_name, validate_submission_rows, drop_zero_confidence_rows
+    from submission.schema import (
+        economy_display_name,
+        filter_formal_submission_rows,
+        validate_submission_rows,
+    )
 
     display = economy_display_name(args.economy)
     all_rows: list[SubmissionRow] = []
@@ -254,11 +264,19 @@ async def _run(args: argparse.Namespace) -> int:
     all_rows = dedupe_submission_rows(all_rows)
     all_rows = cap_rows_per_law_indicator(all_rows)
     all_rows = cap_rows_per_law(all_rows)
-    all_rows = validate_submission_rows(
+    # First enforce the structural/source contract, then apply the precision-first
+    # mapping gate.  Review-mode rows remain available only by explicit request.
+    all_rows = validate_submission_rows(all_rows, allow_empty=True)
+    all_rows = filter_formal_submission_rows(
         all_rows,
-        allow_empty=getattr(args, "allow_empty", False),
+        include_review=getattr(args, "include_review", False),
     )
-    all_rows = drop_zero_confidence_rows(all_rows)
+    if not all_rows and not getattr(args, "allow_empty", False):
+        raise ValueError(
+            "No formally submittable mappings remained after eligibility and "
+            "human-review filtering. Re-run with --include-review for research "
+            "output or --allow-empty to write an empty result."
+        )
 
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     written = write_outputs(

@@ -44,6 +44,7 @@ IndicatorId = Literal[
 ]
 
 ScopeKind = Literal["horizontal", "sectoral", "unknown"]
+MappingDecision = Literal["supported", "insufficient", "contradicted"]
 
 # Feature dict values can be bool / int / str depending on the indicator spec.
 # float included: specs legitimately declare float features (e.g. 5.3
@@ -109,6 +110,11 @@ class IndicatorMapping(BaseModel):
         default="unknown",
         description="LLM identifier (e.g. 'gemini-1.5-flash', 'claude-sonnet-4', 'llama-3-8b-local')",
     )
+    mapping_decision: MappingDecision = "supported"
+    mapping_confidence: float = Field(default=0.8, ge=0.0, le=1.0)
+    mapping_confidence_type: str = "rule_based_eligibility"
+    eligibility_evidence_spans: dict[str, list[str]] = Field(default_factory=dict)
+    eligibility_verifier_mode: str = "deterministic"
 
     # Legal Inventory taxonomy (the 6 fields from the Target Schema Template)
     coverage: str = Field(
@@ -186,6 +192,11 @@ class RejectedExtraction(BaseModel):
     reason: str
     chunk_preview: str = Field(default="", max_length=400)
     raw_output: dict = Field(default_factory=dict)
+    decision: MappingDecision = "insufficient"
+    candidate_indicator: str = ""
+    supported_indicators: list[str] = Field(default_factory=list)
+    evidence_spans: dict[str, list[str]] = Field(default_factory=dict)
+    exclusion_reasons: list[str] = Field(default_factory=list)
 
 
 class RunUsageSummary(BaseModel):

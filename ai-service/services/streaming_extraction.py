@@ -51,8 +51,10 @@ async def _stream_extraction_impl(
     import main as main_module
     from chunker import reflow_legal_text, regex_legal_chunker
     from features import get_feature_spec
+    from agents.eligibility import EligibilityVerifier
 
     reset_quote_registry()
+    eligibility_verifier = EligibilityVerifier(llm_provider)
 
     # Mend PDF/OCR line damage before anything reads the text — so source_text,
     # chunk offsets and quote-locating all operate on the same clean text.
@@ -143,7 +145,7 @@ async def _stream_extraction_impl(
                     )
                     rejected_count += 1
                     continue
-                async for event in process_single(chunk, ind_id, spec, data, text, llm_provider, pdf_metadata):
+                async for event in process_single(chunk, ind_id, spec, data, text, llm_provider, pdf_metadata, eligibility_verifier):
                     if _event_name(event) == "mapping":
                         mapping_count += 1
                     elif _event_name(event) == "rejected":
@@ -162,7 +164,7 @@ async def _stream_extraction_impl(
                     )
                     rejected_count += 1
                     continue
-                async for event in process_single(chunk, ind_id, spec, data, text, llm_provider, pdf_metadata):
+                async for event in process_single(chunk, ind_id, spec, data, text, llm_provider, pdf_metadata, eligibility_verifier):
                     if _event_name(event) == "mapping":
                         mapping_count += 1
                     elif _event_name(event) == "rejected":
@@ -184,7 +186,7 @@ async def _stream_extraction_impl(
     )
 
 
-async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf_metadata=None):
+async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf_metadata=None, eligibility_verifier=None):
     from coverage_classifier import classify_coverage
     from extraction_repair import prepare_extraction_with_repair
     from schemas import IndicatorMapping, RejectedExtraction
@@ -227,6 +229,19 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
     local_end = prepared["local_end"]
     features = prepared["features"]
     pre_flag_reasons = prepared.get("pre_flag_reasons", [])
+
+    from agents.eligibility import EligibilityVerifier, rejected_from_eligibility
+
+    verifier = eligibility_verifier or EligibilityVerifier(llm_provider)
+    eligibility = await verifier.verify(quote, ind_id, features)
+    if not eligibility.supported:
+        yield _sse(
+            "rejected",
+            rejected_from_eligibility(
+                eligibility, chunk.text[:200], raw_output=data
+            ).model_dump(),
+        )
+        return
 
     # DISPLAY ONLY: full sentence(s) around the quote, so a reviewer sees a
     # clipped half-sentence in context. Not used for scoring (see chunker note).
@@ -313,6 +328,11 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
         requires_human_review=score_not_implemented,
         extraction_provider=llm_provider.name,
         timestamp_verification=ts_verification,
+        mapping_decision="supported",
+        mapping_confidence=0.8,
+        mapping_confidence_type="rule_based_eligibility",
+        eligibility_evidence_spans=eligibility.evidence_spans,
+        eligibility_verifier_mode=eligibility.verifier_mode,
     )
 
     import main as main_module
@@ -325,6 +345,7 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
         chunk_text=chunk.text,
         indicator_id=ind_id,
         features=features,
+        include_semantic_check=False,
     )
     if validation.level == "reject":
         yield _sse(
@@ -341,5 +362,15 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
     elif pre_flag_reasons:
         mapping.requires_human_review = True
         mapping.flag_reasons = pre_flag_reasons
+
+    from agents.analyst import AnalystAgent
+
+    mapping.impact = await AnalystAgent(llm_provider).run(
+        chunk_text=chunk.text,
+        indicator_id=ind_id,
+        extracted_data=data,
+        evidence_spans=eligibility.evidence_spans,
+    )
+    main_module.format_and_clean_mapping(mapping, data, chunk.text)
 
     yield _sse("mapping", mapping.model_dump())
