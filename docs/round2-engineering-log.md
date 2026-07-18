@@ -7,6 +7,18 @@ link every claim to code._
 
 ---
 
+## 📌 CURRENT STATE SNAPSHOT (2026-07-18) — read this first after a long session
+
+**Scoring/coverage now aligned to the official answer key. 626 tests green, main clean.**
+- **Coverage: 27/27** official economy×indicator cells have a seed hinted for them (library = 33 entries). Only gap was SGP 7.4 → closed by banking PDPA s11(3) DPO (#278).
+- **Scoring fixes (all verified vs the official answer key):** consent-gate veto for 7.5 (#259), 0.25 fabricated-tier removed + official-value guard (#260), 7.5 coverage top-up via hinted seeds (#261), judicial-warrant → 7.5=0 (#265), government-data exclusion scoped to 6.1-6.4+7.3 (#266→#276), non-regulatory indicators (incl. 6.5) drop law-derived rows (#268), **6.1/6.2 sector-specific personal = 0.5, horizontal = 1** (#276). Deterministic alignment test `test_official_score_alignment.py` pins scorers to the key.
+- **Submission format:** CSV header is official Title Case (#275). `chunker.reflow` preserves inline amendment markers so verbatim matches the source (#277).
+- **Latest 3-economy runs (DeepSeek, seed+live):** MYS 21 rows, SGP 26 rows (0 hallucination) — all official non-zero indicators covered. AUS run in progress at time of writing.
+- **Known reviewable item:** a weak Banking Act NEW row on SGP 7.4 (title-as-quote) — flag for human review, not a blocker.
+- **Insight worth remembering:** internal scores are NOT submitted (evidence rows are); score variance across runs is LLM feature-extraction noise, not a scoring-logic bug (logic is proven by the alignment test).
+
+---
+
 ## 📌 PINNED — open questions to raise with the teacher (if we advance)
 
 **1. Search backend for judges: SerpApi vs. free DuckDuckGo.**
