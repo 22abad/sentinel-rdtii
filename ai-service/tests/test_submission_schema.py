@@ -1041,3 +1041,32 @@ def test_names_without_statute_words_are_dropped():
     # (Bonus check that surfaced while writing this test: a "Singapore TRM
     # Notices" row inside an AUSTRALIA run is dropped too — by the
     # foreign-jurisdiction gate, exactly as designed.)
+
+
+def test_drop_zero_confidence_rows_removes_unscoreable_noise():
+    """Final-assembly guard: rows the extractor scored 0.00 confidence are noise.
+
+    Live discovery surfaces marginal instruments (guidance notes, circular
+    definitions, contract clauses) that the extractor honestly scores 0.00.
+    They are dropped at assembly. This runs OUTSIDE validate_submission_rows, so
+    it does not depend on the fixture-confidence convention used elsewhere.
+    """
+    from submission.schema import SubmissionRow, drop_zero_confidence_rows
+
+    def row(law, conf):
+        return SubmissionRow(
+            economy="Australia", law_name=law, indicator_id="P7-I3",
+            article="s 17", verbatim_snippet="The record must be retained for seven years.",
+            mapping_rationale="[s 17] Retention duty maps to 7.3.",
+            source_url="https://official.example/x", confidence=conf,
+        )
+
+    kept = drop_zero_confidence_rows([
+        row("My Health Records Act 2012", 0.6),
+        row("Pasture Seeds Levy Agreement clause", 0.0),
+        row("Privacy Act 1988", 0.4),
+    ])
+    assert [r.law_name for r in kept] == [
+        "My Health Records Act 2012",
+        "Privacy Act 1988",
+    ]

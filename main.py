@@ -140,7 +140,7 @@ async def _run(args: argparse.Namespace) -> int:
         run_pdf,
         run_seed_first,
     )
-    from submission.schema import economy_display_name, validate_submission_rows
+    from submission.schema import economy_display_name, validate_submission_rows, drop_zero_confidence_rows
 
     display = economy_display_name(args.economy)
     all_rows: list[SubmissionRow] = []
@@ -258,6 +258,7 @@ async def _run(args: argparse.Namespace) -> int:
         all_rows,
         allow_empty=getattr(args, "allow_empty", False),
     )
+    all_rows = drop_zero_confidence_rows(all_rows)
 
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     written = write_outputs(

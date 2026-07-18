@@ -34,6 +34,9 @@ def _row(law_name: str, *, retrieval_method: str = "official_search",
         verbatim_snippet="Exact provision text stating a substantive statutory obligation.",
         source_url=source_url,
         retrieval_method=retrieval_method,
+        # Real extracted rows carry an extraction confidence; the CLI now drops
+        # 0.00-confidence rows at assembly, so fixtures must be realistic.
+        confidence=0.8,
     )
 
 
