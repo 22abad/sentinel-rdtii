@@ -561,6 +561,11 @@ export function DiscoveryPanel({
             <Search size={16} />
           )}
           <span>{loading ? "Searching" : "Discover"}</span>
+          {!loading && (
+            <svg className="w-5 h-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          )}
         </button>
       </div>
 

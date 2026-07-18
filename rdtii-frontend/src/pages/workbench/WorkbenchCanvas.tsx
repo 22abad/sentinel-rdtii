@@ -1228,7 +1228,7 @@ export function WorkbenchCanvas({
         nodesConnectable={!handMode}
         elementsSelectable={!handMode}
       >
-        <Background variant={BackgroundVariant.Dots} gap={28} size={3} color="#c2c8d0" />
+        <Background variant={BackgroundVariant.Dots} gap={28} size={3} color="#c2c8d0" bgColor="#f3f1ea" />
         <MiniMap pannable zoomable maskColor="rgba(0,0,0,0.4)" />
         <CanvasToolbar
           mode={mode}
