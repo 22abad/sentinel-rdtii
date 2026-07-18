@@ -190,6 +190,13 @@ MYS:
       languages: [en, ms]
       pillars: [6, 7]
       priority: 100
+      notes: >-
+        Authoritative principal-Act reprints. Verified-working PDF path pattern
+        (2026-07-18): /ilims/upload/portal/akta/outputaktap/<id>_BI/<TITLE>.pdf
+        e.g. Income Tax Act 1967 (Act 53) s82 record-retention. The search page
+        (search.php) returns subsidiary P.U.(A) instruments; pick the principal
+        Act, not the P.U.(A) order. The heavy PDFs can time out on live fetch —
+        Wayback often has no archive, so download-then-ingest is the fallback.
 
     - name: Personal Data Protection Department
       base_url: https://www.pdp.gov.my
@@ -232,6 +239,23 @@ MYS:
       indicators: ["7.3"]
       priority: 85
       notes: Official Companies Act 2016 text and company-record retention materials.
+
+    - name: Malaysian Investment Development Authority (InvestMalaysia)
+      base_url: https://www.investmalaysia.gov.my
+      domains: [investmalaysia.gov.my, www.investmalaysia.gov.my]
+      adapter: search_engine
+      source_grade: secondary
+      source_type: government_portal
+      languages: [en, ms]
+      pillars: [6]
+      indicators: ["6.2"]
+      priority: 80
+      notes: >-
+        Official .gov.my portal hosting clean tax-law PDFs. Verified-working
+        (2026-07-18): /media/rsoj31eh/service-tax-act-2018.pdf — Service Tax Act
+        2018 (Act 807) s24(2)(c) requires service-tax records be "kept in
+        Malaysia" (explicit 6.2 local-storage evidence). Downloads reliably where
+        the AGC/customs portals time out.
 
     - name: Ministry of Investment Trade and Industry
       base_url: https://fta.miti.gov.my
