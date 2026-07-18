@@ -18,7 +18,7 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 34
+    assert len(entries) == 35
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
