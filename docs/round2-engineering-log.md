@@ -9,6 +9,36 @@ link every claim to code._
 
 ## 📌 CURRENT STATE SNAPSHOT (2026-07-18) — read this first after a long session
 
+**NIGHT UPDATE (for Dong, ~08:00):** PR #293 (`codex/mapping-precision-gate`)
+added a precision-first eligibility gate that hard-drops any mapping failing
+strict feature/pattern + LLM-verifier checks — it decimated the submission
+(SGP 66→4), failing coverage + the 20-pt discovery, and since judges RUN the
+tool a 4-row pipeline is a broken submission. Feature names match, so it's
+intended (not a trivial bug), just far too aggressive. **Fix (#295, opt-in):
+`RDTII_ELIGIBILITY_MODE=flag` keeps ineligible mappings and FLAGS them for human
+review instead of dropping — default (`reject`) byte-identical, 642 tests green.**
+The submission is generated with `RDTII_ELIGIBILITY_MODE=flag … --include-review`
+(+ `RDTII_ELIGIBILITY_VERIFIER=0` for speed, since the verifier's verdict only
+matters as a drop signal, which flag mode ignores). **DECISION FOR DONG:** make
+flag mode the default (recall + human-in-the-loop) vs #293's precision-first
+default — this is a design-philosophy call on your account's code, so I did NOT
+change the default, only added the opt-in.
+Fallback if the live flag-mode run is unsatisfactory: `outputs/SUBMISSION_final/`
+(v3-based, 66 rows, flags) + `outputs/SUBMISSION_Round1_SENTINEL.xlsx`.
+
+**Second #293 symptom found (night):** the MYS 6.2 tax seeds (ITA s82 #286,
+Service Tax s24 #287) no longer produce a P6-I2 row even offline in flag mode —
+they are extracted but their 6.2 mapping is gone. Pre-#293 they worked (verified
+at seed time). So #293's classifier.py / feature-spec changes (not just its drop
+gate) also regressed seed extraction. Not chased further tonight (deep, and the
+right fix depends on the #293 design decision). **The submission is unaffected:**
+the v3-based `SUBMISSION_final` (built pre-#293) has the MYS 6.2 row and full 8/8
+indicator coverage. Recommendation for Dong: treat #293 as over-aggressive across
+the board (drops recall AND regresses seed mappings); either tune it down to
+flag-only or revert the classifier/feature parts, keeping the eligibility signal.
+Chosen submission artifact = the v3-based file; live flag-mode proves the tool
+runs end-to-end (67 rows) but its per-run coverage varies (live variability).
+
 **Scoring/coverage now aligned to the official answer key. 626 tests green, main clean.**
 - **Coverage: 27/27** official economy×indicator cells have a seed hinted for them (library = 33 entries). Only gap was SGP 7.4 → closed by banking PDPA s11(3) DPO (#278).
 - **Scoring fixes (all verified vs the official answer key):** consent-gate veto for 7.5 (#259), 0.25 fabricated-tier removed + official-value guard (#260), 7.5 coverage top-up via hinted seeds (#261), judicial-warrant → 7.5=0 (#265), government-data exclusion scoped to 6.1-6.4+7.3 (#266→#276), non-regulatory indicators (incl. 6.5) drop law-derived rows (#268), **6.1/6.2 sector-specific personal = 0.5, horizontal = 1** (#276). Deterministic alignment test `test_official_score_alignment.py` pins scorers to the key.
@@ -18,6 +48,30 @@ link every claim to code._
 - **Insight worth remembering:** internal scores are NOT submitted (evidence rows are); score variance across runs is LLM feature-extraction noise, not a scoring-logic bug (logic is proven by the alignment test).
 
 ---
+
+## 2026-07-18 (night) — final re-run blocked by PR #293 eligibility gate
+
+The final end-to-end re-run (run4, all gates + flags native) collapsed: SGP
+66→4 rows, MYS/AUS similar, "No formally submittable mappings remained after
+eligibility and human-review filtering." Diagnosed:
+- NOT a provider issue (DeepSeek responds; documents extract).
+- NOT the human-review filter (persisted with `--include-review --allow-empty`).
+- **Root cause: PR #293 `codex/mapping-precision-gate` (commit 5c091e7, "Improve
+  mapping precision and eligibility validation", authored dong@22abad.com /
+  IrishDevNoob, merged ~21:21)** — a new 289-line deterministic eligibility gate
+  (`ai-service/agents/eligibility.py`) that rejects any mapping whose quote does
+  not hit its strict deterministic evidence-span patterns. Far too aggressive:
+  it decimates recall ("Pillar 6: 2 provisions mapped from 4 documents").
+- v3 was produced BEFORE #293; that is why v3 (66 rows) is healthy and run4 is not.
+- NOT reverted — the change is on Dong's account and looks intentional
+  (precision-first). Flagged to Dong for a tune-or-revert decision.
+
+**Fallback submission is intact and ready:** `outputs/SUBMISSION_final/` (66 rows —
+SGP 20 / MYS 14 / AUS 32, 29 NEW, MYS 6.2 covered, 15 rows flagged for human
+review incl. the 6 FSMA→6.1 mis-maps) + `outputs/SUBMISSION_Round1_SENTINEL.xlsx`
+(official 3-sheet template, no BOM). Built by re-validating v3 through the
+current validator (deterministic flags only) — the eligibility gate lives in the
+extraction path, not the validator, so it did not touch this artifact.
 
 ## 2026-07-18 — row-by-row verification, mapping-gate, stable+effective re-run
 
