@@ -294,42 +294,6 @@ export function DiscoveryPanel({
           <h2>Discovery</h2>
           <p>Search official legal sources before extraction.</p>
         </div>
-        <div className="nodrag discovery-header-actions">
-          <button
-            type="button"
-            className="secondary discovery-source-menu-button"
-            onClick={() => setSourceManagerOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={sourceManagerOpen}
-            title="Source manager"
-          >
-            <Settings2 size={16} />
-            <span>Sources</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedIds([]);
-              search({
-                countryCode,
-                pillars,
-                keywords,
-                sourceMode,
-                languages: requestLanguages(),
-              });
-            }}
-            disabled={loading || pillars.length === 0}
-            className="group flex items-center justify-center rounded-full text-md h-10 px-5 cursor-pointer transition-all duration-500 bg-[#0f766e] text-white"
-            style={{ minHeight: 0, border: "none" }}
-          >
-            {loading ? (
-              <Loader2 size={16} className="mr-2 animate-spin" />
-            ) : (
-              <Search size={16} className="mr-2" />
-            )}
-            <span>{loading ? "Searching" : "Discover"}</span>
-          </button>
-        </div>
       </div>
 
       <div className="discovery-controls">
@@ -562,6 +526,43 @@ export function DiscoveryPanel({
           </div>
         </div>
       )}
+
+      <div className="discovery-actions-bar nodrag">
+        <button
+          type="button"
+          className="secondary discovery-source-menu-button"
+          onClick={() => setSourceManagerOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={sourceManagerOpen}
+          title="Source manager"
+        >
+          <Settings2 size={16} />
+          <span>Sources</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedIds([]);
+            search({
+              countryCode,
+              pillars,
+              keywords,
+              sourceMode,
+              languages: requestLanguages(),
+            });
+          }}
+          disabled={loading || pillars.length === 0}
+          className="discovery-run group flex items-center justify-center gap-2 h-14 cursor-pointer uppercase tracking-[0.2em] font-bold text-white transition-all duration-300"
+          style={{ minHeight: 0, border: "none" }}
+        >
+          {loading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Search size={16} />
+          )}
+          <span>{loading ? "Searching" : "Discover"}</span>
+        </button>
+      </div>
 
       <RightDrawer
         open={sourceManagerOpen}

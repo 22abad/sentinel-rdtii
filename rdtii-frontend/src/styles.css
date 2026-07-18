@@ -2024,20 +2024,10 @@ textarea {
 /* header — black box tag (::before) on the left, big display title on the
    right; description hidden (Swiss minimal) */
 .swiss-form .panel-header {
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 16px 18px;
   border-bottom: 2px solid #111827;
-}
-.swiss-form .panel-header::before {
-  content: "RDTII";
-  background: #111827;
-  color: #f3f1ea;
-  padding: 6px 12px;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  font-size: 0.8rem;
 }
 .swiss-form .panel-header h2 {
   color: #111827;
@@ -2126,19 +2116,26 @@ textarea {
 }
 
 /* ── Discovery-panel specifics (shares the .swiss-form base) ──────────────── */
-/* header buttons: square; primary (Discover) to black, Sources to outline */
-.swiss-form .discovery-header-actions button {
-  border-radius: 0;
+/* bottom action bar (moved from the header, mirrors the Source SEND bar) */
+.swiss-form .discovery-actions-bar {
+  display: flex;
+  margin-top: 14px;
 }
-.swiss-form .discovery-header-actions button:not(.secondary) {
+.swiss-form .discovery-actions-bar button {
+  border-radius: 0;
+  height: 56px;
+}
+.swiss-form .discovery-actions-bar .discovery-run {
+  flex: 1;
   background: #111827;
 }
-.swiss-form .discovery-header-actions button:not(.secondary):hover {
+.swiss-form .discovery-actions-bar .discovery-run:hover {
   background: #000;
 }
-.swiss-form .discovery-source-menu-button {
+.swiss-form .discovery-actions-bar .discovery-source-menu-button {
   border: 1.5px solid #111827;
   color: #111827;
+  background: #f3f1ea;
 }
 /* controls block: black hairline separator */
 .swiss-form .discovery-controls {

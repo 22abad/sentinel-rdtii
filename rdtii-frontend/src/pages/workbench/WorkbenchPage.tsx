@@ -242,7 +242,7 @@ export function WorkbenchPage() {
     { id: "discovery", title: "Discovery", element: <DiscoveryThreadPanel />, width: 800, dragHandle: ".panel-header", flat: true },
     {
       id: "source",
-      title: "Source",
+      title: "Extract",
       renderElement: (instanceId) => (
         <SourceThreadPanel
           key={instanceId}
