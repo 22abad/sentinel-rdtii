@@ -43,6 +43,17 @@ CSV_COLUMNS: tuple[str, ...] = (
     "notes",             # 13 OCR issues, partial doc, bilingual sources, cross-refs
 )
 
+# The EXACT header row the judges validate against — the official
+# "Structured Output Template" (OUTPUT_TEMPLATE_31MAY.xlsx): "Column names and
+# order must match this template exactly. Judges validate programmatically."
+# Title Case with spaces, same order as CSV_COLUMNS. The snake_case names above
+# are the internal field keys; this is what gets written to the submission CSV.
+CSV_HEADERS: tuple[str, ...] = (
+    "Economy", "Law Name", "Law Number / Ref", "Last Amended", "Indicator ID",
+    "Article / Section", "Discovery Tag", "Location Reference", "Verbatim Snippet",
+    "Mapping Rationale", "Source URL", "Confidence", "Notes",
+)
+
 # Extended metadata written only to the JSON output (not the CSV).
 JSON_EXTENDED_FIELDS: tuple[str, ...] = (
     "novelty_type",
