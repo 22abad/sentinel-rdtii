@@ -171,13 +171,31 @@ class MASOrchestrator:
                     # 2. Independent eligibility gate — before scoring or
                     # rationale generation, and blind to both of them.
                     eligibility = await self.eligibility.verify(quote, ind_id, features)
-                    if not eligibility.supported:
+                    # RDTII_ELIGIBILITY_MODE=flag keeps an ineligible mapping but
+                    # flags it for human review instead of dropping it — recall-
+                    # preserving, aligned with the official 20% human-validation
+                    # step and our other flag-not-drop gates. Default ("reject")
+                    # is byte-identical to the original precision-first behaviour.
+                    _elig_flag_mode = (
+                        os.getenv("RDTII_ELIGIBILITY_MODE", "reject").strip().lower() == "flag"
+                    )
+                    if not eligibility.supported and not _elig_flag_mode:
                         results_list.append((None, rejected_from_eligibility(
                             eligibility,
                             chunk.text[:200],
                             raw_output=data,
                         )))
                         continue
+                    if not eligibility.supported:
+                        pre_flag_reasons.append(
+                            "Eligibility flag: " + (
+                                "; ".join(eligibility.exclusion_reasons)
+                                or "candidate indicator not independently supported by the quote"
+                            )
+                        )
+                    _mapping_decision = (
+                        "supported" if eligibility.supported else eligibility.decision
+                    )
 
                     # 3. Critic Agent — deterministic scoring
                     raw_score, score_justification = self.critic.evaluate_score(ind_id, features)
@@ -280,7 +298,7 @@ class MASOrchestrator:
                         requires_human_review=src_requires_review or score_not_implemented,
                         extraction_provider=self.provider.name,
                         timestamp_verification=ts_verification,
-                        mapping_decision="supported",
+                        mapping_decision=_mapping_decision,
                         mapping_confidence=0.8,
                         mapping_confidence_type="rule_based_eligibility",
                         eligibility_evidence_spans=eligibility.evidence_spans,
