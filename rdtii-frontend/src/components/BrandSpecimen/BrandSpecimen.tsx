@@ -1,25 +1,63 @@
+import { type CSSProperties, useLayoutEffect, useRef, useState } from "react";
 import "@fontsource/boldonse/400.css";
 
 // Standalone brand-logo display — a type-specimen panel (the reference layout).
-// No background grid: instead, four registration lines are keyed to the
-// wordmark's bounding box — two full-width horizontals at cap-height and
-// baseline, two full-height verticals at the left/right glyph edges — bled out
-// to the panel edges. Four corner labels, a boxed superscript tag, and a row of
-// bare spec numbers under the baseline. Self-contained brand mark.
+// No background grid. The wordmark is set at a fixed 200px and each glyph is its
+// own inline-block cell, so a full-height registration line hangs at every
+// character boundary. `text-box: trim-both cap alphabetic` trims the box to the
+// true cap-height and baseline, so the two horizontal lines land exactly on the
+// glyph edges. Per-glyph advance widths (per-mille of em) print under each
+// column, like the reference. Four corner labels + a boxed superscript tag.
 
 const BRAND_BG = { backgroundColor: "#17593a" } as const;
 const LINE = "pointer-events-none absolute bg-[#86efac]/70";
+const WORD = "Sentinel";
+const FS = 200; // px
 
-// Bare spec numbers under the baseline: pillars 6 & 7, 9 indicators,
-// 4 economies, 13 output fields.
-const SPEC = ["06", "07", "09", "04", "13"];
+const WORD_STYLE = {
+  fontFamily: '"Boldonse", sans-serif',
+  fontSize: `${FS}px`,
+  lineHeight: 1,
+  // Trim the block box to cap-height (top) and alphabetic baseline (bottom) so
+  // the registration lines sit on the real glyph edges.
+  textBox: "trim-both cap alphabetic",
+} as CSSProperties;
 
 export function BrandSpecimen() {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [marks, setMarks] = useState<{ center: number; unit: number }[]>([]);
+
+  useLayoutEffect(() => {
+    let cancelled = false;
+    const measure = () => {
+      const box = boxRef.current;
+      if (!box) return;
+      const base = box.getBoundingClientRect().left;
+      const next: { center: number; unit: number }[] = [];
+      letterRefs.current.forEach((el) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        next.push({
+          center: (r.left + r.right) / 2 - base,
+          unit: Math.round((r.width / FS) * 1000),
+        });
+      });
+      if (!cancelled && next.length) setMarks(next);
+    };
+    const ready = document.fonts?.ready ?? Promise.resolve();
+    ready.then(() => {
+      if (!cancelled) measure();
+    });
+    window.addEventListener("resize", measure);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
   return (
-    <section
-      className="relative w-full overflow-hidden text-white"
-      style={BRAND_BG}
-    >
+    <section className="relative w-full overflow-hidden text-white" style={BRAND_BG}>
       <div className="relative mx-auto flex min-h-[74vh] max-w-6xl items-center justify-center px-6 py-20">
         {/* corner labels */}
         <div className="absolute left-6 top-20 font-sans text-sm leading-tight tracking-wide text-emerald-300">
@@ -43,29 +81,61 @@ export function BrandSpecimen() {
           Framework
         </div>
 
-        {/* wordmark + registration lines + spec numbers */}
+        {/* wordmark + registration lines + per-glyph spec numbers */}
         <div className="relative inline-flex flex-col items-stretch">
-          <div className="relative">
-            <h2
-              className="whitespace-nowrap text-4xl leading-none tracking-tight sm:text-6xl md:text-[5rem] lg:text-[6.5rem]"
-              style={{ fontFamily: '"Boldonse", sans-serif' }}
-            >
-              Sentinel
+          <div className="relative" ref={boxRef}>
+            <h2 className="whitespace-nowrap tracking-tight" style={WORD_STYLE}>
+              {WORD.split("").map((ch, i) => (
+                <span
+                  key={i}
+                  ref={(el) => {
+                    letterRefs.current[i] = el;
+                  }}
+                  className="relative inline-block align-baseline"
+                >
+                  {ch}
+                  {/* left-edge line for this glyph cell, bled full panel height */}
+                  <span
+                    aria-hidden
+                    className={`${LINE} bottom-[-100vh] left-0 top-[-100vh] w-px`}
+                  />
+                  {/* right-edge line only after the last glyph */}
+                  {i === WORD.length - 1 && (
+                    <span
+                      aria-hidden
+                      className={`${LINE} bottom-[-100vh] right-0 top-[-100vh] w-px`}
+                    />
+                  )}
+                </span>
+              ))}
             </h2>
-            {/* boxed superscript tag at the cap-height line, right of the mark */}
+
+            {/* boxed superscript tag at the cap-height line */}
             <span className="absolute left-full top-0 ml-2 shrink-0 border border-white/80 px-2 py-0.5 font-sans text-xs tracking-widest">
               2.1
             </span>
-            {/* registration lines keyed to the wordmark box, bled to panel edges */}
-            <span className={`${LINE} left-[-100vw] right-[-100vw] top-0 h-px`} aria-hidden />
-            <span className={`${LINE} left-[-100vw] right-[-100vw] bottom-0 h-px`} aria-hidden />
-            <span className={`${LINE} bottom-[-100vh] left-0 top-[-100vh] w-px`} aria-hidden />
-            <span className={`${LINE} bottom-[-100vh] right-0 top-[-100vh] w-px`} aria-hidden />
+
+            {/* cap-height + baseline horizontals, bled to panel edges */}
+            <span
+              aria-hidden
+              className={`${LINE} left-[-100vw] right-[-100vw] top-0 h-px`}
+            />
+            <span
+              aria-hidden
+              className={`${LINE} left-[-100vw] right-[-100vw] bottom-0 h-px`}
+            />
           </div>
-          {/* spec numbers, spread across the wordmark width, below the baseline */}
-          <div className="mt-6 flex justify-between font-mono text-sm text-white sm:text-base">
-            {SPEC.map((n, i) => (
-              <span key={i}>{n}</span>
+
+          {/* per-glyph advance widths (per-mille of em), centered under columns */}
+          <div className="relative mt-6 h-4 font-mono text-xs text-white">
+            {marks.map((m, i) => (
+              <span
+                key={i}
+                className="absolute -translate-x-1/2"
+                style={{ left: `${m.center}px` }}
+              >
+                {m.unit}
+              </span>
             ))}
           </div>
         </div>
