@@ -2005,3 +2005,81 @@ textarea {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
+
+/* ── Workbench Source panel — "NDC2014 FORM" editorial restyle ──────────────
+   Scoped under .input-panel--form so ONLY the Source input panel changes;
+   other panels (Documents, Discovery, Review) keep the default card look.
+   Cream ground, hard black frame, mono uppercase labels, hairline row
+   separators, borderless fields — mirroring the reference form. */
+.input-panel--form {
+  background: #f3f1ea;
+  border: 2px solid #111827;
+  border-radius: 16px;
+}
+
+/* header — section title as a black box tag; description in mono */
+.input-panel--form .panel-header {
+  border-bottom: 2px solid #111827;
+  align-items: center;
+}
+.input-panel--form .panel-header h2 {
+  display: inline-block;
+  background: #111827;
+  color: #f3f1ea;
+  padding: 6px 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+}
+.input-panel--form .panel-header p {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+/* field labels — mono, bold, uppercase */
+.input-panel--form label,
+.input-panel--form .source-bar {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.76rem;
+}
+
+/* hairline row separators (the underline look between field groups) */
+.input-panel--form .control-grid,
+.input-panel--form .stacked {
+  border-top: 1.5px solid #111827;
+  margin-top: 4px;
+  padding-top: 14px;
+}
+
+/* inputs & textarea — transparent, borderless; text sits on the cream */
+.input-panel--form input,
+.input-panel--form textarea {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 8px 2px;
+  color: #1f2933;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.input-panel--form input:focus,
+.input-panel--form textarea:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background: rgba(17, 24, 39, 0.04);
+}
+
+/* flat dropdown triggers to match the borderless fields */
+.input-panel--form [data-slot="select-trigger"] {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding-left: 2px;
+  padding-right: 2px;
+}

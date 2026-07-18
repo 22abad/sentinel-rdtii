@@ -133,7 +133,7 @@ export function SourcePanel({
     : t("status.stop");
 
   return (
-    <section className="input-panel" aria-label={t("source.aria")}>
+    <section className="input-panel input-panel--form" aria-label={t("source.aria")}>
       <div className="panel-header">
         <div>
           <h2>{t("source.title")}</h2>
@@ -149,7 +149,7 @@ export function SourcePanel({
             extract();
           }}
           disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim() && linkedSourceCount === 0) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
-          className={`nodrag group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-300 text-white ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#10B981]"}`}
+          className={`nodrag group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-300 text-white ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#111827] hover:bg-black"}`}
           style={{ minHeight: 0, border: "none" }}
         >
           <span>
