@@ -458,6 +458,7 @@ export function WorkbenchCanvas({
   onSwitchView,
   onGraphChange,
   apiRef,
+  onFileExtract,
 }: {
   panels: CanvasPanel[];
   onExit: () => void;
@@ -469,6 +470,9 @@ export function WorkbenchCanvas({
   onGraphChange?: (graph: CanvasGraph) => void;
   /** Receives the canvas's imperative API while mounted. */
   apiRef?: React.MutableRefObject<WorkbenchCanvasApi | null>;
+  /** A file node's Extract button spawned + wired a fresh source instance —
+      the page should auto-run that thread once its linked files register. */
+  onFileExtract?: (fileId: string, sourceInstanceId: string) => void;
 }) {
   const restoredState = useMemo(() => restoreCanvasState(readSavedCanvasLayout()), []);
   const flowRef = useRef<ReactFlowInstance | null>(null);
@@ -908,14 +912,32 @@ export function WorkbenchCanvas({
     [markCanvasDirty],
   );
 
-  const spawnPanel = useCallback((panelId: string, position: XYPosition) => {
+  const spawnPanel = useCallback((panelId: string, position: XYPosition): string => {
     markCanvasDirty();
     const n = (spawnCounter.current += 1);
     const id = `${panelId}-copy-${n}`;
     const offset = (n % 6) * 26;
     setSpawned((prev) => [...prev, { id, panelId }]);
     setPositions((p) => ({ ...p, [id]: { x: position.x + offset, y: position.y + offset } }));
+    return id;
   }, [markCanvasDirty]);
+
+  // One-click file pipeline: the graph assembles itself. Spawns a fresh
+  // Source + Audit pair beside the file, wires file→source→audit, and asks
+  // the page to auto-run the new source thread once the wire lands.
+  const extractFileNode = useCallback((fileId: string) => {
+    markCanvasDirty();
+    const base = flowRef.current?.getNode(fileId)?.position
+      ?? positions[fileId] ?? { x: 240, y: 240 };
+    const sourceId = spawnPanel("source", { x: base.x + 320, y: base.y - 40 });
+    const auditId = spawnPanel("audit", { x: base.x + 320 + 500, y: base.y - 40 });
+    setEdges((es) => [
+      ...es,
+      { id: `auto-${fileId}-${sourceId}`, source: fileId, target: sourceId } as Edge,
+      { id: `auto-${sourceId}-${auditId}`, source: sourceId, target: auditId } as Edge,
+    ]);
+    onFileExtract?.(fileId, sourceId);
+  }, [markCanvasDirty, positions, spawnPanel, onFileExtract]);
 
   // Extract-from-Discovery must always have a visible destination: results
   // stream into the ORIGINAL "source" thread, so if that node was deleted
@@ -1154,10 +1176,11 @@ export function WorkbenchCanvas({
               onResize: (size: WorkbenchCanvasSize) => resizeNode(f.id, size),
               onResetSize: () => resetNodeSize(f.id),
               onDelete: () => removeNode(f.id),
+              onExtract: () => extractFileNode(f.id),
             } satisfies FileNodeData,
           })),
       ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds, handleChatSend, handleChatResponse, handleChatError, sendToSession, handleChatFileUpload, chatIngesting, removeFileFromSession, deleteIngestedFile],
+    [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, extractFileNode, selectedIds, handleChatSend, handleChatResponse, handleChatError, sendToSession, handleChatFileUpload, chatIngesting, removeFileFromSession, deleteIngestedFile],
   );
 
   const renderedEdges = useMemo<Edge[]>(() => {

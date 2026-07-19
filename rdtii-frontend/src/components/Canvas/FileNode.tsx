@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Handle, NodeResizer, Position } from "@xyflow/react";
 import { motion, AnimatePresence } from "motion/react"
-import { Trash2, FileText, ChevronDown } from "lucide-react";
+import { Trash2, FileText, ChevronDown, Play } from "lucide-react";
 import { FILE_MIN_SIZE, RESIZER_HANDLE_STYLE, RESIZER_LINE_STYLE } from "./resize";
 import type { WorkbenchCanvasSize } from "./types";
 
@@ -18,6 +18,9 @@ export type FileNodeData = {
   onResize?: (size: WorkbenchCanvasSize) => void;
   onResetSize?: () => void;
   onDelete: () => void;
+  /** One-click pipeline: spawn a Source + Audit pair, wire this file in, and
+      auto-run the extraction — the graph assembles itself. */
+  onExtract?: () => void;
 };
 
 const INGEST_BADGE: Record<
@@ -184,6 +187,35 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
           >
             {INGEST_BADGE[data.ingestStatus].label}
           </span>
+        )}
+        {data.onExtract && (
+          <button
+            className="nodrag"
+            title="Extract this file: spawns a wired Source + Audit and runs"
+            onClick={(e) => {
+              e.stopPropagation();
+              data.onExtract?.();
+            }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              height: 20,
+              minHeight: 0,
+              padding: "0 8px",
+              borderRadius: 0,
+              border: "1.5px solid #111827",
+              background: "#111827",
+              color: "#fff",
+              fontSize: "0.62rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <Play size={10} /> Extract
+          </button>
         )}
         <button
           className="nodrag"
