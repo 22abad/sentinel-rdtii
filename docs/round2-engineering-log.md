@@ -66,6 +66,13 @@ link every claim to code._
   unfetchable, 16/16 official non-zero cells covered, 0 empty rationale/URL,
   no BOM.** `outputs/SUBMISSION_final/` + `outputs/SUBMISSION_Round1_SENTINEL.xlsx`.
 - 649 tests green, main at #306.
+- **Demo-confirmation run (run7, ~10:20, pre-recording)**: one more fresh bare
+  3-economy live run → 69 rows (AUS 44 / MYS 14 / SGP 11), 16/16 official
+  non-zero cells, hygiene clean, **and the full independent verbatim audit came
+  back 69/69 confirmed, 0 mismatch, 0 unfetchable** — the first fresh run whose
+  RAW output passes the independent audit 100%. The three prepare-time quote
+  gates (#301/#302/#306) are closed-loop; post-hoc cleaning is no longer doing
+  any work. Dong recording the demo against this state.
 
 **NIGHT UPDATE (for Dong, ~08:00):** PR #293 (`codex/mapping-precision-gate`)
 added a precision-first eligibility gate that hard-drops any mapping failing
