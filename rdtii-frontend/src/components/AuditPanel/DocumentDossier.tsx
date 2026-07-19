@@ -180,13 +180,9 @@ function DossierEntry({
       value: `${releaseYear.year} · ${Math.round(releaseYear.confidence * 100)}% (${releaseYear.decided_by})`,
     });
   }
-  if (timestamp) {
-    rows.push({
-      label: "Timestamp",
-      value: `${timestamp.verified ? "✓ corroborated" : "unconfirmed"}${
-        timestamp.best_date ? ` · best date ${timestamp.best_date}` : ""
-      }`,
-    });
+  // Just the resolved date — the multi-source verification detail is internal.
+  if (timestamp?.best_date) {
+    rows.push({ label: "Last update", value: timestamp.best_date });
   }
   if (pdfType !== undefined) rows.push({ label: "Type", value: String(pdfType) });
   if (totalPages !== undefined) {
