@@ -171,13 +171,14 @@ class MASOrchestrator:
                     # 2. Independent eligibility gate — before scoring or
                     # rationale generation, and blind to both of them.
                     eligibility = await self.eligibility.verify(quote, ind_id, features)
-                    # RDTII_ELIGIBILITY_MODE=flag keeps an ineligible mapping but
-                    # flags it for human review instead of dropping it — recall-
-                    # preserving, aligned with the official 20% human-validation
-                    # step and our other flag-not-drop gates. Default ("reject")
-                    # is byte-identical to the original precision-first behaviour.
+                    # Default "flag" keeps an ineligible mapping but flags it for
+                    # human review instead of dropping it — recall-preserving,
+                    # aligned with the official 20% human-validation step and our
+                    # other flag-not-drop gates. RDTII_ELIGIBILITY_MODE=reject
+                    # opts into the precision-first behaviour (hard-drop any
+                    # mapping the eligibility gate does not support).
                     _elig_flag_mode = (
-                        os.getenv("RDTII_ELIGIBILITY_MODE", "reject").strip().lower() == "flag"
+                        os.getenv("RDTII_ELIGIBILITY_MODE", "flag").strip().lower() != "reject"
                     )
                     if not eligibility.supported and not _elig_flag_mode:
                         results_list.append((None, rejected_from_eligibility(

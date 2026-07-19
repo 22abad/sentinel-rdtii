@@ -7,6 +7,7 @@ official README template.
 
 from __future__ import annotations
 
+import os
 import re
 import unicodedata
 from typing import Literal
@@ -1232,6 +1233,25 @@ def filter_formal_submission_rows(
     import logging
 
     logger = logging.getLogger(__name__)
+
+    # Flag-not-drop (the RDTII_ELIGIBILITY_MODE=flag default): review-flagged
+    # rows STAY in the formal output, annotated for the official 20%
+    # human-validation step, instead of being silently excluded — otherwise the
+    # orchestrator's flag mode would be undone here at the output boundary.
+    # RDTII_ELIGIBILITY_MODE=reject restores the precision-first exclusion.
+    if os.getenv("RDTII_ELIGIBILITY_MODE", "flag").strip().lower() != "reject":
+        flagged = sum(
+            1 for row in rows
+            if row.requires_human_review or row.mapping_decision != "supported"
+        )
+        if flagged:
+            logger.info(
+                "Keeping %d review-flagged row(s) in the formal output "
+                "(flag mode); they carry their reasons in Notes for human "
+                "validation.",
+                flagged,
+            )
+        return rows
     kept: list[SubmissionRow] = []
     for row in rows:
         reasons: list[str] = []

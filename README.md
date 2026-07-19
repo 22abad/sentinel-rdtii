@@ -152,6 +152,13 @@ to live discovery to fill gaps and surface NEW finds — so a reviewer's short r
 never rides entirely on a live crawl. Add `--no-seed` for pure live discovery,
 or `--offline` to stay on the seeds only.
 
+The pipeline's quality gates run in **flag mode by default**: a mapping that
+fails an automated eligibility check is kept in the output and annotated in the
+Notes column for human review (mirroring the official methodology's 20%
+human-validation step), rather than silently dropped. Set
+`RDTII_ELIGIBILITY_MODE=reject` for a precision-first run that hard-drops
+anything the gates do not support.
+
 For an auditable reviewer run, use strict live mode:
 
 ```bash
@@ -226,7 +233,7 @@ python main.py --economy Singapore --pillar 6 --offline
 | `--offline` | Map cached official texts from the local law library (no network) |
 | `--no-seed` | Skip the seed pass; go straight to live discovery (default is seed-first) |
 | `--strict-live` | Reviewer mode: verified official live evidence only; fail instead of using fixtures |
-| `--include-review` | Research mode: include ambiguous/flagged mappings; formal output excludes them by default |
+| `--include-review` | Include ambiguous/flagged mappings unconditionally (only changes anything under `RDTII_ELIGIBILITY_MODE=reject`; the default flag mode already keeps them, annotated in Notes) |
 | `--provider` | Override `RDTII_LLM_PROVIDER` for this run |
 | `--format` | `csv`, `json`, or `both` (default) |
 | `--limit` | Maximum Discovery candidates returned per pillar (default: 20) |
