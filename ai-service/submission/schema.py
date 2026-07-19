@@ -800,7 +800,9 @@ _OPERATIVE_LANGUAGE = re.compile(
     r"obligation|no person|any person|an? organisation|means|includes?|access|"
     r"disclose|retain|store|transfer|process|collect|appoint|designate|ensure|"
     r"comply|provide|impose|permit|restrict)\b"
-    r"|应当|不得|必须|禁止|ต้อง|ห้าม|wajib|dilarang|обязан|запрещ",
+    r"|应当|不得|必须|禁止|ต้อง|ห้าม|обязан|запрещ"
+    # Malay/Indonesian operative verbs (Malay statutes: 'hendaklah melantik…')
+    r"|wajib|dilarang|hendaklah|mestilah|tidak boleh|melantik",
     re.IGNORECASE,
 )
 
@@ -849,6 +851,9 @@ def _is_nonsubstantive_quote(law_name: str, quote: str) -> bool:
 _STATUTE_INSTRUMENT_WORD = re.compile(
     r"(act|law|regulation|code|ordinance|decree|rule|order|constitution|"
     r"notice|principle|bill|standard|amendment|schedule|"
+    # Malay statutory-instrument words (Akta 709, Peraturan-Peraturan,
+    # Pekeliling = official circular, Perintah = order)
+    r"akta|peraturan|pekeliling|perintah|kanun|undang-undang|"
     r"กฎหมาย|พระราช|ประกาศ|закон|кодекс|указ|постановление|хууль|法|条例|办法|规定)",
     re.IGNORECASE,
 )
@@ -886,7 +891,7 @@ def _is_out_of_scope_source(law_name: str, source_url: str) -> bool:
     return False
 _STATUTE_WORD = re.compile(
     r"\b(act|law|regulation|regulations|ordinance|decree|code|rules|bill|"
-    r"constitution|notification)\b",
+    r"constitution|notification|akta|peraturan|pekeliling|perintah)\b",
     re.IGNORECASE,
 )
 

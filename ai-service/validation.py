@@ -73,7 +73,8 @@ _SECTION_HEADER_PATTERNS: list[re.Pattern] = [
 # require an auxiliary/modal so a bare participle in a heading ("Consent
 # required") does NOT count, while "consent is required" / "shall provide" do.
 _OPERATIVE_VERB_RE = re.compile(
-    r"\b(?:shall|must|may(?:\s+not)?|"
+    r"\b(?:shall|must|may(?:\s+not)?|hendaklah|mestilah|wajib|dilarang|"
+    r"tidak\s+boleh|"
     r"(?:is|are|be|been|were|was)\s+(?:not\s+)?"
     r"(?:required|prohibited|permitted|entitled|liable|obliged|obligated|"
     r"responsible|allowed|deemed|bound|restricted|guaranteed)|"
