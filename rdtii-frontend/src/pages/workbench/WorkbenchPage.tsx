@@ -434,17 +434,18 @@ export function WorkbenchPage() {
             style={{
               width: 34,
               height: 34,
-              borderRadius: "50%",
-              background: "#0f766e",
-              color: "#ffffff",
+              borderRadius: 0,
+              background: "#f3f1ea",
+              color: "#111827",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: "0.8rem",
               fontWeight: 800,
-              border: "2px solid #ffffff",
-              boxShadow: "0 4px 14px rgba(0,0,0,0.2)",
+              border: "1.5px solid #111827",
+              boxShadow: "none",
               textTransform: "uppercase",
+              fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
             }}
           >
             {(user?.username ?? "?").slice(0, 1)}
@@ -462,14 +463,17 @@ export function WorkbenchPage() {
               style={{
                 minHeight: 0,
                 padding: "8px 18px",
-                borderRadius: 10,
-                border: "none",
-                background: "#10B981",
-                color: "#ffffff",
-                fontSize: "0.82rem",
-                fontWeight: 750,
+                borderRadius: 0,
+                border: "1.5px solid #111827",
+                background: "#111827",
+                color: "#f3f1ea",
+                fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
+                fontSize: "0.7rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
                 cursor: "pointer",
-                boxShadow: "0 6px 18px rgba(16,185,129,0.35)",
+                boxShadow: "none",
               }}
             >
               Share
@@ -485,12 +489,13 @@ export function WorkbenchPage() {
                     top: "calc(100% + 8px)",
                     right: 0,
                     padding: "6px 12px",
-                    borderRadius: 8,
+                    borderRadius: 0,
                     background: "#111827",
-                    color: "#f9fafb",
-                    fontSize: "0.72rem",
+                    color: "#f3f1ea",
+                    fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
+                    fontSize: "0.68rem",
                     whiteSpace: "nowrap",
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                    boxShadow: "none",
                   }}
                 >
                   Canvas sharing is coming soon ✨

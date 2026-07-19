@@ -26,7 +26,9 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
   const bare = !!data.transparent;
   const flat = !!data.flat;
   const nodeWidth = data.width ?? 460;
-  const nodeHeight = data.height;
+  // Flat (swiss) panels stick to their content's minimum height — a stored
+  // resize height would pin the frame open; width still resizes normally.
+  const nodeHeight = flat ? undefined : data.height;
   return (
     // Wrapper is overflow-visible so the floating Delete button (above the card) isn't clipped.
     <div style={{ position: "relative", width: nodeWidth, height: nodeHeight }}>

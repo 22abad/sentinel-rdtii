@@ -2496,11 +2496,8 @@ textarea {
   color: #6b675c;
 }
 
-/* canvas mode: swiss panels fill their node box, so the black frame always
-   wraps the full node even when it's resized taller than the content */
-.react-flow__node .swiss-form {
-  min-height: 100%;
-}
+/* canvas mode: swiss panels stick to content height (PanelNode ignores any
+   stored resize height for flat panels), so no fill/stretch rule is needed */
 
 /* classic view: the PAGE is split in half by one continuous full-height
    divide line (reference: Tambourine index) — the line runs from the top of
