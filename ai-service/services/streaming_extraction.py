@@ -234,7 +234,14 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
 
     verifier = eligibility_verifier or EligibilityVerifier(llm_provider)
     eligibility = await verifier.verify(quote, ind_id, features)
-    if not eligibility.supported:
+    # Flag-not-drop parity with the batch orchestrator (#300): the default
+    # keeps an ineligible mapping FLAGGED for human review — the streaming
+    # path (the workbench UI's only path) still hard-dropped, so the UI
+    # rejected everything the batch pipeline would have kept.
+    _elig_flag_mode = (
+        os.getenv("RDTII_ELIGIBILITY_MODE", "flag").strip().lower() != "reject"
+    )
+    if not eligibility.supported and not _elig_flag_mode:
         yield _sse(
             "rejected",
             rejected_from_eligibility(
@@ -242,6 +249,13 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
             ).model_dump(),
         )
         return
+    if not eligibility.supported:
+        pre_flag_reasons.append(
+            "Eligibility flag: " + (
+                "; ".join(eligibility.exclusion_reasons)
+                or "candidate indicator not independently supported by the quote"
+            )
+        )
 
     # DISPLAY ONLY: full sentence(s) around the quote, so a reviewer sees a
     # clipped half-sentence in context. Not used for scoring (see chunker note).

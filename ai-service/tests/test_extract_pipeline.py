@@ -557,6 +557,9 @@ def test_streaming_runtime_uses_same_feature_normalization(monkeypatch):
     import main as main_module
 
     monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "0")
+    # This test asserts the precision-first hard-drop; the default is now
+    # flag-not-drop on the streaming path too (parity with the orchestrator).
+    monkeypatch.setenv("RDTII_ELIGIBILITY_MODE", "reject")
     source = "Article 1. Personal data shall be freely transferred abroad."
     quote = "Personal data shall be freely transferred abroad"
 

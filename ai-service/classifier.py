@@ -81,6 +81,8 @@ _BASE_PHRASES = {
     "7.4": [
         "data protection officer", "dpo", "dpia", "impact assessment",
         "designate one or more individuals",
+        # Malay (PDP Commissioner circulars): DPO = Pegawai Perlindungan Data
+        "pegawai perlindungan data",
         "数据保护官", "影响评估",
         "compliance officer", "privacy officer", "registration with",
         "data controller", "data processor", "register of processing",
