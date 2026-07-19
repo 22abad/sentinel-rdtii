@@ -266,6 +266,7 @@ export function WorkbenchPage() {
       width: 520,
       dragHandle: ".panel-header",
       upstreamId: "source",
+      flat: true,
     },
     { id: "documents", title: "Documents", element: <DocumentsPanel />, width: 420, dragHandle: ".panel-header" },
   ];
@@ -527,7 +528,7 @@ export function WorkbenchPage() {
               <SourceThreadPanel threadId={MAIN_THREAD_ID} linkedFiles={[]} />
               {foundPdfs.length > 0 && <FoundPdfsThreadPanel />}
             </div>
-            <div className="flex flex-col gap-4 min-w-0 self-start">
+            <div className="workspace-audit-side flex flex-col gap-4 min-w-0">
               <AuditThreadPanel threadId={MAIN_THREAD_ID} />
             </div>
           </section>

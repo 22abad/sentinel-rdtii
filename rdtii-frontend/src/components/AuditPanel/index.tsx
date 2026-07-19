@@ -159,7 +159,7 @@ export function AuditPanel({
 
   return (
     <section
-      className="review-panel self-start flex flex-col max-h-[calc(100vh-40px)]"
+      className="review-panel swiss-form self-start flex flex-col max-h-[calc(100vh-40px)]"
       aria-label={t("audit.aria")}
     >
       <div className="panel-header shrink-0">

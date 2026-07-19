@@ -2303,9 +2303,42 @@ textarea {
   color: #6b675c;
 }
 
-/* classic view: clean half-half split */
+/* classic view: half-half sheet split by a center divide line (reference:
+   Tambourine index) — the whole right part is the Audit panel */
 .workbench-classic .workspace {
   grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+.workbench-classic .workspace > div:first-child {
+  padding-right: 20px;
+}
+.workbench-classic .workspace-audit-side {
+  border-left: 2px solid #111827;
+  padding-left: 20px;
+}
+.workbench-classic .workspace-audit-side .review-panel {
+  align-self: stretch;
+  flex: 1;
+  max-height: none;
+}
+
+/* swiss header action buttons (Audit: Load demo / Preview export) */
+.swiss-form .panel-header button.secondary {
+  min-height: 32px;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+}
+.swiss-form .panel-header button.secondary:hover {
+  background: #111827;
+  color: #f3f1ea;
 }
 
 /* ── UsageSummary, Swiss-ified ────────────────────────────────────────────── */
