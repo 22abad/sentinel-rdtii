@@ -2272,3 +2272,112 @@ textarea {
 .workbench-classic .workspace {
   grid-template-columns: 1fr 1fr;
 }
+
+/* ── UsageSummary, Swiss-ified ────────────────────────────────────────────── */
+/* trigger inside a swiss form: mono, square, black-on-cream */
+.swiss-form .usage-summary-trigger {
+  border-radius: 0;
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .usage-summary-trigger:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .usage-summary-trigger:hover .usage-summary-trigger-label {
+  color: #f3f1ea;
+}
+.swiss-form .usage-summary-trigger:focus-visible {
+  outline: 2px solid #111827;
+}
+.swiss-form .usage-summary-trigger-label {
+  color: #111827;
+}
+
+/* usage drawer: square cream sheet, black frame, hairline lists */
+.right-drawer.usage-drawer {
+  border: 2px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  box-shadow: none;
+}
+.usage-drawer .right-drawer-close {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  color: #111827;
+  box-shadow: none;
+}
+.usage-drawer .right-drawer-close:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.usage-drawer .usage-drawer-header p {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.usage-drawer .usage-drawer-header h3 {
+  color: #111827;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.usage-drawer .usage-drawer-header span {
+  color: #6b675c;
+}
+.usage-drawer .usage-metric {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+}
+.usage-drawer .usage-metric span {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.usage-drawer .usage-metric strong {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.usage-drawer .usage-metric-primary {
+  background: #111827;
+}
+.usage-drawer .usage-metric-primary span {
+  color: rgba(243, 241, 234, 0.65);
+}
+.usage-drawer .usage-metric-primary strong {
+  color: #f3f1ea;
+}
+.usage-drawer .usage-drawer-section h4 {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.usage-drawer .usage-detail-list {
+  border-top: 1.5px solid #111827;
+}
+.usage-drawer .usage-detail-list div,
+.usage-drawer .usage-operation-list div {
+  border-bottom: 1.5px solid #111827;
+}
+.usage-drawer .usage-detail-list dt,
+.usage-drawer .usage-operation-list span {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+}
+.usage-drawer .usage-detail-list dd,
+.usage-drawer .usage-operation-list strong {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.usage-drawer .usage-cost-note {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+}
