@@ -171,14 +171,13 @@ export function SourcePanel({
         <label>
           {t("source.country")}
           {detectedCountry?.detected ? (
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 text-sm font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-2 border-[1.5px] border-[#111827] bg-[#111827] px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-[#f3f1ea]">
                 {detectedCountry.name}
-                <span className="text-emerald-400 text-xs">({detectedCountry.code})</span>
+                <span className="text-[#f3f1ea]/60">({detectedCountry.code})</span>
               </span>
               <small
-                className="text-xs text-gray-400 cursor-pointer hover:text-gray-600 underline underline-offset-2"
+                className="cursor-pointer font-mono text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[#111827] underline decoration-1 underline-offset-4 hover:text-[#6b675c]"
                 onClick={() => setCountry("")}
               >
                 {t("source.change")}
