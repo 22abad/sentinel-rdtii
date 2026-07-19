@@ -2752,13 +2752,22 @@ textarea {
 .swiss-form .reasoning-report .rr-provenance-line:last-child {
   border-bottom: none;
 }
+/* empty/loading states as a simple block (white band, hairline rules) */
 .swiss-form .empty-state {
-  padding: 18px;
+  margin: 0;
+  padding: 16px 18px;
+  border-top: 1.5px solid #111827;
+  border-bottom: 1.5px solid #111827;
+  background: #ffffff;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #6b675c;
+  color: #111827;
+}
+.swiss-form .empty-state.error-state {
+  border-color: #9f2d20;
+  color: #9f2d20;
 }
 
 /* header action group pinned to the right edge (the swiss header switched to
