@@ -1013,6 +1013,23 @@ export function WorkbenchCanvas({
   const removeNode = useCallback((id: string) => {
     markCanvasDirty();
     const persistentPanel = !!(PANEL_FALLBACKS[id] || panelMetaRef.current[id]);
+
+    // Cascade: deleting a Source instance orphans every Audit instance
+    // edge-bound to it — an unwired Audit is only a guard card, so it goes
+    // with its source. Compute BEFORE the edges are cleared below.
+    const baseOf = (instanceId: string): string =>
+      spawned.find((s) => s.id === instanceId)?.panelId ?? instanceId;
+    const downstreamBases = new Set(
+      panels.filter((p) => p.upstreamId === baseOf(id)).map((p) => p.id),
+    );
+    const cascade: string[] = [];
+    if (downstreamBases.size) {
+      for (const edge of edges) {
+        const other = edge.source === id ? edge.target : edge.target === id ? edge.source : null;
+        if (other && downstreamBases.has(baseOf(other))) cascade.push(other);
+      }
+    }
+
     setEdges((prev) => prev.filter((edge) => edge.source !== id && edge.target !== id));
     setSelectedIds((prev) => {
       if (!prev[id]) return prev;
@@ -1050,7 +1067,9 @@ export function WorkbenchCanvas({
       delete next[id];
       return next;
     });
-  }, [markCanvasDirty]);
+    for (const orphan of cascade) removeNode(orphan);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [markCanvasDirty, panels, spawned, edges]);
 
   const nodes = useMemo<Node[]>(
     () =>
