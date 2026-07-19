@@ -130,8 +130,18 @@ class SearchEngineAdapter(DiscoveryAdapter):
     ) -> list[RawSearchHit]:
         hits: list[RawSearchHit] = []
         seen_urls: set[str] = set()
+        last_exc: Exception | None = None
+        any_query_succeeded = False
         for query in queries:
-            rows = await backend.search(query, max(1, limit - len(hits)))
+            # A zero-hit query must not kill the whole source: SerpApi RAISES
+            # on empty results ("Google hasn't returned any results"), which
+            # used to skip the remaining queries AND the core-term retry.
+            try:
+                rows = await backend.search(query, max(1, limit - len(hits)))
+                any_query_succeeded = True
+            except Exception as exc:  # noqa: BLE001 — retried/reported below
+                last_exc = exc
+                rows = []
             if not rows:
                 # Concept phrases ('site:x.gov data export security assessment')
                 # score zero on web engines too — one bounded retry with the
@@ -140,9 +150,14 @@ class SearchEngineAdapter(DiscoveryAdapter):
                 site = site_match.group(0) if site_match else ""
                 core = _core_search_term(strip_site_filter(query))
                 if core and core != strip_site_filter(query):
-                    rows = await backend.search(
-                        f"{site} {core}".strip(), max(1, limit - len(hits))
-                    )
+                    try:
+                        rows = await backend.search(
+                            f"{site} {core}".strip(), max(1, limit - len(hits))
+                        )
+                        any_query_succeeded = True
+                    except Exception as exc:  # noqa: BLE001
+                        last_exc = exc
+                        rows = []
             for row in rows:
                 if row.url in seen_urls:
                     continue
@@ -157,6 +172,10 @@ class SearchEngineAdapter(DiscoveryAdapter):
                 }))
                 if len(hits) >= limit:
                     return hits
+        if not hits and last_exc is not None and not any_query_succeeded:
+            # Every query errored — surface the backend failure (e.g. quota
+            # exhausted) instead of a misleading "no results".
+            raise last_exc
         return hits
 
     async def _fixture_fallback(
