@@ -7,6 +7,8 @@ Distance operator is `<=>` (cosine); score = 1 - distance (1.0 == identical).
 
 from __future__ import annotations
 
+import re
+
 from dataclasses import dataclass
 
 from auth import _db_connect
@@ -16,6 +18,22 @@ from auth import _db_connect
 # Same 384 dims, so the pgvector column is untouched.
 EMBED_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 DEFAULT_TOP_K = 5
+
+_TOC_HEADING_LINE = re.compile(r"^\s*(?:\d{1,3}[A-Z]{0,2}\.?\s+\S|Part\b|Division\b|Subdivision\b|Schedule\b|ARRANGEMENT OF)", re.IGNORECASE)
+_TOC_OPERATIVE = re.compile(r"\b(shall|must|may not|is liable|commits an offence|应当|不得|必须)\b", re.IGNORECASE)
+
+
+def _looks_like_toc(text: str) -> bool:
+    """A table-of-contents chunk: mostly bare numbered-heading lines, no
+    operative language. These repeat every section title verbatim and
+    out-rank real provisions for statutory phrasings."""
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if len(lines) < 6:
+        return False
+    heading_like = sum(1 for line in lines if _TOC_HEADING_LINE.match(line))
+    if heading_like / len(lines) < 0.6:
+        return False
+    return not _TOC_OPERATIVE.search(text)
 
 _model = None
 
@@ -90,7 +108,9 @@ def retrieve(
         params.append(document_ids)
     where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
     params.append(qvec)                        # ORDER BY
-    params.append(top_k)                       # LIMIT
+    # Over-fetch so the ToC penalty below still has substantive chunks to
+    # promote into the final top_k.
+    params.append(max(top_k, min(top_k * 4, 40)))  # LIMIT
 
     sql = f"""
         SELECT dc.id, dc.chunk_text, ce.document_id, ce.country_code,
@@ -117,7 +137,32 @@ def retrieve(
         )
         for r in rows
     ]
-    return [h for h in hits if h.score >= min_score]
+    # Heading noise out-ranks substance for almost any statutory phrasing:
+    # running page headers become tiny duplicate chunks ("Part 3 Ransomware
+    # reporting obligations …" ×6, one per page) and ToC chunks repeat every
+    # section title verbatim — the chat then honestly answers "only headings
+    # were retrieved". Post-rank: dedupe identical texts, then demote
+    # low-substance chunks (short + no operative language, or ToC-shaped)
+    # behind the real provisions.
+    seen: set[str] = set()
+    deduped: list[RetrievedChunk] = []
+    for h in hits:
+        if h.score < min_score:
+            continue
+        key = " ".join(h.text.split()).lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(h)
+
+    def _low_substance(text: str) -> bool:
+        if _looks_like_toc(text):
+            return True
+        return len(text.strip()) < 200 and not _TOC_OPERATIVE.search(text)
+
+    substantive = [h for h in deduped if not _low_substance(h.text)]
+    filler = [h for h in deduped if _low_substance(h.text)]
+    return (substantive + filler)[:top_k]
 
 
 def build_context(chunks: list[RetrievedChunk]) -> str:

@@ -133,6 +133,9 @@ async def chat_query(req: RAGQueryRequest):
         retrieve,
         req.question,
         country_code=req.country_code or None,
+        # Session-scoped retrieval: a canvas chat wired to specific files must
+        # answer from THOSE documents, not whatever the whole store ranks first.
+        document_ids=req.document_ids or None,
     )
     retrieved_context = build_context(hits)
 
