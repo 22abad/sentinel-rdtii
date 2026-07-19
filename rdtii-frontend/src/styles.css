@@ -2308,23 +2308,24 @@ textarea {
   background: #f7d445;
   color: #111827;
 }
-/* multi-select action row: the count owns the left half; the 4 buttons
-   share the right half, each filling its quarter (no mini boxes) */
+/* multi-select block: count line, then ONE full-bleed row of 4 equal
+   buttons filling the whole width — no outer margins, no gaps, divided
+   only by hairlines */
 .swiss-form .shortlist-tray {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
   align-items: stretch;
   border: none;
   border-top: 1.5px solid #111827;
   border-radius: 0;
   background: transparent;
-  padding: 10px 18px;
+  padding: 0;
 }
 .swiss-form .shortlist-tray > span {
-  grid-column: span 4;
+  grid-column: 1 / -1;
   margin-right: 0;
-  align-self: center;
+  padding: 10px 18px;
   color: #111827;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.72rem;
@@ -2333,26 +2334,32 @@ textarea {
   letter-spacing: 0.08em;
 }
 .swiss-form .shortlist-tray button {
-  grid-column: span 1;
   width: 100%;
-  min-height: 40px;
-  padding: 0 6px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 8px;
+  border: none;
+  border-top: 1.5px solid #111827;
   border-radius: 0;
+  background: transparent;
+  color: #111827;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.62rem;
+  font-size: 0.66rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+.swiss-form .shortlist-tray button + button {
+  border-left: 1.5px solid #111827; /* vertical hairline between the four */
 }
 .swiss-form .shortlist-tray .shortlist-progress {
   grid-column: 1 / -1;
+  padding: 10px 18px;
+  border-top: 1.5px solid #111827;
 }
 .swiss-form .shortlist-tray button.secondary {
-  border: 1.5px solid #111827;
-  background: transparent;
+  background: transparent; /* separators come from the bar, not the button */
   color: #111827;
 }
 .swiss-form .shortlist-tray button.secondary:hover:not(:disabled) {
