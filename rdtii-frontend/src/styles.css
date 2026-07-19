@@ -2646,10 +2646,14 @@ textarea {
    top-right on the gray remainder. Square corners per our Swiss language. */
 .swiss-form .reasoning-report .rr-batt {
   position: relative;
-  margin: 10px -18px -14px; /* bleed to the band edges: card = full width */
+  margin: 10px -18px 12px; /* full-width bleed; keep space below for rows */
   min-height: 128px;
   background: #eceae2; /* the card's gray remainder */
   overflow: hidden;
+}
+/* only bleed to the band's bottom edge when nothing follows the card */
+.swiss-form .reasoning-report .rr-batt:last-child {
+  margin-bottom: -14px;
 }
 .swiss-form .reasoning-report .rr-batt-fill {
   display: flex;
