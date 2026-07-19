@@ -38,7 +38,7 @@ export function App() {
           </Routes>
         </Suspense>
       </RouteErrorBoundary>
-      <LanguageToggle />
+      {/* Language toggle hidden for now — restore <LanguageToggle /> to bring it back */}
     </>
   );
 }
