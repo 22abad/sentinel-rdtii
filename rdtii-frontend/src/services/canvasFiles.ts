@@ -54,12 +54,19 @@ export async function getCanvasFileStatus(documentId: string): Promise<string> {
 }
 
 /** Permanently delete an ingested document (chunks + embeddings cascade). */
+/** Broadcast knowledge-base mutations so panels (Documents) refresh live. */
+export const DOCUMENTS_CHANGED_EVENT = "rdtii:documents-changed";
+function notifyDocumentsChanged() {
+  window.dispatchEvent(new CustomEvent(DOCUMENTS_CHANGED_EVENT));
+}
+
 export async function deleteCanvasFile(documentId: string): Promise<void> {
   const res = await fetch(`${CANVAS_FILES_API_URL}/${encodeURIComponent(documentId)}`, {
     method: "DELETE",
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error(`Delete failed (HTTP ${res.status}).`);
+  notifyDocumentsChanged();
 }
 
 /** Upload a canvas file to the backend for RAG ingestion (extract → chunk → embed). */
@@ -87,5 +94,6 @@ export async function uploadCanvasFile(
       typeof detail === "string" ? detail : `File ingest failed (HTTP ${res.status}).`,
     );
   }
+  notifyDocumentsChanged();
   return payload as CanvasFileUploadResponse;
 }

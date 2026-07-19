@@ -60,12 +60,14 @@ const SPAWN_TYPES: SpawnType[] = [
 ];
 
 /** Default landing positions; anything not listed falls back to a cascade. */
+// Non-overlapping by construction: discovery is 800 wide, source 460,
+// audit 520 — laid out as one pipeline row with Documents on a second row.
 const DEFAULT_POSITIONS: Record<string, XYPosition> = {
   discovery: { x: 40, y: 40 },
-  source: { x: 40, y: 360 },
-  foundPdfs: { x: 540, y: 560 },
-  audit: { x: 560, y: 40 },
-  documents: { x: 360, y: 40 },
+  source: { x: 900, y: 40 },
+  audit: { x: 1420, y: 40 },
+  documents: { x: 900, y: 700 },
+  foundPdfs: { x: 1380, y: 700 },
 };
 
 /** Example flow wiring the panels together — endpoints that don't exist are ignored. */
@@ -1311,6 +1313,70 @@ export function WorkbenchCanvas({
     [markCanvasDirty, ingestFileToRag, markFileStale],
   );
 
+  // Tidy: re-lay every live card on a clean grid — connected chains stay on
+  // one row ordered by pipeline role, unwired cards flow into the last rows.
+  const ROLE_RANK: [RegExp, number][] = [
+    [/^discovery/, 0], [/^file-/, 1], [/^chat-/, 1], [/^source/, 2],
+    [/^foundPdfs/, 3], [/^session-/, 3], [/^audit/, 4], [/^documents/, 5],
+  ];
+  const roleOf = (id: string) => ROLE_RANK.find(([re]) => re.test(id))?.[1] ?? 6;
+  const tidyLayout = useCallback(() => {
+    markCanvasDirty();
+    const live = (flowRef.current?.getNodes() ?? []).filter((n) => n.id);
+    if (!live.length) return;
+    const widthOf = (n: Node) => n.measured?.width ?? n.width ?? 460;
+    const heightOf = (n: Node) => n.measured?.height ?? n.height ?? 420;
+    // Connected components over the visible edges.
+    const adjacency: Record<string, string[]> = {};
+    for (const e of edges) {
+      (adjacency[e.source] ??= []).push(e.target);
+      (adjacency[e.target] ??= []).push(e.source);
+    }
+    const liveIds = new Set(live.map((n) => n.id));
+    const seen = new Set<string>();
+    const components: string[][] = [];
+    for (const n of live) {
+      if (seen.has(n.id)) continue;
+      const comp: string[] = [];
+      const queue = [n.id];
+      seen.add(n.id);
+      while (queue.length) {
+        const cur = queue.pop() as string;
+        comp.push(cur);
+        for (const nb of adjacency[cur] ?? []) {
+          if (liveIds.has(nb) && !seen.has(nb)) {
+            seen.add(nb);
+            queue.push(nb);
+          }
+        }
+      }
+      components.push(comp);
+    }
+    // Big chains first; inside a chain, pipeline order.
+    components.sort((a, b) => b.length - a.length);
+    const byId = new Map(live.map((n) => [n.id, n]));
+    const GAP = 60;
+    const next: Record<string, XYPosition> = {};
+    let y = 40;
+    for (const comp of components) {
+      comp.sort((a, b) => roleOf(a) - roleOf(b) || a.localeCompare(b));
+      let x = 40;
+      let rowHeight = 0;
+      for (const id of comp) {
+        const node = byId.get(id);
+        if (!node) continue;
+        next[id] = { x, y };
+        x += widthOf(node) + GAP;
+        rowHeight = Math.max(rowHeight, heightOf(node));
+      }
+      y += rowHeight + GAP;
+    }
+    setPositions((prev) => ({ ...prev, ...next }));
+    requestAnimationFrame(() => {
+      void flowRef.current?.fitView({ padding: 0.15, maxZoom: 1 });
+    });
+  }, [markCanvasDirty, edges]);
+
   const handleReset = useCallback(() => {
     markCanvasDirty();
     setPositions(DEFAULT_POSITIONS);
@@ -1327,6 +1393,9 @@ export function WorkbenchCanvas({
     setViewport(undefined);
     noteCounter.current = 0;
     spawnCounter.current = 0;
+    requestAnimationFrame(() => {
+      void flowRef.current?.fitView({ padding: 0.15, maxZoom: 1 });
+    });
     chatCounter.current = 0;
     window.requestAnimationFrame(() => {
       flowRef.current?.fitView({ maxZoom: 1, padding: 0.2 });
@@ -1386,6 +1455,7 @@ export function WorkbenchCanvas({
           onAddPanel={addNote}
           onAddChat={spawnChat}
           onReset={handleReset}
+          onTidy={tidyLayout}
           onSwitchView={onSwitchView}
           onExit={onExit}
         />
