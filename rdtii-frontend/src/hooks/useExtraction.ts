@@ -463,6 +463,9 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
         }
         providerName = String(payload.outputs.provider ?? providerName);
         sourceText = String(payload.outputs.source_text ?? sourceText);
+        // Safety net for replayed/cached runs that skipped the `started`
+        // event: the highlight view needs the source text in the panel.
+        if (updateTextFromSource && sourceText) setText(sourceText);
         if (isRunUsageSummary(payload.outputs.usage)) {
           runUsage = payload.outputs.usage;
         }
