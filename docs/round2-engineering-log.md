@@ -73,6 +73,30 @@ link every claim to code._
   RAW output passes the independent audit 100%. The three prepare-time quote
   gates (#301/#302/#306) are closed-loop; post-hoc cleaning is no longer doing
   any work. Dong recording the demo against this state.
+- **Name-vs-source hallucination class found via Dong's own fresh run (~11:00,
+  PR #309)**: rows quoting the Identity Verification Services Act 2023 shipped
+  as "Privacy Act 1988", and Pasture Seeds Levy Collection Agreement gazette
+  notices shipped as "Privacy Act 1988 (Cth)" / "SA GIPP Instruction (PC012)".
+  The verbatim audit CANNOT catch this — quote ∈ URL text holds; the NAME is
+  wrong (the model names the act a provision talks ABOUT; the search-result
+  candidate title can be equally wrong; the per-URL majority vote then locks
+  the wrong name in). **9 such rows excised from the finalized artifact →
+  FINAL: 54 rows (AUS 29 / MYS 14 / SGP 11), 16/16 official non-zero cells
+  intact, every remaining row independently verbatim-verified.** Root fix:
+  `build_row` derives the document's own opening title from the fetched text
+  head; near-zero token overlap or disjoint years → the self-title wins, with
+  a Notes annotation (seeds keep their authoritative manifest name); renamed
+  Collection-Agreement rows then die at the no-statute-word gate. 650 tests.
+- **Judging requirements re-read (official Q&A + README template)**: judges do
+  NOT run our dev command — they follow the README Quick Start in a fresh venv
+  (default = key-free Ollama qwen2.5:14b + free DuckDuckGo), <10 min. Stage 2
+  rubric: Substantive accuracy 40% / Technical resilience 30% / Architecture
+  30% + 20 pts Discovery of New Evidence; LLM swappability heavily scored;
+  tool requirements: open-source, modular, OCR <5% CER, audit view,
+  self-hostable; expectation 5–10 documents across the 3 economies. Known open
+  items: local machine only had qwen2.5:32b (pulling 14b + running
+  `tools/check_reproducibility.sh` = the true judge path); one empty-rationale
+  row appeared in Dong's live run (P7-I1 My Health Records — one-off, gate TBD).
 
 **NIGHT UPDATE (for Dong, ~08:00):** PR #293 (`codex/mapping-precision-gate`)
 added a precision-first eligibility gate that hard-drops any mapping failing
