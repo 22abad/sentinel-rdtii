@@ -466,6 +466,19 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
         // Safety net for replayed/cached runs that skipped the `started`
         // event: the highlight view needs the source text in the panel.
         if (updateTextFromSource && sourceText) setText(sourceText);
+        // Same safety net for the rejected log — it's the "what was filtered
+        // out and why" evidence; a replay that omitted the per-item events
+        // must not present a run as if nothing was ever rejected.
+        if (
+          newRejected.length === 0 &&
+          Array.isArray(payload.outputs.rejected) &&
+          payload.outputs.rejected.length > 0
+        ) {
+          for (const item of payload.outputs.rejected as RejectedExtraction[]) {
+            newRejected.push(item);
+            collectedRejected.push(item);
+          }
+        }
         if (isRunUsageSummary(payload.outputs.usage)) {
           runUsage = payload.outputs.usage;
         }
