@@ -2654,6 +2654,20 @@ textarea {
   letter-spacing: 0.08em;
   color: #111827;
 }
+
+/* Score card (top of the report): fill spans the 0–1 range, tier-colored */
+.swiss-form .reasoning-report .rr-sec-score {
+  background: #ffffff;
+}
+.swiss-form .reasoning-report .rr-score-fill-score-one {
+  background: #9fd8a4; /* 1 — full compliance signal, green */
+}
+.swiss-form .reasoning-report .rr-score-fill-score-half {
+  background: #f7d445; /* partial, yellow */
+}
+.swiss-form .reasoning-report .rr-score-fill-score-0 {
+  background: #f2a69b; /* 0, red */
+}
 .swiss-form .reasoning-report .rr-provenance-line {
   display: flex;
   justify-content: space-between;

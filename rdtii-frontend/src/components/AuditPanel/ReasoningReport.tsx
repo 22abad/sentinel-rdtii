@@ -1,5 +1,6 @@
 import { AlertTriangle, Check, X as XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { formatScore, scoreClass } from "../../lib/utils";
 import type { IndicatorMapping } from "../../types";
 import {
   verifyReleaseYear,
@@ -155,6 +156,22 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
 
   return (
     <div className="reasoning-report select-text">
+      {/* Score card at the top: Batteristatus-style — the fill spans the
+          0–1 range (score 1 = fully filled), colored by score tier. */}
+      <section className="rr-section rr-sec-score">
+        <h4>Score</h4>
+        <div className="rr-batt">
+          <div
+            className={`rr-batt-fill rr-score-fill-${scoreClass(mapping.score)}`}
+            style={{ width: `${mapping.score * 100}%` }}
+          >
+            <span className="rr-batt-label">Score.</span>
+            <span className="rr-batt-value">{formatScore(mapping.score)}</span>
+          </div>
+          <span className="rr-batt-info">0 – 1</span>
+        </div>
+      </section>
+
       {flags.length > 0 && (
         <div className="rr-callout">
           <div className="rr-callout-title">
