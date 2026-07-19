@@ -2141,6 +2141,7 @@ textarea {
   grid-template-columns: 1fr 1fr;
   gap: 0;
   align-items: stretch;
+  padding-top: 0; /* pull the first row line up tight under the title */
 }
 .swiss-form .discovery-controls > * {
   border-top: 1.5px solid #111827;
