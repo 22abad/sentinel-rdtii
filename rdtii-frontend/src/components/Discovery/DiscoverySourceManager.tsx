@@ -47,7 +47,11 @@ const SOURCE_TYPES = [
   "secondary_source",
 ];
 
-export function DiscoverySourceManager() {
+export function DiscoverySourceManager({
+  initialCountry = "",
+}: {
+  initialCountry?: string;
+}) {
   const [registry, setRegistry] = useState<DiscoveryRegistry>({});
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedSourceIndex, setSelectedSourceIndex] = useState(0);
@@ -66,6 +70,17 @@ export function DiscoverySourceManager() {
     void loadConfig();
   }, []);
 
+  // Follow the Discovery panel's selected economy (unless the user has
+  // unsaved edits) — opening "Sources" from an Australia session previously
+  // showed whichever country sorted first.
+  useEffect(() => {
+    if (!dirty && initialCountry && registry[initialCountry]) {
+      setSelectedCountry(initialCountry);
+      setSelectedSourceIndex(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialCountry, registry]);
+
   async function loadConfig() {
     if (dirty && !window.confirm("Discard unsaved discovery source changes?")) {
       return;
@@ -77,9 +92,11 @@ export function DiscoverySourceManager() {
       const config = await getDiscoveryConfig();
       const codes = Object.keys(config).sort();
       setRegistry(config);
-      setSelectedCountry((current) =>
-        current && config[current] ? current : (codes[0] ?? ""),
-      );
+      setSelectedCountry((current) => {
+        if (current && config[current]) return current;
+        if (initialCountry && config[initialCountry]) return initialCountry;
+        return codes[0] ?? "";
+      });
       setSelectedSourceIndex(0);
       setDirty(false);
     } catch (err) {

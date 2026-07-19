@@ -33,10 +33,16 @@ export function useDiscovery() {
     }
   }
 
+  function reset() {
+    setData(null);
+    setError("");
+  }
+
   return {
     data,
     error,
     loading,
     search,
+    reset,
   };
 }
