@@ -156,11 +156,11 @@ export function SourcePanel({
         <>
 
       {status === "loading" && (
-        <div className="border-b border-gray-100 px-6 py-2.5 bg-gray-50/70">
+        <div className="border-t-[1.5px] border-[#111827] bg-transparent px-[18px] py-2.5">
           {usage ? (
             <UsageSummary usage={usage} />
           ) : (
-            <p className="text-[11px] text-gray-400">
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#6b675c]">
               {t("status.usagePending")}
             </p>
           )}
