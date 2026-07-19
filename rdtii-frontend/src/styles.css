@@ -2266,14 +2266,19 @@ textarea {
   background: #f7d445;
   color: #111827;
 }
-/* oversized mode label — the row is just the word */
+/* mode as a status STAMP — a black tag on the colored band; mono uppercase,
+   clearly distinct from the panel-title voice (Inter 800 2rem) */
 .swiss-form .retrieval-disclosure strong {
-  display: block;
-  font-size: 2rem;
-  font-weight: 800;
+  display: inline-block;
+  background: #111827;
+  color: #f3f1ea;
+  padding: 5px 10px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.14em;
 }
 .swiss-form .discovery-summary {
   padding: 10px 18px;
