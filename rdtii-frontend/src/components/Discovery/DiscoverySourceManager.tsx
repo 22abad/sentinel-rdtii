@@ -562,7 +562,7 @@ function SourceSelect({
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="swiss-dropdown">
         {options.map((option) => (
           <SelectItem key={option} value={option}>
             {option}
