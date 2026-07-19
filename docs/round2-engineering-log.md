@@ -97,6 +97,25 @@ link every claim to code._
   items: local machine only had qwen2.5:32b (pulling 14b + running
   `tools/check_reproducibility.sh` = the true judge path); one empty-rationale
   row appeared in Dong's live run (P7-I1 My Health Records — one-off, gate TBD).
+- **OVERNIGHT FINALIZATION (2026-07-19 night): 94-row artifact, everything
+  green.** Afternoon/evening closed 14 more PRs (#312–#337): workbench UI
+  session found and fixed the extent-keyword misfire, the "cyber security"
+  open-compound classifier gap, runtime law-name correction, canvas
+  Extract→Audit auto-wiring + one-click file pipeline (prepare-not-bill,
+  auto country detect, auto ingest), cascade delete, chain-raise, Tidy,
+  Documents inline sign-in + live refresh, RAG scoped retrieval +
+  heading-noise demotion, streaming flag-not-drop PARITY (the workbench path
+  still had #293's hard drop!), stream terminal status, and full **Malay
+  legal-vocabulary support across every gate** (classifier, statute-word,
+  operative-language ×4 copies, self-title, eligibility DPO) — Malay was the
+  one Round-1 language the gates didn't speak. Overnight full bare batch run:
+  **94 rows (AUS 38 / MYS 22 / SGP 34), 16/16 official non-zero cells, 0
+  empty fields, 0 name-vs-URL mislabels, 7 Malay-verbatim Pekeliling rows
+  under their true instrument name, submission cleaning 0 drops, and 94/94
+  independently verbatim-verified (0 unfetchable)**. content_smoke 4/4.
+  Artifact promoted: `outputs/SUBMISSION_final/` + xlsx = 94 rows; prior
+  54-row artifact kept at `outputs/SUBMISSION_final_v4_backup/`. 655 tests,
+  main at #337.
 - **Dong's independent re-run (dong_run2, ~11:16) passed all four checks**:
   62 rows (AUS 37 / MYS 14 / SGP 11), 16/16 cells, 0 empty fields, **0
   name-vs-URL mislabels (5 rows carry "law name corrected" notes — #309
