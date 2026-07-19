@@ -330,7 +330,7 @@ export function WorkbenchPage() {
         />
       ),
       width: 800,
-      dragHandle: ".panel-header",
+      dragHandle: ".wb-drag-strip, .panel-header",
       flat: true,
     },
     {
@@ -345,7 +345,7 @@ export function WorkbenchPage() {
         />
       ),
       width: 460,
-      dragHandle: ".panel-header",
+      dragHandle: ".wb-drag-strip, .panel-header",
       flat: true,
     },
     ...(foundPdfs.length > 0
@@ -358,11 +358,11 @@ export function WorkbenchPage() {
         <AuditThreadPanel key={instanceId} threadId={graph.bindings[instanceId] ?? null} />
       ),
       width: 520,
-      dragHandle: ".panel-header",
+      dragHandle: ".wb-drag-strip, .panel-header",
       upstreamId: "source",
       flat: true,
     },
-    { id: "documents", title: "Documents", element: <DocumentsPanel />, width: 420, dragHandle: ".panel-header", flat: true },
+    { id: "documents", title: "Documents", element: <DocumentsPanel />, width: 420, dragHandle: ".wb-drag-strip, .panel-header", flat: true },
   ];
 
   return (

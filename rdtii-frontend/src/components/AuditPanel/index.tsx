@@ -7,6 +7,7 @@ import type {
   Status,
 } from "../../types";
 import { AuditBody } from "./AuditBody";
+import { DocumentDossier } from "./DocumentDossier";
 import { RejectedPanel } from "./RejectedPanel";
 import { t } from "../../lib/i18n";
 import {
@@ -210,6 +211,10 @@ export function AuditPanel({
       )}
       {exportPreviewDrawer}
       {exportError && <p className="discovery-error">{exportError}</p>}
+
+      {/* Document-level characterisation, consolidated across all mappings —
+          re-derived on every render so it updates live as results stream in. */}
+      {mappings.length > 0 && <DocumentDossier mappings={mappings} />}
 
       {mappings.length > 0 && (
         <div className="nodrag flex items-center gap-1.5 border-t-[1.5px] border-[#111827] px-[18px] py-2">

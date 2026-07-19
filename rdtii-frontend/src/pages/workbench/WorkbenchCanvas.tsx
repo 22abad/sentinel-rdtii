@@ -77,6 +77,21 @@ const INITIAL_EDGES: Edge[] = [
   { id: "e-source-foundPdfs", source: "source", target: "foundPdfs" },
 ];
 
+// Shared node-footprint helpers (tidy + collision resolution). The DOM is
+// the ground truth: our controlled `nodes` prop rebuilds node objects each
+// render, so `measured` is often missing on getNodes() results (collision
+// once separated against a 560px fallback while the real card was 644px).
+// offsetWidth/Height are layout units — unaffected by the zoom transform.
+const FALLBACK_W: Record<string, number> = { discovery: 800, audit: 520, documents: 420, source: 460 };
+const FALLBACK_H: Record<string, number> = { discovery: 680, audit: 560, documents: 420, source: 560 };
+const baseKey = (id: string) => id.replace(/-copy-\d+$/, "");
+const nodeDomEl = (id: string): HTMLElement | null =>
+  document.querySelector(`.react-flow__node[data-id="${CSS.escape(id)}"]`);
+const nodeW = (n: Node) =>
+  nodeDomEl(n.id)?.offsetWidth || (n.measured?.width ?? n.width ?? FALLBACK_W[baseKey(n.id)] ?? 460);
+const nodeH = (n: Node) =>
+  nodeDomEl(n.id)?.offsetHeight || (n.measured?.height ?? n.height ?? FALLBACK_H[baseKey(n.id)] ?? 480);
+
 const CANVAS_NODE_KINDS = new Set<WorkbenchCanvasNodeKind>(["panel", "note", "rag", "material", "session"]);
 const PANEL_FALLBACKS: Record<string, { id: string; title: string; width?: number }> = {
   discovery: { id: "discovery", title: "Discovery", width: 800 },
@@ -1260,10 +1275,88 @@ export function WorkbenchCanvas({
       );
   }, [edges, nodes, raisedChain]);
 
+  // ── Hard no-overlap invariant ──────────────────────────────────────────
+  // Every trigger funnels here: node drag-stop, spawn/drop (first measure),
+  // manual resize, and content growth (e.g. discovery results arriving) all
+  // surface as dimension/position events. The changed node stays put; every
+  // other card is pushed out of the way along the axis of least displacement.
+  const COLLISION_GAP = 32;
+  const resolveCollisions = useCallback((fixedId?: string | null) => {
+    const live = flowRef.current?.getNodes() ?? [];
+    if (live.length < 2) return;
+    const rects = live.map((n) => ({
+      id: n.id,
+      x: n.position.x,
+      y: n.position.y,
+      w: nodeW(n),
+      h: nodeH(n),
+    }));
+    let changed = false;
+    for (let pass = 0; pass < 200; pass++) {
+      let any = false;
+      for (let i = 0; i < rects.length; i++) {
+        for (let j = i + 1; j < rects.length; j++) {
+          const a = rects[i];
+          const b = rects[j];
+          const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) + COLLISION_GAP;
+          const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y) + COLLISION_GAP;
+          if (ox <= 0 || oy <= 0) continue;
+          any = true;
+          changed = true;
+          if (ox < oy) {
+            const s = a.x + a.w / 2 <= b.x + b.w / 2 ? 1 : -1;
+            if (a.id === fixedId) b.x += s * ox;
+            else if (b.id === fixedId) a.x -= s * ox;
+            else {
+              a.x -= (s * ox) / 2;
+              b.x += (s * ox) / 2;
+            }
+          } else {
+            const s = a.y + a.h / 2 <= b.y + b.h / 2 ? 1 : -1;
+            if (a.id === fixedId) b.y += s * oy;
+            else if (b.id === fixedId) a.y -= s * oy;
+            else {
+              a.y -= (s * oy) / 2;
+              b.y += (s * oy) / 2;
+            }
+          }
+        }
+      }
+      if (!any) break;
+    }
+    if (!changed) return;
+    markCanvasDirty();
+    setPositions((prev) => {
+      const next = { ...prev };
+      for (const r of rects) next[r.id] = { x: r.x, y: r.y };
+      return next;
+    });
+  }, [markCanvasDirty]);
+
+  // Dimension events arrive in bursts (live resize, streaming results
+  // growing a panel) — debounce and resolve once the burst settles.
+  const collideTimer = useRef<number | null>(null);
+  const collideFixed = useRef<string | null>(null);
+  const scheduleCollisionResolve = useCallback(
+    (fixedId?: string | null) => {
+      if (fixedId) collideFixed.current = fixedId;
+      if (collideTimer.current !== null) window.clearTimeout(collideTimer.current);
+      collideTimer.current = window.setTimeout(() => {
+        collideTimer.current = null;
+        const fixed = collideFixed.current;
+        collideFixed.current = null;
+        resolveCollisions(fixed);
+      }, 220);
+    },
+    [resolveCollisions],
+  );
+
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     if (changes.some((c) => c.type === "position" || c.type === "remove")) {
       markCanvasDirty();
     }
+    const dims = changes.filter((c) => c.type === "dimensions");
+    if (dims.length) scheduleCollisionResolve(dims[dims.length - 1].id);
     setPositions((prev) => {
       let next = prev;
       for (const c of changes) {
@@ -1285,7 +1378,7 @@ export function WorkbenchCanvas({
     for (const c of changes) {
       if (c.type === "remove") removeNode(c.id);
     }
-  }, [markCanvasDirty, removeNode]);
+  }, [markCanvasDirty, removeNode, scheduleCollisionResolve]);
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
@@ -1333,11 +1426,8 @@ export function WorkbenchCanvas({
     markCanvasDirty();
     const live = (flowRef.current?.getNodes() ?? []).filter((n) => n.id);
     if (!live.length) return;
-    const FALLBACK_W: Record<string, number> = { discovery: 800, audit: 520, documents: 420, source: 460 };
-    const FALLBACK_H: Record<string, number> = { discovery: 680, audit: 560, documents: 420, source: 560 };
-    const baseKey = (id: string) => id.replace(/-copy-\d+$/, "");
-    const widthOf = (n: Node) => n.measured?.width ?? n.width ?? FALLBACK_W[baseKey(n.id)] ?? 460;
-    const heightOf = (n: Node) => n.measured?.height ?? n.height ?? FALLBACK_H[baseKey(n.id)] ?? 480;
+    const widthOf = nodeW;
+    const heightOf = nodeH;
     // Connected components over the visible edges.
     const adjacency: Record<string, string[]> = {};
     for (const e of edges) {
@@ -1397,10 +1487,13 @@ export function WorkbenchCanvas({
       docY += heightOf(node) + GAP;
     }
     setPositions((prev) => ({ ...prev, ...next }));
+    // Safety net: if fallback sizes under-estimated a card, the collision
+    // pass separates whatever the grid still left touching.
+    scheduleCollisionResolve(null);
     requestAnimationFrame(() => {
       void flowRef.current?.fitView({ padding: 0.15, maxZoom: 1 });
     });
-  }, [markCanvasDirty, edges]);
+  }, [markCanvasDirty, edges, scheduleCollisionResolve]);
 
   const handleReset = useCallback(() => {
     markCanvasDirty();
@@ -1459,6 +1552,12 @@ export function WorkbenchCanvas({
         }}
         onMoveEnd={(_event: MouseEvent | TouchEvent | null, nextViewport: Viewport) => setViewport(nextViewport)}
         onNodeClick={(_event, node) => raiseChainFrom(node.id)}
+        onNodeDragStop={(_event, node) => {
+          resolveCollisions(node.id);
+          // Re-pass after React commits the pushed positions — catches any
+          // pair the immediate pass resolved against a mid-commit snapshot.
+          scheduleCollisionResolve(node.id);
+        }}
         onPaneClick={() => setRaisedChain(new Set())}
         deleteKeyCode={["Delete", "Backspace"]}
         minZoom={0.8}

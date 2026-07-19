@@ -83,6 +83,8 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
       <div
         style={{
           height: nodeHeight ? "100%" : undefined,
+          display: "flex",
+          flexDirection: "column",
           borderRadius: flat ? 0 : 36,
           overflow: bare ? "visible" : "hidden",
           // Flat (swiss) panels paint their own cream ground — a white card
@@ -94,12 +96,38 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
       >
         <Handle type="target" position={Position.Top} style={{ background: flat ? "#111827" : "#10B981" }} />
 
+        {/* Always-grabbable drag strip: sits ABOVE the scroll container, so
+            the node can be dragged from its top edge no matter how far the
+            panel body is scrolled (the .panel-header handle scrolls away). */}
+        <div
+          className="wb-drag-strip"
+          title="Drag to move"
+          style={{
+            flex: "0 0 auto",
+            height: 18,
+            cursor: "grab",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            background: flat ? "#111827" : "#f3f4f6",
+            borderBottom: flat ? "none" : "1px solid #e5e7eb",
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              style={{ width: 14, height: 2, borderRadius: 1, background: flat ? "#f3f1ea" : "#9ca3af" }}
+            />
+          ))}
+        </div>
+
         <div
           className="nowheel"
           style={
             bare
-              ? { height: nodeHeight ? "100%" : undefined, overflow: "visible" }
-              : { height: nodeHeight ? "100%" : undefined, maxHeight: nodeHeight ? undefined : "72vh", overflow: "auto" }
+              ? { flex: "1 1 auto", minHeight: 0, overflow: "visible" }
+              : { flex: "1 1 auto", minHeight: 0, maxHeight: nodeHeight ? undefined : "72vh", overflow: "auto" }
           }
         >
           {data.element}
