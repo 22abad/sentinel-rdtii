@@ -119,6 +119,7 @@ export function DiscoveryPanel({
   const [languageMode, setLanguageMode] = useState("auto");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sourceManagerOpen, setSourceManagerOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const { data, error, loading, search } = useDiscovery();
 
   useEffect(() => {
@@ -294,7 +295,17 @@ export function DiscoveryPanel({
           <h2>Discovery</h2>
           <p>Search official legal sources before extraction.</p>
         </div>
+        <button
+          type="button"
+          className="panel-collapse nodrag"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-label={collapsed ? "Expand panel" : "Collapse panel"}
+        >
+          {collapsed ? "▸" : "▾"}
+        </button>
       </div>
+      {!collapsed && (
+        <>
 
       <div className="discovery-controls">
         <label>
@@ -564,6 +575,8 @@ export function DiscoveryPanel({
           )}
         </button>
       </div>
+        </>
+      )}
 
       <RightDrawer
         open={sourceManagerOpen}

@@ -2243,3 +2243,25 @@ textarea {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* collapse-to-title toggle in the panel header */
+.swiss-form .panel-collapse {
+  margin-left: auto;
+  min-height: 0;
+  padding: 2px 8px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.swiss-form .panel-collapse:hover {
+  color: #6b675c;
+}
+
+/* classic view: clean half-half split */
+.workbench-classic .workspace {
+  grid-template-columns: 1fr 1fr;
+}

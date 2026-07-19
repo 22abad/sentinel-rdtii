@@ -95,6 +95,7 @@ export function SourcePanel({
   const [urlPlaceholderIndex, setUrlPlaceholderIndex] = useState(0);
   const [showUrlPlaceholder, setShowUrlPlaceholder] = useState(true);
   const [urlFocused, setUrlFocused] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     if (urlFocused || sourceUrl) return;
@@ -142,7 +143,17 @@ export function SourcePanel({
           <h2>{t("source.title")}</h2>
           <p>{t("source.description")}</p>
         </div>
+        <button
+          type="button"
+          className="panel-collapse nodrag"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-label={collapsed ? "Expand panel" : "Collapse panel"}
+        >
+          {collapsed ? "▸" : "▾"}
+        </button>
       </div>
+      {!collapsed && (
+        <>
 
       {status === "loading" && (
         <div className="border-b border-gray-100 px-6 py-2.5 bg-gray-50/70">
@@ -325,6 +336,8 @@ export function SourcePanel({
           </svg>
         )}
       </button>
+        </>
+      )}
     </section>
   );
 }
