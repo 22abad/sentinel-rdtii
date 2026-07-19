@@ -21,7 +21,16 @@ export function DocumentsPanel() {
     setLoading(true);
     setError("");
     try {
-      setDocs(await listCanvasFiles());
+      const items = await listCanvasFiles();
+      // Not-yet-ingested work first (uploading/processing/failed), newest
+      // within each group — a re-uploaded file dedupes to its OLD row and
+      // otherwise sinks out of sight.
+      const pendingRank = (s: string) => (s === "processed" ? 1 : 0);
+      items.sort((a, b) =>
+        pendingRank(a.status) - pendingRank(b.status) ||
+        (b.created_at ?? "").localeCompare(a.created_at ?? ""),
+      );
+      setDocs(items);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load documents.");
     } finally {
