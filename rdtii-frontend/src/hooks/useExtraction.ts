@@ -557,6 +557,10 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
         requestText: nextText !== undefined ? nextText : nextSourceUrl !== undefined ? "" : text,
         signal: controller.signal,
       });
+      // Defensive terminal state: some stream endings (node_output without a
+      // parseable 'done' payload) left status stuck on "loading" forever —
+      // the Audit then shows "Extracting mappings…" for a run that finished.
+      setStatus("ready");
     } catch (err) {
       if (isAbortError(err)) {
         setWarning(t("status.extractionStopped"));
