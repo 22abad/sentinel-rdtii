@@ -326,7 +326,8 @@ def build_row(
         quote_norm in law_norm or law_norm in quote_norm
         or (len(quote_norm) < 90 and not re.search(
             r"\b(shall|must|may not|required|prohibit|no person|liable|"
-            r"应当|不得|禁止|必须|ต้อง|ห้าม|wajib|dilarang|обязан|запрещ)\b|[.。]",
+            r"应当|不得|禁止|必须|ต้อง|ห้าม|wajib|dilarang|обязан|запрещ|"
+            r"hendaklah|mestilah|tidak boleh)\b|[.。]",
             mapping.verbatim_quote))
     ):
         title_note = "requires human review: quote appears to be a title/heading, not an operative provision"

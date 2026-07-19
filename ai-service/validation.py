@@ -211,6 +211,14 @@ _SUBSTANTIVE_SIGNALS: list[re.Pattern] = [
     re.compile(r"\bregister\b"),
     re.compile(r"\bconsent\b"),
     re.compile(r"\bwithdraw\b"),
+    # Malay operative markers (Round-1 economy; PDP Commissioner drafts in
+    # Malay): hendaklah/mestilah = shall/must, tidak boleh = may not,
+    # dilarang = prohibited, wajib = required.
+    re.compile(r"\bhendaklah\b"),
+    re.compile(r"\bmestilah\b"),
+    re.compile(r"\btidak boleh\b"),
+    re.compile(r"\bdilarang\b"),
+    re.compile(r"\bwajib\b"),
 ]
 
 _PROCEDURAL_ONLY_SIGNALS: list[re.Pattern] = [
