@@ -24,7 +24,7 @@ Guide: **RDTII 2.1**
 - **6.4 — Smoke 已验证**: Passing indicator-specific live smoke observed on 2026-07-10.
   - [Privacy Act 1988](https://www.legislation.gov.au/Latest/C2004A03712) — Federal Register of Legislation; live discovery `passed`; text fetch `passed`; smoke `aus-conditional-flow-6.4`.
 - **6.5 — Smoke 已验证**: Operative language and exceptions are smoke-verified. Agreement coverage, sector exclusions, and the final RDTII score still require legal review.
-  - [Australia-Singapore Digital Economy Agreement](https://isomer-user-content.by.gov.sg/166/769c26eb-17cf-4e2d-962b-1277a22df9db/australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf) — Singapore Ministry of Trade and Industry (joint treaty text); live discovery `passed`; text fetch `passed`; smoke `aus-binding-flow-agreement-6.5`.
+  - [Australia-Singapore Digital Economy Agreement](https://isomer-user-content.by.gov.sg/166/769c26eb-17cf-4e2d-962b-1277a22df9db/australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf) — Australia–Singapore DEA text (hosted by MTI Singapore) — joint treaty text; live discovery `passed`; text fetch `passed`; smoke `aus-binding-flow-agreement-6.5`.
 - **7.1 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.
   - [Privacy Act 1988](https://www.legislation.gov.au/Latest/C2004A03712) — Federal Register of Legislation; live discovery `passed`; text fetch `passed`; smoke `aus-privacy-7.1`.
 - **7.2 — Smoke 已验证**: Passing live smoke observed on 2026-07-10.
