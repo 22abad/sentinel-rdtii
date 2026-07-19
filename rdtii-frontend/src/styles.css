@@ -2537,9 +2537,10 @@ textarea {
 .swiss-form .mapping-row {
   border-top: 1.5px solid #111827;
 }
-.swiss-form .mapping-row:last-child {
-  border-bottom: 1.5px solid #111827;
-}
+/* NOTE: no :last-child bottom border here — each row sits in its own
+   motion.div wrapper, so every row matched :last-child and drew a bottom
+   border on top of the next row's top border (doubled lines). Rows carry
+   border-top only; the section below (rejected/frame) closes the list. */
 .swiss-form .mapping-row-head {
   display: flex;
   align-items: center;
