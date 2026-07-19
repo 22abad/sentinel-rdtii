@@ -442,11 +442,22 @@ export type CanvasGraph = {
   bindings: Record<string, string | null>;
 };
 
+/** Imperative canvas actions exposed to the page (e.g. Discovery's Extract
+    button revealing and wiring the Extract → Audit pipeline). */
+export type WorkbenchCanvasApi = {
+  /** Ensure the Extract ("source") and Audit nodes exist on the canvas,
+      wire Discovery → Extract → Audit with data edges, and leave existing
+      positions untouched. Called when the user extracts from Discovery so
+      results always have a visible destination. */
+  revealExtractPipeline: () => void;
+};
+
 export function WorkbenchCanvas({
   panels,
   onExit,
   onSwitchView,
   onGraphChange,
+  apiRef,
 }: {
   panels: CanvasPanel[];
   onExit: () => void;
@@ -456,6 +467,8 @@ export function WorkbenchCanvas({
       instance, and which audit-style instances bind to which upstream
       instance. Linking registers availability; panels consume on demand. */
   onGraphChange?: (graph: CanvasGraph) => void;
+  /** Receives the canvas's imperative API while mounted. */
+  apiRef?: React.MutableRefObject<WorkbenchCanvasApi | null>;
 }) {
   const restoredState = useMemo(() => restoreCanvasState(readSavedCanvasLayout()), []);
   const flowRef = useRef<ReactFlowInstance | null>(null);
@@ -903,6 +916,55 @@ export function WorkbenchCanvas({
     setSpawned((prev) => [...prev, { id, panelId }]);
     setPositions((p) => ({ ...p, [id]: { x: position.x + offset, y: position.y + offset } }));
   }, [markCanvasDirty]);
+
+  // Extract-from-Discovery must always have a visible destination: results
+  // stream into the ORIGINAL "source" thread, so if that node was deleted
+  // (the layout persists across visits) the extraction used to run into an
+  // invisible thread — "nothing happens". Restore + wire the pipeline.
+  const revealExtractPipeline = useCallback(() => {
+    markCanvasDirty();
+    const disc = flowRef.current?.getNode("discovery");
+    setRemoved((prev) => {
+      if (!prev["source"] && !prev["audit"]) return prev;
+      const next = { ...prev };
+      delete next["source"];
+      delete next["audit"];
+      return next;
+    });
+    setPositions((prev) => {
+      if (prev["source"] !== undefined && prev["audit"] !== undefined) return prev;
+      const next = { ...prev };
+      if (next["source"] === undefined) {
+        const base = disc?.position ?? { x: 80, y: 120 };
+        next["source"] = { x: base.x + (disc?.width ?? 800) + 60, y: base.y };
+      }
+      if (next["audit"] === undefined) {
+        const s = next["source"];
+        next["audit"] = { x: s.x + 520, y: s.y };
+      }
+      return next;
+    });
+    setEdges((es) => {
+      const has = (a: string, b: string) =>
+        es.some((e) => (e.source === a && e.target === b) || (e.source === b && e.target === a));
+      const additions: Edge[] = [];
+      if (!has("discovery", "source")) {
+        additions.push({ id: "auto-discovery-source", source: "discovery", target: "source" } as Edge);
+      }
+      if (!has("source", "audit")) {
+        additions.push({ id: "auto-source-audit", source: "source", target: "audit" } as Edge);
+      }
+      return additions.length ? [...es, ...additions] : es;
+    });
+  }, [markCanvasDirty]);
+
+  useEffect(() => {
+    if (!apiRef) return;
+    apiRef.current = { revealExtractPipeline };
+    return () => {
+      apiRef.current = null;
+    };
+  }, [apiRef, revealExtractPipeline]);
 
   const updateNote = useCallback(
     (id: string, patch: Partial<{ title: string; text: string }>) => {
