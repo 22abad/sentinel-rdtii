@@ -93,10 +93,18 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
               return new File([blob], l.fileName ?? "upload", { type: blob.type });
             }),
         );
+        // One file failing to parse (oversized upload, image-only scan, …)
+        // must not kill the whole prepare — detection can still work from
+        // the filename, and extraction can OCR server-side.
         const parts = await Promise.all(
           fileObjs.map(async (file) => {
-            const { text: parsed } = await parseFile(file);
-            return fileObjs.length > 1 ? `=== ${file.name} ===\n${parsed}` : parsed;
+            try {
+              const { text: parsed } = await parseFile(file);
+              return fileObjs.length > 1 ? `=== ${file.name} ===\n${parsed}` : parsed;
+            } catch (err) {
+              console.warn(`Parse failed for ${file.name}; continuing with filename-only detection:`, err);
+              return "";
+            }
           }),
         );
         const combined = parts.join("\n\n");
@@ -105,12 +113,17 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
         } as React.ChangeEvent<HTMLTextAreaElement>);
 
         // Deterministic detection on the parsed text — no debounce races.
+        // The filename rides along so image-only scans (which parse to no
+        // text until server-side OCR) still detect from names like "MYS_….pdf".
         let detectedCode = "";
         try {
           const res = await fetch("/api/detect/country", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: combined.slice(0, 3000) }),
+            body: JSON.stringify({
+              text: combined.slice(0, 3000),
+              filename: fileObjs.map((f) => f.name).join(" "),
+            }),
           });
           if (res.ok) {
             const data = await res.json();

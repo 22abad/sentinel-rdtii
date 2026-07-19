@@ -137,6 +137,7 @@ class CountryDetectRequest(BaseModel):
     text: str = ""
     source_url: str = ""
     source_legislation: str = ""
+    filename: str = ""
 
 
 @router.post("/api/detect/country")
@@ -145,5 +146,6 @@ def detect_country_api(req: CountryDetectRequest):
         text=req.text,
         source_url=req.source_url,
         source_legislation=req.source_legislation,
+        filename=req.filename,
     )
 
