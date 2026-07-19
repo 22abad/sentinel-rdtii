@@ -301,8 +301,9 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
   const activeMapping =
     mappings.find((m) => mappingKey(m) === activeKey) ?? null;
 
+  // pillarFilter is "all" or a comma list ("6,7") — multi-select chips.
   const visibleMappings = mappings.filter((m) =>
-    pillarFilter === "all" ? true : String(m.pillar) === pillarFilter,
+    pillarFilter === "all" ? true : pillarFilter.split(",").includes(String(m.pillar)),
   );
 
   const pendingCount = mappings.filter(

@@ -73,15 +73,34 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, sourceUrl, linkedFiles, extract]);
 
-  // One-click file pipeline: the canvas spawned this instance wired to a
-  // file node and asked for an auto-run. Wait until the linked file has
-  // actually registered (the graph propagates via an effect), then run once.
+  // One-click file pipeline: PREPARE, don't run — extraction bills, so it
+  // must never start silently. Parse the linked file(s) into the thread text;
+  // that triggers country auto-detection (auto-applied; the analyst can
+  // correct it and set the pillar filter, then press Run).
   const consumedAutoRun = useRef(0);
   useEffect(() => {
     if (!autoRunToken || autoRunToken === consumedAutoRun.current) return;
     if (linkedFiles.length === 0) return;
     consumedAutoRun.current = autoRunToken;
-    runExtraction();
+    void (async () => {
+      try {
+        const parts = await Promise.all(
+          linkedFiles
+            .filter((l) => l.previewUrl)
+            .map(async (l) => {
+              const blob = await fetch(l.previewUrl as string).then((r) => r.blob());
+              const file = new File([blob], l.fileName ?? "upload", { type: blob.type });
+              const { text: parsed } = await parseFile(file);
+              return linkedFiles.length > 1 ? `=== ${l.fileName ?? "file"} ===\n${parsed}` : parsed;
+            }),
+        );
+        onTextChange({
+          target: { value: parts.join("\n\n") },
+        } as React.ChangeEvent<HTMLTextAreaElement>);
+      } catch (err) {
+        console.error("Linked-file prepare failed:", err);
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoRunToken, linkedFiles.length]);
 

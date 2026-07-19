@@ -219,28 +219,44 @@ export function SourcePanel({
         </label>
         <label>
           {t("source.filter")}
-          <Select value={pillarFilter} onValueChange={setPillarFilter}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent className={SQUARE_DROPDOWN}>
-              <SelectItem value="all">{t("taxonomy.allPillars")}</SelectItem>
-              <SelectSeparator />
-              <SelectGroup>
-                <SelectLabel>{t("taxonomy.pillar")}</SelectLabel>
-                <SelectItem value="1">{t("taxonomy.p1")}</SelectItem>
-                <SelectItem value="2">{t("taxonomy.p2")}</SelectItem>
-                <SelectItem value="3">{t("taxonomy.p3")}</SelectItem>
-                <SelectItem value="4">{t("taxonomy.p4")}</SelectItem>
-                <SelectItem value="5">{t("taxonomy.p5")}</SelectItem>
-                <SelectItem value="6">{t("taxonomy.p6")}</SelectItem>
-                <SelectItem value="7">{t("taxonomy.p7")}</SelectItem>
-                <SelectItem value="8">{t("taxonomy.p8")}</SelectItem>
-                <SelectItem value="9">{t("taxonomy.p9")}</SelectItem>
-                <SelectItem value="10">{t("taxonomy.p10")}</SelectItem>
-                <SelectItem value="11">{t("taxonomy.p11")}</SelectItem>
-                <SelectItem value="12">{t("taxonomy.p12")}</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <div className="nodrag" style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
+            <button
+              type="button"
+              onClick={() => setPillarFilter("all")}
+              style={{
+                minHeight: 26, padding: "2px 8px", borderRadius: 0, cursor: "pointer",
+                border: "1.5px solid #111827", fontSize: "0.68rem", fontWeight: 700,
+                background: pillarFilter === "all" ? "#111827" : "transparent",
+                color: pillarFilter === "all" ? "#fff" : "#111827",
+              }}
+            >
+              {t("taxonomy.allPillars")}
+            </button>
+            {Array.from({ length: 12 }, (_, i) => String(i + 1)).map((p) => {
+              const selected = pillarFilter !== "all" && pillarFilter.split(",").includes(p);
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  title={t(`taxonomy.p${p}` as Parameters<typeof t>[0])}
+                  onClick={() => {
+                    // Multi-select: toggle pillars in a comma list; empty -> all.
+                    const current = pillarFilter === "all" ? [] : pillarFilter.split(",").filter(Boolean);
+                    const next = selected ? current.filter((x) => x !== p) : [...current, p];
+                    setPillarFilter(next.length ? next.sort((a, b) => Number(a) - Number(b)).join(",") : "all");
+                  }}
+                  style={{
+                    minHeight: 26, padding: "2px 8px", borderRadius: 0, cursor: "pointer",
+                    border: "1.5px solid #111827", fontSize: "0.68rem", fontWeight: 700,
+                    background: selected ? "#111827" : "transparent",
+                    color: selected ? "#fff" : "#111827",
+                  }}
+                >
+                  P{p}
+                </button>
+              );
+            })}
+          </div>
         </label>
       </div>
 
