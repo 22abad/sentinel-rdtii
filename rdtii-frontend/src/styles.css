@@ -2564,7 +2564,7 @@ textarea {
   border-top: 1.5px solid #111827;
   border-radius: 0;
   padding: 12px 18px 14px;
-  background: #ffffff;
+  background: #f3f1ea;
   box-shadow: none;
 }
 .swiss-form .reasoning-report > *:first-child {
@@ -2593,7 +2593,7 @@ textarea {
   background: #f3f1ea;
 }
 .swiss-form .reasoning-report .rr-sec-scoring {
-  background: #ffffff;
+  background: #f3f1ea;
 }
 .swiss-form .reasoning-report .rr-sec-quality {
   background: #d8e5f3;
@@ -2719,7 +2719,7 @@ textarea {
 /* Score card (top of the report): fill spans the 0–1 range, tier-colored.
    No section title — the card itself is the section, full-bleed. */
 .swiss-form .reasoning-report .rr-sec-score {
-  background: #ffffff;
+  background: #f3f1ea;
   padding: 0;
 }
 .swiss-form .reasoning-report .rr-sec-score .rr-batt {
