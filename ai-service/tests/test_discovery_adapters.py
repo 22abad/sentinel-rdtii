@@ -1090,3 +1090,33 @@ def test_core_search_term_extracts_bigram_for_register_contains_search():
     assert _core_search_term("local data centre requirement") == "data centre"
     # Single content word → no useful bigram, no retry.
     assert _core_search_term("ban") == ""
+
+
+@pytest.mark.anyio
+async def test_generic_site_search_retries_zero_hit_phrase_with_core_term():
+    """Concept phrases score zero on web engines too — the generic adapter now
+    retries once with the two-word core, keeping the site: filter."""
+    from discovery.adapters.search_engine import SearchEngineAdapter
+
+    calls: list[str] = []
+
+    class RecordingBackend:
+        async def search(self, query, limit):
+            calls.append(query)
+            if query == "site:nacsa.gov.my data transfer":
+                return [RawSearchHit(
+                    title="Cyber Security Act 2024", url="https://nacsa.gov.my/csa",
+                    snippet="", source_adapter="", source_name="", query=query,
+                    position=1, retrieval_mode="live", discovery_method="web_search",
+                )]
+            return []
+
+    source = get_sources("MYS")[2]  # a search_engine source
+    rows = await SearchEngineAdapter(search_backend=RecordingBackend())._search_live(
+        backend=RecordingBackend() if False else RecordingBackend(),
+        source=source,
+        queries=["site:nacsa.gov.my cross-border data transfer ban"],
+        limit=3,
+    )
+    # both original phrase and the core retry were attempted, retry succeeded
+    assert rows and rows[0].url == "https://nacsa.gov.my/csa"
