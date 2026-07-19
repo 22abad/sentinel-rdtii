@@ -127,8 +127,9 @@ Australia Privacy Act → `legislation.gov.au`).
 
 | `DISCOVERY_SEARCH_BACKEND` | Needs a key? | When to use |
 |---|---|---|
-| *(unset — the default)* | **No** | Free DuckDuckGo. Recommended for reviewers. |
+| *(unset — the default)* | **No** | Free DuckDuckGo. Recommended for reviewers. Can bot-challenge an IP after many rapid searches — either keyed backend below avoids that. |
 | `serpapi` (+ `SERPAPI_API_KEY`) | Yes (free tier) | Slightly broader Google-backed results. Auto-selected if a key is present. |
+| `google` (+ `GOOGLE_CSE_KEY`, `GOOGLE_CSE_ID`) | Yes (100 queries/day free) | Google's **official** Custom Search API — your own Google key, ToS-clean. Auto-selected when both vars are set and no SerpApi key. |
 | `none` | No | Disable live web search; run on the local library only. |
 
 > **Running from inside mainland China?** DuckDuckGo and Google are blocked by

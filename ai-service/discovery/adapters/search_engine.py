@@ -277,6 +277,80 @@ class SerpApiSearchBackend:
         return hits
 
 
+class GoogleCseSearchBackend:
+    """Google's official Custom Search JSON API (100 queries/day free).
+
+    The ToS-clean way to get Google results with your own Google key —
+    unlike scraping google.com, which is bot-blocked and against ToS.
+    Setup (~3 min): create an API key at console.cloud.google.com (enable
+    "Custom Search API"), create a search engine at cse.google.com with
+    "Search the entire web" on, then set GOOGLE_CSE_KEY + GOOGLE_CSE_ID.
+    """
+
+    endpoint = "https://www.googleapis.com/customsearch/v1"
+
+    def __init__(self, api_key: str | None = None, cse_id: str | None = None) -> None:
+        self.api_key = (api_key or os.getenv("GOOGLE_CSE_KEY", "")).strip()
+        self.cse_id = (cse_id or os.getenv("GOOGLE_CSE_ID", "")).strip()
+        if not self.api_key or not self.cse_id:
+            raise SearchBackendConfigError("GOOGLE_CSE_KEY and GOOGLE_CSE_ID must both be set")
+
+    async def search(self, query: str, limit: int) -> list[RawSearchHit]:
+        import httpx
+
+        global _GOOGLE_CSE_DISABLED_REASON
+        if _GOOGLE_CSE_DISABLED_REASON:
+            raise RuntimeError(_GOOGLE_CSE_DISABLED_REASON)
+
+        params = {
+            "key": self.api_key,
+            "cx": self.cse_id,
+            "q": query,
+            "num": max(1, min(limit, 10)),
+        }
+        timeout = httpx.Timeout(12.0, connect=4.0)
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            response = await client.get(self.endpoint, params=params)
+            # 400/403 = bad key or CSE id; 429 = daily quota — all terminal
+            # for this process, same reasoning as the SerpApi breaker.
+            if response.status_code in (400, 403):
+                _GOOGLE_CSE_DISABLED_REASON = (
+                    "Google Custom Search rejected the request (HTTP "
+                    f"{response.status_code} — check GOOGLE_CSE_KEY/GOOGLE_CSE_ID "
+                    "and that the Custom Search API is enabled); disabled for this process"
+                )
+                raise RuntimeError(_GOOGLE_CSE_DISABLED_REASON)
+            if response.status_code == 429:
+                _GOOGLE_CSE_DISABLED_REASON = (
+                    "Google Custom Search daily quota exhausted (HTTP 429); "
+                    "disabled for this process"
+                )
+                raise RuntimeError(_GOOGLE_CSE_DISABLED_REASON)
+            response.raise_for_status()
+            payload = response.json()
+
+        hits: list[RawSearchHit] = []
+        for idx, item in enumerate(payload.get("items") or [], start=1):
+            url = str(item.get("link") or "").strip()
+            if not url:
+                continue
+            hits.append(RawSearchHit(
+                title=str(item.get("title") or url).strip(),
+                url=url,
+                snippet=str(item.get("snippet") or "").strip(),
+                position=idx,
+                raw=dict(item),
+                retrieval_mode="live",
+                discovery_method="web_search",
+            ))
+            if len(hits) >= limit:
+                break
+        return hits
+
+
+_GOOGLE_CSE_DISABLED_REASON: str | None = None
+
+
 class DuckDuckGoSearchBackend:
     """Free, no-API-key web search via DuckDuckGo's HTML endpoint.
 
@@ -352,17 +426,32 @@ def _configured_search_backend() -> str:
             "falling back to the free duckduckgo backend"
         )
         return "duckduckgo"
+    if value in {"google", "google_cse", "google-cse"} and not (
+        os.getenv("GOOGLE_CSE_KEY", "").strip() and os.getenv("GOOGLE_CSE_ID", "").strip()
+    ):
+        logger.warning(
+            "DISCOVERY_SEARCH_BACKEND=google but GOOGLE_CSE_KEY/GOOGLE_CSE_ID "
+            "are not both set — falling back to the free duckduckgo backend"
+        )
+        return "duckduckgo"
     if value:
         return value
-    # Default when unset: SerpApi if a key is present (best quality), otherwise
-    # the free, no-key DuckDuckGo backend — so a reviewer with no search
-    # credentials still gets live web search out of the box.
-    return "serpapi" if os.getenv("SERPAPI_API_KEY", "").strip() else "duckduckgo"
+    # Default when unset: keyed backends first (best quality — SerpApi, then
+    # Google's official Custom Search API), otherwise the free, no-key
+    # DuckDuckGo backend — so a reviewer with no search credentials still
+    # gets live web search out of the box.
+    if os.getenv("SERPAPI_API_KEY", "").strip():
+        return "serpapi"
+    if os.getenv("GOOGLE_CSE_KEY", "").strip() and os.getenv("GOOGLE_CSE_ID", "").strip():
+        return "google"
+    return "duckduckgo"
 
 
 def _build_search_backend(name: str) -> SearchBackend:
     if name == "serpapi":
         return SerpApiSearchBackend()
+    if name in {"google", "google_cse", "google-cse"}:
+        return GoogleCseSearchBackend()
     if name in {"duckduckgo", "ddg"}:
         return DuckDuckGoSearchBackend()
     raise SearchBackendConfigError(f"unsupported DISCOVERY_SEARCH_BACKEND: {name}")
