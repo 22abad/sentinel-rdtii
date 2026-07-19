@@ -2192,6 +2192,10 @@ textarea {
 }
 .swiss-form .discovery-actions-bar .discovery-source-menu-button {
   border: 1.5px solid #111827;
+  /* the bar sits flush on the panel frame: left/bottom edges would double
+     the panel's own border lines */
+  border-left: none;
+  border-bottom: none;
   color: #111827;
   background: #f3f1ea;
 }
@@ -2646,7 +2650,8 @@ textarea {
    top-right on the gray remainder. Square corners per our Swiss language. */
 .swiss-form .reasoning-report .rr-batt {
   position: relative;
-  margin: 10px -18px 12px; /* full-width bleed; keep space below for rows */
+  /* inset card: no bleed, so its frame never overlays the band/panel lines */
+  margin: 10px 0 12px;
   min-height: 128px;
   border: 1.5px solid #111827; /* frame the card — it read bare without one */
   background: #eceae2; /* the card's gray remainder */
@@ -2656,10 +2661,7 @@ textarea {
    it, so a border here would double the lines */
 .swiss-form .reasoning-report .rr-sec-score .rr-batt {
   border: none;
-}
-/* only bleed to the band's bottom edge when nothing follows the card */
-.swiss-form .reasoning-report .rr-batt:last-child {
-  margin-bottom: -14px;
+  margin: 0;
 }
 .swiss-form .reasoning-report .rr-batt-fill {
   display: flex;
