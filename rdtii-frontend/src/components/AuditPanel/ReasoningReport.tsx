@@ -135,7 +135,9 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
   const sha = firstValue(features, "source_file_sha256");
   const pdfPath = firstValue(features, "source_pdf_path");
   const provenance: { label: string; value: React.ReactNode }[] = [];
-  if (grade !== undefined) {
+  // With a confidence value the grade lives in the Batteristatus-style card
+  // (top-right info slot); only fall back to a text row without one.
+  if (grade !== undefined && gradeConfidenceN === null) {
     provenance.push({ label: "Source grade", value: String(grade) });
   }
   if (timeframeStatus !== undefined || timeframeColumn !== undefined) {
@@ -221,12 +223,17 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
         <section className="rr-section rr-provenance rr-sec-provenance">
           <h4>Provenance</h4>
           {gradeConfidenceN !== null && (
-            <div
-              className="rr-percent"
-              style={{ "--pct": `${gradeConfidenceN}%` } as React.CSSProperties}
-            >
-              <span className="rr-percent-label">source-grade confidence</span>
-              <span className="rr-percent-value">{gradeConfidenceN}%</span>
+            <div className="rr-batt">
+              <div
+                className="rr-batt-fill"
+                style={{ width: `${gradeConfidenceN}%` }}
+              >
+                <span className="rr-batt-label">Source grade.</span>
+                <span className="rr-batt-value">{gradeConfidenceN}%</span>
+              </div>
+              {grade !== undefined && (
+                <span className="rr-batt-info">{String(grade)}</span>
+              )}
             </div>
           )}
           {provenance.map((row) => (
