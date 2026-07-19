@@ -282,10 +282,41 @@ def detect_country_from_text(text: str, source_legislation: str = "") -> dict:
     return best
 
 
+def detect_country_from_filename(filename: str) -> dict:
+    """Country hint from a file name — the only signal a scanned PDF has
+    before OCR (the browser can't parse image-only PDFs to text, so a
+    dropped scan reaches detection with an empty body). Recognises an ISO3
+    code token ("MYS_Pekeliling…", "aus-cyber-security…") or a full country
+    name anywhere in the name."""
+    name = (filename or "").strip()
+    if not name:
+        return {"code": None, "confidence": 0.0, "source": "none"}
+    tokens = {t.upper() for t in re.split(r"[^A-Za-z]+", name) if t}
+    for code in KNOWN_COUNTRIES:
+        if code in tokens:
+            return {
+                "code": code,
+                "name": KNOWN_COUNTRIES[code],
+                "confidence": 0.85,
+                "source": f"filename code: {code}",
+            }
+    lowered = name.lower()
+    for code, country in KNOWN_COUNTRIES.items():
+        if country.lower() in lowered:
+            return {
+                "code": code,
+                "name": country,
+                "confidence": 0.8,
+                "source": f"filename mentions {country}",
+            }
+    return {"code": None, "confidence": 0.0, "source": "none"}
+
+
 def detect_country(
     text: str = "",
     source_url: str = "",
     source_legislation: str = "",
+    filename: str = "",
 ) -> dict:
     """Two-stage country detection: URL first, then text keywords/script.
 
@@ -308,5 +339,13 @@ def detect_country(
     if result["code"]:
         result["detected"] = True
         return result
+
+    # Stage 3: file name — the last resort that still works for image-only
+    # scans, where there is no text until OCR runs server-side.
+    if filename:
+        result = detect_country_from_filename(filename)
+        if result["code"]:
+            result["detected"] = True
+            return result
 
     return {"code": None, "confidence": 0.0, "source": "none", "detected": False}
