@@ -2924,7 +2924,7 @@ textarea {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.78rem;
   color: #111827;
-  border-bottom: 1px solid rgba(17, 24, 39, 0.25);
+  border-bottom: 1px solid #111827;
   padding: 4px 0;
 }
 .swiss-form .reasoning-report .rr-provenance-line:last-child {
