@@ -2648,8 +2648,14 @@ textarea {
   position: relative;
   margin: 10px -18px 12px; /* full-width bleed; keep space below for rows */
   min-height: 128px;
+  border: 1.5px solid #111827; /* frame the card — it read bare without one */
   background: #eceae2; /* the card's gray remainder */
   overflow: hidden;
+}
+/* the score card fills its band edge-to-edge; the band's own hairlines frame
+   it, so a border here would double the lines */
+.swiss-form .reasoning-report .rr-sec-score .rr-batt {
+  border: none;
 }
 /* only bleed to the band's bottom edge when nothing follows the card */
 .swiss-form .reasoning-report .rr-batt:last-child {
