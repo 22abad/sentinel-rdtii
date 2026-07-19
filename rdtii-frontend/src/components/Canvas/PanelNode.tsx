@@ -35,7 +35,7 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
         isVisible={selected}
         minWidth={PANEL_MIN_SIZE.width}
         minHeight={PANEL_MIN_SIZE.height}
-        color="#10B981"
+        color={flat ? "#111827" : "#10B981"}
         handleStyle={RESIZER_HANDLE_STYLE}
         lineStyle={RESIZER_LINE_STYLE}
         onResize={(_event, params) => data.onResize?.({ width: params.width, height: params.height })}
@@ -62,7 +62,7 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
             height: 24,
             minHeight: 0, // global `button { min-height: 40px }` would inflate the pill
             padding: "0 10px",
-            borderRadius: 9999,
+            borderRadius: flat ? 0 : 9999,
             border: "none",
             background: "#b91c1c",
             color: "white",
@@ -83,12 +83,14 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
           height: nodeHeight ? "100%" : undefined,
           borderRadius: flat ? 0 : 36,
           overflow: bare ? "visible" : "hidden",
-          background: bare ? "transparent" : "#ffffff",
+          // Flat (swiss) panels paint their own cream ground — a white card
+          // behind them bled through at the frame edges.
+          background: bare || flat ? "transparent" : "#ffffff",
           boxShadow: bare || flat ? "none" : selected ? "0 18px 50px rgba(0,0,0,0.3)" : "0 18px 50px rgba(0,0,0,0.25)",
           transition: "box-shadow 0.12s ease",
         }}
       >
-        <Handle type="target" position={Position.Top} style={{ background: "#10B981" }} />
+        <Handle type="target" position={Position.Top} style={{ background: flat ? "#111827" : "#10B981" }} />
 
         <div
           className="nowheel"
@@ -101,7 +103,7 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
           {data.element}
         </div>
 
-        <Handle type="source" position={Position.Bottom} style={{ background: "#10B981" }} />
+        <Handle type="source" position={Position.Bottom} style={{ background: flat ? "#111827" : "#10B981" }} />
       </div>
     </div>
   );
