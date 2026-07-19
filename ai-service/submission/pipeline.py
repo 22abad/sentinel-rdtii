@@ -201,6 +201,53 @@ def amendment_year_from_text(source_text: str, law_name: str = "") -> str:
     return ""
 
 
+_DOC_TITLE_INSTRUMENT_RE = re.compile(
+    r"\b(?:act|regulations?|rules?|code|ordinance|order|instruction|notice|"
+    r"agreement|determination|direction|circular|principles?)\b",
+    re.IGNORECASE,
+)
+
+_NAME_STOPWORDS = {"the", "act", "and", "for", "of", "cth", "no"}
+
+
+def _document_self_title(source_text: str) -> str:
+    """The title an official instrument opens with ("Identity Verification
+    Services Act 2023 No. 115, 2023 Compilation …" → "Identity Verification
+    Services Act 2023"). Empty string when the head does not look like a
+    title."""
+    head = " ".join((source_text or "")[:240].split())
+    m = re.match(r"(.{4,120}?\b(?:19|20)\d{2})\b", head)
+    if not m:
+        return ""
+    title = m.group(1).strip(" -–—:;,.")
+    if len(title) < 12 or not _DOC_TITLE_INSTRUMENT_RE.search(title):
+        return ""
+    return title
+
+
+def _name_tokens(name: str) -> set[str]:
+    return {
+        t for t in re.findall(r"[a-z0-9]+", (name or "").lower())
+        if len(t) > 2 and t not in _NAME_STOPWORDS
+    }
+
+
+def _names_disagree(law_name: str, self_title: str) -> bool:
+    """True when the row's law name and the document's own title are talking
+    about different instruments: near-zero token overlap, or both carry years
+    and the years are disjoint ("Privacy Act 1988" on the 2020 amendment
+    act)."""
+    a, b = _name_tokens(law_name), _name_tokens(self_title)
+    if not a or not b:
+        return False
+    overlap = len(a & b) / min(len(a), len(b))
+    if overlap < 0.34:
+        return True
+    years_a = {t for t in a if re.fullmatch(r"(?:19|20)\d{2}", t)}
+    years_b = {t for t in b if re.fullmatch(r"(?:19|20)\d{2}", t)}
+    return bool(years_a) and bool(years_b) and not (years_a & years_b)
+
+
 def build_row(
     mapping: IndicatorMapping,
     *,
@@ -218,6 +265,19 @@ def build_row(
     law_name = (
         getattr(candidate, "authoritative_law_name", "") if candidate is not None else ""
     ) or mapping.source_legislation or getattr(candidate, "title", "") or ""
+    # The document's own opening title is the ground truth for what a
+    # live-discovered row is quoting FROM. The model (and even the discovery
+    # candidate's search-result title) often name the statute a provision talks
+    # ABOUT — every row of the Identity Verification Services Act ended up as
+    # "Privacy Act 1988", and levy Collection Agreements as privacy
+    # instruments; the per-URL majority vote then locked the wrong name in.
+    # Curated seeds keep their authoritative name.
+    self_title_note = ""
+    if not (candidate is not None and getattr(candidate, "authoritative_law_name", "")):
+        _self_title = _document_self_title(source_text)
+        if _self_title and _names_disagree(law_name, _self_title):
+            self_title_note = f"law name corrected to the document's own title (model said: {law_name[:60]})"
+            law_name = _self_title
     candidate_url = getattr(candidate, "url", "") if candidate is not None else ""
     candidate_last = getattr(candidate, "last_update", "") if candidate is not None else ""
     discovery_method = (
@@ -310,7 +370,8 @@ def build_row(
         ),
         confidence=mapping_confidence,
         notes="; ".join(x for x in (
-            _notes(mapping, candidate, doc_meta), inferred_note, attribution_note, title_note) if x),
+            _notes(mapping, candidate, doc_meta), inferred_note, self_title_note,
+            attribution_note, title_note) if x),
         # Extended (JSON-only) metadata
         amendment_version_date=(mapping.last_update or candidate_last).strip(),
         ocr_quality_cer=doc_meta.get("ocr_quality_cer"),

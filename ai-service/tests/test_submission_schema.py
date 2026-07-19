@@ -1247,3 +1247,60 @@ def test_drops_citation_plus_heading_verbatim():
     names_inds = {(r.law_name, r.indicator_id) for r in kept}
     assert ("Criminal Procedure Code 2010", "P7-I1") not in names_inds  # heading dropped
     assert ("Criminal Procedure Code 2010", "P7-I5") in names_inds       # real provision kept
+
+
+def test_document_self_title_corrects_mislabeled_live_rows():
+    """Live rows quoting the IVS Act were shipped as 'Privacy Act 1988' (the
+    act a provision talks ABOUT), and levy Collection Agreements as privacy
+    instruments — the document's own opening title is the ground truth."""
+    from types import SimpleNamespace
+
+    from schemas import IndicatorMapping
+    from submission.pipeline import (
+        _document_self_title,
+        _names_disagree,
+        build_row,
+    )
+
+    ivs_head = (
+        "Identity Verification Services Act 2023 No. 115, 2023 Compilation "
+        "No. 1 Compilation date: 11 December 2024"
+    )
+    pasture_head = (
+        "Pasture Seeds Levy Collection Agreement – Western Australia – 2026 "
+        "Department of Agriculture, Fisheries and Forestry"
+    )
+    assert _document_self_title(ivs_head) == "Identity Verification Services Act 2023"
+    assert "Pasture Seeds Levy Collection Agreement" in _document_self_title(pasture_head)
+
+    assert _names_disagree("Australia Privacy Act, 1988", "Identity Verification Services Act 2023")
+    # Same-instrument phrasings must NOT be renamed.
+    assert not _names_disagree("Privacy Act 1988", "Privacy Act 1988")
+    assert not _names_disagree(
+        "Information Privacy Act 2009 (QLD)", "Queensland Information Privacy Act 2009"
+    )
+    # Years disjoint → different instruments even with word overlap.
+    assert _names_disagree(
+        "Australia Privacy Act, 1988",
+        "Privacy Amendment (Public Health Contact Information) Act 2020",
+    )
+
+    mapping = IndicatorMapping(
+        pillar=7, indicator="7.3", score=1.0,
+        verbatim_quote="The record must be retained for seven years.",
+        quote_start=60, quote_end=100,
+        source_legislation="Australia Privacy Act, 1988",
+        impact="[s 10] Retention duty maps to 7.3.",
+        source_url="https://www.legislation.gov.au/C2023A00115/latest/text",
+    )
+    candidate = SimpleNamespace(
+        title="Privacy Act 1988", url=mapping.source_url,
+        authoritative_law_name="", last_update="", discovery_method="live_search",
+        retrieval_mode="live", confidence=0.9, legal_review_approved=False,
+    )
+    row = build_row(
+        mapping, economy_display="Australia", candidate=candidate,
+        source_text=ivs_head + " The record must be retained for seven years.",
+    )
+    assert row.law_name == "Identity Verification Services Act 2023"
+    assert "law name corrected" in row.notes
