@@ -2352,20 +2352,14 @@ textarea {
   border-left: 2px solid #111827;
   padding: 24px 20px 96px;
 }
-/* The outer frame follows the content in BOTH directions: height auto grows
-   with expanded rows and shrinks back on collapse. min-height is viewport-
-   based (audit-side pads 24px top + 96px bottom) — NOT a percentage, which
-   resolved circularly against the column and left stale blank height after
-   collapsing a row. */
+/* The outer frame follows the content in BOTH directions (the component has
+   no max-height cap or inner scroll box anymore): it grows with expanded rows
+   and shrinks back on collapse. min-height is viewport-based (audit-side pads
+   24px top + 96px bottom) — NOT a percentage, which resolved circularly
+   against the column and left stale blank height after collapse. */
 .workbench-classic .workspace-audit-side .review-panel {
   min-height: calc(100dvh - 120px);
-  max-height: none;
   overflow: visible;
-}
-.workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
-  flex: none; /* pure content height — grows and shrinks with the rows */
-  overflow-y: visible;
-  min-height: auto;
 }
 
 /* ── Audit: RAD-style accordion index ─────────────────────────────────────
