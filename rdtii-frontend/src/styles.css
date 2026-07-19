@@ -2328,6 +2328,180 @@ textarea {
   max-height: none;
 }
 
+/* ── Audit: RAD-style accordion index ─────────────────────────────────────
+   Collapsed row = "P6.2 · Legislation Title · +", divided by hairlines;
+   clicking expands the tidied-up report inline. */
+.swiss-form .mapping-list {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.swiss-form .mapping-row {
+  border-top: 1.5px solid #111827;
+}
+.swiss-form .mapping-row:last-child {
+  border-bottom: 1.5px solid #111827;
+}
+.swiss-form .mapping-row-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  text-align: left;
+  cursor: pointer;
+}
+.swiss-form .mapping-row-head:hover,
+.swiss-form .mapping-row.open .mapping-row-head {
+  background: rgba(17, 24, 39, 0.05);
+}
+.swiss-form .mapping-row-code {
+  min-width: 64px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+.swiss-form .mapping-row.active-mapping .mapping-row-code {
+  background: #111827;
+  color: #f3f1ea;
+  padding: 2px 6px;
+}
+.swiss-form .mapping-row-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+.swiss-form .mapping-row-plus {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1;
+}
+.swiss-form .mapping-row-decision {
+  flex-shrink: 0;
+  border: 1.5px solid #111827;
+  padding: 2px 7px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.swiss-form .mapping-row-decision.approved {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .mapping-row-decision.rejected {
+  color: #9f2d20;
+  border-color: #9f2d20;
+}
+
+/* expanded body: the tidied-up report */
+.swiss-form .mapping-row-body {
+  padding: 4px 18px 18px 98px; /* left-aligns content with the title column */
+}
+.swiss-form .mapping-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b675c;
+}
+.swiss-form .mapping-row-body .quote {
+  margin: 12px 0 0;
+  border-left: 2px solid #111827;
+  padding: 2px 0 2px 12px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: #1f2933;
+}
+.swiss-form .mapping-row-body .impact {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  color: #1f2933;
+}
+.swiss-form .mapping-row-report {
+  margin-top: 14px;
+  border-top: 1.5px solid #111827;
+  padding-top: 12px;
+}
+.swiss-form .mapping-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.swiss-form .mapping-row-source {
+  margin-right: auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111827;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.swiss-form .mapping-row-actions button {
+  min-height: 34px;
+  border-radius: 0;
+  padding: 0 14px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.swiss-form .mapping-row-actions button:not(.secondary) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .mapping-row-actions button:not(.secondary):hover {
+  background: #000;
+}
+.swiss-form .mapping-row-actions button.secondary {
+  border: 1.5px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .mapping-row-actions button.secondary:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .mapping-row-actions button.active-approve {
+  background: #116149;
+}
+.swiss-form .mapping-row-actions button.secondary.active-reject {
+  border-color: #9f2d20;
+  color: #9f2d20;
+}
+.swiss-form .score-badge {
+  border-radius: 0;
+}
+.swiss-form .empty-state {
+  padding: 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b675c;
+}
+
 /* swiss header action buttons (Audit: Load demo / Preview export) */
 .swiss-form .panel-header button.secondary {
   min-height: 32px;

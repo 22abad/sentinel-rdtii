@@ -4,7 +4,6 @@ import { formatScore, scoreClass, scoreDescription } from "../../lib/utils";
 import { t } from "../../lib/i18n";
 import type { IndicatorMapping, ReviewDecision } from "../../types";
 import { ReasoningReport } from "./ReasoningReport";
-import { RightDrawer } from "../ui/RightDrawer";
 
 type MappingCardProps = {
   mapping: IndicatorMapping;
@@ -15,6 +14,12 @@ type MappingCardProps = {
   onDecision: (d: ReviewDecision) => void;
 };
 
+/**
+ * RAD-style accordion row (Swiss index list): collapsed, a row shows only
+ * "P6.2 · Legislation Title · +". Clicking expands the tidied-up report
+ * inline — score/meta, verbatim quote, impact, the reasoning report (inline,
+ * no drawer), source link, and the approve/reject decision.
+ */
 export function MappingCard({
   mapping,
   mappingKeyStr,
@@ -23,8 +28,8 @@ export function MappingCard({
   onSelect,
   onDecision,
 }: MappingCardProps) {
+  const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [reportOpen, setReportOpen] = useState(false);
   const hasReport =
     Object.keys(mapping.features ?? {}).length > 0 ||
     (mapping.flag_reasons?.length ?? 0) > 0;
@@ -37,154 +42,119 @@ export function MappingCard({
 
   return (
     <li
-      className={`mapping-card ${active ? "active-mapping" : ""} decision-${decision}`}
-      onClick={onSelect}
-      onKeyDown={(e) => {
-        if (e.target !== e.currentTarget) return;
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onSelect();
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-pressed={active}
-      aria-label={`Mapping ${mapping.indicator}, score ${formatScore(mapping.score)}`}
+      className={`mapping-row ${open ? "open" : ""} ${active ? "active-mapping" : ""} decision-${decision}`}
       data-testid={`mapping-card-${mappingKeyStr}`}
     >
-      <div className="card-row">
-        <span className="indicator-badge">
-          P{mapping.pillar} · {mapping.indicator}
+      <button
+        type="button"
+        className="mapping-row-head nodrag"
+        aria-expanded={open}
+        aria-label={`Mapping ${mapping.indicator}, score ${formatScore(mapping.score)}`}
+        onClick={() => {
+          const next = !open;
+          setOpen(next);
+          if (next) onSelect();
+        }}
+      >
+        <span className="mapping-row-code">P{mapping.indicator}</span>
+        <span className="mapping-row-title">
+          {mapping.source_legislation || t("mapping.untitled")}
         </span>
-        <span
-          className={`score-badge ${scoreClass(mapping.score)}`}
-          data-tooltip={scoreDescription(mapping.score)}
-        >
-          {formatScore(mapping.score)}
+        {decision !== "pending" && (
+          <span className={`mapping-row-decision ${decision}`}>
+            {decision === "approved" ? t("mapping.approve") : t("mapping.reject")}
+          </span>
+        )}
+        <span className="mapping-row-plus" aria-hidden="true">
+          {open ? "−" : "+"}
         </span>
-      </div>
+      </button>
 
-      <div className="card-titles">
-        <h3>{mapping.source_legislation || t("mapping.untitled")}</h3>
-        <p className="muted">
-          {mapping.last_update || t("mapping.dateUnknown")}
-          {mapping.scope !== "unknown" ? ` · ${mapping.scope}` : null}
-        </p>
-      </div>
-
-      <div className="taxonomy-row">
-        {mapping.cluster ? <span className="taxonomy-chip cluster">{mapping.cluster}</span> : null}
-        {mapping.name ? <span className="taxonomy-chip name">{mapping.name}</span> : null}
-        {mapping.policy_description ? <span className="taxonomy-chip policy">{mapping.policy_description}</span> : null}
-        {mapping.cov_name ? <span className="taxonomy-chip cov">{mapping.cov_name}</span> : null}
-        {mapping.region ? <span className="taxonomy-chip region">{mapping.region}</span> : null}
-        {mapping.coverage ? <span className="taxonomy-chip coverage">{mapping.coverage}</span> : null}
-      </div>
-
-      <blockquote className="quote select-text">
-        "{visibleQuote}"
-        {quoteIsLong ? (
-          <button
-            type="button"
-            className="link-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setExpanded((v) => !v);
-            }}
-          >
-            {expanded ? t("mapping.showLess") : t("mapping.showMore")}
-          </button>
-        ) : null}
-      </blockquote>
-
-      {hasReport ? (
-        <div className="reasoning-toggle-row">
-          <button
-            type="button"
-            className="secondary reasoning-toggle"
-            aria-haspopup="dialog"
-            aria-expanded={reportOpen}
-            onClick={(e) => {
-              e.stopPropagation();
-              setReportOpen(true);
-            }}
-          >
-            {t("mapping.reasoningReport")}
-          </button>
-          <RightDrawer
-            open={reportOpen}
-            onOpenChange={setReportOpen}
-            title={t("mapping.reasoningReport")}
-            className="reasoning-drawer"
-          >
-            <div className="reasoning-drawer-header">
-              <span className="indicator-badge">
-                P{mapping.pillar} · {mapping.indicator}
-              </span>
-              <span
-                className={`score-badge ${scoreClass(mapping.score)}`}
-                data-tooltip={scoreDescription(mapping.score)}
-              >
-                {formatScore(mapping.score)}
-              </span>
-              <h3>{mapping.source_legislation || t("mapping.untitled")}</h3>
-            </div>
-            <ReasoningReport mapping={mapping} />
-          </RightDrawer>
-        </div>
-      ) : null}
-
-      {mapping.impact ? (
-        <p className="impact">
-          <strong>{t("mapping.scoreReason")}</strong> {mapping.impact}
-        </p>
-      ) : null}
-
-      <div className="card-footer">
-        <div className="card-footer-left">
-          {mapping.source_url ? (
-            <a
-              href={mapping.source_url}
-              target="_blank"
-              rel="noreferrer"
-              onClick={(e) => e.stopPropagation()}
+      {open && (
+        <div className="mapping-row-body select-text">
+          <div className="mapping-row-meta">
+            <span
+              className={`score-badge ${scoreClass(mapping.score)}`}
+              data-tooltip={scoreDescription(mapping.score)}
             >
-              {t("mapping.source")} ↗
-            </a>
-          ) : (
-            <span className="muted">{t("mapping.noSourceUrl")}</span>
-          )}
-          {mapping.requires_human_review ? (
-            <span className="review-flag">{t("mapping.needsReview")}</span>
-          ) : null}
-        </div>
-        <span className="muted small">
-          {t("mapping.via")} {mapping.extraction_provider || "unknown"}
-        </span>
-      </div>
+              {formatScore(mapping.score)}
+            </span>
+            <span>
+              {mapping.last_update || t("mapping.dateUnknown")}
+              {mapping.scope !== "unknown" ? ` · ${mapping.scope}` : null}
+            </span>
+            <span>
+              {t("mapping.via")} {mapping.extraction_provider || "unknown"}
+            </span>
+            {mapping.requires_human_review && (
+              <span className="review-flag">{t("mapping.needsReview")}</span>
+            )}
+          </div>
 
-      <div className="card-actions">
-        <button
-          type="button"
-          className={`secondary ${decision === "rejected" ? "active-reject" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onDecision(decision === "rejected" ? "pending" : "rejected");
-          }}
-        >
-          {t("mapping.reject")}
-        </button>
-        <button
-          type="button"
-          className={decision === "approved" ? "active-approve" : ""}
-          onClick={(e) => {
-            e.stopPropagation();
-            onDecision(decision === "approved" ? "pending" : "approved");
-          }}
-        >
-          {t("mapping.approve")}
-        </button>
-      </div>
+          <blockquote className="quote select-text">
+            "{visibleQuote}"
+            {quoteIsLong ? (
+              <button
+                type="button"
+                className="link-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded((v) => !v);
+                }}
+              >
+                {expanded ? t("mapping.showLess") : t("mapping.showMore")}
+              </button>
+            ) : null}
+          </blockquote>
+
+          {mapping.impact ? (
+            <p className="impact">
+              <strong>{t("mapping.scoreReason")}</strong> {mapping.impact}
+            </p>
+          ) : null}
+
+          {hasReport ? (
+            <div className="mapping-row-report">
+              <ReasoningReport mapping={mapping} />
+            </div>
+          ) : null}
+
+          <div className="mapping-row-actions">
+            {mapping.source_url ? (
+              <a
+                className="mapping-row-source"
+                href={mapping.source_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t("mapping.source")} ↗
+              </a>
+            ) : (
+              <span className="mapping-row-source muted">
+                {t("mapping.noSourceUrl")}
+              </span>
+            )}
+            <button
+              type="button"
+              className={`secondary ${decision === "rejected" ? "active-reject" : ""}`}
+              onClick={() =>
+                onDecision(decision === "rejected" ? "pending" : "rejected")
+              }
+            >
+              {t("mapping.reject")}
+            </button>
+            <button
+              type="button"
+              className={decision === "approved" ? "active-approve" : ""}
+              onClick={() =>
+                onDecision(decision === "approved" ? "pending" : "approved")
+              }
+            >
+              {t("mapping.approve")}
+            </button>
+          </div>
+        </div>
+      )}
     </li>
   );
 }
