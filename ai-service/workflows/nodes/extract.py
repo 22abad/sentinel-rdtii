@@ -95,6 +95,14 @@ class ExtractMappingsExecutor(NodeExecutor):
                     run_id=context.run_id, node_id=node.id,
                     event="mapping", status="running", payload=mapping,
                 )
+            # The rejected log is evidence too — the audit panel shows WHY
+            # non-qualifying provisions never reached the output. A replay
+            # that drops it makes the tool look like it never filtered.
+            for rejected in cached.get("rejected", []) or []:
+                yield WorkflowRunEvent(
+                    run_id=context.run_id, node_id=node.id,
+                    event="rejected", status="running", payload=rejected,
+                )
             yield WorkflowRunEvent(
                 run_id=context.run_id, node_id=node.id,
                 event="node_output", status="success",
