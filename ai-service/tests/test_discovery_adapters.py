@@ -549,7 +549,7 @@ async def test_official_index_adapter_respects_fixture_environment(monkeypatch):
     monkeypatch.setattr(adapter, "_search_indexes", unexpected_live_search)
     source = next(
         source for source in get_sources("AUS")
-        if source.name == "Singapore Ministry of Trade and Industry"
+        if source.name == "Australia–Singapore DEA text (hosted by MTI Singapore)"
     )
 
     rows = await adapter.search(

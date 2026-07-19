@@ -58,7 +58,7 @@ countries:
       evidence_type: positive
       instruments:
         - title: Australia-Singapore Digital Economy Agreement
-          official_source: Singapore Ministry of Trade and Industry (joint treaty text)
+          official_source: Australia–Singapore DEA text (hosted by MTI Singapore) — joint treaty text
           url: https://isomer-user-content.by.gov.sg/166/769c26eb-17cf-4e2d-962b-1277a22df9db/australia-singapore-digital-economy-agreement%20-%20Jun%2023.pdf
           role: In-force bilateral agreement; Article 23 prohibits restrictions on covered cross-border information transfers, subject to a bounded public-policy exception.
           live_discovery: passed
