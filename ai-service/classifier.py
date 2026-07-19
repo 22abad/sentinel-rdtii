@@ -67,7 +67,10 @@ _BASE_PHRASES = {
         "个人信息保护法", "隐私", "数据主体"
     ],
     "7.2": [
-        "cybersecurity", "cybercrime", "an ninh mạng", "keamanan siber",
+        # AU/UK/SG drafting writes the open compound ("cyber security");
+        # the closed form alone missed the AUS Cyber Security Act 2024.
+        "cybersecurity", "cyber security", "cybercrime", "cyber crime",
+        "an ninh mạng", "keamanan siber",
         "网络安全", "网络犯罪"
     ],
     "7.3": [

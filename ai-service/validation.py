@@ -171,13 +171,20 @@ def is_objectives_clause(quote: str) -> bool:
     # Section number followed by "Objectives" / "Purpose" etc.
     if re.match(r"^\d+\.\s*(objectives|purpose|application|interpretation)\b", t):
         return True
-    # "The objectives of this Act are to" pattern
-    if re.search(r"\b(objectives|purposes?) of this (Act|Law|Regulation)\s+are\b", t):
+    # "The objectives of this Act are to" pattern (AU drafting says "objects").
+    # t is lowercased above — the original pattern's (Act|Law|Regulation) could
+    # never match.
+    if re.search(r"\b(objects?|objectives|purposes?) of this (act|law|regulation)\s+are\b", t):
         return True
     # "This Act provides a legal framework for" → objectives language
     if re.search(r"this (act|law|regulation) provides?\s+(a|an)\s+(legal\s+)?framework", t):
         return True
-    # Keyword match
+    # Keyword match — but never against a quote that carries operative
+    # language: "for the purposes of" / "to the extent that" are ubiquitous in
+    # substantive provisions, and the bare keywords ("purpose", "extent")
+    # previously misfired on them (e.g. Cyber Security Act 2024 s40(4)).
+    if any(sig.search(t) for sig in _SUBSTANTIVE_SIGNALS):
+        return False
     for kw in _OBJECTIVE_KEYWORDS:
         if kw in t:
             return True
