@@ -52,11 +52,20 @@ link every claim to code._
   AUS {6.1,6.2,6.4,7.2,7.3,7.5} (SGP 6.1/7.1 are officially 0, so run5/run6
   "missing" them vs v3 was correct — v3's six FSMA 6.1 rows were the off-topic
   kind the grader removes).
-  NOTE: the night's independent verbatim re-verification (re-fetch every
-  official source, #297 process) has NOT yet been repeated for run6's 64 rows —
-  in-pipeline verbatim gates all passed; the full independent audit is the one
-  remaining optional step.
-- 648 tests green, main at #302.
+- **Independent verbatim audit COMPLETE (run6, ~09:30)**: every official source
+  re-fetched (0 unfetchable), all 64 rows byte-compared. **One mismatch** — an
+  AUS P7-I1 NSW PPIP row whose verbatim was the constructed heading "Section
+  19(2) — Special restrictions on disclosure of personal information
+  (cross-border):" (slipped every gate: no statute word, no operative verb, >8
+  words, not bracket-terminated). Row dropped (it sat on the officially-zero
+  AUS 7.1 cell — zero coverage cost) and the gate hardened (**PR #306**: a
+  quote OPENING with a section citation + dash/colon separator is
+  citation-style, caught at prepare time).
+- **FINAL SUBMISSION STATE: 63 rows (AUS 38 / MYS 14 / SGP 11), 63/63
+  independently verbatim-confirmed against re-fetched official sources, 0
+  unfetchable, 16/16 official non-zero cells covered, 0 empty rationale/URL,
+  no BOM.** `outputs/SUBMISSION_final/` + `outputs/SUBMISSION_Round1_SENTINEL.xlsx`.
+- 649 tests green, main at #306.
 
 **NIGHT UPDATE (for Dong, ~08:00):** PR #293 (`codex/mapping-precision-gate`)
 added a precision-first eligibility gate that hard-drops any mapping failing
