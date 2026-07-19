@@ -217,7 +217,11 @@ class MASOrchestrator:
                     # Post-processing / cleaning metadata
                     source_url_val = data.get("source_url", "")
                     source_legislation_val = data.get("source_legislation") or ""
-                    source_url_val = source_url_val or ""
+                    # The caller's fetched URL beats an absent LLM echo — the
+                    # source-grade audit and staleness checks are URL-driven.
+                    source_url_val = (
+                        source_url_val or (pdf_metadata or {}).get("source_url", "")
+                    )
                     # The document's own opening title beats the model's guess —
                     # the model names the act a provision talks ABOUT (a Cyber
                     # Security Act cross-reference became "Privacy Act 1988").

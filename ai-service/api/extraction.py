@@ -159,6 +159,12 @@ async def extract(
     except ExtractionError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
 
+    # Thread the fetched URL through to the runtime: the LLM rarely echoes a
+    # source_url, and without it the source-grade audit falls back to
+    # title-keyword guessing (an official lom.agc.gov.my doc graded 40%
+    # instead of 95% in the workbench).
+    if source_url.strip():
+        pdf_meta = {**(pdf_meta or {}), "source_url": source_url.strip()}
     result = await run_extraction(text, llm_provider, pdf_metadata=pdf_meta)
     try:
         from services.activity_log import record_activity
@@ -258,6 +264,8 @@ async def extract_stream(
 
         return StreamingResponse(_bad_provider(), media_type="text/event-stream")
 
+    if source_url.strip():
+        pdf_meta = {**(pdf_meta or {}), "source_url": source_url.strip()}
     return StreamingResponse(
         stream_extraction(text, llm_provider, pdf_metadata=pdf_meta),
         media_type="text/event-stream",
