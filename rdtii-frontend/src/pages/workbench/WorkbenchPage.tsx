@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Plus, Menu, X, Home, Map, User, LayoutDashboard } from "lucide-react";
 import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
-import { WorkbenchCanvas, type CanvasPanel, type CanvasGraph, type LinkedFile } from "./WorkbenchCanvas";
+import { WorkbenchCanvas, type CanvasPanel, type CanvasGraph, type LinkedFile, type WorkbenchCanvasApi } from "./WorkbenchCanvas";
 import { fetchSourceTextNode } from "../../services/workflowNodes";
 import { parseFile } from "../../services/canvasFiles";
 import { DocumentsPanel } from "../../components/Workbench/DocumentsPanel";
@@ -144,7 +144,7 @@ function AuditThreadPanel({ threadId }: { threadId: string | null }) {
 }
 
 /** Discovery drives the main thread (candidate URLs → main Source). */
-function DiscoveryThreadPanel() {
+function DiscoveryThreadPanel({ onExtractIntent }: { onExtractIntent?: () => void }) {
   const { country, pillarFilter, status, batchProgress, setSourceUrl, extract, extractShortlist } =
     useExtractionThread(MAIN_THREAD_ID);
   return (
@@ -153,9 +153,18 @@ function DiscoveryThreadPanel() {
       pillarFilter={pillarFilter}
       extracting={status === "loading"}
       batchProgress={batchProgress}
-      onUseCandidate={(candidate) => setSourceUrl(candidate.url)}
-      onExtractCandidate={(candidate) => extract(candidate.url)}
-      onExtractShortlist={(candidates) => extractShortlist(candidates.map((candidate) => candidate.url))}
+      onUseCandidate={(candidate) => {
+        onExtractIntent?.();
+        setSourceUrl(candidate.url);
+      }}
+      onExtractCandidate={(candidate) => {
+        onExtractIntent?.();
+        extract(candidate.url);
+      }}
+      onExtractShortlist={(candidates) => {
+        onExtractIntent?.();
+        extractShortlist(candidates.map((candidate) => candidate.url));
+      }}
     />
   );
 }
@@ -238,8 +247,23 @@ export function WorkbenchPage() {
     setGraph((prev) => (JSON.stringify(prev) === JSON.stringify(next) ? prev : next));
   }, []);
 
+  // Canvas imperative handle: Discovery's Extract auto-reveals + wires the
+  // Extract → Audit pipeline so streamed results always land somewhere visible.
+  const canvasApiRef = useRef<WorkbenchCanvasApi | null>(null);
+
   const canvasPanels: CanvasPanel[] = [
-    { id: "discovery", title: "Discovery", element: <DiscoveryThreadPanel />, width: 800, dragHandle: ".panel-header", flat: true },
+    {
+      id: "discovery",
+      title: "Discovery",
+      element: (
+        <DiscoveryThreadPanel
+          onExtractIntent={() => canvasApiRef.current?.revealExtractPipeline()}
+        />
+      ),
+      width: 800,
+      dragHandle: ".panel-header",
+      flat: true,
+    },
     {
       id: "source",
       title: "Extract",
@@ -513,6 +537,7 @@ export function WorkbenchPage() {
           onExit={() => navigate("/")}
           onSwitchView={() => switchView("classic")}
           onGraphChange={handleGraphChange}
+          apiRef={canvasApiRef}
         />
       ) : (
         <>
