@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { RefreshCw, Trash2, FileText } from "lucide-react";
 import { listCanvasFiles, deleteCanvasFile, type CanvasFileInfo } from "../../services/canvasFiles";
-import { extColor, extLabel } from "./FileCardStack";
 
 /**
  * Knowledge-base browser — every ingested document (uploads from either
@@ -60,14 +59,14 @@ export function DocumentsPanel() {
         </button>
       </div>
 
-      <div className="nodrag nowheel" style={{ padding: "10px 14px 14px", maxHeight: 420, overflowY: "auto" }}>
+      <div className="nodrag nowheel" style={{ padding: 0, maxHeight: 420, overflowY: "auto" }}>
         {error && (
-          <p style={{ margin: "6px 0", fontSize: "0.8rem", color: "#9f2d20" }}>
+          <p style={{ margin: 0, padding: "12px 18px", borderTop: "1.5px solid #9f2d20", fontSize: "0.78rem", color: "#9f2d20", fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace' }}>
             {/401|not authenticated/i.test(error) ? "Please log in to view the knowledge base." : error}
           </p>
         )}
         {!error && !loading && docs.length === 0 && (
-          <p style={{ margin: "10px 0", fontSize: "0.78rem", color: "#6b675c", fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace' }}>
+          <p style={{ margin: 0, padding: "12px 18px", borderTop: "1.5px solid #111827", fontSize: "0.78rem", color: "#6b675c", fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace' }}>
             No documents ingested yet — attach a file in a RAG chat or link a file node.
           </p>
         )}
@@ -77,28 +76,11 @@ export function DocumentsPanel() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              padding: "8px 6px",
-              borderBottom: "1px solid #111827",
+              gap: 12,
+              padding: "10px 18px",
+              borderTop: "1.5px solid #111827",
             }}
           >
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 0,
-                background: extColor(doc.filename),
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "0.55rem",
-                fontWeight: 800,
-                flexShrink: 0,
-              }}
-            >
-              {extLabel(doc.filename)}
-            </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div
                 style={{ fontSize: "0.8rem", fontWeight: 600, color: "#1f2933", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
@@ -119,20 +101,20 @@ export function DocumentsPanel() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 4,
+                justifyContent: "center",
+                width: 28,
+                height: 28,
                 minHeight: 0,
-                padding: "3px 9px",
+                padding: 0,
                 borderRadius: 0,
                 border: "1.5px solid #9f2d20",
                 background: "transparent",
                 color: "#9f2d20",
-                fontSize: "0.68rem",
-                fontWeight: 700,
                 cursor: "pointer",
                 flexShrink: 0,
               }}
             >
-              <Trash2 size={11} /> Delete
+              <Trash2 size={13} />
             </button>
           </div>
         ))}

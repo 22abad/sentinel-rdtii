@@ -50,7 +50,7 @@ function Preview({ url, type, name }: { url?: string; type?: string; name?: stri
     return <img src={url} alt={name ?? "preview"} style={{
       width:"100%",
       display:"block",
-      borderRadius:8,
+      borderRadius:0,
     }}/>
   }
 
@@ -63,7 +63,7 @@ function Preview({ url, type, name }: { url?: string; type?: string; name?: stri
         width:"100%",
         height:1280,
         border:"none",
-        borderRadius:8,
+        borderRadius:0,
         background:"#fff",
       }}
     />
@@ -82,11 +82,11 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
         position: "relative",
         width: nodeWidth,
         height: nodeHeight,
-        borderRadius: 13,
+        borderRadius: 0,
         overflow: selected ? "visible" : "hidden",
-        background: "#ffffff",
-        border: "1px solid #d8dee6",
-        boxShadow: selected ? "0 10px 30px rgba(0,0,0,0.22)" : "0 10px 30px rgba(0,0,0,0.12)",
+        background: "#f3f1ea",
+        border: "1.5px solid #111827",
+        boxShadow: "none",
         transition: isResizing ? "none" : "width 0.28s cubic-bezier(0.4, 0, 0.2, 1), height 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
       }}
     >
@@ -95,7 +95,7 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
         isVisible={selected}
         minWidth={FILE_MIN_SIZE.width}
         minHeight={FILE_MIN_SIZE.height}
-        color="#10B981"
+        color="#111827"
         handleStyle={RESIZER_HANDLE_STYLE}
         lineStyle={RESIZER_LINE_STYLE}
         onResizeStart={() => setIsResizing(true)}
@@ -128,36 +128,38 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
             height: 24,
             minHeight: 0,
             padding: "0 10px",
-            borderRadius: 9999,
+            borderRadius: 0,
             border: "none",
-            background: "#b91c1c",
+            background: "#9f2d20",
             color: "white",
             fontSize: "0.7rem",
             fontWeight: 600,
             cursor: "pointer",
             whiteSpace: "nowrap",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+            boxShadow: "none",
           }}
         >
           <Trash2 size={12} /> Delete
         </button>
       )}
 
-      <Handle type="source" position={Position.Right} style = {{ background: "#10B981" }} />
+      <Handle type="source" position={Position.Right} style={{ background: "#111827" }} />
       <div style={{
         display: "flex",
         alignItems: "center",
         gap: 8,
         padding: "6px 8px 6px 12px",
-        background: "#f5f7fa",
-        borderBottom: "1px solid rgba(0,0,0,0.08)" 
+        background: "transparent",
+        borderBottom: "1.5px solid #111827" 
       }}>
         <FileText size={14} />
         <span style={{
         flex: 1,
-        fontSize: "0.82rem",
-        fontWeight: 700,
-        color: "#26303d"
+        fontSize: "0.8rem",
+        fontWeight: 800,
+        color: "#111827",
+        textTransform: "uppercase",
+        letterSpacing: "0.04em"
         }}>
           File
         </span>
@@ -174,7 +176,7 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
               fontSize: "0.65rem",
               fontWeight: 700,
               padding: "2px 8px",
-              borderRadius: 9999,
+              borderRadius: 0,
               whiteSpace: "nowrap",
               color: INGEST_BADGE[data.ingestStatus].color,
               background: INGEST_BADGE[data.ingestStatus].bg,
@@ -197,7 +199,7 @@ export function FileNode({ id, data, selected }: { id: string; data: FileNodeDat
             justifyContent:"center",
             height: 18,
             width:18,
-            borderRadius: 9999,
+            borderRadius: 0,
             border: "none",
             background: "transparent",
             color: "#5a6573",
