@@ -2408,15 +2408,17 @@ textarea {
   border-color: #9f2d20;
 }
 
-/* expanded body: the tidied-up report */
+/* expanded body: full-bleed — no outer margins, content fills the row;
+   everything is divided by hairlines only */
 .swiss-form .mapping-row-body {
-  padding: 4px 18px 18px 98px; /* left-aligns content with the title column */
+  padding: 0;
 }
 .swiss-form .mapping-row-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 14px;
+  padding: 12px 18px 0;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -2424,7 +2426,7 @@ textarea {
   color: #6b675c;
 }
 .swiss-form .mapping-row-body .quote {
-  margin: 12px 0 0;
+  margin: 12px 18px 0;
   border-left: 2px solid #111827;
   padding: 2px 0 2px 12px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -2432,20 +2434,22 @@ textarea {
   color: #1f2933;
 }
 .swiss-form .mapping-row-body .impact {
-  margin: 12px 0 0;
+  margin: 12px 18px 14px;
   font-size: 0.95rem;
   color: #1f2933;
 }
 .swiss-form .mapping-row-report {
   margin-top: 14px;
   border-top: 1.5px solid #111827;
-  padding-top: 12px;
+  padding-top: 0;
 }
 .swiss-form .mapping-row-actions {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 0;
+  border-top: 1.5px solid #111827;
+  padding: 12px 18px;
 }
 .swiss-form .mapping-row-source {
   margin-right: auto;
@@ -2501,16 +2505,20 @@ textarea {
    when corroborated / yellow when unconfirmed */
 .swiss-form .reasoning-report {
   display: grid;
-  gap: 10px;
+  gap: 0; /* blocks are full-bleed bands divided by lines, not framed boxes */
 }
 .swiss-form .reasoning-report .rr-section,
 .swiss-form .reasoning-report .rr-callout {
   margin: 0;
-  border: 1.5px solid #111827;
+  border: none;
+  border-top: 1.5px solid #111827;
   border-radius: 0;
-  padding: 12px 14px;
+  padding: 12px 18px 14px;
   background: #ffffff;
   box-shadow: none;
+}
+.swiss-form .reasoning-report > *:first-child {
+  border-top: none; /* the report container already draws the opening line */
 }
 .swiss-form .reasoning-report h4,
 .swiss-form .reasoning-report .rr-callout-title {
