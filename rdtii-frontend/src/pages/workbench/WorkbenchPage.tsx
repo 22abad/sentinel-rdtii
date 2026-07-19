@@ -23,7 +23,7 @@ import { useAuth } from "../../hooks/useAuth";
 const MAIN_THREAD_ID = "source";
 
 /** One Source panel instance bound to its own extraction thread. */
-function SourceThreadPanel({ threadId, linkedFiles }: { threadId: string; linkedFiles: LinkedFile[] }) {
+function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: string; linkedFiles: LinkedFile[]; autoRunToken?: number }) {
   const {
     country, setCountry,
     detectedCountry,
@@ -72,6 +72,18 @@ function SourceThreadPanel({ threadId, linkedFiles }: { threadId: string; linked
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, sourceUrl, linkedFiles, extract]);
+
+  // One-click file pipeline: the canvas spawned this instance wired to a
+  // file node and asked for an auto-run. Wait until the linked file has
+  // actually registered (the graph propagates via an effect), then run once.
+  const consumedAutoRun = useRef(0);
+  useEffect(() => {
+    if (!autoRunToken || autoRunToken === consumedAutoRun.current) return;
+    if (linkedFiles.length === 0) return;
+    consumedAutoRun.current = autoRunToken;
+    runExtraction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRunToken, linkedFiles.length]);
 
   return (
     <SourcePanel
@@ -251,6 +263,13 @@ export function WorkbenchPage() {
   // Extract → Audit pipeline so streamed results always land somewhere visible.
   const canvasApiRef = useRef<WorkbenchCanvasApi | null>(null);
 
+  // File-node Extract buttons: instance id -> monotonically increasing token;
+  // the matching SourceThreadPanel auto-runs when its wire lands.
+  const [autoRunTokens, setAutoRunTokens] = useState<Record<string, number>>({});
+  const handleFileExtract = useCallback((_fileId: string, instanceId: string) => {
+    setAutoRunTokens((prev) => ({ ...prev, [instanceId]: (prev[instanceId] ?? 0) + 1 }));
+  }, []);
+
   const canvasPanels: CanvasPanel[] = [
     {
       id: "discovery",
@@ -272,6 +291,7 @@ export function WorkbenchPage() {
           key={instanceId}
           threadId={instanceId}
           linkedFiles={graph.filesByInstance[instanceId] ?? []}
+          autoRunToken={autoRunTokens[instanceId]}
         />
       ),
       width: 460,
@@ -538,6 +558,7 @@ export function WorkbenchPage() {
           onSwitchView={() => switchView("classic")}
           onGraphChange={handleGraphChange}
           apiRef={canvasApiRef}
+          onFileExtract={handleFileExtract}
         />
       ) : (
         <>
