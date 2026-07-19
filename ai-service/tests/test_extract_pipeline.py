@@ -922,3 +922,52 @@ def test_recent_corrections_degrades_without_psycopg2(monkeypatch):
 
     monkeypatch.setattr(builtins, "__import__", no_psycopg2)
     assert LLMProvider._get_recent_corrections() == ""
+
+
+def test_runtime_repair_loop_expands_fragment_quote(monkeypatch):
+    """A verbatim mid-sentence fragment ("kept in Malaysia") is caught at
+    prepare time and repaired to the full provision limb, instead of sailing
+    through mapping only to be dropped at submission validation (the MYS 6.2
+    seed regression)."""
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    source = (
+        "24. (1) Every taxable person shall keep complete and true records. "
+        "(2) The records shall be kept in Malaysia, except as otherwise "
+        "approved by the Director General."
+    )
+    full_quote = (
+        "kept in Malaysia, except as otherwise approved by the Director General"
+    )
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": "kept in Malaysia",
+            "personal_data": False,
+            "has_local_storage": True,
+            "scope": "sectoral",
+        },
+        repairs=[
+            {
+                "verbatim_quote": full_quote,
+                "personal_data": False,
+                "has_local_storage": True,
+                "scope": "sectoral",
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.2"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 1
+    assert any("short fragment" in err for err in fake.repair_calls[0]["validation_errors"])
+    assert len(data["mappings"]) == 1
+    assert data["mappings"][0]["verbatim_quote"] == full_quote

@@ -246,6 +246,25 @@ async def prepare_extraction_with_repair(
             elif vr.level == "flag":
                 validation_reasons = [*validation_reasons, *vr.reasons]
 
+        if quote and is_valid:
+            # Run the submission-level weak-evidence predicate here, while the
+            # repair loop can still act on it: a mid-sentence fragment ("kept
+            # in Malaysia") would otherwise sail through mapping and scoring
+            # only to be silently dropped at submission validation — ask the
+            # model for the complete provision limb instead.
+            from submission.schema import _is_weak_evidence, indicator_to_rdtii_code
+
+            if _is_weak_evidence(
+                str(current.get("source_legislation") or ""),
+                quote,
+                indicator_to_rdtii_code(indicator_id),
+            ):
+                errors.append(
+                    "verbatim_quote is a short fragment — quote the complete "
+                    "contiguous provision text from the source (the full clause "
+                    "or list limb stating the requirement), not a few words"
+                )
+
         if not errors:
             return {
                 "status": "ready",

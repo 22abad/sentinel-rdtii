@@ -68,3 +68,44 @@ def test_chinese_separate_ban_survives_other_conditional_clause():
         "其他个人信息向境外提供时，应当取得个人单独同意。"
     )
     assert _validate_6_1(quote).level != "reject"
+
+
+def test_mid_sentence_fragment_is_not_a_section_heading():
+    """A verb-less list-limb fragment that continues into more provision text
+    on the same line (Service Tax Act 2018 s24(2)(c)) must not be rejected as
+    a heading — the flag-not-drop MYS 6.2 regression from the #293 gate."""
+    chunk = (
+        "24. (1) Every taxable person shall keep complete and true records.\n"
+        "(2) The records referred to in subsection (1) shall be—\n"
+        " (c) kept in Malaysia, except as otherwise approved by the\n"
+        " Director General.\n"
+    )
+    result = validate_mapping(
+        {},
+        quote="kept in Malaysia",
+        chunk_text=chunk,
+        indicator_id="6.2",
+        features={},
+        include_semantic_check=False,
+        track_cross_reference=False,
+    )
+    assert not any("heading" in r for r in result.reasons)
+    assert result.level != "reject"
+
+
+def test_standalone_marginal_note_is_still_a_section_heading():
+    chunk = (
+        "Duty to keep records and give receipts\n\n"
+        "82. (1) Every person carrying on a business shall keep records.\n"
+    )
+    result = validate_mapping(
+        {},
+        quote="Duty to keep records and give receipts",
+        chunk_text=chunk,
+        indicator_id="6.2",
+        features={},
+        include_semantic_check=False,
+        track_cross_reference=False,
+    )
+    assert result.level == "reject"
+    assert any("heading" in r for r in result.reasons)
