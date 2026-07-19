@@ -212,10 +212,10 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
         </section>
       )}
 
-      {/* Last update — just the resolved date; the multi-source verification
-          detail is internal (renamed from "Timestamp verification"). */}
+      {/* Last update — just the resolved date on the yellow band; the
+          multi-source verification detail is internal. */}
       {timestamp?.best_date && (
-        <section className="rr-section rr-provenance rr-sec-provenance">
+        <section className="rr-section rr-provenance rr-sec-timestamp-warn">
           <h4>Last update</h4>
           <div className="rr-provenance-line">
             <span className="rr-provenance-value">{timestamp.best_date}</span>
