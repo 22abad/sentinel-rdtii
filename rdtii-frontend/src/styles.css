@@ -2247,17 +2247,17 @@ textarea {
 .swiss-form .discovery-results > * {
   border-top: 1.5px solid #111827;
 }
-.swiss-form .discovery-results > .candidate-list {
-  border-top: none; /* rows draw their own hairlines */
+.swiss-form .discovery-results > .candidate-list,
+.swiss-form .discovery-results > .retrieval-disclosure {
+  border-top: none; /* rows draw their own; disclosure is stamp-only */
 }
-/* no colored wrapper — just the thin black stamp on the plain ground */
+/* no outer structure at all — only the thin black stamp itself */
 .swiss-form .retrieval-disclosure,
 .swiss-form .retrieval-disclosure.live,
 .swiss-form .retrieval-disclosure.fallback {
   border: none;
-  border-top: 1.5px solid #111827;
   border-radius: 0;
-  padding: 12px 18px;
+  padding: 12px 18px 0;
   background: transparent;
   color: #111827;
 }
@@ -2308,15 +2308,23 @@ textarea {
   background: #f7d445;
   color: #111827;
 }
-/* multi-select action row: count + Top5/Clear/CSV + Extract selected */
+/* multi-select action row: the count owns the left half; the 4 buttons
+   share the right half, each filling its quarter (no mini boxes) */
 .swiss-form .shortlist-tray {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  align-items: stretch;
   border: none;
   border-top: 1.5px solid #111827;
   border-radius: 0;
   background: transparent;
   padding: 10px 18px;
 }
-.swiss-form .shortlist-tray span {
+.swiss-form .shortlist-tray > span {
+  grid-column: span 4;
+  margin-right: 0;
+  align-self: center;
   color: #111827;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.72rem;
@@ -2325,12 +2333,22 @@ textarea {
   letter-spacing: 0.08em;
 }
 .swiss-form .shortlist-tray button {
+  grid-column: span 1;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 6px;
   border-radius: 0;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.swiss-form .shortlist-tray .shortlist-progress {
+  grid-column: 1 / -1;
 }
 .swiss-form .shortlist-tray button.secondary {
   border: 1.5px solid #111827;
