@@ -41,6 +41,7 @@ export function CanvasToolbar({
   const centerOfView = () =>
     screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
 
+  // Swiss dock: square, cream, black hairlines; mono uppercase labels.
   const iconBtn: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
@@ -49,16 +50,16 @@ export function CanvasToolbar({
     height: 36,
     minHeight: 0,   // global `button` rule sets min-height 40 + padding 0 16px —
     padding: 0,     // reset both, or the icon gets squeezed into a 4px content box
-    borderRadius: 10,
+    borderRadius: 0,
     border: "none",
     background: "transparent",
-    color: "#374151",
+    color: "#111827",
     cursor: "pointer",
   };
   const modeBtn = (active: boolean): React.CSSProperties => ({
     ...iconBtn,
-    background: active ? "#e6f4f1" : "transparent",
-    color: active ? "#0f766e" : "#374151",
+    background: active ? "#111827" : "transparent",
+    color: active ? "#f3f1ea" : "#111827",
   });
   const textBtn = (color: string): React.CSSProperties => ({
     ...iconBtn,
@@ -66,10 +67,13 @@ export function CanvasToolbar({
     padding: "0 10px",
     gap: 5,
     color,
-    fontSize: "0.82rem",
-    fontWeight: 600,
+    fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
+    fontSize: "0.66rem",
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
   });
-  const divider = <div style={{ width: 1, height: 22, background: "#e5e7eb", margin: "0 4px" }} />;
+  const divider = <div style={{ width: 1.5, height: 22, background: "#111827", margin: "0 4px" }} />;
 
   return (
     <Panel position="bottom-center">
@@ -81,10 +85,10 @@ export function CanvasToolbar({
           gap: 4,
           padding: 6,
           marginBottom: 12,
-          borderRadius: 14,
-          background: "#ffffff",
-          border: "1px solid #e5e7eb",
-          boxShadow: "0 8px 30px rgba(0,0,0,0.18)",
+          borderRadius: 0,
+          background: "#f3f1ea",
+          border: "2px solid #111827",
+          boxShadow: "none",
         }}
       >
         {mode && onSetMode && (
@@ -114,7 +118,7 @@ export function CanvasToolbar({
             {spawnTypes.map((s) => (
               <button
                 key={s.id}
-                style={textBtn("#0f766e")}
+                style={textBtn("#111827")}
                 title={`Add ${s.label} panel`}
                 onClick={() => onSpawnPanel(s.id, centerOfView())}
               >
@@ -127,7 +131,7 @@ export function CanvasToolbar({
 
         {onAddPanel && (
           <>
-            <button style={textBtn("#6b7280")} title="Add blank note" onClick={() => onAddPanel(centerOfView())}>
+            <button style={textBtn("#111827")} title="Add blank note" onClick={() => onAddPanel(centerOfView())}>
               <StickyNote size={16} /> Note
             </button>
             {divider}
@@ -136,7 +140,7 @@ export function CanvasToolbar({
 
         {onAddChat && (
           <>
-            <button style={textBtn("#7c3aed")} title="Add RAG chat" onClick={() => onAddChat(centerOfView())}>
+            <button style={textBtn("#111827")} title="Add RAG chat" onClick={() => onAddChat(centerOfView())}>
               <MessageSquare size={16} /> RAG
             </button>
             {divider}
@@ -145,7 +149,7 @@ export function CanvasToolbar({
 
         {onReset && (
           <>
-            <button style={textBtn("#6b7280")} title="Reset layout" onClick={onReset}>
+            <button style={textBtn("#111827")} title="Reset layout" onClick={onReset}>
               <RotateCcw size={15} /> Reset
             </button>
             {divider}
@@ -154,14 +158,14 @@ export function CanvasToolbar({
 
         {onSwitchView && (
           <>
-            <button style={textBtn("#0f766e")} title="Switch to the traditional layout" onClick={onSwitchView}>
+            <button style={textBtn("#111827")} title="Switch to the traditional layout" onClick={onSwitchView}>
               <LayoutList size={15} /> Classic
             </button>
             {divider}
           </>
         )}
 
-        <button style={textBtn("#b91c1c")} title="Exit canvas" onClick={onExit}>
+        <button style={textBtn("#9f2d20")} title="Exit canvas" onClick={onExit}>
           <X size={16} /> Exit
         </button>
       </div>

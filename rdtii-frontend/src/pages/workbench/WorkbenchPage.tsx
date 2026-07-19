@@ -539,20 +539,23 @@ export function WorkbenchPage() {
               onClick={() => switchView("canvas")}
               className="pointer-events-auto flex items-center gap-2"
               title="Switch to the canvas layout"
-              whileHover={{ scale: 1.04, y: -1, boxShadow: "0 10px 30px rgba(15, 118, 110, 0.28)" }}
+              whileHover={{ scale: 1.04, y: -1 }}
               whileTap={{ scale: 0.96, y: 0 }}
               transition={{ type: "spring", stiffness: 320, damping: 22 }}
               style={{
                 minHeight: 0,
                 padding: "8px 16px",
-                borderRadius: 9999,
-                border: "1px solid #e5e7eb",
-                background: "#ffffff",
-                color: "#0f766e",
-                fontSize: "0.82rem",
-                fontWeight: 600,
+                borderRadius: 0,
+                border: "2px solid #111827",
+                background: "#f3f1ea",
+                color: "#111827",
+                fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
+                fontSize: "0.7rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
                 cursor: "pointer",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.18)",
+                boxShadow: "none",
               }}
             >
               <LayoutDashboard size={15} /> Canvas
