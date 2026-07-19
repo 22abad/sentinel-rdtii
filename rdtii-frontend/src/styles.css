@@ -2660,13 +2660,13 @@ textarea {
   background: #ffffff;
 }
 .swiss-form .reasoning-report .rr-score-fill-score-one {
-  background: #9fd8a4; /* 1 — full compliance signal, green */
+  background: #f2a69b; /* 1 — fully restrictive: hard to do business, red */
 }
 .swiss-form .reasoning-report .rr-score-fill-score-half {
-  background: #f7d445; /* partial, yellow */
+  background: #f7d445; /* partial restriction, yellow */
 }
 .swiss-form .reasoning-report .rr-score-fill-score-0 {
-  background: #f2a69b; /* 0, red */
+  background: #9fd8a4; /* 0 — no restriction: open for business, green */
 }
 .swiss-form .reasoning-report .rr-provenance-line {
   display: flex;
