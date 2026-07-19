@@ -158,8 +158,11 @@ export function AuditPanel({
   );
 
   return (
+    // Height is content-driven: no max-height cap and no inner scroll box, so
+    // the outer frame grows/shrinks with expanded rows. The canvas PanelNode
+    // supplies its own scroll container; classic CSS supplies the min-height.
     <section
-      className="review-panel swiss-form self-start flex flex-col max-h-[calc(100vh-40px)]"
+      className="review-panel swiss-form flex flex-col"
       aria-label={t("audit.aria")}
     >
       <div className="panel-header shrink-0">
@@ -199,7 +202,7 @@ export function AuditPanel({
       {exportPreviewDrawer}
       {exportError && <p className="discovery-error">{exportError}</p>}
 
-      <div className="flex-1 overflow-y-auto min-h-0">
+      <div>
         <AuditBody
           status={status}
           mappings={mappings}

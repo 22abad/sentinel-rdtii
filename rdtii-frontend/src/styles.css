@@ -2348,21 +2348,17 @@ textarea {
   padding: 24px 20px 96px;
 }
 .workbench-classic .workspace-audit-side {
+  display: block; /* plain block flow — no flex sizing games */
   border-left: 2px solid #111827;
   padding: 24px 20px 96px;
 }
+/* The outer frame tracks its content's minimum height: no forced viewport
+   fill — the panel is exactly as tall as header + rows, growing on expand
+   and shrinking back on collapse. The center divide line still runs full
+   height (it sits on the column, not the panel). */
 .workbench-classic .workspace-audit-side .review-panel {
-  align-self: stretch;
-  flex: 1;
-  max-height: none;
+  min-height: 0;
   overflow: visible;
-}
-/* streaming fix: flex-1 + min-h-0 + overflow-y-auto trapped new rows in an
-   inner scroll area (content stopped driving the height). In classic view the
-   body grows naturally, so streamed results extend the list down the page. */
-.workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
-  flex: none;
-  overflow-y: visible;
 }
 
 /* ── Audit: RAD-style accordion index ─────────────────────────────────────
@@ -2568,7 +2564,7 @@ textarea {
   border-top: 1.5px solid #111827;
   border-radius: 0;
   padding: 12px 18px 14px;
-  background: #ffffff;
+  background: #f3f1ea;
   box-shadow: none;
 }
 .swiss-form .reasoning-report > *:first-child {
@@ -2597,7 +2593,7 @@ textarea {
   background: #f3f1ea;
 }
 .swiss-form .reasoning-report .rr-sec-scoring {
-  background: #ffffff;
+  background: #f3f1ea;
 }
 .swiss-form .reasoning-report .rr-sec-quality {
   background: #d8e5f3;
@@ -2723,7 +2719,7 @@ textarea {
 /* Score card (top of the report): fill spans the 0–1 range, tier-colored.
    No section title — the card itself is the section, full-bleed. */
 .swiss-form .reasoning-report .rr-sec-score {
-  background: #ffffff;
+  background: #f3f1ea;
   padding: 0;
 }
 .swiss-form .reasoning-report .rr-sec-score .rr-batt {
@@ -2751,19 +2747,111 @@ textarea {
 .swiss-form .reasoning-report .rr-provenance-line:last-child {
   border-bottom: none;
 }
+/* empty/loading states as an index row — same anatomy as a mapping row:
+   one opening hairline, row height, no bottom border (no doubled lines) */
 .swiss-form .empty-state {
-  padding: 18px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  min-height: 62px;
+  padding: 0 18px;
+  border-top: 1.5px solid #111827;
+  background: transparent;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #6b675c;
+  color: #111827;
+}
+.swiss-form .empty-state.error-state {
+  border-top-color: #9f2d20;
+  color: #9f2d20;
 }
 
 /* header action group pinned to the right edge (the swiss header switched to
    flex-start, which left Audit's buttons stuck beside the title) */
 .swiss-form .panel-header > div.nodrag {
   margin-left: auto;
+}
+
+/* ── Rejected quotes, Swiss-ified: red/white ──────────────────────────────
+   Red title block (white text), then rejections as accordion index rows
+   reusing the mapping-row layout with red accents. */
+.swiss-form .rejected-panel {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: #f3f1ea; /* cream, on the panel ground */
+  color: #111827;
+}
+.swiss-form .rejected-panel summary {
+  padding: 12px 18px;
+  background: #9f2d20; /* red title block */
+  color: #ffffff;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.swiss-form .rejected-panel summary:hover {
+  background: #7f241a;
+}
+.swiss-form .rejected-panel summary:focus-visible {
+  outline: 2px solid #9f2d20;
+  outline-offset: 0;
+}
+.swiss-form .rejected-panel > ul {
+  display: block;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* red-accented variant of the mapping index rows */
+.swiss-form .mapping-row.rejected-row {
+  border-top: none; /* the red summary block above opens the section */
+}
+.swiss-form .mapping-row.rejected-row + .mapping-row.rejected-row {
+  border-top: 1.5px solid #9f2d20;
+}
+.swiss-form .mapping-row.rejected-row:last-child {
+  border-bottom: 1.5px solid #9f2d20;
+}
+.swiss-form .rejected-row .mapping-row-code,
+.swiss-form .rejected-row .mapping-row-title,
+.swiss-form .rejected-row .mapping-row-plus {
+  color: #9f2d20;
+}
+.swiss-form .rejected-row .mapping-row-head:hover,
+.swiss-form .mapping-row.rejected-row.open .mapping-row-head {
+  background: rgba(159, 45, 32, 0.05);
+}
+.swiss-form .rejected-row .mapping-row-meta,
+.swiss-form .rejected-row .mapping-row-block {
+  border-top-color: #9f2d20;
+}
+.swiss-form .rejected-row .mapping-row-block h4 {
+  color: #9f2d20;
+}
+.swiss-form .rejected-exclusions {
+  margin: 0;
+  padding-left: 18px;
+  list-style: square;
+  color: #9f2d20;
+  font-size: 0.85rem;
+}
+.swiss-form .rejected-preview {
+  margin: 0;
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid #9f2d20;
+  border-radius: 0;
+  background: transparent; /* sits on the cream ground */
+  color: #1f2933;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 /* swiss header action buttons (Audit: Load demo / Preview export) */
