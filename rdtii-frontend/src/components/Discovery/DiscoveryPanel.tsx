@@ -370,22 +370,22 @@ export function DiscoveryPanel({
           />
         </label>
 
-        <div className="discovery-pillars" aria-label="Pillars">
-          {[6, 7].map((pillar) => (
-            <button
-              key={pillar}
-              type="button"
-              className={
-                pillars.includes(pillar)
-                  ? "discovery-toggle active"
-                  : "discovery-toggle"
-              }
-              onClick={() => togglePillar(pillar)}
-            >
-              P{pillar}
-            </button>
-          ))}
-        </div>
+        <label className="discovery-pillars-select" style={{ gridColumn: "1 / -1" }}>
+          Pillars
+          <Select
+            value={[...pillars].sort((a, b) => a - b).join(",") || "6,7"}
+            onValueChange={(v) => setPillars(v.split(",").map(Number))}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
+              <SelectItem value="6,7">P6 · P7</SelectItem>
+              <SelectItem value="6">P6</SelectItem>
+              <SelectItem value="7">P7</SelectItem>
+            </SelectContent>
+          </Select>
+        </label>
       </div>
 
       {error && <p className="discovery-error">{error}</p>}
