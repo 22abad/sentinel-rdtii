@@ -218,9 +218,29 @@ def _document_self_title(source_text: str) -> str:
     title."""
     head = " ".join((source_text or "")[:240].split())
     m = re.match(r"(.{4,120}?\b(?:19|20)\d{2})\b", head)
+    if m:
+        title = m.group(1).strip(" -–—:;,.")
+        title = re.sub(r"^(?:LAWS OF [A-Z ]+?|REPRINT|PRINT)\s+(?=[A-Z])", "", title).strip()
+        if len(title) >= 12 and _DOC_TITLE_INSTRUMENT_RE.search(title):
+            return title
+    # Fallback: official prints often open with assent dates / printer
+    # copyright blocks that push the real title past the first line ("Date of
+    # Royal Assent 18 June 2024 … LAWS OF MALAYSIA Act 854 CYBER SECURITY ACT
+    # 2024 …") — without this, a misattributed name (the LLM pattern-matched
+    # Singapore's 2018 act onto Malaysia's 2024 act) survives uncorrected.
+    window = " ".join((source_text or "")[:1500].split())
+    m = re.search(
+        r"([A-Z][A-Za-z0-9'’&()\-, ]{2,90}?"
+        r"\b(?i:act|akta|ordinance|code|regulations?|rules|order|notice|"
+        r"instruction|circular|pekeliling|peraturan|perintah)\b"
+        r"[ ,]{0,3}(?:(?i:no)\.?\s*\d{1,4}[ ,]{0,3})?(?:19|20)\d{2})",
+        window,
+    )
     if not m:
         return ""
     title = m.group(1).strip(" -–—:;,.")
+    # Trim boilerplate prefixes that ride along ("LAWS OF MALAYSIA REPRINT").
+    title = re.sub(r"^(?:LAWS OF [A-Z ]+|REPRINT|PRINT)\s+", "", title).strip()
     if len(title) < 12 or not _DOC_TITLE_INSTRUMENT_RE.search(title):
         return ""
     return title
