@@ -223,9 +223,9 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
           const body = hasUrl
             ? JSON.stringify({
                 source_url: srcUrl,
-                text: srcText.slice(0, 500),
+                text: srcText.slice(0, 3000),
               })
-            : JSON.stringify({ text: srcText.slice(0, 500) });
+            : JSON.stringify({ text: srcText.slice(0, 3000) });
           const res = await fetch("/api/detect/country", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

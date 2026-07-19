@@ -204,12 +204,13 @@ export function SourcePanel({
           >
             <SelectTrigger><SelectValue placeholder={t("source.autoDetect")} /></SelectTrigger>
             <SelectContent className={SQUARE_DROPDOWN}>
-              <SelectItem value="CHN">{t("country.chn")}</SelectItem>
               <SelectItem value="SGP">{t("country.sgp")}</SelectItem>
               <SelectItem value="MYS">{t("country.mys")}</SelectItem>
+              <SelectItem value="AUS">{t("country.aus")}</SelectItem>
+              <SelectItem value="CHN">{t("country.chn")}</SelectItem>
               <SelectItem value="THA">{t("country.tha")}</SelectItem>
               {detectedCountry?.detected &&
-                !["CHN", "SGP", "MYS", "THA"].includes(detectedCountry.code) && (
+                !["SGP", "MYS", "AUS", "CHN", "THA"].includes(detectedCountry.code) && (
                   <SelectItem value={detectedCountry.code}>
                     {detectedCountry.name}
                   </SelectItem>

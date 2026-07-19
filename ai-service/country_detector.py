@@ -245,6 +245,28 @@ def detect_country_from_text(text: str, source_legislation: str = "") -> dict:
             "source": "chinese_script",
         })
 
+    # Signal 3: country-name frequency. Statutes name their jurisdiction
+    # relentlessly ("Commonwealth of Australia", "acquired in Australia",
+    # "Australians") — a clear mention-count winner is a solid signal even
+    # when no curated law-name pattern matches (the Cyber Security Act 2024
+    # scored zero on Signal 1 despite saying "Australia" on every page).
+    mention_counts: dict[str, int] = {}
+    for code, name in KNOWN_COUNTRIES.items():
+        count = len(re.findall(rf"\b{re.escape(name)}n?s?\b", combined, re.IGNORECASE))
+        if count:
+            mention_counts[code] = count
+    if mention_counts:
+        ranked = sorted(mention_counts.items(), key=lambda kv: -kv[1])
+        top_code, top_count = ranked[0]
+        runner_up = ranked[1][1] if len(ranked) > 1 else 0
+        if top_count >= 2 and top_count >= runner_up * 2:
+            results.append({
+                "code": top_code,
+                "name": KNOWN_COUNTRIES.get(top_code, top_code),
+                "confidence": min(0.55 + 0.03 * top_count, 0.8),
+                "source": f"country-name mentions ×{top_count}",
+            })
+
     if not results:
         return {"code": None, "confidence": 0.0, "source": "none"}
 
