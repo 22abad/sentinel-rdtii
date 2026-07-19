@@ -274,6 +274,30 @@ export function AuditPanel({
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState("");
   const [showExportPreview, setShowExportPreview] = useState(false);
+
+  // Sort/filter the result list under the top bands. Filter by review status,
+  // sort by pillar·indicator (natural order otherwise).
+  const [reviewFilter, setReviewFilter] = useState<"all" | "clean" | "review">("all");
+  const [sortByPillar, setSortByPillar] = useState(false);
+  const cleanCount = mappings.filter((m) => !m.requires_human_review).length;
+  const reviewCount = mappings.length - cleanCount;
+  const visibleMappings = (() => {
+    const filtered =
+      reviewFilter === "all"
+        ? mappings
+        : mappings.filter(
+            (m) => (reviewFilter === "clean") === !m.requires_human_review,
+          );
+    if (!sortByPillar) return filtered;
+    return [...filtered].sort(
+      (a, b) =>
+        a.pillar - b.pillar ||
+        String(a.indicator).localeCompare(String(b.indicator), undefined, {
+          numeric: true,
+        }),
+    );
+  })();
+
   const mappingsForExport = exportMappings ?? mappings;
   const previewRows = mappingsToExcelPreviewRows(
     mappingsForExport,
@@ -422,10 +446,40 @@ export function AuditPanel({
       {/* document-level rows above the result list */}
       {mappings.length > 0 && <DocumentInfoRows mapping={mappings[0]} />}
 
+      {/* sort / filter bar — review status + sort by pillar */}
+      {mappings.length > 0 && (
+        <div className="doc-info-filterbar nodrag">
+          {(
+            [
+              ["all", `ALL (${mappings.length})`],
+              ["clean", `✓ CLEAN (${cleanCount})`],
+              ["review", `NEEDS REVIEW (${reviewCount})`],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              className={`doc-info-chip ${reviewFilter === key ? "active" : ""}`}
+              onClick={() => setReviewFilter(key)}
+            >
+              {label}
+            </button>
+          ))}
+          <button
+            type="button"
+            className={`doc-info-chip doc-info-sort ${sortByPillar ? "active" : ""}`}
+            title="Sort results by pillar · indicator"
+            onClick={() => setSortByPillar((v) => !v)}
+          >
+            ↕ PILLAR
+          </button>
+        </div>
+      )}
+
       <div>
         <AuditBody
           status={status}
-          mappings={mappings}
+          mappings={visibleMappings}
           totalMappings={totalMappings}
           activeKey={activeKey}
           decisions={decisions}

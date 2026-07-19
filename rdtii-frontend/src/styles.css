@@ -2714,6 +2714,36 @@ textarea {
 .swiss-form .doc-info-top > *:first-child {
   border-top: 1.5px solid #111827;
 }
+/* sort/filter bar under the document bands */
+.swiss-form .doc-info-filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-top: 1.5px solid #111827;
+}
+.swiss-form .doc-info-chip {
+  min-height: 26px;
+  padding: 2px 10px;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.swiss-form .doc-info-chip.active {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .doc-info-chip.doc-info-sort {
+  margin-left: auto;
+}
+
 .swiss-form a.doc-info-link {
   display: block;
   overflow: hidden;
