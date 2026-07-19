@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import re
 from typing import Any
 
 from chunker import Chunk
@@ -19,6 +20,30 @@ from verification import find_quote_offsets, verify_quote
 logger = logging.getLogger(__name__)
 
 NO_MATCH_QUOTES = {"", "n/a", "none", "null", "not found"}
+
+_SECTION_REF_RE = re.compile(
+    r"\b(?:section|s\.|art(?:icle)?|reg(?:ulation)?|clause|para(?:graph)?)\s*\.?\s*\d",
+    re.IGNORECASE,
+)
+
+
+def _is_citation_style_quote(quote: str) -> bool:
+    """A statute-name + section-reference quote with no operative language is a
+    citation/header line (e.g. a seed excerpt's descriptive first line:
+    "Cyber Security Act 2024 (No. 98, 2024): Section 3 Objects …"), not
+    provision text. Name-independent on purpose — the submission-layer check
+    compares against the authoritative law name, which the model's own
+    ``source_legislation`` (economy prefixes, citation suffixes) often fails
+    to match at prepare time."""
+    from submission.schema import _OPERATIVE_LANGUAGE, _STATUTE_WORD
+
+    q = (quote or "").strip()
+    return (
+        0 < len(q) <= 160
+        and bool(_STATUTE_WORD.search(q))
+        and bool(_SECTION_REF_RE.search(q))
+        and not _OPERATIVE_LANGUAGE.search(q)
+    )
 
 
 def repair_max_attempts_from_env() -> int:
@@ -247,22 +272,37 @@ async def prepare_extraction_with_repair(
                 validation_reasons = [*validation_reasons, *vr.reasons]
 
         if quote and is_valid:
-            # Run the submission-level weak-evidence predicate here, while the
-            # repair loop can still act on it: a mid-sentence fragment ("kept
-            # in Malaysia") would otherwise sail through mapping and scoring
-            # only to be silently dropped at submission validation — ask the
-            # model for the complete provision limb instead.
-            from submission.schema import _is_weak_evidence, indicator_to_rdtii_code
+            # Run the submission-level quote-quality predicates here, while the
+            # repair loop can still act on them: a mid-sentence fragment ("kept
+            # in Malaysia") or a citation/heading-style quote ("Cyber Security
+            # Act 2024 …: Section 3 Objects …") would otherwise sail through
+            # mapping and scoring only to be silently dropped at submission
+            # validation — ask the model for the operative provision instead.
+            from submission.schema import (
+                _is_nonsubstantive_quote,
+                _is_weak_evidence,
+                indicator_to_rdtii_code,
+            )
 
-            if _is_weak_evidence(
-                str(current.get("source_legislation") or ""),
-                quote,
-                indicator_to_rdtii_code(indicator_id),
-            ):
+            law_name = str(current.get("source_legislation") or "")
+            code_id = indicator_to_rdtii_code(indicator_id)
+            if _is_weak_evidence(law_name, quote, code_id):
                 errors.append(
                     "verbatim_quote is a short fragment — quote the complete "
                     "contiguous provision text from the source (the full clause "
                     "or list limb stating the requirement), not a few words"
+                )
+            # A bare title-quote is legitimate mapping evidence for the
+            # comprehensive-framework indicator (P7-I1) per the golden set —
+            # exempt it there; a citation + section-reference quote is not
+            # framework evidence anywhere.
+            elif (
+                code_id != "P7-I1" and _is_nonsubstantive_quote(law_name, quote)
+            ) or _is_citation_style_quote(quote):
+                errors.append(
+                    "verbatim_quote is a citation/title or section heading, not "
+                    "an operative provision — quote the substantive clause text "
+                    "that states the obligation or framework"
                 )
 
         if not errors:

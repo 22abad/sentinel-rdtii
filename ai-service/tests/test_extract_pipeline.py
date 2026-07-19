@@ -971,3 +971,50 @@ def test_runtime_repair_loop_expands_fragment_quote(monkeypatch):
     assert any("short fragment" in err for err in fake.repair_calls[0]["validation_errors"])
     assert len(data["mappings"]) == 1
     assert data["mappings"][0]["verbatim_quote"] == full_quote
+
+
+def test_runtime_repair_loop_replaces_citation_style_quote(monkeypatch):
+    """A statute-name + section-reference quote with no operative language
+    (e.g. a seed excerpt's descriptive header line) is caught at prepare time
+    and repaired to operative provision text (the AUS 7.2 seed regression)."""
+    from fastapi.testclient import TestClient
+
+    import main as main_module
+
+    monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "1")
+    header = (
+        "Cyber Security Act 2024 (No. 98, 2024): Section 3 Objects and "
+        "Section 27 Ransomware payment reporting"
+    )
+    operative = (
+        "The reporting business entity must give the designated Commonwealth "
+        "body a report within 72 hours of making the ransomware payment"
+    )
+    source = header + "\n\n27. " + operative + "."
+
+    fake = FakeProvider(
+        {
+            "verbatim_quote": header,
+            "has_dedicated_cyber_framework": True,
+            "scope": "horizontal",
+        },
+        repairs=[
+            {
+                "verbatim_quote": operative,
+                "has_dedicated_cyber_framework": True,
+                "scope": "horizontal",
+            }
+        ],
+    )
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["7.2"])
+
+    client = TestClient(main_module.app)
+    r = client.post("/api/extract", data={"text": source})
+    assert r.status_code == 200
+    data = r.json()
+
+    assert len(fake.repair_calls) == 1
+    assert any("citation/title" in err for err in fake.repair_calls[0]["validation_errors"])
+    assert len(data["mappings"]) == 1
+    assert data["mappings"][0]["verbatim_quote"] == operative
