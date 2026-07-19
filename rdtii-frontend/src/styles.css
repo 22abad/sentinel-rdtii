@@ -2250,20 +2250,15 @@ textarea {
 .swiss-form .discovery-results > .candidate-list {
   border-top: none; /* rows draw their own hairlines */
 }
-.swiss-form .retrieval-disclosure {
+/* no colored wrapper — just the thin black stamp on the plain ground */
+.swiss-form .retrieval-disclosure,
+.swiss-form .retrieval-disclosure.live,
+.swiss-form .retrieval-disclosure.fallback {
   border: none;
   border-top: 1.5px solid #111827;
   border-radius: 0;
   padding: 12px 18px;
-  background: #f3f1ea;
-  color: #111827;
-}
-.swiss-form .retrieval-disclosure.live {
-  background: #dcead8;
-  color: #111827;
-}
-.swiss-form .retrieval-disclosure.fallback {
-  background: #f7d445;
+  background: transparent;
   color: #111827;
 }
 /* mode as a status STAMP — a black tag on the colored band; mono uppercase,
