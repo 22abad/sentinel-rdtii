@@ -2773,7 +2773,7 @@ textarea {
   margin: 0;
   border: none;
   border-radius: 0;
-  background: #ffffff;
+  background: #f3f1ea; /* cream, on the panel ground */
   color: #111827;
 }
 .swiss-form .rejected-panel summary {
@@ -2838,7 +2838,7 @@ textarea {
   padding: 2px 0 2px 12px;
   border-left: 2px solid #9f2d20;
   border-radius: 0;
-  background: #ffffff;
+  background: transparent; /* sits on the cream ground */
   color: #1f2933;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.8rem;
