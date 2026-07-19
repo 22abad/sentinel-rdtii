@@ -739,6 +739,7 @@ export function WorkbenchCanvas({
   // Ghost file nodes (blob lost after a refresh) are excluded so panels
   // never see sources they can't read.
   const lastGraphRef = useRef("");
+  const lastBindingsRef = useRef<Record<string, string | null>>({});
   useEffect(() => {
     if (!onGraphChange) return;
 
@@ -774,6 +775,7 @@ export function WorkbenchCanvas({
     // Only notify on real changes — `panels` gets a fresh identity every
     // parent render, so without this the effect would ping-pong with the
     // parent's setState forever.
+    lastBindingsRef.current = bindings;
     const serialized = JSON.stringify({ filesByInstance, bindings });
     if (serialized === lastGraphRef.current) return;
     lastGraphRef.current = serialized;
@@ -1048,11 +1050,18 @@ export function WorkbenchCanvas({
     const downstreamBases = new Set(
       panels.filter((p) => p.upstreamId === baseOf(id)).map((p) => p.id),
     );
-    const cascade: string[] = [];
+    // Keyboard deletes: React Flow removes the connected EDGES before the
+    // node-remove event reaches us, so the live edge list is already empty —
+    // the last reported binding graph is the durable source of truth.
+    const cascade = new Set<string>(
+      Object.entries(lastBindingsRef.current)
+        .filter(([, upstream]) => upstream === id)
+        .map(([instanceId]) => instanceId),
+    );
     if (downstreamBases.size) {
       for (const edge of edges) {
         const other = edge.source === id ? edge.target : edge.target === id ? edge.source : null;
-        if (other && downstreamBases.has(baseOf(other))) cascade.push(other);
+        if (other && downstreamBases.has(baseOf(other))) cascade.add(other);
       }
     }
 
