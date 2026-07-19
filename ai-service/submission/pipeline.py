@@ -203,7 +203,8 @@ def amendment_year_from_text(source_text: str, law_name: str = "") -> str:
 
 _DOC_TITLE_INSTRUMENT_RE = re.compile(
     r"\b(?:act|regulations?|rules?|code|ordinance|order|instruction|notice|"
-    r"agreement|determination|direction|circular|principles?)\b",
+    r"agreement|determination|direction|circular|principles?|"
+    r"akta|peraturan|pekeliling|perintah)\b",
     re.IGNORECASE,
 )
 
