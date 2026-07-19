@@ -132,6 +132,17 @@ class SearchEngineAdapter(DiscoveryAdapter):
         seen_urls: set[str] = set()
         for query in queries:
             rows = await backend.search(query, max(1, limit - len(hits)))
+            if not rows:
+                # Concept phrases ('site:x.gov data export security assessment')
+                # score zero on web engines too — one bounded retry with the
+                # phrase's two-word core, keeping the site: filter.
+                site_match = re.search(r"(?<![A-Za-z0-9_])site:\S+", query)
+                site = site_match.group(0) if site_match else ""
+                core = _core_search_term(strip_site_filter(query))
+                if core and core != strip_site_filter(query):
+                    rows = await backend.search(
+                        f"{site} {core}".strip(), max(1, limit - len(hits))
+                    )
             for row in rows:
                 if row.url in seen_urls:
                     continue
@@ -311,6 +322,24 @@ def _build_search_backend(name: str) -> SearchBackend:
 
 def strip_site_filter(query: str) -> str:
     return re.sub(r"(?<![A-Za-z0-9_])site:\S+\s*", "", query).strip()
+
+
+_GENERIC_QUERY_WORDS = {
+    "ban", "bans", "requirement", "requirements", "restriction", "restrictions",
+    "rule", "rules", "obligation", "obligations", "framework", "assessment",
+    "policy", "measure", "measures", "law", "laws", "the", "for", "and",
+}
+
+
+def _core_search_term(term: str) -> str:
+    """Two-word core of a concept phrase ('cross-border data transfer ban' →
+    'data transfer') — concept phrases rarely appear verbatim anywhere, so a
+    zero-hit query earns one bounded retry with its core."""
+    words = [
+        w for w in re.findall(r"[A-Za-z][A-Za-z-]+", term.lower())
+        if w not in _GENERIC_QUERY_WORDS
+    ]
+    return " ".join(words[-2:]) if len(words) >= 2 else ""
 
 
 def _fixture_hits(

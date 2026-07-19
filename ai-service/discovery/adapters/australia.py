@@ -11,7 +11,7 @@ from urllib.parse import quote, urljoin, urlsplit
 from discovery.schemas import LegalSourceConfig, RawSearchHit
 
 from .base import DiscoveryAdapter
-from .search_engine import FixtureSearchAdapter, strip_site_filter
+from .search_engine import FixtureSearchAdapter, _core_search_term, strip_site_filter
 
 
 class AustraliaLegislationAdapter(DiscoveryAdapter):
@@ -256,23 +256,6 @@ def _known_instruments_for_query(query: str) -> list[dict[str, Any]]:
         for instrument in KNOWN_INSTRUMENTS
         if any(term in query_text for term in instrument["terms"])
     ]
-
-
-_GENERIC_QUERY_WORDS = {
-    "ban", "bans", "requirement", "requirements", "restriction", "restrictions",
-    "rule", "rules", "obligation", "obligations", "framework", "assessment",
-    "policy", "measure", "measures", "law", "laws", "the", "for", "and",
-}
-
-
-def _core_search_term(term: str) -> str:
-    """Two-word core of a concept phrase for the register's contains search:
-    'cross-border data transfer ban' → 'data transfer'."""
-    words = [
-        w for w in re.findall(r"[A-Za-z][A-Za-z-]+", term.lower())
-        if w not in _GENERIC_QUERY_WORDS
-    ]
-    return " ".join(words[-2:]) if len(words) >= 2 else ""
 
 
 def _search_url(query: str) -> str:
