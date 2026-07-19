@@ -43,6 +43,9 @@ services:
       # Ollama on host — Docker Desktop auto-resolves host.docker.internal
       # On Linux, the extra_hosts entry provides the same mapping.
       RDTII_LLM_PROVIDER: deepseek
+      # Big statutes (150K+ chars ≈ 180 chunks) took ~5 min at concurrency 5;
+      # DeepSeek handles 12 parallel chunk calls comfortably.
+      RDTII_CHUNK_CONCURRENCY: "12"
       RAG_CHAT_PROVIDER: ${RAG_CHAT_PROVIDER:-deepseek}
       DEEPSEEK_MODEL: deepseek-v4-flash
       OLLAMA_MODEL: qwen2.5-coder:7b
