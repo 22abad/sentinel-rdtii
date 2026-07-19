@@ -2140,14 +2140,11 @@ textarea {
   border-bottom: none;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  align-items: start; /* natural, uniform cell heights (no stretch) */
-  /* no top/side padding so the row lines run tight under the title AND
-     reach the full panel width; the cells carry the content inset instead */
-  padding: 0 0 16px;
-}
-/* keep the cells a uniform height so every row/bar matches */
-.swiss-form .discovery-controls > * {
-  align-content: start;
+  align-items: stretch;
+  /* zero padding: top so the first line sits under the title, sides so the
+     row lines reach full width (cells carry the inset), bottom so the last
+     row (pillars) isn't taller than the others */
+  padding: 0;
 }
 .swiss-form .discovery-controls > * {
   border-top: 1.5px solid #111827;
