@@ -1077,3 +1077,16 @@ async def test_thailand_ocs_runs_original_query_after_expanded_title_hit():
 
     assert calls[-1] == "cross-border transfer"
     assert [row.external_id for row in rows] == ["pdpa-2562", "cross-border-notification"]
+
+
+def test_core_search_term_extracts_bigram_for_register_contains_search():
+    """The register API does whole-phrase contains matching — concept phrases
+    get a bounded two-word-core retry ('cross-border data transfer ban' →
+    'data transfer') instead of silently falling back."""
+    from discovery.adapters.australia import _core_search_term
+
+    assert _core_search_term("cross-border data transfer ban") == "data transfer"
+    assert _core_search_term("local storage requirement") == "local storage"
+    assert _core_search_term("local data centre requirement") == "data centre"
+    # Single content word → no useful bigram, no retry.
+    assert _core_search_term("ban") == ""
