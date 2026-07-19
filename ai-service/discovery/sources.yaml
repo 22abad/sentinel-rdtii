@@ -29,7 +29,7 @@ AUS:
       priority: 90
       notes: Official treaty texts and digital economy agreement pages for binding data flow commitments.
 
-    - name: Singapore Ministry of Trade and Industry
+    - name: Australia–Singapore DEA text (hosted by MTI Singapore)
       base_url: https://www.mti.gov.sg
       domains: [mti.gov.sg, www.mti.gov.sg, isomer-user-content.by.gov.sg]
       adapter: official_index
@@ -43,7 +43,7 @@ AUS:
       title_overrides:
         'australia-singapore-digital-economy-agreement.*\.pdf': Australia-Singapore Digital Economy Agreement
       priority: 89
-      notes: Singapore government publication of the joint in-force Australia-Singapore Digital Economy Agreement and its binding data flow commitment.
+      notes: The in-force Australia–Singapore DEA is a JOINT instrument whose authoritative text is published by Singapore's MTI (isomer CDN) — listed under AUS because it evidences Australia's 6.5 binding data-flow commitment; the DFAT entry above covers the same treaty from the Australian side.
 
     - name: Office of the Australian Information Commissioner
       base_url: https://www.oaic.gov.au

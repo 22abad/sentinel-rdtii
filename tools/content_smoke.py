@@ -106,6 +106,35 @@ def check(case: Case, mappings) -> list[str]:
     return errs
 
 
+async def resilience_check() -> list[str]:
+    """Degraded-mode drill: with the generic search backend forced OFF
+    (simulating a DDG rate limit / missing key), discovery must still return
+    curated fallback candidates with honest warnings — the exact behaviour to
+    narrate in a demo when a live backend throttles. Deterministic, no
+    search-engine network needed."""
+    os.environ["DISCOVERY_SEARCH_BACKEND"] = "none"
+    os.environ["DISCOVERY_REGISTRY_BACKEND"] = "file"
+    from discovery.schemas import DiscoverySearchRequest
+    from discovery.service import DiscoveryService
+
+    result = await DiscoveryService().search(DiscoverySearchRequest(
+        country_code="AUS", pillars=[6, 7], keywords="data protection",
+        limit=10, browser_mode="mock",
+    ))
+    errs: list[str] = []
+    candidates = list(getattr(result, "candidates", []) or [])
+    if not candidates:
+        errs.append("no fallback candidates with search backend disabled")
+    modes = {getattr(c, "retrieval_mode", "") for c in candidates}
+    if modes - {"fixture", "fallback"}:
+        errs.append(f"unexpected retrieval modes in degraded mode: {modes}")
+    warnings = [w for c in candidates for w in (getattr(c, "warnings", None) or [])]
+    if not warnings:
+        errs.append("degraded mode produced no honest warnings")
+    os.environ.pop("DISCOVERY_SEARCH_BACKEND", None)
+    return errs
+
+
 async def main() -> int:
     from dotenv import load_dotenv
 
@@ -127,7 +156,16 @@ async def main() -> int:
         for e in errs:
             print(f"    - {e}")
         failures += bool(errs)
-    print(f"\n{len(CASES) - failures}/{len(CASES)} content checks passed")
+
+    errs = await resilience_check()
+    status = "PASS ✅" if not errs else "FAIL ❌"
+    print(f"[{status}] Degraded-mode drill: search backend off → fallback candidates + honest warnings")
+    for e in errs:
+        print(f"    - {e}")
+    failures += bool(errs)
+
+    total = len(CASES) + 1
+    print(f"\n{total - failures}/{total} content checks passed")
     return 1 if failures else 0
 
 
