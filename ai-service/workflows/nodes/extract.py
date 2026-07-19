@@ -81,6 +81,15 @@ class ExtractMappingsExecutor(NodeExecutor):
         cached = None if _force_refresh(node, inputs) else _cache_get(text)
         if cached is not None:
             _log_reuse(text, cached)
+            # Replay must look like a real run: without this `started` event
+            # the client never receives the source text, so the audit panel's
+            # quote-highlight view has nothing to highlight into (a document
+            # went "dead" the moment it became a cache hit).
+            yield WorkflowRunEvent(
+                run_id=context.run_id, node_id=node.id,
+                event="started", status="running",
+                payload={"source_text": str(cached.get("source_text") or text)},
+            )
             for mapping in cached.get("mappings", []) or []:
                 yield WorkflowRunEvent(
                     run_id=context.run_id, node_id=node.id,
