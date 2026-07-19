@@ -2728,6 +2728,12 @@ textarea {
   color: #6b675c;
 }
 
+/* header action group pinned to the right edge (the swiss header switched to
+   flex-start, which left Audit's buttons stuck beside the title) */
+.swiss-form .panel-header > div.nodrag {
+  margin-left: auto;
+}
+
 /* swiss header action buttons (Audit: Load demo / Preview export) */
 .swiss-form .panel-header button.secondary {
   min-height: 32px;

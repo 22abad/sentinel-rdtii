@@ -166,7 +166,6 @@ export function AuditPanel({
         <div>
           <h2>{t("audit.title")}</h2>
           <p>{t("audit.description")}</p>
-          {usage && <UsageSummary usage={usage} className="mt-2" />}
         </div>
         <div className="nodrag flex items-center gap-2">
           {onLoadDemoData && (
@@ -191,6 +190,12 @@ export function AuditPanel({
           )}
         </div>
       </div>
+      {/* usage strip under the title, mirroring the Extract panel's */}
+      {usage && (
+        <div className="border-t-[1.5px] border-[#111827] px-[18px] py-2.5">
+          <UsageSummary usage={usage} />
+        </div>
+      )}
       {exportPreviewDrawer}
       {exportError && <p className="discovery-error">{exportError}</p>}
 
