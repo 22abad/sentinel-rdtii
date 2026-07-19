@@ -2966,6 +2966,10 @@ textarea {
   border: none;
   background: #f3f1ea;
 }
+/* single line under the title (nothing below carries a top hairline here) */
+.swiss-form.source-manager-panel .panel-header {
+  border-bottom: 1.5px solid #111827;
+}
 /* square mono buttons everywhere in the manager */
 .swiss-form .source-manager-actions button,
 .swiss-form .source-manager-editor-header button,
