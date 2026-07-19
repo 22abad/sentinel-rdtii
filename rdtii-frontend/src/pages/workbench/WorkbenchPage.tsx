@@ -239,10 +239,10 @@ export function WorkbenchPage() {
   }, []);
 
   const canvasPanels: CanvasPanel[] = [
-    { id: "discovery", title: "Discovery", element: <DiscoveryThreadPanel />, width: 800, dragHandle: ".panel-header" },
+    { id: "discovery", title: "Discovery", element: <DiscoveryThreadPanel />, width: 800, dragHandle: ".panel-header", flat: true },
     {
       id: "source",
-      title: "Source",
+      title: "Extract",
       renderElement: (instanceId) => (
         <SourceThreadPanel
           key={instanceId}
@@ -252,6 +252,7 @@ export function WorkbenchPage() {
       ),
       width: 460,
       dragHandle: ".panel-header",
+      flat: true,
     },
     ...(foundPdfs.length > 0
       ? [{ id: "foundPdfs", title: "Found PDFs", element: <FoundPdfsThreadPanel />, width: 420 }]
@@ -265,6 +266,7 @@ export function WorkbenchPage() {
       width: 520,
       dragHandle: ".panel-header",
       upstreamId: "source",
+      flat: true,
     },
     { id: "documents", title: "Documents", element: <DocumentsPanel />, width: 420, dragHandle: ".panel-header" },
   ];
@@ -519,14 +521,14 @@ export function WorkbenchPage() {
               backgroundSize: "28px 28px",
             }}
           />
-        <main className="workbench-classic flex-1 overflow-auto px-5 pb-8 pt-12" style={{ position: "relative", zIndex: 1 }}>
+        <main className="workbench-classic flex-1 overflow-auto" style={{ position: "relative", zIndex: 1 }}>
           <section className="workspace">
             <div className="flex flex-col gap-4 min-w-0 self-start">
               <DiscoveryThreadPanel />
               <SourceThreadPanel threadId={MAIN_THREAD_ID} linkedFiles={[]} />
               {foundPdfs.length > 0 && <FoundPdfsThreadPanel />}
             </div>
-            <div className="flex flex-col gap-4 min-w-0 self-start">
+            <div className="workspace-audit-side flex flex-col gap-4 min-w-0">
               <AuditThreadPanel threadId={MAIN_THREAD_ID} />
             </div>
           </section>

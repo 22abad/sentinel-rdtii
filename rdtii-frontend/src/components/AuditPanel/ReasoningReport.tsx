@@ -1,5 +1,6 @@
 import { AlertTriangle, Check, X as XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { formatScore, scoreClass } from "../../lib/utils";
 import type { IndicatorMapping } from "../../types";
 import {
   verifyReleaseYear,
@@ -124,17 +125,21 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
 
   // ── Provenance footer rows ──
   const grade = firstValue(features, "_source_grade");
-  const gradeConfidence = asPercent(firstValue(features, "_source_grade_confidence"));
+  // Numeric grade confidence (0-100) for the big percent display + color fill.
+  const gradeConfidenceN = (() => {
+    const raw = firstValue(features, "_source_grade_confidence");
+    const n = typeof raw === "number" ? raw : Number(raw);
+    return Number.isFinite(n) ? Math.round(n * 100) : null;
+  })();
   const timeframeStatus = firstValue(features, "_timeframe_status");
   const timeframeColumn = firstValue(features, "_timeframe_column");
   const sha = firstValue(features, "source_file_sha256");
   const pdfPath = firstValue(features, "source_pdf_path");
   const provenance: { label: string; value: React.ReactNode }[] = [];
-  if (grade !== undefined) {
-    provenance.push({
-      label: "Source grade",
-      value: gradeConfidence ? `${grade} · ${gradeConfidence} confidence` : String(grade),
-    });
+  // With a confidence value the grade lives in the Batteristatus-style card
+  // (top-right info slot); only fall back to a text row without one.
+  if (grade !== undefined && gradeConfidenceN === null) {
+    provenance.push({ label: "Source grade", value: String(grade) });
   }
   if (timeframeStatus !== undefined || timeframeColumn !== undefined) {
     provenance.push({
@@ -151,6 +156,21 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
 
   return (
     <div className="reasoning-report select-text">
+      {/* Score card at the top: Batteristatus-style — the fill spans the
+          0–1 range (score 1 = fully filled), colored by score tier. */}
+      <section className="rr-section rr-sec-score">
+        <div className="rr-batt">
+          <div
+            className={`rr-batt-fill rr-score-fill-${scoreClass(mapping.score)}`}
+            style={{ width: `${mapping.score * 100}%` }}
+          >
+            <span className="rr-batt-label">Score.</span>
+            <span className="rr-batt-value">{formatScore(mapping.score)}</span>
+          </div>
+          <span className="rr-batt-info">0 – 1</span>
+        </div>
+      </section>
+
       {flags.length > 0 && (
         <div className="rr-callout">
           <div className="rr-callout-title">
@@ -167,7 +187,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
 
       {mapping.quote_context &&
         mapping.quote_context.trim() !== mapping.verbatim_quote.trim() && (
-          <section className="rr-section">
+          <section className="rr-section rr-sec-provision">
             <h4>Provision</h4>
             <p className="rr-provision">
               {(() => {
@@ -188,7 +208,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
         )}
 
       {scoringEntries.length > 0 && (
-        <section className="rr-section">
+        <section className="rr-section rr-sec-scoring">
           <h4>Scoring inputs</h4>
           <div className="rr-feature-list">
             {scoringEntries.map(([k, v]) => (
@@ -202,7 +222,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {stats.length > 0 && (
-        <section className="rr-section">
+        <section className="rr-section rr-sec-quality">
           <h4>Document quality</h4>
           <div className="rr-stat-grid">
             {stats.map((s) => (
@@ -216,8 +236,22 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {provenance.length > 0 && (
-        <section className="rr-section rr-provenance">
+        <section className="rr-section rr-provenance rr-sec-provenance">
           <h4>Provenance</h4>
+          {gradeConfidenceN !== null && (
+            <div className="rr-batt">
+              <div
+                className="rr-batt-fill"
+                style={{ width: `${gradeConfidenceN}%` }}
+              >
+                <span className="rr-batt-label">Source grade.</span>
+                <span className="rr-batt-value">{gradeConfidenceN}%</span>
+              </div>
+              {grade !== undefined && (
+                <span className="rr-batt-info">{String(grade)}</span>
+              )}
+            </div>
+          )}
           {provenance.map((row) => (
             <div key={row.label} className="rr-provenance-line">
               <span className="rr-provenance-label">{row.label}</span>
@@ -228,7 +262,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {releaseYear && releaseYear.year && (
-        <section className="rr-section rr-provenance">
+        <section className="rr-section rr-provenance rr-sec-release">
           <h4>Release year (4 signals · LLM-decided)</h4>
           <div className="rr-provenance-line">
             <span className="rr-provenance-label">{releaseYear.year}</span>
@@ -251,7 +285,9 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {timestamp && (
-        <section className="rr-section rr-provenance">
+        <section
+          className={`rr-section rr-provenance ${timestamp.verified ? "rr-sec-timestamp-ok" : "rr-sec-timestamp-warn"}`}
+        >
           <h4>Timestamp verification (forensic)</h4>
           <div className="rr-provenance-line">
             <span className="rr-provenance-label">

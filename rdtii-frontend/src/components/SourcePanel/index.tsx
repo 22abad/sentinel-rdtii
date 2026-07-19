@@ -22,6 +22,11 @@ const PROVIDER_LABELS: Record<string, string> = {
   "llama-3-local": "Llama 3 (Local)",
 };
 
+// Swiss/flat dropdown popup: square cream sheet, black frame, mono items,
+// width pinned to the trigger (see .swiss-dropdown in styles.css — the popup
+// is portaled to <body>, so it can't inherit from .swiss-form).
+const SQUARE_DROPDOWN = "swiss-dropdown";
+
 type SourcePanelProps = {
   sourceRef: React.RefObject<HTMLDivElement>;
   country: string;
@@ -92,6 +97,7 @@ export function SourcePanel({
   const [urlPlaceholderIndex, setUrlPlaceholderIndex] = useState(0);
   const [showUrlPlaceholder, setShowUrlPlaceholder] = useState(true);
   const [urlFocused, setUrlFocused] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     if (urlFocused || sourceUrl) return;
@@ -132,49 +138,55 @@ export function SourcePanel({
     ? `${t("status.stop")} · ${extractionProgress.current}/${extractionProgress.total}`
     : t("status.stop");
 
+  // Title block doubles as a progress bar during extraction: yellow fills the
+  // header from the left up to current/total (full header = done).
+  const progressPct =
+    status === "loading"
+      ? extractionProgress?.total
+        ? Math.min(
+            100,
+            Math.round((extractionProgress.current / extractionProgress.total) * 100),
+          )
+        : 4 // stream started, total unknown yet — show a starting sliver
+      : null;
+
   return (
-    <section className="input-panel" aria-label={t("source.aria")}>
+    <section className="input-panel swiss-form" aria-label={t("source.aria")}>
       <div className="panel-header">
         <div>
           <h2>{t("source.title")}</h2>
           <p>{t("source.description")}</p>
         </div>
         <button
-          onClick={() => {
-            if (status === "loading") {
-              stopExtraction();
-              return;
-            }
-            if (sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim())) return;
-            extract();
-          }}
-          disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim() && linkedSourceCount === 0) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
-          className={`nodrag group flex items-center justify-center rounded-full text-md h-10 px-6 cursor-pointer transition-all duration-300 text-white ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#10B981]"}`}
-          style={{ minHeight: 0, border: "none" }}
+          type="button"
+          className="panel-collapse nodrag"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-label={collapsed ? "Expand panel" : "Collapse panel"}
         >
-          <span>
-            {status === "loading"
-              ? isStopping ? t("status.stopping") : stopLabel
-              : extractionLabel}
-          </span>
-          {status === "loading" ? (
-            <span className="ml-2 inline-block h-2.5 w-2.5 rounded-[2px] bg-white" aria-hidden="true" />
-          ) : (
-            <span className="overflow-hidden w-0 group-hover:w-4 transition-all duration-300 flex items-center justify-center">
-              <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
-              </svg>
-            </span>
-          )}
+          {collapsed ? "▸" : "▾"}
         </button>
+        {/* Progress sweep: a black fill clipped to current/total; it carries an
+            inverted (cream) copy of the title, so letters flip color exactly
+            where the black covers them. */}
+        {progressPct !== null && (
+          <div
+            className="panel-progress"
+            aria-hidden="true"
+            style={{ clipPath: `inset(0 ${100 - progressPct}% 0 0)` }}
+          >
+            <h2>{t("source.title")}</h2>
+          </div>
+        )}
       </div>
+      {!collapsed && (
+        <>
 
       {status === "loading" && (
-        <div className="border-b border-gray-100 px-6 py-2.5 bg-gray-50/70">
+        <div className="border-t-[1.5px] border-[#111827] bg-transparent px-[18px] py-2.5">
           {usage ? (
             <UsageSummary usage={usage} />
           ) : (
-            <p className="text-[11px] text-gray-400">
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#6b675c]">
               {t("status.usagePending")}
             </p>
           )}
@@ -184,37 +196,32 @@ export function SourcePanel({
       <div className="control-grid">
         <label>
           {t("source.country")}
-          {detectedCountry?.detected ? (
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 text-sm font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                {detectedCountry.name}
-                <span className="text-emerald-400 text-xs">({detectedCountry.code})</span>
-              </span>
-              <small
-                className="text-xs text-gray-400 cursor-pointer hover:text-gray-600 underline underline-offset-2"
-                onClick={() => setCountry("")}
-              >
-                {t("source.change")}
-              </small>
-            </div>
-          ) : (
-            <Select value={country} onValueChange={setCountry}>
-              <SelectTrigger><SelectValue placeholder={t("source.autoDetect")} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="CHN">{t("country.chn")}</SelectItem>
-                <SelectItem value="SGP">{t("country.sgp")}</SelectItem>
-                <SelectItem value="MYS">{t("country.mys")}</SelectItem>
-                <SelectItem value="THA">{t("country.tha")}</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
+          {/* Auto-detection simply selects the detected country in the same
+              dropdown — no separate tag UI. Picking manually overrides it. */}
+          <Select
+            value={country || (detectedCountry?.detected ? detectedCountry.code : "")}
+            onValueChange={setCountry}
+          >
+            <SelectTrigger><SelectValue placeholder={t("source.autoDetect")} /></SelectTrigger>
+            <SelectContent className={SQUARE_DROPDOWN}>
+              <SelectItem value="CHN">{t("country.chn")}</SelectItem>
+              <SelectItem value="SGP">{t("country.sgp")}</SelectItem>
+              <SelectItem value="MYS">{t("country.mys")}</SelectItem>
+              <SelectItem value="THA">{t("country.tha")}</SelectItem>
+              {detectedCountry?.detected &&
+                !["CHN", "SGP", "MYS", "THA"].includes(detectedCountry.code) && (
+                  <SelectItem value={detectedCountry.code}>
+                    {detectedCountry.name}
+                  </SelectItem>
+                )}
+            </SelectContent>
+          </Select>
         </label>
         <label>
           {t("source.filter")}
           <Select value={pillarFilter} onValueChange={setPillarFilter}>
             <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
+            <SelectContent className={SQUARE_DROPDOWN}>
               <SelectItem value="all">{t("taxonomy.allPillars")}</SelectItem>
               <SelectSeparator />
               <SelectGroup>
@@ -238,24 +245,21 @@ export function SourcePanel({
       </div>
 
       {availableProviders.length > 0 && (
-        <div className="stacked">
-          <label style={{ display: "block" }}>
-            {t("source.aiProvider")}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
+        <label className="stacked" style={{ display: "block" }}>
+          {t("source.aiProvider")}
+          <Select value={selectedProvider} onValueChange={setSelectedProvider}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("source.aiProvider")} />
+            </SelectTrigger>
+            <SelectContent className={SQUARE_DROPDOWN}>
               {availableProviders.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setSelectedProvider(p)}
-                  className={selectedProvider === p ? "" : "secondary"}
-                  style={{ minHeight: 32, padding: "0 14px", fontSize: "0.82rem", borderRadius: 9999 }}
-                >
+                <SelectItem key={p} value={p}>
                   {PROVIDER_LABELS[p] ?? p}
-                </button>
+                </SelectItem>
               ))}
-            </div>
-          </label>
-        </div>
+            </SelectContent>
+          </Select>
+        </label>
       )}
 
       <label className="stacked">
@@ -326,6 +330,35 @@ export function SourcePanel({
         </p>
       )}
       {error ? <p className="error">{error}</p> : null}
+
+      <button
+        onClick={() => {
+          if (status === "loading") {
+            stopExtraction();
+            return;
+          }
+          if (sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim())) return;
+          extract();
+        }}
+        disabled={isStopping || (status !== "loading" && ((!text.trim() && !sourceUrl.trim() && linkedSourceCount === 0) || (!!sourceUrl.trim() && !text.trim() && !isValidUrl(sourceUrl.trim()))))}
+        className={`source-send nodrag group flex w-full items-center justify-center gap-3 h-14 cursor-pointer uppercase tracking-[0.2em] font-bold text-white transition-all duration-300 ${status === "loading" ? "bg-rose-500 hover:bg-rose-600" : "bg-[#111827] hover:bg-black"}`}
+        style={{ minHeight: 0, border: "none" }}
+      >
+        <span>
+          {status === "loading"
+            ? isStopping ? t("status.stopping") : stopLabel
+            : extractionLabel}
+        </span>
+        {status === "loading" ? (
+          <span className="inline-block h-2.5 w-2.5 rounded-[2px] bg-white" aria-hidden="true" />
+        ) : (
+          <svg className="w-5 h-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        )}
+      </button>
+        </>
+      )}
     </section>
   );
 }

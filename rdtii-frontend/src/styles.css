@@ -2005,3 +2005,890 @@ textarea {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
+
+/* ── Workbench Source panel — "NDC2014 FORM" editorial restyle ──────────────
+   Scoped under .swiss-form so ONLY the Source input panel changes;
+   other panels (Documents, Discovery, Review) keep the default card look.
+   Cream ground, hard black frame, mono uppercase labels, hairline row
+   separators, borderless fields — mirroring the reference form. */
+.swiss-form {
+  background: #f3f1ea;
+  border: 2px solid #111827;
+  border-radius: 0; /* Swiss: sharp corners, no shadow */
+  box-shadow: none;
+}
+.workbench-classic .swiss-form {
+  box-shadow: none;
+}
+
+/* header — black box tag (::before) on the left, big display title on the
+   right; description hidden (Swiss minimal) */
+.swiss-form .panel-header {
+  position: relative;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 16px 18px;
+}
+
+/* extraction progress sweep over the title block: black fill = progression,
+   clipped to current/total; the inverted title inside flips to cream exactly
+   where the black covers it */
+.swiss-form .panel-progress {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  background: #111827;
+  pointer-events: none;
+  transition: clip-path 0.4s ease;
+}
+/* higher specificity than `.swiss-form .panel-header h2` (which also matches
+   this h2 and would otherwise win on source order, painting black-on-black) */
+.swiss-form .panel-header .panel-progress h2 {
+  color: #f3f1ea;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 2rem;
+  line-height: 1;
+}
+.swiss-form .panel-header h2 {
+  color: #111827;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 2rem;
+  line-height: 1;
+}
+.swiss-form .panel-header p {
+  display: none;
+}
+
+/* field labels — mono, bold, uppercase */
+.swiss-form label,
+.swiss-form .source-bar {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.76rem;
+}
+
+/* row-dividing hairline above each field group (reference: line per row) */
+.swiss-form .control-grid,
+.swiss-form .stacked {
+  border-top: 1.5px solid #111827;
+}
+
+/* inputs & textarea — transparent, borderless; text sits on the cream */
+.swiss-form input,
+.swiss-form textarea {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 8px 2px;
+  color: #1f2933;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.swiss-form input:focus,
+.swiss-form textarea:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background: rgba(17, 24, 39, 0.04);
+}
+
+/* flat dropdown triggers to match the borderless fields */
+.swiss-form [data-slot="select-trigger"] {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding-left: 2px;
+  padding-right: 2px;
+  color: #1f2933;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+/* dropdown popup (portaled to body, so styled by its own class): square cream
+   sheet, black frame, width pinned to the trigger bar, flat mono items */
+.swiss-dropdown[data-slot="select-content"] {
+  width: var(--radix-select-trigger-width);
+  min-width: var(--radix-select-trigger-width);
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  box-shadow: none;
+}
+.swiss-dropdown [data-slot="select-item"] {
+  border-radius: 0;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.82rem;
+}
+.swiss-dropdown [data-slot="select-item"]:focus,
+.swiss-dropdown [data-slot="select-item"][data-highlighted] {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-dropdown [data-slot="select-item"] svg {
+  color: currentColor;
+}
+.swiss-dropdown [data-slot="select-label"] {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.swiss-dropdown [data-slot="select-separator"] {
+  background: #111827;
+}
+
+/* two-column row: even columns with a vertical hairline between them */
+.swiss-form .control-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.swiss-form .control-grid > label:first-child {
+  padding-right: 16px;
+}
+.swiss-form .control-grid > label:nth-child(2) {
+  border-left: 1.5px solid #111827;
+  padding-left: 16px;
+}
+
+/* full-width black SEND bar at the bottom — flush, no gap above */
+.swiss-form .source-send {
+  margin-top: 0;
+  border-radius: 0; /* override global button { border-radius: 999px } */
+}
+
+/* raw-text tracing view (active highlight): drop the rounded white box so it
+   sits flat on the cream ground like the other fields */
+.swiss-form .source-view {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 8px 2px;
+}
+
+/* ── Discovery-panel specifics (shares the .swiss-form base) ──────────────── */
+/* bottom action bar (moved from the header, mirrors the Source SEND bar) —
+   flush against the last row line, no gap */
+.swiss-form .discovery-actions-bar {
+  display: flex;
+  margin-top: 0;
+}
+.swiss-form .discovery-actions-bar button {
+  border-radius: 0;
+  height: 56px;
+}
+.swiss-form .discovery-actions-bar .discovery-run {
+  flex: 1;
+  background: #111827;
+}
+.swiss-form .discovery-actions-bar .discovery-run:hover {
+  background: #000;
+}
+.swiss-form .discovery-actions-bar .discovery-source-menu-button {
+  border: 1.5px solid #111827;
+  /* the bar sits flush on the panel frame: left/bottom edges would double
+     the panel's own border lines */
+  border-left: none;
+  border-bottom: none;
+  color: #111827;
+  background: #f3f1ea;
+}
+/* controls block: two columns; a row hairline above each cell and a column
+   hairline between the two columns (reference grid) */
+.swiss-form .discovery-controls {
+  border-bottom: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  /* zero padding: top so the first line sits under the title, sides so the
+     row lines reach full width (cells carry the inset), bottom so the last
+     row (pillars) isn't taller than the others */
+  padding: 0;
+}
+.swiss-form .discovery-controls > * {
+  border-top: 1.5px solid #111827;
+  padding-top: 12px;
+}
+.swiss-form .discovery-controls > *:nth-child(odd) {
+  padding-left: 18px;
+  padding-right: 16px;
+}
+.swiss-form .discovery-controls > *:nth-child(even) {
+  border-left: 1.5px solid #111827;
+  padding-left: 16px;
+  padding-right: 18px;
+}
+/* pillar toggles: square; active state as a black tag */
+.swiss-form .discovery-toggle {
+  border-radius: 0;
+  border-color: #111827;
+  color: #111827;
+}
+.swiss-form .discovery-toggle.active {
+  background: #111827;
+  border-color: #111827;
+  color: #f3f1ea;
+}
+
+/* results: Swiss index list — click box · title · pillars · Extract */
+.swiss-form .candidate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.swiss-form .candidate-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1.5px solid #111827;
+  background: transparent;
+}
+.swiss-form .candidate-row:last-child {
+  border-bottom: 1.5px solid #111827;
+}
+.swiss-form .candidate-row:hover {
+  background: rgba(17, 24, 39, 0.05);
+}
+.swiss-form .candidate-row.selected {
+  background: rgba(17, 24, 39, 0.08);
+}
+.swiss-form .candidate-select {
+  display: inline-flex;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .candidate-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.swiss-form .candidate-pillars {
+  flex-shrink: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #6b675c;
+  white-space: nowrap;
+}
+.swiss-form .candidate-extract {
+  flex-shrink: 0;
+  min-height: 0;
+  height: 34px;
+  padding: 0 14px;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.swiss-form .candidate-extract:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .candidate-extract:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* collapse-to-title toggle in the panel header */
+.swiss-form .panel-collapse {
+  margin-left: auto;
+  min-height: 0;
+  padding: 2px 8px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.swiss-form .panel-collapse:hover {
+  color: #6b675c;
+}
+
+/* classic view: the PAGE is split in half by one continuous full-height
+   divide line (reference: Tambourine index) — the line runs from the top of
+   the viewport to the bottom; the whole right part is the Audit panel. Each
+   half carries its own inner padding (the workspace container has none, so
+   the line can touch the edges). */
+.workbench-classic .workspace {
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  min-height: 100dvh;
+}
+.workbench-classic .workspace > div:first-child {
+  padding: 24px 20px 96px;
+}
+.workbench-classic .workspace-audit-side {
+  border-left: 2px solid #111827;
+  padding: 24px 20px 96px;
+}
+.workbench-classic .workspace-audit-side .review-panel {
+  align-self: stretch;
+  flex: 1;
+  max-height: none;
+  overflow: visible;
+}
+/* streaming fix: flex-1 + min-h-0 + overflow-y-auto trapped new rows in an
+   inner scroll area (content stopped driving the height). In classic view the
+   body grows naturally, so streamed results extend the list down the page. */
+.workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
+  flex: none;
+  overflow-y: visible;
+}
+
+/* ── Audit: RAD-style accordion index ─────────────────────────────────────
+   Collapsed row = "P6.2 · Legislation Title · +", divided by hairlines;
+   clicking expands the tidied-up report inline. */
+.swiss-form .mapping-list {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.swiss-form .mapping-row {
+  border-top: 1.5px solid #111827;
+}
+.swiss-form .mapping-row:last-child {
+  border-bottom: 1.5px solid #111827;
+}
+.swiss-form .mapping-row-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 62px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  text-align: left;
+  cursor: pointer;
+}
+.swiss-form .mapping-row-head:hover,
+.swiss-form .mapping-row.open .mapping-row-head {
+  background: rgba(17, 24, 39, 0.05);
+}
+.swiss-form .mapping-row-code {
+  min-width: 72px;
+  font-family: inherit; /* Inter, like the reference index numbers */
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+.swiss-form .mapping-row.active-mapping .mapping-row-code {
+  background: #111827;
+  color: #f3f1ea;
+  padding: 2px 6px;
+}
+.swiss-form .mapping-row-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  font-weight: 300; /* light, like the reference index titles */
+  letter-spacing: 0.01em;
+}
+.swiss-form .mapping-row-plus {
+  flex-shrink: 0;
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1;
+}
+.swiss-form .mapping-row-decision {
+  flex-shrink: 0;
+  border: 1.5px solid #111827;
+  padding: 2px 7px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.swiss-form .mapping-row-decision.approved {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .mapping-row-decision.rejected {
+  color: #9f2d20;
+  border-color: #9f2d20;
+}
+
+/* expanded body: full-bleed — no outer margins, content fills the row;
+   everything is divided by hairlines only */
+.swiss-form .mapping-row-body {
+  padding: 0;
+}
+/* every body segment opens with its own hairline (border-top only — never
+   bottom — so lines can't double against the next segment) */
+.swiss-form .mapping-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 10px 18px;
+  border-top: 1.5px solid #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b675c;
+}
+/* individual blocks: Raw material / AI reason */
+.swiss-form .mapping-row-block {
+  border-top: 1.5px solid #111827;
+  padding: 12px 18px 14px;
+}
+.swiss-form .mapping-row-block h4 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.swiss-form .mapping-row-body .quote {
+  margin: 0;
+  border-left: 2px solid #111827;
+  padding: 2px 0 2px 12px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.92rem;
+  color: #1f2933;
+}
+.swiss-form .mapping-row-body .impact {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #1f2933;
+}
+.swiss-form .mapping-row-report {
+  margin-top: 0;
+  border-top: 1.5px solid #111827;
+  padding-top: 0;
+}
+.swiss-form .mapping-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0;
+  border-top: 1.5px solid #111827;
+  padding: 12px 18px;
+}
+.swiss-form .mapping-row-source {
+  margin-right: auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111827;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.swiss-form .mapping-row-actions button {
+  min-height: 34px;
+  border-radius: 0;
+  padding: 0 14px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.swiss-form .mapping-row-actions button:not(.secondary) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .mapping-row-actions button:not(.secondary):hover {
+  background: #000;
+}
+.swiss-form .mapping-row-actions button.secondary {
+  border: 1.5px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .mapping-row-actions button.secondary:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .mapping-row-actions button.active-approve {
+  background: #116149;
+}
+.swiss-form .mapping-row-actions button.secondary.active-reject {
+  border-color: #9f2d20;
+  color: #9f2d20;
+}
+.swiss-form .score-badge {
+  border-radius: 0;
+}
+
+/* ── Reasoning report, Swiss-ified: flat blocks, semantic bg per schema ────
+   review flags = yellow · scoring = white · document quality = light blue ·
+   provenance = warm gray · release year = light green · timestamp = green
+   when corroborated / yellow when unconfirmed */
+.swiss-form .reasoning-report {
+  display: grid;
+  gap: 0; /* blocks are full-bleed bands divided by lines, not framed boxes */
+}
+.swiss-form .reasoning-report .rr-section,
+.swiss-form .reasoning-report .rr-callout {
+  margin: 0;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  padding: 12px 18px 14px;
+  background: #ffffff;
+  box-shadow: none;
+}
+.swiss-form .reasoning-report > *:first-child {
+  border-top: none; /* the report container already draws the opening line */
+}
+.swiss-form .reasoning-report h4,
+.swiss-form .reasoning-report .rr-callout-title {
+  margin: 0 0 8px;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.swiss-form .reasoning-report .rr-callout {
+  background: #f7d445; /* requires human review = yellow */
+  color: #111827;
+}
+.swiss-form .reasoning-report .rr-callout ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.85rem;
+}
+.swiss-form .reasoning-report .rr-sec-provision {
+  background: #f3f1ea;
+}
+.swiss-form .reasoning-report .rr-sec-scoring {
+  background: #ffffff;
+}
+.swiss-form .reasoning-report .rr-sec-quality {
+  background: #d8e5f3;
+}
+.swiss-form .reasoning-report .rr-sec-provenance {
+  background: #e7e3da;
+}
+.swiss-form .reasoning-report .rr-sec-release {
+  background: #dcead8;
+}
+.swiss-form .reasoning-report .rr-sec-timestamp-ok {
+  background: #dcead8;
+}
+.swiss-form .reasoning-report .rr-sec-timestamp-warn {
+  background: #f7d445;
+}
+.swiss-form .reasoning-report .rr-feature-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.35);
+  font-size: 0.85rem;
+}
+.swiss-form .reasoning-report .rr-feature-line:last-child {
+  border-bottom: none;
+}
+.swiss-form .reasoning-report .rr-chip {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  padding: 1px 8px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #111827;
+  background: transparent;
+}
+.swiss-form .reasoning-report .rr-chip-yes {
+  background: #9fd8a4;
+}
+.swiss-form .reasoning-report .rr-chip-no {
+  background: #f2a69b;
+}
+.swiss-form .reasoning-report .rr-stat {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px;
+}
+.swiss-form .reasoning-report .rr-stat-value {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  color: #111827;
+}
+.swiss-form .reasoning-report .rr-stat-label {
+  color: rgba(17, 24, 39, 0.65);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+/* "Batteristatus." card, exactly: a wide card whose left portion is a solid
+   yellow block sized to the value (whole card = 100%); the label and the big
+   number live INSIDE the yellow block; the supplementary value (grade) sits
+   top-right on the gray remainder. Square corners per our Swiss language. */
+.swiss-form .reasoning-report .rr-batt {
+  position: relative;
+  /* full-bleed like the Score section: the card spans the band edge-to-edge.
+     Definition comes from top/bottom hairlines ONLY — no vertical borders, so
+     nothing doubles against the panel's own frame at the left/right edges. */
+  margin: 10px -18px 12px;
+  min-height: 128px;
+  border-top: 1.5px solid #111827;
+  border-bottom: 1.5px solid #111827;
+  background: #eceae2; /* the card's gray remainder */
+  overflow: hidden;
+}
+/* the score card fills its band edge-to-edge; the band's own hairlines frame
+   it, so borders here would double the lines */
+.swiss-form .reasoning-report .rr-sec-score .rr-batt {
+  border: none;
+  margin: 0;
+}
+.swiss-form .reasoning-report .rr-batt-fill {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: min-content;
+  height: 100%;
+  min-height: 128px;
+  padding: 14px 16px;
+  background: #f7d445;
+}
+.swiss-form .reasoning-report .rr-batt-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+}
+.swiss-form .reasoning-report .rr-batt-value {
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #111827;
+  white-space: nowrap;
+}
+.swiss-form .reasoning-report .rr-batt-info {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111827;
+}
+
+/* Score card (top of the report): fill spans the 0–1 range, tier-colored.
+   No section title — the card itself is the section, full-bleed. */
+.swiss-form .reasoning-report .rr-sec-score {
+  background: #ffffff;
+  padding: 0;
+}
+.swiss-form .reasoning-report .rr-sec-score .rr-batt {
+  margin: 0;
+}
+.swiss-form .reasoning-report .rr-score-fill-score-one {
+  background: #f2a69b; /* 1 — fully restrictive: hard to do business, red */
+}
+.swiss-form .reasoning-report .rr-score-fill-score-half {
+  background: #f7d445; /* partial restriction, yellow */
+}
+.swiss-form .reasoning-report .rr-score-fill-score-0 {
+  background: #9fd8a4; /* 0 — no restriction: open for business, green */
+}
+.swiss-form .reasoning-report .rr-provenance-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  color: #111827;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.25);
+  padding: 4px 0;
+}
+.swiss-form .reasoning-report .rr-provenance-line:last-child {
+  border-bottom: none;
+}
+.swiss-form .empty-state {
+  padding: 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b675c;
+}
+
+/* header action group pinned to the right edge (the swiss header switched to
+   flex-start, which left Audit's buttons stuck beside the title) */
+.swiss-form .panel-header > div.nodrag {
+  margin-left: auto;
+}
+
+/* swiss header action buttons (Audit: Load demo / Preview export) */
+.swiss-form .panel-header button.secondary {
+  min-height: 32px;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+}
+.swiss-form .panel-header button.secondary:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+
+/* ── UsageSummary, Swiss-ified ────────────────────────────────────────────── */
+/* trigger inside a swiss form: mono, square, black-on-cream */
+.swiss-form .usage-summary-trigger {
+  border-radius: 0;
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .usage-summary-trigger:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .usage-summary-trigger:hover .usage-summary-trigger-label {
+  color: #f3f1ea;
+}
+.swiss-form .usage-summary-trigger:focus-visible {
+  outline: 2px solid #111827;
+}
+.swiss-form .usage-summary-trigger-label {
+  color: #111827;
+}
+
+/* usage drawer: square cream sheet, black frame, hairline lists */
+.right-drawer.usage-drawer {
+  border: 2px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  box-shadow: none;
+}
+.usage-drawer .right-drawer-close {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  color: #111827;
+  box-shadow: none;
+}
+.usage-drawer .right-drawer-close:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.usage-drawer .usage-drawer-header p {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.usage-drawer .usage-drawer-header h3 {
+  color: #111827;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.usage-drawer .usage-drawer-header span {
+  color: #6b675c;
+}
+.usage-drawer .usage-metric {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+}
+.usage-drawer .usage-metric span {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.usage-drawer .usage-metric strong {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.usage-drawer .usage-metric-primary {
+  background: #111827;
+}
+.usage-drawer .usage-metric-primary span {
+  color: rgba(243, 241, 234, 0.65);
+}
+.usage-drawer .usage-metric-primary strong {
+  color: #f3f1ea;
+}
+.usage-drawer .usage-drawer-section h4 {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.usage-drawer .usage-detail-list {
+  border-top: 1.5px solid #111827;
+}
+.usage-drawer .usage-detail-list div,
+.usage-drawer .usage-operation-list div {
+  border-bottom: 1.5px solid #111827;
+}
+.usage-drawer .usage-detail-list dt,
+.usage-drawer .usage-operation-list span {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+}
+.usage-drawer .usage-detail-list dd,
+.usage-drawer .usage-operation-list strong {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+.usage-drawer .usage-cost-note {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+}

@@ -119,6 +119,7 @@ export function DiscoveryPanel({
   const [languageMode, setLanguageMode] = useState("auto");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sourceManagerOpen, setSourceManagerOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const { data, error, loading, search } = useDiscovery();
 
   useEffect(() => {
@@ -288,49 +289,23 @@ export function DiscoveryPanel({
   }
 
   return (
-    <section className="discovery-panel" aria-label="Discovery">
+    <section className="discovery-panel swiss-form" aria-label="Discovery">
       <div className="panel-header discovery-header">
         <div>
           <h2>Discovery</h2>
           <p>Search official legal sources before extraction.</p>
         </div>
-        <div className="nodrag discovery-header-actions">
-          <button
-            type="button"
-            className="secondary discovery-source-menu-button"
-            onClick={() => setSourceManagerOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={sourceManagerOpen}
-            title="Source manager"
-          >
-            <Settings2 size={16} />
-            <span>Sources</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedIds([]);
-              search({
-                countryCode,
-                pillars,
-                keywords,
-                sourceMode,
-                languages: requestLanguages(),
-              });
-            }}
-            disabled={loading || pillars.length === 0}
-            className="group flex items-center justify-center rounded-full text-md h-10 px-5 cursor-pointer transition-all duration-500 bg-[#0f766e] text-white"
-            style={{ minHeight: 0, border: "none" }}
-          >
-            {loading ? (
-              <Loader2 size={16} className="mr-2 animate-spin" />
-            ) : (
-              <Search size={16} className="mr-2" />
-            )}
-            <span>{loading ? "Searching" : "Discover"}</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          className="panel-collapse nodrag"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-label={collapsed ? "Expand panel" : "Collapse panel"}
+        >
+          {collapsed ? "▸" : "▾"}
+        </button>
       </div>
+      {!collapsed && (
+        <>
 
       <div className="discovery-controls">
         <label>
@@ -339,7 +314,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="swiss-dropdown">
               {countries.map((item) => (
                 <SelectItem key={item.country_code} value={item.country_code}>
                   {item.label}
@@ -360,7 +335,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="swiss-dropdown">
               {SOURCE_MODE_OPTIONS.map(({ value, label }) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -376,7 +351,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="swiss-dropdown">
               <SelectItem value="auto">Auto</SelectItem>
               <SelectItem value="en">English</SelectItem>
               {localLanguage !== "en" && (
@@ -395,22 +370,22 @@ export function DiscoveryPanel({
           />
         </label>
 
-        <div className="discovery-pillars" aria-label="Pillars">
-          {[6, 7].map((pillar) => (
-            <button
-              key={pillar}
-              type="button"
-              className={
-                pillars.includes(pillar)
-                  ? "discovery-toggle active"
-                  : "discovery-toggle"
-              }
-              onClick={() => togglePillar(pillar)}
-            >
-              P{pillar}
-            </button>
-          ))}
-        </div>
+        <label className="discovery-pillars-select" style={{ gridColumn: "1 / -1" }}>
+          Pillars
+          <Select
+            value={[...pillars].sort((a, b) => a - b).join(",") || "6,7"}
+            onValueChange={(v) => setPillars(v.split(",").map(Number))}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="swiss-dropdown">
+              <SelectItem value="6,7">P6 · P7</SelectItem>
+              <SelectItem value="6">P6</SelectItem>
+              <SelectItem value="7">P7</SelectItem>
+            </SelectContent>
+          </Select>
+        </label>
       </div>
 
       {error && <p className="discovery-error">{error}</p>}
@@ -563,6 +538,46 @@ export function DiscoveryPanel({
         </div>
       )}
 
+      <div className="discovery-actions-bar nodrag">
+        <button
+          type="button"
+          className="secondary discovery-source-menu-button"
+          onClick={() => setSourceManagerOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={sourceManagerOpen}
+          title="Source manager"
+        >
+          <Settings2 size={16} />
+          <span>Sources</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedIds([]);
+            search({
+              countryCode,
+              pillars,
+              keywords,
+              sourceMode,
+              languages: requestLanguages(),
+            });
+          }}
+          disabled={loading || pillars.length === 0}
+          className="discovery-run group flex items-center justify-center gap-2 h-14 cursor-pointer uppercase tracking-[0.2em] font-bold text-white transition-all duration-300"
+          style={{ minHeight: 0, border: "none" }}
+        >
+          {loading && <Loader2 size={16} className="animate-spin" />}
+          <span>{loading ? "Searching" : "Discover"}</span>
+          {!loading && (
+            <svg className="w-5 h-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          )}
+        </button>
+      </div>
+        </>
+      )}
+
       <RightDrawer
         open={sourceManagerOpen}
         onOpenChange={setSourceManagerOpen}
@@ -610,80 +625,32 @@ function CandidateCard({
   onExtract: () => void;
 }) {
   return (
-    <article
-      className={selected ? "candidate-card selected" : "candidate-card"}
-    >
-      <div className="candidate-topline">
-        <button
-          type="button"
-          className="candidate-select"
-          onClick={onToggleSelected}
-          disabled={extracting}
-          aria-label={selected ? "Remove from shortlist" : "Add to shortlist"}
-        >
-          {selected ? <CheckSquare size={18} /> : <Square size={18} />}
-        </button>
-        <div className="candidate-title-group">
-          <h3>{candidate.title}</h3>
-          <p>{candidate.source_domain}</p>
-        </div>
-        <span className="candidate-score">
-          {Math.round(candidate.rank_score)}
-        </span>
-      </div>
-
-      <div className="candidate-badges">
-        <span>{candidate.source_grade}</span>
-        <span>{candidate.document_type}</span>
-        <span className={`candidate-retrieval ${candidate.retrieval_mode}`}>
-          {retrievalModeLabel(candidate.retrieval_mode)}
-        </span>
-        {candidate.validation_status &&
-          candidate.validation_status !== "unverified" && (
-            <span>{validationStatusLabel(candidate.validation_status)}</span>
-          )}
-        {candidate.matched_indicators.slice(0, 4).map((indicator) => (
-          <span key={indicator}>{indicator}</span>
-        ))}
-      </div>
-
-      {candidate.snippet && (
-        <p className="candidate-snippet">{candidate.snippet}</p>
-      )}
-
-      {candidate.reasons.length > 0 && (
-        <p className="candidate-reasons">
-          {candidate.reasons.slice(0, 3).join(" · ")}
-        </p>
-      )}
-
-      {candidate.warnings.length > 0 && (
-        <div className="candidate-warnings">
-          {candidate.warnings.slice(0, 2).map((warning) => (
-            <span key={warning}>{warning}</span>
-          ))}
-        </div>
-      )}
-
-      <div className="candidate-actions">
-        <a href={candidate.url} target="_blank" rel="noreferrer">
-          <ExternalLink size={14} />
-          Open
-        </a>
-        <button
-          type="button"
-          className="secondary"
-          onClick={onUse}
-          disabled={extracting}
-        >
-          <FileInput size={14} />
-          Use URL
-        </button>
-        <button type="button" onClick={onExtract} disabled={extracting}>
-          <Search size={14} />
-          Extract
-        </button>
-      </div>
+    <article className={selected ? "candidate-row selected" : "candidate-row"}>
+      <button
+        type="button"
+        className="candidate-select"
+        onClick={onToggleSelected}
+        disabled={extracting}
+        aria-label={selected ? "Remove from shortlist" : "Add to shortlist"}
+      >
+        {selected ? <CheckSquare size={18} /> : <Square size={18} />}
+      </button>
+      <h3 className="candidate-title" title={candidate.title}>
+        {candidate.title}
+      </h3>
+      <span className="candidate-pillars">
+        {candidate.matched_pillars.length
+          ? candidate.matched_pillars.map((p) => `P${p}`).join(" · ")
+          : "—"}
+      </span>
+      <button
+        type="button"
+        className="candidate-extract"
+        onClick={onExtract}
+        disabled={extracting}
+      >
+        Extract
+      </button>
     </article>
   );
 }

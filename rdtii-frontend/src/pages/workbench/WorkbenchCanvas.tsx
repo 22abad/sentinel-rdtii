@@ -985,6 +985,7 @@ export function WorkbenchCanvas({
               element: p.renderElement ? p.renderElement(p.id) : p.element,
               width: sizes[p.id]?.width ?? p.width,
               height: sizes[p.id]?.height,
+              flat: p.flat,
               onResize: (size: WorkbenchCanvasSize) => resizeNode(p.id, size),
               onDelete: () => removeNode(p.id),
             } satisfies PanelNodeData,
@@ -1006,6 +1007,7 @@ export function WorkbenchCanvas({
                 element: src.renderElement ? src.renderElement(s.id) : src.element,
                 width: sizes[s.id]?.width ?? src.width,
                 height: sizes[s.id]?.height,
+                flat: src.flat,
                 onResize: (size: WorkbenchCanvasSize) => resizeNode(s.id, size),
                 onDelete: () => removeNode(s.id),
               } satisfies PanelNodeData,
@@ -1226,7 +1228,7 @@ export function WorkbenchCanvas({
         nodesConnectable={!handMode}
         elementsSelectable={!handMode}
       >
-        <Background variant={BackgroundVariant.Dots} gap={28} size={3} color="#c2c8d0" />
+        <Background variant={BackgroundVariant.Dots} gap={28} size={3} color="#c2c8d0" bgColor="#f3f1ea" />
         <MiniMap pannable zoomable maskColor="rgba(0,0,0,0.4)" />
         <CanvasToolbar
           mode={mode}

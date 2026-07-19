@@ -10,6 +10,8 @@ export type PanelNodeData = {
   width?: number;
   height?: number;
   transparent?: boolean;
+  /** Swiss/flat variant: square card, no drop shadow. */
+  flat?: boolean;
   onResize?: (size: WorkbenchCanvasSize) => void;
   onDelete: () => void;
 };
@@ -22,6 +24,7 @@ export type PanelNodeData = {
  */
 export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeData; selected?: boolean }) {
   const bare = !!data.transparent;
+  const flat = !!data.flat;
   const nodeWidth = data.width ?? 460;
   const nodeHeight = data.height;
   return (
@@ -78,10 +81,10 @@ export function PanelNode({ id, data, selected }: { id: string; data: PanelNodeD
       <div
         style={{
           height: nodeHeight ? "100%" : undefined,
-          borderRadius: 36,
+          borderRadius: flat ? 0 : 36,
           overflow: bare ? "visible" : "hidden",
           background: bare ? "transparent" : "#ffffff",
-          boxShadow: bare ? "none" : selected ? "0 18px 50px rgba(0,0,0,0.3)" : "0 18px 50px rgba(0,0,0,0.25)",
+          boxShadow: bare || flat ? "none" : selected ? "0 18px 50px rgba(0,0,0,0.3)" : "0 18px 50px rgba(0,0,0,0.25)",
           transition: "box-shadow 0.12s ease",
         }}
       >

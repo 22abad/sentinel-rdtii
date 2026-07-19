@@ -9,14 +9,14 @@ import { BrandSpecimen } from "@/components/BrandSpecimen/BrandSpecimen";
 export function LandingPage() {
   return (
     <main>
-        <div className="relative">
-            <Hero/>
-            <Label/>
-            <Description />
-            <Placeholder />
-            <BrandSpecimen />
-            <Footer/>
-        </div>
+      <div className="relative">
+        <Hero />
+        <Label />
+        <BrandSpecimen />
+        <Placeholder />
+        <Description />
+        <Footer />
+      </div>
     </main>
   );
 }
