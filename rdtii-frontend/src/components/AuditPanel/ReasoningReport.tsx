@@ -167,7 +167,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
 
       {mapping.quote_context &&
         mapping.quote_context.trim() !== mapping.verbatim_quote.trim() && (
-          <section className="rr-section">
+          <section className="rr-section rr-sec-provision">
             <h4>Provision</h4>
             <p className="rr-provision">
               {(() => {
@@ -188,7 +188,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
         )}
 
       {scoringEntries.length > 0 && (
-        <section className="rr-section">
+        <section className="rr-section rr-sec-scoring">
           <h4>Scoring inputs</h4>
           <div className="rr-feature-list">
             {scoringEntries.map(([k, v]) => (
@@ -202,7 +202,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {stats.length > 0 && (
-        <section className="rr-section">
+        <section className="rr-section rr-sec-quality">
           <h4>Document quality</h4>
           <div className="rr-stat-grid">
             {stats.map((s) => (
@@ -216,7 +216,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {provenance.length > 0 && (
-        <section className="rr-section rr-provenance">
+        <section className="rr-section rr-provenance rr-sec-provenance">
           <h4>Provenance</h4>
           {provenance.map((row) => (
             <div key={row.label} className="rr-provenance-line">
@@ -228,7 +228,7 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {releaseYear && releaseYear.year && (
-        <section className="rr-section rr-provenance">
+        <section className="rr-section rr-provenance rr-sec-release">
           <h4>Release year (4 signals · LLM-decided)</h4>
           <div className="rr-provenance-line">
             <span className="rr-provenance-label">{releaseYear.year}</span>
@@ -251,7 +251,9 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       )}
 
       {timestamp && (
-        <section className="rr-section rr-provenance">
+        <section
+          className={`rr-section rr-provenance ${timestamp.verified ? "rr-sec-timestamp-ok" : "rr-sec-timestamp-warn"}`}
+        >
           <h4>Timestamp verification (forensic)</h4>
           <div className="rr-provenance-line">
             <span className="rr-provenance-label">

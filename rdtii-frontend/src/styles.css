@@ -2380,7 +2380,8 @@ textarea {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 300; /* light, like the reference index titles */
+  letter-spacing: 0.01em;
 }
 .swiss-form .mapping-row-plus {
   flex-shrink: 0;
@@ -2492,6 +2493,124 @@ textarea {
 }
 .swiss-form .score-badge {
   border-radius: 0;
+}
+
+/* ── Reasoning report, Swiss-ified: flat blocks, semantic bg per schema ────
+   review flags = yellow · scoring = white · document quality = light blue ·
+   provenance = warm gray · release year = light green · timestamp = green
+   when corroborated / yellow when unconfirmed */
+.swiss-form .reasoning-report {
+  display: grid;
+  gap: 10px;
+}
+.swiss-form .reasoning-report .rr-section,
+.swiss-form .reasoning-report .rr-callout {
+  margin: 0;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  padding: 12px 14px;
+  background: #ffffff;
+  box-shadow: none;
+}
+.swiss-form .reasoning-report h4,
+.swiss-form .reasoning-report .rr-callout-title {
+  margin: 0 0 8px;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.swiss-form .reasoning-report .rr-callout {
+  background: #f7d445; /* requires human review = yellow */
+  color: #111827;
+}
+.swiss-form .reasoning-report .rr-callout ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.85rem;
+}
+.swiss-form .reasoning-report .rr-sec-provision {
+  background: #f3f1ea;
+}
+.swiss-form .reasoning-report .rr-sec-scoring {
+  background: #ffffff;
+}
+.swiss-form .reasoning-report .rr-sec-quality {
+  background: #d8e5f3;
+}
+.swiss-form .reasoning-report .rr-sec-provenance {
+  background: #e7e3da;
+}
+.swiss-form .reasoning-report .rr-sec-release {
+  background: #dcead8;
+}
+.swiss-form .reasoning-report .rr-sec-timestamp-ok {
+  background: #dcead8;
+}
+.swiss-form .reasoning-report .rr-sec-timestamp-warn {
+  background: #f7d445;
+}
+.swiss-form .reasoning-report .rr-feature-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.35);
+  font-size: 0.85rem;
+}
+.swiss-form .reasoning-report .rr-feature-line:last-child {
+  border-bottom: none;
+}
+.swiss-form .reasoning-report .rr-chip {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  padding: 1px 8px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #111827;
+  background: transparent;
+}
+.swiss-form .reasoning-report .rr-chip-yes {
+  background: #9fd8a4;
+}
+.swiss-form .reasoning-report .rr-chip-no {
+  background: #f2a69b;
+}
+.swiss-form .reasoning-report .rr-stat {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px;
+}
+.swiss-form .reasoning-report .rr-stat-value {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+  color: #111827;
+}
+.swiss-form .reasoning-report .rr-stat-label {
+  color: rgba(17, 24, 39, 0.65);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .reasoning-report .rr-provenance-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  color: #111827;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.25);
+  padding: 4px 0;
+}
+.swiss-form .reasoning-report .rr-provenance-line:last-child {
+  border-bottom: none;
 }
 .swiss-form .empty-state {
   padding: 18px;
