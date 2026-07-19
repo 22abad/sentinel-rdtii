@@ -221,12 +221,12 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
         <section className="rr-section rr-provenance rr-sec-provenance">
           <h4>Provenance</h4>
           {gradeConfidenceN !== null && (
-            <div className="rr-percent">
-              <span className="rr-percent-value">{gradeConfidenceN}%</span>
+            <div
+              className="rr-percent"
+              style={{ "--pct": `${gradeConfidenceN}%` } as React.CSSProperties}
+            >
               <span className="rr-percent-label">source-grade confidence</span>
-              <div className="rr-percent-bar" aria-hidden="true">
-                <span style={{ width: `${gradeConfidenceN}%` }} />
-              </div>
+              <span className="rr-percent-value">{gradeConfidenceN}%</span>
             </div>
           )}
           {provenance.map((row) => (

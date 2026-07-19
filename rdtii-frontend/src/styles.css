@@ -2607,41 +2607,37 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
-/* big percent display: oversized number as the highlight (reference: "96%"),
-   with a separate progress bar below — full fill = 100% */
+/* big percent display (reference: "Batteristatus. 30%"): the block's own
+   background is the progress bar — yellow fills from the left exactly up to
+   the value (whole block yellow = 100%); label on top, oversized number
+   below, both sitting inside the fill. No separate track. */
 .swiss-form .reasoning-report .rr-percent {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: 4px 12px;
-  margin: 8px 0 12px;
-}
-.swiss-form .reasoning-report .rr-percent-value {
-  font-size: clamp(4rem, 9vw, 6rem);
-  font-weight: 300;
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  color: #111827;
+  display: block;
+  margin: 10px -18px -14px; /* bleed to the band edges so fill = full width */
+  padding: 12px 18px 16px;
+  background: linear-gradient(
+    to right,
+    #f7d445 var(--pct, 0%),
+    transparent var(--pct, 0%)
+  );
 }
 .swiss-form .reasoning-report .rr-percent-label {
+  display: block;
+  margin-bottom: 8px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(17, 24, 39, 0.65);
-  text-align: right;
+  color: rgba(17, 24, 39, 0.75);
 }
-.swiss-form .reasoning-report .rr-percent-bar {
-  grid-column: 1 / -1;
-  height: 12px;
-  border: 1.5px solid #111827;
-  background: transparent;
-}
-.swiss-form .reasoning-report .rr-percent-bar > span {
+.swiss-form .reasoning-report .rr-percent-value {
   display: block;
-  height: 100%;
-  background: #f7d445;
+  font-size: clamp(4rem, 9vw, 6rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: #111827;
 }
 .swiss-form .reasoning-report .rr-provenance-line {
   display: flex;
