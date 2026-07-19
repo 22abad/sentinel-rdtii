@@ -677,23 +677,20 @@ async def test_generic_search_adapter_injected_backend_failure_falls_back_withou
     assert any("backend down" in warning for warning in rows[0].warnings)
 
 
-@pytest.mark.anyio
-async def test_generic_search_adapter_missing_serpapi_key_falls_back(monkeypatch):
+def test_stale_serpapi_setting_without_key_degrades_to_duckduckgo(monkeypatch):
+    """A stale explicit serpapi setting with no key must degrade to the free
+    DuckDuckGo backend (live search), NOT to fixture fallback — a leftover
+    .env line otherwise silently turned all site discovery offline (found via
+    the workbench Discovery panel showing only fixtures)."""
+    from discovery.adapters.search_engine import _configured_search_backend
+
     monkeypatch.setenv("DISCOVERY_SEARCH_BACKEND", "serpapi")
     monkeypatch.delenv("SERPAPI_API_KEY", raising=False)
-    monkeypatch.delenv("DISCOVERY_USE_FIXTURES", raising=False)
-    source = get_sources("SGP")[1]
-    rows = await SearchEngineAdapter().search(
-        country_code="SGP",
-        source=source,
-        queries=["site:pdpc.gov.sg data protection officer"],
-        limit=2,
-        browser_mode="auto",
-    )
+    assert _configured_search_backend() == "duckduckgo"
 
-    assert rows
-    assert rows[0].retrieval_mode == "fallback"
-    assert any("SERPAPI_API_KEY is not set" in warning for warning in rows[0].warnings)
+    # With a key present, the explicit serpapi setting is honoured.
+    monkeypatch.setenv("SERPAPI_API_KEY", "sk-test")
+    assert _configured_search_backend() == "serpapi"
 
 
 def test_strip_site_filter_handles_cjk_prefix_without_space():

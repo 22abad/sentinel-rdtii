@@ -57,6 +57,18 @@ AUS:
       priority: 90
       notes: Official privacy impact assessment rules and guidance.
 
+    - name: Department of Home Affairs (Cyber Security)
+      base_url: https://www.homeaffairs.gov.au
+      domains: [homeaffairs.gov.au, www.homeaffairs.gov.au]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [7]
+      indicators: ["7.2"]
+      priority: 60
+      notes: Official cyber security policy portal (2023-2030 Australian Cyber Security Strategy) — cited by the UN hackathon official Pillar 6/7 portal list.
+
 CHN:
   label: China
   languages: [zh, en]
@@ -142,6 +154,18 @@ SGP:
       languages: [en]
       pillars: [7]
       priority: 80
+
+    - name: Enterprise Singapore (Digital Economy Agreements)
+      base_url: https://www.enterprisesg.gov.sg
+      domains: [enterprisesg.gov.sg, www.enterprisesg.gov.sg]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [en]
+      pillars: [6]
+      indicators: ["6.5"]
+      priority: 50
+      notes: Official DEA portal (e.g. Korea-Singapore Digital Partnership Agreement) — cited by the UN hackathon official Pillar 6/7 portal list.
 
 THA:
   label: Thailand
@@ -272,6 +296,30 @@ MYS:
         '14\._Electronic_Commerce_\.pdf': Chapter 14 Electronic Commerce
       priority: 85
       notes: Official electronic commerce agreement text with an Article 14.11 cross-border transfer of information commitment.
+
+    - name: Inland Revenue Board of Malaysia (LHDN)
+      base_url: https://www.hasil.gov.my
+      domains: [hasil.gov.my, www.hasil.gov.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [en, ms]
+      pillars: [6, 7]
+      indicators: ["6.2", "7.3"]
+      priority: 60
+      notes: Official tax authority portal hosting the Income Tax Act 1967 (record-keeping/retention duties) — cited by the UN hackathon official Pillar 6/7 portal list.
+
+    - name: Royal Malaysia Police CCID
+      base_url: https://ccid.rmp.gov.my
+      domains: [ccid.rmp.gov.my]
+      adapter: search_engine
+      source_grade: primary
+      source_type: government_portal
+      languages: [en, ms]
+      pillars: [7]
+      indicators: ["7.2"]
+      priority: 50
+      notes: Official cybercrime enforcement portal (Computer Crimes Act 1997) — cited by the UN hackathon official Pillar 6/7 portal list.
 
 IND:
   label: India
