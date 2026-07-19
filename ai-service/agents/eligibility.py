@@ -61,7 +61,7 @@ _MINIMISATION = re.compile(
 )
 _DPO = re.compile(
     r"data protection officer|\bDPO\b|designat(?:e|es|ed|ing) one or more individuals|"
-    r"privacy officer|数据保护官",
+    r"privacy officer|数据保护官|pegawai perlindungan data",
     re.IGNORECASE,
 )
 _GOV_ACTOR = re.compile(
