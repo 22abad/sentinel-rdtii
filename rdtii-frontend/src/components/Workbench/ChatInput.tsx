@@ -192,7 +192,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
         variants={containerVariants}
         animate={isActive || inputValue ? "expanded" : "collapsed"}
         initial="collapsed"
-        style={{ overflow: "hidden", borderRadius: 32, background: "#fff", border: "1px solid #e4eaee" }}
+        style={{ overflow: "hidden", borderRadius: 0, background: "#f3f1ea", border: "1.5px solid #111827" }}
         onClick={handleActivate}
       >
         <div className="flex flex-col items-stretch w-full h-full">
@@ -211,7 +211,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
               }}
             />
             <button
-              className={`p-3 rounded-full transition ${uploadedFiles.length > 0 || isIngesting ? "bg-[#10B981]/10 text-[#10B981]" : "hover:bg-gray-100"}`}
+              className={`p-3 rounded-none transition ${uploadedFiles.length > 0 || isIngesting ? "bg-[#111827]/10 text-[#111827]" : "hover:bg-[#111827]/5"}`}
               title="Attach file"
               type="button"
               tabIndex={-1}
@@ -258,11 +258,11 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
               </div>
             </div>
 
-            <button className="p-3 rounded-full hover:bg-gray-100 transition" title="Voice input" type="button" tabIndex={-1}>
+            <button className="p-3 rounded-none hover:bg-[#111827]/5 transition" title="Voice input" type="button" tabIndex={-1}>
               <Mic size={20} />
             </button>
             <button
-              className="flex items-center gap-1 bg-[#10B981] hover:bg-[#059669] disabled:opacity-50 text-white p-3 rounded-full font-medium justify-center transition"
+              className="flex items-center gap-1 bg-[#111827] hover:bg-black disabled:opacity-50 text-[#f3f1ea] p-3 rounded-none font-medium justify-center transition"
               title="Send" type="button" tabIndex={-1}
               onClick={handleSend}
               disabled={isLoading || isIngesting || (uploadedFiles.length === 0 && !inputValue.trim())}
@@ -285,7 +285,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
             <div className="flex gap-3 items-center">
               {enableNewSession && (
               <button
-                className={`flex items-center gap-1 px-4 py-2 rounded-full transition-all font-medium group ${newSessionActive ? "bg-[#10B981]/10 outline outline-[#10B981]/60 text-[#065f46]" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                className={`flex items-center gap-1 px-4 py-2 rounded-none transition-all font-medium group ${newSessionActive ? "bg-[#111827] text-[#f3f1ea]" : "bg-[#111827]/5 text-[#111827] hover:bg-[#111827]/10"}`}
                 title="Start a new session thread with the next message" type="button"
                 onClick={(e) => { e.stopPropagation(); setNewSessionActive((a) => !a); }}
               >
@@ -295,7 +295,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
               )}
 
               <motion.button
-                className={`flex items-center px-4 gap-1 py-2 rounded-full transition font-medium whitespace-nowrap overflow-hidden justify-start ${deepSearchActive ? "bg-[#10B981]/10 outline outline-[#10B981]/60 text-[#065f46]" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                className={`flex items-center px-4 gap-1 py-2 rounded-none transition font-medium whitespace-nowrap overflow-hidden justify-start ${deepSearchActive ? "bg-[#111827] text-[#f3f1ea]" : "bg-[#111827]/5 text-[#111827] hover:bg-[#111827]/10"}`}
                 title="Deep Search" type="button"
                 onClick={(e) => { e.stopPropagation(); setDeepSearchActive((a) => !a); }}
                 initial={false}
