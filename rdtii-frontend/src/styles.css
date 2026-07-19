@@ -2352,13 +2352,12 @@ textarea {
   border-left: 2px solid #111827;
   padding: 24px 20px 96px;
 }
-/* The outer frame follows the content in BOTH directions (the component has
-   no max-height cap or inner scroll box anymore): it grows with expanded rows
-   and shrinks back on collapse. min-height is viewport-based (audit-side pads
-   24px top + 96px bottom) — NOT a percentage, which resolved circularly
-   against the column and left stale blank height after collapse. */
+/* The outer frame tracks its content's minimum height: no forced viewport
+   fill — the panel is exactly as tall as header + rows, growing on expand
+   and shrinking back on collapse. The center divide line still runs full
+   height (it sits on the column, not the panel). */
 .workbench-classic .workspace-audit-side .review-panel {
-  min-height: calc(100dvh - 120px);
+  min-height: 0;
   overflow: visible;
 }
 
