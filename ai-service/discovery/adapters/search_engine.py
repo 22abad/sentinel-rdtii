@@ -248,6 +248,15 @@ class DuckDuckGoSearchBackend:
             response.raise_for_status()
             body = response.text
 
+        # DDG serves its anti-bot challenge as HTTP 202 (a 2xx!) with zero
+        # results — surface that as what it is, not as "no results".
+        if response.status_code == 202 or "anomaly" in body[:20000]:
+            raise RuntimeError(
+                "DuckDuckGo is bot-challenging this IP (HTTP 202 anomaly page) — "
+                "usually temporary rate limiting after many searches; retry "
+                "later or set SERPAPI_API_KEY for the paid backend"
+            )
+
         hits: list[RawSearchHit] = []
         for idx, match in enumerate(
             re.finditer(r'<a[^>]*class="result__a"[^>]*href="([^"]+)"[^>]*>(.*?)</a>', body, re.S),

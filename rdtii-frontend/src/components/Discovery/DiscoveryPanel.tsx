@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CheckSquare,
   Download,
@@ -120,7 +120,34 @@ export function DiscoveryPanel({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sourceManagerOpen, setSourceManagerOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const { data, error, loading, search } = useDiscovery();
+  const { data, error, loading, search, reset } = useDiscovery();
+
+  // Country switch must not leave the previous economy's candidates on
+  // screen: clear stale results/selection, and if the panel was already
+  // showing results, re-run discovery for the new economy automatically so a
+  // demo flows without an extra click.
+  const hasResultsRef = useRef(false);
+  useEffect(() => {
+    hasResultsRef.current = Boolean(data);
+  }, [data]);
+  const isFirstCountryRender = useRef(true);
+  useEffect(() => {
+    if (isFirstCountryRender.current) {
+      isFirstCountryRender.current = false;
+      return;
+    }
+    setSelectedIds([]);
+    if (!hasResultsRef.current) return;
+    reset();
+    search({
+      countryCode,
+      pillars,
+      keywords,
+      sourceMode,
+      languages: requestLanguages(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryCode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -199,18 +226,25 @@ export function DiscoveryPanel({
       ).length;
     const fixtureFallback = fixture + fallback;
 
-    if (fixtureFallback > 0) {
+    // Live results win the badge: configured fallback seeds are ALWAYS
+    // present, so "any fallback → Offline Mode" mislabelled every session as
+    // offline even when live search succeeded. Only an all-fixture/fallback
+    // result set is genuinely offline.
+    if (live > 0) {
       return {
-        kind: "fallback",
-        label: "Offline Mode",
+        kind: "live",
+        label:
+          fixtureFallback > 0
+            ? `Live Search (${live} live · ${fixtureFallback} fallback)`
+            : "Live Search",
         live,
         fixtureFallback,
       } as const;
     }
-    if (live > 0) {
+    if (fixtureFallback > 0) {
       return {
-        kind: "live",
-        label: "Live Search",
+        kind: "fallback",
+        label: "Offline Mode",
         live,
         fixtureFallback,
       } as const;
@@ -571,7 +605,7 @@ export function DiscoveryPanel({
         closeLabel="Close source manager"
         className="source-manager-drawer"
       >
-        <DiscoverySourceManager />
+        <DiscoverySourceManager initialCountry={countryCode} />
       </RightDrawer>
     </section>
   );
