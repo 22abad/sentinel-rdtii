@@ -26,12 +26,11 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
         flexDirection: "column",
         width: nodeWidth,
         height: nodeHeight,
-        borderRadius: 14,
+        borderRadius: 0, // Swiss note: square, specimen yellow, black frame
         overflow: selected ? "visible" : "hidden",
-        background: "#fff7d6",
-        border: "1px solid #e6d98a",
-        boxShadow: selected ? "0 10px 30px rgba(0,0,0,0.22)" : "0 10px 30px rgba(0,0,0,0.18)",
-        transition: "box-shadow 0.12s ease",
+        background: "#f7d445",
+        border: "1.5px solid #111827",
+        boxShadow: "none",
       }}
     >
       <NodeResizer
@@ -39,13 +38,13 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
         isVisible={selected}
         minWidth={NOTE_MIN_SIZE.width}
         minHeight={NOTE_MIN_SIZE.height}
-        color="#10B981"
+        color="#111827"
         handleStyle={RESIZER_HANDLE_STYLE}
         lineStyle={RESIZER_LINE_STYLE}
         onResize={(_event, params) => data.onResize?.({ width: params.width, height: params.height })}
       />
 
-      <Handle type="target" position={Position.Top} style={{ background: "#d4b106" }} />
+      <Handle type="target" position={Position.Top} style={{ background: "#111827" }} />
 
       <div
         style={{
@@ -53,8 +52,8 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
           alignItems: "center",
           gap: 8,
           padding: "6px 8px 6px 12px",
-          background: "#f3e7a3",
-          borderBottom: "1px solid rgba(0,0,0,0.08)",
+          background: "transparent",
+          borderBottom: "1.5px solid #111827",
         }}
       >
         <input
@@ -68,9 +67,11 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
             border: "none",
             background: "transparent",
             outline: "none",
-            fontSize: "0.82rem",
-            fontWeight: 700,
-            color: "#3f3a1a",
+            fontSize: "0.8rem",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            color: "#111827",
           }}
         />
         {selected && (
@@ -89,9 +90,9 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
               height: 18,
               minHeight: 0, // global `button { min-height: 40px }` would inflate it
               padding: "0 8px",
-              borderRadius: 9999,
+              borderRadius: 0,
               border: "none",
-              background: "#b91c1c",
+              background: "#9f2d20",
               color: "white",
               fontSize: "0.66rem",
               fontWeight: 600,
@@ -119,12 +120,12 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
           outline: "none",
           padding: "10px 12px",
           fontSize: "0.85rem",
-          color: "#403a1a",
-          fontFamily: "inherit",
+          color: "#111827",
+          fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
         }}
       />
 
-      <Handle type="source" position={Position.Bottom} style={{ background: "#d4b106" }} />
+      <Handle type="source" position={Position.Bottom} style={{ background: "#111827" }} />
     </div>
   );
 }
