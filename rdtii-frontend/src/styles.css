@@ -2811,6 +2811,7 @@ textarea {
   border-bottom: 1.5px solid #9f2d20;
 }
 .swiss-form .rejected-row .mapping-row-code,
+.swiss-form .rejected-row .mapping-row-title,
 .swiss-form .rejected-row .mapping-row-plus {
   color: #9f2d20;
 }
