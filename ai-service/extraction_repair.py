@@ -26,24 +26,33 @@ _SECTION_REF_RE = re.compile(
     re.IGNORECASE,
 )
 
+# "Section 19(2) — Special restrictions on … (cross-border):" — a quote that
+# OPENS with a section citation followed by a dash/colon separator is a
+# constructed heading line, whatever follows it.
+_LEADING_SECTION_CITATION_RE = re.compile(
+    r"^(?:section|s\.|art(?:icle)?|reg(?:ulation)?|clause|para(?:graph)?)"
+    r"\s*\.?\s*[\w().]+\s*[—–:-]",
+    re.IGNORECASE,
+)
+
 
 def _is_citation_style_quote(quote: str) -> bool:
-    """A statute-name + section-reference quote with no operative language is a
-    citation/header line (e.g. a seed excerpt's descriptive first line:
-    "Cyber Security Act 2024 (No. 98, 2024): Section 3 Objects …"), not
-    provision text. Name-independent on purpose — the submission-layer check
-    compares against the authoritative law name, which the model's own
-    ``source_legislation`` (economy prefixes, citation suffixes) often fails
-    to match at prepare time."""
+    """A citation-shaped quote with no operative language is a heading line,
+    not provision text: either statute-name + section reference (a seed
+    excerpt's descriptive first line, "Cyber Security Act 2024 (No. 98, 2024):
+    Section 3 Objects …") or a leading section citation ("Section 19(2) —
+    Special restrictions …:"). Name-independent on purpose — the
+    submission-layer check compares against the authoritative law name, which
+    the model's own ``source_legislation`` (economy prefixes, citation
+    suffixes) often fails to match at prepare time."""
     from submission.schema import _OPERATIVE_LANGUAGE, _STATUTE_WORD
 
     q = (quote or "").strip()
-    return (
-        0 < len(q) <= 160
-        and bool(_STATUTE_WORD.search(q))
-        and bool(_SECTION_REF_RE.search(q))
-        and not _OPERATIVE_LANGUAGE.search(q)
-    )
+    if not 0 < len(q) <= 160 or _OPERATIVE_LANGUAGE.search(q):
+        return False
+    if _STATUTE_WORD.search(q) and _SECTION_REF_RE.search(q):
+        return True
+    return bool(_LEADING_SECTION_CITATION_RE.match(q))
 
 
 def repair_max_attempts_from_env() -> int:

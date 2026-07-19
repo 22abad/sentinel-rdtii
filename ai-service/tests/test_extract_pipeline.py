@@ -1018,3 +1018,20 @@ def test_runtime_repair_loop_replaces_citation_style_quote(monkeypatch):
     assert any("citation/title" in err for err in fake.repair_calls[0]["validation_errors"])
     assert len(data["mappings"]) == 1
     assert data["mappings"][0]["verbatim_quote"] == operative
+
+
+def test_leading_section_citation_quote_is_citation_style():
+    """'Section 19(2) — Special restrictions …:' — a quote opening with a
+    section citation + separator is a constructed heading, caught at prepare
+    time (found by the run6 independent verbatim audit; the NSW PPIP row)."""
+    from extraction_repair import _is_citation_style_quote
+
+    assert _is_citation_style_quote(
+        "Section 19(2) — Special restrictions on disclosure of "
+        "personal information (cross-border):"
+    )
+    # A real provision that merely cites a section mid-text is spared.
+    assert not _is_citation_style_quote(
+        "Section 19(2) provides that an agency must not disclose personal "
+        "information to any person or body outside New South Wales"
+    )
