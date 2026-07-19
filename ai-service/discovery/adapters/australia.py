@@ -78,22 +78,38 @@ class AustraliaLegislationAdapter(DiscoveryAdapter):
                 if not search_term:
                     continue
 
+                params = {
+                    "$select": "id,name,collection,isInForce",
+                    "$top": max(10, min(limit * 3, 50)),
+                    "$count": "true",
+                }
                 search_url = _search_url(search_term)
                 try:
-                    response = await client.get(
-                        search_url,
-                        params={
-                            "$select": "id,name,collection,isInForce",
-                            "$top": max(10, min(limit * 3, 50)),
-                            "$count": "true",
-                        },
-                    )
+                    response = await client.get(search_url, params=params)
                     response.raise_for_status()
                 except Exception:
                     search_rows: list[dict[str, Any]] = []
                 else:
                     search_url = str(response.url)
                     search_rows = _parse_legislation_api_results(response.json())
+
+                # The register API does whole-phrase `contains` matching over
+                # name+text — concept phrases ("cross-border data transfer
+                # ban") almost never appear verbatim in statute text, so a
+                # zero-hit phrase gets ONE bounded retry with its two-word
+                # core ("data transfer") before falling back.
+                if not search_rows:
+                    core_term = _core_search_term(search_term)
+                    if core_term and core_term != search_term:
+                        try:
+                            response = await client.get(_search_url(core_term), params=params)
+                            response.raise_for_status()
+                        except Exception:
+                            pass
+                        else:
+                            search_url = str(response.url)
+                            search_rows = _parse_legislation_api_results(response.json())
+                            search_term = core_term
                 for row in search_rows:
                     key = str(row.get("external_id") or _external_id_from_url(row["url"]))
                     if key in seen_keys:
@@ -240,6 +256,23 @@ def _known_instruments_for_query(query: str) -> list[dict[str, Any]]:
         for instrument in KNOWN_INSTRUMENTS
         if any(term in query_text for term in instrument["terms"])
     ]
+
+
+_GENERIC_QUERY_WORDS = {
+    "ban", "bans", "requirement", "requirements", "restriction", "restrictions",
+    "rule", "rules", "obligation", "obligations", "framework", "assessment",
+    "policy", "measure", "measures", "law", "laws", "the", "for", "and",
+}
+
+
+def _core_search_term(term: str) -> str:
+    """Two-word core of a concept phrase for the register's contains search:
+    'cross-border data transfer ban' → 'data transfer'."""
+    words = [
+        w for w in re.findall(r"[A-Za-z][A-Za-z-]+", term.lower())
+        if w not in _GENERIC_QUERY_WORDS
+    ]
+    return " ".join(words[-2:]) if len(words) >= 2 else ""
 
 
 def _search_url(query: str) -> str:
