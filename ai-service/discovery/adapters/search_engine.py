@@ -7,6 +7,7 @@ fixture hits so the Discovery API contract remains stable.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 from typing import Protocol
@@ -14,6 +15,8 @@ from typing import Protocol
 from discovery.schemas import LegalSourceConfig, RawSearchHit, RetrievalMode
 
 from .base import DiscoveryAdapter
+
+logger = logging.getLogger(__name__)
 
 
 class SearchBackendConfigError(RuntimeError):
@@ -272,6 +275,15 @@ def _configured_search_backend() -> str:
     value = os.getenv("DISCOVERY_SEARCH_BACKEND", "").strip().lower()
     if value in {"none", "off", "fixture"}:
         return ""
+    if value == "serpapi" and not os.getenv("SERPAPI_API_KEY", "").strip():
+        # A stale explicit serpapi setting with no key would force every site
+        # search into fixture fallback even though the free DuckDuckGo backend
+        # works with zero configuration — degrade to DDG loudly instead.
+        logger.warning(
+            "DISCOVERY_SEARCH_BACKEND=serpapi but SERPAPI_API_KEY is not set — "
+            "falling back to the free duckduckgo backend"
+        )
+        return "duckduckgo"
     if value:
         return value
     # Default when unset: SerpApi if a key is present (best quality), otherwise
