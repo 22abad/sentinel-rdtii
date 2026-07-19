@@ -104,7 +104,22 @@ _STATUTE_TITLE_RE = re.compile(
 )
 
 
-def is_section_header(quote: str) -> bool:
+def _continues_in_context(quote: str, context: str) -> bool:
+    """True when an occurrence of the quote runs on into more substantive text
+    on the same line — a mid-sentence fragment of a provision, not a heading
+    standing on its own line."""
+    start = 0
+    while (idx := context.find(quote, start)) >= 0:
+        end = idx + len(quote)
+        newline = context.find("\n", end)
+        tail = context[end:] if newline < 0 else context[end:newline]
+        if re.search(r"[A-Za-z0-9]", tail):
+            return True
+        start = idx + 1
+    return False
+
+
+def is_section_header(quote: str, context: str | None = None) -> bool:
     """Heuristic: a line that looks like a Part / Section heading only."""
     t = quote.strip()
     if len(t) > 120:
@@ -124,6 +139,13 @@ def is_section_header(quote: str) -> bool:
         and not _OPERATIVE_VERB_RE.search(t)
         and not _STATUTE_TITLE_RE.search(t)
     ):
+        # Context exemption for this weakest heuristic only: a verb-less span
+        # that continues into more provision text on the same source line is a
+        # list-limb fragment (e.g. "(c) kept in Malaysia, except as otherwise
+        # approved …"), not a marginal note. Hard patterns above still reject
+        # regardless of context.
+        if context and _continues_in_context(t, context):
+            return False
         body = _SECTION_MARKER_RE.sub("", t).strip()
         words = re.findall(r"\w+", body)
         if words and (len(words) <= 8 or bool(_NUMBERED_START_RE.match(t))):
@@ -418,7 +440,7 @@ def validate_mapping(
         return result
 
     # 1. Section header → reject (no substantive content)
-    if is_section_header(quote):
+    if is_section_header(quote, chunk_text):
         result.level = "reject"
         result.reasons.append("Quote is a section/part heading, not a substantive provision")
         return result
