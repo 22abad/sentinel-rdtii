@@ -1035,3 +1035,41 @@ def test_leading_section_citation_quote_is_citation_style():
         "Section 19(2) provides that an agency must not disclose personal "
         "information to any person or body outside New South Wales"
     )
+
+
+def test_caller_source_url_reaches_source_audit(monkeypatch):
+    """The LLM rarely echoes a source_url; the caller's fetched URL must reach
+    the source-grade audit (an official lom.agc.gov.my doc graded 40% instead
+    of 95% in the workbench because the audit ran URL-less)."""
+    import asyncio
+
+    from services.extraction import run_extraction
+
+    fake = FakeProvider({
+        "verbatim_quote": (
+            "A data user shall not transfer any personal data of a data subject "
+            "to a place outside Malaysia unless to such place as specified by the Minister"
+        ),
+        "personal_data": True,
+        "has_conditional_flow": True,
+        "scope": "horizontal",
+    })
+    _patch_fake_provider(monkeypatch, fake)
+    _patch_classifier_to(monkeypatch, ["6.4"])
+
+    text = (
+        "129. (1) A data user shall not transfer any personal data of a data "
+        "subject to a place outside Malaysia unless to such place as specified "
+        "by the Minister, upon the recommendation of the Commissioner, by "
+        "notification published in the Gazette."
+    )
+    result = asyncio.run(
+        run_extraction(
+            text,
+            fake,
+            pdf_metadata={"source_url": "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI"},
+        )
+    )
+    assert len(result.mappings) == 1
+    mapping = result.mappings[0]
+    assert mapping.source_url == "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI"
