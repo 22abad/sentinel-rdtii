@@ -2655,9 +2655,14 @@ textarea {
   color: #111827;
 }
 
-/* Score card (top of the report): fill spans the 0–1 range, tier-colored */
+/* Score card (top of the report): fill spans the 0–1 range, tier-colored.
+   No section title — the card itself is the section, full-bleed. */
 .swiss-form .reasoning-report .rr-sec-score {
   background: #ffffff;
+  padding: 0;
+}
+.swiss-form .reasoning-report .rr-sec-score .rr-batt {
+  margin: 0;
 }
 .swiss-form .reasoning-report .rr-score-fill-score-one {
   background: #f2a69b; /* 1 — fully restrictive: hard to do business, red */

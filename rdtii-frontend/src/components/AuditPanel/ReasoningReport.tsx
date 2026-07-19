@@ -159,7 +159,6 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       {/* Score card at the top: Batteristatus-style — the fill spans the
           0–1 range (score 1 = fully filled), colored by score tier. */}
       <section className="rr-section rr-sec-score">
-        <h4>Score</h4>
         <div className="rr-batt">
           <div
             className={`rr-batt-fill rr-score-fill-${scoreClass(mapping.score)}`}
