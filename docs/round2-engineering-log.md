@@ -7,7 +7,56 @@ link every claim to code._
 
 ---
 
-## 📌 CURRENT STATE SNAPSHOT (2026-07-18) — read this first after a long session
+## 📌 CURRENT STATE SNAPSHOT (2026-07-19) — read this first after a long session
+
+**MORNING UPDATE (2026-07-19): Dong decided — flag mode IS the default.** Executed:
+- **PR #300**: `RDTII_ELIGIBILITY_MODE` default `reject` → `flag` (reject is the
+  opt-in). Critical companion fix found by empirical test: the formal-output
+  filter (`filter_formal_submission_rows`) was silently undoing flag mode — a
+  bare judge run (`--offline`, no `--include-review`) produced **0 rows** because
+  every flagged row was excluded at the output boundary. In flag mode the filter
+  now keeps flagged rows, annotated in Notes for the official 20% human-validation
+  step. `--include-review` is only meaningful under `reject` now.
+- **PR #301**: the MYS 6.2 seed regression is DIAGNOSED and FIXED (it was not
+  "deep #293 classifier damage"; classifier is bypassed for hinted seeds). Two
+  stacked gates killed it: (1) `is_section_header` called the extractor's 3-word
+  verbatim "kept in Malaysia" a *heading* — now context-aware: a verb-less span
+  continuing into more provision text on the same line is a list-limb fragment,
+  not a marginal note (hard heading patterns unchanged); (2) after that, the row
+  died *silently* at submission validation as a <45-char weak-evidence fragment —
+  that predicate now also runs at prepare time so the repair loop asks the model
+  for the complete limb. Verified live: repair expands the quote to the full
+  s24(2)(c) limb and `--economy Malaysia --pillar 6 --offline` emits P6-I2 again,
+  score 0.5 (= official key). NOTE: the ITA s82 seed excerpt is retention-only
+  (no local-storage clause), so it honestly yields no 6.2 row — Service Tax
+  s24(2)(c) carries MYS 6.2 coverage.
+- **PR #302**: run5 (the first fresh finalization run) exposed the third
+  silent-drop class — the AUS Cyber Security Act 2024 seed's 7.2 verbatim was
+  the excerpt's descriptive header line, dropped by the #297 nonsubstantive
+  gate, leaving the official-nonzero AUS 7.2 cell uncovered. Same medicine as
+  #301: the nonsubstantive/citation-style predicates now run at prepare time so
+  the repair loop swaps in the operative clause (verified live: s3 Objects
+  text). P7-I1 keeps its bare-title exemption (golden set; the eval-runner test
+  caught the first over-broad version).
+- **FINALIZED (run6, 2026-07-19 ~07:50)**: fresh 3-economy live run with the
+  bare judge command (zero env vars / zero flags) → **64 rows, ALL 16 official
+  non-zero economy×indicator cells covered** (AUS 39 / MYS 14 / SGP 11; extras
+  on zero-score cells 7.1/7.2 are flagged evidence, judges decide). Submission
+  cleaning dropped **0 rows** (64→64) — the quality gates now run inside the
+  pipeline, so the tool's raw output is submission-clean. Rebuilt
+  `outputs/SUBMISSION_final/` + `outputs/SUBMISSION_Round1_SENTINEL.xlsx`
+  (3-sheet official template, 64 rows, no BOM, 0 empty rationale/URL). The
+  night's v3 artifact is preserved at `outputs/SUBMISSION_final_v3_backup/`.
+  Acceptance basis: official Round 1 Database answer key — non-zero cells are
+  SGP {6.2,6.4,7.3,7.4,7.5}, MYS {6.2,6.4,7.3,7.4,7.5},
+  AUS {6.1,6.2,6.4,7.2,7.3,7.5} (SGP 6.1/7.1 are officially 0, so run5/run6
+  "missing" them vs v3 was correct — v3's six FSMA 6.1 rows were the off-topic
+  kind the grader removes).
+  NOTE: the night's independent verbatim re-verification (re-fetch every
+  official source, #297 process) has NOT yet been repeated for run6's 64 rows —
+  in-pipeline verbatim gates all passed; the full independent audit is the one
+  remaining optional step.
+- 648 tests green, main at #302.
 
 **NIGHT UPDATE (for Dong, ~08:00):** PR #293 (`codex/mapping-precision-gate`)
 added a precision-first eligibility gate that hard-drops any mapping failing
