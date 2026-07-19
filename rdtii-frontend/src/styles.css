@@ -2353,9 +2353,14 @@ textarea {
 }
 .workbench-classic .workspace-audit-side .review-panel {
   align-self: stretch;
-  flex: 1;
+  /* grow from content (basis auto), never shrink: fills the half when short,
+     but expanding accordion rows always extends the panel height */
+  flex: 1 0 auto;
   max-height: none;
   overflow: visible;
+}
+.workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
+  min-height: auto; /* release the min-h-0 clamp so content sets the height */
 }
 /* streaming fix: flex-1 + min-h-0 + overflow-y-auto trapped new rows in an
    inner scroll area (content stopped driving the height). In classic view the
