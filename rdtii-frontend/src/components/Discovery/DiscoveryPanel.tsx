@@ -314,7 +314,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
+            <SelectContent className="swiss-dropdown">
               {countries.map((item) => (
                 <SelectItem key={item.country_code} value={item.country_code}>
                   {item.label}
@@ -335,7 +335,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
+            <SelectContent className="swiss-dropdown">
               {SOURCE_MODE_OPTIONS.map(({ value, label }) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -351,7 +351,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
+            <SelectContent className="swiss-dropdown">
               <SelectItem value="auto">Auto</SelectItem>
               <SelectItem value="en">English</SelectItem>
               {localLanguage !== "en" && (
@@ -379,7 +379,7 @@ export function DiscoveryPanel({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="rounded-none border-2 border-[#111827] shadow-none">
+            <SelectContent className="swiss-dropdown">
               <SelectItem value="6,7">P6 · P7</SelectItem>
               <SelectItem value="6">P6</SelectItem>
               <SelectItem value="7">P7</SelectItem>

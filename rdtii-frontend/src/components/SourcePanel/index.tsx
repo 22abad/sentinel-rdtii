@@ -22,8 +22,10 @@ const PROVIDER_LABELS: Record<string, string> = {
   "llama-3-local": "Llama 3 (Local)",
 };
 
-// Swiss/flat dropdown popup: square corners, hard black border, no shadow.
-const SQUARE_DROPDOWN = "rounded-none border-2 border-[#111827] shadow-none";
+// Swiss/flat dropdown popup: square cream sheet, black frame, mono items,
+// width pinned to the trigger (see .swiss-dropdown in styles.css — the popup
+// is portaled to <body>, so it can't inherit from .swiss-form).
+const SQUARE_DROPDOWN = "swiss-dropdown";
 
 type SourcePanelProps = {
   sourceRef: React.RefObject<HTMLDivElement>;
