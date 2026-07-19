@@ -2043,7 +2043,9 @@ textarea {
   pointer-events: none;
   transition: clip-path 0.4s ease;
 }
-.swiss-form .panel-progress h2 {
+/* higher specificity than `.swiss-form .panel-header h2` (which also matches
+   this h2 and would otherwise win on source order, painting black-on-black) */
+.swiss-form .panel-header .panel-progress h2 {
   color: #f3f1ea;
   font-weight: 800;
   text-transform: uppercase;
