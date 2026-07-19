@@ -138,6 +138,18 @@ export function SourcePanel({
     ? `${t("status.stop")} · ${extractionProgress.current}/${extractionProgress.total}`
     : t("status.stop");
 
+  // Title block doubles as a progress bar during extraction: yellow fills the
+  // header from the left up to current/total (full header = done).
+  const progressPct =
+    status === "loading"
+      ? extractionProgress?.total
+        ? Math.min(
+            100,
+            Math.round((extractionProgress.current / extractionProgress.total) * 100),
+          )
+        : 4 // stream started, total unknown yet — show a starting sliver
+      : null;
+
   return (
     <section className="input-panel swiss-form" aria-label={t("source.aria")}>
       <div className="panel-header">
@@ -153,6 +165,18 @@ export function SourcePanel({
         >
           {collapsed ? "▸" : "▾"}
         </button>
+        {/* Progress sweep: a black fill clipped to current/total; it carries an
+            inverted (cream) copy of the title, so letters flip color exactly
+            where the black covers them. */}
+        {progressPct !== null && (
+          <div
+            className="panel-progress"
+            aria-hidden="true"
+            style={{ clipPath: `inset(0 ${100 - progressPct}% 0 0)` }}
+          >
+            <h2>{t("source.title")}</h2>
+          </div>
+        )}
       </div>
       {!collapsed && (
         <>

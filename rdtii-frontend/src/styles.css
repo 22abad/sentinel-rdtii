@@ -2024,9 +2024,32 @@ textarea {
 /* header — black box tag (::before) on the left, big display title on the
    right; description hidden (Swiss minimal) */
 .swiss-form .panel-header {
+  position: relative;
   justify-content: flex-start;
   align-items: center;
   padding: 16px 18px;
+}
+
+/* extraction progress sweep over the title block: black fill = progression,
+   clipped to current/total; the inverted title inside flips to cream exactly
+   where the black covers it */
+.swiss-form .panel-progress {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  background: #111827;
+  pointer-events: none;
+  transition: clip-path 0.4s ease;
+}
+.swiss-form .panel-progress h2 {
+  color: #f3f1ea;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 2rem;
+  line-height: 1;
 }
 .swiss-form .panel-header h2 {
   color: #111827;
@@ -2326,6 +2349,14 @@ textarea {
   align-self: stretch;
   flex: 1;
   max-height: none;
+  overflow: visible;
+}
+/* streaming fix: flex-1 + min-h-0 + overflow-y-auto trapped new rows in an
+   inner scroll area (content stopped driving the height). In classic view the
+   body grows naturally, so streamed results extend the list down the page. */
+.workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
+  flex: none;
+  overflow-y: visible;
 }
 
 /* ── Audit: RAD-style accordion index ─────────────────────────────────────
