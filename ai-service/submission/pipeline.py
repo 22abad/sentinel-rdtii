@@ -233,6 +233,50 @@ def _name_tokens(name: str) -> set[str]:
     }
 
 
+# Official format requirement (ESCAP "Format requirements" deck, p.1): the
+# Act/practice name carries an ENGLISH TRANSLATION with the official-language
+# original optional alongside — the official database writes Chinese laws as
+# "English name 《原文》". Deterministic glossary for Malay instrument names
+# (never free-form LLM translation — unverifiable): phrase-level, and only
+# applied when nothing recognisably legal-Malay is left untranslated.
+_MALAY_NAME_PHRASES: list[tuple[str, str]] = [
+    (r"pekeliling\s+pesuruhjaya\s+perlindungan\s+data\s+peribadi",
+     "Circular of the Personal Data Protection Commissioner"),
+    (r"akta\s+perlindungan\s+data\s+peribadi", "Personal Data Protection Act"),
+    (r"peraturan-peraturan|peraturan", "Regulations"),
+    (r"pekeliling", "Circular"),
+    (r"perintah", "Order"),
+    (r"akta", "Act"),
+    (r"bilangan", "No."),
+    (r"tahun", "of"),
+]
+_MALAY_LEGAL_RESIDUE = re.compile(
+    r"pesuruhjaya|perlindungan|peribadi|bilangan|tahun|undang-undang|kanun",
+    re.IGNORECASE,
+)
+
+
+def bilingual_malay_name(law_name: str) -> str:
+    """'PEKELILING PESURUHJAYA … BILANGAN 1 TAHUN 2025' →
+    'Circular of the Personal Data Protection Commissioner No. 1 of 2025
+    (PEKELILING …)'. Returns the input unchanged when the glossary cannot
+    fully translate it (partial translations are worse than the original)."""
+    name = (law_name or "").strip()
+    if not name or "(" in name and name.rstrip().endswith(")"):
+        pass
+    gloss = name
+    fired = False
+    for pattern, english in _MALAY_NAME_PHRASES:
+        gloss, n = re.subn(pattern, english, gloss, flags=re.IGNORECASE)
+        fired = fired or bool(n)
+    if not fired or _MALAY_LEGAL_RESIDUE.search(gloss):
+        return name
+    gloss = " ".join(gloss.split())
+    if gloss.lower() == name.lower():
+        return name
+    return f"{gloss} ({name})"
+
+
 def _names_disagree(law_name: str, self_title: str) -> bool:
     """True when the row's law name and the document's own title are talking
     about different instruments: near-zero token overlap, or both carry years
@@ -279,6 +323,8 @@ def build_row(
         if _self_title and _names_disagree(law_name, _self_title):
             self_title_note = f"law name corrected to the document's own title (model said: {law_name[:60]})"
             law_name = _self_title
+    # Official format: English translation first, original in parentheses.
+    law_name = bilingual_malay_name(law_name)
     candidate_url = getattr(candidate, "url", "") if candidate is not None else ""
     candidate_last = getattr(candidate, "last_update", "") if candidate is not None else ""
     discovery_method = (
