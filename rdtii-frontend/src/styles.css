@@ -2766,6 +2766,69 @@ textarea {
   margin-left: auto;
 }
 
+/* ── Rejected quotes, Swiss-ified: red/white blocks ───────────────────────
+   Full-bleed banded section like the accordion; white blocks ruled in red
+   (the rejection color), mono red heads, quote previews on white. */
+.swiss-form .rejected-panel {
+  margin: 0;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #ffffff;
+  color: #111827;
+}
+.swiss-form .rejected-panel summary {
+  padding: 12px 18px;
+  color: #9f2d20;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.swiss-form .rejected-panel summary:hover {
+  background: rgba(159, 45, 32, 0.06);
+}
+.swiss-form .rejected-panel summary:focus-visible {
+  outline: 2px solid #9f2d20;
+  outline-offset: 0;
+}
+.swiss-form .rejected-panel > ul {
+  gap: 0;
+  padding: 0;
+}
+.swiss-form .rejected-item {
+  gap: 6px;
+  padding: 12px 18px 14px;
+  border: none;
+  border-top: 1.5px solid #9f2d20; /* red rules divide the white blocks */
+  border-radius: 0;
+  background: #ffffff;
+  color: #111827;
+}
+.swiss-form .rejected-reason {
+  color: #9f2d20;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.swiss-form .rejected-item ul {
+  margin: 0;
+  padding-left: 18px;
+  list-style: square;
+  color: #9f2d20;
+  font-size: 0.8rem;
+}
+.swiss-form .rejected-preview {
+  margin: 0;
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid #9f2d20;
+  border-radius: 0;
+  background: #ffffff;
+  color: #1f2933;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+
 /* swiss header action buttons (Audit: Load demo / Preview export) */
 .swiss-form .panel-header button.secondary {
   min-height: 32px;
