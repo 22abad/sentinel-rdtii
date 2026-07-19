@@ -34,7 +34,9 @@ export function DocumentsPanel() {
     // Re-fetch when the auth token changes (e.g. inline sign-in below).
   }, [refresh, token]);
 
-  const needsLogin = !user && /401|not authenticated|log in/i.test(error);
+  // Show the inline form when logged out OR when the API rejects the stored
+  // token (stale/expired JWT: the route guard passes but every call 401s).
+  const needsLogin = !user || /401|not authenticated/i.test(error);
 
   const handleInlineLogin = async (e: React.FormEvent) => {
     e.preventDefault();
