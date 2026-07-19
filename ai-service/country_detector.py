@@ -105,6 +105,14 @@ _LAW_KEYWORDS: list[tuple[str, str, float]] = [
     (r"พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล", "THA", 0.95),
     (r"พ\.?ร\.?บ\.?คุ้มครองข้อมูลส่วนบุคคล", "THA", 0.95),
     (r"สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล", "THA", 0.90),
+    # Malaysia — Malay-language instruments (the PDP Commissioner's circulars
+    # name "Malaysia" itself only in passing; the Malay legal vocabulary is
+    # the reliable signal: 'peribadi' spelling is Malay, Indonesian uses
+    # 'pribadi')
+    (r"Perlindungan Data Peribadi", "MYS", 0.92),
+    (r"Pesuruhjaya Perlindungan Data", "MYS", 0.9),
+    (r"Akta 709", "MYS", 0.9),
+    (r"Undang-Undang Malaysia", "MYS", 0.9),
     # Australia
     (r"Privacy Act 1988", "AUS", 0.95),
     (r"Australian Privacy Principles", "AUS", 0.90),
