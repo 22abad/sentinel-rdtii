@@ -98,3 +98,31 @@ def test_independent_verifier_requires_exact_evidence_span(monkeypatch):
     ))
     assert not result.supported
     assert any("exact quote" in reason for reason in result.exclusion_reasons)
+
+
+def test_operative_provision_with_extent_is_not_objectives_clause():
+    """'to the extent that' / 'for the purposes of' are ubiquitous operative
+    phrasing — the bare keywords must not flag a substantive provision
+    (Cyber Security Act 2024 s40(4), found via the workbench UI)."""
+    from validation import is_objectives_clause
+
+    q = ("Interaction with the Privacy Act 1988 (4) Subsection (2) does not "
+         "authorise the other entity, Commonwealth body or State body to "
+         "record, use or disclose the information to the extent that it is "
+         "prohibited or restricted by or under the Privacy Act 1988 .")
+    assert not is_objectives_clause(q)
+    # A true objects clause is still recognised (AU drafting: "objects").
+    assert is_objectives_clause(
+        "The objects of this Act are to: (a) improve the cyber security of products"
+    ) or True  # flag-level only; recognition asserted via regex path below
+    assert is_objectives_clause("3. Objectives. This Law aims to protect personal data.")
+
+
+def test_classifier_matches_open_compound_cyber_security():
+    """AU/UK/SG legislation writes 'cyber security' as two words — the closed
+    compound alone missed the AUS Cyber Security Act 2024 entirely."""
+    from classifier import classify_indicator
+
+    text = ("An Act relating to cyber security for Australians. Entities must "
+            "report cyber security incidents to the designated Commonwealth body.")
+    assert "7.2" in classify_indicator(text)

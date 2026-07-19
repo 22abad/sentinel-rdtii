@@ -87,6 +87,10 @@ class MASOrchestrator:
         from validation import reset_quote_registry
         reset_quote_registry()
 
+        from submission.pipeline import _document_self_title, _names_disagree
+
+        _doc_self_title = _document_self_title(text)
+
         t0 = time.time()
         from chunker import regex_legal_chunker
         chunks = regex_legal_chunker(text)
@@ -214,6 +218,19 @@ class MASOrchestrator:
                     source_url_val = data.get("source_url", "")
                     source_legislation_val = data.get("source_legislation") or ""
                     source_url_val = source_url_val or ""
+                    # The document's own opening title beats the model's guess —
+                    # the model names the act a provision talks ABOUT (a Cyber
+                    # Security Act cross-reference became "Privacy Act 1988").
+                    # Same rule build_row applies at the submission boundary;
+                    # applied here so the runtime/API and audit views agree.
+                    if _doc_self_title and _names_disagree(
+                        source_legislation_val, _doc_self_title
+                    ):
+                        pre_flag_reasons.append(
+                            "Law name corrected to the document's own title "
+                            f"(model said: {source_legislation_val[:60]})"
+                        )
+                        source_legislation_val = _doc_self_title
                     last_update_val = data.get("last_update") or ""
                     raw_scope = (data.get("scope") or "").strip().lower()
                     scope_value = raw_scope if raw_scope in {"horizontal", "sectoral"} else "unknown"
