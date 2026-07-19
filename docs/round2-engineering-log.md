@@ -9,6 +9,32 @@ link every claim to code._
 
 ## 📌 CURRENT STATE SNAPSHOT (2026-07-19) — read this first after a long session
 
+**EVENING UPDATE (2026-07-19, PR #343) — document dossier + canvas no-overlap.**
+- *Problem (Dong, from the live UI):* the same document showed a DIFFERENT
+  source grade / timeframe / release year / staleness on every mapping card —
+  "幻觉实锤或逻辑错误". Root cause was architectural, not hallucination: doc-level
+  attributes were rendered per mapping from per-chunk LLM fields, and
+  `ReasoningReport` fired per-card `verifyReleaseYear`/`verifyTimestamp` API
+  calls, so N cards = N independent (noisy) resolutions of one document.
+- *Fix:* `DocumentDossier` — document identity consolidated ONCE above the
+  triage chips: best-confidence source grade, modal timeframe, worst staleness
+  (union reasons), ONE release-year/timestamp probe per document; grouped only
+  by deterministic identity (URL/SHA — grouping by LLM `source_legislation`
+  would have re-split one doc into "several"). Live-updating while streaming.
+  Per-card report keeps only score/flags/provision/scoring-inputs (staleness
+  keys no longer leak into Scoring inputs).
+- *Row titles:* "P7.2 · <per-chunk law-name variant>" × N said nothing — now
+  `clause · "verbatim snippet"`. Shared components ⇒ classic/canvas in sync.
+- *Canvas:* hard no-overlap invariant (drag stop / drop / spawn / resize /
+  content growth all funnel into a push-apart resolver; changed node stays
+  put). **Trap worth remembering:** on controlled React Flow, `getNodes()`
+  items often lack `measured` — the resolver first separated against a 560px
+  fallback while the card was really 644px, leaving a real 42×52 overlap; DOM
+  `offsetWidth/Height` (layout units, zoom-independent) is the ground truth.
+  Plus an always-visible drag strip pinned above each panel's scroll container.
+- *Verified* via Playwright UI-driving: 0 overlaps across 4 scenarios; dossier
+  = 1 per document, 6 mappings consolidated; classic parity. 655 tests green.
+
 **MORNING UPDATE (2026-07-19): Dong decided — flag mode IS the default.** Executed:
 - **PR #300**: `RDTII_ELIGIBILITY_MODE` default `reject` → `flag` (reject is the
   opt-in). Critical companion fix found by empirical test: the formal-output
