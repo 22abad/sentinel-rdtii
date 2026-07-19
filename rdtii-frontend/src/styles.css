@@ -2348,26 +2348,22 @@ textarea {
   padding: 24px 20px 96px;
 }
 .workbench-classic .workspace-audit-side {
+  display: block; /* plain block flow — no flex sizing games */
   border-left: 2px solid #111827;
   padding: 24px 20px 96px;
 }
+/* The outer frame must follow the content: height is auto (grows with
+   expanded rows / rejected section), with min-height 100% so a short list
+   still fills the right half. No inner scroll, no basis-0 flex. */
 .workbench-classic .workspace-audit-side .review-panel {
-  align-self: stretch;
-  /* grow from content (basis auto), never shrink: fills the half when short,
-     but expanding accordion rows always extends the panel height */
-  flex: 1 0 auto;
+  min-height: 100%;
   max-height: none;
   overflow: visible;
 }
 .workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
-  min-height: auto; /* release the min-h-0 clamp so content sets the height */
-}
-/* streaming fix: flex-1 + min-h-0 + overflow-y-auto trapped new rows in an
-   inner scroll area (content stopped driving the height). In classic view the
-   body grows naturally, so streamed results extend the list down the page. */
-.workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
-  flex: none;
+  flex: 1 0 auto; /* fill leftover space, but NEVER shrink below content */
   overflow-y: visible;
+  min-height: auto;
 }
 
 /* ── Audit: RAD-style accordion index ─────────────────────────────────────
