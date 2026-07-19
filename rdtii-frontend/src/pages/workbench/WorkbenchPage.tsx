@@ -13,7 +13,7 @@ import { GooeyFilter } from "../../components/ui/gooey-filter";
 import { t } from "../../lib/i18n";
 import { WorkbenchCanvas, type CanvasPanel, type CanvasGraph, type LinkedFile, type WorkbenchCanvasApi } from "./WorkbenchCanvas";
 import { fetchSourceTextNode } from "../../services/workflowNodes";
-import { parseFile } from "../../services/canvasFiles";
+import { parseFile, uploadCanvasFile } from "../../services/canvasFiles";
 import { DocumentsPanel } from "../../components/Workbench/DocumentsPanel";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -74,9 +74,10 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
   }, [text, sourceUrl, linkedFiles, extract]);
 
   // One-click file pipeline: PREPARE, don't run — extraction bills, so it
-  // must never start silently. Parse the linked file(s) into the thread text;
-  // that triggers country auto-detection (auto-applied; the analyst can
-  // correct it and set the pillar filter, then press Run).
+  // must never start silently. EXTRACT = parse the file(s) into the thread
+  // text + detect the jurisdiction explicitly (auto-applied; correct it if
+  // wrong) + ingest into the knowledge base so Documents/RAG see the file.
+  // The analyst reviews country/filter, then presses Run.
   const consumedAutoRun = useRef(0);
   useEffect(() => {
     if (!autoRunToken || autoRunToken === consumedAutoRun.current) return;
@@ -84,19 +85,49 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
     consumedAutoRun.current = autoRunToken;
     void (async () => {
       try {
-        const parts = await Promise.all(
+        const fileObjs = await Promise.all(
           linkedFiles
             .filter((l) => l.previewUrl)
             .map(async (l) => {
               const blob = await fetch(l.previewUrl as string).then((r) => r.blob());
-              const file = new File([blob], l.fileName ?? "upload", { type: blob.type });
-              const { text: parsed } = await parseFile(file);
-              return linkedFiles.length > 1 ? `=== ${l.fileName ?? "file"} ===\n${parsed}` : parsed;
+              return new File([blob], l.fileName ?? "upload", { type: blob.type });
             }),
         );
+        const parts = await Promise.all(
+          fileObjs.map(async (file) => {
+            const { text: parsed } = await parseFile(file);
+            return fileObjs.length > 1 ? `=== ${file.name} ===\n${parsed}` : parsed;
+          }),
+        );
+        const combined = parts.join("\n\n");
         onTextChange({
-          target: { value: parts.join("\n\n") },
+          target: { value: combined },
         } as React.ChangeEvent<HTMLTextAreaElement>);
+
+        // Deterministic detection on the parsed text — no debounce races.
+        let detectedCode = "";
+        try {
+          const res = await fetch("/api/detect/country", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: combined.slice(0, 3000) }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.detected && data.code) {
+              detectedCode = data.code;
+              setCountry(data.code);
+            }
+          }
+        } catch { /* detection is best-effort */ }
+
+        // Best-effort knowledge-base ingest (Documents refreshes live via the
+        // documents-changed event; 401 just means not signed in — skip).
+        for (const file of fileObjs) {
+          uploadCanvasFile(file, detectedCode || undefined).catch((err) =>
+            console.warn("Knowledge-base ingest skipped:", err),
+          );
+        }
       } catch (err) {
         console.error("Linked-file prepare failed:", err);
       }

@@ -1324,8 +1324,11 @@ export function WorkbenchCanvas({
     markCanvasDirty();
     const live = (flowRef.current?.getNodes() ?? []).filter((n) => n.id);
     if (!live.length) return;
-    const widthOf = (n: Node) => n.measured?.width ?? n.width ?? 460;
-    const heightOf = (n: Node) => n.measured?.height ?? n.height ?? 420;
+    const FALLBACK_W: Record<string, number> = { discovery: 800, audit: 520, documents: 420, source: 460 };
+    const FALLBACK_H: Record<string, number> = { discovery: 680, audit: 560, documents: 420, source: 560 };
+    const baseKey = (id: string) => id.replace(/-copy-\d+$/, "");
+    const widthOf = (n: Node) => n.measured?.width ?? n.width ?? FALLBACK_W[baseKey(n.id)] ?? 460;
+    const heightOf = (n: Node) => n.measured?.height ?? n.height ?? FALLBACK_H[baseKey(n.id)] ?? 480;
     // Connected components over the visible edges.
     const adjacency: Record<string, string[]> = {};
     for (const e of edges) {
@@ -1352,13 +1355,20 @@ export function WorkbenchCanvas({
       }
       components.push(comp);
     }
-    // Big chains first; inside a chain, pipeline order.
-    components.sort((a, b) => b.length - a.length);
+    // Documents lives in its own fixed column on the far right; chains get
+    // one row each, big chains first, pipeline order within a row.
+    const isDocuments = (id: string) => baseKey(id) === "documents";
+    const docNodes = live.filter((n) => isDocuments(n.id));
+    const rowComponents = components
+      .map((comp) => comp.filter((id) => !isDocuments(id)))
+      .filter((comp) => comp.length);
+    rowComponents.sort((a, b) => b.length - a.length);
     const byId = new Map(live.map((n) => [n.id, n]));
     const GAP = 60;
     const next: Record<string, XYPosition> = {};
     let y = 40;
-    for (const comp of components) {
+    let maxRight = 40;
+    for (const comp of rowComponents) {
       comp.sort((a, b) => roleOf(a) - roleOf(b) || a.localeCompare(b));
       let x = 40;
       let rowHeight = 0;
@@ -1369,7 +1379,13 @@ export function WorkbenchCanvas({
         x += widthOf(node) + GAP;
         rowHeight = Math.max(rowHeight, heightOf(node));
       }
+      maxRight = Math.max(maxRight, x);
       y += rowHeight + GAP;
+    }
+    let docY = 40;
+    for (const node of docNodes) {
+      next[node.id] = { x: maxRight + GAP, y: docY };
+      docY += heightOf(node) + GAP;
     }
     setPositions((prev) => ({ ...prev, ...next }));
     requestAnimationFrame(() => {
