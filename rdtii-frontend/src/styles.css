@@ -2097,9 +2097,9 @@ textarea {
   padding-left: 16px;
 }
 
-/* full-width black SEND bar at the bottom */
+/* full-width black SEND bar at the bottom — flush, no gap above */
 .swiss-form .source-send {
-  margin-top: 14px;
+  margin-top: 0;
   border-radius: 0; /* override global button { border-radius: 999px } */
 }
 
@@ -2113,10 +2113,11 @@ textarea {
 }
 
 /* ── Discovery-panel specifics (shares the .swiss-form base) ──────────────── */
-/* bottom action bar (moved from the header, mirrors the Source SEND bar) */
+/* bottom action bar (moved from the header, mirrors the Source SEND bar) —
+   flush against the last row line, no gap */
 .swiss-form .discovery-actions-bar {
   display: flex;
-  margin-top: 14px;
+  margin-top: 0;
 }
 .swiss-form .discovery-actions-bar button {
   border-radius: 0;
