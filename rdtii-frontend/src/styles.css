@@ -2747,13 +2747,16 @@ textarea {
 .swiss-form .reasoning-report .rr-provenance-line:last-child {
   border-bottom: none;
 }
-/* empty/loading states as a simple block (white band, hairline rules) */
+/* empty/loading states as an index row — same anatomy as a mapping row:
+   one opening hairline, row height, no bottom border (no doubled lines) */
 .swiss-form .empty-state {
+  display: flex;
+  align-items: center;
   margin: 0;
-  padding: 16px 18px;
+  min-height: 62px;
+  padding: 0 18px;
   border-top: 1.5px solid #111827;
-  border-bottom: 1.5px solid #111827;
-  background: #ffffff;
+  background: transparent;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -2761,7 +2764,7 @@ textarea {
   color: #111827;
 }
 .swiss-form .empty-state.error-state {
-  border-color: #9f2d20;
+  border-top-color: #9f2d20;
   color: #9f2d20;
 }
 
