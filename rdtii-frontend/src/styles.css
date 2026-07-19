@@ -2754,14 +2754,16 @@ textarea {
   align-items: center;
   margin: 0;
   min-height: 62px;
-  padding: 0 18px;
+  padding: 12px 18px;
+  border: none; /* kill the base dashed rounded box — just a line */
   border-top: 1.5px solid #111827;
+  border-radius: 0;
   background: transparent;
+  text-align: left;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #111827;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #6b675c;
 }
 .swiss-form .empty-state.error-state {
   border-top-color: #9f2d20;
