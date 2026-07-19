@@ -2940,6 +2940,103 @@ textarea {
   margin-left: auto;
 }
 
+/* ── Export preview drawer, Swiss-ified ───────────────────────────────────
+   Square cream sheet + black frame (usage-drawer language); mono table with
+   black header row; hairlines only INSIDE the table — cell borders drop on
+   the last column/row so they never overlay the wrap's own frame. */
+.right-drawer.export-preview-dialog {
+  border: 2px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  box-shadow: none;
+}
+.export-preview-dialog .right-drawer-close {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  color: #111827;
+  box-shadow: none;
+}
+.export-preview-dialog .right-drawer-close:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.export-preview-dialog .export-preview-header {
+  border-bottom: 1.5px solid #111827;
+}
+.export-preview-dialog .export-preview-header h3 {
+  color: #111827;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 1.2rem;
+}
+.export-preview-dialog .export-preview-header p,
+.export-preview-dialog .export-preview-note {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+}
+.export-preview-dialog .export-preview-table-wrap {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #ffffff;
+}
+.export-preview-dialog .export-preview-table {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+}
+.export-preview-dialog .export-preview-table th,
+.export-preview-dialog .export-preview-table td {
+  border-bottom: 1px solid #111827;
+  border-right: 1px solid #111827;
+}
+/* hairline-overlay fix: no cell border where the wrap frame already is */
+.export-preview-dialog .export-preview-table th:last-child,
+.export-preview-dialog .export-preview-table td:last-child {
+  border-right: none;
+}
+.export-preview-dialog .export-preview-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.export-preview-dialog .export-preview-table th {
+  background: #111827;
+  color: #f3f1ea;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.66rem;
+}
+.export-preview-dialog .export-preview-table td {
+  color: #1f2933;
+}
+.export-preview-dialog .export-preview-actions {
+  border-top: 1.5px solid #111827;
+}
+.export-preview-dialog .export-preview-actions button {
+  border-radius: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.export-preview-dialog .export-preview-actions button.secondary {
+  border: 1.5px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+.export-preview-dialog .export-preview-actions button.secondary:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.export-preview-dialog .export-preview-actions button:not(.secondary) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.export-preview-dialog .export-preview-actions button:not(.secondary):hover:not(:disabled) {
+  background: #000000;
+}
+
 /* ── Rejected quotes, Swiss-ified: red/white ──────────────────────────────
    Red title block (white text), then rejections as accordion index rows
    reusing the mapping-row layout with red accents. */
