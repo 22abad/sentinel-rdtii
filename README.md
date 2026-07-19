@@ -203,6 +203,24 @@ want to watch live discovery find and report NEW laws.
 > honesty check that returns empty on a mismatched pillar) live in
 > [`data/demo_pdfs/`](data/demo_pdfs/).
 
+### Optional — Web workbench (the audit view), via Docker
+
+The CLI above is the judged path and needs no Docker. If you also want the
+**human-review workbench** — the audit view with per-document dossier,
+clean/needs-review triage, verbatim highlighting, and approve/reject that
+persists an audit trail — the full self-hosted stack is three commands
+(Docker Desktop or compatible required; the database schema initialises
+itself on first start):
+
+```bash
+cp .env.example .env        # same file as above; add a model key or use Ollama
+docker compose up -d --build
+# then open http://localhost:5173 and create an account on /login
+```
+
+`docker compose ps` shows the whole stack — frontend, AI service, Postgres
+(pgvector), Redis — running locally with no external services.
+
 ---
 
 ## Full Usage

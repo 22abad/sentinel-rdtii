@@ -125,18 +125,29 @@ function DossierEntry({
       .filter(Boolean) as string[],
   );
 
-  // Staleness: worst severity, union of reasons.
+  // Staleness: worst severity, but reasons ONLY from the rows at that
+  // severity, with a rows-affected count. A union across all rows once put
+  // "repealed" and "draft" on the same in-force Act — one noisy chunk must
+  // read as an attributed minority signal, not the document's verdict.
   let severity = "none";
-  const reasons = new Set<string>();
   let sawStaleness = false;
+  const perRow: { sv: string; reasons: string[] }[] = [];
   for (const m of mappings) {
     const s = feat(m, "_staleness_severity");
     if (s !== undefined) sawStaleness = true;
     const sv = String(s ?? "none");
     if (SEVERITY_ORDER.indexOf(sv) > SEVERITY_ORDER.indexOf(severity)) severity = sv;
-    const r = String(feat(m, "_staleness_reasons") ?? "");
-    r.split(";").map((x) => x.trim()).filter(Boolean).forEach((x) => reasons.add(x));
+    perRow.push({
+      sv,
+      reasons: String(feat(m, "_staleness_reasons") ?? "")
+        .split(";")
+        .map((x) => x.trim())
+        .filter(Boolean),
+    });
   }
+  const worstRows = perRow.filter((r) => r.sv === severity);
+  const reasons = new Set<string>(worstRows.flatMap((r) => r.reasons));
+  const worstCount = worstRows.length;
 
   // Document/OCR quality: file-level metadata, identical on every row —
   // take it from the anchor.
@@ -158,7 +169,9 @@ function DossierEntry({
       value:
         severity === "none"
           ? "none — healthy"
-          : `${severity}${reasons.size ? ` · ${[...reasons].join("; ")}` : ""}`,
+          : `${severity} (${worstCount}/${mappings.length} rows)${
+              reasons.size ? ` · ${[...reasons].join("; ")}` : ""
+            }`,
     });
   }
   if (releaseYear?.year) {
