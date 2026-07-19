@@ -2607,6 +2607,36 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+/* big percent display: the number fills the section; a second color fills
+   the band from the left up to the value, acting as a progress bar */
+.swiss-form .reasoning-report .rr-percent {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px -18px 10px; /* bleed the fill to the band edges */
+  padding: 6px 18px 8px;
+  background: linear-gradient(
+    to right,
+    #f7d445 var(--pct, 0%),
+    transparent var(--pct, 0%)
+  );
+}
+.swiss-form .reasoning-report .rr-percent-value {
+  font-size: 3.2rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #111827;
+}
+.swiss-form .reasoning-report .rr-percent-label {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(17, 24, 39, 0.65);
+}
 .swiss-form .reasoning-report .rr-provenance-line {
   display: flex;
   justify-content: space-between;

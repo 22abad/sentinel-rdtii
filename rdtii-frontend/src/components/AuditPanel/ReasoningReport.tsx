@@ -124,17 +124,19 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
 
   // ── Provenance footer rows ──
   const grade = firstValue(features, "_source_grade");
-  const gradeConfidence = asPercent(firstValue(features, "_source_grade_confidence"));
+  // Numeric grade confidence (0-100) for the big percent display + color fill.
+  const gradeConfidenceN = (() => {
+    const raw = firstValue(features, "_source_grade_confidence");
+    const n = typeof raw === "number" ? raw : Number(raw);
+    return Number.isFinite(n) ? Math.round(n * 100) : null;
+  })();
   const timeframeStatus = firstValue(features, "_timeframe_status");
   const timeframeColumn = firstValue(features, "_timeframe_column");
   const sha = firstValue(features, "source_file_sha256");
   const pdfPath = firstValue(features, "source_pdf_path");
   const provenance: { label: string; value: React.ReactNode }[] = [];
   if (grade !== undefined) {
-    provenance.push({
-      label: "Source grade",
-      value: gradeConfidence ? `${grade} · ${gradeConfidence} confidence` : String(grade),
-    });
+    provenance.push({ label: "Source grade", value: String(grade) });
   }
   if (timeframeStatus !== undefined || timeframeColumn !== undefined) {
     provenance.push({
@@ -218,6 +220,15 @@ export function ReasoningReport({ mapping }: { mapping: IndicatorMapping }) {
       {provenance.length > 0 && (
         <section className="rr-section rr-provenance rr-sec-provenance">
           <h4>Provenance</h4>
+          {gradeConfidenceN !== null && (
+            <div
+              className="rr-percent"
+              style={{ "--pct": `${gradeConfidenceN}%` } as React.CSSProperties}
+            >
+              <span className="rr-percent-value">{gradeConfidenceN}%</span>
+              <span className="rr-percent-label">source-grade confidence</span>
+            </div>
+          )}
           {provenance.map((row) => (
             <div key={row.label} className="rr-provenance-line">
               <span className="rr-provenance-label">{row.label}</span>
