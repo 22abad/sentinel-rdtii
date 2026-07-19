@@ -203,6 +203,12 @@ class SearchEngineAdapter(DiscoveryAdapter):
         ]
 
 
+# Auth/quota failures are terminal for the whole process — every further call
+# would fail identically, and dozens of them (sources × queries × retries)
+# stack real latency onto a discovery run. Trip once, fail instantly after.
+_SERPAPI_DISABLED_REASON: str | None = None
+
+
 class SerpApiSearchBackend:
     endpoint = "https://serpapi.com/search"
 
@@ -214,6 +220,10 @@ class SerpApiSearchBackend:
     async def search(self, query: str, limit: int) -> list[RawSearchHit]:
         import httpx
 
+        global _SERPAPI_DISABLED_REASON
+        if _SERPAPI_DISABLED_REASON:
+            raise RuntimeError(_SERPAPI_DISABLED_REASON)
+
         params = {
             "engine": "google",
             "q": query,
@@ -223,11 +233,30 @@ class SerpApiSearchBackend:
         timeout = httpx.Timeout(12.0, connect=4.0)
         async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.get(self.endpoint, params=params)
+            if response.status_code in (401, 403):
+                _SERPAPI_DISABLED_REASON = (
+                    "SerpApi rejected the API key (HTTP "
+                    f"{response.status_code} — check SERPAPI_API_KEY for typos/"
+                    "whitespace); disabled for this process"
+                )
+                raise RuntimeError(_SERPAPI_DISABLED_REASON)
+            if response.status_code == 429:
+                _SERPAPI_DISABLED_REASON = (
+                    "SerpApi quota exhausted (HTTP 429); disabled for this process"
+                )
+                raise RuntimeError(_SERPAPI_DISABLED_REASON)
             response.raise_for_status()
             payload = response.json()
 
         if payload.get("error"):
-            raise RuntimeError(str(payload["error"]))
+            msg = str(payload["error"])
+            if "Invalid API key" in msg:
+                _SERPAPI_DISABLED_REASON = (
+                    "SerpApi says the API key is invalid — check SERPAPI_API_KEY "
+                    "for typos/whitespace; disabled for this process"
+                )
+                raise RuntimeError(_SERPAPI_DISABLED_REASON)
+            raise RuntimeError(msg)
 
         hits: list[RawSearchHit] = []
         for idx, item in enumerate(payload.get("organic_results") or [], start=1):

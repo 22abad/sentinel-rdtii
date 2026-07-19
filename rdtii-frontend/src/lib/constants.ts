@@ -30,7 +30,10 @@ export const TIMESTAMP_API_URL =
 
 export const DISCOVERY_SEARCH_TIMEOUT_MS = envNumber(
   import.meta.env.VITE_DISCOVERY_SEARCH_TIMEOUT_MS,
-  60_000,
+  // SGP's SSO sits behind an AWS WAF whose browser-cascade fallback alone can
+  // eat 60s — the old default aborted the fetch while the backend was still
+  // legitimately working.
+  150_000,
 );
 
 export const WORKBENCH_CANVAS_API_URL =
