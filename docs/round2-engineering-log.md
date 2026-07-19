@@ -97,6 +97,16 @@ link every claim to code._
   items: local machine only had qwen2.5:32b (pulling 14b + running
   `tools/check_reproducibility.sh` = the true judge path); one empty-rationale
   row appeared in Dong's live run (P7-I1 My Health Records — one-off, gate TBD).
+- **Dong's independent re-run (dong_run2, ~11:16) passed all four checks**:
+  62 rows (AUS 37 / MYS 14 / SGP 11), 16/16 cells, 0 empty fields, **0
+  name-vs-URL mislabels (5 rows carry "law name corrected" notes — #309
+  correcting live), 62/62 independent verbatim audit, 0 unfetchable**. The
+  Pasture Seeds Levy Agreements now surface under their true names and die at
+  the no-statute-word gate, visible in the run log itself. Row-count stability
+  across four fresh runs: 64 / 69 / 65 / 62 (±10% live-discovery variance by
+  design; seed backbone and cell coverage constant). Judge-path
+  reproducibility gate also green (fresh venv + pip install + key-free Ollama
+  qwen2.5:14b → REPRODUCIBLE).
 
 **NIGHT UPDATE (for Dong, ~08:00):** PR #293 (`codex/mapping-precision-gate`)
 added a precision-first eligibility gate that hard-drops any mapping failing
