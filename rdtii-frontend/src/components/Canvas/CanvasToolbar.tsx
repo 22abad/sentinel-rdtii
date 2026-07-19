@@ -1,6 +1,6 @@
 import React from "react";
 import { Panel, useReactFlow, type XYPosition } from "@xyflow/react";
-import { X, StickyNote, Plus, MousePointer2, Lock, RotateCcw, MessageSquare, LayoutList } from "lucide-react";
+import { X, StickyNote, Plus, MousePointer2, Lock, RotateCcw, MessageSquare, LayoutList, LayoutGrid } from "lucide-react";
 import type { CanvasMode, SpawnType } from "./types";
 
 /**
@@ -23,6 +23,7 @@ export function CanvasToolbar({
   onAddPanel,
   onAddChat,
   onReset,
+  onTidy,
   onSwitchView,
   onExit,
 }: {
@@ -33,6 +34,7 @@ export function CanvasToolbar({
   onAddPanel?: (position: XYPosition) => void;
   onAddChat?: (position: XYPosition) => void;
   onReset?: () => void;
+  onTidy?: () => void;
   /** Switch to the traditional (stacked) workbench layout. */
   onSwitchView?: () => void;
   onExit: () => void;
@@ -147,6 +149,13 @@ export function CanvasToolbar({
           </>
         )}
 
+        {onTidy && (
+          <>
+            <button style={textBtn("#111827")} title="Tidy: auto-arrange all cards on a clean grid" onClick={onTidy}>
+              <LayoutGrid size={15} /> Tidy
+            </button>
+          </>
+        )}
         {onReset && (
           <>
             <button style={textBtn("#111827")} title="Reset layout" onClick={onReset}>

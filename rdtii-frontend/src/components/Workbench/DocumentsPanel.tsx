@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { RefreshCw, Trash2, FileText, LogIn } from "lucide-react";
-import { listCanvasFiles, deleteCanvasFile, type CanvasFileInfo } from "../../services/canvasFiles";
+import { listCanvasFiles, deleteCanvasFile, DOCUMENTS_CHANGED_EVENT, type CanvasFileInfo } from "../../services/canvasFiles";
 import { useAuth } from "../../hooks/useAuth";
 
 /**
@@ -42,6 +42,23 @@ export function DocumentsPanel() {
     void refresh();
     // Re-fetch when the auth token changes (e.g. inline sign-in below).
   }, [refresh, token]);
+
+  // Live updates: any knowledge-base mutation (wire-to-chat ingest, paperclip
+  // upload, delete) broadcasts — no manual Refresh needed. Ingest is async on
+  // the backend, so follow up once for the processing→processed flip.
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const onChanged = () => {
+      void refresh();
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => void refresh(), 6000);
+    };
+    window.addEventListener(DOCUMENTS_CHANGED_EVENT, onChanged);
+    return () => {
+      window.removeEventListener(DOCUMENTS_CHANGED_EVENT, onChanged);
+      if (timer) clearTimeout(timer);
+    };
+  }, [refresh]);
 
   // Show the inline form when logged out OR when the API rejects the stored
   // token (stale/expired JWT: the route guard passes but every call 401s).
