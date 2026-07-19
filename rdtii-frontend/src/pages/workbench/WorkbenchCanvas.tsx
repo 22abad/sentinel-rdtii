@@ -1010,6 +1010,30 @@ export function WorkbenchCanvas({
     setPositions((p) => ({ ...p, [id]: position }));
   }, [markCanvasDirty]);
 
+  // Click any node in a pipeline → raise its whole connected chain to the
+  // front (and thicken its wires) so the analyst never hunts for the linked
+  // Discovery/Extract/Audit members among overlapping cards.
+  const [raisedChain, setRaisedChain] = useState<Set<string>>(new Set());
+  const raiseChainFrom = useCallback((nodeId: string) => {
+    const adjacency: Record<string, string[]> = {};
+    for (const e of edges) {
+      (adjacency[e.source] ??= []).push(e.target);
+      (adjacency[e.target] ??= []).push(e.source);
+    }
+    const seen = new Set<string>([nodeId]);
+    const queue = [nodeId];
+    while (queue.length) {
+      const current = queue.pop() as string;
+      for (const nb of adjacency[current] ?? []) {
+        if (!seen.has(nb)) {
+          seen.add(nb);
+          queue.push(nb);
+        }
+      }
+    }
+    setRaisedChain(seen);
+  }, [edges]);
+
   const removeNode = useCallback((id: string) => {
     markCanvasDirty();
     const persistentPanel = !!(PANEL_FALLBACKS[id] || panelMetaRef.current[id]);
@@ -1198,8 +1222,12 @@ export function WorkbenchCanvas({
               onExtract: () => extractFileNode(f.id),
             } satisfies FileNodeData,
           })),
-      ].map((n) => ({ ...n, selected: !!selectedIds[n.id] })),
-    [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, extractFileNode, selectedIds, handleChatSend, handleChatResponse, handleChatError, sendToSession, handleChatFileUpload, chatIngesting, removeFileFromSession, deleteIngestedFile],
+      ].map((n) => ({
+        ...n,
+        selected: !!selectedIds[n.id],
+        zIndex: raisedChain.has(n.id) ? 1000 : undefined,
+      })),
+    [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, extractFileNode, selectedIds, raisedChain, handleChatSend, handleChatResponse, handleChatError, sendToSession, handleChatFileUpload, chatIngesting, removeFileFromSession, deleteIngestedFile],
   );
 
   const renderedEdges = useMemo<Edge[]>(() => {
@@ -1213,10 +1241,13 @@ export function WorkbenchCanvas({
           ...edge,
           type: "step",
           animated: true,
+          ...(raisedChain.has(edge.source) && raisedChain.has(edge.target)
+            ? { style: { stroke: "#111827", strokeWidth: 2.5 }, zIndex: 999 }
+            : {}),
           style: { stroke: "#111827", strokeWidth: 1.5, ...edge.style },
         }),
       );
-  }, [edges, nodes]);
+  }, [edges, nodes, raisedChain]);
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     if (changes.some((c) => c.type === "position" || c.type === "remove")) {
@@ -1333,6 +1364,8 @@ export function WorkbenchCanvas({
           }
         }}
         onMoveEnd={(_event: MouseEvent | TouchEvent | null, nextViewport: Viewport) => setViewport(nextViewport)}
+        onNodeClick={(_event, node) => raiseChainFrom(node.id)}
+        onPaneClick={() => setRaisedChain(new Set())}
         deleteKeyCode={["Delete", "Backspace"]}
         minZoom={0.8}
         fitView={!restoredState.viewport}
