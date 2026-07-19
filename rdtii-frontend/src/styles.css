@@ -2352,16 +2352,18 @@ textarea {
   border-left: 2px solid #111827;
   padding: 24px 20px 96px;
 }
-/* The outer frame must follow the content: height is auto (grows with
-   expanded rows / rejected section), with min-height 100% so a short list
-   still fills the right half. No inner scroll, no basis-0 flex. */
+/* The outer frame follows the content in BOTH directions: height auto grows
+   with expanded rows and shrinks back on collapse. min-height is viewport-
+   based (audit-side pads 24px top + 96px bottom) — NOT a percentage, which
+   resolved circularly against the column and left stale blank height after
+   collapsing a row. */
 .workbench-classic .workspace-audit-side .review-panel {
-  min-height: 100%;
+  min-height: calc(100dvh - 120px);
   max-height: none;
   overflow: visible;
 }
 .workbench-classic .workspace-audit-side .review-panel .overflow-y-auto {
-  flex: 1 0 auto; /* fill leftover space, but NEVER shrink below content */
+  flex: none; /* pure content height — grows and shrinks with the rows */
   overflow-y: visible;
   min-height: auto;
 }
