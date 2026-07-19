@@ -1100,7 +1100,14 @@ export function WorkbenchCanvas({
 
   const renderedEdges = useMemo(() => {
     const visibleNodeIds = new Set(nodes.map((node) => node.id));
-    return edges.filter((edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target));
+    return edges
+      .filter((edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target))
+      // Swiss wiring: sharp right-angle edges (no bezier curves), black ink.
+      .map((edge) => ({
+        ...edge,
+        type: "step" as const,
+        style: { stroke: "#111827", strokeWidth: 1.5, ...edge.style },
+      }));
   }, [edges, nodes]);
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {

@@ -46,63 +46,40 @@ export function NoteNode({ id, data, selected }: { id: string; data: NoteNodeDat
 
       <Handle type="target" position={Position.Top} style={{ background: "#111827" }} />
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          padding: "6px 8px 6px 12px",
-          background: "transparent",
-          borderBottom: "1.5px solid #111827",
-        }}
-      >
-        <input
+      {/* No title — the note is just a writing surface. Delete floats in the
+          corner while the note is selected. */}
+      {selected && (
+        <button
           className="nodrag"
-          value={data.title}
-          placeholder="Title"
-          onChange={(e) => data.onChange({ title: e.target.value })}
-          style={{
-            flex: 1,
-            minWidth: 0,
-            border: "none",
-            background: "transparent",
-            outline: "none",
-            fontSize: "0.8rem",
-            fontWeight: 800,
-            textTransform: "uppercase",
-            letterSpacing: "0.04em",
-            color: "#111827",
+          title="Delete note"
+          onClick={(e) => {
+            e.stopPropagation();
+            data.onDelete();
           }}
-        />
-        {selected && (
-          <button
-            className="nodrag"
-            title="Delete panel"
-            onClick={(e) => {
-              e.stopPropagation();
-              data.onDelete();
-            }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 4,
-              height: 18,
-              minHeight: 0, // global `button { min-height: 40px }` would inflate it
-              padding: "0 8px",
-              borderRadius: 0,
-              border: "none",
-              background: "#9f2d20",
-              color: "white",
-              fontSize: "0.66rem",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            <Trash2 size={11} /> Delete
-          </button>
-        )}
-      </div>
+          style={{
+            position: "absolute",
+            top: 6,
+            right: 6,
+            zIndex: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            height: 18,
+            minHeight: 0, // global `button { min-height: 40px }` would inflate it
+            padding: "0 8px",
+            borderRadius: 0,
+            border: "none",
+            background: "#9f2d20",
+            color: "white",
+            fontSize: "0.66rem",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          <Trash2 size={11} /> Delete
+        </button>
+      )}
 
       <textarea
         className="nodrag nowheel"
