@@ -2766,20 +2766,20 @@ textarea {
   margin-left: auto;
 }
 
-/* ── Rejected quotes, Swiss-ified: red/white blocks ───────────────────────
-   Full-bleed banded section like the accordion; white blocks ruled in red
-   (the rejection color), mono red heads, quote previews on white. */
+/* ── Rejected quotes, Swiss-ified: red/white ──────────────────────────────
+   Red title block (white text), then rejections as accordion index rows
+   reusing the mapping-row layout with red accents. */
 .swiss-form .rejected-panel {
   margin: 0;
   border: none;
-  border-top: 1.5px solid #111827;
   border-radius: 0;
   background: #ffffff;
   color: #111827;
 }
 .swiss-form .rejected-panel summary {
   padding: 12px 18px;
-  color: #9f2d20;
+  background: #9f2d20; /* red title block */
+  color: #ffffff;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.74rem;
   font-weight: 700;
@@ -2787,36 +2787,50 @@ textarea {
   letter-spacing: 0.1em;
 }
 .swiss-form .rejected-panel summary:hover {
-  background: rgba(159, 45, 32, 0.06);
+  background: #7f241a;
 }
 .swiss-form .rejected-panel summary:focus-visible {
   outline: 2px solid #9f2d20;
   outline-offset: 0;
 }
 .swiss-form .rejected-panel > ul {
+  display: block;
   gap: 0;
+  margin: 0;
   padding: 0;
+  list-style: none;
 }
-.swiss-form .rejected-item {
-  gap: 6px;
-  padding: 12px 18px 14px;
-  border: none;
-  border-top: 1.5px solid #9f2d20; /* red rules divide the white blocks */
-  border-radius: 0;
-  background: #ffffff;
-  color: #111827;
+/* red-accented variant of the mapping index rows */
+.swiss-form .mapping-row.rejected-row {
+  border-top: none; /* the red summary block above opens the section */
 }
-.swiss-form .rejected-reason {
+.swiss-form .mapping-row.rejected-row + .mapping-row.rejected-row {
+  border-top: 1.5px solid #9f2d20;
+}
+.swiss-form .mapping-row.rejected-row:last-child {
+  border-bottom: 1.5px solid #9f2d20;
+}
+.swiss-form .rejected-row .mapping-row-code,
+.swiss-form .rejected-row .mapping-row-plus {
   color: #9f2d20;
-  font-size: 0.85rem;
-  font-weight: 700;
 }
-.swiss-form .rejected-item ul {
+.swiss-form .rejected-row .mapping-row-head:hover,
+.swiss-form .mapping-row.rejected-row.open .mapping-row-head {
+  background: rgba(159, 45, 32, 0.05);
+}
+.swiss-form .rejected-row .mapping-row-meta,
+.swiss-form .rejected-row .mapping-row-block {
+  border-top-color: #9f2d20;
+}
+.swiss-form .rejected-row .mapping-row-block h4 {
+  color: #9f2d20;
+}
+.swiss-form .rejected-exclusions {
   margin: 0;
   padding-left: 18px;
   list-style: square;
   color: #9f2d20;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 .swiss-form .rejected-preview {
   margin: 0;
@@ -2827,6 +2841,8 @@ textarea {
   color: #1f2933;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 /* swiss header action buttons (Audit: Load demo / Preview export) */
