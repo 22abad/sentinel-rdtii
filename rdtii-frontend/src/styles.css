@@ -2348,7 +2348,7 @@ textarea {
   align-items: center;
   gap: 16px;
   width: 100%;
-  min-height: 56px;
+  min-height: 62px;
   padding: 0 18px;
   border: 0;
   border-radius: 0;
@@ -2362,11 +2362,11 @@ textarea {
   background: rgba(17, 24, 39, 0.05);
 }
 .swiss-form .mapping-row-code {
-  min-width: 64px;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
+  min-width: 72px;
+  font-family: inherit; /* Inter, like the reference index numbers */
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
 }
 .swiss-form .mapping-row.active-mapping .mapping-row-code {
   background: #111827;
@@ -2379,12 +2379,12 @@ textarea {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 1.02rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 .swiss-form .mapping-row-plus {
   flex-shrink: 0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 300;
   line-height: 1;
 }
@@ -2417,7 +2417,7 @@ textarea {
   align-items: center;
   gap: 8px 14px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #6b675c;
@@ -2427,12 +2427,12 @@ textarea {
   border-left: 2px solid #111827;
   padding: 2px 0 2px 12px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   color: #1f2933;
 }
 .swiss-form .mapping-row-body .impact {
   margin: 12px 0 0;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: #1f2933;
 }
 .swiss-form .mapping-row-report {
