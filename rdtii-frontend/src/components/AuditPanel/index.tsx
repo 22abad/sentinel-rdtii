@@ -57,6 +57,15 @@ export function AuditPanel({
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState("");
   const [showExportPreview, setShowExportPreview] = useState(false);
+  // Demo-critical triage: jump straight to the rows that DON'T need a human
+  // ("clean") or the flagged ones, instead of scanning the whole list.
+  const [reviewFilter, setReviewFilter] = useState<"all" | "clean" | "review">("all");
+  const cleanCount = mappings.filter((m) => !m.requires_human_review).length;
+  const reviewCount = mappings.length - cleanCount;
+  const reviewFiltered =
+    reviewFilter === "all"
+      ? mappings
+      : mappings.filter((m) => (reviewFilter === "clean") === !m.requires_human_review);
   const mappingsForExport = exportMappings ?? mappings;
   const previewRows = mappingsToExcelPreviewRows(
     mappingsForExport,
@@ -202,10 +211,35 @@ export function AuditPanel({
       {exportPreviewDrawer}
       {exportError && <p className="discovery-error">{exportError}</p>}
 
+      {mappings.length > 0 && (
+        <div className="nodrag flex items-center gap-1.5 border-t-[1.5px] border-[#111827] px-[18px] py-2">
+          {([
+            ["all", `ALL (${mappings.length})`],
+            ["clean", `✓ CLEAN (${cleanCount})`],
+            ["review", `NEEDS REVIEW (${reviewCount})`],
+          ] as const).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setReviewFilter(key)}
+              style={{
+                minHeight: 26, padding: "2px 10px", borderRadius: 0, cursor: "pointer",
+                border: "1.5px solid #111827",
+                fontSize: "0.66rem", fontWeight: 700, letterSpacing: "0.04em",
+                background: reviewFilter === key ? "#111827" : "transparent",
+                color: reviewFilter === key ? "#fff" : "#111827",
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div>
         <AuditBody
           status={status}
-          mappings={mappings}
+          mappings={reviewFiltered}
           totalMappings={totalMappings}
           activeKey={activeKey}
           decisions={decisions}
