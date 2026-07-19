@@ -238,7 +238,7 @@ export function DiscoverySourceManager() {
 
   return (
     <section
-      className="source-manager-panel"
+      className="source-manager-panel swiss-form"
       aria-label="Discovery source manager"
     >
       <div className="panel-header source-manager-header">
@@ -562,7 +562,7 @@ function SourceSelect({
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="swiss-dropdown">
         {options.map((option) => (
           <SelectItem key={option} value={option}>
             {option}

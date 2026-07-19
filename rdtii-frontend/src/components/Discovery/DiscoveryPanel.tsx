@@ -202,7 +202,7 @@ export function DiscoveryPanel({
     if (fixtureFallback > 0) {
       return {
         kind: "fallback",
-        label: "🟡 Offline Demo Mode (Fixture Fallback)",
+        label: "Offline Mode",
         live,
         fixtureFallback,
       } as const;
@@ -210,14 +210,14 @@ export function DiscoveryPanel({
     if (live > 0) {
       return {
         kind: "live",
-        label: "🟢 Live Search (Real-time)",
+        label: "Live Search",
         live,
         fixtureFallback,
       } as const;
     }
     return {
       kind: "empty",
-      label: "No retrieval evidence",
+      label: "No evidence",
       live,
       fixtureFallback,
     } as const;
@@ -397,22 +397,8 @@ export function DiscoveryPanel({
               className={`retrieval-disclosure ${retrievalDisclosure.kind}`}
               role="status"
             >
-              <div className="retrieval-disclosure-heading">
-                <strong>{retrievalDisclosure.label}</strong>
-                <span>
-                  Live evidence: {retrievalDisclosure.live} · Fixture/fallback
-                  evidence: {retrievalDisclosure.fixtureFallback}
-                </span>
-              </div>
-              {retrievalDisclosure.kind === "fallback" && (
-                <p>
-                  <em>
-                    Note: This evidence comes from a local fixture cache. It is
-                    not counted in live-search metrics and is excluded from
-                    formal submission results.
-                  </em>
-                </p>
-              )}
+              {/* Just the mode, oversized — no counts, no note */}
+              <strong>{retrievalDisclosure.label}</strong>
             </div>
           )}
 

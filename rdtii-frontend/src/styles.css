@@ -2236,6 +2236,170 @@ textarea {
   color: #f3f1ea;
 }
 
+/* ── Discovery results, Swiss-ified: hairline bands ───────────────────────
+   Disclosure/summary/diagnostics/tray/warnings become full-width bands
+   divided by lines; fallback & warnings in the semantic yellow; chips and
+   buttons squared. The shortlist tray stays a multi-select action row. */
+.swiss-form .discovery-results {
+  gap: 0;
+  padding: 0;
+}
+.swiss-form .discovery-results > * {
+  border-top: 1.5px solid #111827;
+}
+.swiss-form .discovery-results > .candidate-list,
+.swiss-form .discovery-results > .retrieval-disclosure {
+  border-top: none; /* rows draw their own; disclosure is stamp-only */
+}
+/* no outer structure at all — only the thin black stamp itself */
+.swiss-form .retrieval-disclosure,
+.swiss-form .retrieval-disclosure.live,
+.swiss-form .retrieval-disclosure.fallback {
+  border: none;
+  border-radius: 0;
+  padding: 12px 18px 0;
+  background: transparent;
+  color: #111827;
+}
+/* mode as a status STAMP — a black tag on the colored band; mono uppercase,
+   clearly distinct from the panel-title voice (Inter 800 2rem) */
+.swiss-form .retrieval-disclosure strong {
+  display: inline-block;
+  background: #111827;
+  color: #f3f1ea;
+  padding: 5px 10px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.swiss-form .discovery-summary {
+  padding: 10px 18px;
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .discovery-diagnostics {
+  padding: 10px 18px;
+}
+.swiss-form .discovery-diagnostics span {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .discovery-diagnostics span.discovery-mode-live {
+  border-color: #111827;
+  background: #dcead8;
+  color: #111827;
+}
+.swiss-form .discovery-diagnostics span.discovery-mode-fallback {
+  border-color: #111827;
+  background: #f7d445;
+  color: #111827;
+}
+/* multi-select block: count line, then ONE full-bleed row of 4 equal
+   buttons filling the whole width — no outer margins, no gaps, divided
+   only by hairlines */
+.swiss-form .shortlist-tray {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  align-items: stretch;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+.swiss-form .shortlist-tray > span {
+  grid-column: 1 / -1;
+  margin-right: 0;
+  padding: 10px 18px;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.swiss-form .shortlist-tray button {
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 8px;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.swiss-form .shortlist-tray button + button {
+  border-left: 1.5px solid #111827; /* vertical hairline between the four */
+}
+.swiss-form .shortlist-tray .shortlist-progress {
+  grid-column: 1 / -1;
+  padding: 10px 18px;
+  border-top: 1.5px solid #111827;
+}
+.swiss-form .shortlist-tray button.secondary {
+  background: transparent; /* separators come from the bar, not the button */
+  color: #111827;
+}
+.swiss-form .shortlist-tray button.secondary:hover:not(:disabled) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .shortlist-tray button:not(.secondary) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .shortlist-tray button:not(.secondary):hover:not(:disabled) {
+  background: #000000;
+}
+.swiss-form .shortlist-progress div {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+}
+.swiss-form .shortlist-progress div span {
+  border-radius: 0;
+  background: #111827;
+}
+.swiss-form .discovery-warning {
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f7d445;
+  color: #111827;
+  padding: 10px 18px;
+  font-size: 0.82rem;
+}
+.swiss-form .discovery-error {
+  border: none;
+  border-radius: 0;
+  background: #9f2d20;
+  color: #ffffff;
+  padding: 10px 18px;
+  font-size: 0.82rem;
+}
+
 /* results: Swiss index list — click box · title · pillars · Extract */
 .swiss-form .candidate-list {
   display: flex;
@@ -2246,7 +2410,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 10px 0;
+  padding: 10px 18px; /* side inset — checkbox/Extract were drifting to the edges */
   border-top: 1.5px solid #111827;
   background: transparent;
 }
@@ -2332,6 +2496,9 @@ textarea {
   color: #6b675c;
 }
 
+/* canvas mode: swiss panels stick to content height (PanelNode ignores any
+   stored resize height for flat panels), so no fill/stretch rule is needed */
+
 /* classic view: the PAGE is split in half by one continuous full-height
    divide line (reference: Tambourine index) — the line runs from the top of
    the viewport to the bottom; the whole right part is the Audit panel. Each
@@ -2373,9 +2540,10 @@ textarea {
 .swiss-form .mapping-row {
   border-top: 1.5px solid #111827;
 }
-.swiss-form .mapping-row:last-child {
-  border-bottom: 1.5px solid #111827;
-}
+/* NOTE: no :last-child bottom border here — each row sits in its own
+   motion.div wrapper, so every row matched :last-child and drew a bottom
+   border on top of the next row's top border (doubled lines). Rows carry
+   border-top only; the section below (rejected/frame) closes the list. */
 .swiss-form .mapping-row-head {
   display: flex;
   align-items: center;
@@ -2754,14 +2922,16 @@ textarea {
   align-items: center;
   margin: 0;
   min-height: 62px;
-  padding: 0 18px;
+  padding: 12px 18px;
+  border: none; /* kill the base dashed rounded box — just a line */
   border-top: 1.5px solid #111827;
+  border-radius: 0;
   background: transparent;
+  text-align: left;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #111827;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #6b675c;
 }
 .swiss-form .empty-state.error-state {
   border-top-color: #9f2d20;
@@ -2772,6 +2942,269 @@ textarea {
    flex-start, which left Audit's buttons stuck beside the title) */
 .swiss-form .panel-header > div.nodrag {
   margin-left: auto;
+}
+
+/* ── Source manager, Swiss-ified ──────────────────────────────────────────
+   Drawer in the usage/export sheet language; the panel carries swiss-form
+   (title, mono labels, flat fields) with manager-specific overrides. */
+.right-drawer.source-manager-drawer {
+  border: 2px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  box-shadow: none;
+}
+.source-manager-drawer .right-drawer-close {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  color: #111827;
+  box-shadow: none;
+}
+.source-manager-drawer .right-drawer-close:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+/* the drawer is the frame — don't double it on the panel */
+.source-manager-drawer .source-manager-panel.swiss-form {
+  border: none;
+  background: #f3f1ea;
+}
+/* single line under the title (nothing below carries a top hairline here);
+   header stacked: title row, then Reload | Save as a full-width line */
+.swiss-form.source-manager-panel .panel-header {
+  display: block;
+  border-bottom: 1.5px solid #111827;
+}
+.swiss-form.source-manager-panel .panel-header > div:first-child {
+  margin-bottom: 12px;
+  padding-right: 56px; /* clear the drawer's close button */
+}
+.swiss-form.source-manager-panel .source-manager-actions {
+  justify-content: stretch;
+  padding-right: 0; /* actions no longer sit beside the close button */
+}
+.swiss-form.source-manager-panel .source-manager-actions button {
+  flex: 1; /* Reload | Save share the line half-half */
+}
+/* square mono buttons everywhere in the manager */
+.swiss-form .source-manager-actions button,
+.swiss-form .source-manager-editor-header button,
+.swiss-form .source-manager-country-form button,
+.swiss-form .source-manager-section-title button {
+  border-radius: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .source-manager-actions button.secondary,
+.swiss-form .source-manager-editor-header button.secondary,
+.swiss-form .source-manager-section-title button {
+  border: 1.5px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .source-manager-actions button.secondary:hover:not(:disabled),
+.swiss-form .source-manager-editor-header button.secondary:hover:not(:disabled),
+.swiss-form .source-manager-section-title button:hover:not(:disabled) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .source-manager-actions button:not(.secondary):not(.danger),
+.swiss-form .source-manager-country-form button:not(.secondary):not(.danger) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .source-manager-actions button:not(.secondary):not(.danger):hover:not(:disabled) {
+  background: #000000;
+}
+.swiss-form .source-manager-editor-header button.danger,
+.swiss-form .source-manager-country-form button.danger {
+  border: 1.5px solid #9f2d20;
+  background: transparent;
+  color: #9f2d20;
+}
+.swiss-form .source-manager-editor-header button.danger:hover:not(:disabled),
+.swiss-form .source-manager-country-form button.danger:hover:not(:disabled) {
+  background: #9f2d20;
+  color: #ffffff;
+}
+/* section titles: black mono */
+.swiss-form .source-manager-section-title {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  letter-spacing: 0.1em;
+}
+/* country/source lists: square hairline cards; active = black fill */
+.swiss-form .source-manager-country-list button,
+.swiss-form .source-manager-source-list button {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .source-manager-country-list button.active,
+.swiss-form .source-manager-source-list button.active {
+  border-color: #111827;
+  background: #111827;
+  color: #f3f1ea;
+  box-shadow: none;
+}
+.swiss-form .source-manager-country-list button.active small,
+.swiss-form .source-manager-source-list button.active small {
+  color: rgba(243, 241, 234, 0.65);
+}
+.swiss-form .source-manager-country-list small,
+.swiss-form .source-manager-source-list small {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+}
+/* editor card: square hairline box on the cream */
+.swiss-form .source-manager-editor {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+}
+/* editor header restacked: title as its own row, then the two buttons as a
+   row of equal halves, then the form — divided by a hairline */
+.swiss-form .source-manager-editor-header {
+  display: block;
+  border-bottom: 1.5px solid #111827;
+  padding-bottom: 12px;
+}
+.swiss-form .source-manager-editor-header h3 {
+  margin: 0 0 12px;
+  color: #111827;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.swiss-form .source-manager-editor-header div {
+  justify-content: stretch;
+}
+.swiss-form .source-manager-editor-header div button {
+  flex: 1; /* Copy | Delete share the row half-half */
+}
+/* form separators + readonly field on the cream */
+.swiss-form .source-manager-country-form {
+  border-bottom: 1.5px solid #111827;
+}
+.swiss-form .source-manager-country-form input[readonly] {
+  background: rgba(17, 24, 39, 0.05);
+  color: #6b675c;
+}
+/* success note: green band, square */
+.swiss-form .source-manager-success {
+  border: none;
+  border-radius: 0;
+  background: #dcead8;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+}
+.swiss-form .source-manager-muted {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+/* ── Export preview drawer, Swiss-ified ───────────────────────────────────
+   Square cream sheet + black frame (usage-drawer language); mono table with
+   black header row; hairlines only INSIDE the table — cell borders drop on
+   the last column/row so they never overlay the wrap's own frame. */
+.right-drawer.export-preview-dialog {
+  border: 2px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  box-shadow: none;
+}
+.export-preview-dialog .right-drawer-close {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  color: #111827;
+  box-shadow: none;
+}
+.export-preview-dialog .right-drawer-close:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.export-preview-dialog .export-preview-header {
+  border-bottom: 1.5px solid #111827;
+}
+.export-preview-dialog .export-preview-header h3 {
+  color: #111827;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 1.2rem;
+}
+.export-preview-dialog .export-preview-header p,
+.export-preview-dialog .export-preview-note {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+}
+.export-preview-dialog .export-preview-table-wrap {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #ffffff;
+}
+.export-preview-dialog .export-preview-table {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+}
+.export-preview-dialog .export-preview-table th,
+.export-preview-dialog .export-preview-table td {
+  border-bottom: 1px solid #111827;
+  border-right: 1px solid #111827;
+}
+/* hairline-overlay fix: no cell border where the wrap frame already is */
+.export-preview-dialog .export-preview-table th:last-child,
+.export-preview-dialog .export-preview-table td:last-child {
+  border-right: none;
+}
+.export-preview-dialog .export-preview-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.export-preview-dialog .export-preview-table th {
+  background: #111827;
+  color: #f3f1ea;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.66rem;
+}
+.export-preview-dialog .export-preview-table td {
+  color: #1f2933;
+}
+.export-preview-dialog .export-preview-actions {
+  border-top: 1.5px solid #111827;
+}
+.export-preview-dialog .export-preview-actions button {
+  border-radius: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.export-preview-dialog .export-preview-actions button.secondary {
+  border: 1.5px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+.export-preview-dialog .export-preview-actions button.secondary:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+.export-preview-dialog .export-preview-actions button:not(.secondary) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.export-preview-dialog .export-preview-actions button:not(.secondary):hover:not(:disabled) {
+  background: #000000;
 }
 
 /* ── Rejected quotes, Swiss-ified: red/white ──────────────────────────────

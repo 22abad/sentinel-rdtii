@@ -1098,9 +1098,20 @@ export function WorkbenchCanvas({
     [panels, spawned, panelById, customNotes, chatIds, sessions, pendingSessions, files, positions, sizes, removed, updateNote, resizeNode, resetNodeSize, removeNode, selectedIds, handleChatSend, handleChatResponse, handleChatError, sendToSession, handleChatFileUpload, chatIngesting, removeFileFromSession, deleteIngestedFile],
   );
 
-  const renderedEdges = useMemo(() => {
+  const renderedEdges = useMemo<Edge[]>(() => {
     const visibleNodeIds = new Set(nodes.map((node) => node.id));
-    return edges.filter((edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target));
+    return edges
+      .filter((edge) => visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target))
+      // Swiss wiring: sharp right-angle edges (no bezier curves), black ink,
+      // dashed flow effect on every wire.
+      .map(
+        (edge): Edge => ({
+          ...edge,
+          type: "step",
+          animated: true,
+          style: { stroke: "#111827", strokeWidth: 1.5, ...edge.style },
+        }),
+      );
   }, [edges, nodes]);
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
