@@ -2790,6 +2790,9 @@ textarea {
 .swiss-form .reasoning-report .rr-sec-timestamp-warn {
   background: #f7d445;
 }
+.swiss-form .reasoning-report .rr-sec-staleness-high {
+  background: #f2a69b; /* red — high staleness */
+}
 .swiss-form .reasoning-report .rr-feature-line {
   display: flex;
   align-items: center;
@@ -2926,6 +2929,10 @@ textarea {
 }
 .swiss-form .reasoning-report .rr-provenance-line:last-child {
   border-bottom: none;
+}
+.swiss-form .reasoning-report .rr-provenance-label,
+.swiss-form .reasoning-report .rr-provenance-value {
+  color: #111827;
 }
 /* empty/loading states as an index row — same anatomy as a mapping row:
    one opening hairline, row height, no bottom border (no doubled lines) */

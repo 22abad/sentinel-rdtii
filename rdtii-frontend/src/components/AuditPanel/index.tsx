@@ -101,21 +101,21 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
   if (typeof pdfPath === "string" && pdfPath) {
     provenance.push({ label: "File", value: <code title={pdfPath}>{truncateMiddle(pdfPath, 40)}</code> });
   }
-  // Staleness — severity + reasons are document-level (does the dossier match
-  // the live source?), so they belong in Provenance.
-  const stalenessSeverity = features["_staleness_severity"];
-  const stalenessReasons = features["_staleness_reasons"];
-  if (stalenessSeverity !== undefined || stalenessReasons !== undefined) {
-    provenance.push({
-      label: "Staleness",
-      value: [
-        stalenessSeverity !== undefined ? String(stalenessSeverity) : null,
-        stalenessReasons ? String(stalenessReasons) : null,
-      ]
-        .filter(Boolean)
-        .join(" · ") || "—",
-    });
-  }
+  // Staleness — document-level (does the dossier still match the live
+  // source?). Rendered as its own band, colored by severity.
+  const stalenessSeverity =
+    features["_staleness_severity"] !== undefined
+      ? String(features["_staleness_severity"])
+      : null;
+  const stalenessReasons = features["_staleness_reasons"]
+    ? String(features["_staleness_reasons"])
+    : "";
+  const stalenessClass =
+    stalenessSeverity === null || stalenessSeverity === "none"
+      ? "rr-sec-timestamp-ok" // green — fresh
+      : stalenessSeverity === "high"
+        ? "rr-sec-staleness-high" // red — stale
+        : "rr-sec-timestamp-warn"; // yellow — low/medium
 
   // Reuse the report's band styling (rr-*) so the blocks keep their original
   // look — light-blue quality stat tiles, green release-year band — just
@@ -209,6 +209,18 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
               <span className="rr-provenance-value">{row.value}</span>
             </div>
           ))}
+        </section>
+      )}
+
+      {stalenessSeverity !== null && (
+        <section className={`rr-section rr-provenance ${stalenessClass}`}>
+          <h4>Staleness</h4>
+          <div className="rr-provenance-line">
+            <span className="rr-provenance-label">{stalenessSeverity}</span>
+            {stalenessReasons && (
+              <span className="rr-provenance-value">{stalenessReasons}</span>
+            )}
+          </div>
         </section>
       )}
 

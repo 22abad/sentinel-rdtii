@@ -34,6 +34,9 @@ const PROVENANCE_KEYS = new Set([
   "_source_grade_confidence",
   "_timeframe_status",
   "_timeframe_column",
+  // Staleness is document-level — shown in the top bands, not per quote.
+  "_staleness_reasons",
+  "_staleness_severity",
 ]);
 
 /** Human label from a snake_case feature key. */
