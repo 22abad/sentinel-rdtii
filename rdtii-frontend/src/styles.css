@@ -2450,20 +2450,37 @@ textarea {
 .swiss-form .mapping-row-body {
   padding: 0;
 }
+/* every body segment opens with its own hairline (border-top only — never
+   bottom — so lines can't double against the next segment) */
 .swiss-form .mapping-row-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 14px;
-  padding: 12px 18px 0;
+  padding: 10px 18px;
+  border-top: 1.5px solid #111827;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #6b675c;
 }
+/* individual blocks: Raw material / AI reason */
+.swiss-form .mapping-row-block {
+  border-top: 1.5px solid #111827;
+  padding: 12px 18px 14px;
+}
+.swiss-form .mapping-row-block h4 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
 .swiss-form .mapping-row-body .quote {
-  margin: 12px 18px 0;
+  margin: 0;
   border-left: 2px solid #111827;
   padding: 2px 0 2px 12px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -2471,12 +2488,12 @@ textarea {
   color: #1f2933;
 }
 .swiss-form .mapping-row-body .impact {
-  margin: 12px 18px 14px;
+  margin: 0;
   font-size: 0.95rem;
   color: #1f2933;
 }
 .swiss-form .mapping-row-report {
-  margin-top: 14px;
+  margin-top: 0;
   border-top: 1.5px solid #111827;
   padding-top: 0;
 }

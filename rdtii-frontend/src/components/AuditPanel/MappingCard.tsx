@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { QUOTE_TRUNCATE } from "../../lib/constants";
-import { formatScore, scoreClass, scoreDescription } from "../../lib/utils";
+import { formatScore } from "../../lib/utils";
 import { t } from "../../lib/i18n";
 import type { IndicatorMapping, ReviewDecision } from "../../types";
 import { ReasoningReport } from "./ReasoningReport";
@@ -72,13 +72,8 @@ export function MappingCard({
 
       {open && (
         <div className="mapping-row-body select-text">
+          {/* single meta row — score lives in the report's Score card now */}
           <div className="mapping-row-meta">
-            <span
-              className={`score-badge ${scoreClass(mapping.score)}`}
-              data-tooltip={scoreDescription(mapping.score)}
-            >
-              {formatScore(mapping.score)}
-            </span>
             <span>
               {mapping.last_update || t("mapping.dateUnknown")}
               {mapping.scope !== "unknown" ? ` · ${mapping.scope}` : null}
@@ -91,26 +86,30 @@ export function MappingCard({
             )}
           </div>
 
-          <blockquote className="quote select-text">
-            "{visibleQuote}"
-            {quoteIsLong ? (
-              <button
-                type="button"
-                className="link-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setExpanded((v) => !v);
-                }}
-              >
-                {expanded ? t("mapping.showLess") : t("mapping.showMore")}
-              </button>
-            ) : null}
-          </blockquote>
+          <section className="mapping-row-block">
+            <h4>Raw material</h4>
+            <blockquote className="quote select-text">
+              "{visibleQuote}"
+              {quoteIsLong ? (
+                <button
+                  type="button"
+                  className="link-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setExpanded((v) => !v);
+                  }}
+                >
+                  {expanded ? t("mapping.showLess") : t("mapping.showMore")}
+                </button>
+              ) : null}
+            </blockquote>
+          </section>
 
           {mapping.impact ? (
-            <p className="impact">
-              <strong>{t("mapping.scoreReason")}</strong> {mapping.impact}
-            </p>
+            <section className="mapping-row-block">
+              <h4>AI reason</h4>
+              <p className="impact">{mapping.impact}</p>
+            </section>
           ) : null}
 
           {hasReport ? (
