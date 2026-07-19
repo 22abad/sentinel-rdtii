@@ -87,9 +87,9 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
             height: 24,
             minHeight: 0,
             padding: "0 10px",
-            borderRadius: 9999,
+            borderRadius: 0,
             border: "none",
-            background: "#b91c1c",
+            background: "#9f2d20",
             color: "white",
             fontSize: "0.7rem",
             fontWeight: 600,
@@ -107,14 +107,14 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          borderRadius: 32,
+          borderRadius: 0,
           overflow: "hidden",
-          background: "#ffffff",
-          border: "1px solid #d8dee6",
-          boxShadow: selected ? "0 12px 36px rgba(0,0,0,0.22)" : "0 12px 36px rgba(0,0,0,0.12)",
+          background: "#f3f1ea",
+          border: "1.5px solid #111827",
+          boxShadow: "none",
         }}
       >
-        <Handle type="target" position={Position.Left} style={{ background: "#7c3aed" }} />
+        <Handle type="target" position={Position.Left} style={{ background: "#111827" }} />
 
         {/* Header */}
         <div
@@ -124,13 +124,13 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
             alignItems: "center",
             gap: 8,
             padding: "8px 12px",
-            background: "#f5f3ff",
-            borderBottom: "1px solid rgba(0,0,0,0.08)",
+            background: "transparent",
+            borderBottom: "1.5px solid #111827",
             flexShrink: 0,
           }}
         >
-          <MessagesSquare size={14} color="#7c3aed" />
-          <span style={{ flex: 1, fontSize: "0.82rem", fontWeight: 700, color: "#26303d" }}>
+          <MessagesSquare size={14} color="#111827" />
+          <span style={{ flex: 1, fontSize: "0.82rem", fontWeight: 800, color: "#111827", textTransform: "uppercase", letterSpacing: "0.04em" }}>
             {data.title ?? "Session"}
           </span>
           <span style={{ fontSize: "0.68rem", color: "#8a94a3" }}>
@@ -187,10 +187,10 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
               padding: "7px 12px",
               minHeight: 0,
               border: "none",
-              borderBottom: "1px solid #eef2f4",
+              borderBottom: "1.5px solid #111827",
               borderRadius: 0,
-              background: "#fbfcfd",
-              color: "#116149",
+              background: "transparent",
+              color: "#111827",
               fontSize: "0.72rem",
               fontWeight: 750,
               cursor: "pointer",
@@ -238,14 +238,14 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
               style={{
                 maxWidth: "85%",
                 alignSelf: m.role === "user" ? "flex-end" : "flex-start",
-                borderRadius: 14,
+                borderRadius: 0,
                 padding: "8px 12px",
                 fontSize: "0.8rem",
                 lineHeight: 1.5,
                 whiteSpace: m.role === "user" ? "pre-wrap" : undefined,
                 ...(m.role === "user"
-                  ? { background: "#10B981", color: "#fff", borderBottomRightRadius: 5 }
-                  : { background: "#f4f6f8", color: "#1a2e26", borderBottomLeftRadius: 5, border: "1px solid rgba(0,0,0,0.05)" }),
+                  ? { background: "#111827", color: "#f3f1ea" }
+                  : { background: "#ffffff", color: "#1f2933", border: "1px solid #111827" }),
               }}
             >
               {m.role === "assistant" ? (
@@ -259,12 +259,12 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
             <div
               style={{
                 alignSelf: "flex-start",
-                borderRadius: 14,
+                borderRadius: 0,
                 padding: "8px 12px",
                 fontSize: "0.8rem",
-                background: "#f4f6f8",
-                color: "#9ca3af",
-                borderBottomLeftRadius: 5,
+                background: "#ffffff",
+                border: "1px solid #111827",
+                color: "#6b675c",
               }}
             >
               <span style={{ display: "inline-flex", gap: 3 }}>

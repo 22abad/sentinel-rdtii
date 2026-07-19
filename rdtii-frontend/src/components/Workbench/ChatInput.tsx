@@ -163,20 +163,23 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
   };
 
   const subRowStyle = {
-    background: "#fff",
-    border: "1px solid #e4eaee",
-    borderRadius: 32,
+    background: "#f3f1ea",
+    border: "1.5px solid #111827",
+    borderRadius: 0,
     padding: "16px 20px",
     display: "flex",
     alignItems: "center",
     gap: 15,
-    boxShadow: "0 2px 8px 0 rgba(0,0,0,0.06)",
+    boxShadow: "none",
   };
 
   const labelStyle: React.CSSProperties = {
-    fontSize: "0.75rem",
+    fontSize: "0.7rem",
     fontWeight: 700,
-    color: "#667085",
+    color: "#111827",
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.08em",
+    fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
     minWidth: 80,
     flexShrink: 0,
   };
@@ -374,7 +377,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
                       <button
                         type="button"
                         onClick={() => setUploadedFiles((prev) => prev.filter((entry) => entry.id !== id))}
-                        style={{ flexShrink: 0, padding: 4, minHeight: 0, borderRadius: "50%", border: "none", background: "transparent", cursor: "pointer", color: "#9ca3af", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        style={{ flexShrink: 0, padding: 4, minHeight: 0, borderRadius: 0, border: "none", background: "transparent", cursor: "pointer", color: "#6b675c", display: "flex", alignItems: "center", justifyContent: "center" }}
                         className="hover:text-red-400 transition"
                       >
                         <X size={14} />

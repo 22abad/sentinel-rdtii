@@ -70,8 +70,8 @@ export function FileCardStack({ items }: { items: FileCardItem[] }) {
                 exit={{ x: 60, opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                 transition={{ type: "spring", stiffness: 260, damping: 26, delay: expanded ? i * 0.04 : (n - 1 - i) * 0.04 }}
               >
-                <div style={{ height: "100%", background: "#fff", border: "1px solid #e4eaee", borderRadius: 9999, padding: "10px 14px", display: "flex", alignItems: "center", gap: 12, boxShadow: "0 2px 8px 0 rgba(0,0,0,0.07)" }}>
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "0.6rem", fontWeight: 800, color: "#fff" }}>{label}</div>
+                <div style={{ height: "100%", background: "#f3f1ea", border: "1.5px solid #111827", borderRadius: 0, padding: "10px 14px", display: "flex", alignItems: "center", gap: 12, boxShadow: "none" }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 0, background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "0.6rem", fontWeight: 800, color: "#fff" }}>{label}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#1f2933", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</div>
                     {item.subtitle ? (
@@ -101,16 +101,16 @@ export function FileCardStack({ items }: { items: FileCardItem[] }) {
             position: "relative",
             minHeight: 0,
             padding: "8px 36px 8px 20px",
-            background: "#fff",
-            borderRadius: 9999,
-            border: "none",
-            boxShadow: "0px 3px 3.5px rgba(119,113,113,0.35)",
+            background: "#f3f1ea",
+            borderRadius: 0,
+            border: "1.5px solid #111827",
+            boxShadow: "none",
             fontSize: "0.75rem",
             fontWeight: 600,
             color: "#1f2933",
             cursor: "pointer",
           }}
-          whileHover={{ y: -2, boxShadow: "0px 5px 5px rgba(119,113,113,0.4)" }}
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
           layout
