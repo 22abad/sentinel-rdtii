@@ -2266,14 +2266,14 @@ textarea {
   background: #f7d445;
   color: #111827;
 }
-.swiss-form .retrieval-disclosure-heading strong {
+/* oversized mode label — the row is just the word */
+.swiss-form .retrieval-disclosure strong {
+  display: block;
+  font-size: 2rem;
   font-weight: 800;
-}
-.swiss-form .retrieval-disclosure-heading span,
-.swiss-form .retrieval-disclosure p {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.74rem;
-  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 .swiss-form .discovery-summary {
   padding: 10px 18px;
