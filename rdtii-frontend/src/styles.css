@@ -2661,36 +2661,31 @@ textarea {
   border-top: 1.5px solid #111827;
   padding-top: 0;
 }
+/* decision as a whole line: Reject | Approve fill the row half-half,
+   divided by a hairline (no mini buttons, no gaps) */
 .swiss-form .mapping-row-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
   margin-top: 0;
   border-top: 1.5px solid #111827;
-  padding: 12px 18px;
-}
-.swiss-form .mapping-row-source {
-  margin-right: auto;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.74rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #111827;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  padding: 0;
 }
 .swiss-form .mapping-row-actions button {
-  min-height: 34px;
-  border-radius: 0;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
   padding: 0 14px;
+  border: none;
+  border-radius: 0;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 .swiss-form .mapping-row-actions button:not(.secondary) {
+  border-left: 1.5px solid #111827; /* divider between the halves */
   background: #111827;
   color: #f3f1ea;
 }
@@ -2698,20 +2693,37 @@ textarea {
   background: #000;
 }
 .swiss-form .mapping-row-actions button.secondary {
-  border: 1.5px solid #111827;
   background: transparent;
-  color: #111827;
+  color: #9f2d20;
 }
 .swiss-form .mapping-row-actions button.secondary:hover {
-  background: #111827;
-  color: #f3f1ea;
+  background: #9f2d20;
+  color: #ffffff;
 }
 .swiss-form .mapping-row-actions button.active-approve {
   background: #116149;
 }
 .swiss-form .mapping-row-actions button.secondary.active-reject {
-  border-color: #9f2d20;
-  color: #9f2d20;
+  background: #9f2d20;
+  color: #ffffff;
+}
+
+/* document-level bands above the result list — reuse the report band styling;
+   the first band opens with its own hairline (the report container normally
+   suppresses it) */
+.swiss-form .doc-info-top > *:first-child {
+  border-top: 1.5px solid #111827;
+}
+.swiss-form a.doc-info-link {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .swiss-form .score-badge {
   border-radius: 0;

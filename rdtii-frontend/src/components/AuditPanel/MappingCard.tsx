@@ -40,19 +40,6 @@ export function MappingCard({
       ? `${mapping.verbatim_quote.slice(0, QUOTE_TRUNCATE)}…`
       : mapping.verbatim_quote;
 
-  // Row title: the PROVISION, not the law name. Every row of one document
-  // repeats (a per-chunk variant of) the same law name — zero information,
-  // while the clause + quote is what actually distinguishes rows. The
-  // document's identity lives once in the DocumentDossier.
-  const clause = mapping.article_clause?.trim();
-  const quoteSnippet = mapping.verbatim_quote.replace(/\s+/g, " ").trim();
-  const rowTitle =
-    [clause, quoteSnippet && `“${quoteSnippet.slice(0, 90)}${quoteSnippet.length > 90 ? "…" : ""}”`]
-      .filter(Boolean)
-      .join(" · ") ||
-    mapping.source_legislation ||
-    t("mapping.untitled");
-
   return (
     <li
       className={`mapping-row ${open ? "open" : ""} ${active ? "active-mapping" : ""} decision-${decision}`}
@@ -70,7 +57,9 @@ export function MappingCard({
         }}
       >
         <span className="mapping-row-code">P{mapping.indicator}</span>
-        <span className="mapping-row-title">{rowTitle}</span>
+        <span className="mapping-row-title">
+          {mapping.source_legislation || t("mapping.untitled")}
+        </span>
         {decision !== "pending" && (
           <span className={`mapping-row-decision ${decision}`}>
             {decision === "approved" ? t("mapping.approve") : t("mapping.reject")}
@@ -129,21 +118,8 @@ export function MappingCard({
             </div>
           ) : null}
 
+          {/* Source link lives in the document rows above the list now. */}
           <div className="mapping-row-actions">
-            {mapping.source_url ? (
-              <a
-                className="mapping-row-source"
-                href={mapping.source_url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t("mapping.source")} ↗
-              </a>
-            ) : (
-              <span className="mapping-row-source muted">
-                {t("mapping.noSourceUrl")}
-              </span>
-            )}
             <button
               type="button"
               className={`secondary ${decision === "rejected" ? "active-reject" : ""}`}

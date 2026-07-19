@@ -3,16 +3,17 @@ import { formatScore, scoreClass } from "../../lib/utils";
 import type { IndicatorMapping } from "../../types";
 
 /**
- * Per-MAPPING view: score, review flags, provision, scoring features.
- * Document-level identity (source grade, timeframe, staleness, release
- * year, timestamp, OCR quality) lives in DocumentDossier — consolidated
- * once per document, never repeated (or contradicted) per card.
+ * Per-quote view of what the pipeline computed for one mapping: the score
+ * card, validation flags, the provision (quote in context), and the scoring
+ * feature chips. Document-level facts (quality, release year, source link,
+ * provenance, timestamp verification) render once above the result list —
+ * see DocumentInfoRows in the Audit panel.
  */
 
 type FeatureValue = boolean | number | string;
 
 // Document/OCR quality metadata merged into `features` by the extraction
-// pipeline (scalar pdf_metadata) — shown in the DocumentDossier, not here.
+// pipeline (scalar pdf_metadata) — context, not scoring inputs.
 const DOC_QUALITY_KEYS = new Set([
   "mean_confidence",
   "ocr_ratio",
@@ -25,8 +26,7 @@ const DOC_QUALITY_KEYS = new Set([
   "_pdf_type",
 ]);
 
-// Reproducibility / source-grading / staleness provenance — document-level,
-// shown in the DocumentDossier.
+// Reproducibility / source-grading provenance.
 const PROVENANCE_KEYS = new Set([
   "source_file_sha256",
   "source_pdf_path",
@@ -34,8 +34,6 @@ const PROVENANCE_KEYS = new Set([
   "_source_grade_confidence",
   "_timeframe_status",
   "_timeframe_column",
-  "_staleness_reasons",
-  "_staleness_severity",
 ]);
 
 /** Human label from a snake_case feature key. */
