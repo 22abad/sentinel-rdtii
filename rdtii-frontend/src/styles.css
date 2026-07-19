@@ -2940,7 +2940,8 @@ textarea {
 
 /* header action group pinned to the right edge (the swiss header switched to
    flex-start, which left Audit's buttons stuck beside the title) */
-.swiss-form .panel-header > div.nodrag {
+.swiss-form .panel-header > div.nodrag,
+.swiss-form .panel-header > button.secondary {
   margin-left: auto;
 }
 

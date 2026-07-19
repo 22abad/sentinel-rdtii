@@ -42,7 +42,7 @@ export function DocumentsPanel() {
   };
 
   return (
-    <section className="input-panel" aria-label="Knowledge base documents">
+    <section className="input-panel swiss-form" aria-label="Knowledge base documents">
       <div className="panel-header">
         <div>
           <h2>Documents</h2>
@@ -67,7 +67,7 @@ export function DocumentsPanel() {
           </p>
         )}
         {!error && !loading && docs.length === 0 && (
-          <p style={{ margin: "10px 0", fontSize: "0.8rem", color: "#8a94a3" }}>
+          <p style={{ margin: "10px 0", fontSize: "0.78rem", color: "#6b675c", fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace' }}>
             No documents ingested yet — attach a file in a RAG chat or link a file node.
           </p>
         )}
@@ -79,14 +79,14 @@ export function DocumentsPanel() {
               alignItems: "center",
               gap: 10,
               padding: "8px 6px",
-              borderBottom: "1px solid #eef2f4",
+              borderBottom: "1px solid #111827",
             }}
           >
             <div
               style={{
                 width: 32,
                 height: 32,
-                borderRadius: "50%",
+                borderRadius: 0,
                 background: extColor(doc.filename),
                 color: "#fff",
                 display: "flex",
@@ -106,7 +106,7 @@ export function DocumentsPanel() {
               >
                 {doc.filename || <FileText size={12} />}
               </div>
-              <div style={{ fontSize: "0.68rem", color: "#8a94a3", marginTop: 1 }}>
+              <div style={{ fontSize: "0.68rem", color: "#6b675c", marginTop: 1, fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace' }}>
                 {doc.status}
                 {doc.country_code ? ` · ${doc.country_code}` : ""}
                 {doc.created_at ? ` · ${new Date(doc.created_at).toLocaleDateString()}` : ""}
@@ -122,10 +122,10 @@ export function DocumentsPanel() {
                 gap: 4,
                 minHeight: 0,
                 padding: "3px 9px",
-                borderRadius: 9999,
-                border: "none",
-                background: "#fee2e2",
-                color: "#991b1b",
+                borderRadius: 0,
+                border: "1.5px solid #9f2d20",
+                background: "transparent",
+                color: "#9f2d20",
                 fontSize: "0.68rem",
                 fontWeight: 700,
                 cursor: "pointer",

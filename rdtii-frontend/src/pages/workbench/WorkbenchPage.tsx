@@ -268,7 +268,7 @@ export function WorkbenchPage() {
       upstreamId: "source",
       flat: true,
     },
-    { id: "documents", title: "Documents", element: <DocumentsPanel />, width: 420, dragHandle: ".panel-header" },
+    { id: "documents", title: "Documents", element: <DocumentsPanel />, width: 420, dragHandle: ".panel-header", flat: true },
   ];
 
   return (
