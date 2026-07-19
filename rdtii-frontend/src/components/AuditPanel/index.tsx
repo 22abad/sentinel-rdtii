@@ -101,6 +101,21 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
   if (typeof pdfPath === "string" && pdfPath) {
     provenance.push({ label: "File", value: <code title={pdfPath}>{truncateMiddle(pdfPath, 40)}</code> });
   }
+  // Staleness — severity + reasons are document-level (does the dossier match
+  // the live source?), so they belong in Provenance.
+  const stalenessSeverity = features["_staleness_severity"];
+  const stalenessReasons = features["_staleness_reasons"];
+  if (stalenessSeverity !== undefined || stalenessReasons !== undefined) {
+    provenance.push({
+      label: "Staleness",
+      value: [
+        stalenessSeverity !== undefined ? String(stalenessSeverity) : null,
+        stalenessReasons ? String(stalenessReasons) : null,
+      ]
+        .filter(Boolean)
+        .join(" · ") || "—",
+    });
+  }
 
   // Reuse the report's band styling (rr-*) so the blocks keep their original
   // look — light-blue quality stat tiles, green release-year band — just
@@ -197,27 +212,14 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
         </section>
       )}
 
-      {timestamp && (
-        <section
-          className={`rr-section rr-provenance ${timestamp.verified ? "rr-sec-timestamp-ok" : "rr-sec-timestamp-warn"}`}
-        >
-          <h4>Timestamp verification (forensic)</h4>
+      {/* Last update — just the resolved date; the multi-source verification
+          detail is internal (renamed from "Timestamp verification"). */}
+      {timestamp?.best_date && (
+        <section className="rr-section rr-provenance rr-sec-provenance">
+          <h4>Last update</h4>
           <div className="rr-provenance-line">
-            <span className="rr-provenance-label">
-              {timestamp.verified ? "✓ corroborated" : "unconfirmed"}
-            </span>
-            <span className="rr-provenance-value">
-              best date {timestamp.best_date || "—"}
-            </span>
+            <span className="rr-provenance-value">{timestamp.best_date}</span>
           </div>
-          {timestamp.source_details.map((s, i) => (
-            <div key={i} className="rr-provenance-line">
-              <span className="rr-provenance-label">{s.source}</span>
-              <span className="rr-provenance-value">
-                {s.date || "—"} ({s.status})
-              </span>
-            </div>
-          ))}
         </section>
       )}
     </div>
