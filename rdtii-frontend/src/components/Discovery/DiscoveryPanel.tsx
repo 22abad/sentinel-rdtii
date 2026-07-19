@@ -629,14 +629,6 @@ function CandidateCard({
           ? candidate.matched_pillars.map((p) => `P${p}`).join(" · ")
           : "—"}
       </span>
-      <button
-        type="button"
-        className="candidate-extract"
-        onClick={onExtract}
-        disabled={extracting}
-      >
-        Extract
-      </button>
     </article>
   );
 }
