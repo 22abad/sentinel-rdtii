@@ -518,6 +518,9 @@ def test_runtime_feature_normalization_prevents_string_false_scoring_bug(monkeyp
     import main as main_module
 
     monkeypatch.setenv("RDTII_REPAIR_MAX_ATTEMPTS", "0")
+    # Precision-first mode: this test asserts the eligibility gate's hard-drop
+    # path (the default flag mode keeps + flags instead of rejecting).
+    monkeypatch.setenv("RDTII_ELIGIBILITY_MODE", "reject")
     source = "Article 1. Personal data shall be freely transferred abroad."
     quote = "Personal data shall be freely transferred abroad"
 

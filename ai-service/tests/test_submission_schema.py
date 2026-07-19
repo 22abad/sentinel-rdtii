@@ -1075,7 +1075,7 @@ def test_drop_zero_confidence_rows_removes_unscoreable_noise():
     ]
 
 
-def test_formal_submission_filter_excludes_review_and_low_confidence_rows():
+def test_formal_submission_filter_excludes_review_and_low_confidence_rows(monkeypatch):
     from submission.schema import filter_formal_submission_rows
 
     def row(law, confidence, *, review=False, decision="supported"):
@@ -1091,10 +1091,37 @@ def test_formal_submission_filter_excludes_review_and_low_confidence_rows():
     weak = row("Weak Act 2024", 0.5)
     contradicted = row("Wrong Act 2024", 0.9, decision="contradicted")
 
+    monkeypatch.setenv("RDTII_ELIGIBILITY_MODE", "reject")
     assert filter_formal_submission_rows([accepted, review, weak, contradicted]) == [accepted]
     assert filter_formal_submission_rows(
         [accepted, review, weak, contradicted], include_review=True
     ) == [accepted, review, weak, contradicted]
+
+
+def test_formal_submission_filter_flag_mode_keeps_flagged_rows(monkeypatch):
+    """Flag-not-drop default: flagged rows stay in the formal output, annotated
+    for human validation, instead of being excluded at the output boundary."""
+    from submission.schema import filter_formal_submission_rows
+
+    def row(law, confidence, *, review=False, decision="supported"):
+        return SubmissionRow(
+            economy="Australia", law_name=law, indicator_id="P7-I3",
+            article="s 17", verbatim_snippet="Records must be retained for seven years.",
+            source_url="https://official.example/x", confidence=confidence,
+            requires_human_review=review, mapping_decision=decision,
+        )
+
+    accepted = row("Accepted Act 2024", 0.8)
+    review = row("Review Act 2024", 0.8, review=True)
+    weak = row("Weak Act 2024", 0.5)
+    contradicted = row("Wrong Act 2024", 0.9, decision="contradicted")
+    rows = [accepted, review, weak, contradicted]
+
+    # Unset → flag mode is the default.
+    monkeypatch.delenv("RDTII_ELIGIBILITY_MODE", raising=False)
+    assert filter_formal_submission_rows(rows) == rows
+    monkeypatch.setenv("RDTII_ELIGIBILITY_MODE", "flag")
+    assert filter_formal_submission_rows(rows) == rows
 def test_mapping_gate_drops_offtopic_and_confabulated_maps():
     """Mapping-layer gate: real quote, wrong indicator/label must be dropped.
 
