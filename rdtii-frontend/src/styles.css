@@ -2941,6 +2941,141 @@ textarea {
   margin-left: auto;
 }
 
+/* ── Source manager, Swiss-ified ──────────────────────────────────────────
+   Drawer in the usage/export sheet language; the panel carries swiss-form
+   (title, mono labels, flat fields) with manager-specific overrides. */
+.right-drawer.source-manager-drawer {
+  border: 2px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  box-shadow: none;
+}
+.source-manager-drawer .right-drawer-close {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  color: #111827;
+  box-shadow: none;
+}
+.source-manager-drawer .right-drawer-close:hover {
+  background: #111827;
+  color: #f3f1ea;
+}
+/* the drawer is the frame — don't double it on the panel */
+.source-manager-drawer .source-manager-panel.swiss-form {
+  border: none;
+  background: #f3f1ea;
+}
+/* square mono buttons everywhere in the manager */
+.swiss-form .source-manager-actions button,
+.swiss-form .source-manager-editor-header button,
+.swiss-form .source-manager-country-form button,
+.swiss-form .source-manager-section-title button {
+  border-radius: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .source-manager-actions button.secondary,
+.swiss-form .source-manager-editor-header button.secondary,
+.swiss-form .source-manager-section-title button {
+  border: 1.5px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .source-manager-actions button.secondary:hover:not(:disabled),
+.swiss-form .source-manager-editor-header button.secondary:hover:not(:disabled),
+.swiss-form .source-manager-section-title button:hover:not(:disabled) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .source-manager-actions button:not(.secondary):not(.danger),
+.swiss-form .source-manager-country-form button:not(.secondary):not(.danger) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .source-manager-actions button:not(.secondary):not(.danger):hover:not(:disabled) {
+  background: #000000;
+}
+.swiss-form .source-manager-editor-header button.danger,
+.swiss-form .source-manager-country-form button.danger {
+  border: 1.5px solid #9f2d20;
+  background: transparent;
+  color: #9f2d20;
+}
+.swiss-form .source-manager-editor-header button.danger:hover:not(:disabled),
+.swiss-form .source-manager-country-form button.danger:hover:not(:disabled) {
+  background: #9f2d20;
+  color: #ffffff;
+}
+/* section titles: black mono */
+.swiss-form .source-manager-section-title {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  letter-spacing: 0.1em;
+}
+/* country/source lists: square hairline cards; active = black fill */
+.swiss-form .source-manager-country-list button,
+.swiss-form .source-manager-source-list button {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .source-manager-country-list button.active,
+.swiss-form .source-manager-source-list button.active {
+  border-color: #111827;
+  background: #111827;
+  color: #f3f1ea;
+  box-shadow: none;
+}
+.swiss-form .source-manager-country-list button.active small,
+.swiss-form .source-manager-source-list button.active small {
+  color: rgba(243, 241, 234, 0.65);
+}
+.swiss-form .source-manager-country-list small,
+.swiss-form .source-manager-source-list small {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 700;
+}
+/* editor card: square hairline box on the cream */
+.swiss-form .source-manager-editor {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+}
+.swiss-form .source-manager-editor-header h3 {
+  color: #111827;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+/* form separators + readonly field on the cream */
+.swiss-form .source-manager-country-form {
+  border-bottom: 1.5px solid #111827;
+}
+.swiss-form .source-manager-country-form input[readonly] {
+  background: rgba(17, 24, 39, 0.05);
+  color: #6b675c;
+}
+/* success note: green band, square */
+.swiss-form .source-manager-success {
+  border: none;
+  border-radius: 0;
+  background: #dcead8;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+}
+.swiss-form .source-manager-muted {
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+}
+
 /* ── Export preview drawer, Swiss-ified ───────────────────────────────────
    Square cream sheet + black frame (usage-drawer language); mono table with
    black header row; hairlines only INSIDE the table — cell borders drop on

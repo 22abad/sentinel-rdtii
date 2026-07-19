@@ -238,7 +238,7 @@ export function DiscoverySourceManager() {
 
   return (
     <section
-      className="source-manager-panel"
+      className="source-manager-panel swiss-form"
       aria-label="Discovery source manager"
     >
       <div className="panel-header source-manager-header">
