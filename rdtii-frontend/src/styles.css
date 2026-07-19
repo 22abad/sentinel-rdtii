@@ -2661,36 +2661,31 @@ textarea {
   border-top: 1.5px solid #111827;
   padding-top: 0;
 }
+/* decision as a whole line: Reject | Approve fill the row half-half,
+   divided by a hairline (no mini buttons, no gaps) */
 .swiss-form .mapping-row-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
   margin-top: 0;
   border-top: 1.5px solid #111827;
-  padding: 12px 18px;
-}
-.swiss-form .mapping-row-source {
-  margin-right: auto;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.74rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #111827;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  padding: 0;
 }
 .swiss-form .mapping-row-actions button {
-  min-height: 34px;
-  border-radius: 0;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
   padding: 0 14px;
+  border: none;
+  border-radius: 0;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 .swiss-form .mapping-row-actions button:not(.secondary) {
+  border-left: 1.5px solid #111827; /* divider between the halves */
   background: #111827;
   color: #f3f1ea;
 }
@@ -2698,20 +2693,67 @@ textarea {
   background: #000;
 }
 .swiss-form .mapping-row-actions button.secondary {
-  border: 1.5px solid #111827;
   background: transparent;
-  color: #111827;
+  color: #9f2d20;
 }
 .swiss-form .mapping-row-actions button.secondary:hover {
-  background: #111827;
-  color: #f3f1ea;
+  background: #9f2d20;
+  color: #ffffff;
 }
 .swiss-form .mapping-row-actions button.active-approve {
   background: #116149;
 }
 .swiss-form .mapping-row-actions button.secondary.active-reject {
-  border-color: #9f2d20;
-  color: #9f2d20;
+  background: #9f2d20;
+  color: #ffffff;
+}
+
+/* document-level bands above the result list — reuse the report band styling;
+   the first band opens with its own hairline (the report container normally
+   suppresses it) */
+.swiss-form .doc-info-top > *:first-child {
+  border-top: 1.5px solid #111827;
+}
+/* sort/filter bar under the document bands */
+.swiss-form .doc-info-filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-top: 1.5px solid #111827;
+}
+.swiss-form .doc-info-chip {
+  min-height: 26px;
+  padding: 2px 10px;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.swiss-form .doc-info-chip.active {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .doc-info-chip.doc-info-sort {
+  margin-left: auto;
+}
+
+.swiss-form a.doc-info-link {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .swiss-form .score-badge {
   border-radius: 0;
@@ -2777,6 +2819,9 @@ textarea {
 }
 .swiss-form .reasoning-report .rr-sec-timestamp-warn {
   background: #f7d445;
+}
+.swiss-form .reasoning-report .rr-sec-staleness-high {
+  background: #f2a69b; /* red — high staleness */
 }
 .swiss-form .reasoning-report .rr-feature-line {
   display: flex;
@@ -2909,11 +2954,15 @@ textarea {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.78rem;
   color: #111827;
-  border-bottom: 1px solid rgba(17, 24, 39, 0.25);
+  border-bottom: 1px solid #111827;
   padding: 4px 0;
 }
 .swiss-form .reasoning-report .rr-provenance-line:last-child {
   border-bottom: none;
+}
+.swiss-form .reasoning-report .rr-provenance-label,
+.swiss-form .reasoning-report .rr-provenance-value {
+  color: #111827;
 }
 /* empty/loading states as an index row — same anatomy as a mapping row:
    one opening hairline, row height, no bottom border (no doubled lines) */
