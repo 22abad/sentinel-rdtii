@@ -463,6 +463,80 @@ def test_configured_search_backend_defaults_to_free_duckduckgo(monkeypatch):
     assert type(_build_search_backend("duckduckgo")).__name__ == "DuckDuckGoSearchBackend"
 
 
+def test_configured_search_backend_google_cse(monkeypatch):
+    from discovery.adapters.search_engine import _build_search_backend, _configured_search_backend
+
+    monkeypatch.delenv("DISCOVERY_SEARCH_BACKEND", raising=False)
+    monkeypatch.delenv("SERPAPI_API_KEY", raising=False)
+    # both Google CSE vars present + no SerpApi key -> google auto-selected
+    monkeypatch.setenv("GOOGLE_CSE_KEY", "g-key")
+    monkeypatch.setenv("GOOGLE_CSE_ID", "g-cx")
+    assert _configured_search_backend() == "google"
+    # SerpApi key outranks Google CSE (explicit setting still wins over both)
+    monkeypatch.setenv("SERPAPI_API_KEY", "s-key")
+    assert _configured_search_backend() == "serpapi"
+    monkeypatch.setenv("DISCOVERY_SEARCH_BACKEND", "google")
+    assert _configured_search_backend() == "google"
+    assert type(_build_search_backend("google")).__name__ == "GoogleCseSearchBackend"
+    # explicit google WITHOUT keys degrades loudly to free DDG, not fixtures
+    monkeypatch.delenv("GOOGLE_CSE_KEY", raising=False)
+    monkeypatch.delenv("GOOGLE_CSE_ID", raising=False)
+    assert _configured_search_backend() == "duckduckgo"
+
+
+@pytest.mark.anyio
+async def test_google_cse_backend_parses_items_and_trips_breaker(monkeypatch):
+    import discovery.adapters.search_engine as se
+
+    class FakeResponse:
+        def __init__(self, status_code, payload):
+            self.status_code = status_code
+            self._payload = payload
+
+        def json(self):
+            return self._payload
+
+        def raise_for_status(self):
+            pass
+
+    class FakeClient:
+        def __init__(self, response):
+            self._response = response
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            return False
+
+        async def get(self, url, params=None):
+            return self._response
+
+    import httpx
+
+    monkeypatch.setattr(se, "_GOOGLE_CSE_DISABLED_REASON", None)
+    backend = se.GoogleCseSearchBackend(api_key="k", cse_id="cx")
+
+    ok = FakeResponse(200, {"items": [
+        {"link": "https://sso.agc.gov.sg/Act/PDPA2012", "title": "PDPA", "snippet": "s"},
+        {"link": "", "title": "skipped"},
+    ]})
+    monkeypatch.setattr(httpx, "AsyncClient", lambda **kw: FakeClient(ok))
+    hits = await backend.search("personal data protection act", limit=5)
+    assert len(hits) == 1
+    assert hits[0].url == "https://sso.agc.gov.sg/Act/PDPA2012"
+    assert hits[0].retrieval_mode == "live"
+
+    # 403 trips the process-wide breaker: second call fails instantly
+    bad = FakeResponse(403, {})
+    monkeypatch.setattr(httpx, "AsyncClient", lambda **kw: FakeClient(bad))
+    with pytest.raises(RuntimeError, match="disabled for this process"):
+        await backend.search("q", limit=3)
+    with pytest.raises(RuntimeError, match="disabled for this process"):
+        await backend.search("q", limit=3)
+    monkeypatch.setattr(se, "_GOOGLE_CSE_DISABLED_REASON", None)
+
+
 @pytest.mark.anyio
 async def test_generic_search_adapter_non_mock_marks_fixture_fallback(monkeypatch):
     # Explicitly disable the live backend so this exercises the fixture-fallback
