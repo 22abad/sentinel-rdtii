@@ -2236,6 +2236,145 @@ textarea {
   color: #f3f1ea;
 }
 
+/* ── Discovery results, Swiss-ified: hairline bands ───────────────────────
+   Disclosure/summary/diagnostics/tray/warnings become full-width bands
+   divided by lines; fallback & warnings in the semantic yellow; chips and
+   buttons squared. The shortlist tray stays a multi-select action row. */
+.swiss-form .discovery-results {
+  gap: 0;
+  padding: 0;
+}
+.swiss-form .discovery-results > * {
+  border-top: 1.5px solid #111827;
+}
+.swiss-form .discovery-results > .candidate-list {
+  border-top: none; /* rows draw their own hairlines */
+}
+.swiss-form .retrieval-disclosure {
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  padding: 12px 18px;
+  background: #f3f1ea;
+  color: #111827;
+}
+.swiss-form .retrieval-disclosure.live {
+  background: #dcead8;
+  color: #111827;
+}
+.swiss-form .retrieval-disclosure.fallback {
+  background: #f7d445;
+  color: #111827;
+}
+.swiss-form .retrieval-disclosure-heading strong {
+  font-weight: 800;
+}
+.swiss-form .retrieval-disclosure-heading span,
+.swiss-form .retrieval-disclosure p {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+.swiss-form .discovery-summary {
+  padding: 10px 18px;
+  color: #6b675c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .discovery-diagnostics {
+  padding: 10px 18px;
+}
+.swiss-form .discovery-diagnostics span {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .discovery-diagnostics span.discovery-mode-live {
+  border-color: #111827;
+  background: #dcead8;
+  color: #111827;
+}
+.swiss-form .discovery-diagnostics span.discovery-mode-fallback {
+  border-color: #111827;
+  background: #f7d445;
+  color: #111827;
+}
+/* multi-select action row: count + Top5/Clear/CSV + Extract selected */
+.swiss-form .shortlist-tray {
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 18px;
+}
+.swiss-form .shortlist-tray span {
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.swiss-form .shortlist-tray button {
+  border-radius: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.swiss-form .shortlist-tray button.secondary {
+  border: 1.5px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+.swiss-form .shortlist-tray button.secondary:hover:not(:disabled) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .shortlist-tray button:not(.secondary) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .shortlist-tray button:not(.secondary):hover:not(:disabled) {
+  background: #000000;
+}
+.swiss-form .shortlist-progress div {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+}
+.swiss-form .shortlist-progress div span {
+  border-radius: 0;
+  background: #111827;
+}
+.swiss-form .discovery-warning {
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f7d445;
+  color: #111827;
+  padding: 10px 18px;
+  font-size: 0.82rem;
+}
+.swiss-form .discovery-error {
+  border: none;
+  border-radius: 0;
+  background: #9f2d20;
+  color: #ffffff;
+  padding: 10px 18px;
+  font-size: 0.82rem;
+}
+
 /* results: Swiss index list — click box · title · pillars · Extract */
 .swiss-form .candidate-list {
   display: flex;
