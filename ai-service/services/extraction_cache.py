@@ -27,11 +27,21 @@ from auth import _db_connect
 logger = logging.getLogger(__name__)
 
 
+# Fold the pipeline generation into the cache key: entries written by an
+# older gate/classifier generation must never be served again (a pre-fix run
+# once served a heading-quote 7.1 row scored 1, instantly, into the audit
+# panel). Bump whenever extraction/gate behaviour changes materially — old
+# rows simply stop matching; no migration needed.
+CACHE_SCHEMA_VERSION = "2026-07-19-gates-v2"
+
+
 def source_hash(text: str) -> str:
     """Stable content fingerprint. Whitespace-normalised so trivially-different
     copies of the same document (extra blank lines, trailing spaces) still hit."""
     normalized = "\n".join(line.rstrip() for line in (text or "").strip().splitlines())
-    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+    return hashlib.sha256(
+        f"{CACHE_SCHEMA_VERSION}\n{normalized}".encode("utf-8")
+    ).hexdigest()
 
 
 def get_cached(text: str) -> dict[str, Any] | None:
