@@ -3051,11 +3051,25 @@ textarea {
   border-radius: 0;
   background: transparent;
 }
+/* editor header restacked: title as its own row, then the two buttons as a
+   row of equal halves, then the form — divided by a hairline */
+.swiss-form .source-manager-editor-header {
+  display: block;
+  border-bottom: 1.5px solid #111827;
+  padding-bottom: 12px;
+}
 .swiss-form .source-manager-editor-header h3 {
+  margin: 0 0 12px;
   color: #111827;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+}
+.swiss-form .source-manager-editor-header div {
+  justify-content: stretch;
+}
+.swiss-form .source-manager-editor-header div button {
+  flex: 1; /* Copy | Delete share the row half-half */
 }
 /* form separators + readonly field on the cream */
 .swiss-form .source-manager-country-form {
