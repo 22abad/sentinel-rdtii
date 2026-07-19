@@ -9,6 +9,36 @@ link every claim to code._
 
 ## 📌 CURRENT STATE SNAPSHOT (2026-07-19) — read this first after a long session
 
+**LATE-NIGHT UPDATE (2026-07-19, PRs #345–#347).**
+- **#346 — quote-highlight went dead the moment a document became a cache
+  hit.** Classic audit click stopped jumping/highlighting the source panel.
+  Root cause: the extraction-cache replay path (#339) re-emitted `mapping`
+  events but never the `started` event that carries `source_text` — so on a
+  cache hit the panel text stayed empty and the highlight view had nothing to
+  render into. Fixed on both sides (replay now emits `started`; frontend also
+  backfills from `node_output`), plus SourceView now treats quote offsets as
+  a hint and relocates the verbatim by exact/whitespace-tolerant search.
+  **Lesson: a cache replay must be indistinguishable from a real run — audit
+  every event the live path emits, not just the payload rows.** Verified via
+  Playwright (cached Pekeliling URL → click deep row → mark scrolled into
+  viewport; second click moves the highlight).
+- **#347 — Google Custom Search backend.** DDG (free default) bot-challenges
+  after rapid searches. Added Google's official CSE JSON API (100/day free,
+  own key, ToS-clean) as `DISCOVERY_SEARCH_BACKEND=google` / auto-selected on
+  GOOGLE_CSE_KEY+GOOGLE_CSE_ID; same process-wide breaker as SerpApi. Judge
+  default unchanged (key-less DDG). Bing is NOT an option (Microsoft retired
+  the Bing Search APIs in Aug 2025); China discovery stays search-engine-free
+  via the china_flk direct portal adapter.
+- **#345 — demo prep.** New primary OCR asset: 300dpi image-only scan of the
+  Malay Pekeliling (5 article-level P7-I4 rows, correct bilingual name).
+  Found in the process: the old PDPA-excerpt scan misattributes itself to
+  "Private Healthcare Facilities and Services Act" — the #342 self-title
+  fallback latches onto any Act named in the first 1500 chars when an excerpt
+  has no title page (OPEN ITEM; asset quarantined with a warning in
+  demo-assets/README). Dossier staleness now shows worst-severity reasons
+  with an N/M row count instead of a cross-row union ("repealed"+"draft" had
+  landed on one in-force Act).
+
 **EVENING UPDATE (2026-07-19, PR #343) — document dossier + canvas no-overlap.**
 - *Problem (Dong, from the live UI):* the same document showed a DIFFERENT
   source grade / timeframe / release year / staleness on every mapping card —
