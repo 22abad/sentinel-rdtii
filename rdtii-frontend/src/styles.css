@@ -2141,18 +2141,22 @@ textarea {
   grid-template-columns: 1fr 1fr;
   gap: 0;
   align-items: stretch;
-  padding-top: 0; /* pull the first row line up tight under the title */
+  /* no top/side padding so the row lines run tight under the title AND
+     reach the full panel width; the cells carry the content inset instead */
+  padding: 0 0 16px;
 }
 .swiss-form .discovery-controls > * {
   border-top: 1.5px solid #111827;
   padding-top: 12px;
 }
 .swiss-form .discovery-controls > *:nth-child(odd) {
+  padding-left: 18px;
   padding-right: 16px;
 }
 .swiss-form .discovery-controls > *:nth-child(even) {
   border-left: 1.5px solid #111827;
   padding-left: 16px;
+  padding-right: 18px;
 }
 /* pillar toggles: square; active state as a black tag */
 .swiss-form .discovery-toggle {
