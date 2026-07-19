@@ -2966,9 +2966,22 @@ textarea {
   border: none;
   background: #f3f1ea;
 }
-/* single line under the title (nothing below carries a top hairline here) */
+/* single line under the title (nothing below carries a top hairline here);
+   header stacked: title row, then Reload | Save as a full-width line */
 .swiss-form.source-manager-panel .panel-header {
+  display: block;
   border-bottom: 1.5px solid #111827;
+}
+.swiss-form.source-manager-panel .panel-header > div:first-child {
+  margin-bottom: 12px;
+  padding-right: 56px; /* clear the drawer's close button */
+}
+.swiss-form.source-manager-panel .source-manager-actions {
+  justify-content: stretch;
+  padding-right: 0; /* actions no longer sit beside the close button */
+}
+.swiss-form.source-manager-panel .source-manager-actions button {
+  flex: 1; /* Reload | Save share the line half-half */
 }
 /* square mono buttons everywhere in the manager */
 .swiss-form .source-manager-actions button,
