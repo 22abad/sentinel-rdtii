@@ -2140,10 +2140,14 @@ textarea {
   border-bottom: none;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  align-items: stretch;
+  align-items: start; /* natural, uniform cell heights (no stretch) */
   /* no top/side padding so the row lines run tight under the title AND
      reach the full panel width; the cells carry the content inset instead */
   padding: 0 0 16px;
+}
+/* keep the cells a uniform height so every row/bar matches */
+.swiss-form .discovery-controls > * {
+  align-content: start;
 }
 .swiss-form .discovery-controls > * {
   border-top: 1.5px solid #111827;
