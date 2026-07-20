@@ -341,6 +341,7 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
     baseMappings = [],
     baseRejected = [],
     updateTextFromSource = true,
+    textPrefix = "",
     setReadyOnDone = true,
     signal,
   }: {
@@ -349,6 +350,10 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
     baseMappings?: IndicatorMapping[];
     baseRejected?: RejectedExtraction[];
     updateTextFromSource?: boolean;
+    // When set, the Source panel shows `textPrefix + this doc's source_text`
+    // — lets a batch keep prior documents' text on screen while this one
+    // streams in (progressive multi-file highlight), instead of a blank box.
+    textPrefix?: string;
     setReadyOnDone?: boolean;
     signal?: AbortSignal;
   }): Promise<ExtractionResponse> {
@@ -407,7 +412,7 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
           typeof data.source_text === "string" ? data.source_text : "";
         if (nextSourceText) {
           sourceText = nextSourceText;
-          if (updateTextFromSource) setText(nextSourceText);
+          if (updateTextFromSource) setText(textPrefix + nextSourceText);
         }
       }
 
@@ -465,7 +470,7 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
         sourceText = String(payload.outputs.source_text ?? sourceText);
         // Safety net for replayed/cached runs that skipped the `started`
         // event: the highlight view needs the source text in the panel.
-        if (updateTextFromSource && sourceText) setText(sourceText);
+        if (updateTextFromSource && sourceText) setText(textPrefix + sourceText);
         // Same safety net for the rejected log — it's the "what was filtered
         // out and why" evidence; a replay that omitted the per-item events
         // must not present a run as if nothing was ever rejected.
@@ -643,13 +648,19 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
       setSourceUrl(url);
       triggerCountryDetect(url, "");
 
+      // Keep the already-extracted documents on screen and stream THIS one in
+      // under its own "=== url ===" header, so the Source panel is never blank
+      // and every mapping (from any doc) can trace to its highlighted quote.
+      const header = `${accumulatedText ? accumulatedText + "\n\n" : ""}=== ${url} ===\n`;
+
       try {
         const result = await runExtractionStream({
           runSourceUrl: url,
           requestText: "",
           baseMappings: accumulatedMappings,
           baseRejected: accumulatedRejected,
-          updateTextFromSource: false,
+          updateTextFromSource: true,
+          textPrefix: header,
           setReadyOnDone: false,
           signal: controller.signal,
         });
@@ -661,10 +672,8 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
           result.usage,
           batchRunId,
         );
-        if (result.source_text) {
-          accumulatedText += `${accumulatedText ? "\n\n" : ""}=== ${url} ===\n${result.source_text}`;
-          setText(accumulatedText);
-        }
+        accumulatedText = header + (result.source_text || "");
+        setText(accumulatedText);
       } catch (err) {
         if (isAbortError(err)) {
           stopped = true;
