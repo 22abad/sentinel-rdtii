@@ -526,6 +526,36 @@ class _FixtureCandidate(_FakeCandidate):
     title = "Configured Fixture Act 2099"
 
 
+def test_confidence_reflects_human_review_gate():
+    """Confidence (official col 12) must AGREE with the review gate: any row
+    routed to a human sits below 0.80; a clean row sits high. Guards against
+    the old two-state flag (1.0 seed / 0.8 live) that ignored the gates."""
+    text = "x" * 100 + _sample_mapping().verbatim_quote + "y" * 200
+
+    flagged = build_row(
+        _sample_mapping(),  # requires_human_review=True, 1 flag
+        economy_display="Singapore",
+        candidate=_FakeCandidate(),
+        source_text=text,
+        doc_meta={"quality": "good"},
+    )
+    assert flagged.requires_human_review is True
+    assert flagged.confidence < 0.80
+
+    clean = _sample_mapping()
+    clean.requires_human_review = False
+    clean.flag_reasons = []
+    clean_row = build_row(
+        clean,
+        economy_display="Singapore",
+        candidate=_FakeCandidate(),
+        source_text=text,
+        doc_meta={"quality": "good"},
+    )
+    assert clean_row.requires_human_review is False
+    assert clean_row.confidence >= 0.80
+
+
 def test_build_row_maps_all_fields():
     text = "x" * 100 + _sample_mapping().verbatim_quote + "y" * 200
     row = build_row(
@@ -541,7 +571,10 @@ def test_build_row_maps_all_fields():
     assert row.article == "Section 26"
     assert row.last_amended == "2020"
     assert row.source_url.endswith("PDPA2012")
-    assert row.confidence == pytest.approx(0.8)
+    # This mapping is flagged for human review (1 flag), so confidence must
+    # sit BELOW the official 0.80 review threshold — not the old hardcoded 0.8.
+    assert row.confidence == pytest.approx(0.75)
+    assert row.confidence < 0.80
     assert row.source_confidence == pytest.approx(0.91)
     assert row.amendment_version_date == "Amended 2020"
     assert "requires human review" in row.notes
@@ -756,7 +789,8 @@ def test_csv_and_json_round_trip(tmp_path):
         assert len(header) == len(CSV_COLUMNS)
         first = next(reader)
         assert first[list(CSV_COLUMNS).index("indicator_id")] == "P6-I4"
-        assert first[list(CSV_COLUMNS).index("confidence")] == "0.80"
+        # Flagged-for-review row → confidence below the 0.80 review threshold.
+        assert first[list(CSV_COLUMNS).index("confidence")] == "0.75"
 
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert payload["meta"]["economy"] == "Singapore"
