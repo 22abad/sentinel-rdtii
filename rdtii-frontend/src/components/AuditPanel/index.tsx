@@ -330,13 +330,15 @@ function DocumentInfoGroup({
         </section>
       )}
 
-      {/* Last update — just the resolved date on the yellow band; the
+      {/* Last update — the resolved date, oversized, on the cream band; the
           multi-source verification detail is internal. */}
       {timestamp?.best_date && (
-        <section className="rr-section rr-provenance rr-sec-timestamp-warn">
+        <section className="rr-section rr-provenance">
           <h4>Last update</h4>
           <div className="rr-provenance-line">
-            <span className="rr-provenance-value">{timestamp.best_date}</span>
+            <span className="rr-provenance-value doc-info-lastdate">
+              {timestamp.best_date}
+            </span>
           </div>
         </section>
       )}

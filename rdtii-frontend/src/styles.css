@@ -2776,6 +2776,13 @@ textarea {
   color: #f3f1ea;
 }
 
+/* Last update: oversized date to highlight it on the cream band */
+.swiss-form .doc-info-lastdate {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
 .swiss-form a.doc-info-link {
   display: block;
   overflow: hidden;
