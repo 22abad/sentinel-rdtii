@@ -42,8 +42,15 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
 
   useEffect(() => {
     if (!activeMapping || !sourceRef.current) return;
-    const mark = sourceRef.current.querySelector("mark");
-    if (mark) mark.scrollIntoView({ block: "center", behavior: "smooth" });
+    // rAF: let the highlight <mark> paint before we scroll to it. Instant
+    // (not smooth): on a long statute the quote can be thousands of px down,
+    // and a smooth animation over that distance reads as "nothing happened".
+    const container = sourceRef.current;
+    const raf = requestAnimationFrame(() => {
+      const mark = container.querySelector("mark");
+      mark?.scrollIntoView({ block: "center", behavior: "auto" });
+    });
+    return () => cancelAnimationFrame(raf);
   }, [activeKey, activeMapping]);
 
   // Run: prefer explicit text/URL; otherwise parse every linked file node to
