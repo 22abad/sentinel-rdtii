@@ -61,6 +61,7 @@ function locateQuote(
   quote: string,
   hintStart: number,
   hintEnd: number,
+  allowHintFallback = false,
 ): [number, number] | null {
   const start = Math.max(0, Math.min(hintStart, text.length));
   const end = Math.max(start, Math.min(hintEnd, text.length));
@@ -89,6 +90,12 @@ function locateQuote(
   } catch {
     // give up
   }
+  // Single-page (single-file) only: the stored offsets are page-relative and
+  // valid here, so fall back to highlighting the hinted span even when the
+  // verbatim doesn't textually resolve (paraphrase / whitespace / cache
+  // variance). For multi-file the offsets are blob-relative, so this fallback
+  // would mis-hit the wrong page — the caller passes allowHintFallback=false.
+  if (allowHintFallback) return start === end ? null : [start, end];
   return null;
 }
 
@@ -125,10 +132,16 @@ export function SourceView({ text, activeMapping, sourceRef, onClick, title }: S
     () =>
       activeMapping
         ? pages.map((p) =>
-            locateQuote(p.body, quote, activeMapping.quote_start, activeMapping.quote_end),
+            locateQuote(
+              p.body,
+              quote,
+              activeMapping.quote_start,
+              activeMapping.quote_end,
+              !multi, // single file: offsets are valid, allow the hint fallback
+            ),
           )
         : pages.map(() => null),
-    [pages, activeMapping, quote],
+    [pages, activeMapping, quote, multi],
   );
 
   // Jump to the page that actually contains the clicked quote.
