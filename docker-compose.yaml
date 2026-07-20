@@ -54,6 +54,11 @@ services:
       GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp-vertex-key.json
     volumes:
       - ./ai-service:/app
+      # KNOWN-baseline law corpus, read-only. The code resolves it at /data/…
+      # (repo root); without this mount the container has no local fallback, so
+      # a blocked/anti-bot portal (e.g. sso.agc.gov.sg returning its banner)
+      # sinks extraction even though the text is downloaded in the repo.
+      - ./data:/data:ro
       - ~/.config/opencode/gcp-vertex-key.json:/etc/gcp-vertex-key.json
     extra_hosts:
       - "host.docker.internal:host-gateway"
