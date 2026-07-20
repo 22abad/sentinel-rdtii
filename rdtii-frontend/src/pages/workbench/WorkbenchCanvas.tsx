@@ -1203,6 +1203,7 @@ export function WorkbenchCanvas({
               width: sizes[id]?.width ?? 460,
               height: sizes[id]?.height,
               transparent: true,
+              flat: true, // black selection hardware, like the other Swiss nodes
               onResize: (size: WorkbenchCanvasSize) => resizeNode(id, size),
               onDelete: () => removeNode(id),
             } satisfies PanelNodeData,
