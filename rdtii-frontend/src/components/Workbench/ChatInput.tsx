@@ -125,12 +125,12 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
 
   const containerVariants: Variants = {
     collapsed: {
-      height: 94, // +26 for the black header bar
+      height: 68,
       boxShadow: "none", // flat Swiss node — no drop shadow
       transition: { type: "spring", stiffness: 120, damping: 18 },
     },
     expanded: {
-      height: 154,
+      height: 128,
       boxShadow: "none",
       transition: { type: "spring", stiffness: 120, damping: 18 },
     },
@@ -199,24 +199,6 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
         onClick={handleActivate}
       >
         <div className="flex flex-col items-stretch w-full h-full">
-          {/* Header — black bar, matches the other Swiss nodes */}
-          <div
-            className="nodrag flex items-center px-3"
-            style={{
-              height: 26,
-              flexShrink: 0,
-              background: "#111827",
-              color: "#f3f1ea",
-              fontFamily:
-                '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace',
-              fontSize: "0.62rem",
-              fontWeight: 700,
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-            }}
-          >
-            RAG Chat
-          </div>
           {/* Input Row */}
           <div className="flex items-center gap-2 p-3 w-full">
             <input

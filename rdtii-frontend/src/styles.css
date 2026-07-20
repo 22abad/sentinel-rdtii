@@ -2747,6 +2747,20 @@ textarea {
   font-size: 0.8rem;
 }
 
+/* needs-review tag — square black-framed yellow chip (mono uppercase) */
+.swiss-form .review-flag {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  padding: 1px 7px;
+  background: #f7d445;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* review-status filter — 3 equal buttons filling the row, divided by lines */
 .swiss-form .doc-info-filterbar {
   display: grid;
