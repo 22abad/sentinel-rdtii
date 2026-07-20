@@ -192,9 +192,33 @@ class ExtractMappingsExecutor(NodeExecutor):
                 str(source_url),
                 browser_mode=str(payload.get("browser_mode") or "auto"),
             )
+            text = document.text or ""
+            # Resilience parity with the CLI: when the live fetch (and its own
+            # Wayback/cache fallbacks) comes back unusably short — e.g. an
+            # anti-bot portal returning its "Trusted websites" banner instead
+            # of the statute — serve the pre-downloaded official text from the
+            # local KNOWN-baseline corpus so a blocked portal doesn't sink the
+            # whole extraction. The web path previously had no such fallback.
+            if len(text.strip()) < 400:
+                cached = _cached_text_for_url(str(source_url))
+                if cached:
+                    return cached, None
             return document.text, document.pdf_metadata
 
         raise ValueError("extract.mappings requires document.text, text, or source_url.")
+
+
+def _cached_text_for_url(url: str) -> str | None:
+    """Local KNOWN-baseline corpus text for this official URL, or None.
+
+    Best-effort: any failure (no corpus, unmapped URL) just returns None and
+    the caller keeps the live (short) text."""
+    try:
+        from services.known_corpus_cache import cached_text_for_url
+
+        return cached_text_for_url(url)
+    except Exception:  # noqa: BLE001 — the fallback must never break extraction
+        return None
 
 
 def _parse_sse_event(raw_event: str) -> tuple[str, Any]:
