@@ -355,9 +355,8 @@ def build_row(
     )
     source_confidence = float(getattr(candidate, "confidence", 0.0) or 0.0) if candidate else 0.0
     legally_approved = bool(getattr(candidate, "legal_review_approved", False))
-    mapping_confidence = 1.0 if legally_approved else float(
-        getattr(mapping, "mapping_confidence", 0.5) or 0.0
-    )
+    # The submission `confidence` (official col 12) is derived below from the
+    # human-review gate, not from the old hardcoded mapping_confidence.
 
     before, after = _context_windows(
         source_text, mapping.quote_start, mapping.quote_end
@@ -408,6 +407,24 @@ def build_row(
     if doc_title and law_name and doc_title.lower() not in law_name.lower()             and law_name.lower() not in doc_title.lower():
         attribution_note = f"quoted from document: {doc_title[:80]}"
 
+    # ── Confidence (official column 12 = "model certainty 0.00–1.00") ──
+    # The raw `mapping_confidence` is a hardcoded 0.8 and `legal_review_approved`
+    # is only ever True for curated-library rows, so the old value was a mere
+    # two-state flag (1.0 seed / 0.8 live) that ignored the review gates —
+    # every flagged row still read 1.0, the exact opposite of the official
+    # guidance ("scores below 0.80 should be flagged for human review"). Derive
+    # a meaningful, deterministic value that AGREES with that gate: any row we
+    # route to a human sits below 0.80 (graded by how many concerns fired);
+    # clean rows sit high, with team-verified seeds at the top.
+    needs_review = bool(getattr(mapping, "requires_human_review", False)) or bool(title_note)
+    if needs_review:
+        n_flags = len(getattr(mapping, "flag_reasons", []) or []) + (1 if title_note else 0)
+        row_confidence = round(max(0.4, 0.75 - 0.1 * max(0, n_flags - 1)), 2)
+    elif legally_approved:
+        row_confidence = 1.0
+    else:
+        row_confidence = 0.9
+
     return SubmissionRow(
         economy=economy_display,
         law_name=law_name,
@@ -436,7 +453,7 @@ def build_row(
             or doc_meta.get("source_pdf_path")
             or doc_meta.get("location_reference", "")
         ),
-        confidence=mapping_confidence,
+        confidence=row_confidence,
         notes="; ".join(x for x in (
             _notes(mapping, candidate, doc_meta), inferred_note, self_title_note,
             attribution_note, title_note) if x),
