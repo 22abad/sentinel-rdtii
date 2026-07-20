@@ -172,29 +172,60 @@ class ExtractMappingsExecutor(NodeExecutor):
 
     async def _resolve_text(self, node: WorkflowNode, inputs: dict) -> tuple[str, dict[str, Any] | None]:
         payload = {**inputs, **node.config}
-        document = payload.get("document")
-        if isinstance(document, dict):
-            text = str(document.get("text") or "")
-            pdf_metadata = document.get("pdf_metadata")
-            if text.strip():
-                return text, pdf_metadata if isinstance(pdf_metadata, dict) else None
 
-        text = str(payload.get("text") or "")
-        if text.strip():
-            return text, None
-
+        # Know the source URL up front so the local-corpus fallback applies to
+        # EVERY path — including Discovery, which pre-fetches the candidate and
+        # hands us its text directly. A blocked anti-bot portal returns a
+        # ~107-char "Trusted websites" banner, which is non-empty, so without
+        # this the short banner would be extracted instead of the downloaded
+        # statute (0 tokens, every row rejected).
         candidate = payload.get("candidate")
         source_url = payload.get("source_url") or payload.get("url")
         if not source_url and isinstance(candidate, dict):
             source_url = candidate.get("url")
+
+        def _fallback_if_short(text: str, meta: dict[str, Any] | None):
+            """Return the local-corpus text when `text` is too short to be a
+            real statute body and we know its official URL; else keep `text`."""
+            if len(text.strip()) < 400 and source_url:
+                cached = _cached_text_for_url(str(source_url))
+                if cached:
+                    return cached, None
+            return text, meta
+
+        document = payload.get("document")
+        if isinstance(document, dict):
+            text = str(document.get("text") or "")
+            pdf_metadata = document.get("pdf_metadata")
+            meta = pdf_metadata if isinstance(pdf_metadata, dict) else None
+            if text.strip():
+                return _fallback_if_short(text, meta)
+
+        text = str(payload.get("text") or "")
+        if text.strip():
+            return _fallback_if_short(text, None)
+
         if source_url:
             document = await fetch_document_text(
                 str(source_url),
                 browser_mode=str(payload.get("browser_mode") or "auto"),
             )
-            return document.text, document.pdf_metadata
+            return _fallback_if_short(document.text or "", document.pdf_metadata)
 
         raise ValueError("extract.mappings requires document.text, text, or source_url.")
+
+
+def _cached_text_for_url(url: str) -> str | None:
+    """Local KNOWN-baseline corpus text for this official URL, or None.
+
+    Best-effort: any failure (no corpus, unmapped URL) just returns None and
+    the caller keeps the live (short) text."""
+    try:
+        from services.known_corpus_cache import cached_text_for_url
+
+        return cached_text_for_url(url)
+    except Exception:  # noqa: BLE001 — the fallback must never break extraction
+        return None
 
 
 def _parse_sse_event(raw_event: str) -> tuple[str, Any]:
