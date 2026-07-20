@@ -19,6 +19,7 @@ const PROVIDER_LABELS: Record<string, string> = {
   mistral: "Mistral",
   together: "Together AI",
   openrouter: "OpenRouter",
+  ollama: "Ollama (local · no key)",
   "llama-3-local": "Llama 3 (Local)",
 };
 
