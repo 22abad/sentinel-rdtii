@@ -2714,6 +2714,30 @@ textarea {
 .swiss-form .doc-info-top > *:first-child {
   border-top: 1.5px solid #111827;
 }
+/* Extract panel error / warning as Swiss bands (red / yellow, square) */
+.swiss-form .error {
+  margin: 0;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #9f2d20;
+  color: #ffffff;
+  padding: 10px 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+.swiss-form .source-warning {
+  margin: 0;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f7d445;
+  color: #111827;
+  padding: 10px 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+
 /* sort/filter bar under the document bands */
 .swiss-form .doc-info-filterbar {
   display: flex;
