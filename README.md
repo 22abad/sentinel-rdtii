@@ -63,6 +63,19 @@ in a few minutes. The default provider below is a local open-weight model
 (Ollama) so **no API key is required**; see [Swapping the LLM](#swapping-the-llm)
 for cloud providers.
 
+> **Two independent ways to run this — don't mix them up:**
+> 1. **The `main.py` CLI (this Quick Start) — the Round-1 structured-output
+>    deliverable.** It runs in a plain Python **virtualenv on your machine**.
+>    It does **not** use Docker and does **not** need PostgreSQL — so
+>    `python main.py --economy Australia --pillar 6,7` only works after you do
+>    the `pip install` step below. `docker compose up` alone will **not** make
+>    the CLI runnable.
+> 2. **The web workbench (optional) — the interactive UI.** That one runs via
+>    `docker compose up --build` (see [below](#optional--web-workbench-the-audit-view-via-docker)).
+>
+> A judge reproducing our results uses path 1 for the CSV/JSON output, and can
+> optionally start path 2 to click through the same engine in a browser.
+
 ### 1. Clone
 
 ```bash
