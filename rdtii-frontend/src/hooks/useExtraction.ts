@@ -193,7 +193,7 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
   };
 
   const [selectedOllamaModel, setSelectedOllamaModelState] = useState(
-    () => localStorage.getItem("selectedOllamaModel") || "gemma4:12b",
+    () => localStorage.getItem("selectedOllamaModel") || "qwen2.5:14b",
   );
   const setSelectedOllamaModel = (val: string) => {
     setSelectedOllamaModelState(val);
