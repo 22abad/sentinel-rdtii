@@ -37,7 +37,63 @@ function truncateMiddle(value: string, max = 30): string {
     as bands at the top of the list instead of repeating inside each quote's
     report. Markup/classes copied verbatim from the report so the styling is
     identical. Derived from the first mapping (one document per run). */
-function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
+// Multi-file plan (PR #343 + #345), on our band rendering: group mappings by
+// DETERMINISTIC document identity (source_url / content hash, never the LLM
+// law name), render one doc-info block per document, and aggregate the
+// per-chunk-noisy fields deterministically (best-confidence grade, modal
+// timeframe, worst-severity staleness) so the doc info can't flicker.
+const SEVERITY_ORDER = ["none", "low", "medium", "high"];
+function feat(m: IndicatorMapping, ...keys: string[]): unknown {
+  const f = (m.features ?? {}) as Record<string, unknown>;
+  for (const k of keys) if (k in f) return f[k];
+  return undefined;
+}
+function docKey(m: IndicatorMapping): string {
+  return (
+    m.source_url ||
+    String(feat(m, "source_file_sha256") ?? "") ||
+    "uploaded-document"
+  );
+}
+function docTitleOf(mappings: IndicatorMapping[]): string {
+  const counts = new Map<string, number>();
+  for (const m of mappings) {
+    if (m.source_legislation)
+      counts.set(m.source_legislation, (counts.get(m.source_legislation) ?? 0) + 1);
+  }
+  let best = "";
+  let bestN = 0;
+  for (const [name, n] of counts) if (n > bestN) [best, bestN] = [name, n];
+  return best || mappings.find((m) => m.source_url)?.source_url || "Uploaded document";
+}
+
+function DocumentInfoRows({ mappings }: { mappings: IndicatorMapping[] }) {
+  const groups = new Map<string, IndicatorMapping[]>();
+  for (const m of mappings) {
+    const k = docKey(m);
+    const g = groups.get(k);
+    if (g) g.push(m);
+    else groups.set(k, [m]);
+  }
+  return (
+    <>
+      {[...groups.entries()].map(([key, group]) => (
+        <DocumentInfoGroup key={key} mappings={group} showTitle={groups.size > 1} />
+      ))}
+    </>
+  );
+}
+
+function DocumentInfoGroup({
+  mappings,
+  showTitle,
+}: {
+  mappings: IndicatorMapping[];
+  showTitle: boolean;
+}) {
+  // Anchor row (a real source_url) drives the doc-level fields + the single
+  // release-year/timestamp probe per document.
+  const mapping = mappings.find((m) => m.source_url) ?? mappings[0];
   const features = (mapping.features ?? {}) as Record<string, unknown>;
   const num = (v: unknown) => {
     const n = typeof v === "number" ? v : Number(v);
@@ -72,15 +128,33 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapping.source_legislation, mapping.source_url, mapping.last_update]);
 
-  // ── Provenance (verbatim from the report) ──
-  const grade = features["_source_grade"];
-  const gradeConfidenceN = (() => {
-    const raw = features["_source_grade_confidence"];
+  // ── Provenance — aggregated across the document ──
+  // Source grade: the best-confidence row wins (same document, same source).
+  let grade: unknown;
+  let gradeConf = -1;
+  for (const m of mappings) {
+    const raw = feat(m, "_source_grade_confidence");
     const n = typeof raw === "number" ? raw : Number(raw);
-    return Number.isFinite(n) ? Math.round(n * 100) : null;
+    if (Number.isFinite(n) && n > gradeConf) {
+      gradeConf = n;
+      grade = feat(m, "_source_grade");
+    }
+  }
+  if (grade === undefined) grade = features["_source_grade"];
+  const gradeConfidenceN = gradeConf >= 0 ? Math.round(gradeConf * 100) : null;
+  // Timeframe: modal column/status across the rows.
+  const timeframeColumn = (() => {
+    const counts = new Map<string, number>();
+    for (const m of mappings) {
+      const c = feat(m, "_timeframe_column");
+      if (c !== undefined) counts.set(String(c), (counts.get(String(c)) ?? 0) + 1);
+    }
+    let best: string | undefined;
+    let bestN = 0;
+    for (const [c, n] of counts) if (n > bestN) [best, bestN] = [c, n];
+    return best;
   })();
   const timeframeStatus = features["_timeframe_status"];
-  const timeframeColumn = features["_timeframe_column"];
   const sha = features["source_file_sha256"];
   const pdfPath = features["source_pdf_path"];
   const provenance: { label: string; value: React.ReactNode }[] = [];
@@ -103,13 +177,37 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
   }
   // Staleness — document-level (does the dossier still match the live
   // source?). Rendered as its own band, colored by severity.
-  const stalenessSeverity =
-    features["_staleness_severity"] !== undefined
-      ? String(features["_staleness_severity"])
-      : null;
-  const stalenessReasons = features["_staleness_reasons"]
-    ? String(features["_staleness_reasons"])
-    : "";
+  // Staleness: worst severity across rows; reasons ONLY from the rows AT that
+  // severity, with an N/M count (PR #345 — a union put "repealed" and "draft"
+  // on the same in-force Act from one noisy chunk).
+  let worstSeverity = "none";
+  let sawStaleness = false;
+  const perRow: { sv: string; reasons: string[] }[] = [];
+  for (const m of mappings) {
+    const s = feat(m, "_staleness_severity");
+    if (s !== undefined) sawStaleness = true;
+    const sv = s !== undefined ? String(s) : "none";
+    if (SEVERITY_ORDER.indexOf(sv) > SEVERITY_ORDER.indexOf(worstSeverity))
+      worstSeverity = sv;
+    perRow.push({
+      sv,
+      reasons: String(feat(m, "_staleness_reasons") ?? "")
+        .split(";")
+        .map((r) => r.trim())
+        .filter(Boolean),
+    });
+  }
+  const worstRows = perRow.filter((r) => r.sv === worstSeverity);
+  const stalenessSeverity = sawStaleness ? worstSeverity : null;
+  const stalenessReasons =
+    worstSeverity === "none"
+      ? ""
+      : [
+          `${worstRows.length}/${mappings.length} rows`,
+          [...new Set(worstRows.flatMap((r) => r.reasons))].join("; "),
+        ]
+          .filter(Boolean)
+          .join(" · ");
   const stalenessClass =
     stalenessSeverity === null || stalenessSeverity === "none"
       ? "rr-sec-timestamp-ok" // green — fresh
@@ -133,6 +231,14 @@ function DocumentInfoRows({ mapping }: { mapping: IndicatorMapping }) {
 
   return (
     <div className="reasoning-report doc-info-top select-text">
+      {showTitle && (
+        <section className="rr-section rr-sec-provenance doc-info-doctitle">
+          <h4>Document</h4>
+          <div className="rr-provenance-line">
+            <span className="rr-provenance-value">{docTitleOf(mappings)}</span>
+          </div>
+        </section>
+      )}
       {stats.length > 0 && (
         <section className="rr-section rr-sec-quality">
           <h4>Document quality</h4>
@@ -444,7 +550,7 @@ export function AuditPanel({
       {exportError && <p className="discovery-error">{exportError}</p>}
 
       {/* document-level rows above the result list */}
-      {mappings.length > 0 && <DocumentInfoRows mapping={mappings[0]} />}
+      {mappings.length > 0 && <DocumentInfoRows mappings={mappings} />}
 
       {/* sort / filter bar — review status + sort by pillar */}
       {mappings.length > 0 && (

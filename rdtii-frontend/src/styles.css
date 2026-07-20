@@ -2711,7 +2711,9 @@ textarea {
 /* document-level bands above the result list — reuse the report band styling;
    the first band opens with its own hairline (the report container normally
    suppresses it) */
-.swiss-form .doc-info-top > *:first-child {
+/* higher specificity than `.reasoning-report > *:first-child { border-top:none }`
+   so the first band (Document quality) keeps its line under the usage strip */
+.swiss-form .reasoning-report.doc-info-top > *:first-child {
   border-top: 1.5px solid #111827;
 }
 /* Extract panel error / warning as Swiss bands (red / yellow, square) */
