@@ -9,6 +9,8 @@ type SourceViewProps = {
   activeMapping: IndicatorMapping | null;
   sourceRef: React.RefObject<HTMLDivElement>;
   onClick?: () => void;
+  /** Bar label rendered on the same line as the pager (e.g. "Audit Highlight"). */
+  title?: string;
 };
 
 function escapeRegExp(s: string): string {
@@ -109,7 +111,7 @@ function splitPages(text: string): Page[] {
   return pages.length ? pages : [{ title: null, body: text }];
 }
 
-export function SourceView({ text, activeMapping, sourceRef, onClick }: SourceViewProps) {
+export function SourceView({ text, activeMapping, sourceRef, onClick, title }: SourceViewProps) {
   const pages = useMemo(() => splitPages(text), [text]);
   const multi = pages.length > 1;
   const [page, setPage] = useState(0);
@@ -146,34 +148,41 @@ export function SourceView({ text, activeMapping, sourceRef, onClick }: SourceVi
 
   return (
     <>
-      {multi && (
+      <div className="source-bar source-bar--pager">
+        <span>{title}</span>
+        {multi && (
         <div className="source-pager nodrag">
           <button
             type="button"
+            className="source-pager-arrow"
+            aria-label="Previous document"
             disabled={page === 0}
             onClick={(e) => {
               e.stopPropagation();
               setPage((p) => Math.max(0, p - 1));
             }}
           >
-            ‹ Prev
+            ←
           </button>
           <span className="source-pager-label">
             {page + 1}/{pages.length}
-            {current.title ? ` · ${current.title}` : ""}
+            {current.title ? ` “${current.title}”` : ""}
           </span>
           <button
             type="button"
+            className="source-pager-arrow"
+            aria-label="Next document"
             disabled={page >= pages.length - 1}
             onClick={(e) => {
               e.stopPropagation();
               setPage((p) => Math.min(pages.length - 1, p + 1));
             }}
           >
-            Next ›
+            →
           </button>
         </div>
-      )}
+        )}
+      </div>
       <div
         ref={sourceRef}
         className={`source-view ${located ? "active-highlight" : ""}`}

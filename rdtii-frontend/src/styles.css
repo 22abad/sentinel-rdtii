@@ -2790,11 +2790,19 @@ textarea {
 }
 
 /* multi-file source pager — turn between document pages in the highlight view */
+/* Highlight bar carrying the title on the left and the pager on the right */
+.swiss-form .source-bar--pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+}
 .swiss-form .source-pager {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
-  margin-bottom: 8px;
 }
 .swiss-form .source-pager button {
   min-height: 0;
@@ -2809,6 +2817,18 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   cursor: pointer;
+}
+/* Compact square arrow buttons flanking the `1/2 "Title"` label */
+.swiss-form .source-pager-arrow {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+/* the label sits between the arrows and takes only the space it needs, so the
+   whole cluster stays hugged to the right edge */
+.swiss-form .source-pager .source-pager-label {
+  flex: 0 1 auto;
 }
 .swiss-form .source-pager button:hover:not(:disabled) {
   background: #111827;
