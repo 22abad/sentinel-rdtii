@@ -622,6 +622,12 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
     let accumulatedRejected: RejectedExtraction[] = [];
     let accumulatedProvider = "";
     let accumulatedUsage: RunUsageSummary | null = null;
+    // Batch runs used updateTextFromSource:false and discarded every doc's
+    // source_text, so the Source panel stayed empty and clicking a mapping
+    // showed nothing to highlight. Collect each crawled source into one
+    // "=== url ===" blob and write it progressively, so multi-file quotes
+    // display and trace (single-file works because extract() sets text).
+    let accumulatedText = "";
     const batchRunId = `shortlist-${Date.now()}`;
     const failedUrls: string[] = [];
     const controller = new AbortController();
@@ -655,6 +661,10 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
           result.usage,
           batchRunId,
         );
+        if (result.source_text) {
+          accumulatedText += `${accumulatedText ? "\n\n" : ""}=== ${url} ===\n${result.source_text}`;
+          setText(accumulatedText);
+        }
       } catch (err) {
         if (isAbortError(err)) {
           stopped = true;
@@ -691,7 +701,7 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
       mappings: accumulatedMappings,
       rejected: accumulatedRejected,
       provider: accumulatedProvider,
-      source_text: "",
+      source_text: accumulatedText,
       usage: accumulatedUsage,
     });
 
