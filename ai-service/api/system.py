@@ -28,7 +28,7 @@ def health():
         "status": "ok" if canonical else "misconfigured",
         "provider_env": raw,
         "active_provider": canonical,
-        "available_providers": list_providers(),
+        "available_providers": _available_with_active(canonical),
     }
 
 
@@ -48,8 +48,18 @@ def providers_info():
         "active": canonical,
         "active_alias": raw if raw != canonical else None,
         "name_recognised": True,
-        "available": list_providers(),
+        "available": _available_with_active(canonical),
     }
+
+
+def _available_with_active(canonical: str | None) -> list[str]:
+    """UI provider list, always including the active provider — even a hidden
+    one (e.g. an explicitly-configured llama-3-local) must show so the UI can
+    render it as the current selection."""
+    avail = list_providers()
+    if canonical and canonical not in avail:
+        avail = sorted([*avail, canonical])
+    return avail
 
 
 @router.get("/providers/ollama-models")

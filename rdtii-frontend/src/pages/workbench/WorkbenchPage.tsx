@@ -35,6 +35,7 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
     extractionProgress,
     availableProviders,
     selectedProvider, setSelectedProvider,
+    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
     stopExtraction, isStopping, usage,
     extract,
   } = useExtractionThread(threadId);
@@ -171,6 +172,9 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
       availableProviders={availableProviders}
       selectedProvider={selectedProvider}
       setSelectedProvider={setSelectedProvider}
+      ollamaModels={ollamaModels}
+      selectedOllamaModel={selectedOllamaModel}
+      setSelectedOllamaModel={setSelectedOllamaModel}
       stopExtraction={stopExtraction}
       isStopping={isStopping}
       usage={usage}

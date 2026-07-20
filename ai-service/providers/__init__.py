@@ -160,9 +160,17 @@ def resolve_provider(name: str | None = None) -> LLMProvider:
     return FallbackProvider(primary, fallback)
 
 
+# Providers hidden from the UI/health list: usable if named explicitly, but
+# not offered as a pick because they can't run out of the box. `llama-3-local`
+# needs a hand-downloaded .gguf (LLAMA_MODEL_PATH) — selecting it by mistake
+# caused "LLM extraction failed"; the key-free local path is `ollama`, which
+# auto-discovers the models on the machine.
+_HIDDEN_PROVIDERS = {"llama-3-local"}
+
+
 def list_providers() -> list[str]:
-    """Return registered provider keys."""
-    return sorted(_LAZY_REGISTRY.keys())
+    """Return the provider keys offered in the UI (usable ones only)."""
+    return sorted(k for k in _LAZY_REGISTRY.keys() if k not in _HIDDEN_PROVIDERS)
 
 
 __all__ = [
