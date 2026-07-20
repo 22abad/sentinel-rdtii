@@ -108,6 +108,18 @@ function mergeUsageSummaries(
   };
 }
 
+// A short, human-readable page label for a batch document: the URL's last path
+// segment (decoded), falling back to host, then the raw string.
+function shortDocTitle(url: string): string {
+  try {
+    const u = new URL(url);
+    const seg = u.pathname.split("/").filter(Boolean).pop();
+    return decodeURIComponent(seg || u.hostname);
+  } catch {
+    return url;
+  }
+}
+
 export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
   // Per-thread run state lives in the external store (see extractionStore.ts)
   // so it survives panel unmount and can be shared by sibling canvas nodes.
@@ -622,6 +634,11 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
     let accumulatedRejected: RejectedExtraction[] = [];
     let accumulatedProvider = "";
     let accumulatedUsage: RunUsageSummary | null = null;
+    // Per-URL runs use updateTextFromSource:false (each crawl would otherwise
+    // stomp the panel). Collect every document's source_text into ONE blob so
+    // the highlight viewer has text to show — `=== title ===` markers are the
+    // page delimiters the SourceView pager splits on, one page per document.
+    const sourcePages: { title: string; text: string }[] = [];
     const batchRunId = `shortlist-${Date.now()}`;
     const failedUrls: string[] = [];
     const controller = new AbortController();
@@ -655,6 +672,19 @@ export function useExtractionThread(threadId: string = DEFAULT_THREAD_ID) {
           result.usage,
           batchRunId,
         );
+        // Keep the crawled source so the highlight viewer can display and
+        // trace quotes for this document; concatenate progressively so text
+        // appears as the batch advances.
+        if (result.source_text) {
+          sourcePages.push({ title: shortDocTitle(url), text: result.source_text });
+          setText(
+            uniqueUrls.length > 1
+              ? sourcePages
+                  .map((p) => `=== ${p.title} ===\n${p.text}`)
+                  .join("\n\n")
+              : sourcePages[0].text,
+          );
+        }
       } catch (err) {
         if (isAbortError(err)) {
           stopped = true;

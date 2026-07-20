@@ -296,22 +296,19 @@ export function SourcePanel({
       </label>
 
       <div className="stacked text-area-label">
-        <div className="source-bar">
-          <span>
-            {activeMapping
-              ? t("source.auditHighlight")
-              : t("source.sourceText")}
-          </span>
-        </div>
-
         {activeMapping ? (
           <SourceView
+            title={t("source.auditHighlight")}
             text={text}
             activeMapping={activeMapping}
             sourceRef={sourceRef}
             onClick={() => setActiveKey(null)}
           />
         ) : (
+          <>
+          <div className="source-bar">
+            <span>{t("source.sourceText")}</span>
+          </div>
           <textarea
             ref={textareaRef}
             value={text}
@@ -322,14 +319,11 @@ export function SourcePanel({
             }}
             placeholder={t("source.placeholder")}
           />
+          </>
         )}
       </div>
 
-      {warning && (
-        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
-          ⚠ {warning}
-        </p>
-      )}
+      {warning && <p className="source-warning">⚠ {warning}</p>}
       {error ? <p className="error">{error}</p> : null}
 
       <button

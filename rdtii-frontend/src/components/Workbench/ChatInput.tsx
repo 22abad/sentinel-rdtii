@@ -126,12 +126,12 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
   const containerVariants: Variants = {
     collapsed: {
       height: 68,
-      boxShadow: "0 2px 8px 0 rgba(0,0,0,0.08)",
+      boxShadow: "none", // flat Swiss node — no drop shadow
       transition: { type: "spring", stiffness: 120, damping: 18 },
     },
     expanded: {
       height: 128,
-      boxShadow: "0 8px 32px 0 rgba(0,0,0,0.16)",
+      boxShadow: "none",
       transition: { type: "spring", stiffness: 120, damping: 18 },
     },
   };

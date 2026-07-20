@@ -59,7 +59,7 @@ export function MappingCard({
 
   return (
     <li
-      className={`mapping-row ${open ? "open" : ""} ${active ? "active-mapping" : ""} decision-${decision}`}
+      className={`mapping-row ${open ? "open" : ""} ${active ? "active-mapping" : ""} ${mapping.requires_human_review ? "needs-review" : ""} decision-${decision}`}
       data-testid={`mapping-card-${mappingKeyStr}`}
     >
       <button

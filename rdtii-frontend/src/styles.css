@@ -2562,6 +2562,13 @@ textarea {
 .swiss-form .mapping-row.open .mapping-row-head {
   background: rgba(17, 24, 39, 0.05);
 }
+/* rows needing human review get a yellow head (wins over hover/open) */
+.swiss-form li.mapping-row.needs-review .mapping-row-head {
+  background: #f7d445;
+}
+.swiss-form li.mapping-row.needs-review .mapping-row-head:hover {
+  background: #eec700;
+}
 .swiss-form .mapping-row-code {
   min-width: 72px;
   font-family: inherit; /* Inter, like the reference index numbers */
@@ -2711,22 +2718,162 @@ textarea {
 /* document-level bands above the result list — reuse the report band styling;
    the first band opens with its own hairline (the report container normally
    suppresses it) */
-.swiss-form .doc-info-top > *:first-child {
+/* higher specificity than `.reasoning-report > *:first-child { border-top:none }`
+   so the first band (Document quality) keeps its line under the usage strip */
+.swiss-form .reasoning-report.doc-info-top > *:first-child {
   border-top: 1.5px solid #111827;
 }
-/* sort/filter bar under the document bands */
-.swiss-form .doc-info-filterbar {
+/* Wardrobe head — one clickable title row per document; expands/minimizes
+   that document's verification bands. Square, cream, mono, black hairline. */
+.swiss-form .doc-info-wardrobe-head {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: #111827;
+}
+.swiss-form .doc-info-wardrobe-head:hover {
+  background: #ebe8de;
+}
+.swiss-form .doc-info-wardrobe-title {
+  flex: 1;
+  min-width: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.swiss-form .doc-info-wardrobe-plus {
+  flex: 0 0 auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+/* An open wardrobe: the first band below the head keeps its own hairline. */
+.swiss-form .reasoning-report.doc-info-top.open
+  > .doc-info-wardrobe-head
+  + section {
+  border-top: 1.5px solid #111827;
+}
+/* Extract panel error / warning as Swiss bands (red / yellow, square) */
+.swiss-form .error {
+  margin: 0;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #9f2d20;
+  color: #ffffff;
+  padding: 10px 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+.swiss-form .source-warning {
+  margin: 0;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f7d445;
+  color: #111827;
+  padding: 10px 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+/* multi-file source pager — turn between document pages in the highlight view */
+/* Highlight bar carrying the title on the left and the pager on the right */
+.swiss-form .source-bar--pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+}
+.swiss-form .source-pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.swiss-form .source-pager button {
+  min-height: 0;
+  padding: 3px 10px;
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+/* Compact square arrow buttons flanking the `1/2 "Title"` label */
+.swiss-form .source-pager-arrow {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+/* the label sits between the arrows and takes only the space it needs, so the
+   whole cluster stays hugged to the right edge */
+.swiss-form .source-pager .source-pager-label {
+  flex: 0 1 auto;
+}
+.swiss-form .source-pager button:hover:not(:disabled) {
+  background: #111827;
+  color: #f3f1ea;
+}
+.swiss-form .source-pager button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.swiss-form .source-pager-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* needs-review tag — square black-framed yellow chip (mono uppercase) */
+.swiss-form .review-flag {
+  border: 1.5px solid #111827;
+  border-radius: 0;
+  padding: 1px 7px;
+  background: #f7d445;
+  color: #111827;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* review-status filter — 3 equal buttons filling the row, divided by lines */
+.swiss-form .doc-info-filterbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
   border-top: 1.5px solid #111827;
 }
 .swiss-form .doc-info-chip {
-  min-height: 26px;
-  padding: 2px 10px;
-  border: 1.5px solid #111827;
+  min-height: 40px;
+  padding: 0 8px;
+  border: none;
   border-radius: 0;
   background: transparent;
   color: #111827;
@@ -2734,14 +2881,15 @@ textarea {
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.04em;
+  white-space: nowrap;
   cursor: pointer;
+}
+.swiss-form .doc-info-chip + .doc-info-chip {
+  border-left: 1.5px solid #111827;
 }
 .swiss-form .doc-info-chip.active {
   background: #111827;
   color: #f3f1ea;
-}
-.swiss-form .doc-info-chip.doc-info-sort {
-  margin-left: auto;
 }
 
 .swiss-form a.doc-info-link {
