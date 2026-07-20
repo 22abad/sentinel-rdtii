@@ -2723,6 +2723,48 @@ textarea {
 .swiss-form .reasoning-report.doc-info-top > *:first-child {
   border-top: 1.5px solid #111827;
 }
+/* Wardrobe head — one clickable title row per document; expands/minimizes
+   that document's verification bands. Square, cream, mono, black hairline. */
+.swiss-form .doc-info-wardrobe-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-top: 1.5px solid #111827;
+  border-radius: 0;
+  background: #f3f1ea;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: #111827;
+}
+.swiss-form .doc-info-wardrobe-head:hover {
+  background: #ebe8de;
+}
+.swiss-form .doc-info-wardrobe-title {
+  flex: 1;
+  min-width: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.swiss-form .doc-info-wardrobe-plus {
+  flex: 0 0 auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+/* An open wardrobe: the first band below the head keeps its own hairline. */
+.swiss-form .reasoning-report.doc-info-top.open
+  > .doc-info-wardrobe-head
+  + section {
+  border-top: 1.5px solid #111827;
+}
 /* Extract panel error / warning as Swiss bands (red / yellow, square) */
 .swiss-form .error {
   margin: 0;

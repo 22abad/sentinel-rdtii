@@ -104,6 +104,9 @@ function DocumentInfoGroup({
   const ocrPages = features["ocr_pages"];
   const conf = num(features["_ocr_mean_confidence"] ?? features["mean_confidence"]);
 
+  // Wardrobe: with multiple documents (showTitle), each doc's verification
+  // bands collapse to a single title row; a single document stays open.
+  const [open, setOpen] = useState(!showTitle);
   const [year, setYear] = useState<ReleaseYear | null>(null);
   const [timestamp, setTimestamp] = useState<TimestampVerification | null>(null);
   useEffect(() => {
@@ -230,15 +233,27 @@ function DocumentInfoGroup({
   if (conf !== null) stats.push({ label: "OCR confidence", value: `${Math.round(conf * 100)}%` });
 
   return (
-    <div className="reasoning-report doc-info-top select-text">
+    <div
+      className={`reasoning-report doc-info-top select-text ${open ? "open" : ""}`}
+    >
       {showTitle && (
-        <section className="rr-section rr-sec-provenance doc-info-doctitle">
-          <h4>Document</h4>
-          <div className="rr-provenance-line">
-            <span className="rr-provenance-value">{docTitleOf(mappings)}</span>
-          </div>
-        </section>
+        <button
+          type="button"
+          className="doc-info-wardrobe-head nodrag"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="doc-info-wardrobe-title">{docTitleOf(mappings)}</span>
+          {stalenessSeverity && stalenessSeverity !== "none" && (
+            <span className="review-flag">{stalenessSeverity}</span>
+          )}
+          <span className="doc-info-wardrobe-plus" aria-hidden="true">
+            {open ? "−" : "+"}
+          </span>
+        </button>
       )}
+      {(open || !showTitle) && (
+        <>
       {stats.length > 0 && (
         <section className="rr-section rr-sec-quality">
           <h4>Document quality</h4>
@@ -339,6 +354,8 @@ function DocumentInfoGroup({
             <span className="rr-provenance-value">{timestamp.best_date}</span>
           </div>
         </section>
+      )}
+        </>
       )}
     </div>
   );

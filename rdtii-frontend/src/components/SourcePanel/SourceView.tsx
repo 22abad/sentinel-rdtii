@@ -15,6 +15,37 @@ function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+// Length-preserving normalisation: fold the character variants that routinely
+// differ between an LLM's verbatim_quote and the raw source (curly vs straight
+// quotes, en/em dash vs hyphen, non-breaking space, ASCII case) WITHOUT
+// changing string length, so an index found in normalised space maps straight
+// back onto the original text. One UTF-16 unit in → one out (astral chars pass
+// through unchanged), which keeps the 1:1 mapping intact.
+function normChar(ch: string): string {
+  const code = ch.charCodeAt(0);
+  if (code >= 65 && code <= 90) return ch.toLowerCase(); // A–Z, always 1:1
+  if (code === 0x00a0 || code === 0x2007 || code === 0x202f) return " "; // nbsp
+  switch (ch) {
+    case "‘":
+    case "’":
+    case "ʼ":
+      return "'";
+    case "“":
+    case "”":
+      return '"';
+    case "–":
+    case "—":
+      return "-";
+    default:
+      return ch;
+  }
+}
+function normalize(s: string): string {
+  let out = "";
+  for (let i = 0; i < s.length; i++) out += normChar(s[i]);
+  return out;
+}
+
 /**
  * Locate the quote in the text. Offsets are a hint, not gospel: a cached
  * extraction may have been produced from a whitespace-variant of the same
@@ -41,6 +72,20 @@ function locateQuote(
     if (m) return [m.index, m.index + m[0].length];
   } catch {
     // quote too pathological for a regex — give up on highlighting
+  }
+  // Last resort: fold the character variants (curly/straight quotes, dashes,
+  // nbsp, ASCII case) that routinely differ between the LLM's verbatim and the
+  // raw source. normalize() is length-preserving, so indices map straight back.
+  const nt = normalize(text);
+  const nq = normalize(quote);
+  const nidx = nt.indexOf(nq);
+  if (nidx >= 0) return [nidx, nidx + quote.length];
+  try {
+    const pattern = nq.trim().split(/\s+/).map(escapeRegExp).join("\\s+");
+    const m = new RegExp(pattern).exec(nt);
+    if (m) return [m.index, m.index + m[0].length];
+  } catch {
+    // give up
   }
   return null;
 }
