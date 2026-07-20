@@ -114,29 +114,35 @@ export function SourceView({ text, activeMapping, sourceRef, onClick }: SourceVi
   const multi = pages.length > 1;
   const [page, setPage] = useState(0);
 
+  // Resolve the quote against EVERY page with the same tolerant matcher the
+  // highlight uses (offsets are blob-relative, so per-page they're only a
+  // hint — the content search is what actually lands it). The page that
+  // resolves is the one to show; its span is the highlight.
+  const quote = activeMapping?.verbatim_quote ?? "";
+  const perPage = useMemo(
+    () =>
+      activeMapping
+        ? pages.map((p) =>
+            locateQuote(p.body, quote, activeMapping.quote_start, activeMapping.quote_end),
+          )
+        : pages.map(() => null),
+    [pages, activeMapping, quote],
+  );
+
   // Jump to the page that actually contains the clicked quote.
-  const quote = (activeMapping?.verbatim_quote ?? "").trim();
   useEffect(() => {
-    if (!multi || !quote) return;
-    const idx = pages.findIndex((p) => p.body.includes(quote));
+    if (!multi || !quote.trim()) return;
+    const idx = perPage.findIndex((loc) => loc !== null);
     if (idx >= 0) setPage(idx);
-  }, [quote, pages, multi]);
+  }, [perPage, multi, quote]);
   useEffect(() => {
     if (page > pages.length - 1) setPage(0);
   }, [pages.length, page]);
 
-  const current =
-    pages[Math.min(page, pages.length - 1)] ?? { title: null, body: text };
+  const pageIdx = Math.min(page, pages.length - 1);
+  const current = pages[pageIdx] ?? { title: null, body: text };
   const body = current.body;
-
-  const located = activeMapping
-    ? locateQuote(
-        body,
-        activeMapping.verbatim_quote ?? "",
-        activeMapping.quote_start,
-        activeMapping.quote_end,
-      )
-    : null;
+  const located = perPage[pageIdx] ?? null;
 
   return (
     <>
