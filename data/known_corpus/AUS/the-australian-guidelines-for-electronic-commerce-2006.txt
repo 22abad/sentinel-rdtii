@@ -1,0 +1,675 @@
+The Australian Guidelines 
+for Electronic Commerce 
+March 2006
+The Australian Guidelines for Electronic Commerce March 2006
+� Commonwealth of Australia 2006 
+ISBN 0 642 74333 9 
+This work is copyright. Apart from any use as permitted under the Copyright 
+Act 1968 , no part may be reproduced by any process without prior written 
+permission from the Commonwealth. Requests and inquiries concerning 
+reproduction and rights should be addressed to: 
+Commonwealth Copyright Administration 
+Attorney-General’s Department 
+Robert Garran Offices 
+National Circuit 
+CANBERRA  ACT  2600 
+Or posted at: 
+A copy of this document appears on the Treasury website, 
+Printed by Pirion Pty Limited
+Page iii 
+This publication may be freely reproduced provided suitable acknowledgment 
+is made. Copies of this publication may be obtained from: 
+The Manager 
+Consumer Policy Framework Unit 
+Competition and Consumer Policy Division 
+The Treasury 
+Langton Crescent 
+PARKES   ACT   2600 
+Phone: (02) 6263 3874 
+Fax: 
+(02) 6263 3964 
+Internet: http://www.treasury.gov.au 
+
+Page v 
+I am pleased to release The Australian Guidelines for 
+Electronic Commerce .
+Electronic 
+commerce 
+is 
+rapidly 
+growing 
+in 
+popularity and has become part of the common 
+experience of many Australians, who now use the 
+Internet to access a wide range of goods and services 
+with an ease and immediacy not previously 
+available. Consumers’ growing confidence in this 
+means of doing business has been fundamental to 
+the growth of electronic commerce and the resultant 
+benefits to consumers and businesses.  
+The Australian Guidelines for Electronic Commerce seek to enhance further 
+consumer confidence in electronic commerce by providing guidance to 
+businesses 
+on 
+how 
+to 
+deal 
+with 
+consumers 
+when 
+engaged 
+in 
+business-to-consumer electronic commerce. The guidelines update and replace 
+the Australian E-commerce Best Practice Model , which was released by the 
+Australian Government in May 2000. 
+The principles set out in the guidelines are not mandatory, but they should 
+provide businesses with valuable guidance in a number of important areas 
+where consumers’ experience of electronic commerce differs from that in the 
+traditional retail environment. 
+The guidelines have been prepared in consultation with the Commonwealth 
+Consumer Affairs Advisory Council (CCAAC). CCAAC is an important source 
+of independent advice to the Government on both current issues and on new 
+and emerging consumer issues. 
+I value the contribution that CCAAC makes to the policy process and I 
+commend it for its work on the guidelines. 
+The Hon Chris Pearce MP 
+Parliamentary Secretary to the Treasurer 
+March 2006 
+
+Page vii 
+Enquiries ........................................................................................................................iii 
+Foreword ........................................................................................................................ v 
+Context ...........................................................................................................................1
+Introduction ................................................................................................................1
+Citation .......................................................................................................................1
+Definitions ..................................................................................................................2
+Scope .........................................................................................................................2
+Objective ....................................................................................................................3
+Existing laws and regulation ......................................................................................3
+The Guidelines ...............................................................................................................5
+Fair business practices ..............................................................................................5
+Accessibility................................................................................................................5
+Disability access.........................................................................................................6
+Advertising and marketing .........................................................................................6
+Engaging with minors.................................................................................................7
+Information — identification of the business ..............................................................7
+Information — contractual..........................................................................................8
+Conclusion of contract..............................................................................................10
+Privacy .....................................................................................................................10
+Payment...................................................................................................................11
+Security and authentication......................................................................................12
+Internal complaint-handling......................................................................................12
+External dispute resolution.......................................................................................13
+Applicable law and forum.........................................................................................13
+Changes to the Guidelines.......................................................................................14 
+
+Page 1 
+Introduction 
+1.
+Business-to-consumer (B2C) electronic commerce offers Australian 
+consumers and businesses substantial benefits. Consumers are able to 
+take advantage of greater choice and convenience, increased competition 
+amongst suppliers and more information on the goods and services they 
+purchase. Electronic commerce also provides Australian businesses with 
+the opportunity to develop new markets and to create broader and 
+deeper relationships with their customers than was previously possible. 
+2.
+Electronic commerce has become part of the common experience of many 
+Australians, and continues to grow in popularity. However, in a number 
+of important areas, the consumer experience of electronic commerce 
+differs from that in the traditional retail environment. These areas 
+include the way in which information is made available to consumers, 
+security of payments, privacy of personal information, and access to 
+redress. The Australian Guidelines for Electronic Commerce (the Guidelines) 
+focus on these areas and seek to enhance consumer confidence by 
+providing guidance to businesses on how to deal with consumers when 
+engaged in B2C electronic commerce. 
+3.
+The Guidelines have been developed for traders located in Australia 
+dealing with both Australian and overseas consumers. Traders located 
+outside Australia who are dealing with Australian consumers are also 
+encouraged to follow the Guidelines. Ideally, industry groups will 
+encourage their members to follow the Guidelines. 
+4.
+The Guidelines have been developed in consultation with the 
+Commonwealth Consumer Affairs Advisory Council. The document 
+replaces and updates the Australian E-Commerce Best Practice Model ,
+which was released by the Australian Government in May 2000. 
+Citation
+5.
+These Guidelines may be cited as ‘The Australian Guidelines for 
+Electronic Commerce’. 
+The Australian Guidelines for Electronic Commerce 
+Page 2 
+Definitions
+6.
+References to the singular include references to the plural and vice versa. 
+7.
+In these Guidelines the following definitions apply: 
+‘authentication 
+mechanisms’  
+tools and techniques for establishing the 
+validity of a claimed identity of a user, device or 
+another entity 
+‘B2B’  
+business-to-business electronic commerce 
+‘B2C’  
+business-to-consumer electronic commerce 
+‘business’  
+a legal entity, including a government body, 
+acting in a commercial or professional capacity 
+that supplies goods or services to consumers 
+‘commercial email’  
+advertising or promotional emails, excluding 
+emails relating to a contractual, operational or 
+other service-related customer notice 
+‘consumer’  
+a natural person 
+‘electronic commerce’  
+commercial activities carried out through 
+electronic networks including the promotion, 
+marketing, supply, order or delivery of goods or 
+services
+‘goods and services’  
+goods or services of a kind ordinarily bought for 
+personal use 
+‘IM’  
+Instant Messaging 
+‘MMS’  
+Multimedia Messaging Service 
+‘SMS’  
+Short Message Services 
+Scope
+8.
+The Guidelines apply to B2C electronic commerce. However, businesses 
+are encouraged to follow the Guidelines when engaging in B2B electronic 
+commerce.
+9.
+The Guidelines do not apply to transactions between individuals both 
+acting in a non-business capacity. 
+Context 
+Page 3 
+Objective
+10.
+The Guidelines seek to enhance consumer confidence in B2C electronic 
+commerce by providing guidance to businesses on: 
+10.1
+fair business practices; 
+10.2
+accessibility and disability access; 
+10.3
+advertising and marketing; 
+10.4
+engaging with minors; 
+10.5
+disclosure of a business’s identity and location; 
+10.6
+disclosure of a contract’s terms and conditions; 
+10.7
+the implementation of mechanisms for concluding contracts;  
+10.8
+adopting privacy principles; 
+10.9
+using and disclosing information about payment, security and 
+authentication mechanisms; 
+10.10
+the establishment of fair and effective procedures for handling 
+complaints and resolving disputes; and 
+10.11
+the law and forum for the resolution of contractual disputes. 1
+Existing laws and regulation 
+11.
+The Guidelines are not a replacement for consumer protection laws or 
+codes of conduct. Complying with the Guidelines does not exempt a 
+business from compliance with obligations under such laws or codes. 
+12.
+Every effort has been made to avoid inconsistencies with existing laws. 
+However, if there is an inconsistency, the law has precedence over the 
+Guidelines.
+13.
+Some parts of the Guidelines reflect legal requirements. Businesses 
+should not rely on the Guidelines as a definitive statement of these 
+requirements. Also, not all legal requirements relevant to electronic 
+commerce are reflected in the Guidelines. 
+1  Further information for businesses engaged in B2C electronic commerce can be found at the 
+Australian Government’s Business Entry Point website, business.gov.au. 
+
+Page 5 
+Fair business practices 
+14.
+Businesses should adopt fair business practices when engaging in B2C 
+electronic commerce. 
+15.
+In particular, the Trade Practices Act 1974 , the Australian Securities and 
+Investments Commission Act 2001 (in relation to financial services) and 
+state and territory fair trading legislation require that businesses: 
+15.1
+not engage in conduct that is misleading or deceptive or is likely 
+to mislead or deceive; 
+15.2
+not make false or misleading representations about the goods or 
+services they supply; 
+15.3
+not harass or coerce consumers either when seeking to sell 
+goods and services or when seeking to obtain payment; 
+15.4
+not engage in unconscionable conduct, including ensuring that 
+contractual terms are reasonably necessary to protect the 
+supplier’s legitimate interests; 
+15.5
+make sure that the goods supplied correspond with the 
+description of the goods; 
+15.6
+ensure that the goods supplied are of merchantable quality and 
+fit for any purpose made known to the supplier by the 
+consumer; and 
+15.7
+ensure that services supplied are rendered with due care and 
+skill and are reasonably fit for any purpose made known to the 
+supplier by the consumer.  
+Accessibility 
+16.
+Businesses should ensure that the electronic delivery of goods or services 
+can be achieved without specialised software or hardware, unless the 
+requirement for such specialised software or hardware is made clear to 
+the consumer beforehand. 
+The Australian Guidelines for Electronic Commerce 
+Page 6 
+Disability access 
+17.
+In accordance with the Disability Discrimination Act 1992 , businesses have 
+to make reasonable adjustment in the provision of goods and services to 
+ensure that they are accessible to people with a disability. 2
+Advertising and marketing 
+18.
+Businesses should: 
+18.1
+make sure advertising material is clearly identifiable and can be 
+distinguished from other content, such as editorial comment, 
+terms and conditions and independent product reviews; 
+18.2
+make sure the business is identifiable from the advertising; and 
+18.3
+be able to back up their advertising or marketing claims. 
+19.
+Businesses must comply with the terms of the Spam Act 2003 (the Spam 
+Act), which prohibits the sending of unsolicited commercial electronic 
+messages and applies to messages sent by email, SMS, MMS, or IM. It 
+also provides guidelines for sending legitimate commercial electronic 
+messages. 
+19.1
+The three main requirements of the Spam Act apply to 
+commercial 
+electronic 
+messages. 
+Commercial 
+electronic 
+messages: 
+19.1.1
+must only be sent with the addressee’s consent — 
+consent may be expressly given by the recipient, or 
+under certain restricted circumstances it may be 
+inferred from the conduct or business relationships of 
+the recipient; 
+19.1.2
+must include information to identify the sender — the 
+message must contain accurate information about the 
+person or organisation that authorised the sending of 
+the message; and 
+2  Information on how to provide electronic transaction services and web-based information 
+services that are more accessible to people with a disability is available at 
+The Guidelines 
+Page 7 
+19.1.3
+must include an unsubscribe facility — the functional 
+unsubscribe facility must allow the recipient to opt out 
+of receiving messages from that source in the future.  
+19.2
+The requirements created by the Spam Act apply to electronic 
+messages that have an ‘Australian link’. This means the 
+legislation applies to: 
+19.2.1
+messages that originate or are commissioned in 
+Australia being sent to any destination; and  
+19.2.2
+messages that originate or are commissioned overseas 
+being sent to an address accessed in Australia. 
+Engaging with minors 
+20.
+Businesses should take special care in advertising or marketing that is 
+targeted at children.  
+21.
+Since children (under the age of 16 years) may not have the legal capacity 
+to enter into a binding contract, it is important that businesses implement 
+procedures for verifying the age of parties to any transaction. 
+22.
+As a general principle, before a business requests personal information 
+from a consumer, the business should: 
+22.1
+take reasonable steps to establish that the consumer is 16 years 
+of age or older; and 
+22.2
+seek the consent of the child’s parent or guardian where they 
+believe the consumer to be under 16 years of age. 
+Information — identification of the business �
+23.
+Businesses should provide consumers with accurate and easily accessible 
+information that allows: 
+23.1
+identification of the business involved in a particular 
+transaction; 
+23.2
+prompt, easy and effective communication with the business 
+regarding any electronic transaction; and 
+23.3
+service of legal documents. 
+The Australian Guidelines for Electronic Commerce 
+Page 8 
+24.
+This information should include:
+24.1
+the name under which the business trades; 
+24.2
+the physical address of the business and its registration address; 
+24.3
+the business’s email address, telephone number and other 
+contact information; 
+24.4
+any relevant statutory registration or licence numbers, including 
+the business’s Australian Business Number and/or Australian 
+Company Number; and
+24.5
+contact details and an easy method of identifying the 
+membership of and accessing the relevant codes of practice of 
+any relevant self-regulatory scheme, business association, 
+dispute resolution organisation or other certification body. This 
+could be satisfied by displaying the logo of the industry 
+association and providing an Internet link to the association’s 
+website.
+Information — contractual �
+25.
+Businesses engaged in electronic commerce should provide enough 
+information about the terms, conditions and costs of a transaction to 
+enable consumers to make informed decisions. 
+26.
+This information should be clear, accurate and easily accessible. It should 
+be provided in a way that gives consumers an adequate opportunity for 
+review before entering into the transaction and that allows consumers to 
+retain a copy of the information. 
+27.
+Businesses should provide all information they are required to provide 
+either by law or by any relevant code of practice to which the business 
+subscribes. Where there is a legislative or other mandatory regime for 
+disclosing contractual information, compliance with that regime is 
+sufficient to address the Guidelines. 
+28.
+All information referring to costs should indicate the applicable 
+currency, including guidance on how to get information on exchange 
+rates, or a link to a site where such information may be found. 
+29.
+Information about terms and conditions should be clearly identified and 
+distinguished from advertising material. 
+The Guidelines 
+Page 9 
+30.
+Businesses should give consumers a clear and complete text of the 
+transaction’s terms and conditions. The consumer should be able to 
+access and retain a record of that information, for example, by printing or 
+electronic record. 
+31.
+The information should include a prominently displayed single-figure 
+total minimum price for the product or service. All compulsory charges 
+such as delivery, postage and handling charges should be included in 
+this price. This does not preclude a business itemising the total costs to 
+the consumer collected by the business. 
+31.1
+Where the total cost of a transaction cannot be worked out in 
+advance, the information should include a statement that the 
+total cost cannot be provided and a description of the method to 
+be used to calculate it, including any recurrent costs and the 
+methods used to calculate those costs. 
+32.
+Where applicable, the information provided to consumers should also 
+include:
+32.1
+notice of any optional ongoing costs, fees and charges and 
+methods of notification for changes to those costs, fees and 
+charges;
+32.2
+if limited, the period for which the offer is valid, including time 
+zone information where relevant; 
+32.3
+any restrictions, limitations or conditions of purchase, such as 
+geographic 
+limitations 
+or 
+parental/guardian 
+approval 
+requirements for minors; 
+32.4
+details of payment options; 
+32.5
+terms of delivery; 
+32.6
+mandatory safety and health care warnings that a consumer 
+would get at any physical point of sale; 
+32.7
+conditions about termination, return, exchange, cancellation and 
+refunds;
+32.8
+details about any cooling-off period or right of withdrawal; 
+32.9
+any conditions about contract renewal or extension; 
+32.10
+details of any explicit warranty provisions; and 
+32.11
+details of any after-sales service. 
+The Australian Guidelines for Electronic Commerce 
+Page 10 
+Conclusion of contract 
+33.
+Where appropriate, prior to the conclusion of the contract, businesses 
+should give consumers the opportunity to let them know the purpose for 
+which they require the product or service or the result they wish to 
+achieve.
+34.
+Businesses should put in place procedures that let consumers: 
+34.1
+review and accept or reject the terms and conditions of the 
+contract;
+34.2
+identify and correct any errors; and 
+34.3
+confirm and accept or reject the offer. 
+35.
+Consumers should be able to retain a record of any order, transaction 
+confirmation, or acceptance of any offer they make. 
+36.
+Businesses should promptly acknowledge receipt of any order, 
+confirmation or acceptance received. 
+Privacy 
+37.
+Businesses should respect consumers’ privacy when dealing with 
+personal information and should provide consumers with clear and 
+easily accessible information about the way they handle personal 
+information.
+38.
+Many businesses must, as a minimum, comply with the National Privacy 
+Principles (NPPs) set out in Schedule 3 to the Privacy Act 1988 (the 
+Privacy Act).
+38.1
+The NPPs regulate the way many private sector organisations 
+collect, use, disclose and secure personal information.  
+38.1.1
+The NPPs give consumers the right to know what 
+information a business holds about them and a right to 
+correct that information if it is incorrect, out of date or 
+incomplete. A business must take reasonable steps to 
+make consumers aware that it is collecting personal 
+information and the purpose of collection.  
+The Guidelines 
+Page 11 
+38.1.2
+The NPPs also contain certain restrictions on what a 
+business can do with personal information, including in 
+relation to: the use of government identifiers; the 
+transfer of information overseas; and the collection of 
+sensitive information. 
+38.2
+Although the Privacy Act does not apply to small businesses, a 
+small business may want to take advantage of the benefits that 
+can flow from complying with the legislation. The benefits could 
+include increased consumer confidence and trust in its 
+operations. The Privacy Act provides a mechanism to allow an 
+organisation that is a small business to opt in to the Privacy 
+Act. 3
+Payment 
+39.
+Businesses should provide to consumers payment mechanisms that are 
+reliable, easy to use and offer security that is appropriate for the 
+transaction.
+40.
+Businesses should ensure that consumers have access to information on: 
+40.1
+available payment methods;  
+40.2
+the security of those payment methods in clear, simple 
+language, so as to help consumers judge the risk in relying on 
+those methods;   
+40.3
+how best to use those methods; 
+40.4
+how to cancel regular payments under those methods; and 
+40.5
+any costs applicable to those payment methods. 
+41.
+Businesses should review the payment mechanisms they provide 
+periodically to ensure they continue to offer a reliable, accessible and 
+secure service.
+3  More information on what constitutes a small business under the Privacy Act, along with 
+information on the NPPs, is available at http://www.privacy.gov.au. 
+The Australian Guidelines for Electronic Commerce 
+Page 12 
+Security and authentication 
+42.
+Businesses should: 
+42.1
+make sure consumers have access to information about the 
+security and authentication mechanisms the business uses in 
+clear, simple language which helps consumers assess the risk in 
+relying on those systems; 
+42.2
+provide security appropriate for protecting consumers’ personal 
+and payment information;   
+42.3
+provide 
+security 
+appropriate 
+for 
+identification 
+and 
+authentication mechanisms to be used by consumers;   
+42.4
+discourage consumers from giving confidential information in a 
+way that is considered insecure;   
+42.5
+update their security and authentication mechanisms over time 
+to make sure the security offered is maintained at an 
+appropriate level; and
+42.6
+not attempt to contract out of their responsibility for losses 
+arising 
+from 
+the 
+misuse 
+or 
+failure 
+of 
+authentication 
+mechanisms. 4
+Internal complaint-handling 
+43.
+Businesses should set up internal procedures to handle consumer 
+complaints:
+43.1
+within a reasonable time;  
+43.2
+in a reasonable way;  
+43.3
+free of charge to the consumer; and 
+4  Material to assist businesses in determining appropriate authentication solutions and their 
+implementation has been developed by the Australian Government Information 
+Management Office (AGIMO), Department of Finance and Administration. From the website 
+www.agimo.gov.au/infrastructure/authentication businesses can access the Australian 
+Government eAuthentication Framework for Business (AGAF) Overview as well as 
+A Checklist for Business, An Implementation Guide and A Guide to Access and Authorisation 
+Management .
+The Guidelines 
+Page 13 
+43.4
+without prejudicing the rights of the consumer to seek legal 
+redress. 5
+44.
+Businesses should provide consumers with clear and easily accessible 
+information about complaints-handling procedures including any that 
+may form part of an industry code of conduct to which the trader is a 
+signatory.
+45.
+If 
+a 
+consumer 
+is 
+not 
+satisfied 
+with 
+the 
+outcome 
+of 
+the 
+complaints-handling mechanism, the business should provide the 
+consumer with information about any external dispute resolution bodies 
+to which it subscribes or any relevant government body, such as a Fair 
+Trading Agency or the Federal Privacy Commissioner (in the case of 
+privacy complaints). 
+External dispute resolution 
+46.
+Businesses should provide consumers with clear and easily accessible 
+information on any independent customer dispute resolution mechanism 
+to which the business subscribes. 
+47.
+This independent method of dispute resolution should be: 
+47.1
+accessible;
+47.2
+independent;
+47.3
+fair;
+47.4
+accountable; 
+47.5
+efficient;
+47.6
+effective; and 
+47.7
+without prejudice to judicial redress. 
+Applicable law and forum 
+48.
+Where a business specifies an applicable law or jurisdiction to govern 
+any contractual disputes or a jurisdiction or forum where disputes must 
+be determined, it should clearly and conspicuously state that information 
+5  Australian Standard AS4269-1995 provides a guide to good practice in complaint-handling. 
+The Australian Guidelines for Electronic Commerce 
+Page 14 
+at the earliest possible stage of the consumer’s interaction with the 
+business.
+49.
+A business located in Australia that enters into a contract with a 
+consumer whom the business believes is resident in Australia — for 
+instance, because of the consumer’s address — should spell out which 
+Australian jurisdiction’s law is the governing law of that contract. It 
+should also make clear that any contractual disputes will be heard by 
+Australian courts and tribunals. 
+Changes to the Guidelines 
+50.
+The Guidelines may be modified periodically, including to reflect 
+changes in relevant legislation. 

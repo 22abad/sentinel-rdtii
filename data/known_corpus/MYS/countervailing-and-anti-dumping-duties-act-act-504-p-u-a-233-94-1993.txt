@@ -1,0 +1,1891 @@
+LAWS OF MALAYSIA 
+ONLINE VERSION OF UPDATED  
+TEXT OF REPRINT 
+Act 504 
+COUNTERVAILING AND  
+ANTI-DUMPING DUTIES ACT 1993 
+As at 1 January 2014 
+2 
+COUNTERVAILING AND ANTI-DUMPING  
+DUTIES ACT 1993 
+Date of Royal Assent …  …  …  …  …  …  7 July 1992 
+Date of publication in the Gazette …  …  … 15 July 1993 
+Latest amendment made 
+by Act A1046 which came 
+into operation on  …  …  …  …  …  …  … … 1 December 1999 
+P REVIOUS R EPRINTS
+First Reprint  ...  ...  ...  ...  ...  2002 
+Second Reprint  …  …  …  …  2006 
+3 
+LAWS OF MALAYSIA  
+Act 504 
+COUNTERVAILING AND ANTI-DUMPING  
+DUTIES ACT 1993 
+ARRANGEMENT OF SECTIONS 
+P ART I 
+PRELIMINARY 
+Section  
+1. 
+Short title and commencement 
+2. 
+Interpretation 
+P ART I A 
+SUBSIDIES 
+2 A . 
+Subsidy 
+2 B . 
+Prohibited subsidy 
+2 C . 
+Actionable subsidy 
+2 D . 
+Non-actionable subsidy 
+2 E . 
+Calculation of subsidy 
+P ART II 
+COUNTERVAILING DUTIES 
+3. 
+Imposition of countervailing duties 
+4. 
+Initiation of investigation 
+5. 
+Consultations with interested foreign governments 
+4                                        Laws of Malaysia A CT 504
+Section
+6. 
+Amendments to the petition 
+7. 
+Duration of investigation 
+7 A . 
+Injury and causal link 
+8. 
+Preliminary determination of subsidy and injury 
+9. 
+Provisional measures 
+10. 
+Final determination of subsidy and injury 
+11. 
+Termination of investigation 
+12. 
+Suspension of investigation 
+12 A . 
+Duration of duty  
+13. 
+Administrative review 
+13 A . 
+Refund review 
+13 B . 
+Expedited review 
+14. 
+Developing country Member 
+P ART III 
+ANTI-DUMPING DUTIES 
+15. Imposition of anti-dumping duties 
+16. Normal value 
+17. Export price 
+18. Comparison of normal value and export price 
+19. Subject merchandise from a non-market economy country 
+20. Initiation of investigation 
+21. Amendments to the petition 
+22. Duration of investigation 
+22 A . Injury and causal link 
+23. Preliminary determination of dumping and injury 
+24. Provisional measures 
+25. Final determination of dumping and injury 
+26. Termination of investigation 
+27. Suspension of investigation 
+Countervailing and Anti-Dumping Duties                    5 
+Section
+27 A . Duration of duty 
+28. Administrative review 
+28 A . Refund review 
+28 B . Expedited review 
+29. Anti-dumping action on behalf of third country 
+P ART IV 
+ADMINISTRATION 
+30. Administrative matters 
+31. Protection of officers and persons acting under direction of officers 
+32. ( Deleted ) 
+33. Regulations in respect of specified areas 
+34. Application of the Customs Act 1967 
+34 A . Judicial review 
+P ART V 
+GENERAL 
+35. Cumulative assessment 
+36. False statements 
+37. Anti-circumvention measures 
+38. Notice of information and opportunities to present evidence 
+39. Confidential information 
+40. Verification of information 
+41. Use of facts available 
+42. Other practices discovered during the investigation 
+43. Conduct of investigation where no international obligations apply 
+44. Transhipment 
+45. Publication of notices 
+46. Double counting not permitted 
+47. Customs clearance not to be hindered 
+6                                        Laws of Malaysia A CT 504
+Section
+48. Public servants 
+49. Obligation of secrecy 
+50. Power to make regulations 
+51. Repeal of the Customs (Dumping and Subsidies) Act 1959 
+7 
+LAWS OF MALAYSIA 
+Act 504 
+COUNTERVAILING AND ANTI-DUMPING  
+DUTIES ACT 1993 
+An Act to make provisions for the investigation and 
+determination of subsidies being provided on, and the dumping 
+of, merchandise imported into Malaysia, the imposition of 
+countervailing and anti-dumping duties to offset such subsidies or 
+dumping, and other matters connected therewith.  
+[ 28 April 1994, P.U. (B) 212/1994 ]  
+BE IT ENACTED by the Seri Paduka Baginda Yang di-Pertuan 
+Agong with the advice and consent of the Dewan Negara and Dewan 
+Rakyat in Parliament assembled, and by the authority of the same, as 
+follows:  
+P ART I 
+PRELIMINARY 
+Short title and commencement  
+1 . (1) 
+This Act may be cited as the Countervailing and Anti- Dumping 
+Duties Act 1993. 
+(2) This Act shall come into force on such date as the Minister may, 
+by notification in the Gazette , appoint.  
+Interpretation  
+2.  (1) In this Act, unless the context otherwise requires—  
+8                                        Laws of Malaysia A CT 504
+“country” includes a customs union or customs territory that 
+possesses full autonomy in the conduct of its external commercial 
+relations and of the other matters provided for in the World Trade 
+Organization Agreement;  
+ “ de minimis ”—  
+(a) in relation to subsidy means the amount of the subsidy in 
+relation to the imports from the country under 
+investigation is less than one per centum ad valorem ; and  
+(b) in relation to dumping means the margin of dumping is 
+less than two per centum, expressed as a percentage of the 
+export price;  
+ “domestic industry” means—  
+(a) the domestic producers as a whole of the like product;  
+(b) the domestic producers whose collective output of the like 
+product constitutes a major proportion of the total 
+domestic production of the like product; or  
+(c) where appropriate, the regional producers of the like 
+product:  
+Provided that when any of the producers referred to in paragraphs 
+(a) , (b) and (c) are related to the exporters or importers, or are 
+themselves importers of the subject merchandise or, in relation to Part 
+II, are importers of a like product from other countries, the expression 
+“domestic industry” may be construed as referring to the rest of the 
+producers referred to in paragraph (a) , (b) or (c) , as the case may be, 
+other than such related producers or producers who are importers;  
+“dumping” means the importation of merchandise into Malaysia at 
+less than its normal value as sold in the domestic market of the 
+exporting country;  
+“dumping margin” means the amount by which the normal value of 
+Countervailing and Anti-Dumping Duties                    9 
+a merchandise exceeds the export price;  
+“export price” means the export price of a merchandise as 
+determined in accordance with section 17;  
+ “exporting country” means—  
+(a) the country of export of the subject merchandise; or  
+(b) in cases where the subject merchandise is not exported 
+directly to Malaysia but is transhipped through an 
+intermediate country—  
+(i) where the subject merchandise is not substantially 
+transformed in the intermediate country, the 
+country of origin of the subject merchandise;  
+(ii) where the subject merchandise is substantially 
+transformed in the intermediate country, the 
+intermediate country;  
+“General Agreement on Tariffs and Trade 1994” means the General 
+Agreement on Tariffs and Trade 1994 set out in Annex 1 A to the 
+World Trade Organization Agreement;  
+ “Government” means the Government of Malaysia;  
+“injury” means material injury or threat of material injury to the 
+domestic industry or material retardation of the establishment of such 
+an industry;  
+ “interested party” means—  
+(a) a producer, exporter or importer of the subject 
+merchandise;  
+(b) a trade or business association of which a majority of its 
+members are producers, exporters or importers of the 
+subject merchandise;  
+10                                        Laws of Malaysia A CT 504
+(c) the government of a country in which the subject 
+merchandise is produced or from which it is exported;  
+(d) a producer of the like product in Malaysia;  
+(e) a trade or business association of which a majority of its 
+members produce a like product in Malaysia; or  
+(f) any other party as the Government considers appropriate;  
+“like product” means a product that is identical or alike in all 
+respects to the subject merchandise or, in the absence of such a 
+product, another product that although not alike in all respects has 
+characteristics closely resembling the subject merchandise;  
+“Member” means a Member to the World Trade Organization 
+Agreement;  
+“Minister” means the Minister responsible for international trade 
+and industry;  
+ “negligible”—  
+(a) in relation to a countervailing duty action, in the case of a 
+developing country Member, means the volume of imports 
+of the subject merchandise, actual or potential, from a 
+particular developing country Member into Malaysia 
+accounts for less than four per centum of the total imports 
+of the like product unless developing country Members 
+that individually account for less than four per centum of 
+the imports of the like product into Malaysia collectively 
+account for more than nine per centum of the total imports 
+of the like product into Malaysia; and  
+(b) in relation to an anti-dumping duty action means the 
+volume of imports of the subject merchandise, actual or 
+potential, from a particular country into Malaysia accounts 
+for less than three per centum of the total imports of the 
+like product unless countries that individually account for 
+Countervailing and Anti-Dumping Duties                    11 
+less than three per centum of the imports of the like 
+product into Malaysia collectively account for more than 
+seven per centum of the total imports of the like product 
+into Malaysia;  
+“non-market economy country” means any foreign country that the 
+Government determines operates on a centrally-planned economy and 
+not on market principles of cost or pricing structures or free enterprise 
+economy;  
+“normal value” means the normal value of a merchandise as 
+determined in accordance with section 16 or 19;  
+“officer of customs” has the same meaning as is assigned to that 
+expression under section 2 of the Customs Act 1967 [ Act 235 ];  
+“prescribed” means prescribed by the regulations;  
+“producer” means a producer, manufacturer or processor;  
+“provisional measures” means—  
+(a) in relation to Part II, the requirement to post a security 
+equal to the estimated subsidy found in the preliminary 
+determination; and  
+(b) in relation to Part III, the requirement to post a security 
+equal to the estimated dumping margin found in the 
+preliminary determination;  
+ “regional producers” means the domestic producers of the like 
+product located in a specific regional market within Malaysia where 
+in exceptional circumstances there are two or more competitive 
+markets within Malaysia for the production in question and in such 
+case, the producers of the like product within each market may be 
+regarded as a separate industry if—  
+(a) the producers within each market sell all or almost all of 
+12                                        Laws of Malaysia A CT 504
+their production of the merchandise in question within 
+that market; and  
+(b) the demand in each market is not to any substantial degree 
+supplied by producers of the merchandise in question 
+located elsewhere in Malaysia;  
+“subject merchandise” means the class or kind of merchandise 
+imported or sold for importation into Malaysia that is the subject of 
+any countervailing or anti-dumping duty action under this Act, as 
+determined by the Government to be appropriate for establishing the 
+scope of the action;  
+“undertakings” means undertakings as may be prescribed under 
+section 50;  
+“World Trade Organization” means the World Trade Organization 
+established by the World Trade Organization Agreement;  
+“World Trade Organization Agreement” means the Marrakesh 
+Agreement Establishing the World Trade Organization done at 
+Marrakesh on 15 April 1994.  
+ (2) ( Deleted by Act A1046 ).  
+(3) Notwithstanding any other provisions of this Act, the Minister 
+may regard such activities as are recognized under Malaysia’s 
+international obligations to be activities which shall or shall not be 
+subject to action under this Act.  
+ (4) ( Deleted by Act A1046 ).  
+ (5) Parties shall be deemed to be related if—  
+(a) one of them directly or indirectly controls the other;  
+(b) both of them are directly or indirectly controlled by a third 
+party; or  
+Countervailing and Anti-Dumping Duties                    13 
+(c) together they directly or indirectly control a third party:  
+Provided that there are grounds for believing or suspecting that the 
+effect of the relationship is such as to cause the party concerned to 
+behave differently from non-related parties.  
+(6) One party shall be deemed to control another when the 
+firstmentioned party is legally or operationally in a position to 
+exercise restraint or direction over the latter.  
+P ART I A 
+SUBSIDIES 
+Subsidy 
+2 A . For the purposes of this Act, “subsidy”, in relation to 
+merchandise that is imported into Malaysia, means—  
+(a) a financial contribution by a government or a public body, 
+or by a private body entrusted or directed by the 
+government or public body to carry out a governmental 
+function, that is made in connection with the production, 
+manufacture or export of the merchandise and that 
+involves one or more of the following:  
+(i) a direct transfer of funds from the government or 
+public body or private body to the enterprise by 
+whom the merchandise is produced, manufactured 
+or exported (after this referred to as “the 
+enterprise”);  
+(ii) a potential direct transfer of funds from the 
+government or public body or private body to the 
+enterprise contingent on the occurrence of 
+particular circumstances;  
+14                                        Laws of Malaysia A CT 504
+(iii) the acceptance of liabilities, actual or potential, of 
+the enterprise by the government or public body or 
+private body;  
+(iv) the forgoing, or non-collection, of revenue (other 
+than an allowable exemption or remission) due to 
+the government or public body or private body 
+from the enterprise;  
+(v) the provision by the government or public body or 
+private body of goods or services to the enterprise 
+other than general infrastructure;  
+(vi) the purchase by the government or public body or 
+private body of goods provided by the enterprise;  
+(vii) the making of payments to a funding mechanism 
+by the government or public body; or  
+(b) any form of income or price support as specified in Article 
+XVI of the General Agreement on Tariffs and Trade 1994 
+that is received from a government or public body, if that 
+financial contribution or income or price support confers a 
+benefit in relation to the merchandise.  
+Prohibited subsidy  
+2 B . The following subsidies shall be prohibited:  
+(a) subsidies contingent, in law or in fact, whether solely or as 
+one of several other conditions, upon export performance, 
+including those as may be prescribed; and  
+(b) subsidies contingent, whether solely or as one of several 
+other conditions, upon the use of domestic over imported 
+merchandise.  
+Countervailing and Anti-Dumping Duties                    15 
+Actionable subsidy  
+2 C . A subsidy that causes the following adverse effects to the 
+domestic interest shall be subject to countervailing measures under 
+this Act:  
+(a) injury to the domestic industry;  
+(b) nullification or impairment of benefits accruing directly or 
+indirectly under the General Agreement on Tariffs and 
+Trade 1994, in particular the benefits of concessions 
+bound under Article II of the General Agreement on 
+Tariffs and Trade 1994; or  
+(c) serious prejudice to domestic interests:  
+Provided that this section shall not apply to subsidies maintained on 
+agricultural products as provided in Article 13 of the Agreement on 
+Agriculture set out in Annex 1 A to the World Trade Organization 
+Agreement.  
+Non-actionable subsidy  
+2 D . The following subsidies shall be regarded as non-actionable 
+subsidies and shall not be subject to countervailing duties under this 
+Act:  
+(a) subsidies that are not specific within the meaning of 
+subsection 3(2); and  
+(b) subsidies that are specific within the meaning of 
+subsection 3(2) but meet all the prescribed conditions.  
+Calculation of subsidy  
+2 E . Subsidy shall be calculated in the prescribed manner.  
+16                                        Laws of Malaysia A CT 504
+P ART II 
+COUNTERVAILING DUTIES 
+Imposition of countervailing duties  
+3. (1) No countervailing duty shall be imposed except in 
+accordance with this Act. 
+(2) A subsidy as specified in section 2 A shall be subject to 
+countervailing duties as provided under this Act only if the subsidy is 
+specific, as may be prescribed, and is not a non-actionable subsidy.  
+(3) The amount of the countervailing duty to be imposed shall be 
+calculated in accordance with the method as may be prescribed.  
+Initiation of investigation  
+4. (1) 
+The Government may initiate an investigation to determine 
+the existence, degree and effect of any alleged subsidy upon the 
+submission of a written petition by or on behalf of the domestic 
+industry producing the like product.  
+(2) A petition under subsection (1) shall contain such information 
+as may be prescribed and shall include sufficient evidence of the 
+existence of a subsidy and injury and a causal link between the 
+imports of the subject merchandise and the alleged injury.  
+(3) The Government shall, within the prescribed period, examine 
+the petition and other available information and evidence to 
+determine whether—  
+(a) the evidence is sufficient to justify the initiation of an 
+investigation;  
+(b) there is a sufficient degree of support for or opposition to 
+Countervailing and Anti-Dumping Duties                    17 
+the petition expressed by the domestic industry; and  
+(c) an investigation is in the public interest.  
+(4) A petition under subsection (1) shall be immediately rejected if 
+the Government is satisfied that—  
+(a) there is no sufficient evidence of either subsidization or of 
+injury to justify the initiation of a countervailing duty 
+investigation, such as but not limited to cases where the 
+amount of a subsidy is de minimis or where the volume of 
+imports of the subject merchandise, actual or potential, or 
+the injury, is negligible; or  
+(b) an investigation is not in the public interest.  
+(5) Where the Government rejects a petition under subsection (4), 
+the Government shall, as soon as practicable, notify the petitioner in 
+writing of its determination not to initiate an investigation.  
+(6) Notwithstanding subsection (1) the Government may, in special 
+circumstances, initiate a countervailing duty investigation on its own 
+accord without having received a written petition by or on behalf of 
+the domestic industry for the initiation of such investigation if it has 
+sufficient evidence of each of the matters specified in subsection (2).  
+(7) Where the Government decides to initiate an investigation under 
+subsection (1) or (6), it shall notify the appropriate interested parties 
+and publish a notice of initiation of investigation.  
+(8) Evidence of both subsidy and injury shall be considered 
+simultaneously in the decision whether to initiate an investigation and 
+after that during the course of the investigation, starting on a date not 
+later than the earliest date the provisional measures may be applied.  
+(9) The Government shall not disclose any petition made under this 
+section unless the Government has made a decision to initiate an 
+investigation.  
+18                                        Laws of Malaysia A CT 504
+Consultations with interested foreign governments  
+5. (1) 
+Before initiating an investigation, the Government shall 
+provide the Members the merchandise of which are subject to 
+investigation and any interested foreign government an opportunity 
+for consultation for the purpose of clarifying matters relevant to the 
+investigation and arriving at a mutually agreed solution. 
+ (2) The Government shall provide a reasonable opportunity for 
+further consultations throughout the investigation.  
+(3) No affirmative determination whether preliminary or final shall 
+be made without reasonable opportunity for consultations having 
+been given.  
+(4) The consultations referred to in subsection (1) may establish the 
+basis for proceeding under section 4.  
+(5) The Government shall also permit, upon request, the Members 
+the merchandise of which are subject to investigation access to     
+non-confidential evidence, including the non-confidential summary of 
+confidential information, being used for initiating or conducting the 
+investigation.  
+Amendments to the petition  
+6. A petition requesting a countervailing duty investigation be 
+initiated may be amended subject to such conditions as the 
+Government deems fit.  
+Duration of investigation  
+7. The 
+Government 
+shall 
+conclude 
+a 
+countervailing 
+duty 
+investigation within such period as may be prescribed.  
+Countervailing and Anti-Dumping Duties                    19 
+Injury and causal link  
+7 A . (1) A determination of injury for the purpose of a countervailing 
+duty investigation under this Act shall be based on relevant evidence 
+and shall involve an objective examination of both the volume of 
+imports of the subject merchandise and the effect of the subject 
+merchandise on prices in the domestic market for like products and 
+the consequent impact of these imports on the domestic producers of 
+such products.  
+(2) For the purposes of this Act, it shall be demonstrated that the 
+subject merchandise is, through the effects of subsidies, causing 
+injury.  
+(3) The demonstration of a causal relationship between the subject 
+merchandise and the injury to the domestic industry shall be based on 
+an examination of all relevant evidence available to the Government.  
+(4) The Government shall also examine any known factors other 
+than the subject merchandise that at the same time are injuring the 
+domestic industry and the injuries caused by these other factors shall 
+not be attributed to the subject merchandise.  
+(5) A determination of a threat of material injury shall be based on 
+facts and not merely on allegation, conjecture or remote possibility.  
+(6) In making a determination regarding the existence of a threat of 
+material injury, the Government shall consider such factors as may be 
+prescribed.  
+(7) In cases where injury is threatened by the subject merchandise, 
+the application of countervailing measures shall be considered and 
+decided with special care.  
+Preliminary determination of subsidy and injury  
+8. (1) The Government shall, within such period as may be 
+20                                        Laws of Malaysia A CT 504
+prescribed, make a preliminary determination regarding—  
+(a) whether a subsidy is being provided with respect to the 
+subject merchandise and the amount of such subsidy; and  
+(b) whether injury is found to exist in any one of the 
+following ways:  
+(i) the subject merchandise, through the effects of the 
+subsidy, is causing material injury to the domestic 
+industry in Malaysia producing the like product;  
+(ii) the subject merchandise, through the effects of the 
+subsidy, is threatening to cause material injury to 
+the domestic industry in Malaysia producing the 
+like product; or  
+(iii) the subject merchandise, through the effects of the 
+subsidy, is causing material retardation of the 
+establishment of such an industry in Malaysia.  
+(2) If the Government makes a negative preliminary determination 
+with regard to subsection (1), it shall publish a notice stating the 
+reasons for the negative determination and—  
+(a) continue the investigation; or  
+(b) terminate the investigation if the Government deems fit.  
+(3) If 
+the 
+Government 
+makes 
+an 
+affirmative 
+preliminary 
+determination with regard to subsection (1), it shall continue the 
+investigation and publish a notice of—  
+(a) the affirmative preliminary determination, stating the reasons 
+for its determination with respect to paragraphs (1) (a) and (b) ; 
+and  
+(b) the provisional measures applicable.  
+Countervailing and Anti-Dumping Duties                    21 
+Provisional measures  
+9. (1) 
+The Government shall apply provisional measures with 
+regard to the subject merchandise imported into Malaysia on or after 
+the publication of the notice of affirmative preliminary determination 
+where the Government determines that such measures are necessary 
+to prevent the injury referred to in paragraph 8(1) (b) from occurring 
+during the period of investigation.  
+(2) Provisional measures shall take the form of provisional 
+countervailing duties guaranteed by a security equal to the amount of 
+the estimated subsidy determined under subsection 8(1).  
+(3) The provisional measures imposed under this section shall not 
+exceed such period as may be prescribed.  
+Final determination of subsidy and injury  
+10. (1) The Government shall, within such period as may be 
+prescribed, make a final determination regarding—  
+(a) whether a subsidy is being provided with respect to the 
+subject merchandise and the amount of such subsidy; and  
+(b) whether injury is found to exist in any one of the 
+following ways:  
+(i) the subject merchandise, through the effects of the 
+subsidy, is causing material injury to the domestic 
+industry in Malaysia producing the like product;  
+(ii) the subject merchandise, through the effects of the 
+subsidy, is threatening to cause material injury to 
+the domestic industry in Malaysia producing the 
+like product; or  
+(iii) the subject merchandise, through the effects of the 
+22                                        Laws of Malaysia A CT 504
+subsidy, is causing material retardation of the 
+establishment of such an industry in Malaysia.  
+(2) The Government shall, before making a final determination, 
+inform all interested Members and interested parties of the essential 
+facts under consideration that form the basis for the decision whether 
+to apply definitive measures.  
+(2 A ) A disclosure under subsection (2) shall be made in sufficient 
+time for all interested Members and interested parties to defend their 
+interests.  
+(3) Where the Government makes a negative final determination 
+with regard to subsection (1), it shall—  
+(a) terminate the investigation;  
+(b) terminate the provisional measures applied under section 9 
+and release the security required by such measures; and  
+(c) publish a notice of the negative final determination, stating 
+the reasons for its negative determination.  
+(4) Where 
+the 
+Government 
+makes 
+an 
+affirmative 
+final 
+determination with regard to subsection (1), it shall—  
+(a) publish a notice of affirmative final determination stating 
+the reasons for its affirmative determination, the 
+countervailing 
+duties 
+applicable 
+and 
+the 
+subject 
+merchandise on which the countervailing duties apply;  
+(b) impose countervailing duties in the amounts determined in 
+accordance 
+with 
+subsection 
+3(3) 
+on 
+the 
+subject 
+merchandise imported into Malaysia on or after the date of 
+publication of the final determination; and  
+(c) impose 
+countervailing 
+duties 
+in 
+accordance 
+with 
+subsections (5) and (6) on imports into Malaysia for which 
+Countervailing and Anti-Dumping Duties                    23 
+provisional measures were applied.  
+(4 A ) Where an affirmative final determination has been made, the 
+Government may take into consideration public interest in 
+determining whether to impose countervailing duties and the amount 
+of such duties.  
+(5) The Government shall impose countervailing duties on the 
+subject merchandise against which provisional measures were applied 
+where—  
+(a) the Government makes a determination of material injury 
+under subparagraph (1) (b) (i); or  
+(b) the Government makes a determination of threat of 
+material injury under subparagraph (1) (b) (ii), it finds that 
+the subject merchandise, in the absence of the provisional 
+measures, would have led to a finding of material injury 
+under subparagraph (1) (b) (i).  
+(5 A ) Notwithstanding subsection (5), where a determination of 
+threat of injury or material retardation is made but no injury has 
+occurred, a definitive countervailing duty may be imposed only from 
+the date of the determination of the existence of a threat of injury or 
+material retardation, and any security submitted during the period of 
+the application of provisional measures shall be released immediately.  
+(6) With respect to the imposition of countervailing duties under 
+subsection (5)—  
+(a) where the countervailing duty is higher than the amount 
+guaranteed by the security required under the provisional 
+measures, only the amount equal to the security shall be 
+imposed; and  
+(b) where the countervailing duty is less than the amount 
+guaranteed by the security required under the provisional 
+measures, the full amount of the countervailing duty shall 
+24                                        Laws of Malaysia A CT 504
+be imposed and the excess amount of the security shall be 
+reimbursed or released.  
+(7) Notwithstanding subsections (4) and (5), the Government may 
+impose countervailing duties on the subject merchandise imported 
+into Malaysia within a period of ninety days prior to the application 
+of provisional measures if—  
+(a) the Government finds injury that is difficult to repair;  
+(b) such injury is being caused by massive imports of the 
+subject merchandise in a short period of time; and  
+(c) export subsidies are being provided with respect to the 
+subject merchandise contrary to the interested foreign 
+government’s international obligations.  
+(7 A ) No countervailing duties shall be imposed retroactively under 
+subsection (7) on merchandise entered for consumption before the 
+date of initiation of the investigation.  
+(8) When a countervailing duty is imposed on the subject 
+merchandise, such countervailing duty shall be imposed in the 
+appropriate amount in each case on a non-discriminatory basis on all 
+imports of such merchandise into Malaysia from the country found to 
+be subsidizing the subject merchandise causing injury.  
+(9) Provisional measures and definitive countervailing duties shall 
+only be applied to subject merchandise that enters for consumption 
+after the time when the decision under subsection 9(1) or 10(4), as the 
+case may be, enters into force.  
+Termination of investigation  
+11. (1) Notwithstanding any other provisions of this Act, an 
+investigation may be terminated at any time if—  
+(a) the petitioner withdraws the petition;  
+Countervailing and Anti-Dumping Duties                    25 
+(b) there are changed circumstances;  
+(c) the Government is satisfied that there is no sufficient 
+evidence of subsidization or injury to justify proceeding 
+with the investigation;  
+(d) the amount of subsidy is de minimis or the volume of 
+imports of the subject merchandise, actual or potential, or 
+the injury, is negligible; or  
+(e) the Government determines that termination of the 
+investigation is in the public interest.  
+(2) If a termination pursuant to subsection (1) occurs prior to the 
+preliminary determination, the Government shall publish a notice of 
+such termination stating the reasons for the termination.  
+(3) If a termination pursuant to subsection (1) occurs after the 
+preliminary determination, the Government shall—  
+(a) terminate any provisional measures referred to in section 9 
+and release the security required by such measures; and  
+(b) publish a notice of such termination, stating the reasons 
+for the termination.  
+Suspension of investigation  
+12. (1) An investigation may be suspended at any time if 
+undertakings are accepted by the Government.  
+(2) Before accepting the undertakings, the Government shall 
+determine that—  
+(a) the undertakings—  
+(i) will eliminate the subsidy or the injurious effects 
+caused by the subject merchandise; and  
+(ii) can be monitored effectively; or  
+26                                        Laws of Malaysia A CT 504
+(b) the undertakings are in the public interest.  
+(3) Undertakings shall not be sought or accepted unless the 
+Government has made a preliminary affirmative determination of 
+subsidization and injury caused by such subsidization and, in the case 
+of undertakings from exporters, has obtained the consent of the 
+exporting Member.  
+(4) If the undertakings are accepted by the Government after the 
+preliminary determination, the Government shall—  
+(a) suspend the investigation;  
+(b) suspend any provisional measures applied under section 9 
+and release all or part of the security required by such 
+measures as the Government deems appropriate; and  
+(c) publish a notice stating the reasons for the suspension of 
+the investigation and actions under paragraph (b) .  
+(5) Notwithstanding the acceptance of the undertakings, the 
+investigation shall be completed upon the written request of the 
+interested foreign government or if the Government so decides.  
+(6) Where the Government completes the investigation pursuant to 
+subsection (5) and makes an affirmative determination, the 
+undertakings shall remain in effect consistent with the provisions of 
+this Act.  
+(7) Where the Government completes the investigation pursuant to 
+subsection (5) and makes a negative determination, the undertakings 
+shall lapse, except where the negative determination is due in large 
+part to the existence of the undertakings.  
+(8) Where the negative determination referred to in subsection (7) is 
+due in large part to the existence of the undertakings, the undertakings 
+may be maintained for a reasonable period consistent with the 
+provisions of this Act.  
+Countervailing and Anti-Dumping Duties                    27 
+(8 A ) The Government may suggest for price undertakings to be 
+provided by exporting Members or exporters, but no exporter shall be 
+obliged to enter into such undertakings.  
+(8 B ) The fact that the exporting Members or exporters do not offer 
+price undertakings, or do not accept an invitation to do so, shall in no 
+way affect the consideration of the case.  
+(8 C ) Notwithstanding subsections (8 A ) and (8 B ), the Government 
+shall be free to determine that a threat of injury is more likely to be 
+realized if the importation of the subject merchandise continues.  
+(8 D ) The Government may require any exporting Member or 
+exporter from whom an undertaking has been accepted to provide, 
+periodically, information relevant to the fulfilment of such 
+undertaking and to permit verification of pertinent information.  
+(8 E ) Non-compliance with subsection (8 D ) shall be construed as a 
+breach of the undertaking.  
+(9) The Government may resume a suspended investigation at any 
+time if it determines that the undertakings accepted under subsection (1) 
+no longer meet the requirements of subsection (2) or there is a material 
+violation of the undertakings.  
+(10) If the Government resumes an investigation pursuant to 
+subsection (9), it shall take expeditious action to—  
+(a) ( Deleted by Act A1046 );  
+(b) apply provisional measures in conformity with section 9, 
+if appropriate; and  
+(c) make a final determination pursuant to section 10.  
+(11) The Government may use the facts available with respect to 
+any determination under subsection (10) where a material violation of 
+the undertakings occur.  
+28                                        Laws of Malaysia A CT 504
+(12) In the cases mentioned in subsection (9), the Government may 
+impose countervailing duties in conformity with section 10 on the 
+subject merchandise imported into Malaysia within a period of ninety 
+days prior to the provisional measures applied under subsection (10):  
+Provided that such retroactive assessment shall not be applied to 
+subject merchandise imported prior to the violation.  
+Duration of duty  
+12 A . A countervailing duty imposed under this Act shall remain in 
+force only for as long as and to the extent necessary to counteract the 
+subsidization that is causing the injury.  
+Administrative review  
+13. (1) Whenever an interested party provides information to the 
+Government, or the Government otherwise obtains information, 
+that—  
+(a) the amount of subsidy has changed substantially;  
+(b) the imposition of a countervailing duty is no longer 
+necessary;  
+(c) an undertaking is no longer necessary or should be 
+revised;  
+(d) a countervailing duty or undertaking which is required to 
+be terminated pursuant to subsection (6) should be 
+maintained; or  
+(e) an administrative review is in the public interest,  
+the Government may conduct an administrative review:  
+Provided that no administrative review shall be undertaken unless 
+the period prescribed has lapsed.  
+Countervailing and Anti-Dumping Duties                    29 
+(2) If the Government decides to conduct an administrative review 
+under subsection (1), the Government shall—  
+(a) publish a notice of the initiation of an administrative 
+review; and  
+(b) conduct such review, allowing appropriate interested 
+parties an opportunity to provide comments.  
+(3) Any administrative review conducted pursuant to subsection (2) 
+shall be completed within such period as may be prescribed.  
+(4) On the completion of the administrative review, the 
+Government shall publish a final administrative review determination 
+stating the reasons for its determination.  
+(5) Any determination made pursuant to subsection (4) shall apply 
+to the subject merchandise imported on or after the date of publication 
+of the administrative review determination.  
+(6) No countervailing duty shall be collected on imports made after 
+five years from the date of its imposition, or five years from the date 
+of the conclusion of the most recent administrative review under 
+subsection (1) that covered both subsidy and injury, and undertakings 
+shall automatically lapse with respect to imports made after five years 
+from the date of publication of the notice of suspension of the 
+investigation, unless the Government determines, in an administrative 
+review initiated before that date on the Government’s own initiative 
+or upon a duly substantiated request made by or on behalf of the 
+domestic industry within a reasonable period of time before that date, 
+that the expiry of the duty or undertaking would be likely to lead to a 
+continuation or recurrence of subsidization and injury.  
+(7) A countervailing duty duly imposed under this Act may remain in 
+force pending the outcome of an administrative review under this section.  
+(8) An interested party who submits relevant information 
+substantiating the need for an administrative review shall have the 
+right to request for an administrative review by the Government to 
+30                                        Laws of Malaysia A CT 504
+determine one or more of the following:  
+(a) whether the continued imposition of the countervailing 
+duty is necessary to offset subsidization;  
+(b) whether the injury would be likely to continue to recur if 
+the duty were removed or varied:  
+Provided that the period specified in subsection (6) has lapsed since 
+the imposition of the definitive countervailing duty.  
+Refund review  
+13 A . (1) Without prejudice to section 13, an importer may request for 
+a refund of the countervailing duties paid where the importer can 
+show that the amount of the countervailable subsidy on the basis of 
+which the countervailing duties were imposed has been either 
+eliminated or reduced to a level that is below the level of the 
+countervailing duties in force.  
+(2) A request for a refund review shall be submitted in writing to 
+the Government and shall contain—  
+(a) a list of all entries of the subject merchandise into 
+Malaysia for which the refund review is requested; and  
+(b) all relevant evidence to show that the importer is entitled 
+to a refund on each such entry.  
+(3) Where, on the completion of a refund review under this section, 
+the Government determines that—  
+(a) a refund of the countervailing duty, wholly or partly, is 
+appropriate;  
+(b) no countervailing duty should have been imposed; or  
+(c) the countervailing duty that was imposed is higher than 
+the countervailing duty that should have been imposed in 
+Countervailing and Anti-Dumping Duties                    31 
+the circumstances,  
+the Government shall refund such amount of the countervailing duty 
+collected as it deems fit.  
+(4) A refund under subsection (3) shall, as far as practicable, be 
+made within ninety days from the date of the determination of the 
+refund review.  
+(5) A finding in the refund review that no countervailing duty 
+should have been imposed shall not by itself require the Government 
+to terminate the definitive countervailing duty.  
+Expedited review  
+13 B . (1) An exporter or a producer whose exports of the subject 
+merchandise are subject to a definitive countervailing duty but 
+who was not actually investigated for reasons other than a refusal 
+to co-operate shall be entitled to an expedited review in order that 
+the Government may immediately establish an individual 
+countervailing duty rate for the exporter or producer.  
+(2) No countervailing duty shall be imposed on imports from the 
+exporters or producers referred to in subsection (1) while the review 
+is being carried out.  
+(3) Notwithstanding subsection (2), the Government may withhold an 
+appraisement or request guarantees to ensure that, should a review under 
+subsection (1) result in a determination of subsidization and injury 
+caused thereby in respect of exports of the subject merchandise into 
+Malaysia by the exporters or producers referred to in subsection (1), 
+countervailing duties may be imposed retroactively to the date of the 
+initiation of the review.  
+32                                        Laws of Malaysia A CT 504
+Developing country Member  
+14. Notwithstanding any other provisions of this Act, countervailing 
+duty proceedings against exporters or producers from developing 
+country Members of the World Trade Organization shall be carried 
+out in such manner as may be prescribed.  
+P ART III 
+ANTI-DUMPING DUTIES 
+Imposition of anti-dumping duties  
+15. (1) No anti-dumping duty shall be imposed except in 
+accordance with this Act.  
+ (2) The amount of anti-dumping duty to be imposed—  
+(a) shall be equal to the dumping margin determined to exist 
+with respect to the subject merchandise; or  
+(b) if the Government determines that a lower anti-dumping 
+duty will be sufficient to eliminate the injury, may be such 
+lower duty.  
+Normal value  
+16. (1) For the purpose of this Act, the normal value shall be the 
+comparable price actually paid or payable in the ordinary course of 
+trade for the like product sold for consumption in the domestic market 
+of the exporting country.  
+(2) When there are no sales in the domestic market of the exporting 
+country under subsection (1), or when such sales do not permit a 
+proper comparison, normal value shall be determined—  
+(a) by comparison with a comparable price of the like product 
+Countervailing and Anti-Dumping Duties                    33 
+when exported to an appropriate third country provided 
+that the comparable price is representative; or  
+(b) by constructing the value of the subject merchandise by 
+adding cost of production in the country of origin plus a 
+reasonable amount for selling, administrative and other 
+general expenses and for profits.  
+(3) If there are reasonable grounds for believing or suspecting that a 
+sale of the like product under subsection (1) or paragraph (2) (a) is at a 
+price below unit production costs (fixed and variable) plus selling, 
+administrative and other general expenses, the sale may be treated as 
+not having been made in the ordinary course of trade by reason of 
+price and may be disregarded in determining normal value only if the 
+Government determines that such sale was made within an extended 
+period of time in substantial quantities and is at a price that does not 
+provide for the recovery of all costs within a reasonable period of 
+time.  
+(4) If the price of a sale referred to in subsection (3) is above the 
+weighted average per unit cost for the period of investigation, such 
+price shall be considered to provide for the recovery of costs within a 
+reasonable period of time.  
+(5) For the purpose of this section, the amount for selling, 
+administrative and other general expenses and for profits shall be 
+based on actual information pertaining to production and sales in the 
+ordinary course of trade of the like product by the exporter or 
+producer under investigation.  
+(6) If the amount referred to in subsection (5) cannot be determined 
+on the basis specified in that subsection, the amount may be 
+determined on any of the following basis:  
+(a) the weighted average of the actual amount incurred and 
+realized by other exporters or producers subject to 
+investigation in respect of production and sales of the like 
+product in the domestic market of the country of origin;  
+34                                        Laws of Malaysia A CT 504
+(b) the actual amount incurred and realized by the exporter or 
+producer in question in respect of production and sales in 
+the domestic market of the country of origin of the same 
+general category of products; or  
+(c) any other reasonable method, provided that the amount for 
+profits so established shall not exceed the profit normally 
+realized by other exporters or producers on the sale of 
+products of the same general category in the domestic 
+market of the country of origin.  
+(7) For the purpose of this section, production costs shall be 
+calculated on the basis of records kept by the exporter or producer 
+under investigation, provided that such records are in accordance with 
+the generally accepted accounting principles of the exporting country 
+concerned and reasonably reflect the costs associated with the 
+production and sale of the subject merchandise.  
+(8) The Government shall consider all available evidence on the 
+proper allocation of costs, including any evidence that is made 
+available by the exporter or producer in the course of the 
+investigation, provided that it is shown that such allocations have 
+historically been utilized by the exporter or producer, in particular in 
+relation to establishing appropriate amortization and depreciation 
+periods and allowances for capital expenditures and other 
+development costs.  
+Export price  
+17. (1) The export price shall be the price actually paid or payable 
+for the subject merchandise.  
+(2) In cases where there is no export price or where it appears that 
+the export price is unreliable because the exporter and the importer or 
+a third party are related, or that there is a compensatory arrangement 
+between the exporter and the importer or a third party, the export 
+price may be constructed on the basis of the price at which the subject 
+Countervailing and Anti-Dumping Duties                    35 
+merchandise is first resold to an independent buyer, or if the subject 
+merchandise is not resold to an independent buyer, or not resold in 
+the condition imported, on any reasonable basis.  
+(3) If the export price is constructed as described in subsection (2), 
+allowance shall be made for all costs incurred between importation 
+and resale.  
+Comparison of normal value and export price  
+18. (1) A fair comparison shall be made between the export price 
+and the normal value. 
+(2) The comparison shall be made at the same level of trade, 
+normally at ex-factory level, and in respect of sales made at as nearly 
+as possible the same time and due account shall be taken of other 
+differences that affect price comparability.  
+(3) Where the normal value and the export price as established are 
+not on a comparable basis, due allowance, in the form of adjustments, 
+shall be made in each case, on its merits, for differences in factors 
+that are claimed, and demonstrated, to affect prices and price 
+comparability.  
+(4) If the determination of the export price under subsection 17(2) 
+affects price comparability, the Government shall establish the 
+normal value at a level of trade equivalent to the level of trade of the 
+constructed export price, or shall make due allowance as provided 
+under this section.  
+(5) In a case where the subject merchandise is not imported directly 
+from the country of origin but is exported from an intermediate 
+country, the price at which the subject merchandise is sold from the 
+exporting country to Malaysia shall be compared with the comparable 
+price in the exporting country.  
+(6) Notwithstanding subsection (5), comparison may be made with 
+36                                        Laws of Malaysia A CT 504
+the price in the country of origin if—  
+(a) the subject merchandise is merely transhipped through the 
+exporting country;  
+(b) the subject merchandise is not produced in the exporting 
+country; or  
+(c) there is no comparable price for the subject merchandise 
+in the exporting country.  
+(7) Where an exporter or importer claims for an adjustment under 
+subsection (3), it shall prove that its claim is justified.  
+(8) The Government shall indicate to the parties in question the 
+information that is necessary to ensure a fair comparison.  
+Subject merchandise from a non-market economy country  
+19. Where the country of origin of the subject merchandise is a 
+non-market economy country, the normal value shall be 
+determined in the prescribed manner.  
+Initiation of investigation  
+20. (1) The Government may initiate an investigation to determine 
+the existence, degree and effect of any alleged dumping upon the 
+submission of a written petition by or on behalf of the domestic 
+industry producing the like product.  
+(2) A petition under subsection (1) shall contain such information 
+as may be prescribed and shall include sufficient evidence of the 
+dumping and injury and a causal link between the imports of the 
+subject merchandise and the alleged injury.  
+(3) After receipt of a petition under subsection (1) but before 
+proceeding under subsection (4), the Government shall notify the 
+Countervailing and Anti-Dumping Duties                    37 
+government of the exporting country of the receipt of the petition.  
+(4) The Government shall, within the prescribed period, examine 
+the petition and other available information and evidence to 
+determine whether—  
+(a) the evidence is sufficient to justify the initiation of an 
+investigation;  
+(b) there is a sufficient degree of support for or opposition to 
+the petition expressed by the domestic industry; and  
+(c) an investigation is in the public interest. 
+(5) A petition under subsection (1) shall be immediately rejected if 
+the Government is satisfied that—  
+(a) there is no sufficient evidence of either dumping or of 
+injury to justify the initiation of an anti-dumping duty 
+investigation, such as but not limited to cases where the 
+dumping margin is de minimis or where the volume of 
+imports of the subject merchandise, actual or potential, or 
+the injury, is negligible; or  
+(b) an investigation is not in the public interest.  
+(6) Where the Government rejects a petition under subsection (5), 
+the Government shall, as soon as practicable, notify the petitioner in 
+writing of its determination not to initiate an investigation.  
+(7) Notwithstanding subsection (1) the Government may, in special 
+circumstances, initiate an anti-dumping duty investigation on its own 
+accord without having received a written petition by or on behalf of 
+the domestic industry for the initiation of such investigation if it has 
+sufficient evidence of each of the matters specified in subsection (2).  
+(8) Where the Government decides to initiate an investigation 
+under subsection (1) or subsection (7), it shall notify the appropriate 
+interested parties and publish a notice of initiation of investigation.  
+38                                        Laws of Malaysia A CT 504
+(9) Evidence of both dumping and injury shall be considered 
+simultaneously in the decision whether to initiate an investigation and 
+after that during the course of the investigation, starting on a date not 
+later than the earliest date the provisional measures may be applied.  
+(10) The Government shall not disclose any petition made under 
+this section unless the Government has made a decision to initiate an 
+investigation.  
+Amendments to the petition  
+21. A petition requesting an anti-dumping duty investigation be 
+initiated may be amended subject to such conditions as the 
+Government deems fit.  
+Duration of investigation  
+22. The Government shall conclude an anti-dumping duty 
+investigation within such period as may be prescribed.  
+Injury and causal link  
+22 A . (1) A determination of injury for the purpose of an anti-dumping 
+duty investigation under this Act shall be based on relevant evidence and 
+shall involve an objective examination of both the volume of imports of 
+the subject merchandise and the effect of the subject merchandise on 
+prices in the domestic market for like products and the consequent impact 
+of these imports on the domestic producers of such products.  
+(2) For the purposes of this Act, it shall be demonstrated that the 
+subject merchandise is, through the effects of dumping, causing 
+injury.  
+(3) The demonstration of a causal relationship between the subject 
+merchandise and the injury to the domestic industry shall be based on 
+Countervailing and Anti-Dumping Duties                    39 
+an examination of all relevant evidence available to the Government.  
+(4) The Government shall also examine any known factors other 
+than the subject merchandise that at the same time are injuring the 
+domestic industry and the injuries caused by these other factors shall 
+not be attributed to the subject merchandise.  
+(5) A determination of a threat of material injury shall be based on 
+facts and not merely on allegation, conjecture or remote possibility.  
+(6) In making a determination regarding the existence of a threat of 
+material injury, the Government shall consider such factors as may be 
+prescribed.  
+(7) In cases where injury is threatened by the subject merchandise, 
+the application of anti-dumping measures shall be considered and 
+decided with special care.  
+Preliminary determination of dumping and injury  
+23. (1) The Government shall, within such period as may be 
+prescribed, make a preliminary determination regarding—  
+(a) whether a dumping margin exists with respect to the 
+subject merchandise and the margin of such dumping; and  
+(b) whether injury is found to exist in any one of the 
+following ways:  
+(i) the subject merchandise, through the effects of 
+dumping, is causing material injury to the 
+domestic industry in Malaysia producing the like 
+product;  
+(ii) the subject merchandise, through the effects of 
+dumping, is threatening to cause material injury to 
+the domestic industry in Malaysia producing the 
+like product; or  
+40                                        Laws of Malaysia A CT 504
+(iii) the subject merchandise, through the effects of 
+dumping, is causing material retardation of the 
+establishment of such an industry in Malaysia.  
+(2) If the Government makes a negative preliminary determination 
+with regard to subsection (1), it shall publish a notice stating the 
+reasons for the negative determination and—  
+(a) continue the investigation; or  
+(b) terminate the investigation if the Government deems fit.  
+(3) If the Government makes an affirmative preliminary 
+determination with regard to subsection (1), it shall continue the 
+investigation and publish a notice of—  
+(a) the affirmative preliminary determination, stating the reasons 
+for its determination with respect to paragraphs (1) (a) and (b) ; 
+and  
+(b) the provisional measures applicable.  
+Provisional measures  
+24. (1) The Government shall apply provisional measures with 
+regard to the subject merchandise imported into Malaysia on or after 
+the publication of the notice of affirmative preliminary determination 
+where the Government determines that such measures are necessary 
+to prevent the injury referred to in paragraph 23(1) (b) from occurring 
+during the period of investigation.  
+(2) Provisional measures shall take the form of provisional        
+anti-dumping duties guaranteed by a security equal to the amount of 
+estimated dumping margin determined under subsection 23(1).  
+(3) The provisional measures imposed under this section shall not 
+exceed such period as may be prescribed.  
+Countervailing and Anti-Dumping Duties                    41 
+Final determination of dumping and injury  
+25. (1) The Government shall, within such period as may be 
+prescribed, make a final determination regarding—  
+(a) whether a dumping margin exists with regard to the 
+subject merchandise and the margin of such dumping; and  
+(b) whether injury is found to exist in any one of the 
+following ways:  
+(i) the subject merchandise, through the effects of 
+dumping, is causing material injury to the domestic 
+industry in Malaysia producing the like product;  
+(ii) the subject merchandise, through the effects of 
+dumping, is threatening to cause material injury to 
+the domestic industry in Malaysia producing the 
+like product; or  
+(iii) the subject merchandise, through the effects of 
+dumping, is causing material retardation of the 
+establishment of such an industry in Malaysia.  
+(2) The Government shall, before making a final determination, 
+inform all interested parties of the essential facts under consideration 
+that form the basis for the decision whether to apply definitive 
+measures.  
+(2 A ) A disclosure under subsection (2) shall be made in sufficient 
+time for all interested parties to defend their interests. 
+(3) Where the Government makes a negative final determination 
+with regard to subsection (1), it shall—  
+(a) terminate the investigation;  
+(b) terminate the provisional measures applied under section 24, 
+and release the security required by such measures; and  
+(c) publish a notice of the negative final determination, stating 
+42                                        Laws of Malaysia A CT 504
+the reasons for its negative determination.  
+(4) Where 
+the 
+Government 
+makes 
+an 
+affirmative 
+final 
+determination with regard to subsection (1), it shall—  
+(a) publish a notice of affirmative final determination stating 
+the reasons for its affirmative determination, the          
+anti-dumping 
+duties 
+applicable 
+and 
+the 
+subject 
+merchandise on which the anti-dumping duties apply;  
+(b) impose anti-dumping duties in the amounts determined in 
+accordance with subsection 15(2) on the subject 
+merchandise imported into Malaysia on or after the date of 
+publication of the final determination; and  
+(c) impose 
+anti-dumping 
+duties 
+in 
+accordance 
+with 
+subsections (5) and (6) on imports into Malaysia for which 
+provisional measures were applied.  
+(4 A ) Where an affirmative final determination has been made, the 
+Government may take into consideration public interest in 
+determining whether to impose anti-dumping duties and the amount 
+of such duties.  
+(5) The Government shall impose anti-dumping duties on the 
+subject merchandise against which provisional measures were applied 
+where—  
+(a) the Government makes a determination of material injury 
+under subparagraph (1) (b) (i); or  
+(b) the Government makes a determination of threat of 
+material injury under subparagraph (1) (b) (ii), it finds that 
+the subject merchandise, in the absence of the provisional 
+measures, would have led to a finding of material injury 
+under subparagraph (1) (b) (i).  
+(5 A ) Notwithstanding subsection (5), where a determination of 
+threat of injury or material retardation is made but no injury has 
+occurred, a definitive anti-dumping duty may be imposed only from 
+Countervailing and Anti-Dumping Duties                    43 
+the date of the determination of the existence of a threat of injury or 
+material retardation, and any security submitted during the period of 
+the application of provisional measures shall be released immediately.  
+(6) With respect to the imposition of anti-dumping duties under 
+subsection (5)—  
+(a) where the anti-dumping duty is higher than the amount 
+guaranteed by the security required under the provisional 
+measures, only the amount equal to the security shall be 
+imposed; and  
+(b) where the anti-dumping duty is less than the amount 
+guaranteed by the security required under the provisional 
+measures, the full amount of the anti-dumping duty shall 
+be imposed and the excess amount of the security shall be 
+reimbursed or released.  
+(7) Notwithstanding subsections (4) and (5), the Government may 
+impose anti-dumping duties on the subject merchandise imported into 
+Malaysia within a period of ninety days prior to the application of 
+provisional measures if—  
+(a) the Government finds injury that is difficult to repair;  
+(b) such injury is being caused by massive imports of the 
+subject merchandise in a short period of time; and  
+(c) there is a history of dumping which caused injury, or the 
+importer was or should have been aware that the exporter 
+practises dumping and that such dumping would cause 
+injury.  
+(7 A ) No anti-dumping duties shall be imposed retroactively under 
+subsection (7) on merchandise entered for consumption before the 
+date of initiation of the investigation.  
+(8) When an anti-dumping duty is imposed on the subject 
+merchandise, such anti-dumping duty shall be imposed in the 
+appropriate amount in each case on a non-discriminatory basis on all 
+44                                        Laws of Malaysia A CT 504
+imports of such merchandise into Malaysia from the country found to 
+be dumping the subject merchandise causing injury.  
+(9) Provisional measures and definitive anti-dumping duties shall 
+only be applied to subject merchandise that enters for consumption 
+after the time when the decision under subsection 24(1) or 25(4), as 
+the case may be, enters into force.  
+Termination of investigation  
+26.  (1) Notwithstanding any other provisions of this Act, an 
+investigation may be terminated at any time if—  
+(a) the petitioner withdraws the petition;  
+(b) there are changed circumstances;  
+(c) the Government is satisfied that there is no sufficient 
+evidence of dumping or injury to justify proceeding with 
+the investigation;  
+(d) the dumping margin is de minimis or the volume of 
+imports of the subject merchandise, actual or potential, or 
+the injury, is negligible; or  
+(e) the Government determines that termination of the 
+investigation is in the public interest.  
+(2) If a termination pursuant to subsection (1) occurs prior to the 
+preliminary determination, the Government shall publish a notice of 
+such termination stating the reasons for the termination.  
+(3) If a termination pursuant to subsection (1) occurs after the 
+preliminary determination, the Government shall—  
+(a) terminate any provisional measures referred to in section 
+24 and release the security required by such measures; and  
+(b) publish a notice of such termination, stating the reasons 
+Countervailing and Anti-Dumping Duties                    45 
+for the termination.  
+Suspension of investigation  
+27. (1) An investigation may be suspended at any time if price 
+undertakings are accepted by the Government.  
+(2) Before accepting the price undertakings, the Government shall 
+determine that — 
+(a) the price undertakings —  
+(i) will eliminate the dumping margin or the injurious 
+effects caused by the subject merchandise; and 
+(ii) can be monitored effectively; or 
+(b) the price undertakings are in the public interest. 
+ (3) Price undertakings shall not be sought or accepted from 
+exporters unless the Government has made a preliminary affirmative 
+determination of dumping and injury caused by such dumping. 
+(4) If the price undertakings are accepted by the Government after 
+the preliminary determination, the Government shall— 
+(a) suspend the investigation; 
+(b) suspend any provisional measures applied under section 24 
+and release all or part of the security required by such 
+measures as the Government deems appropriate; and 
+(c) publish a notice stating the reasons for the suspension of 
+the investigation and actions under paragraph (b) . 
+ (5) Notwithstanding the acceptance of the price undertakings, the 
+investigation shall be completed upon the written request of the 
+exporter or if the Government so decides. 
+46                                        Laws of Malaysia A CT 504
+ (6) Where the Government completes the investigation pursuant to 
+subsection (5), and makes an affirmative determination, the price 
+undertakings shall remain in effect consistent with the provisions of 
+this Act. 
+ (7) Where the Government completes the investigation pursuant to 
+subsection (5), and makes a negative determination, the price 
+undertakings shall lapse, except where the negative determination is 
+due in large part to the existence of the price undertakings. 
+ (8) Where the negative determination referred to in subsection (7) is 
+due in large part to the existence of the price undertakings, the price 
+undertakings may be maintained for a reasonable period consistent 
+with the provisions of this Act. 
+ (8 A ) The Government may suggest for price undertakings to be 
+provided by exporters, but no exporter shall be obliged to enter into 
+such undertakings. 
+(8 B ) The fact that the exporters do not offer price undertakings, or 
+do not accept an invitation to do so, shall in no way affect the 
+consideration of the case.  
+(8 C ) Notwithstanding subsections (8 A ) and (8 B ), the Government 
+shall be free to determine that a threat of injury is more likely to be 
+realized if the importation of the subject merchandise continues.  
+(8 D ) The Government may require any exporter from whom a price 
+undertaking has been accepted to provide, periodically, information 
+relevant to the fulfilment of such undertaking and to permit 
+verification of pertinent information.  
+(8 E ) Non-compliance with subsection (8 D ) shall be construed as a 
+breach of the price undertaking.  
+(9) The Government may resume a suspended investigation at any 
+time if it determines that the price undertakings accepted under 
+subsection (1) no longer meet the requirements of subsection (2) or 
+Countervailing and Anti-Dumping Duties                    47 
+there is a material violation of the price undertakings.  
+(10) If the Government resumes an investigation pursuant to 
+subsection (9), it shall take expeditious action to—  
+(a) ( Deleted by Act A1046 );  
+(b) apply provisional measures in conformity with section 24, 
+if appropriate; and  
+(c) make a final determination pursuant to section 25.  
+(11) The Government may use the facts available with respect to 
+any determination under subsection (10) where a material violation of 
+the price undertakings occur.  
+(12) In the cases mentioned in subsection (9), the Government may 
+impose anti-dumping duties in conformity with section 25 on the 
+subject merchandise imported into Malaysia within a period of ninety 
+days prior to the provisional measures applied under subsection (10):  
+Provided that such retroactive assessment shall not be applied to 
+subject merchandise imported prior to the violation.  
+Duration of duty  
+27 A . An anti-dumping duty imposed under this Act shall remain in 
+force only for as long as and to the extent necessary to counteract the 
+dumping that is causing the injury.  
+Administrative review  
+28. (1) Whenever an interested party provides information to the 
+Government, or the Government otherwise obtains information, 
+that—  
+(a) the dumping margin has changed substantially;  
+48                                        Laws of Malaysia A CT 504
+(b) ( Deleted by Act A1046 );  
+(c) the imposition of an anti-dumping duty is no longer 
+necessary;  
+(d) an undertaking is no longer necessary or should be 
+revised;  
+(e) an anti-dumping duty or undertaking which is required to 
+be terminated pursuant to subsection (6) should be 
+maintained; or  
+(f) an administrative review is in the public interest,  
+the Government may conduct an administrative review:  
+Provided that no administrative review shall be undertaken unless 
+the period prescribed has lapsed.  
+(2) If the Government decides to conduct an administrative review 
+under subsection (1), the Government shall—  
+(a) publish a notice of the initiation of an administrative 
+review; and  
+(b) conduct such review, allowing appropriate interested 
+parties an opportunity to provide comments.  
+(3) Any administrative review conducted pursuant to subsection (2) 
+shall be completed within such period as may be prescribed.  
+(4) On the completion of the administrative review, the 
+Government shall publish a final administrative review determination, 
+stating the reasons for its determination.  
+(5) Any determination made pursuant to subsection (4) shall apply 
+to the subject merchandise imported on or after the date of 
+publication of the administrative review determination.  
+Countervailing and Anti-Dumping Duties                    49 
+(6) No anti-dumping duty shall be collected on imports made after 
+five years from the date of its imposition, or five years from the date 
+of the conclusion of the most recent administrative review under 
+subsection (1) that covered both dumping and injury, and 
+undertakings shall automatically lapse with respect to imports made 
+after five years from the date of publication of the notice of 
+suspension of the investigation, unless the Government determines, in 
+an administrative review initiated before that date on the 
+Government’s own initiative or upon a duly substantiated request 
+made by or on behalf of the domestic industry within a reasonable 
+period of time before that date, that the expiry of the duty or 
+undertaking would be likely to lead to a continuation or recurrence of 
+dumping and injury.  
+(7) An anti-dumping duty duly imposed under this Act may remain 
+in force pending the outcome of an administrative review under this 
+section.  
+(8) An interested party who submits relevant information 
+substantiating the need for an administrative review shall have the 
+right to request for an administrative review by the Government to 
+determine one or more of the following:  
+(a) whether the continued imposition of the anti-dumping duty 
+is necessary to offset dumping;  
+(b) whether the injury would be likely to continue to recur if 
+the duty were removed or varied:  
+Provided that the period specified in subsection (6) has lapsed since 
+the imposition of the definitive anti-dumping duty.  
+Refund review  
+28 A . (1) Without prejudice to section 28, an importer may request 
+for a refund of the anti-dumping duties paid where the importer can 
+show that the dumping on the basis of which the anti-dumping duties 
+were imposed has been either eliminated or reduced to a level that is 
+50                                        Laws of Malaysia A CT 504
+below the level of the anti-dumping duties in force.  
+(2) A request for a refund review shall be submitted in writing to 
+the Government and shall contain—  
+(a) a list of all entries of the subject merchandise into 
+Malaysia for which the refund review is requested; and  
+(b) all relevant evidence to show that the importer is entitled 
+to a refund on each such entry.  
+(3) Where, on the completion of a refund review under this section, 
+the Government determines that—  
+(a) a refund of the anti-dumping duty, wholly or partly, is 
+appropriate;  
+(b) no anti-dumping duty should have been imposed; or  
+(c) the anti-dumping duty that was imposed is higher than the 
+anti-dumping duty that should have been imposed in the 
+circumstances,  
+the Government shall refund such amount of the anti-dumping duty 
+collected as it deems fit.  
+(4) A refund under subsection (3) shall, as far as practicable, be 
+made within ninety days from the date of the determination of the 
+refund review.  
+(5) A finding in the refund review that no anti-dumping duty should 
+have been imposed shall not by itself require the Government to 
+terminate the definitive anti-dumping duty.  
+Expedited review  
+28 B . (1) An exporter or a producer whose exports of the subject 
+merchandise are subject to a definitive anti-dumping duty but who 
+has not exported the subject merchandise to Malaysia during the 
+Countervailing and Anti-Dumping Duties                    51 
+period of investigation shall be entitled to an expedited review in 
+order that the Government may immediately establish an individual 
+anti-dumping duty rate for the exporter or producer, provided that the 
+exporter or producer can show that the exporter or producer is not 
+related to any of the exporters or producers in the exporting country 
+who are subject to the anti-dumping duties on the subject 
+merchandise.  
+(2) No anti-dumping duty shall be imposed on imports from the 
+exporters or producers referred to in subsection (1) while the review 
+is being carried out.  
+(3) Notwithstanding subsection (2), the Government may withhold 
+an appraisement or request guarantees to ensure that, should a review 
+under subsection (1) result in a determination of dumping and injury 
+caused thereby in respect of exports of the subject merchandise into 
+Malaysia by the exporters or producers referred to in subsection (1), 
+anti-dumping duties may be imposed retroactively to the date of the 
+initiation of the review.  
+Anti-dumping action on behalf of third country  
+29.  (1) The Government may initiate an anti-dumping duty 
+investigation on behalf of a third country upon receipt of a written 
+request for an anti-dumping action from the government of the third 
+country.  
+(2) The request referred to in subsection (1) shall be supported by 
+price information to show that the imports are being dumped and by 
+detailed information to show that the alleged dumping is causing 
+injury to the domestic industry concerned in the third country.  
+(3) The government of the third country shall give all assistance to 
+the Government to obtain any further information as may be 
+necessary for the investigation.  
+(4) In considering a request under this section, the Government 
+52                                        Laws of Malaysia A CT 504
+shall consider the effects of the alleged dumping on the industry 
+concerned as a whole in the third country.  
+(5) The decision whether to proceed with an anti-dumping duty 
+investigation on behalf of a third country shall rest solely with the 
+Government.  
+(6) If the Government decides to initiate an anti-dumping duty 
+investigation under this section, the Government shall obtain the 
+approval of the Council for Trade in Goods of the World Trade 
+Organization before beginning the investigation.  
+P ART IV 
+ADMINISTRATION 
+Administrative matters 
+30. (1) Any petition to be submitted under Parts II and III shall be 
+submitted to the Minister. 
+(2) Subject to the provisions of this Act, any action to be conducted 
+or taken under this Act shall be conducted or taken by any person or 
+officer authorized in writing in that behalf by the Minister.  
+(3) Any finding of an investigation, whether for the purpose of a 
+preliminary or final determination, or a review, under this Act, shall 
+be forwarded to the Minister.  
+(4) The Minister shall make a recommendation to the Minister of 
+Finance who shall make a determination or a decision.  
+(5) The collection of any countervailing or anti-dumping duty 
+imposed under this Act shall be conducted by an officer of customs.  
+(6) If any question arises as to whether any particular product is or is 
+Countervailing and Anti-Dumping Duties                    53 
+not included in any notification given under this Act, such question shall 
+be referred to the Minister who shall make a decision on the matter.  
+Protection of officers and persons acting under direction of 
+officers  
+31. No action or prosecution shall be brought, instituted or 
+maintained in any court against any person or officer authorized 
+under this Act for or on account of or in respect of any act ordered or 
+done for the purpose of carrying into effect this Act, and no suit or 
+prosecution shall lie in any court against any other person for or on 
+account of or in respect of any act done or purported to be done by 
+him under the order, direction or instruction of any such person or 
+officer if the act was done in good faith and in a reasonable belief that 
+it was necessary for the purpose intended to be served thereby.  
+32. ( Deleted by Act A1046 ).  
+Regulations in respect of specified areas  
+33. The Minister of Finance may, in respect of certain areas to be 
+specified in regulations made under this section, make special 
+provision to regulate those specified areas for the purposes of this 
+Act.  
+Application of the Customs Act 1967  
+34. (1) This Act shall be construed as one with the Customs Act 
+1967.  
+(2) In the event of any inconsistency occurring between the 
+provisions of the Customs Act 1967 and the provisions of this Act, 
+the provisions of this Act shall prevail.  
+54                                        Laws of Malaysia A CT 504
+Judicial review  
+34 A . (1) An interested party who is not satisfied or who is aggrieved 
+by the decision of the Government in relation to a final determination 
+or a final administrative review determination under this Act shall 
+have the right to refer such matter to the High Court for judicial 
+review in accordance with Order 53 of the  Rules of the High Court 
+1980 [ P.U. (A) 50/1980 ].  
+(2) A request for judicial review shall be filed in the High Court 
+within thirty days after the publication of the final determination or 
+the final administrative review determination in question.  
+(3) A request for judicial review shall not be filed in the High Court 
+unless the final determination or final administrative review 
+determination in question has been published by the Government in 
+accordance with this Act.  
+(4) Notwithstanding subrule 1(5) of Order 53 of the  Rules of the 
+High Court 1980, a request for judicial review in the High Court shall 
+not hinder the Government from collecting the countervailing duty or 
+anti-dumping duty imposed under any final determination or final 
+administrative review determination.  
+P ART V 
+GENERAL 
+Cumulative assessment  
+35. (1) Where imports of subject merchandise from more than one 
+country are simultaneously subject to countervailing or anti-dumping 
+duty investigations, the Government may cumulatively assess the 
+effects of such imports.  
+ NOTE —the Rules of the High Court 1980 [ P.U.(A) 50/1980 ] has been repealed by the Rules of the 
+High Court 2012 [ P.U.(A) 205/2012 ].
+Countervailing and Anti-Dumping Duties                    55 
+ (2) Subsection (1) shall apply only if the Government 
+determines—  
+(a) that the amount of a subsidy or the margin of dumping 
+established in relation to the imports from each country is 
+more than de minimis ;  
+(b) that the volume of imports of the subject merchandise 
+from each country is not negligible; and  
+(c) that the cumulative assessment of the effects of the 
+imports of the subject merchandise is appropriate in view 
+of the conditions of competition between the subject 
+merchandise, and the conditions of competition between 
+the subject merchandise and the like domestic product.  
+False statements  
+36. Any information provided which is false or materially inaccurate 
+shall be rejected without prejudice to whatever penalties that may be 
+applicable under regulations made under this Act or any other written 
+law.  
+Anti-circumvention measures  
+37. The Government may take action to prevent circumvention of the 
+application of countervailing and anti-dumping duties as may be 
+prescribed.  
+Notice of information and opportunities to present evidence  
+38. (1) The Government shall provide a copy of the notice of the 
+information that it requires form the Members and all interested 
+parties whose product is the subject of an investigation under this Act 
+to the Members and interested parties and shall give the Members and 
+interested parties an opportunity within the period as may be 
+56                                        Laws of Malaysia A CT 504
+prescribed to present in writing all evidence that they consider 
+relevant in respect of the investigation.  
+(2) As soon as an investigation has been initiated, the Government 
+shall provide the full text of the written petition received under 
+subsection 4(1) or 20(1), as the case may be, to the known exporters 
+and the exporting Members and shall make it available, upon request, 
+to the other interested parties involved, due regard being given to the 
+protection of confidential information.  
+(3) Subject to the requirement to protect confidential information, 
+evidence presented in writing by any interested Member or interested 
+party shall be made available immediately to the other interested 
+Members or interested parties involved in the investigation.  
+(4) The Government shall, whenever practicable, provide timely 
+opportunities for all interested Members and interested parties to see 
+all information that is relevant to the presentation of their case 
+provided that the information is not confidential and is used by the 
+Government in the investigation.  
+Confidential information  
+39. (1) Any information which is by its nature confidential, or any 
+information which is provided on a confidential basis to the 
+Government, shall for good cause shown, be treated as such by the 
+Government.  
+(2) The confidential nature of a document shall not be used as a 
+reason for refusing to provide it to the Government.  
+(3) The Government shall be responsible for ensuring the 
+confidentiality of such documents.  
+(4) Confidential information shall not be disclosed without specific 
+written permission from the party submitting the confidential 
+information.  
+Countervailing and Anti-Dumping Duties                    57 
+(5) The Government shall require parties providing confidential 
+information to furnish non-confidential summaries that are sufficient 
+in detail to permit reasonable understanding of the substance of the 
+confidential information.  
+(6) In the event such parties indicate that such information is not 
+susceptible of summary, a statement of reasons why summarization is 
+not possible shall be provided.  
+(7) The Government may disregard information presented if—  
+(a) the Government finds that a request for confidentiality 
+under subsection (1) is not warranted and the supplier of 
+the information nevertheless is unwilling to make the 
+information public or to authorize its disclosure in a 
+generalized or summary form unless it can be 
+demonstrated to the Government’s satisfaction from 
+appropriate sources that the information is correct;  
+(b) the non-confidential summaries as required under 
+subsection (5) are not in sufficient detail; or  
+(c) the reasons given for not providing non-confidential 
+summaries under subsection (6) are not deemed adequate 
+and the party supplying the information nevertheless 
+refuses to provide non-confidential summaries.  
+Verification of information  
+40. The Government may decide to verify the accuracy of any 
+information submitted during an investigation or administrative 
+review in the prescribed manner.  
+Use of facts available  
+41. Where any interested party refuses access to, or otherwise does 
+58                                        Laws of Malaysia A CT 504
+not provide, necessary information within a reasonable period or 
+significantly impedes an investigation or review, including refusal to 
+allow verification of its information, preliminary and final 
+determinations in investigations or reviews under this Act may be 
+made on the basis of the facts available, including the facts contained 
+in the petition received under subsection 4(1) or 20(1), as the case 
+may be.  
+Other practices discovered during the investigation  
+42. If in the course of an investigation the Government discovers 
+practices which appear to be subsidies or dumping, but were not 
+included in the matters alleged in the petition, then the Government 
+may, if there is sufficient time, investigate the practices.  
+Conduct of investigation where no international obligations apply  
+43. (1) When 
+no 
+applicable 
+international 
+obligation 
+on 
+countervailing and anti-dumping duties exist between Malaysia and 
+the interested foreign government—  
+(a) countervailing and anti-dumping duties may be imposed 
+without regard to an investigation referred to in sections 4 
+and 20; and  
+(b) the Government shall be entitled to use any administrative 
+and legal definition, methodology and procedure it deems 
+appropriate, with regard to the investigations.  
+(2) When applying the provisions of subsection (1), consideration 
+shall be given to the laws and regulations of the interested foreign 
+government and their application to Malaysian exports.  
+Transhipment  
+44. In cases where merchandise is not imported into Malaysia 
+Countervailing and Anti-Dumping Duties                    59 
+directly from the country of origin, but is exported to Malaysia from 
+an intermediate country, the provisions of the Act shall be fully 
+applicable and the transaction, for the purposes of this Act, shall be 
+regarded as having taken place between the country of origin and 
+Malaysia.  
+Publication of notices  
+45. All notices required to be published under this Act shall be 
+published in the Gazette , unless otherwise specified.  
+Double counting not permitted  
+46. No merchandise shall be subject to both anti-dumping and 
+countervailing duties to compensate for the same situation of 
+dumping or subsidization.  
+Customs clearance not to be hindered  
+47. Any investigation conducted under this Act shall not hinder 
+procedures for customs clearance.  
+Public servants  
+48. Any person acting for and on behalf of or under the direction of 
+the Government under this Act shall be deemed to be a public servant 
+within the meaning of the Penal Code [ Act 574 ].  
+Obligation of secrecy  
+49. (1) No person who has access to any statement, accounts, 
+record, correspondence, document, information or any other material 
+obtained pursuant to the provisions of this Act shall disclose such 
+60                                        Laws of Malaysia A CT 504
+statement, accounts, record, correspondence, document, information 
+or other material to any other person unless—  
+(a) such disclosure is authorized by the Minister; or  
+(b) such disclosure is made for the purposes of this Act.  
+(2) Any person who contravenes subsection (1) shall be guilty of an 
+offence and shall, on conviction, be liable to a fine not exceeding one 
+hundred thousand ringgit or to imprisonment for a term not exceeding 
+one year or to both.  
+Power to make regulations  
+50. (1) The Minister may make such regulations as may be 
+necessary or expedient for giving full effect to the provisions of this 
+Act, for carrying out the purposes of this Act or any provisions 
+thereof, or for the further, better or more convenient implementation 
+of the provisions of this Act.  
+(2) Without prejudice to the generality of subsection (1), 
+regulations may be made— 
+(a) to prescribe the time periods for any action to be taken 
+under this Act;  
+(b) to provide for extensions of time for any action to be taken 
+and the circumstances when extensions may be granted;  
+(c) to provide for the form and content of notices required for 
+the purposes of this Act and the procedures related to the 
+giving of such notices;  
+(d) to provide for anti-circumvention measures;  
+(e) to provide for the procedures of investigations, reviews 
+and appeals;  
+(f) to provide for any fee to be charged in respect of any 
+matter or things required for the purposes of this Act;  
+Countervailing and Anti-Dumping Duties                    61 
+(g) to provide for the forms of undertakings which may be 
+accepted by the Government and the procedures related 
+thereto; and  
+(h) to provide for all matters which are required to be 
+prescribed or which are necessary or expedient to give 
+effect to this Act.  
+ (3) Regulations under this section—  
+(a) may provide that any act or omission in contravention of 
+any provisions thereof shall be an offence; and  
+(b) may provide for the imposition of penalties which shall 
+not exceed three hundred thousand ringgit for such 
+offence.  
+Repeal of the Customs (Dumping and Subsidies) Act 1959  
+51. The Customs (Dumping and Subsidies) Act 1959 [ Act 361 ] is 
+hereby repealed.  
+62 
+LAWS OF MALAYSIA  
+Act 504 
+COUNTERVAILING AND ANTI-DUMPING  
+DUTIES ACT 1993 
+LIST OF AMENDMENTS 
+Amending law 
+Short title 
+In force from 
+Act A1046 
+Countervailing and Anti-Dumping 
+Duties (Amendment) Act 1998 
+01-12-1999 
+63 
+LAWS OF MALAYSIA  
+Act 504 
+COUNTERVAILING AND ANTI-DUMPING  
+DUTIES ACT 1993 
+LIST OF SECTIONS AMENDED 
+Section 
+Amending authority 
+In force from 
+2 
+Act A1046 
+01-12-1999 
+Part 1 A
+Act A1046 
+01-12-1999 
+3 
+Act A1046 
+01-12-1999 
+4 
+Act A1046 
+01-12-1999 
+5 
+Act A1046 
+01-12-1999 
+7 A
+Act A1046 
+01-12-1999 
+8 
+Act A1046 
+01-12-1999 
+10 
+Act A1046 
+01-12-1999 
+11 
+Act A1046 
+01-12-1999 
+12 
+Act A1046 
+01-12-1999 
+12 A
+Act A1046 
+01-12-1999 
+13 
+Act A1046 
+01-12-1999 
+13 A
+Act A1046 
+01-12-1999 
+13 B
+Act A1046 
+01-12-1999 
+14 
+Act A1046 
+01-12-1999 
+15 
+Act A1046 
+01-12-1999 
+16 
+Act A1046 
+01-12-1999 
+17 
+Act A1046 
+01-12-1999 
+64                                        Laws of Malaysia A CT 504
+Section 
+Amending authority 
+In force from 
+18 
+Act A1046 
+01-12-1999 
+20 
+Act A1046 
+01-12-1999 
+22 A
+Act A1046 
+01-12-1999 
+23 
+Act A1046 
+01-12-1999 
+25 
+Act A1046 
+01-12-1999 
+26 
+Act A1046 
+01-12-1999 
+27 
+Act A1046 
+01-12-1999 
+27 A
+Act A1046 
+01-12-1999 
+28 
+Act A1046 
+01-12-1999 
+28 A
+Act A1046 
+01-12-1999 
+29 
+Act A1046 
+01-12-1999 
+30 
+Act A1046 
+01-12-1999 
+32 
+Act A1046 
+01-12-1999 
+34 A
+Act A1046 
+01-12-1999 
+35 
+Act A1046 
+01-12-1999 
+38 
+Act A1046 
+01-12-1999 
+39 
+Act A1046 
+01-12-1999 
+40 
+Act A1046 
+01-12-1999 
+41 
+Act A1046 
+01-12-1999 
+47 
+Act A1046 
+01-12-1999 
+50 
+Act A1046 
+01-12-1999 

@@ -1,0 +1,507 @@
+BROADCASTING ACT
+(CHAPTER 28, SECTION 9)
+BROADCASTING (CLASS LICENCE) NOTIFICATION
+ARRANGEMENT OF PARAGRAPHS
+Paragraph
+1.
+Citation
+2.
+Definitions
+3.
+Licensable broadcasting services subject to class licence
+3A.
+Exclusion from class licence
+4.
+Conditions of class licence
+5.
+Application of conditions
+The Schedule
+[15th July 1996]
+Citation
+1. This Notification may be cited as the Broadcasting (Class
+Licence) Notification.
+Definitions
+2. For the purposes of this Notification —
+“ Internet Content Provider ” means —
+( a ) any individual in Singapore who provides any
+programme, for business, political or religious
+purposes, on the World Wide Web through the
+Internet; or
+( b ) any corporation or group of individuals (including
+any association, business, club, company, society,
+organisation or partnership, whether registrable or
+incorporated under the laws of Singapore or not) who
+provides any programme on the World Wide Web
+through the Internet,
+C AP . 28 , N 1]
+[ 2004 Ed.
+p. 1
+and includes any web publisher and any web server
+administrator;
+“ Internet Service Provider ” means any of the following persons:
+( a ) an Internet Access Service Provider licensed under
+section 5 of the Telecommunications Act (Cap. 323);
+( b ) a Localised Internet Service Reseller; or
+( c ) a Non-localised Internet Service Reseller;
+“ Localised Internet Service Reseller ” means a person —
+( a ) who obtains Internet access from an Internet Access
+Service Provider or from a Non-localised Internet
+Service Reseller;
+( b ) who provides Internet services obtained from the
+Internet Access Service Provider, or the Non-
+localised Internet Service Reseller, to all or part of
+the public; and
+( c ) whose Internet services are available for reception
+only within a single building, dwelling-house,
+hospital,
+educational
+institution,
+residential,
+commercial or industrial complex, or any other
+single temporary or permanent structure,
+but does not include a person who provides Internet services
+to that person ’ s own employees for use solely within that
+person ’ s firm or corporation;
+“ Non-localised Internet Service Reseller ” means a person
+who —
+( a ) obtains Internet access from an Internet Access
+Service Provider; and
+( b ) provides Internet services obtained from the Internet
+Access Service Provider to all or part of the public by
+leased telecommunication lines, integrated services
+digital networks, modems or by any other wired or
+wireless means,
+p. 2
+2004 Ed. ]
+[ C AP . 28 , N 1
+but does not include a person who provides Internet services
+to that person ’ s own employees for use solely within that
+person ’ s firm or corporation;
+“ VAN computer on-line service ” means a computer on-line
+service that is licensed as a Value Added Network service
+under section 5 of the Telecommunications Act.
+Licensable broadcasting services subject to class licence
+3. The provision of the following licensable broadcasting services
+are subject to a class licence, except a computer on-line service
+provided on or after such date as the Authority specifies in a notice
+given to the provider of the service under paragraph 3A:
+( a ) audiotext services;
+( b ) videotext services;
+( c ) teletext services;
+( d ) broadcast data services;
+( e ) VAN computer on-line services; and
+( f ) computer on-line services that are provided by Internet
+Content Providers and Internet Service Providers.
+[S 330/2013 wef 01/06/2013]
+Exclusion from class licence
+3A. — (1) A notice may be given by the Authority to any person
+who provides a computer on-line service in or from Singapore,
+whether for payment or free, and whether at regular intervals or
+otherwise —
+( a ) that is accessed from at least 50,000 different Internet
+protocol addresses in Singapore per month on average,
+over any period of 2 consecutive months; and
+( b ) that contains at least one Singapore news programme per
+week on average, over the same period of 2 consecutive
+months referred to in sub-paragraph ( a ),
+and that notice shall not cease to have effect by reason only that the
+computer on-line service concerned ceases subsequently to satisfy
+C AP . 28 , N 1]
+[ 2004 Ed.
+p. 3
+sub-paragraph ( a ) or ( b ) during the validity of any broadcasting
+licence under section 8 of the Act relating to that service.
+(2) For the purposes of reckoning access and content under
+sub-paragraph (1)( a ) and ( b ) —
+( a ) where a computer on-line service is provided by a web site
+with a domain and one or more sub-domains, all
+sub-domains shall be regarded as part of the domain of
+the web site; and
+( b ) where a computer on-line service is provided by a web site
+in or from Singapore (referred to in this sub-paragraph as
+the original web site) which is duplicated on or transferred
+to one or more other web sites in or from Singapore
+(referred to in this sub-paragraph as the mirrored web site),
+all mirrored web sites shall be regarded as part of the
+original web site.
+(3) In this paragraph, “ Singapore news programme ” means any
+programme (whether or not the programme is presenter-based and
+whether or not the programme is provided by a third party) containing
+any news, intelligence, report of occurrence, or any matter of public
+interest, about any social, economic, political, cultural, artistic,
+sporting, scientific or any other aspect of Singapore in any language
+(whether paid or free and whether at regular intervals or otherwise)
+but does not include any programme produced by or on behalf of the
+Government.
+(4) This Notification also does not apply to or in relation to a person
+who is a class licensee by virtue of the Broadcasting (Class Licence
+— Broadcasting to Digital Display Panels) Notification 2020
+(G.N. No. S 477/2020).
+[S 478/2020 wef 22/06/2020]
+[S 330/2013 wef 01/06/2013]
+Conditions of class licence
+4. The conditions of the class licence referred to in paragraph 3 are
+set out in the Schedule.
+p. 4
+2004 Ed. ]
+[ C AP . 28 , N 1
+Application of conditions
+5. The conditions of the class licence set out in the Schedule apply
+to the provision of any licensable broadcasting service that is subject
+to a class licence where the service is available or continues to be
+provided after 15th July 1996 notwithstanding that the service was
+available or first provided before 15th July 1996.
+THE SCHEDULE
+Paragraph 4
+CONDITIONS OF CLASS LICENCE
+1. In this Schedule —
+“ licensee ” means a person who provides a licensable broadcasting service
+that is subject to a class licence under section 9 of the Act;
+“ newspaper ” means any publication containing
+( a ) news;
+( b ) intelligence;
+( c ) reports of occurrences;
+( d ) remarks;
+( e ) observations; or
+( f ) comments,
+and published in any form, for sale or free distribution, at regular intervals
+or otherwise, but does not include any publication published by or for the
+Government.
+“ service ” means a licensable broadcasting service that is subject to a class
+licence under section 9 of the Act.
+2. — (1) An Internet Service Provider shall —
+( a ) register with the Authority within 14 days of providing the service;
+( b ) faithfully
+and
+truthfully
+furnish
+such
+information
+and
+such
+undertakings, as the Authority may require in connection with the
+provision of the Internet Service Provider ’ s service; and
+( c ) pay the following licence fees:
+(i) for the provision of a computer on-line service by an Internet
+Access Service Provider, $1,000 per annum;
+C AP . 28 , N 1]
+[ 2004 Ed.
+p. 5
+THE SCHEDULE — continued
+(ii) for the provision of a computer on-line service by a Non-
+localised Internet Service Reseller —
+(A) where the service is provided to 500 user-accounts or
+more, $1,000 per annum; and
+(B) where the service is provided to less than 500 user-
+accounts, $100 per annum; and
+(iii) for the provision of a computer on-line service by a Localised
+Internet Service Reseller, $100 per annum for each premise at
+which the computer on-line services are provided.
+(2) Sub-paragraph (1) does not apply to a Localised Internet Service Reseller
+who, in the opinion of the Authority, provides Internet services —
+( a ) for purposes only incidental to its primary business; or
+( b ) for purposes of demonstration only on an occasional basis.
+2A. — (1) An Internet Service Provider who is an Internet Access Service
+Provider licensed under section 5 of the Telecommunications Act (Cap. 323)
+(called in this paragraph an Internet Access Service Provider) must —
+( a ) upon receiving any request for specified content filter services by any
+of its relevant subscribers, offer to provide that relevant subscriber
+specified content filter services;
+( b ) inform any prospective relevant subscriber of the availability of
+specified content filter services before first providing to the
+prospective relevant subscriber access to the Internet;
+( c ) inform a relevant subscriber of the availability of specified content
+filter services before renewing the subscription of that relevant
+subscriber;
+( d ) where the application by a prospective relevant subscriber for access to
+the Internet is made on or after 28 December 2016, make reasonable
+attempts to obtain, within 14 days after the application, the prospective
+relevant subscriber ’ s agreement or refusal to subscribe to specified
+content filter services;
+( e ) where the application by a relevant subscriber for renewal of
+subscription is made on or after 28 December 2016, make
+reasonable attempts to obtain, within 14 days after the application,
+the relevant subscriber ’ s agreement or refusal to subscribe to specified
+content filter services; and
+p. 6
+2004 Ed. ]
+[ C AP . 28 , N 1
+THE SCHEDULE — continued
+( f ) for the duration of a relevant subscriber ’ s subscription to specified
+content filter services, provide reasonable technical support and
+instructional guides on the use of specified content filter services.
+(2) Where a relevant subscriber of an Internet Access Service Provider
+subscribes to specified content filter services for the first time with the Internet
+Access Service Provider, the Internet Access Service Provider must, unless the
+subscriber agrees to pay for the specified content filter services —
+( a ) provide specified content filter services at no additional cost to the
+relevant subscriber for a trial period; and
+( b ) inform the relevant subscriber of the first and last dates of the trial
+period.
+(3) An Internet Access Service Provider must, on or before the expiry of a trial
+period for a relevant subscriber, make reasonable attempts to obtain the relevant
+subscriber ’ s agreement or refusal to subscribe to specified content filter services
+after the expiry of the trial period.
+(4) An Internet Access Service Provider must maintain records of a relevant
+subscriber ’ s agreement or refusal to subscribe to specified content filter services
+under sub-paragraph (1) or (3) for a period of 12 months after the expiry of the
+relevant subscriber ’ s subscription.
+(5) To avoid doubt, nothing in this paragraph prevents an Internet Access
+Service Provider from offering to provide or providing, whether at an additional
+cost or not, an arrangement that gives a relevant subscriber a means of preventing
+access by an end-user to content in any programme through the World Wide Web,
+through —
+( a ) the Internet Access Service Provider ’ s network or gateway; or
+( b ) software installed on the end-user ’ s device or computer equipment.
+(6) An Internet Access Service Provider must, where required by the Authority
+in a written notice, take all reasonable steps —
+( a ) to modify the Internet Access Service Provider ’ s content filter
+services; or
+( b ) to enable the Internet Access Service Provider ’ s relevant subscribers
+who have subscribed to content filter services to modify such services,
+so as to prevent access by an end-user to such content in a programme on the
+World Wide Web specified in the written notice, being a programme that the
+Authority is satisfied is undesirable, harmful or obscene.
+C AP . 28 , N 1]
+[ 2004 Ed.
+p. 7
+THE SCHEDULE — continued
+(7) In this paragraph —
+“ excepted service ” means —
+( a ) a computer online service providing access to the Internet
+through radio-communication, for which the subscriber is not
+required to pay any type of fee as consideration, and is not
+required to accept as a condition for the computer online
+service, any condition that is not directly connected with the
+provision of the computer online service; or
+( b ) a computer online service providing access to the Internet
+through
+radio-communication
+in
+connection
+with
+a
+telecommunication
+technical
+trial
+or
+market
+trial,
+the
+operation and provision of which is licensed under section 5
+of the Telecommunications Act;
+“ relevant subscriber ” means a person in Singapore who subscribes to any
+computer online service that enables the person to obtain access to the
+Internet —
+( a ) through any telecommunication line access at a private
+residence, whether or not owned by the relevant subscriber; or
+( b ) through radio-communication that is not an excepted service;
+“ specified content filter services ” means an arrangement that gives a relevant
+subscriber a means of preventing access by an end-user to, at the
+minimum, content in any programme through the World Wide Web that
+contains sexually explicit material or material that contains violence and
+gore, through an Internet Access Service Provider ’ s network or gateway;
+“ trial period ” , in relation to a relevant subscriber, means the shorter of the
+following:
+( a ) a period of 6 months, starting from the date that an Internet
+Access Service Provider provides content filter services to the
+relevant subscriber under sub-paragraph (2); or
+( b ) a period that is half of the relevant subscriber ’ s fixed term
+contract with an Internet Access Service Provider, starting from
+the date that the Internet Access Service Provider provides
+content filter services to that relevant subscriber under
+sub-paragraph (2).
+[S 674/2016 wef 28/12/2016]
+3. — (1) Subject to sub-paragraph (2), an Internet Content Provider who is or is
+determined by the Authority to be a political party registered in Singapore
+p. 8
+2004 Ed. ]
+[ C AP . 28 , N 1
+THE SCHEDULE — continued
+providing any programme on the World Wide Web through the Internet shall
+register with the Authority within 14 days of the commencement of its service.
+(2) Notwithstanding sub-paragraph (1), the Authority may permit the Internet
+Content Provider to register with the Authority within such longer time as the
+Authority may permit.
+4. An Internet Content Provider who is or is determined by the Authority to be a
+body of persons engaged in the propagation, promotion or discussion of political
+or religious issues relating to Singapore on the World Wide Web through the
+Internet, shall register with the Authority within 14 days after the commencement
+of its service, or within such longer time as the Authority may permit.
+5. If required by the Authority to do so by notice in writing —
+( a ) an Internet Content Provider who is, or is determined by the Authority
+to be, in the business of providing through the Internet an on-line
+newspaper for a subscription fee or other consideration; and
+( b ) an Internet Content Provider who is, or is determined by the Authority
+to be, an individual providing any programme, for the propagation,
+promotion or discussion of political or religious issues relating to
+Singapore, on the World Wide Web through the Internet,
+shall register with the Authority within the time stipulated by the Authority in the
+notice.
+6. An Internet Content Provider who is required to register or re-register, as the
+case may be, under paragraph 3, 4 or 5 shall —
+( a ) register or re-register in such form and manner as the Authority may
+determine; and
+( b ) provide the Authority with such particulars and undertakings as the
+Authority may require in connection with the provision of the Internet
+Content Provider ’ s service.
+7. A licensee who is required to register or re-register, as the case may be, under
+paragraph 2, 3, 4 or 5 shall give the Authority 14 days written notice of its
+intention to terminate the provision of its service.
+8. A licensee shall at all times comply with the laws of Singapore.
+9. A licensee shall —
+( a ) assist the Authority in the investigation into —
+(i) any breach of its licence; or
+(ii) any alleged violation of any law committed by the licensee or
+any other person; and
+C AP . 28 , N 1]
+[ 2004 Ed.
+p. 9
+THE SCHEDULE — continued
+( b ) produce such information, records, documents, data or other materials
+as may be required by the Authority for the purpose of the
+investigation.
+10. — (1) A licensee who intends to broadcast its service on —
+( a ) a radio frequency;
+( b ) any spare capacity or sub-carrier on a television or radio channel; or
+( c ) television lines in the Vertical Blanking Interval,
+shall, before the commencement of the broadcast of its service, apply to the
+Authority for approval to broadcast its service by such means.
+(2) A licensee shall comply with the conditions attached to any approval issued
+by the Authority under sub-paragraph (1), which may include the condition
+requiring the payment of spectrum utilisation fees.
+11. A licensee who provides a teletext service after 1st December 2003 shall pay
+an annual licence fee of $2,000 for each period of 12 months commencing from —
+( a ) that date if the licensee starts to provide, or is continuing to provide a
+teletext service it is already providing on that date; or
+( b ) the date the licensee starts providing its teletext service.
+11A. A licensee who provides an audiotext service shall register with the
+Authority within 14 days of 15th April 2004, or in the case where it provides the
+service after that date, within 14 days of providing the service.
+[S 196/2004 wef 15/04/2004]
+12. The licensee shall keep and furnish to the Authority all information, records,
+documents, data or other materials concerning or relating to the provision of its
+service as the Authority may, from time to time, require.
+13. A licensee shall use its best efforts to ensure that its service —
+( a ) complies with such Codes of Practice as the Authority may issue from
+time to time; and
+( b ) is not used for any purpose, and does not contain any programme,
+that —
+(i) is against the public interest, public order or national harmony;
+or
+(ii) offends against good taste or decency.
+14. An Internet Content Provider who provides a webpage on the World Wide
+Web through the Internet to which other persons are invited to contribute or post
+p. 10
+2004 Ed. ]
+[ C AP . 28 , N 1
+THE SCHEDULE — continued
+programmes shall use its best efforts to ensure that such programmes conform
+with such applicable Codes of Practice as the Authority may issue from time to
+time.
+15. A licensee who provides any licensable broadcasting service referred to in
+paragraph 3( a ) to ( e ) of this Notification, shall —
+( a ) ensure that its service is not used for, or in furtherance of, games and
+lotteries, the conduct of which is an offence under the Common
+Gaming Houses Act (Cap. 49) unless the licensee is exempted from the
+provisions of that Act;
+( b ) avoid the broadcast of horse-racing analyses, commentaries or tips,
+other than horse-racing results, for the purpose of gambling;
+( c ) ensure that its service is not used to advertise, provide or otherwise
+promote —
+(i) astrology;
+(ii) geomancy;
+(iii) palmistry; or
+(iv) any other type of fortune-telling device
+( d ) ensure that its service is not used for the solicitation of prostitution or
+for any other immoral activity;
+( e ) ensure that any professional advice, or any specialist consultancy
+service, offered on its service is offered by persons with qualifications
+recognised by the relevant professional bodies in Singapore;
+( f ) in the case of the broadcast of sound recordings, ensure that only sound
+recordings that are acceptable to the Authority are broadcast; and
+[S 70/2012 wef 23/02/2012]
+( g ) in the case of the broadcast of films or video recordings, ensure that
+only films and video recordings that are approved for exhibition under
+the Films Act (Cap. 107) or exempted from the provisions of that Act
+or to which that Act does not apply are broadcast.
+[S 70/2012 wef 23/02/2012]
+16. A licensee shall remove, or prohibit the broadcast of, the whole or any part of
+a programme included in its service if the Authority informs the licensee that the
+broadcast of —
+( a ) the whole or part of the programme is contrary to a Code of Practice
+applicable to the licensee; or
+C AP . 28 , N 1]
+[ 2004 Ed.
+p. 11
+THE SCHEDULE — continued
+( b ) the programme —
+(i) is against the public interest, public order or national harmony;
+or
+(ii) offends against good taste or decency.
+17. If any doubt arises as to whether a licensee has used its best efforts in
+compliance with the conditions of this licence, the licensee shall be treated as
+having used its best efforts if it satisfies the Authority that it took all reasonable
+steps in the circumstances.
+18. Nothing in this Schedule shall exempt the licensee from complying with the
+requirements of any other written law relating to the provision of the licensee ’ s
+service.
+[G.N. Nos. S 306/96; S 496/2001; S 555/2003]
+p. 12
+2004 Ed. ]
+[ C AP . 28 , N 1
+LEGISLATIVE HISTORY
+BROADCASTING (CLASS LICENCE) NOTIFICATION
+(CHAPTER 28, N 1)
+This Legislative History is provided for the convenience of users of the
+Broadcasting (Class Licence) Notification. It is not part of this Notification.
+1. G. N. No. S 306/1996 — Singapore Broadcasting Authority (Class
+Licence) Notification 1996
+Date of commencement
+:
+15 July 1996
+2. 1997 Revised Edition — Singapore Broadcasting Authority (Class
+Licence) Notification
+Date of operation
+:
+1 January 1997
+3. G. N. No. S 496/2001 — Singapore Broadcasting Authority (Class
+Licence) (Amendment) Notification 2001
+Date of commencement
+:
+10 October 2001
+4. G. N. No. S 555/2003 — Broadcasting (Class Licence) (Amendment)
+Notification 2003
+Date of commencement
+:
+1 December 2003
+5. 2004 Revised Edition — Broadcasting (Class Licence) Notification
+Date of operation
+:
+29 February 2004
+6. G. N. No. S 196/2004 — Broadcasting (Class Licence) (Amendment)
+Notification 2004
+Date of commencement
+:
+15 April 2004
+7. G.N. No. S 70/2012 — Broadcasting (Class Licence) (Amendment)
+Notification 2012
+Date of commencement
+:
+23 February 2012
+8. G.N. No. S 330/2013 — Broadcasting (Class Licence) (Amendment)
+Notification 2013
+Date of commencement
+:
+1 June 2013
+9. G.N. No. S 674/2016 — Broadcasting (Class Licence) (Amendment)
+Notification 2016
+Date of commencement
+:
+28 December 2016
+10. G.N. No. S 478/2020 — Broadcasting (Class Licence) (Amendment)
+Notification 2020
+Date of commencement
+:
+22 June 2020
+ii

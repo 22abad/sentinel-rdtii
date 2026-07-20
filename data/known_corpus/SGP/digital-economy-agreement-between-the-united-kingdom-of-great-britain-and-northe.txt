@@ -1,0 +1,77 @@
+Password Protect WordPress plugin
+Password:
+const getCountdown = () => {
+const datetime = new Date().toString();
+const utcTime = (function() {
+let utc = '';
+let operator = '';
+if (datetime.indexOf('+') >= 0) {
+utc = datetime.split('+');
+operator = '+';
+} else {
+utc = datetime.split('-');
+operator = '-';
+}
+const utcNumber = utc[1].split(' ')[0];
+const hour = Math.floor(parseInt(utcNumber)/100);
+const min  = (parseInt(utcNumber)%(hour*100))/60*100;
+return parseFloat(hour + '.' + min) - parseFloat("0");
+})();
+const time_unit = "default"
+const end_date = "";
+const countDownDate = new Date(end_date).getTime();
+const start_date = "";
+const countDownDateStart = new Date(start_date).getTime();
+var getNow = new Date().getTime() - utcTime*3600*1000;
+const isShowCountdown = "";
+const isShowDateCountdown = "";
+let checkvalue = false;
+if (getNow < countDownDateStart) {
+const x = setInterval(function() {
+if( getNow < countDownDateStart ) {
+getNow = new Date().getTime() - utcTime*3600*1000;
+} else {
+checkvalue = true;
+if ( end_date ) {
+getDay();
+}
+clearInterval(x);
+}
+}, 1000);
+} else {
+if ( end_date ) {
+getDay();
+}
+}
+function getDay() {
+const x = setInterval(function() {
+const now = new Date().getTime() - utcTime*3600*1000;
+const distance = countDownDate - now;
+const { hours, days, minutes, seconds } = (function(distance){
+const hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+const days = Math.floor(distance / (1000 * 60 * 60 *24));
+const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+return { hours, days, minutes, seconds };
+})(distance);
+if (isShowCountdown || isShowCountdown === '') {
+if (distance > 0) {
+if(days > 0) {
+document.getElementById("ppwp_sitewide_countdown").innerHTML =  '<div class="ppwp_countdown_timer_day"><div class="ppwp_countdown_time">' + days + "</div><div class='ppwp_countdown_timer_unit'> Days</div>" + '</div><div class="ppwp_coundown_colon_spacing">:</div><div class="ppwp_countdown_timer_hour"><div class="ppwp_countdown_time">' + hours + " </div><div class='ppwp_countdown_timer_unit'>Hours</div>"+ '</div><div class="ppwp_coundown_colon_spacing">:</div><div class="ppwp_countdown_timer_minute"><div class="ppwp_countdown_time">' + minutes + " </div><div class='ppwp_countdown_timer_unit'>Mimutes</div>"+ '</div><div class="ppwp_coundown_colon_spacing">:</div><div class="ppwp_countdown_timer_second"><div class="ppwp_countdown_time">' + seconds + " </div><div class='ppwp_countdown_timer_unit'>Seconds</div>" + '</div>';
+} else {
+const hours = Math.floor(distance / (1000 * 60 * 60));
+document.getElementById("ppwp_sitewide_countdown").innerHTML =  '<div class="ppwp_countdown_timer_hour"><div class="ppwp_countdown_time">' + hours + " </div><div class='ppwp_countdown_timer_unit'>Hours</div>"+ '</div><div class="ppwp_coundown_colon_spacing">:</div><div class="ppwp_countdown_timer_minute"><div class="ppwp_countdown_time">' + minutes + " </div><div class='ppwp_countdown_timer_unit'>Mimutes</div>"+ '</div><div class="ppwp_coundown_colon_spacing">:</div><div class="ppwp_countdown_timer_second"><div class="ppwp_countdown_time">' + seconds + " </div><div class='ppwp_countdown_timer_unit'>Seconds</div>" + '</div>';
+}
+document.getElementById('ppwp_desc_above_countdown').style.display = 'block';
+document.getElementById('ppwp_desc_below_countdown').style.display = 'block';
+} else {
+clearInterval(x);
+document.getElementById('ppwp_sitewide_countdown').style.display = 'none';
+document.getElementById('ppwp_desc_above_countdown').style.display = 'none';
+document.getElementById('ppwp_desc_below_countdown').style.display = 'none';
+}
+}
+}, 1000);
+}
+};
+getCountdown();

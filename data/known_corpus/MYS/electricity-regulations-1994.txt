@@ -1,0 +1,1923 @@
+ELECTRICITY REGULATIONS 1994 
+IN exercise of the powers conferred by section 53 of the Electricity Supply Act 1990 [ Act 
+447 ], the Minister makes the following regulations: 
+PART 1 - PRELIMINARY
+Regulation 1. Citation and commencement.
+(1) These regulations may be cited as the Electricity Regulations 1994 and shall, subject 
+to subregulation (2), come into force on the 30th January 1994. 
+(2) Subject to subregulation (1), the following regulations shall come into force on the 
+30th January 1996: 
+(a) regulation 13; 
+(b) subregulations 23(2), 23(3) and 23(4); 
+(c) paragraph 78(2) (c) ; 
+(d) paragraph 78(3) (c) ; 
+(e) paragraph 78(4) (c) ; 
+(f) paragraph 78(5) (c) ; 
+(g) paragraph 81 (c) ; 
+(h) paragraph 85 (c) ; 
+(i) regulation 88; and  
+(j) regulation 57. 
+Regulation 2. Interpretation . 
+In these Regulations, unless the context otherwise requires— 
+"accessory" means a device, other than current-using equipment, associated with such 
+equipment or with the wiring of an installation; 
+"apparatus" means any electrical apparatus and includes the device or fitting in which a 
+conductor is used, or of which it forms part of; 
+"appliance" means any device which utilises electricity for a particular purpose; 
+"bare" means not covered with or protected by insulating material; 
+"cable" means a length of insulated single conductor, whether solid or stranded, or of 
+two or more such conductors, each provided with its own insulation, which are laid 
+together. The insulated conductor or conductors may or may not be provided with an 
+overall covering for mechanical protection; 
+"Cable Jointer" means a person who holds a Certificate of Competency as a Cable 
+Jointer issued under regulation 51; 
+"Certificate of Approval" means a Certificate of Approval issued by the Commission for 
+the manufacture, import, display, sale or advertisement of any electrical equipment in the 
+area of jurisdiction of the Commission; 
+"Chargeman" means a person who holds a Certificate of Competency as a Chargeman 
+issued under regulation 49; 
+"circuit" means an electrical circuit forming a system or a branch of a system; 
+"circuit breaker" means a mechanical device for making and breaking a live circuit, such 
+as a short circuit, where the circuit is broken automatically; 
+"Competent Electrical Engineer" means a person who holds a Certificate of Competency 
+as a Competent Electrical Engineer issued under regulation 47; 
+"consuming apparatus" means an apparatus which is intended to consume electricity; 
+"distributing main" means the portion of any main with which a service line is or is 
+intended to be immediately connected; 
+"domestic installation" means an installation in a private dwelling which is not used in 
+any hotel or boarding house or for the purpose of carrying out any business, trade, 
+profession or service; 
+"earthed" means connected to the general mass of the earth; 
+"Electrical Contractor" means a person who holds a Certificate of Registration as an 
+Electrical Contractor issued under regulation 75; 
+"Electrical Repair Contractor" means a person who holds a Certificate of Registration as 
+an Electrical Repair Contractor issued under regulation 88; 
+"Electrical Services Contractor" means a person who holds a Certificate of Registration 
+as an Electrical Services Contractor issued under regulation 71; 
+"Electrical Services Engineer" means a person who holds a Certificate of Competency 
+as an Electrical Services Engineer issued under regulation 46; 
+"electrical work" means any work performed or carried out on an electrical installation 
+and includes the installing, constructing, erecting or repairing thereof, the altering of the 
+structure, the replacing of any of its parts, the adding of any part thereto or the carrying 
+out of any work thereon for the purposes of its maintenance, but does not include work 
+in relation to— 
+(a) the manufacturing of an electrical installation or the assembling thereof in the 
+course of, or in connection with, its manufacture for the purpose of producing 
+a new article; or 
+(b) the oiling, greasing, cleaning or painting of an electrical installation; 
+"electric sign" means a neon sign or other consuming apparatus of like nature operating 
+more than 400 volts; 
+"Electric Sign Contractor" means a person who holds a Certificate of Registration as an 
+Electric Sign Contractor issued under regulation 84; 
+"Electrical Supervisor" means a person who holds a Certificate of Competency as an 
+Electrical Supervisor issued under regulation 48; 
+"extra low voltage" means a voltage normally not exceeding 50 volts alternating current 
+or 120 volts direct current, whether between conductors or between conductor and 
+earth; 
+"final circuit" means a circuit connected directly to current-using equipment, or to a 
+socket outlet or other outlet points, for the connection of the equipment; 
+"line conductor" means a conductor forming part of an aerial line; 
+"low voltage" means a voltage normally exceeding extra low voltage but not exceeding 
+1,000 volts alternating current or 1,500 volts direct current between conductors, or 600 
+volts alternating current or 900 volts direct current between conductor and earth; 
+"Malaysian Communications and Multimedia Commission" means the Commission 
+established under the Malaysian Communications and Multimedia Commission Act 1998 
+[ Act 589 ]; 
+"multiple-earth neutral" means a neutral line conductor which is earthed at more than 
+one point; 
+"neutral conductor" means a conductor connected to the neutral point of a system and 
+contributing to the transmission of electrical energy; 
+"occupier" means the person occupying any premises and includes the person having 
+the charge, management or control thereof either on his own account or as an agent of 
+another person, but does not include a lodger; 
+"owner" means the owner or lessee of an installation, and includes, where the owner or 
+lessee is absent, his authorised agent; 
+"person" includes any individual, firm, company, association, partnership or body of 
+persons, whether incorporated or otherwise; 
+phase conductor" means a conductor of an alternating current system for the 
+transmission of electrical energy, other than a neutral conductor; 
+"portable apparatus" means an apparatus so constructed that it may be readily moved 
+from place to place and be safely operated without any structural alteration following the 
+removal; 
+"Private Wiring Unit" means a person who holds a Certificate of Registration as a Private 
+Wiring Unit issued under regulation 80; 
+"registered installation" means an installation for which a valid Certificate of Registration 
+has been issued under regulation 3; 
+"resident Competent Electrical Engineer" means a Competent Electrical Engineer who is 
+engaged on a full-time basis to be responsible for a particular installation; 
+"residual current device" means a mechanical switching device or an association of 
+devices intended to cause the opening of the contacts when the residual current attains 
+a given value under specified conditions; 
+"road" has the meaning assigned thereto in the Road Transport Act 1987 [ Act 333] ; 
+"service line" means an electric supply line through which electricity is, or is intended to 
+be, supplied to one consumer or a group of consumers from a distributing main or 
+immediately from a generating station or substation; 
+"substation" means any premises or enclosed part thereof which contains apparatus for 
+either transforming or converting electricity to or from high voltage (other than 
+transforming or converting electricity solely for the operation of switching devices or 
+instruments) or for switching, controlling or regulating electricity at high voltage and 
+which is large enough to admit the entrance of a person after the apparatus is in 
+position, and includes the apparatus therein; 
+"switchboard" means an assembly or switchgear with or without instruments, but does 
+not apply to a group of local switches in a final circuit; 
+"Switchboard Manufacturer" means a person who holds a Certificate of Registration as a 
+Switchboard Manufacturer issued under regulation 92; 
+"switchgear" means an assembly of main and auxiliary switching apparatus for 
+operation, regulation, protection or other control of electrical installations; 
+“telecommunication authority” - [ Deleted by P.U.(A) 431/2003: Reg. 2 ]; 
+"telecommunication line" means a wire or wires and any appliances or any apparatus 
+connected to it used for the purpose of communication as defined under the 
+Communications and Multimedia Act 1998 [ Act 588 ]; 
+"transformer" means an apparatus without continuously moving parts which by 
+electromagnetic induction transforms alternating voltage or current in one winding into 
+alternating voltage or current in one or more other windings, usually at different values of 
+voltage or current, and includes an auto-transformer; 
+"Wireman" means a person who holds a Certificate of Competency as a Wireman issued 
+under regulation 50. 
+PART II – INSTALLATION 
+Registration of Installation
+Regulation 3. Application for registration of installation.
+(1) Unless otherwise exempted by the Minister, an application for the registration of an 
+installation shall be in Form A as prescribed in the First Schedule. 
+(2) The Certificate of Registration shall be in Form B as prescribed in the First Schedule. 
+(3) A Certificate of Registration shall be valid for a period of not less than one year and 
+not more than five years from the date of issue. 
+(4) [ Deleted by P.U.(A) 431/2003: Reg.3 ] 
+Regulation 4. Fee for registration of installation.
+A fee shall be paid for the issue of a Certificate of Registration at the rate prescribed in 
+Part I of the Second Schedule. 
+Regulation 5. Inspection and test of installation.
+(1) Inspection and test of a new installation for the purpose of registration shall be made 
+not later than twenty-one days after the receipt of Form A referred to in regulation 3 and 
+reasonable notice of the inspection and test shall be given in writing to the owner or 
+management of the installation, as the case may be. 
+(2) Upon receiving the notice issued under subregulation (1), the owner or management 
+of the installation shall cause the preparation for the inspection and test to be made and 
+shall be present at the time of such inspection and test. 
+(3) Notice of initial and follow-up inspection and test shall be in Forms D and E 
+respectively as prescribed in the First Schedule, and shall be served either personally 
+upon the person to whom they are addressed or be sent to him by registered post or be 
+affixed conspicuously to the building where the installation to be inspected and tested is 
+located. 
+Regulation 6. Fee for inspection and test of installation.
+A fee shall be charged for the inspection and test of any installation at the rate 
+prescribed in Part II of the Second Schedule. 
+Regulation 6A. Register.
+(1) The Commission shall keep a Register into which shall be entered the name and 
+other particulars of every person to whom a Certificate of Registration is issued under 
+regulation 4. 
+(2) There shall be removed from the register the name and other particulars of every 
+person to whom a Certificate of Registration has been cancelled under regulation 7. 
+Regulation 7. Cancellation of Certificate of Registration of installation.
+(1) The Commission may cancel a Certificate of Registration of installation issued under 
+these Regulations if — 
+(a)  the installation is no longer required to be used; 
+(b)  the installation is found to be unsafe for use; 
+(c)  the person to whom the Certificate was issued uses it for a purpose other 
+than for that for which it was issued; or 
+(d)  the person has contravened or failed to comply with any of the provisions of 
+the Act or these Regulations. 
+(2) Where a Certificate of Registration of an installation is cancelled by the Commission 
+pursuant to subregulation (1) the person to whom the Certificate was issued shall return 
+it to the Commission within fourteen days after being notified in writing of the 
+cancellation. 
+Licence for Installation
+Regulation 8. Licence for a public installation.
+A licence for a public installation shall be in the form which the Commission deems fit 
+and appropriate for the public installation. 
+Regulation 9. Licence for a private installation.
+A licence for a private installation shall be in Form F as prescribed in the First Schedule. 
+Regulation 10. Fee for public or private installation.
+(1) The fee payable for the issue of a licence for a public installation, other than the 
+generation referred to in subregulation (2), shall be on an annual basis and shall be at 
+the rate as prescribed in Part III of the Second Schedule. 
+(2) The fee payable for the issue of a licence for a public installation for generating 
+electricity using biomass, hydro power, solar power, geothermal power, wind power, 
+waves and tides sources with aggregate power not exceeding 10MW shall be paid on an 
+annual basis and shall be at the rate as prescribed in Part III A of the Second Schedule. 
+(3) The fee payable for the issue of a licence for a private installation shall be paid in full 
+in accordance with the period of the licence and shall be at the rate prescribed in Part I A 
+of the Second Schedule. 
+(4) All fees due under subregulations (1), (2) and (3) shall be payable at the beginning of 
+the commencement year of the licence. 
+(5) Any fees paid before the date of coming into operation of Parts I A , III and III A of the 
+Second Schedule shall not be refundable. 
+Supervision and Test of Installation
+Regulation 11. Approval for commencement of wiring.
+(1) No wiring or rewiring of an installation or extension to an existing installation shall be 
+carried out by an Electrical Contractor or a Private Wiring Unit without first obtaining the 
+approval in writing from a licensee or supply authority, as the case may be: 
+Provided that no approval is necessary for an extension to an existing wiring of a 
+domestic installation where the total current consumed at any one time by the said 
+installation, as a result of the extension, does not exceed the maximum current demand 
+as agreed upon in the supply contract between the owner and the licensee or supply 
+authority. 
+(2) The manner for calculating the maximum current demand of a domestic installation in 
+subregulation (1) shall be as prescribed in the Third Schedule. 
+Regulation 12. Supervision and completion of installation.
+(1) Any electrical wiring in an installation which receives single phase supply from a 
+licensee or supply authority, as the case may be, shall be under the immediate 
+supervision of a Wireman with Single Phase Restriction or Three Phase Restriction, and 
+upon completion of the installation, the Wireman shall certify a Supervision and 
+Completion Certificate. 
+(2) Any electrical wiring in an installation operating at low voltage which receives three 
+phase supply from a licensee or supply authority, as the case may be, shall be under the 
+immediate supervision of a Wireman with Three Phase Restriction, and upon completion 
+of the installation, the Wireman shall certify a Supervision and Completion Certificate. 
+(3) For the purpose of this regulation and subregulations 13(1) and (2), a Wireman with 
+Single Phase Restriction or Three Phase Restriction, as the case may be, shall be 
+employed on a full-time basis by an Electrical Contractor or a Private Wiring Unit. 
+Regulation 13. Test of installation.
+(1) Upon completion of wiring or rewiring of an installation or extension to an existing 
+installation in subregulation 12(1), the installation shall be tested by a Wireman with 
+Single Phase Restriction or a Wireman with Three Phase Restriction authorised to test 
+any installation, and who shall certify a Test Certificate for the installation. 
+(2) Upon completion of wiring or rewiring of an installation or extension to an existing 
+installations as in subregulation 12(2), the installation shall be tested by a Wireman with 
+Three Phase Restriction authorised to test any installation, and who shall certify a Test 
+Certificate for the installation. 
+(3) Upon completion of an installation or extension to an existing installation operating at 
+higher than low voltage, the installation shall be tested by an Electrical Services 
+Engineer, employed on a full-time basis by an Electrical Services Contractor and who 
+shall certify a Test Certificate for the installation. 
+Regulation 14. Supervision and Completion Certificate and Test Certificate.
+(1) The Supervision and Completion Certificate and Test Certificate in regulations 12 
+and 13 shall be in Forms G and H respectively as prescribed in the First Schedule. 
+(2) No installation, other than those in regulation 11, shall receive electricity from or be 
+given electricity by a licensee or supply authority until the Supervision and Completion 
+Certificate and Test Certificate has been submitted by the owner or management of the 
+installation to the licensee or supply authority, as the case may be. 
+Material, Equipment and Method of Installation
+Regulation 15. Apparatus, conductor, accessory, etc.
+(1) Any apparatus, conductor or accessory for the purpose of connection to an 
+installation shall be sufficient in size, power and number to serve the purpose for which it 
+is intended and shall be constructed, installed, arranged, protected, worked and 
+maintained in such a manner as to prevent danger. 
+(2) A conductor shall be insulated and effectively protected or so placed or safeguarded 
+in such a manner as to prevent danger. 
+(3) A conductor which is neither protected by metallic sheath nor conveyed in a conduit 
+shall be protected by an insulating bush or tube, where is passes through a wall, 
+partition, floor, or the roof of a building or other structure. 
+(4) Every cable or metallic conduit in which cables are run can be buried in plaster 
+provided that the cable or conduit is of such material that corrosion of the cable or 
+conduit will not cause weakening of the insulation and consequent danger from leakage 
+of current. 
+(5) A cable or metallic conduit in which cables are run may be buried in pure cement or 
+concrete. 
+(6) Any conductor or apparatus that is exposes to the weather, water, corrosion, undue 
+heating or used in inflammable surroundings or in an explosive atmosphere shall be 
+constructed or protected in such a manner as to prevent danger. 
+Regulation 16. Switch, switchfuse, fuse switch, circuit breaker, contractor, fuse, 
+etc.
+(1) Any switch, switchfuse, fuse switch, circuit breaker or isolating link shall be— 
+(a) constructed, placed or protected in such a manner as to prevent danger; 
+(b) constructed and adjusted in such a manner as to and maintain efficient 
+contact; 
+(c) provided with an efficient handle insulated from the system and arranged in 
+such a manner that the handle cannot inadvertently touch any live part; 
+(d) constructed or arranged in such a manner that it cannot accidentally come 
+into contact with any live conductor when left in the "off" position; 
+(e) constructed in such a manner that it cannot be left in partial contact with any 
+live conductor; and 
+(f) constructed in such a manner that an arc cannot be maintained when used for 
+breaking a circuit on load. 
+(2) Any circuit breaker or contactor used for changing a source of supply shall have 
+poles which include a pole for the neutral. 
+(3) Any fuse or circuit breaker shall be— 
+(a) constructed and arranged in such a manner so as to break the current when it 
+exceeds a given value for a sufficient time to prevent danger; and 
+(b) constructed, guarded or placed in such a manner as to prevent danger of 
+overheating, arcing or from the scattering of hot metal or other substance. 
+(4) A fuse in subregulation (3) shall be either of such construction or protected by a 
+switch so that the fusible portion shall be readily renewed without danger. 
+Regulation 17. Generator, motor, transformer, etc. 
+(1) Any part of a generator, motor, transformer, or other equipment operating at high or 
+extra high voltage which is within the natural reach of a person shall be protected where 
+necessary to prevent danger. 
+(2) A motor shall be controlled by one or more effective starting devices for starting or 
+stopping it 
+(3) The switch referred to in subregulation (2) shall be placed in such a manner that it 
+can be easily operated by the person in charge of the motor. 
+(4) Any switchgear for use in connection with winches, winders and cranes exposed to 
+the weather, on dredges or in underground places, operating at higher than low voltage, 
+shall be of the totally enclosed metal-clad type. 
+(5) Where electricity is transformed from one voltage to another, provision shall be made 
+to guard against danger by reason of the lower voltage system becoming accidentally 
+charged above its normal voltage by leakage from or leakage due to contact with the 
+higher voltage system. 
+(6) Where an auto-transformer is used for any purpose, care shall be taken to ensure 
+that the voltage between any part of the lower voltage winding and the earth does not 
+exceed the voltage between the terminals of the lower voltage winding. 
+(7) An underground substation, not otherwise easily and safely accessible, shall be 
+provided with adequate means of access by a door way with a staircase or ladder 
+securely fixed and placed in such a manner that no live part of any switchboard or any 
+bare conductor is within the natural reach of any person.  
+Regulation 18. Means of isolation.
+In an electrical system effective means shall be provided for— 
+(a) making dead every part of the system; 
+(b) protecting every part of the system from excess current; 
+(c) making dead every branch of a distribution system without interruption of 
+supply to the remainder system; and 
+(d) making dead every sub-circuit of a wiring system without interruption of 
+supply to the remainder system. 
+Installation of Switchboard
+Regulation 19. Arrangement of switchboard in general.
+(1) The general arrangement of a switchboard shall be as follows: 
+(a) all its parts which may have to be adjusted or handled shall be readily 
+accessible; 
+(b) the course of a conductor shall be readily traced and a clearly drawn diagram 
+of the connections shall be displayed near the switchboard; 
+(c) a conductor, not arranged for connection to the same system, shall be kept 
+well apart and shall be readily distinguished; and 
+(d) a bare conductor shall be placed or protected so as to prevent danger from 
+accidental contact. 
+(2) A rubber mat of suitable size and thickness shall be placed on the floor in front of 
+every switchboard to prevent danger of electric shock to an operator. 
+(3) A switchboard having bare conductors so exposed that they may be touched, shall, if 
+not located in an area set apart for the purpose thereof, be fenced or otherwise 
+enclosed. 
+(4) No person, except a competent person or a person acting under the immediate 
+supervision of a competent person, shall have access to any part of the switchboard. 
+(5) An apparatus appertaining to a switchboard and requiring handling shall be placed or 
+arranged in such a manner that the same may be operated from the working platform of 
+the switchboard, and any measuring instrument and indicator connected therewith shall 
+be placed in such a manner that the same may be observed from the working platform. 
+(6) Where the apparatus, measuring instrument and indicator referred to in subregulation 
+(5) are operated or observed from any place, adequate precaution shall be taken to 
+prevent danger. 
+Regulation 20. Working on a switchboard.
+Before any work is commenced on a switchboard— 
+(a) the switchboard shall be made dead and the conductor earthed; or 
+(b) if the switchboard is arranged in such a manner that any conductor thereof 
+can be made dead in section and separated by permanent or removable division 
+or screen from any adjoining section of which the conductor is live, that section 
+on which work has to be done shall be made dead and every conductor earthed. 
+Regulation 21. Switchboard operating at high or extra high voltage.
+In a switchboard operating at high or extra high voltage— 
+(a) the conductor which is within the natural reach of a person standing on the 
+working platform or in any switchboard passage way shall be placed or protected 
+adequately to prevent danger; 
+(b) the metallic frame of any instrument shall be earthed; and 
+(c) the metal handle of a switch and any metal gear for operating the switch shall 
+be earthed. 
+Underground Supply Line
+Regulation 22. Underground mains and connections.
+(1) An underground supply line shall be continuously insulated and protected to the 
+satisfaction of a Commission, and where it is attached to a bridge or culvert it shall be 
+protected in such a manner as may be directed by the Commission. 
+(2) The breaking up of a street, road or public place for the purpose of laying an 
+underground main and the connections thereto and the refilling and making good thereof 
+shall be carried out by the owner, management, licensee, supply authority, or his servant 
+or agent, as the case may be, in the manner as may be required by the relevant 
+authority charged with the responsibility for matters relating to streets, roads or public 
+places. 
+(3) Except for the purpose of making immediate repairs, no underground main shall be 
+laid by the owner, management, licensee, supply authority, or his servant or agent, as 
+the case may be, in any road unless reasonable notice has been given to the relevant 
+authority. 
+Regulation 23. Joint, connection or termination.
+(1) Any electrical joint, connection or termination shall be constructed and made to serve 
+its purpose with regard to its conductivity, insulation, mechanical strength and 
+mechanical protection. 
+(2) A joint, connection or termination of any cable shall be carried out by a Cable Jointer. 
+(3) The cable referred to in subregulation (2) shall include— 
+(a) an impregnated paper-insulated cable, sheathed in lead or aluminium; 
+(b) an armoured cable with thermosetting insulation; 
+(c) a mineral-insulated cable; 
+(d) a polymeric-insulated cable; 
+(e) an oil-filled cable; 
+(f) a gas-pressure cable; and 
+(g) any other cable where the Commission considers the jointing, connecting and 
+terminating of such cable requires special skill. 
+(4) A joint of an armoured polyvinyl chloride insulated cable shall be carried out by a 
+Cable Jointer. 
+Portable Apparatus 
+Regulation 24. Portable apparatus in general.
+(1) A flexible cable for portable apparatus shall be connected to the system by a 
+permanent joint or a properly constructed plug and socket. 
+(2) A portable apparatus and its flexible cable shall be controlled by effective means 
+suitably located and capable of making dead the apparatus. 
+(3) An exposed metallic part of a portable apparatus shall be earthed independently and 
+any flexible metallic cover of the conductor shall be earthed. 
+(4) A portable apparatus which is exposed to the weather, or is within reach of any 
+person normally working in the vicinity of a conducting floor, shall be of completely 
+insulated construction or earthed, and where it is subject to accidental damage, it shall 
+be further protected by an earthed guard. 
+(5) No portable lampholder shall be in metallic connection with the lamp guard or with 
+any other exposed metallic part of a portable lamp which is not effectively earthed. 
+Regulation 25. Portable apparatus on a dredge or floating structure
+(1) A portable inspection lamp used on a dredge or other floating structure, in a place 
+normally exposed to the weather where the floor is liable to be wet, in any underground 
+place or confined space such as the inside of a boiler, tank or pipe, or in other similar 
+situation, shall be operated at a voltage not exceeding 50 volts between conductors. 
+(2) A portable apparatus used in any of the situations described in subregulation (1) shall 
+be connected to the main in such a manner that the voltage to earth of any part of the 
+apparatus shall not exceed 50 volts. 
+(3) A portable apparatus suitable for use on 100 volts may be used and supplied with 
+electricity from a transformer having a 100 volts winding with the center or the neutral 
+point of the winding connected to earth. 
+Installation of Electric Sign
+Regulation 26. Electric sign.
+(1) No circuit for an electric sign shall use voltage exceeding 7,500 volts to earth, 
+measured on an open circuit. 
+(2) There shall be an effective means of disconnection or isolation so that repair and 
+maintenance of an electric sign may be safely carried out. 
+(3) The switch normally used for controlling the circuit shall be of the double-pole type 
+and of sufficient current rating. 
+(4) The switch referred to in subregulation (3) shall be installed in an easily accessible 
+position and shall be marked "SUIS KAWALAN". 
+(5) Any exposed frame or metal part of an electric sign and any metal sheath or conduit 
+enclosing a cable shall be effectively earthed. 
+(6) An Electric Sign Contractor who installs an electric sign shall notify the officer-in-
+charge of the local Fire Brigade before the electric sign is put into use. 
+Regulation 27. Fireman's switch, notice and transformer.
+(1) A fireman's switch shall be provided for— 
+(a) any exterior electric sign; and 
+(b) any interior electric sign, 
+which are unattended. 
+(2) The fireman's switch referred to in subregulation (1) shall comply with the following 
+requirements: 
+(a) it shall be arranged so that it is capable of isolating the electric sign from all 
+poles of the supply except from the neutral of a three-phase four-wire supply; 
+(b) it shall be painted red and near it shall be fixed a name-plate having the 
+words "SUIS BOMBA" inscribed on it in white block capital letters and the "ON" 
+and "OFF" position shall be clearly indicated with the "OFF" position at the top 
+and all letterings shall be legible to a person standing on the ground; 
+(c) it shall be fixed in a conspicuous position reasonably accessible to a fireman 
+and not more than 2, 700 millimetres from the ground; 
+(d) in respect of an exterior electric sigh, the switch shall be directly below the 
+electric sign or a notice indicating its position shall be placed directly below the 
+electric sign and a name-plate shall be fixed near the switch so as to render it 
+clearly distinguishable; 
+(e) in respect of an interior electric sign, the switch shall be on the main entrance 
+to the building or in a position agreed to by the officer-in-charge of the local Fire 
+Brigade; 
+(f) where more than one fireman's switch is installed in any one building, every 
+such switch shall be clearly marked to indicated the electric sigh or the section of 
+the electric sign which it controls and the officer-in-charge of the local Fire 
+Brigade shall be notified accordingly; 
+(g) a fireman's switch shall be provided with a lock or catch designed to prevent 
+the switch from being inadvertently or accidentally returned to the "ON" position; 
+and 
+(h) wherever practicable, an exterior electric sign on any one building shall be 
+controlled by a single fireman's switch. 
+(3) A danger notice not less than 150 millimetres wide by 100 millimetres high made of 
+suitable material with the lettering in red on a white background bearing the words 
+"BAHAYA VOLTAN TINGGI" shall be fixed in a prominent position adjacent to an electric 
+sign or to a transformer if it is not immediately adjacent to the same electric sign, and in 
+the case of a portable electric sign, the notice shall be fixed to the transformer. 
+(4) A transformer used in an electric sign shall bear a name-plate showing the following: 
+(a) the maker's name and address; 
+(b) the maker's type designation; 
+(c) open-circuit root mean square (r.m.s.) secondary voltage to core; 
+(d) rate primary current; 
+(e) rated primary voltage; and 
+(f) frequency. 
+Regulation 28. Steps to be taken by owner or management.
+The owner or management of an installation shall— 
+(a) at all times maintain the electric sign to ensure adequate safety to obviate 
+danger from arising; and 
+(b) take adequate precautions to prevent any unauthorised person from coming 
+into contact with any part of the electric sign. 
+Other Installations 
+Regulation 29. Installation not in use.
+When any part of a system or an installation is not in use, that part shall be isolated from 
+the source of electricity and shall not be allowed to remain alive. 
+Regulation 30. Power of Commission to make adjustment or alteration to 
+installation.
+When an installation is found likely to cause undue interference with supply of electricity 
+to other consumers or other installations, the Commission may require the owner, 
+occupier or management of the installation to make adjustments or alterations to the 
+installation or the operation of the electrical system to such an extent, as he considers 
+necessary, to rectify the situation. 
+Regulation 31. Installation for electric smelting, X-ray, etc.
+Any installation for electric smelting or for any other electric metallurgical process or any 
+X-ray installation shall be controlled and operated in such a manner as the Commission 
+may direct. 
+Regulation 32. Installation in a place of public entertainment.
+(1) In a place of public entertainment, any meter or main switch used in connection with 
+the intake of electricity supply from a licensee or supply authority, as the case may be, 
+shall be installed in an enclosure of adequate size which shall be made of fire-resisting 
+materials and shall be adequately ventilated and where the enclosure is located in open 
+air, it shall be of weather-proof construction. 
+(2) The connection of a source of electricity supply to a projector switchboard, stage 
+switchboard or other control board shall be easily accessible. 
+(3) Any part of a switch, circuit breaker or fuse and any conductor which is live shall be 
+protected to prevent accidental contact with them. 
+(4) Any switchboard, fuse board, circuit breaker or other electrical regulating apparatus 
+shall be installed in such a manner so as to prevent access by any person other than a 
+competent person or a person under the immediate supervision of a competent person. 
+(5) An enclosed switch and circuit breaker, other than a lighting switch shall have the 
+"ON" and "OFF" positions clearly indicated. 
+(6) The switch, circuit breaker and fuse board shall be labelled to indicate clearly the 
+circuits which they control. 
+(7) The use of a flexible cable for a portable apparatus shall be avoided and if it is 
+unavoidable the cable used shall be kept as short as possible. 
+(8) In a projection room of a cinema— 
+(a) wiring for supply at different voltages shall be kept apart and distinct; 
+(b) a separate sub-circuit shall be provided for lighting and no apparatus other 
+than the lights in the projection room shall be connected to the sub-circuit; and 
+(c) any projector, lantern, rectifier or transformer shall be controlled by a separate 
+double-pole switch located in a position which is easily accessible to the 
+operator. 
+(9) Where a moving apparatus is arranged to be started or stopped from a point remote 
+from the apparatus, a suitable isolating switch shall be installed close to the apparatus. 
+Regulation 33. Installation on a dredge or floating structure.
+(1) Any lighting installation on a dredge, floating structure or an offshore platform shall 
+be arranged in such a manner that the voltage between any conductor and earth does 
+not exceed 150 volts. 
+(2) Any lighting installation by means of any luminous discharge lamp including the 
+fluorescent lamps on a dredge, floating structure or an offshore platform shall comply 
+with the following provisions: 
+(a) the voltage between any two conductors shall not exceed 255 volts; 
+(b) any final circuit for supplying electricity to a discharge lamp shall not have any 
+other apparatus connected to it; and 
+(c) means shall be provided to ensure the immediate discharge of electricity 
+stored in capacitors when the supply of electricity is disconnected.
+Earthing of Installation
+Regulation 34. Earthing of metallic part, neutral point, etc.
+(1) Any metallic sheath, cover, handle, joint box, switch box, fuse box, switchgear frame, 
+the frame bed plate of any generator, converter, rectifier and motor, the metallic case 
+and core of any transformer, and the metallic frame and cover of any refrigerator, 
+cooking stove and other electrical equipment including any domestic appliance, except 
+those of class II construction, shall be effectively earthed. 
+(2) Any water pipe connected to a public water supply system shall not be used as a 
+sole means of earthing. 
+(3) Any gas pipe shall not be used as a sole means or earthing. 
+(4) The neutral point of an alternating current system or the midpoint of a direct current 
+system shall not be connected to earth at more that one point, except with the approval 
+of the Commission. 
+(5) Where the neutral or mid-point of a system is not effectively earthed, an indicative 
+and protective device shall be installed in order to avoid danger due to leakage of 
+current to earth from a live conductor. 
+(6) Where permission of the Commission has been obtained for the neutral conductor to 
+be used as an earth conductor for earthing the frame of an electrical apparatus, the 
+neutral conductor shall not be used as the return conductor for a single phase supply. 
+Regulation 35. Method of earthing.
+In any installation a complete system of earthing conductors made of an acceptable 
+material and having and adequate cross-sectional area with one or more earth plates, 
+pipes or rods shall be provided. Such system of earthing conductors shall be connected 
+to the earth and effectively maintained. 
+Regulation 36. Protection against earth leakage current.
+(1) For an installation in a place of public entertainment, protection against earth leakage 
+current shall be afforded for any final circuit supplying electricity to an equipment which 
+is intended to provide service to the public or which is intended to be accessible to, used 
+by or operated by the public by a residual current device having a rated residual 
+operating current not exceeding 10 milliamperes. 
+(2) For an installation in a place where the floor is likely to be wet or where the wall or 
+enclosure is of low electrical resistance, protection against earth leakage current shall be 
+afforded for any final circuit supplying electricity to any equipment, either individually or 
+in a group, by a residual current device having a rated residual operating current not 
+exceeding 10 milliamperes. 
+(3) For an installation where hand-held equipment, apparatus or appliance is used or is 
+likely to be used, protection against earth leakage current shall be afforded for any final 
+circuit, either individually or in a group, by a residual current device having a rated 
+residual operating current not exceeding 30 milliamperes. 
+(4) For an installation, other than the installations mentioned in subregulations (1), (2) 
+and (3), protection against earth leakage current shall be afforded for any final circuit, 
+either individually or in a group, by a residual current device having a rated residual 
+operating current not exceeding 100 milliamperes unless— 
+(a) for functional reasons, it is impractical to provide the protection; or 
+(b) it is unsafe or even dangerous to provide the protection. 
+General Requirements of Installation
+Regulation 37. Room for switchboard or equipment.
+Any part of an installation where the switchboard or equipment is installed in any 
+premises— 
+(a) shall be adequately lighted, ventilated and kept dry; 
+(b) shall be free from obstruction to facilitate the safe working of the switchboard 
+or equipment; 
+(c) shall be of ample dimension to facilitate ample space for safe operation or 
+maintenance; and  
+(d) shall not be used for storage of any kind. 
+Regulation 38. Notice.
+(1) A standard notice displaying the words "DILARANG MASUK" shall be placed outside 
+a place containing electrical equipment where unauthorized interference with the 
+equipment is to be expected and where such interference is dangerous. 
+(2) The notice referred to in subregulation (1) shall be of suitable material, 350 
+millimetres wide and 240 millimetres high with the lettering in black on a white 
+background, and the words "DILARANG MASUK" shall be inscribed in capital letters in 
+the middle, the inscription being 290 millimetres long and 30 millimetres high and the 
+spacing of letters being 6 millimetrs wide. 
+(3) A standard notice displaying the word "BAHAYA" shall be placed in a conspicuous 
+position near the switchboard. 
+(4) The notice referred to in subregulation (3) shall be of suitable material, 240 
+millimetres wide and 350 millimetres high with the lettering in red on a white background, 
+and at the top it shall bear a line of three conventional thunderbolts each 80 millimetres 
+high and 6 millimetres wide at the broadest part, and below these the word "BAHAYA" 
+shall be inscribed in capital letters, the inscription being 190 millimetres long and 28 
+millimetres high and the spacing of letters being 6 millimetres wide. 
+(5) The notices under subregulations (1) and (3) shall be legible and placed in 
+conspicuous positions. 
+Regulation 39. Instructions for treatment of electric shock.
+(1) Instructions in the national language as to the proper mode of treating a person 
+suffering from electric shock shall be affixed to any installation, other than a domestic 
+installation, where persons are normally employed and where electricity is generated, 
+transformed or used. 
+(2) The owner, management, licensee or supply authority of an installation, as the case 
+may be, shall ensure that any person employed therein understands and is familiar with 
+the instructions. 
+Regulation 40. Fire extinguishers.
+Fire extinguishers shall be provided by the owner, management, licensee or supply 
+authority of an installation, other than a domestic installation, and the extinguishers shall 
+be kept on the premises for use at any time. 
+Installation of Aerial Line
+Regulation 41. General conditions of aerial line.
+The following general conditions shall apply to an aerial line: 
+(1) A line conductor shall be of hard-drawn copper, cadmium copper, aluminium or steel-
+cored aluminium, or such other material as may be approved in writing by the 
+Commission. 
+(2) A line conductor, unless it is effectively insulated, shall be rendered inaccessible to 
+the natural reach of a person in a building or any other place. 
+(3) The height of the line conductor shall be increased or its position altered in order to 
+provide sufficient clearance for safety in accordance with its use. 
+(4) Effective means shall be provided to ensure that a line conductor is dead after it has 
+fallen due to breakage or otherwise. 
+(5) Any metal work on supports other than a conductor, within 3, 048 millimetres of the 
+ground wherever situated, shall be effectively earthed at each support or connected to a 
+continuous overhead earth conductor which shall be effectively earthed at not less than 
+four points in every 1.61 kilometres. 
+(6) Any stay wire under subregulation (5) shall be effectively earthed except where it is 
+connected with any unearthed steel-work on wooden pole supports in which case it shall 
+be insulated by means of an insulator placed in each stay wire at a height of not less 
+than 3, 048 millimetres from the ground. 
+(7) A multiple-earth neutral shall not be installed except with the written approval of the 
+Commission and subject to such conditions as the Commission may impose. 
+(8) A line conductor, other than a multiple-earth neutral, shall be attached to a suitable 
+insulator carried on the support of wood, iron, steel or reinforced concrete. 
+(9) Every precaution shall be taken to prevent the corrosion of any metalwork and the 
+deterioration of wooden poles and supports at or below the surface of the ground. 
+(10) A service line shall be connected to a line conductor at a point of support only and 
+shall be fixed to an insulator on a consumer's premises. 
+(11) Adequate provision shall be made for any line conductor forming part of a system at 
+different voltages, erected on the same pole or support, to— 
+(a) guard against danger to any person who works on the system; and 
+(b)  guard against the lower voltage caused by leakage from, or when it comes 
+into contact with, the higher voltage system. 
+(12) An aerial line, including its supports and structural parts, and any electrical 
+appliance or device belonging to or connected therewith, shall be regularly inspected 
+and effectively maintained. 
+(13) Any owner, management, licensee or supply authority, as the case may be, shall 
+remove any aerial line upon ceasing to use it for transmission of electricity. 
+(14) The factor of safety of a line conductor shall be— 
+(a) based on the breaking load and shall be calculated on the assumption that 
+the line conductor is at a temperature of 21 degrees Celsius; and 
+(b) the line conductor shall be simultaneously subjected to wind of 96.56 
+kilometres per hour at right angles to the line and this is wind to be taken as 
+exerting a pressure equivalent to 0.05 gram per square millimetre calculated on 
+the whole of the projected area of the lines. 
+(15) The height from the ground of any line conductor or auxiliary earth wire in still air 
+shall not, except with the written permission of the Commission, be less than the height 
+appropriate to the system voltage and situation indicated below: 
+Ground Clearance in Metres
+System Voltage between 
+conductors
+Over roads
+Other than over 
+roads
+In positions 
+inaccessible to 
+vehicular traffic
+Not exceeding 600 volts 
+5.49 
+5.18 
+4.57 
+Exceeding 600 volts but 
+not exceeding 11,000 volts 
+5.79 
+5.49 
+4.88 
+Exceeding 11,000 volts 
+but not exceeding 66,000 
+volts 
+6.10 
+6.10 
+5.18 
+Exceeding 66,000 volts 
+but not exceeding 132,000 
+volts 
+6.70 
+6.70 
+5.79 
+Exceeding 132,000 volts 
+but not exceeding 275,000 
+volts 
+7.00 
+7.00 
+7.00 
+Exceeding 275,000 volts 
+7.30 
+7.30 
+7.30 
+(16) Any insulated line conductor, operating at a voltage not exceeding low voltage, shall 
+be terminated on the building at a height of not less than 2.74 metres from ground level 
+where the normal use of the building does not result in danger or accidental contact with 
+the line conductor by a person normally resident in, or employed in, or visiting the 
+building. 
+(17) A line conductor shall not cross, over or under, any radio aerial, except with the 
+written permission of the Commission. 
+(18) Where an aerial line crosses, over or under or is in close proximity to any other 
+aerial line, adequate clearance must be maintained, and where one of the aerial lines 
+operates at high extra high voltage, and the other aerial line at low voltage, suitable 
+protection shall be provided to protect the low voltage line from danger due to excess 
+voltage in the event of any contact between the two lines due to breakage of any line 
+conductor of any of the aerial lines. 
+(19) At the point of crossing of any aerial lines under subregulation (18), protection shall 
+be provided by an earthed cradle guard between the two aerial lines, and where the 
+higher voltage line crosses over the low voltage line, and where the higher voltage line 
+crosses over the low voltage line, the cradle guard shall not be erected on the lower 
+voltage line supports and shall not be connected to any of the lower voltage line 
+conductors or auxiliary earth conductors except with the written permission of the 
+Commission. 
+(20) A cradle guard under an aerial line shall be such that from the outermost wires on 
+each side of the guard a line drawn upwards towards the centre of the guard at an angle 
+of 45 degrees to the horizontal shall totally enclose the line conductors. 
+(21) A cradle guard shall be suitably backstayed where necessary, and in the event of 
+breakage of any or all of the line conductors, the cradle guard shall support any fallen 
+line conductor without serious deformation and without allowing the line conductor or the 
+cradle guard wire to come into contact with the aerial line to be protected or any road 
+underneath the guard. 
+(22) A cradle guard wire shall be of hard-drawn copper or galvanised stranded steel 
+wire. 
+(23) The cradle guard shall be connected at both ends to effective earth plates or pipes 
+and to the continuous earth wire, if provided, and the electrical resistance of the cradle 
+guard to earth shall be maintained at a sufficiently low value to ensure the immediate 
+operation of the protective devices controlling the circuit in the event of failure of 
+insulation occurring between a line conductor and the cradle guard. 
+(24) Any cradle guard wire, including cross lacing, must be maintained in good order and 
+sound condition and the resistance of each arrangement of cradle guard wires to earth 
+must be maintained at a sufficiently low value so that, in the event of any contact 
+occurring between a line conductor and a cradle guard wire, the line conductor shall be 
+made dead. 
+(25) An aerial line may cross over a railway line provided that, in all cases, the prior 
+written consent of the relevant authority has been obtained, and any such crossing shall 
+be installed and protected in the manner prescribed in subregulation (20), (21), (22), (23) 
+and (24) and conforms with any instruction issued from time to time by the Commission 
+or the relevant authority, as the case may be. 
+(26) No joint in a line conductor shall be made in any span of an aerial line which 
+crosses over another aerial line or a telecommunication line, road, railway line or 
+navigable waterway. 
+(27) [ Deleted by P.U.(A) 431/2003: Reg. 20 ] 
+Regulation 42. Aerial line operating at low voltage.
+The following conditions shall apply to an aerial line operating at low voltage: 
+(a) an aerial line shall be protected from leakage in the following manner: 
+(i) in a case where metal poles are used, an earthed wire running from 
+pole to pole and connected to the pole shall be used; or 
+(ii) in a case where wooden or concrete poles are used, a bonding wire 
+connected to the supporting metalwork of all insulators and terminating at 
+the lowest point shall be used; and 
+(iii) in all cases, the neutral shall be the lowest conductor of an aerial line; 
+(b) a line conductor may cross, over or under, any overhead telecommunication 
+line, provided that the line is installed and protected in accordance with the 
+provisions of subregulations 41(21), (22), (23), (24) and (25) and conforms with 
+any instruction issued from time to time by the Commission or Malaysian 
+Communication and Multimedia Commission; 
+(c) the clearance between a line conductor and a building or structure, other than 
+a substation, shall be maintained at not less than 2,134 millimetres horizontally or 
+not less than 2, 743 millimetres vertically unless the written permission of the 
+Commission has been obtained to provide for a different clearance; 
+(d) no person shall, without the lawful authority of the owner, management, 
+licensee or supply authority of the installation, as the case may be, undertake 
+any work or engage in any activity within 2, 134 millimetres horizontally or 2, 743 
+millimetres vertically of any conductor. 
+Regulation 43. Aerial line operating at high or extra high voltage.
+The following provisions shall apply to an aerial line operating at high or extra high 
+voltage: 
+(a) any metalwork other than conductors, but including stays, shall be 
+permanently and effectively earthed and for this purpose a continuous earth wire 
+shall be provided and connected with earth at not less than four points in every 
+1.61 kilometres, the spacing between the points being as nearly equal as 
+possible, or the metalwork shall be connected to an effective earthing device at 
+each individual support; 
+(b) where an aerial line crosses over a road, a suitable cradle guard shall be 
+erected in accordance with the requirements of subregulations 41(21), (22), (23), 
+(24) and (25) and the Commission may in special circumstances exempt the 
+owner, management, licensee or supply authority of the installation, as the case 
+may be, from having to comply with this subregulation; 
+(c) no aerial line shall be erected along a road without the prior approval in 
+writing of the Commission who may require special precautions and method of 
+construction to be adopted; 
+(d) any line conductor operating at a voltage not exceeding 66, 000 volts may 
+cross over an overhead telecommunication line provided that the crossing is 
+installed and protected in the manner required by subregulations 41(21), (22), 
+(23), (24) and (25) and conforms to any instruction issued from time to time by 
+the Commission or Malaysian Communications and Multimedia Commission; 
+(e) an aerial line support or structure shall be clearly and permanently marked 
+with a number; 
+(f) an aerial line support or structure shall be numbered consecutively; 
+(g) adequate provision shall be made to prevent unauthorized climbing on any 
+lattice steel tower or other types of aerial line support or structure; 
+(h) a danger notice of the standard pattern prescribed in subregulations 38(3) 
+and (4) shall be fixed at each support or structure where an aerial line is erected 
+along or across a road, canal, navigable river or railway or crosses over any 
+other overhead conductor; 
+(i) the clearance between a line conductor and a building or structure, other than 
+a substation, shall be maintained at not less than 4.57 metres unless the written 
+permission of the Commission has been obtained to provide for a different 
+clearance; 
+(j) no person shall, without the lawful authority of the owner, management, 
+licensee or supply authority of the installation, as the case may be, undertake 
+any work or engage in any activity within 4.57 metres of a conductor; 
+(k) an aerial line conveying electricity at high or extra high voltage shall not be 
+laid or placed parallel to or nearly parallel to any telecommunication line which is 
+within 183 metres by direct measurement of the proposed route of the supply 
+line: 
+Provided that the distance of 183 metres may be increased or reduced by the 
+Commission after considering the voltage to be used and all circumstances 
+generally affecting each particular case; 
+(l) no person, other than a licensee or supply authority, shall lay or place an 
+aerial line conveying electricity at high or extra high voltage within 9.15 metres of 
+any open wire telecommunication line except with the written permission of the 
+Commission; and 
+(m) the provisions of paragraph (1) shall not apply to any telecommunication line 
+or apparatus installed in a building. 
+PART III – OPERATION 
+Examination for Competent Persons
+Regulation 44. Appointment of Board of Examiners
+[ Deleted by P.U.(A) 431/2003: Reg. 24 ] 
+Regulation 45. Requirement for Certificate of Competency.
+(1) Any Electrical Services Engineer, Competent Electrical Engineer, Electrical 
+Supervisor, Chargeman, Wireman or Cable Jointer referred to in these Regulations shall 
+possess a valid Certificate of Competency appropriate to such category, with 
+restrictions, if any, issued to him by the Commission under these Regulations. 
+(2) The Commission may conduct or cause to be conducted, in such manner as it deems 
+fit, examinations for the purposes of determining whether a person possesses the 
+necessary qualifications to be issued with a Certificate of Competency. 
+(3) [ Deleted by P.U.(A) 431/2003: Reg. 25 ] .
+Regulation 45A. Appliction for examination.
+(1) An application for examination for a Certificate of Competency shall be made in 
+writing in such manner as may be determined by the Commission. 
+(2) Every application under subregulation (1) shall be considered by the Commission 
+who shall decide whether the applicant is eligible under these Regulations to sit for the 
+examination. 
+(3) The Commission shall notify in writing of its decision. 
+Regulation 46. Eligibility to become Electrical Services Engineer.
+(1) A person, in order to be considered eligible to sit for the examination for a Certificate 
+of Competency as an Electrical Services Engineer, shall satisfy the Commission that he 
+complies with the following conditions: 
+(a) that he is a Malaysian citizen; 
+(b) that he is a holder of a Certificate of Competency as a competent Electrical 
+Engineer issued under these Regulations; 
+(c) that he has experience in carrying out the work in connection with 
+maintenance and repair, overhaul and service, calibration, test and commission 
+of equipment and location of cable faults; 
+(d) that he is able to speak and write in the national language; and 
+(e) that he is able to comply with any other conditions as the Commission deems 
+necessary. 
+(2) Before a Certificate of Competency as an Electrical Services Engineer is issued to a 
+person, he shall attend a professional interview conducted by the Commission and shall 
+satisfy the Board that-- 
+(a) he has sufficient knowledge of maintenance and repair, overhaul and service, 
+calibration, test and commission of equipment, including the principles of 
+operation of equipment used for generation, transmission, distribution, utilisation, 
+protection and metering in electrical installations and energy efficiency 
+management; 
+(b) he has sufficient knowledge of location of cable faults; 
+(c) he has sufficient knowledge of first aid, resuscitation and treatment of electric 
+shock; and 
+(d) he has sufficient knowledge of the Act and any regulation made thereunder. 
+(3) The examination for a Certificate of Competency as an Electrical Services Engineer 
+shall be based on a syllabus to be determined by the Commission and shall be 
+conducted partly by written answers to questions set and partly by viva voce. 
+(4) Notwithstanding subregulations (1), (2) and (3), the Commission may exempt, at its 
+discretion, any person from any or all of the requirements necessary for the examination. 
+Regulation 47. Eligibility to become Competent Electrical Engineer.
+(1) A person, in order to be considered eligible to sit for the examination for a Certificate 
+of Competency as a Competent Electrical Engineer, shall satisfy the Commission that he 
+complies with the following conditions: 
+(a) that he is a Malaysian citizen; 
+(b) that he holds a Degree or the equivalent qualification to a degree in electrical 
+engineering from a recognised university or institution; 
+(c) that he is a Professional Engineer in electrical engineering registered with the 
+Board of Engineers under the Registration of Engineers Act 1967; 
+(d) that he has not less than five years working experience in an environment 
+where electrical equipment is in operation and has had experience of controlling 
+live equipment; 
+(e) that he is able to speak and write in the national language; and 
+(f) that he is able to comply with any other conditions as the Board deems 
+necessary. 
+(2) Before a Certificate of Competency as a Competent Electrical Engineer is issued to a 
+person, he shall attend a professional interview conducted by the Commission and shall 
+satisfy the Commission that— 
+(a) he has sufficient knowledge of modern electrical engineering practice, 
+including the principles of operation of equipment used for generation, 
+transmission, distribution, utilisation, protection and metering in electrical 
+installations and energy efficiency management; 
+(b) he has sufficient knowledge of first aid, resuscitation and treatment of electric 
+shock; and 
+(c) he has sufficient knowledge of the Act and any regulation made thereunder. 
+(3) The examination for a Certificate of Competency as a Competent Electrical Engineer 
+shall be based on a syllabus to be determined by the Commission and shall be 
+conducted partly by written answers to questions set and partly by viva voce. 
+(4) Notwithstanding subregulations (1), (2) and (3), the Commission may exempt, at its 
+discretion, any person from any or all of the requirements necessary for the examination. 
+Regulation 48. Eligibility to become Electrical Supervisor.
+(1) A person, in order to be considered eligible to sit for the examination for a Certificate 
+of Competency as an Electrical Supervisor, shall satisfy the Commission that he 
+complies with the following conditions: 
+(a) that he is a Malaysian citizen; 
+(b) that he is in possession of a Diploma or the equivalent qualification to a 
+Diploma in electrical engineering from a recognised institution; 
+(c) that he has not less than five years working experience in an environment 
+where electrical equipment is in operation and has had experience of controlling 
+live equipment; 
+(d) that he is able to speak and write in the national language; and 
+(e) that he is able to comply with any other conditions as the Commission deems 
+necessary. 
+(2) Before a Certificate as an Electrical Supervisor is issued to a person, he shall attend 
+an interview conducted by the Commission and shall satisfy the Commission that— 
+(a) he has sufficient knowledge of modern electrical engineering practice, 
+including the principles of operation of equipment used for generation, 
+transmission, distribution, utilisation, protection and metering in electrical 
+installations and energy efficiency management; 
+(b) he has sufficient knowledge of first aid, resuscitation and treatment of electric 
+shock; and 
+(c) he has sufficient knowledge of the Act and any regulation made thereunder. 
+(3) The examination for a Certificate of Competency as an Electrical Supervisor shall be 
+based on a syllabus to be determined by the Commission and shall be partly by written 
+answers to questions set and partly by viva voce . 
+(4) [ Deleted by P.U.(A) 431/2003: Reg. 2 9]  
+(5) Notwithstanding subregulations (1), (2) and (3), the Commission may exempt, at its 
+discretion, any person from any or all of the requirements necessary for the examination. 
+Regulation 49. Eligibility to become Chargeman.
+(1) A person, in order to be considered eligible to sit for the examination for a Certificate 
+of Competency as a Chargeman, shall satisfy the Commission that he complies with the 
+following conditions: 
+(a) that he is a Malaysian citizen; 
+(b) that he is not less than 20 years of age; 
+(c) that he has the suitable educational qualification to be determined by the 
+Commission; 
+(d) that he has not less than three years working experience in an environment 
+where electrical equipment is in operation and has had experience of controlling 
+live equipment; 
+(e) that he is able to speak and write in the national language; and 
+(f) that he is able to comply with any other conditions as the Commission deems 
+necessary. 
+(2) Before a Certificate of Competency as a Chargeman is issued to a person, he shall 
+attend an interview conducted by the Commission and shall satisfy the Commission 
+that— 
+(a) he understands the use of various types of equipment which are likely to 
+come under his charge, and has sufficient knowledge to install and operate it 
+without danger; 
+(b) he has sufficient knowledge of first aid, resuscitation and treatment of electric 
+shock; and 
+(c) he has sufficient knowledge of the Act and any regulation made thereunder. 
+(3) The examination for a Certificate of Competency as a Chargeman shall be based on 
+a syllabus to be determined by the Commission and shall be partly by written answers to 
+questions set and partly by viva voce and may include such practical tests as the 
+Commission deems necessary. 
+(4).[ Deleted. P.U.(A) 431/2003: Reg. 30 ] 
+(5) Notwithstanding subregulations (1), (2) and (3), the Commission may exempt, at its 
+discretion, any person from any or all of the requirements necessary for the examination. 
+Regulation 50. Eligibility to become Wireman.
+(1) A person, in order to be considered eligible to sit for the examination for a Certificate 
+of Competency as a Wireman, shall satisfy the Commission that he complies with the 
+following conditions: 
+(a) that he is a Malaysian citizen; 
+(b) that he is not less than 18 years of age; 
+(c) that he has the suitable educational qualification to be determined by the 
+Commission; 
+(d) that he has working experience in relation to electrical wiring for such a 
+period, to be determined by the Commission, with an Electrical Contractor or 
+Private Wiring Unit or any recognised academic institution or Government 
+department or agency; 
+(e) that he is able to speak and write in the national language; and 
+(f) that he is able to comply with any other conditions as the Commission deems 
+necessary. 
+(2).Before a Certificate of Competency as a Wireman is issued to a person, he shall 
+attend an interview conducted by the Commission and satisfy the Commission that— 
+(a) he has sufficient knowledge and practical skill in the wiring of an installation; 
+(b) he has sufficient knowledge of first aid, resuscitation and treatment of electric 
+shock; and 
+(c) he has sufficient knowledge of the Act and any regulation made thereunder. 
+(3) The examination for a Certificate of Competency as a Wireman shall be based on a 
+syllabus to be determined by the Commission and shall be partly by written answers to 
+questions set and partly by viva voce and may include such practical tests as the 
+Commission deems necessary. 
+(4) [ Deleted. P.U.(A) 431/2003: Reg. 31 ] 
+(5) Notwithstanding subregulations (1), (2) and (3), the Commission may exempt, at its 
+discretion, any person from any or all of the requirements necessary for the examination.
+Regulation 51. Eligibility to become Cable Jointer.
+(1) An applicant, in order to be considered eligible to sit for the examination for a 
+Certificate of Competency as a Cable Jointer, shall satisfy the Commission that he 
+complies with the following conditions: 
+(a) that he is a Malaysian citizen; 
+(b) that he is not less than 20 years of age; 
+(c) that he has the suitable educational qualification to be determined by the 
+Commission; 
+(d) that he has not less than three years working experience in the jointing, 
+connecting and terminating of cables; 
+(e) that he is able to speak and write in the national language; and 
+(f) that he is able to comply with any other conditions as the Commission deems 
+necessary. 
+(2) Before a Certificate of Competency as a Cable Jointer is issued to a person, he shall 
+attend an interview conducted by the Board and shall satisfy the Commission that he 
+understands the jointing, connecting and terminating of various types of cables which 
+are likely to come under his charge and has sufficient knowledge to carry out the work. 
+(3) The examination for a Certificate of Competency as a Cable Jointer shall be based 
+on a syllabus to be determined by the Commission and shall be partly by written 
+answers to questions set and partly by viva voce and may include such practical tests as 
+the Commission deem necessary. 
+(4) [ Deleted. P.U.(A) 431/2003: Reg. 32 ] 
+(5) Notwithstanding subregulations (1), (2) and (3), the Commission may exempt, at its 
+discretion, any person from any or all of the requirements necessary for the examination. 
+Regulation 52. Temporary registration of foreign person.
+(1) Subject to these Regulations and such conditions as the Commission may think fit to 
+impose, the Commission may, upon payment of the fee prescribed in Part III B of the 
+Second Schedule, issue a temporary Certificate of Competency as a competent person 
+to any foreign person. 
+(2) A foreign person may be considered for temporary issuance of the Certificate of 
+Competency if he satisfies the Commission that— 
+(a) he possesses the necessary qualification and skill which is recognised for the 
+practice of electrical engineering in the country where he normally practices; 
+(b) he possesses the necessary expertise and his physical presence is required in 
+Malaysia; and 
+(c) he has the necessary work permit issued by the relevant authority. 
+(3) Notwithstanding subregulation (2), before a person may be considered for the 
+purpose of temporary registration as an Electrical Services Engineer or a Competent 
+Electrical Engineer, he shall be registered temporarily as a Professional Engineer in 
+Electrical Engineering with the Board of Engineers under the Registration of Engineers 
+Act 1967 [ Act 138 ]. 
+(4) The Commission may issue a temporary Certificate of Competency for a period not 
+exceeding twelve months. 
+(5) A foreign person whose Certificate of Competency has expired may apply for 
+renewal subject to the provisions of these Regulations and the Commission may renew 
+the Certificate as he deems fit. 
+(6) For the purpose of this regulation, "foreign person" means a person who is not a 
+citizen or a permanent resident of Malaysia. 
+Regulation 53. Medical evidence of fitness.
+The Commission may required medical evidence of physical and mental fitness, certified 
+by a registered medical practitioner, to be produced by a person before a Certificate of 
+Competency is issued to him. 
+Regulation 54. Fee for examination, endorsement and replacement of Certificate of 
+Competency.
+A fee as prescribed in Part IV of the Second Schedule shall be charged for— 
+(a) an examination for a Certificate of Competency; 
+(b) the endorsement of a Certificate of Competency; 
+(c) replacement of a Certificate of Competency; and 
+(d) the reissuance of a Certificate of Competency. 
+Regulation 55. Restriction of endorsement of Certificate of Competency.
+(1) The Commission may at its discretion— 
+(a) restrict the use of a Certificate of Competency of any Electrical Services 
+Engineer, Competent Electrical Engineer, Electrical Supervisor, Chargeman, 
+Wireman or Cable Jointer to any type, class, duration or location of installation; 
+(b) endorse a Certificate of Competency for a Wireman with Single Phase 
+Restriction or a Wireman with Three Phase Restriction to authorise him to set 
+and certify the wiring of any Single Phase or Three Phase installation, 
+respectively, operating at low voltage on the condition that he has shown 
+sufficient knowledge and experience in carrying out the work to the satisfaction of 
+the Commission; or 
+(c) endorse a Certificate of Competency for a Wireman with Three Phase 
+Restriction to authorise him to carry out any electric sign installation on the 
+condition that he has shown sufficient knowledge and experience in carrying out 
+the work to the satisfaction of the Commission. 
+(2) The Commission may make any other endorsement on any Certificate of 
+Competency issued under these Regulations as the Commission deems necessary. 
+Regulation 56. Form of Certificate of Competency.
+The Certificates of Competency as an Electrical Services Engineer, a Competent 
+Electrical Engineer, an Electrical Supervisor, a Chargeman, a Wireman and a Cable 
+Jointer shall be in Forms J, K, L, M, N and O respectively as prescribed in the First 
+Schedule. 
+Regulation 57. Surrender of Certificate of Competency issued under any other 
+written law.
+(1) A person who holds a Certificate of Competency issued under any other written law 
+shall forthwith surrender the Certificate to the Commission who shall issue to the person 
+a new Certificate of Competency of equivalent qualification. 
+(2) A person who holds a Certificate of Competency issued under any other written law 
+immediately before the date of commencement of these Regulations, and who does any 
+work, act or thing under these Regulations may continue to do so during the period of 
+twelve months from the commencement of these Regulations provided that he has 
+surrendered the Certificate referred to in subregulation (1) for the purpose of issuance of 
+the appropriate Certificate of Competency under these Regulations. 
+(3) A fee shall be charged for any Certificate of Competency issued under subregulation 
+(1) at the rate prescribed in Part IV of the Second Schedule. 
+Regulation 58. Lost or damaged Certificate of Competency.
+Where a Certificate of Competency issued by the Commission is lost, stolen, destroyed, 
+mutilated or defaced, a replacement of the Certificate of Competency may be issued by 
+the Commission on production of a statutory declaration that the original Certificate of 
+Competency has been lost, stolen or destroyed or upon surrender of the mutilated or 
+defaced original Certificate of Competency and upon payment of such fee as prescribed 
+in Part IV of the Second Schedule. 
+Regulation 59. Suspension and revocation of Certificate of Competency.
+(1) The Commission may, after the conclusion of an enquiry under the Act or on 
+consideration of a judgment of a court or a finding in an enquiry of death held under the 
+Criminal Procedure Code, if it appears necessary to the Commission so to do, suspend 
+for such period as the Commission may decide or revoke absolutely any Certificate of 
+Competency issued under these Regulations. 
+(2) The Commission may suspend or revoke a Certificate of Competency issued under 
+these Regulations if the holder of the Certificate has obtained the Certificate by making 
+or causing to be made a false or fraudulent declaration, certification or representation, 
+either in writing or otherwise. 
+(3) The Commission may endorse, suspend or revoke any Certificate of Competency 
+issued under these Regulations in a case of serious misconduct. 
+(4) For the purpose of subregulation (3) "serious misconduct" means one or more of the 
+following: 
+(a) sleeping while on duty; 
+(b) causing damage to equipment by careless operation; 
+(c) causing danger to life by careless operation; 
+(d) causing damage to equipment by neglect to use safety devices provided; 
+(e) causing danger to life by neglect to use safety devices provided; 
+(f) being under the influence of alcohol or drugs or both whilst on duty; 
+(g) making or causing to be made a false or fraudulent declaration, certification or 
+representation, either in writing or otherwise; or 
+(h) failing to carry out any duty prescribed in these Regulations. 
+(5) When the Commission has reason to believe that a person who holds a Certificate of 
+Competency has committed an offence under the Act or these Regulations or any 
+misconduct under these Regulations and is no longer fit to hold the Certificate of 
+Competency the Commission shall forthwith suspend the Certificate. 
+(6) The Commission shall, as soon as practicable after the suspension of the Certificate, 
+appoint a Committee consisting of the Chairman of the Commission and two other 
+officers appointed by the Chairman of the Commission to enquire into the alleged 
+offence or misconduct. 
+(7) The person whose Certificate of Competency has been suspended under 
+subregulation (5) shall be given the opportunity to defend himself against the alleged 
+offence or misconduct before the Committee appointed by the Commission. 
+(8) The Committee appointed by the Commission shall, within fourteen days from the 
+date of the completion of an enquiry under subregulation (6), forward its findings and 
+recommendations to the Commission which shall decide whether to endorse, suspend 
+for such period as the Commission deems fit or to revoke absolutely the Certificate of 
+Competency issued under these Regulations. 
+(9) A person who is aggrieved by the decision of the Commission under subregulation 
+(8) may apply to the Minister for re-consideration of the matter. The application shall be 
+made in writing within twenty-one days from the date when the decision of the 
+Commission is received by him and shall contain the grounds of grievance. 
+(10) The decision of the Minister on the matter referred to him under subregulation (9) 
+shall be final. 
+(11) A person, whose Certificate of Competency issued under these Regulations has 
+been suspended, shall not, during the period of the suspension, do any work, act or 
+thing which under these Regulations a person is allowed to do as a holder of such 
+Certificate of Competency. 
+(12) A person, whose Certificate of Competency issued under these Regulations has 
+been revoked, shall not, after the date of the revocation, do any work, act or thing which 
+under these Regulations a person is allowed to do as a holder of such Certificate of 
+Competency. 
+Competent Person
+Regulation 60. Competent person.
+(1) The competent person to work, operate or be in control of any work or operation of 
+an installation required by any owner, management or licensee of the installation, as the 
+case may be, shall, unless exempted under the Act, be recommended by the following 
+persons: 
+(a) where the installation operates at a voltage not exceeding 600 volts— 
+(i) an Electrical Services Engineer; 
+(ii) a Competent Electrical Engineer; 
+(iii) an Electrical Supervisor; or 
+(iv) a resident Competent Electrical Engineer; 
+(b) where the installation operates at a voltage exceeding 600 volts but not 
+exceeding 132, 000 volts— 
+(i) an Electrical Services Engineer; 
+(ii) a Competent Electrical Engineer; or 
+(iii) a resident Competent Electrical Engineer; and 
+(b) 
+where the installation operates at a voltage at or exceeding 132,000 volts, 
+a resident Competent Electrical Engineer. 
+(2) The Electrical Services Engineer, Competent Electrical Engineer, resident 
+Competent Electrical Engineer or Electrical Supervisor, as the case may be, in 
+subregulation (1) shall— 
+(a) 
+recommend the competent person who shall work or operate or be in 
+control of any work or operation and who shall be responsible for any work or 
+operation carried out by any person under his control; and 
+(b) 
+obtain the approval from the Commission of the competent person 
+referred to in paragraph (a), 
+for the installation or equipment belonging to the owner, management or 
+licensee. 
+(3) The owner, management or licensee of the installation or equipment shall comply 
+with such recommendation as may be approved by the Commission under subregulation 
+(2). 
+(4) [ Deleted bu P.U.(A) 431/2003: Reg. 40 ] 
+Regulation 61. Competent person responsible for a public installation.
+Notwithstanding regulation 60, the competent person required by a licensee of a public 
+installation shall— 
+(a) work, operate or be in control of the installation; and 
+(b) be responsible for the work or operation in the installation of any person 
+under his control. 
+Regulation 62. Competent person on each shift.
+Where any installation or equipment is operated by two or more shifts, the competent 
+person on each shift required by the owner, management or licensee of the installation 
+or equipment, as the case may be, shall be as specified in regulation 60. 
+Regulation 63. Registration of competent person. 
+(1) A person who holds a Certificate of Competency issued under these Regulations and 
+who does any work, act or thing under these Regulations in relation to his Certificate of 
+Competency shall register himself with the Commission. 
+(2) The registration referred to in subregulation (1), other than a temporary Certificate of 
+Competency issued under regulation 52, shall be valid for a period of not less than one 
+year and not more than five years on payment of the fees as prescribed in Part V of the 
+Second Schedule. 
+(2A) If a person who is registered under subregulation (2) intends to continue to do any 
+work, act or thing for which such registration is required after the expiry of the period of 
+registration, he shall, before or on the date of expiry of his registration apply for a new 
+registration. 
+(3) A person, who holds one or more Certificates of Competency issued under these 
+Regulations, shall not register or allow to be registered such certificate or certificates, as 
+the case may be, with more than one employer or installation, except with the written 
+permission of the Commission. 
+(4) A person who holds a Certificate of Competency as an Electrical Services Engineer, 
+Competent Electrical Engineer or Electrical Supervisor shall not do any work, act or thing 
+under these Regulations which a person is allowed to do as a holder of such Certificate 
+of Competency if he is more than 75 years of age. 
+(5) A person who holds a Certificate of Competency as a Chargeman, Wireman or Cable 
+Jointer shall not do any work, act or thing under these Regulations which a person is 
+allowed to do as a holder of such Certificate of Competency if he is more than 65 years 
+of age. 
+(6) Notwithstanding subregulations (4) and (5), the age limit of a person may be waived 
+on a year to year basis at the discretion of the Commission who may require medical 
+evidence of the physical and mental fitness of the person certified by any registered 
+medical practitioner. 
+(7) The owner, management or licensee of the installation, as the case may be, shall 
+cause to register within seven days of employment or appointment any person who 
+holds a Certificate of Competency issued under these Regulations and shall inform the 
+Commission in writing the name and qualification of the person. 
+(8) The owner, management or licensee of the installation, as the case may be, shall 
+prepare a duty list to identify the work or operation of each competent person and the 
+part of the installation which is to be under the responsibility of each competent person 
+under his employment, and the duty list shall be acknowledged by the competent person 
+and shall be produced on demand by an authorized officer. 
+Regulation 64. Competent person to connect switchboard, equipment, etc.
+(1) No switchboard, switchgear or equipment, except any electrical appliance, fitting or 
+apparatus designed to be connected to an electrical socket outlet by means of a plug, 
+shall be connected to an installation for the purpose of receiving electricity unless the 
+connection is carried out by or under the control of a competent person. 
+(2) Notwithstanding subregulation (1), it shall not be unlawful for a person to replace any 
+lamp in a domestic installation. 
+Regulation 65. Competent persons to submit plans, drawings and specifications.
+The competent persons who shall, on request, prepare and submit plans, drawings and 
+specifications are as provided in Part VI of the Second Schedule. 
+Regular Inspection by Competent Person
+Regulation 66. Installation to be visited and inspected by competent person.
+Without prejudice to any exemption under the Act and subject to regulation 67, an 
+installation shall be visited and inspected by the competent person referred to in 
+regulation 67. 
+Regulation 67. Competent person and frequency of visit and inspection. 
+(1) The competent person who is required to visit and inspect the installation shall be as 
+follows: 
+(a) where the installation is operating at low voltage— 
+(i) the Electrical Services Engineer; 
+(ii) the Competent Electrical Engineer; or 
+(iii) the Electrical Supervisor; and 
+(b) where the installation is operating at higher than low voltage— 
+(i) the Electrical Services Engineer; or 
+(ii) the Competent Electrical Engineer. 
+(2) The number of visits for the purpose of inspection by the competent person referred 
+to in subregulation (1) shall be as follows: 
+(a) for an installation not exceeding 600 volts and receiving electricity via a 
+switchgear rated at or above 100 amperes, the minimum number of visits for 
+the purposes of inspection per month shall be one visit; 
+(b) for an installation exceeding 600 volts but not exceeding 11,000 volts, the 
+minimum number of visits for the purpose of inspection per month shall be 
+two visits; and 
+(c) for an installation exceeding 11,000 volts but not exceeding 132,000 volts the 
+minimum number of visits for the purpose of inspection per month shall be 
+four visits: 
+Provided that in a place of public entertainment the frequency of inspection for 
+the installation referred to in paragraph (a) shall be at least two inspections per month: 
+Provided further that the Commission may determine— 
+(aa) in the interests of public safety the number of inspections for an 
+installation by a competent person shall be more than that prescribed in 
+paragraph (a) , (b) or (c) ; or 
+(bb)  where he is satisfied that the installation is safe and reasonably 
+secured, the number of inspections for the installation by a competent 
+person shall be less than that prescribed in paragraph (a) , (b) or (c) . 
+Regulation 68. Duty of Engineer or Supervisor to inspect and report.
+(1) Any Electrical Services Engineer, Competent Electrical Engineer or Electrical 
+Supervisor who is required to inspect an installation under regulation 67 shall inspect the 
+installation and shall record and direct all findings, recommendations and instructions to 
+the Commission and the owner, management or licensee of the installation, as the case 
+may be. 
+(2) The Electrical Services Engineer, Competent Electrical Engineer or Electrical 
+Supervisor shall submit to the owner, management or licensee of the installation, as the 
+case may be, an inspection report of his findings, recommendations and instructions on 
+the installation within two weeks of the inspection. 
+(3) The owner, management or licensee of an installation shall keep a book of all the 
+records and reports made under subregulations (1) and (2) and the book shall be open 
+for inspection by the Commission at all times. 
+(4) The Electrical Services Engineer, Competent Electrical Engineer or Electrical 
+Supervisor shall submit to the Commission an Inspection Certificate as prescribed in 
+Form I of the First Schedule within two weeks of the inspection of the Installation. 
+Regulation 69. Commission to determine number of visits.
+The Commission shall determine the total number of visits in a month which can be 
+performed by any Electrical Services Engineer, Competent Electrical Engineer or 
+Electrical Supervisor for the purpose of inspection of any installation as provided in 
+regulation 67. 
+Regulation 70. Duty to inform and to make good defects.
+Any Electrical Services Engineer, Competent Electrical Engineer or Electrical Supervisor 
+inspecting and installation referred to in subregulation 67(2), and being aware of any 
+defect in the installation or any equipment therein which is likely to cause danger shall 
+forthwith inform the owner, management or licensee of the installation to make good or 
+remove the defects, and make a report immediately to the Commission. 
+Registration of Electrical Services Contractor
+Regulation 71. Electrical Services Contractor.
+(1) No person shall perform or carry out any maintenance and repair, overhaul and 
+service, calibration, test and commission of any installation or equipment and location of 
+cable faults unless he holds a valid Certificate of Registration as an Electrical Services 
+Contractor issued under these Regulations. 
+(2) The maximum voltage for any electrical work referred to in subregulation (1) to be 
+undertaken by an Electrical Services Contractor shall be limited to whatever operating 
+voltage restriction that is in the Certificate of Competency of the Electrical Services 
+Engineer who is in his employment. 
+(3) A Certificate of Registration as an Electrical Services Contractor shall be in Form P 
+as prescribed in the First Schedule and shall be valid for a period of not less than one 
+year and not more than five years from the date of issue of renewal of the Certificate of 
+Registration. 
+Regulation 72. Requirements for registration as an Electrical Services Contractor.
+No Certificate of Registration as an Electrical Services Contractor shall be issued or 
+renewed unless the Commission is satisfied that— 
+(a) the person has registered his business under the Registration of Businesses 
+Act 1956 or is a company registered or incorporated under the Companies Act 
+1965; 
+(b) the person employs on a full-time basis an Electrical Services Engineer, and 
+nothing in this paragraph prohibits the same person to be the Electrical Services 
+Engineer; 
+(c) the person has insurance coverage for his employees under the Employees' 
+Social Security Act 1969 [Act 4 ]; and 
+(d) the person is in possession of testing equipment and instruments related to 
+his work to be determined by the Commission. 
+Regulation 73. Information required for registration as an Electrical Services 
+Contractor.
+Before issuing or renewing a Certificate of Registration for an Electrical Services 
+Contractor, the Commission shall require the person to submit the following information: 
+(a) the names and addresses of all partners in the case of a registered 
+partnership, and of all directors, managers and shareholders in the case of a 
+registered company; 
+(b) the premises rented or owned for carrying on the business; and 
+(c) any other information as the Commission deems necessary. 
+Regulation 74. Fee for Certificate of Registration as an Electrical Services 
+Contractor.
+A fee shall be paid for a Certificate of Registration as an Electrical Services Contractor 
+and the renewal thereof at the rate prescribed in Part VII of the Second Schedule. 
+Registration of Electrical Contractor
+Regulation 75. Electrical Contractor.
+(1) No person shall perform or carry out any electrical work unless he holds a valid 
+Certificate of Registration as an Electrical Contractor issued under these Regulations. 
+(2) A Certificate of Registration as an Electrical Contractor shall be in Form Q as 
+prescribed in the First Schedule in the First Schedule and shall be valid for a period of 
+not less than one year and not more than five years from the date of issue or renewal of 
+the Certificate of Registration. 
+Regulation 76. Requirements for registration as an Electrical Contractor.
+No Certificate of Registration as an Electrical Contractor shall be issued or renewed 
+unless the Commission is satisfied that— 
+(a) the person has registered his business with the Registrar of Businesses or is 
+a company registered or incorporated under the Companies Act 1965; 
+(b) the person employs on a full-time basis such number of Wireman as 
+prescribed in regulation 78 relevant to the class of Electrical Contractor to which 
+his application relates; 
+(c) the person has insurance coverage for his employees under the Employees' 
+Social Security Act 1969 [Act 4 ]; and 
+(d) the person is in possession of suitable equipment, testing equipment and 
+instruments related to his work to be determined by the Commission. 
+Regulation 77. Information required for registration as an Electrical Contractor.
+Before issuing or renewing a Certificate of Registration for an Electrical Contractor, the 
+Commission shall require the person to submit the following information: 
+(a) the names and addresses of all partners in the case of a registered 
+partnership, and of all directors, managers and shareholders in the case of a 
+registered company; 
+(b) the premises rented or owned for carrying on the business; and 
+(c) any other information as the Commission deems necessary. 
+Regulation 78. Classification of Electrical Contractors.
+(1) An Electrical Contractor shall be classified under any of the following classes: 
+(a) Class A; 
+(b) Class B; 
+(c) Class C; or 
+(d) Class D. 
+(2) An Electrical Contractor of Class A shall be a person who— 
+(a) is capable of carrying out electrical work above one million ringgit in value; 
+(b) has employed on a full-time basis at least three Wireman with Three Phase 
+Restriction, and nothing in this paragraph prohibits him to be one of the three 
+Wireman; 
+(c) has employed on a full-time basis at least one Wireman with Three Phase 
+Restriction authorised to test an installation, and nothing in this paragraph 
+prohibits the Wireman from being one of the three Wireman with Three Phase 
+Restriction as provided in paragraph (b) ; and 
+(d) has employed on a full-time basis at least two Wireman with Single Phase 
+Restriction, and nothing in this paragraph prohibits him to be one of the two 
+Wireman. 
+(3) An Electrical Contractor of Class B shall be a person who— 
+(a) is capable of carrying out electrical work up to one million ringgit in value; 
+(b) has employed on a full-time basis at least two Wiremen with Three Phase 
+Restriction, and nothing in this paragraph prohibits him to be one of the two 
+Wiremen; 
+(c) has employed on a full-time basis at least one Wireman with Three Phase 
+Restriction authorised to test an installation, and nothing in this paragraph 
+prohibits the Wireman from being one of the two Wiremen with Three Phase 
+Restriction as provided in paragraph (b) ; and 
+(d) has employed on a full-time basis at least one Wireman with Single Phase 
+Restriction, and nothing in this paragraph prohibits him to be the Wireman. 
+(4) An Electrical Contractor of Class C shall be a person who— 
+(a) is capable of carrying out electrical work up to five hundred thousand ringgit in 
+value; 
+(b) has employed on a full-time basis at least one Wireman with Three Phase 
+Restriction, and nothing in this paragraph prohibits him to be the Wireman; 
+and 
+(c) has employed on a full-time basis at least one Wireman with Three Phase 
+Restriction authorised to test an installation, and nothing in this paragraph 
+prohibits the Wireman from being the same person as the Wireman with 
+Three Phase Restriction as provided in paragraph (b) . 
+(5) An Electrical Contractor of Class D shall be a person who— 
+(a) is capable of carrying out electrical work up to one hundred thousand ringgit 
+in value; 
+(b) has employed on a full-time basis at least one Wireman with Single Phase 
+Restriction, and nothing in this paragraph prohibits him to be the Wireman; 
+(c) has employed on a full-time basis at least one Wireman with Single Phase 
+Restriction authorised to test an installation, and nothing in this paragraph 
+prohibits him to be the Wireman; and 
+(d) shall only carry out electrical work in a single phase installation which 
+receives electricity from a licensee or supply authority, as the case may be, via a 
+single phase two wire system. 
+(6) An Electrical Contractor may apply to the Commission to be promoted from one class 
+to another. 
+Regulation 79. Fee for registration as an Electrical Contractor.
+A fee shall be paid for a Certificate of Registration as an Electrical Contractor and the 
+renewal thereof at the rate prescribed in Part VIII of the Second Schedule. 
+Registration of Private Wiring Unit
+Regulation 80. Private Wiring Unit.
+(1) No person shall carry out any electrical wiring on his own premises unless he holds a 
+valid Certificate of Registration as a Private Wiring Unit issued under these Regulations. 
+(2) A Certificate of Registration as a Private Wiring Unit shall be in Form R as prescribed 
+in the First Schedule and shall be valid for a period of not less than one year and not 
+more than five years from the date of issue or renewal of the Certificate of Registration. 
+Regulation 81. Requirement for registration as a Private Wiring Unit.
+(1) No Certificate of Registration as a Private Wiring Unit shall be issued or renewed 
+unless the Commission is satisfied that— 
+(a) the person has registered his business under the Registration of Businesses 
+Act 1956 [ Act 197 ] or is a company registered or incorporated under the 
+Companies Act 1965 [ Act 125 ]; 
+(b) the person employs on a full-time basis a Wireman with Three Phase 
+Restriction, and nothing in this paragraph prohibits him to be the Wireman; 
+(c) the person employs on a full-time basis at least one Wireman with Three 
+Phase Restriction authorised to test an installation, and nothing in this paragraph 
+prohibits the Wireman in paragraph (b) from being the Wireman under this 
+paragraph; 
+(d) the person has insurance coverage for his employees under the Employees' 
+Social Security Act 1969 [ Act 4 ]; and 
+(e) the person is in possession of suitable equipment, testing equipment and 
+instruments related to his work to be determined by the Commission. 
+(2) Notwithstanding subregulation (1), the Commission may, after due consideration, 
+exempt any person from all or any of the requirements necessary for the issue or 
+renewal of the Certificate of Registration. 
+Regulation 82. Information required for registration as a Private Wiring Unit. 
+(1) Before issuing or renewing a Certificate of Registration for a Private Wiring Unit, a 
+Commission shall require the person to submit the following information: 
+(a) the names and addresses of all partners in the case of a registered 
+partnership and of all directors, managers and shareholders, in the case of a 
+registered company; 
+(b) the premises rented or owned for carrying on the business; and 
+(c) any other information as the Commission deems necessary. 
+(2) Notwithstanding subregulation (1), the Commission may exempt, at its discretion, any 
+person from all or any of the requirements stipulated in subparagraphs (1) (a), (b) and 
+(c). 
+Regulation 83. Fee for registration as a Private Wiring Unit.
+A fee shall be paid for a Certificate of Registration as a Private Wiring Unit and the 
+renewal thereof at the rate prescribed in Part IX of the Second Schedule. 
+Registration of Electric Sign Contractor
+Regulation 84. Electric Sign Contractor.
+(1) No person shall perform or carry out any electric sign work unless he holds a valid 
+Certificate of Registration as an Electric Sign Contractor issued under these 
+Regulations. 
+(2) A Certificate of Registration as an Electric Sign Contractor shall be in Form S as 
+prescribed in the First Schedule and shall be valid for a period of not less than one year 
+and not more than five years from the date of issue or renewal of the Certificate of 
+Registration. 
+Regulation 85. Requirements for registration as an Electric Sign Contractor.
+No Certificate of Registration as an Electric Sign Contractor shall be issued or renewed 
+unless the Commission is satisfied that— 
+(a) the person has registered his business under the Registration of Businesses 
+Act 1956 [ Act 197. ] or is a company registered or incorporated under the 
+Companies Act 1965 [ Act 125. ]; 
+(b) the person employs on a full-time basis at least one Wireman with Three 
+Phase Restriction authorised to carry out electric sign work, and nothing in this 
+paragraph prohibits him to be the Wireman; 
+(c) the person employs on a full-time basis at least one Wireman with Three 
+Phase Restriction authorised to test an installation, and nothing in this paragraph 
+prohibits the said person, the Wireman with Three Phase Restriction as in 
+paragraph (b) and the Wireman under with Three Phase Restriction endorsed to 
+test an installation to be the one and the same person; 
+(d) the person has insurance coverage for his employees under the Employees' 
+Social Security Act 1969 [ Act 4 ]; and 
+(e) the person is in possession of suitable equipment, testing equipment and 
+instruments related to his work to be determined by the Commission. 
+Regulation 86. Information required for registration as an Electric Sign Contractor.
+Before issuing or renewing a Certificate of Registration for an Electric Sign Contractor, 
+the Commission shall require the person to submit the following information: 
+(a) the names and addresses of all partners in the case of a registered 
+partnership and of all directors, managers and shareholders in the case of a 
+registered company; 
+(b) the premises rented or owned for carrying on the business; and 
+(c) any other information as the Commission deems necessary. 
+Regulation 87. Fee for Certificate of Registration as an Electric Sign Contractor. 
+A fee shall be paid for a Certificate of Registration as an Electric Sign Contractor and the 
+renewal thereof at the rate prescribed in Part X of the Second Schedule. 
+Registration of Electrical Repair Contractor
+Regulation 88. Electrical Repair Contractor.
+(1) No person shall, in the course of or in connection with or for the purposes of any 
+trade, business or profession carried on by him, perform or carry out any checking, 
+servicing or repair of any electrical appliance unless he holds a valid Certificate of 
+Registration as an Electrical Repair Contractor issued under these Regulations. 
+(2) A Certificate of Registration as an Electrical Repair Contractor shall be in Form T as 
+prescribed in the First Schedule and shall be valid for a period of not less than one year 
+and not more than five years from the date of issue or renewal of the Certificate of 
+Registration. 
+Regulation 89. Requirements for registration as an Electrical  
+No Certificate of Registration as an Electrical Repair Contractor shall be issued or 
+renewed unless the Commission is satisfied that— 
+(a) the person has registered his business under the Registration of Businesses 
+Act 1956 [ Act 197. ] or is a company registered or incorporated under the 
+Companies Act 1965 [ Act 125 .]; 
+(b) the person employs on a full-time basis a skilled person with sufficient 
+experience in the repair and service of electrical appliances, and nothing in this 
+paragraph prohibits him to be the skilled person; 
+(c) the person has insurance coverage for his employees under the Employees' 
+Social Security Act 1969; and 
+(d) the person is in possession of suitable equipment, testing equipment and 
+instruments related to his work to be determined by the Commission. 
+Regulation 90. Information required for registration as an Electrical Repair 
+Contractor. 
+Before issuing or renewing a Certificate of Registration for an Electrical Repair 
+Contractor, the Commission shall require the person to submit the following information: 
+(a) the names and addresses of all partners in the case of a registered 
+partnership and of all directors, managers and shareholders in the case of a 
+registered company; 
+(b) the premises rented or owned for carrying on the business; and 
+(c) any other information as the Commission deems necessary. 
+Regulation 91. Fee for Certificate of Registration as an Electrical Repair 
+Contractor.
+A fee shall be paid for a Certificate of Registration as an Electrical Repair Contractor and 
+renewal thereof at the rate prescribed in Part XI of the Second Schedule. 
+Registration of Switchboard Manufacturer
+Regulation 92. Switchboard Manufacturer.
+(1) No person shall, in the course of or in connection with or for the purposes of any 
+trade or business carried on by him, make any switchboard unless he holds a valid 
+Certificate of Registration as a Switchboard Manufacturer, issued under these 
+Regulations. 
+(2) A Certificate of Registration as a Switchboard Manufacturer shall be in Form U as 
+prescribed in the First Schedule and shall be valid for a period of not less than one year 
+and not more five years from the date of issue or renewal of the Certificate of 
+Registration. 
+Regulation 93. Requirements for registration as a Switchboard Manufacturer 
+operating at low voltage.
+No Certificate of Registration as a Switchboard Manufacturer for a switchboard operating 
+at low voltage shall be issued or renewed unless the Commission is satisfied that— 
+(a) the person has registered his business under the Registration of Businesses 
+Act 1956 [ Act 197. ] or is a company registered or incorporated under the 
+Companies Act 1965 [ Act 125 .]; 
+(b) the person employs on a full-time basis at least one Wireman with Three 
+Phase Restriction, and nothing in this paragraph prohibits him to be the 
+Wireman; 
+(c) the person employs on a full-time basis at least one Chargeman with the 
+relevant restriction to be determined by the Commission, and nothing in this 
+paragraph prohibits the person, the Chargeman and the Wireman with Three 
+Phase Restriction as in paragraph (b) to be one and the same person; 
+(d) the person has insurance coverage for his employees under the Employees' 
+Social Security Act 1969; and 
+(e) the person is in possession of suitable equipment, test equipment and 
+instruments for testing of the switchboard. 
+Regulation 94. Requirements for registration as a Switchboard Manufacturer 
+operating at low voltage and higher than low voltage.
+No Certificate of Registration as a Switchboard Manufacturer for a switchboard operating 
+at low voltage and higher than low voltage shall be issued or renewed unless the 
+Commission is satisfied that— 
+(a) the person has registered his business under the Registration of Businesses 
+Act 1956 [ Act 197. ] or is a company registered or incorporated under the 
+Companies Act 1965 [ Act 125 .]; 
+(b) the person employs on a full-time basis at least one Wireman with Three 
+Phase Restriction, and nothing in this paragraph prohibits him to be the 
+Wireman; 
+(c) the person employs on a full-time basis at least one Chargeman with the 
+relevant restriction to be determined by the Commission, and nothing in this 
+paragraph prohibits the person, the Chargeman and the Wireman with Three 
+Phase Restriction as in paragraph (b) to be one and the same person; 
+(d) the person employs on a full-time basis at least one Professional Engineer in 
+electrical engineering who is registered with the Board of Engineers under the 
+Registration of Engineers Act 1967 [Act 138], and nothing in this paragraph 
+prohibits the person to be the Professional Engineer; 
+(e) the person has insurance coverage for his employees under the Employees' 
+Social Security Act 1969; and 
+(f) the person is in possession of suitable equipment, test equipment and 
+instruments for testing of the switchboard. 
+Regulation 
+95. 
+Information 
+required 
+for 
+registration 
+as 
+a 
+Switchboard 
+Manufacturer.
+Before issuing or renewing a Certificate of Registration for a Switchboard Manufacturer 
+the Commission shall require the person to submit the following information: 
+(a) the names and addresses of all partners in the case of a registered 
+partnership and of all directors, managers and shareholders in the case of a 
+registered company; 
+(b) the premises rented or owned for carrying on the business; and 
+(c) any other information as the Commission deem necessary. 
+Regulation 96. Fee for Certificate of Registration as a Switchboard Manufacturer. 
+A fee shall be paid for a Certificate of Registration as a Switchboard Manufacturer and 
+the renewal thereof at the rate prescribed in Part XII of the Second Schedule. 
+Approval of Equipment
+Regulation 97. Certificate of Approval of equipment.
+(1) No person shall manufacture, import, display, sell or advertise— 
+(a) any domestic equipment; 
+(b) any equipment which is usually sold direct to the general public; or 
+(c) any equipment which does not require special skills in its operation. 
+unless the equipment is approved by the Commission. 
+(2) A Certificate of Approval to manufacture, import, display, sell or advertise the 
+equipment shall be in Forms V and W respectively as prescribed in the First Schedule. 
+(3) A processing fee of twenty ringgit shall be charged for an application for a Certificate 
+of Approval of any equipment. 
+(4) A fee shall be paid for the Certificate of Approval in subregulation (2) and the renewal 
+thereof at the rate prescribed in Part XIII of the Second Schedule. 
+Regulation 98. Marking or labelling of approved equipment.
+Where an equipment has been approved for manufacture, import, display, sale or 
+advertisement by the Commission, the person to whom a Certificate of Approval has 
+been issued under regulation 97 may be required by the Commission to mark or label 
+the equipment and he shall do so in the manner to be determined by the Commission. 
+Regulation 99. Samples of equipment to be delivered to Commission.
+(1) Any application for a Certificate of Approval of any equipment referred to in regulation 
+97 shall be made to the Commission in the manner to be determined by the 
+Commission. 
+(2) The applicant shall deliver to the Commission samples of the equipment in 
+subregulation (1) and such other information in connection therewith, including drawings, 
+photographs, pamphlets and technical literature, as the Commission may require. 
+(3) A sample delivered shall have attached or affixed thereto a label bearing the 
+following particulars: 
+(a) the full name of the applicant; 
+(b) the nature of the equipment; 
+(c) the energy efficiency of the equipment; and 
+(d) the catalogue or type number of the manufacturer, or any other means of 
+identifying the equipment. 
+(4) The Commission shall not be liable for any loss or damage caused to any equipment 
+delivered under subregulation (2). 
+Regulation 100. Test and modification before approval.
+(1) The Commission may cause one or more samples of the equipment in regulation 99 
+to be examined and tested. 
+(2) Where the Commission considers that the equipment examined and tested in 
+subregulation (1) is likely to cause danger, the person applying for approval thereof shall 
+modify or alter the equipment to suit the Commission's requirements before submitting 
+any further samples thereof. 
+Regulation 101. Submission for test and seizure of dangerous equipment.
+(1) The Commission may at any time by notice in writing require a person who 
+manufactures, imports, displays, sells or advertises any equipment to deliver, within 
+such time as may be specified in the notice, samples of the equipment for an 
+examination an a test thereof. 
+(2) If any equipment is, in the opinion of the Commission, unsafe or dangerous or likely 
+to become unsafe or dangerous to use, the Commission may prohibit the manufacture, 
+import, display, advertisement or sale of the equipment and may direct the person in 
+subregulation (1) to withdraw immediately all the equipment from use or sale and where 
+necessary may seize and remove such equipment. 
+(3) The Commission shall not be liable for any loss or damage caused to any equipment 
+delivered or seized and removed under subregulation (1) or (2), as the case may be. 
+Renewal, Transfer, Cancellation, Removal and Reinstatement
+Regulation 102. Renewal of Certificate of Registration.
+The renewal of any Certificate of Registration issued under regulation 71, 75, 80, 84, 88 
+or 92 shall be made not less than fourteen days before the date of expiry of the 
+Certificate. 
+Regulation 103. Transfer of Certificate of Registration.
+(1) No Certificate of Registration issued under regulation 71, 75, 80, 84, 88 or 92 shall 
+be transferred by the holder of the Certificate to any other person except with the written 
+permission of the Commission. 
+(2) The holder of any Certificate of Registration issued under regulation 71, 75, 80, 84, 
+88 or 92 shall obtain approval from the Commission in writing for any change of name or 
+address in connection with the business and the Certificate shall be amended or 
+replaced without payment of any fee. 
+Regulation 104. Cancellation of Certificate of Registration.
+(1) The Commission may cancel a Certificate of Registration issued under regulation 71, 
+75, 80, 84, 88 or 92 if— 
+(a) the holder of the Certificate ceases to carry on the business in respect of 
+which he is registered; 
+(b) the holder of the Certificate has been adjudicated a bankrupt; 
+(c) the company goes into liquidation; 
+(d) the holder of the Certificate or his servant or agent contravenes or fails to 
+comply with any provisions of the Act or these Regulations; or 
+(e) the holder of the Certificate has obtained the Certificate by making or causing 
+to be made any false or fraudulent declaration, certification or representation, 
+either in writing or otherwise. 
+(2) Where a Certificate of Registration is cancelled by the Commission pursuant to 
+subregulation (1), the Certificate shall be returned to the Commission by the person, to 
+whom the Certificate was issued, within fourteen days of the person being notified in 
+writing of the cancellation. 
+Regulation 105. Removal from and reinstatement to the Register of Certificate of 
+Registration.
+(1) There shall be removed from the Register the name and other particulars of any 
+person whose Certificate of Registration was issued under regulation 71, 75, 80,84,88 or 
+92—  
+(a) where he has failed to renew his Certificate of Registration by the date of 
+expiry thereof; or 
+(b) where his Certificate of Registration has been cancelled under regulation 104. 
+(2) A person whose name has been removed from the Register under subregulation (1) 
+may appeal, within thirty days of the removal from the Register, for reinstatement and 
+the Commission, upon receipt of satisfactory evidence or reasons for his reinstatement, 
+may register him again. 
+(3) The person referred to in subregulation (2) who feels aggrieved by the decision of the 
+Commission not to reinstate him may apply to the Minister for re-consideration of the 
+matter. 
+(4) The application under subregulation (3) shall be made in writing within twenty-one 
+days from the date of the decision of the Commission and shall contain the grounds of 
+grievance. 
+(5) The decision of the Minister on the matter referred to him under subregulation (3) 
+shall be final. 
+(6) [ Delete by P.U.(A) 431/2003: Reg. 75 ] 
+Regulation 106. Renewal of Certificate of Approval.
+Renewal of a Certificate of Approval issued under regulation 97 shall be made not less 
+than fourteen days before the date of expiry of the Certificate. 
+Regulation 107. Transfer of Certificate of Approval.
+(1) No Certificate of Approval issued under regulation 97 shall be transferred by the 
+holder of the Certificate to any other person except with the written permission of the 
+Commission. 
+(2) The holder of a Certificate of Approval issued under regulation 97 shall obtain 
+approval from the Commission in writing for any change of name or address in 
+connection with the business and the Certificate shall be amended or replaced without 
+payment of any fee. 
+Regulation 108. Cancellation of Certificate of Approval.
+(1) The Commission may cancel a Certificate of Approval issued in respect of any 
+equipment referred to in regulation 97 if— 
+(a) the equipment is found to be unsafe for use upon any examination or test 
+thereof; 
+(b) the person to whom the Certificate was issued, uses it for a purpose different 
+for that for which it was issued or in a manner calculated to mislead or deceive 
+the public; 
+(c) the person has contravened or failed to comply with any of the provisions of 
+the Act or these Regulations; or 
+(d) the holder of the Certificate has obtained the Certificate by making or causing 
+to be made any false or fraudulent declaration, certification or representation, 
+either in writing or otherwise. 
+(2) Where a Certificate of Approval is cancelled by the Commission pursuant to 
+subregulation (1), the Certificate shall be returned to the Commission by the person to 
+whom the Certificate was issued within fourteen days of the person being notified in 
+writing of the cancellation. 
+Regulation 109. Removal from and reinstatement to the Register of Certificate of 
+Approval
+(1) There shall be removed from the Register the name and other particulars or any 
+person whose Certificate of Approval was issued under regulation 97— 
+(a) where he has failed to renew his Certificate of Approval by the date of expiry 
+thereof; or 
+(b) where his Certificate of Approval has been cancelled under regulation 108. 
+(2) A person whose name has been removed from the Register under subregulation (1) 
+may appeal, within thirty days of the removal from the Register, for reinstatement and 
+the Commission, upon receipt of satisfactory evidence or reasons for his reinstatement, 
+may register him again. 
+(3) The person referred to in subregulation (2) who feels aggrieved by the decision of the 
+Commission not to reinstate him, may apply to the Minister for re-consideration of the 
+matter. 
+(4) The application under subregulation (3) shall be made in writing within twenty-one 
+days from the date of the decision of the Commission and shall contain the grounds of 
+grievance. 
+(5) The decision of the Minister on the matter referred to him under subregulation (3) 
+shall be final. 
+(6) [ Delete by P.U.(A) 431/2003: Reg. 79 ] 
+PART IV – MAINTENANCE 
+Maintenance of Installations
+Regulation 110. Inspection and test for the purpose of maintenance of installation, 
+etc.
+(1) An installation shall be maintained in good and working order and safety precautions 
+shall be observed at all times to prevent danger. 
+(2) The responsibility to maintain the installation in the manner required in subregulation 
+(1) shall be with the owner, management, licensee or occupier of the installation, his 
+servant or agent, as the case may be. 
+(3) An installation, other than a domestic installation, shall be checked and tested by a 
+competent person at least once in every five years, or at any time as directed by the 
+Commission. 
+(4) Any protective relay and device of an installation shall be checked, tested and 
+calibrated by a competent person at least once in every two years, or at any time as 
+directed by the Commission. 
+(5) The Commission may inspect an installation or the premises where an installation is 
+located if the Commission thinks it is desirable to do so in the interest of the public or for 
+public safety and if a notice in writing is given to the owner, management or licensee of 
+an installation or any premises, the owner, management or licensee of the installation or 
+premises, as the case may be, shall cause the person in charge of the installation or 
+premises to attend and give such assistance as may be ordered by the Commission in 
+the notice.
+Regulation 111. Competent person to undertake maintenance work.
+No person, except a competent person or a person acting under the control of a 
+competent person, shall undertake to carry out any repair, replacement, servicing or 
+cleaning of any equipment which forms part of an installation. 
+Regulation 112. Adequate safety precautions to be taken during work.
+(1) A competent person shall take adequate precautions to prevent any installation or 
+equipment from being accidentally or inadvertently made alive when persons are 
+working. 
+(2) Any person engaged in work in connection with any installation or equipment shall be 
+adequately protected from danger, and the responsibility for such protection shall be on 
+the licensee or supply authority, owner, management or occupier of the installation, his 
+servant or agent, as the case may be. 
+(3) Where any person is engaged in work on a circuit controlled by a switch not under 
+his immediate supervision, the switch shall be locked in "OFF" position until the work is 
+finished and— 
+(a) in the case of aerial line work, a notice shall be hung on the switch and 
+earthing sticks to provide earthing shall be fixed at a visible distance from the 
+workmen; and 
+(b) in the case of underground cabling work, a suitable notice shall be hung on 
+the switch, to warn any person that there are persons at work on the circuit and 
+that the switch shall not be closed. 
+(4) If the circuit is operated at high voltage or extra high voltage, the switch in 
+subregulation (3) shall be locked in the "OFF" position by the competent person. 
+(5) No competent person or person under the control of a competent person shall 
+reclose any switch until he is certain that all persons are clear of the circuit concerned 
+and have been warned that the circuit is to be made alive. 
+(6) No person shall defeat, remove or damage a safety device fitted in connection with or 
+for use with any installation or equipment. 
+(7) Notwithstanding subregulations (1), (3), (4) and (5), where the competent person is 
+satisfied that live work on any installation, equipment or circuit, as the case may be, is 
+safe, it shall not be unlawful for any person to engage in such work. 
+Regulation 113. Competent person to issue written instruction.
+No work or operation under the control of a competent person shall be commenced until 
+a written instruction has been issued by the competent person
+PART V - MISCELLANEOUS 
+Regulation 114. Authorised officer's identity card.
+The official identity card or badge which the authorised officer shall carry under 
+subsection 5(6) of the Act shall be in Form X as prescribed in the First Schedule. 
+Regulation 115. Special order by Commission.
+Where it appears to the Commission that it is necessary in order to secure a reasonable 
+degree of safety— 
+(a) to take precautions in the working or operation of an apparatus; or 
+(b) to make additions or alterations to an apparatus; 
+the Commission shall issue an order in writing and the other shall be carried into effect 
+by the owner, management or licensee of any installation, contractor, manufacturer, 
+distributor or retailer to whom the order is addressed. 
+Regulation 116. Prohibition of use of equipment dangerous to health.
+(1) No person shall use, work or operate any equipment which is, in the opinion of the 
+Health Officer of a State, hazardous or dangerous to the health of the persons in 
+attendance thereof or to the public. 
+(2) The Commission shall issue directions to any person concerned to secure the due 
+compliance of the provisions of subregulation (1). 
+(3) The Commission may prohibit the use of any equipment by a person which is, in his 
+opinion, causing or likely to cause nuisance to the public. 
+Regulation 117. Summons to assessor and witness.
+(1) A summons to an assessor under section 34 of the Act shall be in Form Y of the First 
+Schedule. 
+(2) A summons to a witness under section 35 of the Act shall be in Form Z of the First 
+Schedule. 
+(3) An enquiry to be held by the person appointed by the Minister under subsection 34(3) 
+of the Act may be held at any place in Malaysia that the person may elect, and the 
+evidence may be taken in the national language or in the English language. 
+Regulation 118. Fees payable to the Commission.
+Any fees payable under the Act or these Regulations shall be paid in advance to the 
+Commission by such means and in such manner as the Commission may decide from 
+time to time and shall not be refundable under any circumstances. 
+Regulation 119. Licensee or supply authority to keep records.
+Any licensee or supply authority shall keep record of the following matters and shall 
+produce them within the specified time as required by the Commission— 
+(a) the maximum daily load and electricity sold per month; 
+(b) the breakdown of any installation and the occurrence of any accident, fatal or 
+otherwise; 
+(c) the class, operating voltage and capacity of all consumers; 
+(d) the units generated by a generating station, the plant capacity and the 
+maximum load; and 
+(e) any other information as the Commission deems necessary. 
+Regulation 120. Fee for a copy of a report. 
+A fee of fifty ringgit shall be charged for a copy of the report made under subsection 
+33(5) of the Act or a copy of the summary of the evidence and the decision made under 
+subsection 34(5) of the Act. 
+Regulation 121. Transitional and saving provisions.
+With the coming into force of these Regulations— 
+(a) any installation or equipment in operation the design or construction of which 
+does not comply with these Regulations shall be altered so as to make it comply 
+with these Regulations within such reasonable time as the Commission may 
+direct; 
+(b) any licence for a public or private installation issued under any written law 
+shall be renewed in compliance with the Act and these Regulations within one 
+year or earlier if the expiry date of the licence falls within the same year; 
+(c) any Certificate of Registration of an installation issued under any written law 
+shall be renewed in compliance with the Act and these Regulations when the 
+date for the renewal of the registration is due; 
+(d) any Certificate of Registration for any Wiring Contractor, Electric Sign 
+Contractor, Switchboard Maker, Private Wiring Unit or Electrical Services 
+Engineer issued under any written law shall be renewed in compliance with the 
+Act and these Regulations when the date for the renewal of the registration is 
+due; 
+(e) any registration of competent persons made under any written law shall be 
+renewed in accordance with the Act and these Regulations when the date for the 
+renewal of the registration is due; 
+(f) any person who has been given approval to sit for his examination conducted 
+under any written law for his Certificate of Competency shall be deemed to be 
+eligible to sit for the examination under these Regulations; 
+(g) any valid Certificate of Approval for the manufacture and importation of 
+electrical equipment issued under any written law shall be renewed in 
+compliance with these Regulations when its period of validity expires; 
+(h) any application for the following and any application for the renewal thereof, 
+made under any written law and which is still pending before the coming into 
+force of these Regulations, shall be deemed to have been made under these 
+Regulations, and may be continued to be processed under these Regulations— 
+(i) a licence for a public installation; 
+(ii) a licence for a private installation; 
+(iii) a Certificate of Competency as an Electrical Engineer; 
+(iv) a Certificate of Competency as an Electrical Engineering Supervisor; 
+(v) a Certificate of Competency as a Chargeman; 
+(vi) a Certificate of Competency as a Wireman; 
+(vii) a Certificate of Registration as a Wiring Contractor; 
+(viii) a Certificate of Registration as an Electric Sign Contractor; 
+(ix) a Certificate of Registration as a Switchboard Maker; 
+(x) a Certificate of Registration as a Private Wiring Unit; 
+(xi) a Certificate of Registration as an Electrical Services Engineer; and 
+(xii) a Certificate of Registration for an installation; 
+(i) any inspection, investigation or enquiry made under any written law and which 
+is still pending before the coming into force of these Regulations shall be deemed 
+to have been conducted under these Regulations and may be continued under 
+these Regulations; and 
+(j) any findings and consequential verdicts henceforth resulting from any 
+inspection, investigation or enquiry carried out under any written law shall be 
+upheld under these Regulations. 
+Regulation 122. Penalty.
+Unless otherwise made an offence under the Act, a person who contravenes or fails to 
+comply with any of the provisions of these Regulations shall be guilty of an offence and 
+shall, on conviction, be liable to a fine not exceeding five thousand ringgit or to 
+imprisonment for a term not exceeding one year or to both. 
+Regulation 123. Revocation.
+The Electricity Supply Regulations 1990 are hereby revoked. 

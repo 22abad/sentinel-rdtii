@@ -1,0 +1,85 @@
+1
+INTERNET CODE OF PRACTICE
+1. It is hereby notified for general information that, in exercise of the powers 
+conferred by section 6 of the Broadcasting Act (Cap. 28), the Info-
+communications Media Development Authority has issued, with effect from 1st 
+November 1997, the Internet Code of Practice as set out in the Schedule.  
+2. Notification no. 2400/96 of 15th July 1996 is cancelled. 
+THE SCHEDULE 
+INTERNET CODE OF PRACTICE 
+Foreword 
+1.- (1) The Broadcasting Act (Cap. 28) makes it the duty of Info-
+communications Media Development Authority to ensure that nothing is 
+included in any broadcasting service which is against public interest or 
+order, national harmony or which offends against good taste or decency. 
+This Code of Practice has been produced by the Info-communications
+Media Development Authority for this purpose.  
+(2) All Internet Service Providers and Internet Content Providers licensed 
+under the Broadcasting (Class Licence) Notification (N1) are required to 
+comply with this Code of Practice. Under the Broadcasting Act, the Info-
+communications Media Development Authority has the power to impose 
+sanctions, including fines, on licensees who contravene this Code of 
+Practice.  
+Internet Code of Practice  
+2.    A licensee shall use his best efforts to ensure that prohibited material is  
+        not broadcast via the Internet to users in Singapore.  
+Obligations under this Code  
+3.- (1) An Internet Access Service Provider or Reseller discharges his 
+obligations under this Code, in relation to programmes on the World Wide 
+Web, when he denies access to sites notified to him by the Authority as 
+containing prohibited material, under clause 4 below.  
+2
+(2) An Internet Access Service Provider or Reseller discharges his  
+       obligations under this Code, in relation to Internet Newsgroups, when           
+       it:-  
+(a) refrains from subscribing to any newsgroup if, in his opinion, it is 
+likely to contain prohibited material; and  
+(b) unsubscribes from any newsgroups that the Authority may direct. 
+(3)  An Internet Content Provider discharges his obligation under this  
+        Code:-  
+(a) in relation to private discussion fora hosted on his service (e.g. 
+chat groups), when the licensee chooses discussion themes 
+which are not prohibited under the guidelines in clause 4 below;  
+(b) in relation to programmes on his service contributed by other 
+persons who are invited to do so on the licensee's service for 
+public display (eg. bulletin boards), when the licensee denies 
+access to any contributions that contain prohibited material that 
+he discovers in the normal course of exercising his editorial 
+duties, or is informed about; and  
+(c) in relation to all other programmes on his service, if the licensee 
+ensures that such programmes do not include material that 
+would be considered to be prohibited under the guidelines in 
+clause 4 below*.  
+(4)  An Internet Content Provider shall deny access to material considered 
+by the Authority to be prohibited material if directed to do so by the 
+Authority.  
+(5) Paragraph (3) does not apply to any web publisher or web server 
+administrator in respect of programmes on his service for which he 
+has no editorial control.  
+Prohibited Material  
+4.- (1) Prohibited material is material that is objectionable on the grounds of 
+public interest, public morality, public order, public security, national 
+harmony, or is otherwise prohibited by applicable Singapore laws.  
+(2) In considering what is prohibited material, the following factors should 
+be taken into account:-  
+(a) whether the material depicts nudity or genitalia in a manner 
+calculated to titillate;  
+3
+(b) whether the material promotes sexual violence or sexual activity 
+involving coercion or non-consent of any kind;  
+(c) whether the material depicts a person or persons clearly 
+engaged in explicit sexual activity;  
+(d) whether the material depicts a person who is, or appears to be, 
+under 16 years of age in sexual activity, in a sexually provocative 
+manner or in any other offensive manner;  
+(e) whether the material advocates homosexuality or lesbianism, or 
+depicts or promotes incest, paedophilia, bestiality and necrophilia;  
+(f) whether the material depicts detailed or relished acts of extreme 
+violence or cruelty;  
+(g) whether the material glorifies, incites or endorses ethnic, racial or 
+religious hatred, strife or intolerance.  
+(3) A further consideration is whether the material has intrinsic medical, 
+scientific, artistic or educational value.  
+(4) A licensee who is in doubt as to whether any content would be 
+considered prohibited may refer such content to the Authority for its 
+decision. 

@@ -1,0 +1,1969 @@
+First published in the Government Gazette , Electronic Edition, on 21 March 2022 at 5 pm.
+No. S 205
+SUPREME COURT OF JUDICATURE ACT 1969
+SUPREME COURT OF JUDICATURE
+(INTELLECTUAL PROPERTY)
+RULES 2022
+ARRANGEMENT OF RULES
+PART 1
+PRELIMINARY
+Rule
+1.
+Citation and commencement
+2.
+General definitions
+PART 2
+SIMPLIFIED PROCESS FOR
+CERTAIN INTELLECTUAL PROPERTY CLAIMS
+3.
+Definitions of this Part
+4.
+What originating claims are suitable for this Part
+5.
+Claimant may elect for this Part to apply, etc.
+6.
+Court may make order for this Part to apply
+7.
+Rules of Court to apply subject to modifications
+8.
+Active management at case conference, etc.
+9.
+Costs to be fixed and capped
+10.
+Appellate court may limit costs of appeal
+PART 3
+GEOGRAPHICAL INDICATIONS ACT 2014
+Division 1 — Preliminary
+11.
+Definitions of this Part
+12.
+Application of Rules of Court
+Division 2 — Actions for certain uses of
+geographical indications (section 4)
+13.
+Mode of commencement
+1
+Rule
+14.
+Service of defendant ’ s pleadings on Registrar, etc.
+15.
+Particulars to be included in defence
+16.
+Counterclaim where geographical indication is registered
+Division 3 — Applications for declarations relating to
+homonymous geographical indications (section 10(2))
+17.
+Mode of commencement
+18.
+Consultation on possibility of agreement
+19.
+Court may declare practical conditions regardless of agreement
+Division 4 — Applications for limitation of scope
+to be entered in register (section 48A)
+20.
+Mode of commencement, etc.
+21.
+Particulars to be included in application
+22.
+Publication of particulars in journal
+23.
+Joinder of affected parties
+Division 5 — References by Registrar to Court
+24.
+Application to be made after reference
+Division 6 — Appeals from Registrar to Court
+25.
+Application of this Division
+26.
+Provisions relating to appellant
+27.
+Provisions relating to respondent
+28.
+Other provisions
+Division 7 — Miscellaneous
+29.
+Registrant may be served at address in register
+30.
+Registrar to be notified of proceedings, etc., and may take part
+PART 4
+PATENTS ACT 1994
+Division 1 — Preliminary
+31.
+Definitions of this Part
+32.
+Application of Rules of Court
+Division 2 — Actions for infringement (section 67) or
+declaration of non-infringement of patent (section 78)
+33.
+Action for infringement
+34.
+Production of documents
+2
+Division 3 — Proceedings where validity of
+patent put in issue (section 82)
+Rule
+35.
+Particulars of objections to validity of patent in originating claim
+36.
+Particulars of objections to validity of patent in originating
+application
+37.
+Production of documents
+38.
+Registrar to be notified
+Division 4 — Appeals from Registrar to Court
+39.
+Application
+40.
+Provisions relating to appellant
+41.
+Provisions relating to respondent
+42.
+Other provisions
+Division 5 — Other proceedings under Act
+43.
+Determination of questions about entitlement to patents, etc.,
+before grant (section 20(7)) or right to patents after grant
+(section 47(8))
+44.
+Applications for rectification of register (section 44(1))
+45.
+Applications relating to certain contracts (section 52(3));
+references of disputes as to Government use (section 58)
+46.
+Application for permission to amend specification (section 83)
+Division 6 — Miscellaneous
+47.
+Proprietor may be served at address in register
+48.
+Registrar to be notified of proceedings, etc., and may take part
+49.
+Admissions of fact
+50.
+Establishing facts by experiments
+PART 5
+REGISTERED DESIGNS ACT 2000
+Division 1 — Preliminary
+51.
+Definitions of this Part
+52.
+Application of Rules of Court
+Division 2 — Action for infringement of registered design
+(sections 36, 37 and 38)
+53.
+Mode of commencement
+54.
+Defendant may dispute validity of registration, etc.
+3
+Division 3 — Applications and references under Act
+Rule
+55.
+Mode of commencement
+56.
+References by Registrar to Court — application to be made after
+reference
+Division 4 — Appeals from Registrar to Court
+57.
+Application
+58.
+Provisions relating to appellant
+59.
+Provisions relating to respondent
+60.
+Other provisions
+Division 5 — Miscellaneous
+61.
+Registered owner may be served at address in register
+62.
+Registrar to be notified of proceedings, etc., and may take part
+PART 6
+TRADE MARKS ACT 1998
+Division 1 — Preliminary
+63.
+Definitions of this Part
+64.
+Application of Rules of Court
+Division 2 — Action for infringement of
+trade mark (section 31)
+65.
+Mode of commencement
+66.
+Provisions relating to defendant
+Division 3 — Applications and references under Act
+67.
+Applications to Court
+68.
+References by Registrar to Court — application to be made after
+reference
+Division 4 — Appeals from Registrar to Court
+69.
+Application of this Division
+70.
+Provisions relating to appellant
+71.
+Provisions relating to respondent
+72.
+Other provisions
+Division 5 — Miscellaneous
+73.
+Proprietor may be served at address in register
+74.
+Registrar to be notified of proceedings, etc., and may take part
+4
+Rule
+75.
+Consequential amendments to other Rules
+In exercise of the powers conferred by section 80 of the Supreme
+Court of Judicature Act 1969 and all other powers enabling us under
+any written law, we, the Rules Committee, make the following Rules:
+PART 1
+PRELIMINARY
+Citation and commencement
+1. These Rules are the Supreme Court of Judicature (Intellectual
+Property) Rules 2022 and come into operation on 1 April 2022.
+General definitions
+2. — (1) In these Rules, unless the context otherwise requires —
+“ Court ” means the General Division of the High Court;
+“ proceedings ” means proceedings before the Court;
+“ Rules of Court ” means the Rules of Court 2021 (G.N. No.
+S 914/2021).
+(2) In these Rules, a word or an expression that is defined by
+Order 1, Rule 3 (general definitions) of the Rules of Court and not by
+these Rules has the meaning given by that Rule.
+PART 2
+SIMPLIFIED PROCESS FOR
+CERTAIN INTELLECTUAL PROPERTY CLAIMS
+Definitions of this Part
+3. In this Part —
+“ form ” means the relevant form specified in the practice
+directions issued from time to time under Order 26, Rule 2
+of the Rules of Court for the purposes of this Part by the
+5
+Registrar of the Supreme Court with the approval of the Chief
+Justice;
+“ intellectual property right ” includes —
+( a ) a patent;
+( b ) a trade mark;
+( c ) a geographical indication;
+( d ) a registered design;
+( e ) a copyright;
+( f ) a right in a protected layout design of an integrated
+circuit;
+( g ) a grant of protection in respect of a plant variety;
+( h ) a right in confidential information, trade secret or
+know how; and
+( i ) a right to protect goodwill by way of passing off or
+similar action against unfair competition;
+“ monetary relief ” means —
+( a ) an account for profits;
+( b ) damages
+(including
+additional,
+equitable
+and
+statutory damages); and
+( c ) contractual interest.
+What originating claims are suitable for this Part
+4. — (1) An originating claim is suitable for this Part if —
+( a ) the dispute involves an intellectual property right;
+( b ) one of the following conditions applies:
+(i) the monetary relief claimed by each party (whether
+in relation to an intellectual property right or
+otherwise) in the action does not or is not likely to
+exceed $500,000;
+(ii) all parties agree to the application of this Part; and
+6
+( c ) the case is otherwise suitable for this Part, having regard to
+the following matters:
+(i) whether a party can only afford to bring or defend the
+claim under this Part;
+(ii) the complexity of the issues;
+(iii) whether the estimated length of the trial is likely to
+exceed 2 days;
+(iv) any other relevant matter.
+(2) For the purposes of this Part —
+( a ) a party may file and serve the form to abandon any claim
+for monetary relief in excess of $500,000;
+( b ) the form has effect if and only if this Part applies to the
+originating claim; and
+( c ) the form may be withdrawn only with the permission of the
+Court.
+Claimant may elect for this Part to apply, etc.
+5. — (1) This Part applies to an originating claim if the claimant files
+and serves —
+( a ) the form to elect for this Part to apply; and
+( b ) the form to abandon any claim for monetary relief in
+excess of $500,000.
+(2) Where this Part applies to an originating claim because of
+paragraph (1), a defendant that makes a counterclaim must —
+( a ) file and serve the form to abandon any claim for monetary
+relief in excess of $500,000;
+( b ) inform the Court by letter that the defendant agrees to the
+application of this Part; or
+( c ) inform the Court by letter that —
+(i) the defendant does not intend to file the form
+mentioned in sub-paragraph ( a ); and
+7
+(ii) the defendant does not agree to the application of this
+Part.
+(3) Despite paragraph (1), this Part does not apply if the Court
+considers that the originating claim is not suitable to be heard and
+disposed of under this Part and makes an order for this Part not to
+apply.
+(4) An order under paragraph (3) may be made by the Court on its
+own motion or on the application of a party (including a defendant
+that has not made a counterclaim).
+Court may make order for this Part to apply
+6. — (1) This Part also applies to an originating claim if the Court
+considers that the originating claim is suitable for this Part and makes
+an order for this Part to apply.
+(2) An order under paragraph (1) may be made by the Court on its
+own motion or on the application of a party.
+(3) A party may not make an application under paragraph (2)
+unless —
+( a ) the party files and serves the form to abandon any claim for
+monetary relief in excess of $500,000;
+( b ) the party (being the defendant) is not making any
+counterclaim; or
+( c ) all parties agree to the application of this Part.
+Rules of Court to apply subject to modifications
+7. Subject to this Part, the Rules of Court apply to an originating
+claim to which this Part applies.
+Active management at case conference, etc.
+8. — (1) Order 9 (case conferences, applications in action, etc.) of
+the Rules of Court applies subject to this rule.
+(2) At a case conference, the Court must —
+( a ) give directions on all matters that are necessary for the case
+to proceed expeditiously; and
+8
+( b ) if practicable, give directions to ensure that the trial of the
+case is completed within 2 days.
+(3) All directions under paragraph (2) must, if practicable, be made
+at a single case conference.
+(4) Without limiting paragraph (2), directions given under that
+paragraph may include directions on the following matters:
+( a ) identifying and narrowing the main factual and legal issues
+in dispute;
+( b ) identifying the most similar prior art where the dispute
+involves the validity of a patent;
+( c ) the evidence that may be given (including survey
+evidence);
+( d ) the number of affidavits and witnesses;
+( e ) the timelines for filing and serving affidavits;
+( f ) the timelines relating to the bundle of documents
+mentioned in Order 9, Rule 25(9)( b ) of the Rules of Court;
+( g ) the date and duration of the hearing;
+( h ) the time for the examination of each witness.
+(5) Without limiting Order 9, Rule 9(2), (3) and (4) of the Rules of
+Court, the single application pending trial may deal with the matters
+mentioned in paragraph (4).
+(6) At a case conference, if the Court considers that it is not
+practicable for the trial of the case to be completed within 2 days, the
+Court may consider making an order under rule 5(3) for this Part not
+to apply to the case.
+(7) Order 9, Rule 9(5) of the Rules of Court does not apply.
+Costs to be fixed and capped
+9. — (1) Order 21 (costs) of the Rules of Court applies subject to this
+rule.
+(2) If the originating claim is proceeding to trial, the Court must not
+make any order for costs until the trial is completed.
+9
+(3) The Court may order costs only in respect of the items specified
+in Table A.
+(4) The Court must fix any costs it orders.
+(5) The costs ordered in respect of an item specified in Table A
+must not exceed the maximum amount for that item.
+(6) The total costs ordered against a party (including any costs in
+respect of GST) must not exceed the following amounts after any set
+off:
+( a ) $50,000 in relation to the trial of the originating claim;
+( b ) $25,000 in relation to any bifurcated assessment as to the
+amount of monetary relief.
+(7) Paragraphs (2), (5) and (6) do not apply where costs are ordered
+against a party that has behaved unreasonably.
+(8) This rule does not affect —
+( a ) the Court ’ s powers under the Rules of Court to make
+adverse cost orders against a solicitor at any time;
+( b ) the Court ’ s powers in relation to court fees under Order 25
+of the Rules of Court;
+( c ) the Court ’ s powers under the Rules of Court in relation to
+the costs of enforcement; and
+( d ) a party ’ s entitlement to costs and expenses under any of the
+following written laws:
+(i) section
+76(2)
+of
+the
+Geographical
+Indications
+Act 2014;
+(ii) section 72(2) of the Patents Act 1994;
+(iii) section 43(2) of the Registered Designs Act 2000;
+(iv) section 102(2) of the Trade Marks Act 1998.
+10
+(9) In this rule, “ GST ” means goods and services tax.
+Table A
+Items relating to the trial
+of the originating claim
+Maximum
+amount
+1. Preparing or reviewing statement of claim
+$7,000
+2. Preparing or reviewing defence and counterclaim
+$7,000
+3. Preparing or reviewing reply and defence to
+counterclaim
+$7,000
+4. Preparing or reviewing reply to defence to
+counterclaim
+$3,500
+5. Attending one or more case conferences
+$3,000
+6. Making or responding to one or more applications
+$3,000
+7. Producing or inspecting documents or other material,
+product descriptions or process descriptions
+$6,000
+8. Performing or inspecting one or more experiments
+$3,000
+9. Preparing or reviewing one or more affidavits
+(including affidavits of evidence-in-chief)
+$6,000
+10. Preparing or reviewing one or more expert reports
+$8,000
+11. Preparing for and attending trial
+$16,000
+12. Preparing for determination on papers
+$5,500
+13. GST payable by a GST-registered law firm
+Actual amount
+of GST payable
+Items relating to any bifurcated assessment
+of the amount of monetary relief
+Maximum
+amount
+14. Preparing or reviewing supplementary statement of
+claim
+$3,000
+15. Preparing or reviewing supplementary defence
+$3,000
+16. Attending one or more case conferences
+$3,000
+17. Making or responding to one or more applications
+$3,000
+18. Producing or inspecting documents or other material
+$3,000
+19. Preparing or reviewing one or more affidavits
+(including affidavits of evidence-in-chief)
+$6,000
+11
+Table A
+20. Preparing or reviewing one or more expert reports
+$6,000
+21. Preparing for and attending trial
+$8,000
+22. Preparing for determination on papers
+$3,000
+23. GST payable by a GST-registered law firm
+Actual amount
+of GST payable
+Appellate court may limit costs of appeal
+10. — (1) The appellate court may make an order to limit the costs
+recoverable on an appeal from a decision of the Court in an
+originating claim to which this Part applies.
+(2) An order under paragraph (1) may be made by the appellate
+court on its own motion or on the application of any party.
+(3) An application under paragraph (2) —
+( a ) may be made even if a notice of appeal is not filed; and
+( b ) may not be made more than 14 days after a notice of appeal
+is filed.
+(4) In deciding whether to make an order under paragraph (1), the
+appellate court must have regard to all relevant matters, including —
+( a ) the means of the parties;
+( b ) whether the appeal raises a point of law or practice of
+public importance; and
+( c ) the need to facilitate access to justice.
+(5) The appellate court is not bound by an order under paragraph (1)
+in ordering any costs against a party that, after the order was made,
+conducted itself unreasonably.
+(6) In this rule, “ appellate court ” means the court to which an
+appeal from a decision of the Court is or may be made.
+12
+PART 3
+GEOGRAPHICAL INDICATIONS ACT 2014
+Division 1 — Preliminary
+Definitions of this Part
+11. — (1) In this Part —
+“ Act ” means the Geographical Indications Act 2014, and a
+reference to a section is a reference to a section of the Act;
+“ GI Rules ” means the Geographical Indications Rules 2019
+(G.N. No. S 125/2019).
+(2) In this Part, the following words and expressions have the
+meanings given by section 2(1):
+( a ) “ geographical indication ” ;
+( b ) “ homonymous geographical indication ” ;
+( c ) “ interested party ” ;
+( d ) “ international trade mark (Singapore) ” ;
+( e ) “ proprietor ” in relation to a trade mark;
+( f ) “ register ” ;
+( g ) “ registered geographical indication ” ;
+( h ) “ registered trade mark ” ;
+( i ) “ registrant ” ;
+( j ) “ Registrar ” ;
+( k ) “ well known trade mark ” .
+Application of Rules of Court
+12. Subject to these Rules, the Rules of Court apply to any
+proceedings under the Act.
+13
+Division 2 — Actions for certain uses of
+geographical indications (section 4)
+Mode of commencement
+13. An action under section 4 must be commenced by originating
+claim.
+Service of defendant ’ s pleadings on Registrar, etc.
+14. The defendant in an action under section 4 must serve on the
+Registrar a copy of the defendant ’ s pleading within 7 days after filing
+the pleading in Court.
+Particulars to be included in defence
+15. — (1) If the defendant in an action under section 4 by way of
+defence disputes that the geographical indication falls within the
+meaning of “ geographical indication ” as defined in section 2, the
+defendant ’ s pleadings must include particulars of the dispute.
+(2) If the defendant by way of defence disputes the validity of the
+registration of the geographical indication, the defendant ’ s pleadings
+must include particulars of the objection to the validity of the
+registration on which the defendant relies.
+(3) If the defendant by way of defence pleads any exception under
+Part 3 of the Act, the defendant ’ s pleadings must include —
+( a ) particulars of the exception; and
+( b ) the relevant particulars set out in paragraph (4), (5), (6),
+(7), (8), (9), (10) or (11) (whichever is applicable) in
+relation to the exception.
+(4) In relation to an exception under section 11( b ) for the use of a
+geographical indication that has ceased to be protected in its country
+or territory of origin, the relevant particular is the date of the
+cessation.
+(5) In relation to an exception under section 12(1), the relevant
+particulars are —
+14
+( a ) the goods or services or related goods or services in
+relation to which the geographical indication (being a
+geographical indication identifying a wine or a spirit) was
+continuously used by the defendant or by the defendant and
+the defendant ’ s predecessor in title (as the case may be)
+and details of the use;
+( b ) the name of every such predecessor in title that has
+continuously used the geographical indication; and
+( c ) the date on which the geographical indication was first
+used in relation to the goods or services or related goods or
+services.
+(6) In relation to an exception under section 12(2)( a ), the relevant
+particulars are —
+( a ) the name of the proprietor of the trade mark;
+( b ) the date on which the trade mark was first used by the
+defendant;
+( c ) the details of the registration of the trade mark or the
+application for the registration of the trade mark, as the
+case may be;
+( d ) a representation of the trade mark; and
+( e ) the date on which the geographical indication was first
+protected in its country or territory of origin.
+(7) In relation to an exception under section 12(2)( b ), the relevant
+particulars are —
+( a ) the name of the proprietor (if any) of the trade mark;
+( b ) the date on which the trade mark was first used in the
+manner mentioned in that provision by the defendant or by
+the defendant and the defendant ’ s predecessor in title, as
+the case may be;
+( c ) the name of every predecessor in title (if any) of the
+defendant who has used the trade mark in the manner
+mentioned in that provision;
+15
+( d ) a representation of the trade mark, and details of its use in
+the manner mentioned in that provision by the defendant or
+by the defendant and every such predecessor in title, as the
+case may be; and
+( e ) the date on which the geographical indication was
+first protected in its country or territory of origin.
+(8) In relation to an exception under section 16(1), the relevant
+particulars are —
+( a ) the goods or services or related goods or services in
+relation to which the registered geographical indication
+(being a geographical indication identifying any goods
+other than a wine or a spirit) was continuously used by the
+defendant or the defendant and the defendant ’ s predecessor
+in title (as the case may be) and details of the use;
+( b ) the name of every such predecessor in title that has
+continuously used the goods or services or related goods or
+services; and
+( c ) the date on which the registered geographical indication
+was first used in relation to the goods or services or related
+goods or services.
+(9) In relation to an exception under section 16(2)( a ), the relevant
+particulars are —
+( a ) whether the trade mark is a registered trade mark or an
+international trade mark (Singapore);
+( b ) the name of the proprietor of the trade mark;
+( c ) the date on which the trade mark was first used by the
+defendant;
+( d ) the details of the registration of the trade mark or the
+application for the registration of the trade mark, as the
+case may be;
+( e ) a representation of the trade mark; and
+( f ) the date of application for the registration of the
+geographical indication.
+16
+(10) In relation to an exception under section 16(2)( b ), the relevant
+particulars are —
+( a ) the name of the proprietor (if any) of the trade mark;
+( b ) the date on which the trade mark was first used in the
+manner mentioned in that provision by the defendant or by
+the defendant and the defendant ’ s predecessor in title, as
+the case may be;
+( c ) the name of every predecessor in title (if any) that has used
+the trade mark in the manner mentioned in that provision;
+( d ) a representation of the trade mark, and details of its use in
+the manner mentioned in that provision by the defendant or
+by the defendant and every such predecessor in title, as the
+case may be; and
+( e ) the date of application for the registration of the
+geographical indication.
+(11) In relation to an exception under section 16(3), the relevant
+particulars are —
+( a ) the name of the proprietor of the well known trade mark;
+( b ) the date of application for the registration of the
+geographical indication;
+( c ) details of any matter from which it may be inferred that the
+trade mark is well known; and
+( d ) details of how the application of section 4 to the use of the
+trade mark is liable to mislead consumers as to the true
+identity of the goods identified by the geographical
+indication.
+Counterclaim where geographical indication is registered
+16. If the geographical indication in an action under section 4 is a
+registered geographical indication, the defendant may make a
+counterclaim for one or both of the following:
+( a ) the cancellation of the registration of the geographical
+indication;
+17
+( b ) the rectification of an error or omission in the register
+affecting the registration of the geographical indication.
+Division 3 — Applications for declarations relating to
+homonymous geographical indications (section 10(2))
+Mode of commencement
+17. An application under section 10(2) must be commenced by
+originating application.
+Consultation on possibility of agreement
+18. — (1) Where an application is made under section 10(2) —
+( a ) the applicant must consult with each defendant on the
+possibility of agreement to the practical conditions to be
+declared under section 10(2);
+( b ) if the parties reach an agreement, the applicant must file in
+Court a copy of their agreement, including the details of the
+agreed practical conditions; and
+( c ) if the parties fail to reach an agreement, each party must
+file with the Court a submission —
+(i) containing the party ’ s proposal for the practical
+conditions to be declared; and
+(ii) identifying the areas for which an agreement could
+not be reached.
+(2) For the purposes of paragraph (1), the Court must send a written
+notice to all the parties to the proceedings and the notice must —
+( a ) direct the applicant to consult with each defendant as
+required by paragraph (1)( a ); and
+( b ) specify —
+(i) the period for consultation under paragraph (1)( a );
+(ii) the period within which the applicant must take the
+step in paragraph (1)( b ) (if applicable); and
+18
+(iii) the period within which each party must take the step
+in paragraph (1)( c ) (if applicable).
+(3) An application under section 10(2) is deemed to have been
+discontinued if —
+( a ) where paragraph (1)( b ) applies — the applicant did not
+carry out the step in paragraph (1)( b ) at the end of the
+period specified in paragraph (2)( b )(ii); or
+( b ) where paragraph (1)( c ) applies — the applicant did not
+carry out the step in paragraph (1)( c ) as it applies to the
+applicant
+at
+the
+end
+of
+the
+period
+specified
+in
+paragraph (2)( b )(iii).
+Court may declare practical conditions regardless of
+agreement
+19. After hearing an application under section 10(2), the Court may
+declare the practical conditions on which the relevant homonymous
+geographical indications are to be differentiated from one another,
+whether or not the practical conditions are those in respect of which
+an agreement between the parties was filed under rule 18.
+Division 4 — Applications for limitation of scope
+to be entered in register (section 48A)
+Mode of commencement, etc.
+20. — (1) An application under section 48A(1) must be commenced
+by originating application.
+(2) If the applicant is not the registrant of the relevant registered
+geographical indication, the registrant must be named as a defendant.
+Particulars to be included in application
+21. An application under section 48A(1) must include the following
+particulars:
+( a ) a statement setting out the proposed limitation of the scope
+of the rights conferred under the Act in respect of a
+registered geographical indication that is to be entered in
+the register —
+19
+(i) in relation to any name contained in the registered
+geographical indication that is the subject of the
+application; or
+(ii) in relation to any term which may be a possible
+translation of the registered geographical indication
+that is the subject of the application;
+( b ) where the application is made on the ground that an
+exception under section 11( b ) applies to that name or
+term — the date of the cessation (if applicable) of the
+protection of the registered geographical indication in its
+country or territory of origin;
+( c ) where the application is made on the ground that an
+exception under section 12(1) applies to that name or
+term —
+(i) the goods or services or related goods or services in
+relation
+to
+which
+the
+registered
+geographical
+indication
+(being
+a
+geographical
+indication
+identifying a wine or a spirit) was continuously
+used in Singapore by the applicant or by the
+applicant and the applicant ’ s predecessor in title
+(as the case may be) and details of such use;
+(ii) the name of every such predecessor in title (if any)
+that
+has
+continuously
+used
+in
+Singapore
+the
+registered geographical indication; and
+(iii) the date on which the registered geographical
+indication was first used in Singapore in relation to
+the goods or services or related goods or services;
+( d ) where the application is made on the ground that an
+exception under section 12(2)( a ) applies to that name or
+term —
+(i) the name of the proprietor of the trade mark;
+(ii) the date on which the trade mark was first used by the
+applicant;
+20
+(iii) the details of the registration of the trade mark or the
+application for the registration of the trade mark, as
+the case may be;
+(iv) a representation of the trade mark; and
+(v) the date on which the registered geographical
+indication was first protected in its country or
+territory of origin;
+( e ) where the application is made on the ground that an
+exception under section 12(2)( b ) applies to that name or
+term —
+(i) the name of the proprietor of the trade mark;
+(ii) the date on which the trade mark was first used in
+Singapore in the manner mentioned in that provision
+by the applicant or by the applicant and the
+applicant ’ s predecessor in title, as the case may be;
+(iii) the name of every predecessor in title (if any) of the
+applicant who has used the trade mark in Singapore
+in the manner mentioned in that provision;
+(iv) a representation of the trade mark, and details of its
+use in Singapore in the manner mentioned in that
+provision by the applicant or by the applicant and
+every such predecessor in title, as the case may be;
+and
+(v) the date on which the registered geographical
+indication was first protected in its country or
+territory of origin;
+( f ) where the application is made on the ground that an
+exception under section 16(1) applies to that name or
+term —
+21
+(i) the goods or services or related goods or services in
+relation
+to
+which
+the
+registered
+geographical
+indication
+(being
+a
+geographical
+indication
+identifying any goods other than a wine or a spirit)
+was continuously used in Singapore by the applicant
+or the applicant and the applicant ’ s predecessor in
+title (as the case may be) and details of such use;
+(ii) the name of every such predecessor in title (if any)
+that has continuously used in Singapore the goods or
+services or related goods or services; and
+(iii) the date on which the registered geographical
+indication was first used in Singapore in relation to
+the goods or services or related goods or services;
+( g ) where the application is made on the ground that an
+exception under section 16(2)( a ) applies to that name or
+term —
+(i) whether the trade mark is a registered trade mark or
+an international trade mark (Singapore);
+(ii) the name of the proprietor of the trade mark;
+(iii) the date on which the trade mark was first used by the
+applicant;
+(iv) the details of the registration of the trade mark or the
+application for the registration of the trade mark
+(as the case may be) and the priority date, if any;
+(v) a representation of the trade mark; and
+(vi) the date of application for the registration of the
+registered geographical indication;
+( h ) where the application is made on the ground that an
+exception under section 16(2)( b ) applies to that name or
+term —
+(i) the name of the proprietor of the trade mark;
+22
+(ii) the date on which the trade mark was first used in
+Singapore in the manner mentioned in that provision
+by the applicant or by the applicant and the
+applicant ’ s predecessor in title, as the case may be;
+(iii) the name of every predecessor in title (if any) that has
+used in Singapore the trade mark in the manner
+mentioned in that provision;
+(iv) a representation of the trade mark, and details of its
+use in Singapore in the manner mentioned in that
+provision by the applicant or by the applicant and
+every such predecessor in title, as the case may be;
+and
+(v) the date of application for the registration of the
+registered geographical indication;
+( i ) where the application is made on the ground that an
+exception under section 16(3) applies to that name or
+term —
+(i) the name of the proprietor of the well known trade
+mark;
+(ii) the date of application for the registration of the
+registered geographical indication;
+(iii) details of any matter from which it may be inferred
+that the trade mark is well known; and
+(iv) details of how the application of section 4 to the use
+of the trade mark is liable to mislead consumers as to
+the true identity of the goods identified by the
+registered geographical indication.
+Publication of particulars in journal
+22. — (1) The Registrar must publish the following particulars of an
+application under section 48A(1) in the Geographical Indications
+Journal published under rule 96 of the GI Rules:
+23
+( a ) the registered geographical indication concerned, and the
+registration
+number
+of
+that
+registered
+geographical
+indication;
+( b ) the date on which the application was made;
+( c ) the statement setting out the proposed limitation of the
+scope of the rights conferred under the Act in respect of the
+registered geographical indication concerned that is to be
+entered in the register;
+( d ) the name of the applicant;
+( e ) the address of the applicant for the purpose of service of
+any document under these Rules.
+(2) The particulars must be published within 7 days after the service
+of the originating application on the Registrar.
+Joinder of affected parties
+23. — (1) A person who claims that the person ’ s interests will be
+affected by an order sought in an application under section 48A(1)
+may apply to the Court to be joined as a party to the application.
+(2) An application under paragraph (1) must be made within
+2 months after the date on which the particulars of the application are
+published under rule 22.
+Division 5 — References by Registrar to Court
+Application to be made after reference
+24. — (1) Where the Registrar refers to the Court an application
+made to the Registrar under the Act —
+( a ) the applicant must make the same application to the Court
+within the period mentioned in paragraph (2); and
+( b ) if the applicant fails to do so, the applicant is treated as
+having abandoned the application.
+(2) For the purposes of paragraph (1) —
+( a ) the period is one month after the application is notified of
+the Registrar ’ s decision to refer; but
+24
+( b ) the period may be extended by the Registrar on the
+application of any interested party (which application may
+be made before or after the expiration of that month).
+(3) Paragraph (2) does not affect the power of the Court to extend
+time under Order 3, Rule 4 of the Rules of Court.
+Division 6 — Appeals from Registrar to Court
+Application of this Division
+25. This Division applies for the purposes of an appeal to the Court
+from a decision of the Registrar in any case in which the Act gives a
+right of appeal.
+Provisions relating to appellant
+26. — (1) An appeal must be brought by originating application
+(called in this Division a notice of appeal).
+(2) A notice of appeal —
+( a ) must be filed with the Court within 28 days after the
+decision of the Registrar;
+( b ) may be given in respect of the whole or any specific part of
+the decision of the Registrar; and
+( c ) must specify the grounds of the appeal and the relief which
+the appellant seeks.
+(3) An appellant must, within 7 days after filing the notice of
+appeal, serve a copy of the notice of appeal on —
+( a ) the Registrar; and
+( b ) every other party to the proceedings before the Registrar.
+(4) An appellant must, within 14 days after filing the notice of
+appeal, file a bundle consisting of a copy each of the following
+documents (as applicable):
+( a ) a representation of the relevant geographical indication;
+25
+( b ) the details of the registration of that geographical
+indication or the application for the registration of that
+geographical indication, as the case may be;
+( c ) the application to the Registrar that is the subject of the
+decision of the Registrar being appealed against;
+( d ) the agreement or each submission on the practical
+conditions to be imposed;
+( e ) the request for qualification of rights;
+( f ) the notice of opposition;
+( g ) the notice of objection;
+( h ) the counter-statement;
+( i ) every statutory declaration (including its exhibits) filed
+with the Registrar;
+( j ) the written submissions;
+( k ) the grounds of decision of the Registrar.
+(5) Except with the permission of the Court, the appellant is not
+entitled on the hearing of the appeal to rely on any ground of appeal or
+to apply for any relief not specified in the notice of appeal.
+(6) Except with the permission of the Court, no appeal may be
+entertained unless the notice of appeal is filed within the period
+specified in paragraph (2)( a ).
+Provisions relating to respondent
+27. — (1) The respondent must give notice if the respondent intends
+to contend on the appeal that the Registrar ’ s decision should be —
+( a ) varied (whether in any event or in the event of the appeal
+being allowed in whole or in part); or
+( b ) affirmed on grounds other than those set out in the grounds
+of decision.
+(2) The respondent ’ s notice must specify —
+( a ) the grounds of the contention; and
+26
+( b ) in the case of paragraph (1)( b ), the relief that the
+respondent seeks from the Court.
+(3) The respondent ’ s notice must be filed and served on the
+following persons within 14 days after the respondent receives the
+notice of appeal or any further time as the Court may direct:
+( a ) the Registrar;
+( b ) the appellant;
+( c ) every other party to the proceedings before the Registrar.
+Other provisions
+28. — (1) The Registrar must transmit to the Court any document
+requested by the Court relating to the matter that is the subject of the
+appeal.
+(2) The Court must give notice of the date appointed for the hearing
+of the appeal to —
+( a ) the Registrar;
+( b ) the appellant; and
+( c ) every other party to the proceedings before the Registrar.
+(3) At least 7 days ’ notice must be given under paragraph (2), but
+the Court may direct that a shorter period of notice be given.
+(4) An appeal is to be by way of rehearing.
+(5) The evidence used on appeal must be the same as that used
+before the Registrar and, except with the permission of the Court, no
+further evidence may be given.
+Division 7 — Miscellaneous
+Registrant may be served at address in register
+29. — (1) Subject to this rule, for the purposes of any proceedings
+under the Act —
+( a ) a document (including an originating process) may be
+served on the registrant of a geographical indication by
+serving the document in the manner prescribed by Order 7
+27
+of the Rules of Court at the address for service given in the
+register; but
+( b ) if any provision of the Rules of Court requires a response to
+a document served under sub-paragraph ( a ) within a
+specified time limit (whether by filing and serving a notice
+of intention to contest or not contest or otherwise), that
+time limit is extended by 7 days.
+(2) Paragraph (1)( a ) ceases to apply when the registrant has
+provided an address for service within the meaning of Order 4,
+Rule 8 of the Rules of Court.
+(3) This rule does not prevent the registrant from being served in
+accordance with the Rules of Court.
+Registrar to be notified of proceedings, etc., and may take part
+30. — (1) In any proceedings under the Act —
+( a ) the party that commenced the proceedings must —
+(i) serve the originating process on the Registrar within
+7 days after the originating process is issued;
+(ii) if the proceedings are entirely discontinued or
+withdrawn, notify the Registrar within 7 days after
+the discontinuance or withdrawal takes effect; and
+(iii) notify the Registrar of the judgment of the Court
+within 7 days after the judgment is given;
+( b ) a defendant that entirely discontinues or withdraws its
+defence or counterclaim must notify the Registrar within
+7 days after the discontinuance or withdrawal takes effect;
+and
+( c ) a party that files a notice of appeal against the judgment of
+the Court must —
+(i) notify the Registrar within 7 days after the notice of
+appeal is filed;
+(ii) if the appeal is withdrawn, notify the Registrar
+within 7 days after the withdrawal takes effect; and
+28
+(iii) notify the Registrar of the judgment of the appellate
+court within 7 days after the judgment is given.
+(2) Notice under paragraph (1) must be given in writing.
+(3) The Registrar —
+( a ) may take part in any proceedings under the Act to the
+extent permitted by the Court; but
+( b ) need not serve a defence or other pleading unless ordered
+to do so by the Court.
+PART 4
+PATENTS ACT 1994
+Division 1 — Preliminary
+Definitions of this Part
+31. — (1) In this Part, “ Act ” means the Patents Act 1994, and a
+reference to a section is a reference to a section of the Act.
+(2) In this Part, the following words have the meanings given by
+section 2(1):
+( a ) “ journal ” ;
+( b ) “ patent ” ;
+( c ) “ register ” ;
+( d ) “ Registrar ” ;
+( e ) “ Registry ” .
+Application of Rules of Court
+32. Subject to these Rules, the Rules of Court apply to any
+proceedings under the Act.
+29
+Division 2 — Actions for infringement (section 67) or
+declaration of non-infringement of patent (section 78)
+Action for infringement
+33. — (1) An action for an infringement of a patent must be
+commenced by originating claim.
+(2) The claimant must serve, with the claimant ’ s statement of claim,
+particulars of the infringement relied on, and those particulars
+must —
+( a ) show which of the claims in the specification of the patent
+are alleged to be infringed; and
+( b ) give at least one instance of each type of infringement
+alleged.
+(3) Except with the permission of the Court, no evidence may be
+given of any alleged infringement of a patent if the infringement was
+not raised in the particulars of infringement.
+(4) If the defendant alleges, as a defence to the action, that at the
+time of the infringement there was in force a contract or licence
+relating to the patent —
+( a ) made by or with the consent of the claimant; and
+( b ) containing a condition or term void by virtue of section 51,
+the defendant must serve on the claimant —
+( c ) particulars of the date of, and parties to, the contract or
+licence; and
+( d ) particulars of the condition or term.
+Production of documents
+34. — (1) The application of Order 11 (production of documents) of
+the Rules of Court to an action for an infringement of a patent, or for a
+declaration of non-infringement of a patent, is subject to the
+modifications in this rule.
+(2) A document relating to the infringement of a patent by a product
+or process (called in this rule an exempt document) must not be listed
+if, before serving a list of documents, the party against whom the
+30
+allegation of infringement is made has served on the other parties full
+particulars of the allegedly infringing product or process, including
+(if necessary) drawings or other illustrations.
+(3) Despite paragraph (2), any party may apply under Order 11 of
+the Rules of Court for further and better production or specific
+production of any exempt document.
+(4) If, despite paragraphs (1) and (2), a party ( X ) produces an
+exempt document for inspection —
+( a ) any other party ( Y ) may request X in writing to provide a
+supplementary list of all other exempt documents; and
+( b ) unless the Court orders otherwise, X must serve the
+supplementary list on Y within 14 days after the request.
+(5) This rule does not affect the Court ’ s power to limit production
+on any other ground.
+(6) To avoid doubt, if the validity of a patent is put in issue in an
+action for an infringement of a patent, or for a declaration of
+non-infringement of a patent, rule 37 applies in addition to this rule.
+Division 3 — Proceedings where validity of
+patent put in issue (section 82)
+Particulars of objections to validity of patent in originating
+claim
+35. — (1) If the claimant in an originating claim intends to put in
+issue the validity of a patent, the claimant must serve with its
+statement of claim the particulars of its objections to the validity of
+the patent.
+(2) If the defendant in an originating claim intends to put in issue
+the validity of a patent by way of defence or counterclaim, the
+defendant must —
+( a ) within 14 days after being served the statement of claim,
+give prior notice of that intention; and
+( b ) within 42 days after being served the statement of claim,
+serve —
+31
+(i) the defence or counterclaim, as the case may be; and
+(ii) particulars of its objections to the validity of the
+patent.
+(3) The particulars of objections must —
+( a ) state every ground on which the validity of the patent is put
+in issue; and
+( b ) include particulars that clearly define every issue that is
+intended to be raised.
+(4) If the grounds stated in the particulars of objections include
+want of novelty or want of any inventive step, the particulars must —
+( a ) state the manner, time and place of every prior publication
+or user relied upon; and
+( b ) if prior user is alleged —
+(i) specify the name of every person alleged to be a prior
+user;
+(ii) state whether the prior use is alleged to have
+continued until the priority date of the claim in
+question or of the invention, as may be appropriate,
+and, if not, the earliest and latest date on which the
+prior use is alleged to have taken place;
+(iii) contain a description accompanied by drawings, if
+necessary, sufficient to identify the prior use; and
+(iv) if the prior use relates to machinery or apparatus,
+state whether the machinery or apparatus is in
+existence and where the machinery or apparatus
+can be inspected.
+(5) If in the case of an existing patent —
+( a ) one of the grounds stated in the particulars of objections is
+that the invention, so far as claimed in any claim of the
+complete specification, is not useful; and
+32
+( b ) it is intended, in connection with that ground, to rely on the
+fact that an example of the invention that is the subject of
+any such claim cannot be made to work, either at all or as
+described in the specification,
+the particulars must —
+( c ) state that fact and identify each such claim; and
+( d ) include particulars of each such example, specifying the
+respects in which it is alleged that the invention does not
+work or does not work as described.
+(6) If the validity of a patent is put in issue on the ground of
+obviousness, a party that wishes to rely on the commercial success of
+the patent must state in that party ’ s pleadings the grounds upon which
+that party so relies.
+(7) Except with the permission of the Court, no evidence may be
+given of any objection to the validity of a patent raised in an
+originating claim, if —
+( a ) the objection was not raised in the particulars of objections;
+or
+( b ) the evidence is not in accordance with a statement in the
+particulars of objections.
+(8) If any machinery or apparatus alleged to have been used before
+the priority date mentioned in paragraph (4)( b )(ii) exists at the date of
+service of the particulars of objections, no evidence of its user before
+that date may be given.
+(9) Paragraph (8) does not apply if it is proved that the party relying
+on the user —
+( a ) being in possession of the machinery or apparatus, offered
+inspection of the machinery or apparatus to the other
+parties to the proceedings; or
+( b ) not being in possession of the machinery or apparatus, used
+all reasonable endeavours to obtain inspection of the
+machinery or apparatus for those parties.
+33
+Particulars of objections to validity of patent in originating
+application
+36. — (1) On the hearing of an originating application in which there
+are or may be objections to the validity of a patent, the Court must
+give directions relating to —
+( a ) the service of the relevant particulars of any objections to
+the validity of the patent; and
+( b ) the manner in which the evidence must be given.
+(2) In paragraph (1), “ relevant particulars ” —
+( a ) means the particulars mentioned in rule 35(3), (4) and (5)
+(as applicable); and
+( b ) includes, where the validity of a patent is put in issue on the
+ground of obviousness and a party wishes to rely on the
+commercial success of the patent, the grounds upon which
+that party so relies.
+Production of documents
+37. — (1) In any proceedings where the validity of a patent is put in
+issue, the application of Order 11 of the Rules of Court is subject to
+the modifications in this rule.
+(2) A document falling within any of the following classes (called
+in this rule exempt documents) must not be listed:
+( a ) a document relating to any ground on which the validity of
+a patent is put in issue, but not a document that came into
+existence within the period beginning 2 years before the
+earliest claimed priority date and ending 2 years after that
+date;
+( b ) a document relating to the issue of commercial success.
+(3) If the issue of commercial success arises, the proprietor of the
+patent must serve a schedule containing the following details:
+( a ) where the commercial success relates to an article or a
+product —
+34
+(i) an identification of the article or product (for
+example,
+by
+product
+code
+number)
+that
+the
+proprietor asserts has been made in accordance
+with the claims of the patent;
+(ii) a summary by convenient periods of sales of any
+such article or product;
+(iii) a summary for the equivalent periods of sales (if any)
+of any equivalent prior article or product marketed
+before
+the
+article
+or
+product
+mentioned
+in
+sub-paragraph (i); and
+(iv) a summary by convenient periods of any expenditure
+on advertising and promotion which supported the
+marketing of the articles or products mentioned in
+sub-paragraphs (i) and (iii);
+( b ) where the commercial success relates to the use of a
+process —
+(i) an identification of the process which the proprietor
+asserts has been used in accordance with the claims
+of the patent;
+(ii) a summary by convenient periods of the revenues
+received from the use of such process;
+(iii) a summary for the equivalent periods of the revenues
+(if any) received from the use of any equivalent prior
+art process; and
+(iv) a summary by convenient periods of any expenditure
+which supported the use of the process mentioned in
+sub-paragraphs (i) and (iii).
+(4) Despite paragraph (2), any party may apply under Order 11 of
+the Rules of Court for further and better production or specific
+production of any exempt document.
+(5) To avoid doubt, paragraph (2) does not create any privilege in an
+exempt document.
+(6) If, despite paragraphs (1) and (2), a party ( X ) produces an
+exempt document for inspection —
+35
+( a ) any other party ( Y ) may request X in writing to provide a
+supplementary list of all other documents within the same
+class as the exempt document; and
+( b ) unless the Court orders otherwise, X must serve the
+supplementary list on Y within 14 days after the request.
+(7) This rule does not affect the Court ’ s power to limit production
+on any other ground.
+Registrar to be notified
+38. If a party to any proceedings under the Act puts in issue the
+validity of a patent, the party must notify the Registrar within 7 days
+after filing the pleadings or the affidavit that put the validity of the
+patent in issue.
+Division 4 — Appeals from Registrar to Court
+Application
+39. This Division applies for the purposes of an appeal to the Court
+from a decision of the Registrar in any case in which the Act gives a
+right of appeal.
+Provisions relating to appellant
+40. — (1) An appeal must be brought by originating application
+(called in this Part a notice of appeal).
+(2) A notice of appeal —
+( a ) must be filed with the Court —
+(i) if the Registrar ’ s decision is on a matter of
+procedure, within 28 days after the Registrar ’ s
+decision; and
+(ii) in any other case, within 6 weeks after the Registrar ’ s
+decision;
+( b ) may be given in respect of the whole or any specific part of
+the decision of the Registrar; and
+36
+( c ) must specify the grounds of the appeal and the relief which
+the appellant seeks.
+(3) For the purposes of paragraph (2)( a ) —
+( a ) the Registrar may decide whether a decision is on a matter
+of procedure; and
+( b ) a decision under sub-paragraph ( a ) is a decision on a matter
+of procedure.
+(4) An appellant must, within 7 days after filing the notice of
+appeal, serve a copy of the notice of appeal on —
+( a ) the Registrar; and
+( b ) every other party to the proceedings before the Registrar.
+(5) An appellant must, within 14 days after filing the notice of
+appeal, file a bundle consisting of a copy each of the following
+documents (as applicable):
+( a ) the particulars of the patent that is the subject of the appeal;
+( b ) the application or reference to the Registrar that is the
+subject of the decision of the Registrar being appealed
+against, and the statement of grounds accompanying the
+application or reference;
+( c ) the notice of opposition;
+( d ) the counter-statement;
+( e ) every statutory declaration (including any exhibits) filed
+with the Registrar;
+( f ) the written submissions;
+( g ) the grounds of decision of the Registrar.
+(6) Except with the permission of the Court, the appellant is not
+entitled on the hearing of the appeal to rely on any ground of appeal or
+to apply for any relief not specified in the notice of appeal.
+(7) Except with the permission of the Court, no appeal may be
+entertained unless the notice of appeal is given within the period
+specified in paragraph (2)( a ).
+37
+Provisions relating to respondent
+41. — (1) The respondent must give notice if the respondent intends
+to contend on the appeal that the Registrar ’ s decision should be —
+( a ) varied (whether in any event or in the event of the appeal
+being allowed in whole or in part); or
+( b ) affirmed on grounds other than those set out in the grounds
+of decision.
+(2) The respondent ’ s notice must specify —
+( a ) the grounds of the contention; and
+( b ) in the case of paragraph (1)( b ), the relief that the
+respondent seeks from the Court.
+(3) The respondent ’ s notice must be filed and served on the
+following persons within 14 days after the respondent receives the
+notice of appeal or any further time as the Court may direct:
+( a ) the Registrar;
+( b ) the appellant;
+( c ) every other party to the proceedings before the Registrar.
+Other provisions
+42. — (1) The Registrar must transmit to the Court any document
+requested by the Court relating to the matter that is the subject of the
+appeal.
+(2) The Court must give notice of the date appointed for the hearing
+of the appeal to —
+( a ) the Registrar;
+( b ) the appellant; and
+( c ) every other party to the proceedings before the Registrar.
+(3) At least 7 days ’ notice must be given under paragraph (2), but
+the Court may direct that a shorter period of notice be given.
+(4) An appeal is to be by way of rehearing.
+38
+(5) The evidence used on appeal must be the same as that used
+before the Registrar and, except with the permission of the Court, no
+further evidence may be given.
+Division 5 — Other proceedings under Act
+Determination of questions about entitlement to patents, etc.,
+before grant (section 20(7)) or right to patents after grant
+(section 47(8))
+43. — (1) This rule applies where the Registrar declines to deal with
+a question under section 20(7) or 47(8).
+(2) A person entitled to do so may apply to the Court to determine
+the question.
+(3) An application under paragraph (2) must be made —
+( a ) within one month after the Registrar ’ s decision; and
+( b ) by original application.
+Applications for rectification of register (section 44(1))
+44. An application to the Court under section 44(1) for an order that
+the register be rectified must be commenced by originating
+application, except where it is made by way of counterclaim in
+proceedings for infringement.
+Applications relating to certain contracts (section 52(3));
+references of disputes as to Government use (section 58)
+45. — (1) The following proceedings must be commenced by
+originating application:
+( a ) an application under section 52(3);
+( b ) proceedings for the determination of a dispute referred to
+the Court under section 58.
+(2) There must be at least 14 days between the service of an
+originating application under this rule and the hearing date.
+(3) On the hearing of an originating application under this rule, the
+Court must give directions for the further conduct of the proceedings
+39
+as the Court thinks necessary or expedient, including directions
+relating to —
+( a ) the service of particulars;
+( b ) the manner in which the evidence must be given; and
+( c ) the hearing date.
+Application for permission to amend specification (section 83)
+46. — (1) Where the proprietor of a patent intends to apply under
+section 83 for permission to amend the proprietor ’ s specification —
+( a ) the proprietor must give notice of the proprietor ’ s intention
+to
+the
+Registrar,
+together
+with
+a
+copy
+of
+an
+advertisement —
+(i) identifying the proceedings pending before the Court
+in which the proprietor intends to apply for such
+permission;
+(ii) giving particulars of the amendment sought;
+(iii) stating the applicant ’ s address for service within
+Singapore;
+(iv) stating that a Statement of Reasons is available from
+that address; and
+(v) stating that any person intending to oppose the
+amendment
+must,
+within
+28
+days
+after
+the
+advertisement appears in the journal, give to the
+applicant —
+(A) written notice of that person ’ s intention; and
+(B) a Statement of Opposition; and
+( b ) the Registrar must insert the advertisement once in the
+journal.
+(2) A person who gives notice in accordance with the advertisement
+is entitled to be heard on the application subject to any direction of the
+Court as to costs.
+40
+(3) The proprietor must, at the same time as giving notice to the
+Registrar, serve on all parties to the proceedings —
+( a ) a copy of the Statement of Reasons; and
+( b ) a copy of the patent as proposed to be amended.
+(4) The Statement of Reasons must contain —
+( a ) full particulars of the amendment sought;
+( b ) the reasons for the amendment;
+( c ) the reasons why the applicant contends that in the exercise
+of the discretion the amendment should be allowed; and
+( d ) in particular —
+(i) a statement whether the amendment is by way of
+deletion of claims or re-writing of claims;
+(ii) insofar as the amendment involves re-writing claims,
+details as to why the amendment is in accordance
+with the statutory requirements of an amendment;
+and
+(iii) insofar as the amendment is sought to distinguish
+over prior art, an indication of the prior art.
+(5) The Statement of Opposition must contain full particulars of all
+grounds of opposition to the application to amend.
+(6) The proprietor must —
+( a ) after the advertisement has appeared in the journal for
+42 days, make the application under section 83 —
+(i) as soon as may be; and
+(ii) by summons in the proceedings; and
+( b ) serve
+the
+summons,
+together
+with
+a copy
+of
+the
+specification certified by the Registrar and showing in
+coloured ink the amendment sought, on —
+(i) the Registrar;
+(ii) the parties to the proceedings; and
+41
+(iii) any person who has given notice of that person ’ s
+intention to oppose the amendment.
+(7) On the hearing of the summons, the Court must give directions
+for the further conduct of the summons as the Court thinks necessary
+or expedient, including directions relating to —
+( a ) whether the summons is to be heard with the other
+proceedings relating to the patent in question or separately
+and, if separately, fixing the date of hearing thereof;
+( b ) the manner in which the evidence is to be given;
+( c ) if the evidence is to be given by affidavit, the times within
+which the affidavits must be filed; and
+( d ) whether any production is necessary and, if so, the extent
+of production and the manner and time within which
+production is to be given.
+(8) Where the Court allows a specification to be amended —
+( a ) the applicant must —
+(i) forthwith file a copy of the Court ’ s order with the
+Registrar; and
+(ii) if required by the Court or the Registrar, leave at the
+Registry a new specification and drawings as
+amended, prepared in compliance with the Act; and
+( b ) the Registrar must cause a copy of the Court ’ s order to be
+inserted at least once in the journal.
+Division 6 — Miscellaneous
+Proprietor may be served at address in register
+47. — (1) Subject to this rule, for the purposes of any proceedings
+under the Act —
+( a ) a document (including an originating process) may be
+served on the proprietor of a patent by serving the
+document in the manner prescribed by Order 7 of the
+Rules of Court at the address for service given in the
+register; but
+42
+( b ) if any provision of the Rules of Court requires a response to
+a document served under sub-paragraph ( a ) within a
+specified time limit (whether by filing and serving a notice
+of intention to contest or not contest or otherwise), that
+time limit is extended by 7 days.
+(2) Paragraph (1)( a ) ceases to apply when the proprietor has
+provided an address for service within the meaning of Order 4, Rule 8
+of the Rules of Court.
+(3) This rule does not prevent the proprietor from being served in
+accordance with the Rules of Court.
+Registrar to be notified of proceedings, etc., and may take part
+48. — (1) In any proceedings under the Act —
+( a ) the party that commenced the proceedings must —
+(i) serve the originating process on the Registrar within
+7 days after the originating process is issued;
+(ii) if the proceedings are entirely discontinued or
+withdrawn, notify the Registrar within 7 days after
+the discontinuance or withdrawal takes effect; and
+(iii) notify the Registrar of the judgment of the Court
+within 7 days after the judgment is given;
+( b ) a defendant that entirely discontinues or withdraws its
+defence or counterclaim must notify the Registrar within
+7 days after the discontinuance or withdrawal takes effect;
+and
+( c ) a party that files a notice of appeal against the judgment of
+the Court must —
+(i) notify the Registrar within 7 days after the notice of
+appeal is filed;
+(ii) if the appeal is withdrawn, notify the Registrar
+within 7 days after the withdrawal takes effect; and
+(iii) notify the Registrar of the judgment of the appellate
+court within 7 days after the judgment is given.
+43
+(2) Notice under paragraph (1) must be given in writing.
+(3) The Registrar —
+( a ) may take part in any proceedings under the Act to the
+extent permitted by the Court; but
+( b ) need not serve a defence or other pleading unless ordered
+to do so by the Court.
+Admissions of fact
+49. — (1) Where a party ( X ) desires another party ( Y ) to admit any
+facts for the purposes of a proceeding under the Act, X must —
+( a ) serve on Y a notice specifying those facts and requiring Y to
+admit them; and
+( b ) do so within 21 days after —
+(i) the service of a defence or a reply; or
+(ii) the expiration of the period fixed for serving a
+defence or reply.
+(2) Within 21 days after being served the notice in paragraph (1),
+Y must serve on X a notice stating in respect of each fact specified in
+the notice whether or not Y admits it.
+Establishing facts by experiments
+50. — (1) This rule applies where a party ( X ) desires to establish any
+fact by experimental proof.
+(2) X must, within 21 days after service of the list of documents
+under Order 11, Rule 2 of the Rules of Court, serve on every other
+party a notice —
+( a ) stating the facts that X desires to establish by experimental
+proof; and
+( b ) giving full particulars of the experiments proposed to
+establish those facts.
+(3) A party ( Y ) upon whom a notice under paragraph (2) is served
+must, within 21 days after service of the notice, serve upon X a notice
+stating in respect of each fact whether or not Y admits it.
+44
+(4) Where any fact that X desires to establish by experimental proof
+is not admitted, X may seek directions at a case conference about the
+experiments.
+PART 5
+REGISTERED DESIGNS ACT 2000
+Division 1 — Preliminary
+Definitions of this Part
+51. — (1) In this Part, “ Act ” means the Registered Designs
+Act 2000, and a reference to a section is a reference to a section of
+the Act.
+(2) In this Part, the following words and expressions have the
+meanings given by section 2(1):
+( a ) “ design ” ;
+( b ) “ Register ” ;
+( c ) “ registered design ” ;
+( d ) “ registered owner ” ;
+( e ) “ Registrar ” .
+Application of Rules of Court
+52. Subject to these Rules, the Rules of Court apply to any
+proceedings under the Act.
+Division 2 — Action for infringement of registered design
+(sections 36, 37 and 38)
+Mode of commencement
+53. An action for an infringement of a registered design must be
+commenced by originating claim.
+Defendant may dispute validity of registration, etc.
+54. — (1) The defendant in an action for an infringement of a
+registered design may do all or any of the following in its pleadings:
+45
+( a ) dispute the validity of the registration of the design;
+( b ) counterclaim for the registration of the design to be
+revoked;
+( c ) counterclaim for the register to be rectified.
+(2) If the defendant does anything mentioned in paragraph (1), the
+defendant must —
+( a ) serve, with the defendant ’ s pleadings, particulars of the
+defendant ’ s objections to the validity of the registration;
+and
+( b ) serve the pleadings and particulars on the Registrar within
+7 days after filing them.
+Division 3 — Applications and references under Act
+Mode of commencement
+55. The following proceedings must be commenced by originating
+application:
+( a ) an application to the Court under the Act;
+( b ) a reference to the Court under the Act.
+References by Registrar to Court — application to be made
+after reference
+56. — (1) Where the Registrar refers to the Court an application
+made to the Registrar under the Act —
+( a ) the applicant must make the same application to the Court
+within the period mentioned in paragraph (2); and
+( b ) if the applicant fails to do so, the applicant is treated as
+having abandoned the application.
+(2) For the purposes of paragraph (1) —
+( a ) the period is one month after the applicant is notified of the
+Registrar ’ s decision to refer; but
+46
+( b ) the period may be extended by the Registrar on the
+application of any interested party (which application may
+be made before or after the expiration of that month).
+(3) Paragraph (2) does not affect the power of the Court to extend
+time under Order 3, Rule 4 of the Rules of Court.
+Division 4 — Appeals from Registrar to Court
+Application
+57. This Division applies for the purposes of an appeal to the Court
+from a decision of the Registrar in any case where the Act gives a
+right of appeal.
+Provisions relating to appellant
+58. — (1) An appeal must be brought by originating application
+(called in this Part a notice of appeal).
+(2) A notice of appeal —
+( a ) must be filed with the Court within 28 days after the
+decision of the Registrar;
+( b ) may be given in respect of the whole or any specific part of
+the decision of the Registrar; and
+( c ) must specify the grounds of the appeal and the relief which
+the appellant seeks.
+(3) An appellant must, within 7 days after filing the notice of
+appeal, serve a copy of the notice of appeal on —
+( a ) the Registrar; and
+( b ) every other party to the proceedings before the Registrar.
+(4) An appellant must, within 14 days after filing the notice of
+appeal, file a bundle consisting of a copy each of the following
+documents (as applicable):
+( a ) a representation of the registered design in issue;
+( b ) the details of the registration of that design;
+47
+( c ) the application for the revocation of the registration of that
+design and the statement of grounds accompanying the
+application;
+( d ) the counter-statement;
+( e ) every statutory declaration (including any exhibits) filed
+with the Registrar;
+( f ) the written submissions;
+( g ) the grounds of decision of the Registrar.
+(5) Except with the permission of the Court, the appellant is not
+entitled on the hearing of the appeal to rely on any ground of appeal or
+to apply for any relief not specified in the notice of appeal.
+(6) Except with the permission of the Court, no appeal may be
+entertained unless the notice of appeal is given within the period
+specified in paragraph (2)( a ).
+Provisions relating to respondent
+59. — (1) The respondent must give notice if the respondent intends
+to contend on the appeal that the Registrar ’ s decision should be —
+( a ) varied (whether in any event or in the event of the appeal
+being allowed in whole or in part); or
+( b ) affirmed on grounds other than those set out in the grounds
+of decision.
+(2) The respondent ’ s notice must specify —
+( a ) the grounds of the contention; and
+( b ) in the case of paragraph (1)( b ), the relief that the
+respondent seeks from the Court.
+(3) The respondent ’ s notice must be filed and served on the
+following persons within 14 days after the respondent receives the
+notice of appeal or any further time as the Court may direct:
+( a ) the Registrar;
+( b ) the appellant;
+( c ) every other party to the proceedings before the Registrar.
+48
+Other provisions
+60. — (1) The Registrar must transmit to the Court any document
+requested by the Court relating to the matter that is the subject of the
+appeal.
+(2) The Court must give notice of the date appointed for the hearing
+of the appeal to —
+( a ) the Registrar;
+( b ) the appellant; and
+( c ) every other party to the proceedings before the Registrar.
+(3) At least 7 days ’ notice must be given under paragraph (2), but
+the Court may direct that a shorter period of notice be given.
+(4) An appeal is to be by way of rehearing.
+(5) The evidence used on appeal must be the same as that used
+before the Registrar and, except with the permission of the Court, no
+further evidence may be given.
+Division 5 — Miscellaneous
+Registered owner may be served at address in register
+61. — (1) Subject to this rule, for the purposes of any proceedings
+under the Act —
+( a ) a document (including an originating process) may be
+served on the registered owner of a registered design by
+serving the document in the manner prescribed by Order 7
+of the Rules of Court at the address for service given in the
+Register; but
+( b ) if any provision of the Rules of Court requires a response to
+a document served under sub-paragraph ( a ) within a
+specified time limit (whether by filing and serving a notice
+of intention to contest or not contest or otherwise), that
+time limit is extended by 7 days.
+(2) Paragraph (1)( a ) ceases to apply when the registered owner has
+provided an address for service within the meaning of Order 4, Rule 8
+of the Rules of Court.
+49
+(3) This rule does not prevent the registered owner from being
+served in accordance with the Rules of Court.
+Registrar to be notified of proceedings, etc., and may take part
+62. — (1) In any proceedings under the Act —
+( a ) the party that commenced the proceedings must —
+(i) serve the originating process on the Registrar within
+7 days after the originating process is issued;
+(ii) if the proceedings are entirely discontinued or
+withdrawn, notify the Registrar within 7 days after
+the discontinuance or withdrawal takes effect; and
+(iii) notify the Registrar of the judgment of the Court
+within 7 days after the judgment is given;
+( b ) a defendant that entirely discontinues or withdraws its
+defence or counterclaim must notify the Registrar within
+7 days after the discontinuance or withdrawal takes effect;
+and
+( c ) a party that files a notice of appeal against the judgment of
+the Court must —
+(i) notify the Registrar within 7 days after the notice of
+appeal is filed;
+(ii) if the appeal is withdrawn, notify the Registrar
+within 7 days after the withdrawal takes effect; and
+(iii) notify the Registrar of the judgment of the appellate
+court within 7 days after the judgment is given.
+(2) Notice under paragraph (1) must be given in writing.
+(3) The Registrar —
+( a ) may take part in any proceedings under the Act to the
+extent permitted by the Court; but
+( b ) need not serve a defence or other pleading unless ordered
+to do so by the Court.
+50
+PART 6
+TRADE MARKS ACT 1998
+Division 1 — Preliminary
+Definitions of this Part
+63. — (1) In this Part —
+“ Act ” means the Trade Marks Act 1998, and a reference to a
+section is a reference to a section of the Act;
+“ registered trade mark ” means a trade mark registered under the
+Act, and includes a trade mark that the Act provides is a
+registered trade mark for the purposes of the Act.
+(2) In this Part, the following words have the meaning given by
+section 2(1):
+( a ) “ proprietor ” ;
+( b ) “ register ” ;
+( c ) “ Registrar ” .
+Application of Rules of Court
+64. Subject to these Rules, the Rules of Court apply to any
+proceedings under the Act.
+Division 2 — Action for infringement of
+trade mark (section 31)
+Mode of commencement
+65. An action for an infringement of a registered trade mark must be
+commenced by originating claim.
+Provisions relating to defendant
+66. — (1) The defendant in an action for an infringement of a
+registered trade mark may do all or any of the following:
+( a ) dispute the validity of the registration of the trade mark;
+( b ) counterclaim for the revocation of the registration;
+51
+( c ) counterclaim for a declaration that the registration was
+invalid;
+( d ) counterclaim for the rectification of the register.
+(2) If the defendant does anything mentioned in paragraph (1), the
+defendant must —
+( a ) serve, with the pleading, particulars of the objection to the
+validity of the registration on which the party relies; and
+( b ) serve the pleadings and the particulars mentioned in
+sub-paragraph ( a ) on the Registrar within 7 days after
+filing those pleadings and particulars.
+Division 3 — Applications and references under Act
+Applications to Court
+67. Subject to rule 66(1), every application to the Court under the
+Act must be commenced by originating application.
+References by Registrar to Court — application to be made
+after reference
+68. — (1) Where the Registrar refers to the Court an application
+made to the Registrar under the Act —
+( a ) the applicant must make the same application to the Court
+within the period mentioned in paragraph (2); and
+( b ) if the applicant fails to do so, the applicant is treated as
+having abandoned the application.
+(2) For the purposes of paragraph (1) —
+( a ) the period is one month after the applicant is notified of the
+Registrar ’ s decision to refer; but
+( b ) the period may be extended by the Registrar on the
+application of any interested party (which application may
+be made before or after the expiration of that month).
+(3) Paragraph (2) does not affect the power of the Court to extend
+time under Order 3, Rule 4 of the Rules of Court.
+52
+Division 4 — Appeals from Registrar to Court
+Application of this Division
+69. This Division applies for the purposes of an appeal to the Court
+from a decision of the Registrar in any case in which the Act gives a
+right of appeal.
+Provisions relating to appellant
+70. — (1) An appeal must be brought by originating application
+(called in this Part a notice of appeal).
+(2) A notice of appeal —
+( a ) must be filed with the Court within 28 days after the
+decision of the Registrar;
+( b ) may be given in respect of the whole or any specific part of
+the decision of the Registrar; and
+( c ) must specify the grounds of the appeal and the relief which
+the appellant seeks.
+(3) An appellant must, within 7 days after filing the notice of
+appeal, serve a copy of the notice of appeal on —
+( a ) the Registrar; and
+( b ) every other party to the proceedings before the Registrar.
+(4) An appellant must, within 14 days after filing the notice of
+appeal, file a bundle consisting of a copy each of the following
+documents (as applicable):
+( a ) a representation of the trade mark that is the subject of the
+appeal;
+( b ) the notice of opposition;
+( c ) the application for alteration, revocation or rectification of
+the trade mark or for a declaration that the trade mark is
+invalid;
+( d ) the counter-statement;
+( e ) every statutory declaration (including any exhibits) filed
+with the Registrar;
+53
+( f ) the written submissions;
+( g ) the grounds of decision of the Registrar.
+(5) Except with the permission of the Court, the appellant is not
+entitled on the hearing of the appeal to rely on any ground of appeal or
+to apply for any relief not specified in the notice of appeal.
+(6) Except with the permission of the Court, no appeal may be
+entertained unless the notice of appeal is given within the period
+specified in paragraph (2)( a ).
+Provisions relating to respondent
+71. — (1) The respondent must give notice if the respondent intends
+to contend on the appeal that the Registrar ’ s decision should be —
+( a ) varied (whether in any event or in the event of the appeal
+being allowed in whole or in part); or
+( b ) affirmed on grounds other than those set out in the grounds
+of decision.
+(2) The respondent ’ s notice must specify —
+( a ) the grounds of the contention; and
+( b ) in the case of paragraph (1)( b ), the relief that the
+respondent seeks from the Court.
+(3) The respondent ’ s notice must be filed and served on the
+following persons within 14 days after the respondent receives the
+notice of appeal or any further time as the Court may direct:
+( a ) the Registrar;
+( b ) the appellant;
+( c ) every other party to the proceedings before the Registrar.
+Other provisions
+72. — (1) The Registrar must transmit to the Court any document
+requested by the Court relating to the matter that is the subject of the
+appeal.
+54
+(2) The Court must give notice of the date appointed for the hearing
+of the appeal to —
+( a ) the Registrar;
+( b ) the appellant; and
+( c ) every other party to the proceedings before the Registrar.
+(3) At least 7 days ’ notice must be given under paragraph (2), but
+the Court may direct that a shorter period of notice be given.
+(4) An appeal is to be by way of rehearing.
+(5) The evidence used on appeal must be the same as that used
+before the Registrar and, except with the permission of the Court, no
+further evidence may be given.
+Division 5 — Miscellaneous
+Proprietor may be served at address in register
+73. — (1) Subject to this rule, for the purposes of any proceedings
+under the Act —
+( a ) a document (including an originating process) may be
+served on the proprietor of a registered trade mark by
+serving the document in the manner prescribed by Order 7
+of the Rules of Court at the address for service given in the
+register; but
+( b ) if any provision of the Rules of Court requires a response to
+a document served under sub-paragraph ( a ) within a
+specified time limit (whether by filing and serving a notice
+of intention to contest or not contest or otherwise), that
+time limit is extended by 7 days.
+(2) Paragraph (1)( a ) ceases to apply when the proprietor has
+provided an address for service within the meaning of Order 4, Rule 8
+of the Rules of Court.
+(3) This rule does not prevent the proprietor from being served in
+accordance with the Rules of Court.
+55
+Registrar to be notified of proceedings, etc., and may take part
+74. — (1) In any proceedings under the Act —
+( a ) the party that commenced the proceedings must —
+(i) serve the originating process on the Registrar within
+7 days after the originating process is issued;
+(ii) if the proceedings are entirely discontinued or
+withdrawn, notify the Registrar within 7 days after
+the discontinuance or withdrawal takes effect; and
+(iii) notify the Registrar of the judgment of the Court
+within 7 days after the judgment is given;
+( b ) a defendant that entirely discontinues or withdraws its
+defence or counterclaim must notify the Registrar within
+7 days after the discontinuance or withdrawal takes effect;
+and
+( c ) a party that files a notice of appeal against the judgment of
+the Court must —
+(i) notify the Registrar within 7 days after the notice of
+appeal is filed;
+(ii) if the appeal is withdrawn, notify the Registrar
+within 7 days after the withdrawal takes effect; and
+(iii) notify the Registrar of the judgment of the appellate
+court within 7 days after the judgment is given.
+(2) Notice under paragraph (1) must be given in writing.
+(3) The Registrar —
+( a ) may take part in any proceedings under the Act to the
+extent permitted by the Court; but
+( b ) need not serve a defence or other pleading unless ordered
+to do so by the Court.
+Consequential amendments to other Rules
+75. — (1) Orders 69 and 70 of the Rules of Court are deleted.
+56
+(2) The Supreme Court of Judicature (Geographical Indications)
+Rules 2019 (G.N. No. S 706/2019) are revoked.
+Made on 9 March 2022.
+SUNDARESH MENON
+Chief Justice.
+LUCIEN WONG
+Attorney-General.
+TAY YONG KWANG
+Justice of the Court of Appeal.
+STEVEN CHONG
+Justice of the Court of Appeal.
+BELINDA ANG SAW EAN
+Judge of the Appellate Division.
+QUENTIN LOH
+Judge of the Appellate Division.
+57
+VINODH COOMARASWAMY
+Judge.
+VINCENT HOONG SENG LEI
+Presiding Judge of the State Courts.
+CHRISTOPHERTAN PHENG WEE
+District Judge and Registrar of the
+State Courts.
+SIRAJ OMAR, SC
+Advocate and Solicitor.
+CHAN TAI-HUI JASON, SC
+Advocate and Solicitor.
+[SUPCT.RJW.009.0000; AG/LEGIS/SL/322/2020/3 Vol. 1]
+(To be presented to Parliament under section 80(6) of the Supreme
+Court of Judicature Act 1969).
+58

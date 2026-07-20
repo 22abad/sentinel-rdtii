@@ -1,0 +1,2061 @@
+1 
+INFO-COMMUNICATIONS DEVELOPMENT AUTHORITY 
+OF SINGAPORE 
+TELECOMMUNICATIONS ACT 
+(CHAPTER 323) 
+ADVISORY GUIDELINES GOVERNING CONSOLIDATION REVIEW AND TENDER 
+OFFER PROCESS 
+UNDER SECTION 10 OF THE CODE OF PRACTICE FOR COMPETITION 
+IN THE PROVISION OF TELECOMMUNICATION SERVICES 2012 
+DATE OF ISSUE: 9 April 2012 
+PART I – INTRODUCTION 
+1.  
+INTRODUCTION 
+1.1  
+Definitions 
+1.2  
+Legal Effect of These Guidelines 
+1.3  
+Right to Approve, Deny, or Condition Consolidation Applications Based on Non-
+competition-related Factors 
+1.4  
+Modification of These Guidelines 
+1.5  
+Effective Date of These Guidelines 
+1.6  
+Short Title 
+PART II – GENERAL APPLICATION  
+2.  
+CLARIFICATION OF EFFECTIVE CONTROL, ACQUIRING PARTY AND 
+ASSOCIATES 
+2.1  
+Presumption of Effective Control 
+2.2  
+Duty to Seek IDA’s Approval for Consolidations 
+PART III – CONSOLIDATION  
+3.  
+CONSOLIDATION APPLICATION 
+3.1  
+Application for Approval of a Consolidation 
+3.2  
+Minimum Information Requirements 
+3.3  
+Consolidation Application Processing Fee 
+3.4  
+IDA’s Preliminary Review of Consolidation Application 
+3.5  
+Exemption from Submission Obligations 
+3.6  
+Duty to Update Pending Consolidation Application to Reflect Material Changes 
+3.7  
+Statement that Consolidation Agreement is Subject to IDA’s Approval 
+3.8  
+Informal Guidance Prior to Submitting Consolidation Application 
+2 
+4.  
+CONSOLIDATION REVIEW PRINCIPLES 
+4.1  
+Promotion and Preservation of Competition 
+4.2  
+Competitive Concerns Raised by Consolidations 
+4.3  
+Goal of Consolidation Review 
+4.4  
+Compliance with the Telecom Competition Code 2012 Regulatory Principles 
+5.  
+CONSOLIDATION REVIEW PERIOD 
+5.1  
+Consolidation Review Period Does Not Begin Until Receipt of Complete 
+Consolidation Application 
+5.2  
+Length of Consolidation Review Period 
+5.3  
+Suspension of Consolidation Review Period Due to Failure to Adequately 
+Respond to Supplemental Information Requests 
+6.  
+INFORMATION GATHERING 
+6.1  
+Requests for Supplemental Information from Applicants 
+6.2  
+Procedures for Obtaining Information from Other Parties 
+6.3  
+Co-operation with Foreign Government Authorities 
+6.4  
+Confidentiality 
+7.  
+ANALYTICAL FRAMEWORK 
+7.1  
+General Approach 
+7.2  
+Horizontal Consolidations 
+7.3  
+Non-horizontal Consolidations 
+7.4  
+Considerations Applicable to All Consolidations 
+8.  
+SPECIAL SITUATIONS 
+8.1  
+Consolidations with Entities that have Significant Market Power in Markets Not 
+Subject to IDA Regulation 
+9.  
+DISPOSITION OF CONSOLIDATION APPLICATIONS 
+9.1  
+Approval of the Consolidation Application 
+9.2  
+Denial of the Consolidation Application 
+9.3  
+Approval of the Consolidation Application Subject to Conditions 
+9.4  
+Notification by IDA 
+9.5  
+Notification by Applicants of Acceptance or Rejection of Conditions 
+9.6  
+Sanctions for Post-Consolidation Failure of an Applicant to Comply with 
+Conditions 
+10.  
+TRANSPARENCY 
+10.1  Public Notification at the Start of the Consolidation Review Period 
+10.2  IDA’s Solicitation of Public Comments 
+10.3  Publication of Decisions 
+11.  
+RECONSIDERATION OF OR APPEAL AGAINST IDA’S DECISION 
+3 
+PART IV – TENDER OFFER 
+12.  
+OBTAINING IDA’S WRITTEN APPROVAL FOR TENDER OFFER WHERE 
+THE TAKE-OVER CODE APPLIES 
+12.1  
+Rule 14 of the Take-over Code: Mandatory Offer 
+12.2  
+Rule 15 of the Take-over Code: Voluntary Offer 
+12.3  
+Rule 16 of the Take-over Code: Partial Offer 
+12.4  
+Rule 22 of the Take-over Code: Offer Timetable 
+13.  
+PROCEDURES FOR SEEKING IDA’S WRITTEN APPROVAL 
+13.1  
+Partial Offer of at least 12% but less than 30% 
+13.2  
+Voluntary Offer or Partial Offer which amounts to Consolidation 
+13.3  
+Mandatory Offer 
+13.4  
+Compliance with Take-over Code 
+ANNEXES 
+ANNEX 1: Long Form Consolidation Application 
+ANNEX 2: Short Form Consolidation Application 
+4 
+ADVISORY GUIDELINES GOVERNING CONSOLIDATION REVIEW AND TENDER 
+OFFER PROCESS 
+UNDER SECTION 10 OF THE CODE OF PRACTICE FOR COMPETITION 
+IN THE PROVISION OF TELECOMMUNICATION SERVICES 2012 
+9 April 2012 
+The Info-Communications Development Authority of Singapore (“IDA”), pursuant to 
+Section 28 of the Telecommunications Act (Cap. 323) (“Act”), hereby issues these 
+Advisory Guidelines Governing Consolidation Review and Tender Offer Process under 
+Section 10 of the Code of Practice for Competition in the Provision of 
+Telecommunication Services 2012 (“Code”). 
+PART I – INTRODUCTION 
+1.  
+INTRODUCTION 
+This Section defines terms used in these Guidelines, specifies the legal effect of these 
+Guidelines, reserves certain rights and provides the Effective Date and Short Title of 
+these Guidelines. 
+1.1  
+Definitions 
+Unless otherwise defined in these Guidelines, capitalised terms used in these 
+Guidelines have the same meaning as in the Code.  
+When used in these Guidelines, the following terms will have the meanings specified in 
+this Sub-section: 
+(a)  
+“Consolidation Agreement” means a valid, legal and binding agreement that, 
+save for approval by IDA and satisfaction of Conditions imposed by IDA, would 
+result in a Consolidation; 
+(b)  
+“Consolidation Review” means IDA’s review of a Consolidation Application to 
+assess the likely impact of the Consolidation on competition in the Singapore 
+telecommunication market; 
+(c)  
+“Consolidation Review Period” means the period, specified in Section 5 of these 
+Guidelines, during which IDA reviews a Consolidation Application;  
+(d)  
+“Consolidation Application Processing Fee” means the fee specified in 
+Subsection 3.3 of these Guidelines; 
+(e)  
+“Effective Date” means the date of issue of these Guidelines; 
+5 
+(f)  
+“Guidelines” or “Telecom Consolidation and Tender Offer Guidelines” means 
+these Advisory Guidelines Governing Consolidation Review and Tender Offer 
+Process; 
+(g)  
+“Horizontal Consolidation” means a Consolidation involving two or more entities 
+that are current competing providers of the same Services or Services that are 
+reasonable substitutes; 
+(h)  
+“Licence” means a licence issued by IDA pursuant to Section 5 of the Act; 
+(i)  
+“Licensee” means a Facilities-based Licensee or a Services-based Licensee that 
+IDA has declared to be a Designated Telecommunication Licensee pursuant to 
+Section 32A(2) of the Act; 
+(j)  
+“Long Form Consolidation Application” means the application form set out in 
+Annex 1 of these Guidelines; 
+(k)  
+“Minimum Information Requirements” means the requirements specified in Sub-
+sections 3.2.1 through 3.2.2.3 of these Guidelines; 
+(l)  
+“Non-horizontal Consolidation” means a Consolidation that involves two or more 
+entities that are not current competitors. This includes a Vertical Consolidation; 
+(m) 
+“Offer” refers to an offer made pursuant to Rules 14, 15 or 16 of the Take-over 
+Code; 
+(n)  
+“Post-Consolidation Entity” means the economic entity that will be created as a 
+result of a Consolidation; 
+(o)  
+“Short Form Consolidation Application” means the application form set out in 
+Annex 2 of these Guidelines; 
+(p) 
+“Take-over Code” means the Singapore Code on Take-overs and Mergers; 
+(q)  
+“Telecommunications” or “telecommunications” shall have the same meaning as 
+defined in the Act; and 
+(r)  
+“Vertical Consolidation” means a Consolidation that involves two or more entities 
+at different levels in the supply chain, such as a Facilities-based Licensee and a 
+reseller that sells that Licensee’s services. 
+1.2  
+Legal Effect of These Guidelines 
+The provisions contained in these Guidelines are advisory; they do not impose any 
+binding legal obligations on IDA or any private party. Rather, these Guidelines are 
+intended to clarify the procedures that IDA will generally use, and the standards that 
+6 
+IDA will generally apply in implementing the Consolidation Review and Tender Offer 
+provisions contained in Section 10 of the Code. In order to provide a single document 
+addressing all issues relevant to the Consolidation Review and Tender Offer process, 
+certain provisions of the Code have been summarised or repeated in these Guidelines. 
+In the case of any conflict between the Code and these Guidelines, the terms of the 
+Code will prevail. 
+1.3 
+Right to Approve, Deny or Condition Consolidation Applications Based 
+on Non-competition-related Factors 
+In assessing any Consolidation Application, IDA will seek to determine whether the 
+Consolidation 
+would 
+substantially 
+lessen 
+competition 
+in 
+the 
+Singapore 
+telecommunication market. However, IDA reserves the right to approve, deny or 
+condition its approval of a Consolidation where IDA concludes that such action is in the 
+public interest. 
+1.4  
+Modification of These Guidelines 
+IDA will periodically review these Guidelines and, based on experience and changing 
+market conditions, make any appropriate modifications. IDA will generally seek public 
+comments as part of the review process, and notify the public of any such modifications. 
+1.5  
+Effective Date of These Guidelines 
+These Guidelines will take effect on the date of issue of these Guidelines. 
+1.6 
+Short Title 
+These Guidelines may be referred to as the “Telecom Consolidation and Tender Offer 
+Guidelines”. 
+7 
+PART II – GENERAL APPLICATION  
+2.  
+CLARIFICATION OF EFFECTIVE CONTROL, ACQUIRING PARTY AND 
+ASSOCIATES
+This Section clarifies the concept of Effective Control set out in Sub-section 10.1.3(a) of 
+the Code, provides illustrations on when a “person” will be considered an Acquiring 
+Party for purposes of seeking IDA’s approval and explains the scope of IDA’s approval 
+in a situation involving Associates. 
+2.1  
+Presumption of Effective Control 
+Sub-section 10.1.3(a) of the Code provides that IDA will presume that any person who 
+holds 30% or more of the Voting Shares/Units/Equity Interest or is in a position to 
+control 30% or more of the Voting Power in an entity will be able to exercise effective 
+control over that entity. 
+For this purpose, Sub-section 10.1.3(c) further provides that: 
+“Where a person holds 30% or more of the Voting Shares/Units/Equity Interest or 
+is in a position to control 30% or more of the Voting Power in entity A, in the 
+situation where entity A is in the position to control X% of Voting Power in 
+another entity B, that person will be presumed to control that same X% of Voting 
+Power in entity B.  
+In addition, where a person holds 30% or more of the Voting Shares/Units/Equity 
+Interest or is in a position to control 30% or more of the Voting Power in entity A, 
+in the situation where IDA has presumed entity A to be able to exercise effective 
+control over another entity B, that person will be presumed to be able to exercise 
+effective control over B.” 
+The following examples illustrate the application of Sub-section 10.1.3(c): 
+Illustration 1: If entity A is in a position to control 12% of the Voting Shares/Voting Power 
+in a Licensee, and entity B holds 30% or more of the Voting Shares/Units/Equity Interest 
+or is in a position to control 30% of the Voting Power in entity A, IDA will presume that 
+entity B is in a position to control 12% of the Voting Power in the Licensee. 
+Illustration 2: If entity A is in a position to control 30% of the Voting Shares/Voting Power 
+in a Licensee, and entity B holds 30% or more of the Voting Shares/Units/Equity Interest 
+or is a position to control 30% of the Voting Power in entity A, IDA will presume that 
+entity B has Effective Control over the Licensee. 
+Illustration 3: Parent Company A has two wholly-owned subsidiaries – Company B and 
+Company C. Company B currently holds 10% Voting Shares in a Licensee, while 
+Company C holds another 10% Voting Shares in the same Licensee.  Due to Company 
+8 
+A’s effective control over Company B and Company C, IDA will presume that Company 
+A is in a position to control 20% of the Voting Power in the Licensee.  
+2.2 
+Duty to Seek IDA’s Approval for Consolidation 
+Sub-sections 10.3.1.1 and 10.4.1.1 of the Code impose an obligation on every Acquiring 
+Party, the Licensee and Trustee Manager/trustee (as the case may be) to seek IDA’s 
+approval for Consolidation.  
+The following illustrations explain when a “person” will be considered an Acquiring Party 
+and, therefore, have to seek IDA’s approval for Consolidation. In addition, these 
+illustrations also explain whom IDA’s approval (if granted) will cover, in a situation 
+involving Associates.  
+Illustration 1:  
+Parent Company A has 2 wholly-owned subsidiaries – Company B and Company C. 
+Company B currently holds 28% Voting Shares in a Licensee. Company C does not 
+hold any Voting Shares or Voting Power in the Licensee. Company A currently has 28% 
+Voting Power in the Licensee (due to Company B’s holding of 28% Voting Shares in the 
+Licensee).  
+Company C now acquires 2% Voting Shares in the Licensee. This results in Company A 
+acquiring an additional 2% Voting Power in the Licensee for a total of 30% Voting 
+Power. 
+As a result of this transaction: 
+-
+Company A has acquired additional 2% Voting Power in the Licensee, for a total 
+30% Voting Power; 
+-
+Company B has not acquired any additional Voting Power or Voting Shares in 
+the Licensee; and 
+-
+Company C has acquired 2% Voting Shares (and Voting Power) in the Licensee. 
+Company A and Company C would therefore be Acquiring Parties, and together with 
+the Licensee would be required to jointly file a Consolidation Application under Sub-
+section 10.3.6 of the Code. As Company B has not acquired any additional Voting 
+Power or Voting Shares in the Licensee, it is not an Acquiring Party and is not required 
+to be a party to the joint filing. 
+In the event IDA grants approval for the Consolidation Application, IDA’s approval will 
+apply to Company A, Company B and Company C, since Company A, Company B and 
+Company C are Associates who have each become a 30% Controller as a result of this 
+transaction. 
+9 
+Illustration 2:  
+Parent Company A has 2 wholly-owned subsidiaries – Company B and Company C. 
+Company B currently holds 28% Units in a Designated Business Trust. Company C 
+does not hold any Units or Voting Power in the Designated Business Trust. Company A 
+currently has 28% Voting Power in the Designated Business Trust (due to Company B’s 
+holding of 28% Units in the Designated Business Trust).  
+Company C now acquires 2% Units in the Designated Business Trust. This results in 
+Company A acquiring an additional 2% Voting Power in the Designated Business Trust 
+for a total of 30% Voting Power. 
+As a result of this transaction: 
+-
+Company A has acquired additional 2% Voting Power in the Designated 
+Business Trust, amounting to a total 30% Voting Power; 
+-
+Company B has not acquired any additional Voting Power or Units in the 
+Designated Business Trust; and 
+-
+Company C has acquired 2% Units (and Voting Power) in the Designated 
+Business Trust. 
+Company A and Company C would therefore be Acquiring Parties in this transaction, 
+and together with the Trustee-Manager of the Designated Business Trust and the 
+Licensee, would be required to jointly file a Consolidation Application under Sub-section 
+10.4.6 of the Code. As Company B has not acquired any additional Voting Power or 
+Voting Shares in the Licensee, it is not an Acquiring Party in this transaction and is not 
+required to be a party to the joint filing. 
+In the event IDA grants approval for the Consolidation Application, IDA’s approval will 
+apply to Company A, Company B and Company C, since Company A, Company B and 
+Company C are Associates who have each become a 30% Controller as a result of this 
+transaction. 
+Illustration 3: 
+Parent Company A has 2 wholly-owned subsidiaries – Company B and Company C. 
+Company B currently holds 28% Equity Interest in a Designated Trust. Company C 
+does not hold any Equity Interest or Voting Power in the Designated Trust. Company A 
+currently has 28% Voting Power in the Designated Trust (due to Company B’s holding 
+of 28% Equity Interest in the Designated Trust).  
+Company C now acquires 2% Equity Interest in the Designated Trust. This results in 
+Company A acquiring an additional 2% Voting Power in the Designated Trust 
+amounting to a total of 30% Voting Power. 
+10 
+As a result of this transaction: 
+-
+Company A has acquired additional 2% Voting Power in the Designated Trust, 
+amounting to a total 30% Voting Power; 
+-
+Company B has not acquired any additional Voting Power or Equity Interest in 
+the Designated Trust; and 
+-
+Company C has acquired 2% Equity Interest (and Voting Power) in the 
+Designated Trust. 
+Company A and Company C would therefore be Acquiring Parties in this transaction 
+and, together with the trustee of the Designated Trust and the Licensee, would be 
+required to jointly file a Consolidation Application under Sub-section 10.4.6 of the Code. 
+As Company B has not acquired any additional Voting Power or Voting Shares in the 
+Licensee, it is not an Acquiring Party in this transaction and is not required to be a party 
+to the joint filing. 
+In the event IDA grants approval for the Consolidation Application, IDA’s approval will 
+apply to Company A, Company B and Company C, since Company A, Company B and 
+Company C are Associates who have each become a 30% Controller as a result of this 
+transaction. 
+Illustration 4: 
+Parent Company A has 2 wholly-owned subsidiaries – Company B and Company C. 
+Company B currently holds 28% Voting Shares in a Licensee. Company C does not 
+hold any Voting Shares or Voting Power in the Licensee. Company A currently has 28% 
+Voting Power in the Licensee (due to Company B’s holding of 28% Voting Shares in the 
+Licensee).  
+Company A now acquires 2% Voting Shares in the Licensee. This results in Company A 
+acquiring an additional 2% Voting Power in the Licensee, amounting to a total of 30% 
+Voting Power. 
+As a result of this transaction: 
+-
+Company A has acquired additional 2% Voting Power in the Licensee, amounting 
+to a total 30% Voting Power; 
+-
+Company B has not acquired any additional Voting Shares or Voting Power in 
+the Licensee; and 
+-
+Company C has not acquired any Voting Shares or Voting Power in the 
+Licensee. 
+Company A would therefore be an Acquiring Party and, together with the Licensee, 
+would be required to jointly file a Consolidation Application under Sub-section 10.3.6 of 
+the Code. As both Company B and Company C have not acquired any additional Voting 
+Power or Voting Shares in the Licensee, they are not Acquiring Parties and are not 
+required to be parties to the joint filing. 
+11 
+In the event IDA grants approval for the Consolidation Application, IDA’s approval will 
+apply to Company A, Company B and Company C, since Company A, Company B and 
+Company C are Associates who have each become a 30% Controller as a result of this 
+transaction. 
+12 
+PART III – CONSOLIDATION  
+3.  
+CONSOLIDATION APPLICATION 
+This Section describes the application procedures that entities required to file a 
+Consolidation Application must follow. This Section also describes the procedure by 
+which an individual or entity that is considering entering into a Consolidation may ask 
+IDA to provide informal guidance prior to the time at which a Consolidation Application 
+must be submitted. 
+3.1  
+Application for Approval of a Consolidation 
+Any entity that has entered into a transaction that results in a Consolidation must submit 
+a Consolidation Application to IDA and obtain IDA’s written approval for the 
+Consolidation. 
+3.1.1  
+Parties that Must Submit a Consolidation Application and Separate 
+Filing of Information and Consolidation Application 
+The Consolidation Application must be submitted jointly by the Acquiring Party, the 
+Licensee and Trustee-Manager/trustee that is the subject of the Consolidation. 
+However, where any party to a joint Consolidation Application does not want to disclose 
+confidential, commercially sensitive or proprietary information to the other parties, the 
+Applicants may choose to provide this information separately. 
+In addition, in any case in which a Consolidation Application is submitted pursuant to 
+Sub-section 10.3.6 of the Code (in the case of a Licensee) or Sub-section 10.4.6 of the 
+Code (in the case of a Designated Business Trust or Designated Trust) and: 
+(a)  
+the Acquiring Party reasonably believes that the Licensee and/or Trustee-
+Manager/trustee is likely to be opposed to the Consolidation; 
+(b)  
+any party reasonably believes that the filing of a joint Consolidation Application 
+would be unreasonably burdensome or infeasible; or 
+(c)  
+any party can demonstrate that the other party or parties has or have refused to 
+cooperate with it to file a joint Consolidation Application,  
+that party may petition IDA for permission to file a separate Consolidation Application 
+and IDA will inform all parties of its decision. Where IDA grants permission, all parties 
+must file a separate Consolidation Application.  
+3.1.2  
+Transactions that Constitute a Consolidation 
+A Consolidation may, but need not, result in the dissolution of an existing legal entity, 
+the creation of a new legal entity or the assignment of the Licensee’s Licence to another 
+13 
+legal entity. Consolidations may occur as a result of a variety of transactions. For 
+example: 
+(a)  
+a party may seek to obtain Voting Shares/Units/Equity Interests or Voting Power 
+in a Licensee, Designated Business Trust or Designated Trust by entering into an 
+agreement with one of more of the Licensee’s shareholders, unitholders of the 
+Designated Business Trust or holders of equity interests in the Designated Trust; 
+(b)  
+a party may seek to obtain Voting Shares/Units/Equity Interests or Voting Power 
+in a Licensee, Designated Business Trust or Designated Trust by purchasing the 
+Licensee’s shares, units in the Designated Business Trust or equity interests in 
+the Designated Trust on the open market – either through individual transactions 
+or pursuant to a Tender Offer; 
+(c)  
+a party may seek to obtain an indirect interest in Voting Shares/Units/Equity 
+Interests or indirect Voting Power in a Licensee, Designated Business Trust or 
+Designated Trust through the purchase of shares, units or equity interests in a 
+parent company several steps up the ownership chain; 
+(d)  
+a party may engage in a transaction, such as an asset acquisition, that has the 
+same economic impact as a Consolidation achieved through the acquisition of 
+the Licensee’s Voting Shares, Units in the Designated Business Trust or Equity 
+Interests in the Designated Trust; or 
+(e)  
+a party may acquire Voting Shares/Units/Equity Interests or Voting Power in a 
+Licensee, Designated Business Trust or Designated Trust as a result of a 
+Licensee, Trustee-Manager or trustee engaging in a Share Buyback, Unit 
+Buyback or Equity Interest Buyback. 
+3.1.2.1  
+Transactions Involving Acquisition of Voting Shares/Units/Equity 
+Interests or Voting Power  
+The acquisition of Voting Shares/Units/Equity Interests or Voting Power in a Licensee, 
+Designated Business Trust or Designated Trust which results in the Acquiring Party 
+holding Voting Shares/Units/Equity Interests or Voting Power of 30% or more 
+constitutes a Consolidation. This presumption may be rebutted by evidence of the 
+degree of control that the Acquiring Party would be able to exercise. For example, if an 
+entity that seeks to acquire an Ownership Interest in a Licensee which results in that 
+entity holding an Ownership Interest of less than 30% has the right to appoint a majority 
+of the Licensee’s Board or to veto certain management and major operating decisions 
+of the Licensee, IDA may find that the proposed transaction will constitute a 
+Consolidation.  
+14 
+3.1.2.2  Transactions Involving the Obtaining of Effective Control over a 
+Licensee, Designated Business Trust or Designated Trust
+A transaction in which the Acquiring Party obtains the ability to exercise Effective 
+Control over a Licensee, Designated Business Trust or Designated Trust also 
+constitutes a Consolidation. For example, if an entity that seeks to acquire Voting 
+Shares/Units/Equity Interests or Voting Power in a Licensee, Designated Business Trust 
+or Designated Trust which results in that entity holding Voting Shares/Units/Equity 
+Interests or Voting Power of less than 30%, but having the right to appoint a majority of 
+the Board of the Licensee or Trustee-Manager/trustee or to veto certain management 
+and major operating decisions of the Licensee, Designated Business Trust or 
+Designated Trust, the proposed transaction will constitute a Consolidation.
+3.1.2.3  
+Transactions Involving the Acquisition of the Business of a Licensee, 
+Designated Business Trust or Designated Trust as a Going Concern 
+A transaction in which the Acquiring Party acquires the business of a Licensee, 
+Designated Business Trust or Designated Trust as a going concern also constitutes a 
+Consolidation, even if the Acquiring Party does not acquire the Voting Shares of the 
+Licensee, Units of the Designated Business Trust or Equity Interests of the Designated 
+Trust. IDA will find that an Acquiring Party has acquired the business of a Licensee, 
+Designated Business Trust or Designated Trust as a “going concern” where the 
+Acquiring Party: acquires all or substantially all of the assets of the Licensee, 
+Designated Business Trust or Designated Trust; and/or enters into an agreement 
+pursuant to which it acquires the right to provide service to, and receive compensation 
+from, the substantial majority of the Licensee’s End Users. 
+3.1.3  
+Situations in Which a Consolidation Application Need Not be Submitted 
+A Consolidation Application need not be submitted where the transaction does not 
+constitute a Consolidation. However, in such cases, the Licensee and Trustee-
+Manager/trustee may have to comply with other filing requirements. For example, if the 
+transaction constitutes an acquisition of Voting Shares/Units/Equity Interests or Voting 
+Power in a Licensee, Designated Business Trust or Designated Trust that results in the 
+Acquiring Party holding Voting Shares/Units/Equity Interests or Voting Power of at least 
+12%, the Licensee, Trustee-Manager/trustee and the Acquiring Party must comply with 
+the procedures, specified in Sub-sections 10.3.5 and 10.4.5 of the Code, and submit a 
+Request to obtain IDA’s prior approval. If the transaction involves a Licence 
+Assignment, the Licensee must comply with the provisions in its Licence to seek IDA’s 
+approval. 
+In such cases, when making any required filing, the Licensee and Trustee-
+Manager/trustee should include a clear statement indicating the basis on which it 
+believes that the proposed transaction would not constitute a Consolidation. IDA 
+reserves the right to require the Licensee and Trustee-Manager/trustee to submit a 
+Consolidation Application if IDA determines that the proposed transaction may 
+15 
+constitute a Consolidation. In such cases, the Consolidation Review Period will begin on 
+the day on which IDA receives a complete Consolidation Application.  
+3.1.3.1  Prescribed Transactions that Do Not Require Consolidation Approval 
+As provided for in the Telecommunications (Prescribed Transactions) Order 2012, the 
+following transactions as prescribed by the Minister in the Order do not require 
+Consolidation approval by IDA. However, the Licensee and Trustee-Manager/trustee 
+must notify IDA within 7 days after first becoming aware of any such transaction being 
+carried out. 
+An acquisition of Voting Shares/Units/Equity Interests or Voting Power in a Licensee, 
+Designated Business Trust or Designated Trust is a prescribed transaction under the 
+Order if:  
+(a)  
+it results in the transfer of Voting Shares in a Licensee – 
+(i) 
+from any person to a corporation, any shares in which are owned or any 
+Voting Power in which is controlled by that person, without any change in 
+the percentage of Voting Power in the Licensee controlled by that person; 
+or 
+(ii)  
+from a corporation to any shareholder of the corporation, without any 
+change in the percentage of Voting Power in the Licensee controlled by 
+that shareholder; or 
+(iii)  
+from a corporation to its wholly owned subsidiary, or to a corporation from 
+its wholly owned subsidiary, whether or not the subsidiary is a direct 
+subsidiary of the corporation; or 
+(iv)  
+from one corporation, any shares in which are owned or any Voting Power 
+in which is controlled by any person, to another corporation, any shares in 
+which are owned or any Voting Power in which is controlled by that 
+person, without any change in the percentage of Voting Power in the 
+Licensee controlled by that person; or 
+(b)  
+it does not change the percentage of the Voting Power in the Licensee controlled 
+by every person who controlled any Voting Power in the Licensee immediately 
+before the transaction; or 
+(c) 
+it results in the transfer of Units in a Designated Business Trust – 
+(i) 
+from any person to a corporation, any shares in which are owned or any 
+Voting Power in which is controlled by that person, without any change in 
+the percentage of Voting Power in the Designated Business Trust 
+controlled by that person; or 
+16 
+(ii)  
+from a corporation to any shareholder of the corporation, without any 
+change in the percentage of Voting Power in the Designated Business 
+Trust controlled by that shareholder; or 
+(iii)  
+from a corporation to its wholly owned subsidiary, or to a corporation from 
+its wholly owned subsidiary, whether or not the subsidiary is a direct 
+subsidiary of the corporation; or 
+(iv)  
+from one corporation, any shares in which are owned or any Voting Power 
+in which is controlled by any person, to another corporation, any shares in 
+which are owned or any Voting Power in which is controlled by that 
+person, without any change in the percentage of Voting Power in the 
+Designated Business Trust controlled by that person; or 
+(d)  
+it does not change the percentage of the Voting Power in the Designated 
+Business Trust controlled by every person who controlled any Voting Power in 
+the Designated Business Trust immediately before the transaction; or 
+(e)  
+it results in the transfer of Equity Interests in a Designated Trust – 
+(i) 
+from any person to a corporation, any shares in which are owned or any 
+Voting Power in which is controlled by that person, without any change in 
+the percentage of Voting Power in the Designated Trust controlled by that 
+person; or 
+(ii)  
+from a corporation to any shareholder of the corporation, without any 
+change in the percentage of Voting Power in the Designated Trust 
+controlled by that shareholder; or 
+(iii)  
+from a corporation to its wholly owned subsidiary, or to a corporation from 
+its wholly owned subsidiary, whether or not the subsidiary is a direct 
+subsidiary of the corporation; or 
+(iv)  
+from one corporation, any shares in which are owned or any Voting Power 
+in which is controlled by any person, to another corporation, any shares in 
+which are owned or any Voting Power in which is controlled by that 
+person, without any change in the percentage of Voting Power in the 
+Designated Trust controlled by that person; or 
+(f)  
+it does not change the percentage of the Voting Power in the Designated Trust 
+controlled by every person who controlled any Voting Power in the Designated 
+Trust immediately before the transaction. 
+The above transactions would be deemed to have constituted a pro forma change. 
+17 
+3.2  
+Minimum Information Requirements 
+Any Consolidation Application submitted to IDA must comply with the Minimum 
+Information Requirements specified in Sub-sections 3.2.1 to 3.2.2.3 of these Guidelines. 
+Applicants must follow the Long Form Consolidation Application procedure, unless they 
+are eligible to use the Short Form Consolidation Application procedure. Pursuant to 
+Sub-section 1.7(a) of the Code, Applicants may also request an exemption from any 
+requirements contained in these Sub-sections. 
+3.2.1  
+Long Form Consolidation Application Procedure 
+Applicants required to submit a Long Form Consolidation Application must provide the 
+information specified in Sub-sections 3.2.1.1 to 3.2.1.5 of these Guidelines. 
+3.2.1.1  
+Long Form Consolidation Application 
+Applicants must complete and submit the Long Form Consolidation Application in the 
+application form set out in Annex 1 of these Guidelines. 
+3.2.1.2  
+Consolidation Agreement and Ancillary Agreements 
+Applicants must submit: 
+(a)  
+a copy of the Consolidation Agreement, including any appendices, side letters 
+and supporting documents; and 
+(b)  
+copies of all agreements that, while not directly addressing the Consolidation, are 
+an integral part of the transaction (such as covenants not to compete or licensing 
+agreements) or that are necessary or useful for IDA to fully assess the likely 
+competitive impact of the Consolidation. 
+Provided, however, that in any case in which the Licensee, Designated Business Trust 
+or Designated Trust is not a party to the Consolidation Agreement or any other 
+agreement as specified in Sub-section 3.2.1.2(b) of these Guidelines, the Acquiring 
+Party shall provide these materials directly to IDA. 
+3.2.1.3  Description, Competitive Impact and Public Interest Statement 
+Applicants must submit a statement that provides a clear, accurate and comprehensive 
+description of the Consolidation, a good faith assessment of the likely impact of the 
+Consolidation on competition in the Singapore telecommunication market and a 
+discussion of why approval of the Consolidation would serve the public interest (the 
+“Statement”). The competitive assessment should generally include information 
+regarding: (a) the telecommunication markets in which the Applicants and their Affiliates 
+participate; (b) the market participants; (c) the estimated market shares of the 
+participants and the level of concentration in those markets; (d) the structure of the 
+18 
+market (and the extent to which it facilitates unilateral anticompetitive conduct or 
+concerted action by multiple participants); (e) the likelihood that output would be 
+increased (either by existing market participants or new entrants) in response to a 
+significant and non-transitory price increase; (f) the likelihood of End Users switching to 
+a competing service provider in response to a significant and non-transitory price 
+increase; and (g) any efficiency that would likely result from the Consolidation. 
+Applicants should make reasonable and diligent efforts to collect and provide the 
+necessary information. Applicants should assume that IDA will release this document to 
+the public. If the Statement contains proprietary or commercially sensitive information, 
+the Applicants should put such information in a separate appendix. Requests for 
+confidential treatment are further addressed in Sub-section 11.7 of the Code. 
+3.2.1.4  Supporting Documentation 
+Applicants should submit a copy of any supporting documents that would assist IDA in 
+assessing the likely competitive effect of the Consolidation. At the minimum, this must 
+include: (a) a copy of the Applicants’ current annual reports or audited financial 
+statements; (b) a copy of the Applicants’ business plans for the current and immediately 
+previous years; (c) a copy of the trust deed of the Designated Business Trust or 
+Designated Trust where relevant; (d) a copy of all reports, studies or analyses prepared 
+for the shareholders, Unitholders or holders of Equity Interests, beneficiaries of a trust, 
+directors, or executive officers of the Applicants assessing the proposed Consolidation 
+and describing the proposed operation of the Post-Consolidation Entity; and (d) a chart 
+indicating the relationship between each Applicant and its respective Associates and 
+Affiliates and their relevant Voting Shares/Units/Equity Interests or Voting Power. 
+Applicants should indicate any situation in which the Voting Shares/Units/Equity 
+Interests or Voting Power grants the holder thereof a special or preferential right, and 
+any pending changes in the ownership structure of any of the Applicants in addition to 
+the change that is the subject of their Consolidation Application. 
+3.2.1.5  Proposed Conditions to Address Competitive Concerns 
+Applicants must indicate whether they wish to propose any possible Conditions for 
+IDA’s consideration (such as partial divestiture or the imposition of behavioural 
+safeguards) that could reduce any potential adverse competitive impact of the 
+Consolidation. If Applicants choose to propose such Conditions, they should provide a 
+complete description of the proposed Conditions and an assessment of why such 
+Conditions would be adequate to address any competitive concerns that might arise 
+from the Consolidation.  
+3.2.2  
+Short Form Consolidation Application Procedure 
+Where a Consolidation meets any of the requirements set out in Sub-section 3.2.2.1 of 
+these Guidelines, the Applicants must follow the procedures for submitting the Short 
+Form Consolidation Application. IDA will generally grant approval for any Consolidation 
+Application that is eligible for such procedures without significant review. 
+19 
+3.2.2.1  
+Situations in Which a Short Form Consolidation Application May be 
+Submitted 
+Applicants required to submit a Consolidation Application may use the Short Form 
+Consolidation Application procedure if either: (a) the Consolidation is a Horizontal 
+Consolidation which will not result in the Post-Consolidation Entity having more than a 
+15% share in the telecommunication market in Singapore; or (b) the Consolidation is a 
+Non-horizontal Consolidation in which none of the Applicants has more than a 25% 
+share of any telecommunication market, whether in Singapore or elsewhere, in which it 
+participates. 
+3.2.2.2  
+Short Form Consolidation Application 
+Applicants using the Short Form Consolidation Application procedure must complete 
+and submit the Short Form Consolidation Application using the application form set out 
+in Annex 2 of these Guidelines. 
+3.2.2.3  
+Abbreviated Description, Competitive Impact and Public Interest 
+Statement 
+Applicants using the Short Form Consolidation Application procedure must submit an 
+abbreviated statement that accurately describes the Consolidation, a good faith 
+description of the basis on which the Applicants believe that the Consolidation does not 
+raise significant competitive issues, and a brief discussion of why approval of the 
+Consolidation would serve the public interest (the “Abbreviated Statement”). The 
+competitive assessment should generally include information regarding: (a) a chart 
+indicating the relationship between each Applicant and its respective Associates and 
+Affiliates and their relevant  Voting Shares/Units/Equity Interests or Voting Power; (b) a 
+copy of the trust deed of the Designated Business Trust or Designated Trust where 
+relevant; (c) the telecommunication markets in which the Applicants and their Affiliates 
+participate; (d) the market participants; and (e) the estimated market shares of the 
+participants and the level of concentration in those markets. Applicants should indicate 
+any situation in which the Voting Shares/Units/Equity Interests or Voting Power grants 
+the holder thereof a special or preferential right, and any pending changes in the 
+ownership structure of any of the Applicants in addition to the change that is the subject 
+of their Consolidation Application. Applicants should also include any additional relevant 
+information that demonstrates that the Consolidation would not be likely to substantially 
+lessen competition and would serve the public interest. Applicants should make 
+reasonable and diligent efforts to collect and provide the necessary information. 
+Applicants should assume that IDA will release the Abbreviated Statement to the public. 
+If the Abbreviated Statement contains proprietary or commercially sensitive information, 
+the Applicants should put such information in a separate appendix. Requests for 
+confidential treatment are further addressed in Sub-section 11.7 of the Code.  
+20 
+3.3  
+Consolidation Application Processing Fee 
+Each Long Form Consolidation Application must be accompanied by payment of a sum 
+of S$10,000. Each Short Form Consolidation Application must be accompanied by 
+payment of a sum of S$2,500. Applicants may make such payment to IDA by way of 
+money orders, postal orders, banker’s orders, Interbank GIRO, cheques or telegraphic 
+transfer. All bank charges associated with such payment shall be borne by the 
+Applicants.  
+3.4  
+IDA’s Preliminary Review of Consolidation Application 
+IDA will generally complete a preliminary review of the Consolidation Application within 
+5 working days of receiving the Consolidation Application. The sole purpose of the 
+preliminary review is to determine whether the Applicants have satisfied the Minimum 
+Information Requirements. 
+3.4.1  
+Acceptance of Complete Consolidation Application 
+If, at the conclusion of its preliminary review, IDA determines that the Consolidation 
+Application fully satisfies the Minimum Information Requirements, IDA will notify the 
+Applicants, in writing, that it has accepted the Consolidation Application for processing. 
+If IDA makes such a determination, the Consolidation Review Period will be deemed to 
+have begun on the day on which IDA received the Consolidation Application. This 
+determination does not preclude IDA from subsequently requesting the Applicants to 
+provide supplemental information. 
+3.4.2  
+Incomplete Consolidation Application Will Not be Processed 
+IDA will decline to process any Consolidation Application that does not satisfy the 
+Minimum Information Requirements. This includes any situation in which the Applicants 
+have improperly submitted a Short Form Consolidation Application when a Long Form 
+Consolidation Application should have been submitted. If IDA makes such a 
+determination, it will inform the Applicants as to the additional information that they must 
+submit. 
+3.5  
+Exemption from Submission Obligations 
+Any Applicant may request IDA to exempt it from any or all of the requirements 
+contained in Sub-sections 3.1 to 3.2.2.3 of these Guidelines. Such exemption will only 
+be granted if the Applicant makes a specific and compelling submission that: 
+compliance with the specific requirement or requirements (a) is not possible; (b) would 
+be unreasonably burdensome; or (c) is not necessary to ensure that a Consolidation 
+would not substantially lessen competition in the Singapore telecommunication market. 
+An exemption request should be submitted prior to the date on which the Applicants 
+submit the Consolidation Application. IDA will generally make publicly available relevant 
+21 
+information on any exemption granted, with an explanation of the justification for 
+granting the exemption. 
+3.6  
+Duty to Update Pending Consolidation Application to Reflect Material 
+Changes 
+During the period between the day on which the Applicants submit the Consolidation 
+Application and the day on which IDA issues its decision to approve or deny the 
+Consolidation Application, or approve the Consolidation Application subject to 
+Conditions, the Applicants must promptly inform IDA, in writing, of any new or different 
+fact or matter that is reasonably likely to have a material impact on IDA’s consideration 
+of the Consolidation Application. In the event that IDA determines that the Applicants’ 
+subsequent submission has substantially altered the terms of the Consolidation, IDA 
+may require the Applicants to withdraw the pending Consolidation Application and 
+submit a new Consolidation Application. Applicants will not be entitled to a refund of the 
+Consolidation Application Processing Fee and will be required to pay an additional 
+Consolidation Application Processing Fee at the time it submits the new Consolidation 
+Application. 
+3.7  
+Statement that Consolidation Agreement is Subject to IDA’s Approval 
+Every Consolidation Agreement must include language expressly stating that the 
+Consolidation is subject to IDA’s approval and that the Consolidation will not be 
+consummated unless and until such time as IDA grants its written approval. The 
+Acquiring Party, Licensee and Trustee-Manager/trustee must include similar language 
+in any public statement regarding the Consolidation. 
+3.8  
+Informal Guidance Prior to Submitting Consolidation Application 
+Any Applicant considering entering into a Consolidation may ask IDA to provide informal 
+guidance prior to the time at which a Consolidation Application must be submitted. This 
+may include guidance regarding the likelihood that IDA will approve or deny the 
+Consolidation Application, or approve the Consolidation Application subject to 
+Conditions. However, the informal guidance process cannot substitute for a full review 
+following submission of a complete Consolidation Application. 
+3.8.1  
+Procedures for Requesting Informal Guidance 
+Any Applicant that seeks informal guidance should submit a written request, containing 
+all relevant available information regarding the proposed Consolidation and its likely 
+impact on competition in the Singapore telecommunication market. The Applicant 
+should also indicate any specific issues on which it seeks guidance. IDA will treat all 
+information submitted as confidential. In addition, IDA will not disclose the fact that the 
+Applicant has requested for informal guidance, and will treat any guidance provided as 
+confidential, unless the Applicant receiving the guidance consents to such disclosure by 
+IDA or chooses to publicly disclose this information. 
+22 
+3.8.2  
+Limitations 
+IDA will provide informal guidance at its discretion. Any informal guidance provided is 
+subject to the following limitations: 
+3.8.2.1  
+Inability to Provide Informal Guidance Absent Adequate Information 
+Assessing whether a proposed Consolidation is likely to substantially lessen competition 
+is often a fact-specific process. At a minimum, this requires a clear understanding of the 
+likely structure of the proposed Consolidation as well as basic information regarding 
+market structure and participants. IDA will not provide informal guidance in any case in 
+which an individual or entity fails to provide sufficient information. In some cases, 
+assessing the competitive impact of a proposed Consolidation requires significantly 
+more information – including information in the possession of suppliers, competitors and 
+customers. The informal guidance process is not an appropriate means to conduct a 
+detailed review. In such cases, IDA will not express a view regarding its likely 
+disposition of a Consolidation Application. IDA may, however, provide preliminary views 
+regarding some of the issues that it anticipates will be relevant to its review. 
+3.8.2.2  
+Informal Guidance Does Not Bind IDA 
+Recognising the importance of minimising regulatory uncertainty, IDA will attempt to 
+provide reliable informal guidance. However, the provision of informal guidance does 
+not preclude IDA, following a complete review of a Consolidation Application, from 
+taking actions that are inconsistent with the views contained in the informal guidance. 
+This is especially likely where the Consolidation Review reveals additional or different 
+information from that on which IDA relied in providing the informal guidance or where 
+legal requirements, regulatory policies, market conditions or other relevant factors have 
+changed since the date on which IDA provided the informal guidance. 
+4.  
+CONSOLIDATION REVIEW PRINCIPLES 
+This Section describes the regulatory principles that will guide IDA’s review of the likely 
+impact of a Consolidation on competition in the Singapore telecommunication market.  
+4.1  
+Promotion and Preservation of Competition 
+In competitive markets, voluntary transactions generally result in the production of the 
+optimal quantity of each product, push prices towards cost, and promote the most 
+efficient methods of production. Therefore, IDA will seek to promote and preserve 
+competition in all telecommunication markets subject to its jurisdiction. 
+23 
+4.2  
+Competitive Concerns Raised by Consolidations 
+In general, voluntary Consolidations – like other voluntary transactions – result in the 
+most efficient allocation of society’s resources. However, in certain limited cases, 
+Consolidations can have an adverse impact by reducing competition. These concerns 
+are described below. 
+4.2.1  
+Horizontal Consolidations 
+Horizontal Consolidations can adversely affect competition in a number of different 
+ways, including: 
+4.2.1.1  
+Creation, Preservation or Enhancement of Significant Market Power 
+A Horizontal Consolidation can adversely affect competition by creating, preserving or 
+enhancing a single service provider’s ability to exercise Significant Market Power. 
+Unlike participants in a competitive telecommunication market, an entity with Significant 
+Market Power has the ability to unilaterally restrict output, raise prices, reduce quality or 
+otherwise act, to a significant extent, independently of competitive market forces. In 
+some cases, this can adversely affect competition in “downstream” markets that rely on 
+the entity’s Service as an essential input. 
+4.2.1.2  
+Facilitation of Concerted Anti-competitive Conduct 
+Horizontal Consolidations can also result in the creation of a telecommunication market 
+in which a small number of entities can reach, and enforce, agreements to collectively 
+restrict output, raise prices, reduce quality or otherwise act independently of competitive 
+market forces. Such agreements can have the same adverse impact as a single entity’s 
+abuse of its Significant Market Power. 
+4.2.2  
+Non-horizontal Consolidations 
+As Non-horizontal Consolidations, by definition, do not involve current competitors, they 
+generally do not restrict competition. On the contrary, such Consolidations often 
+increase efficiency, thereby enabling a Licensee to compete more effectively. 
+However, Non-horizontal Consolidations can have adverse competitive effects where at 
+least one of the entities has Significant Market Power or participates in a concentrated 
+market with few other competitors. There are several ways in which this can occur: 
+4.2.2.1  
+Elimination of a Potential Competitor 
+A Non-horizontal Consolidation can eliminate the possibility that, in future, one of the 
+parties will enter, as a competitor, a telecommunication market in which the other party 
+currently participates. This can raise significant concerns in telecommunication markets 
+that have few current competitors. The ability of current telecommunication market 
+24 
+participants to restrict output or raise prices will be constrained by the existence of an 
+entity that, although not currently in the telecommunication market, would actually 
+respond (or which current telecommunication market participants believe would 
+respond) to an anti-competitive restriction in output or increase in price by entering the 
+telecommunication market. A Non-horizontal Consolidation may eliminate that 
+constraint and reduce the chances of establishing actual competition in future. 
+4.2.2.2  
+Foreclosure or Discriminatory Access to “Upstream” Inputs or 
+“Downstream” Facilities 
+A Non-horizontal Consolidation can restrict competition by limiting the ability of 
+competitors to access an “upstream” input or a “downstream” facility necessary to 
+deliver Services to End Users. This can occur, for example, when an entity that controls 
+an essential “upstream” input, acquires a “downstream” Licensee that relies on that 
+input, and then refuses to provide the input on reasonable and non-discriminatory terms 
+to the “downstream” Licensee’s competitors. At a minimum, this may increase such 
+competitors’ costs and put them at a significant competitive disadvantage. In extreme 
+cases, a Non-horizontal Consolidation can result in such significant foreclosure that it 
+becomes necessary for future entrants to enter both the “upstream” and “downstream” 
+markets at the same time. Given the extra costs and risk of “dual level” entry, Non-
+horizontal Consolidations reduce the likelihood of future competition in one or both 
+markets.  
+4.2.2.3  
+Market Distortion 
+A Non-horizontal Consolidation can restrict competition by enabling an entity with 
+Significant Market Power in one market to distort competition in another market. For 
+example, after the Non-horizontal Consolidation, an “upstream” entity that has 
+Significant Market Power in the input telecommunication market could charge above-
+cost prices in that telecommunication market and use the revenue to enable the 
+“downstream” affiliate to sell Services at below-cost prices. 
+4.3  
+Goal of Consolidation Review 
+The goal of IDA’s Consolidation Review process is to identify those Consolidations that 
+are likely to substantially lessen competition or harm the public interest in the Singapore 
+telecommunication market. Based on its review of a Consolidation, IDA may take one of 
+the following approaches: 
+4.3.1  
+Prevent Consolidations that are Anti-competitive or against Public 
+Interest 
+IDA will generally prevent the consummation of a Consolidation where the transaction 
+would be likely to substantially lessen competition or it is in the public interest to deny 
+the Consolidation, and where the anticompetitive harm cannot be adequately remedied 
+through the imposition of narrowly tailored structural or behavioural Conditions. As 
+25 
+regulation generally is a poor substitute for the operation of a competitive 
+telecommunication market, preventing such a Consolidation is superior to approving the 
+Consolidation and imposing pervasive regulation or allowing the Consolidation to go 
+forward and, if anticompetitive conduct occurs, subsequently requiring the transaction to 
+be unwound. 
+4.3.2  
+Allow Consolidations Subject to Conditions 
+IDA will generally allow the consummation of a Consolidation, subject to Conditions, 
+where competitive concerns exist but can be adequately addressed through the 
+imposition of narrowly tailored structural or behavioural Conditions. 
+4.3.3  
+Allow Consolidations Without Conditions 
+IDA will generally allow the consummation of a Consolidation, without imposition of 
+Conditions, where the Consolidation does not raise any competitive concerns or harm 
+public interest. 
+4.4  
+Compliance with the Telecom Competition Code 2012 Regulatory 
+Principles 
+IDA will conduct Consolidation Reviews in a manner that is consistent with the 
+regulatory principles contained in the Code – including reliance on market forces, 
+promotion of competition, non-discrimination, proportionate regulation, technological 
+neutrality, avoidance of unnecessary delay, and transparent and reasoned decision 
+making. 
+5.  
+CONSOLIDATION REVIEW PERIOD 
+This Section describes the timing of IDA’s Consolidation Review process. IDA 
+recognises that regulatory delay increases business risk and, potentially, can deter 
+Licensees, Designated Business Trusts or Designated Trusts from entering into pro-
+competitive Consolidations. IDA is committed to reviewing all Consolidation Applications 
+in a timely manner, while giving adequate consideration to all relevant issues. 
+5.1  
+Consolidation Review Period Does Not Begin Until Receipt of Complete 
+Consolidation Application 
+IDA will inform the Applicants when their Consolidation Application has satisfied the 
+Minimum Information Requirements specified in Sub-section 3.2 of these Guidelines 
+after conducting the preliminary review described in Sub-section 3.4 of these 
+Guidelines. The Consolidation Review Period will be deemed to have begun on the day 
+on which the Applicants first satisfied the Minimum Information Requirements specified 
+in Sub-section 3.2 of these Guidelines. For example, if the Applicants submit the 
+minimum required information on 1 July, and IDA informs the Applicants on 5 July that 
+26 
+their Consolidation Application is complete, the Consolidation Review Period will be 
+deemed to have begun on 1 July. In contrast, if IDA informs the Applicants on 5 July 
+that they must submit additional information, and the Applicants provide the information 
+on 10 July, and IDA informs the Applicants on 15 July that their Consolidation 
+Application is complete, the Consolidation Review Period will be deemed to have begun 
+on 10 July. 
+5.2  
+Length of Consolidation Review Period 
+IDA will ordinarily complete its Consolidation Review within 30 days after the start of the 
+Consolidation Review Period. IDA will seek to give expedited consideration to requests 
+made in connection with Consolidations to be achieved through Open Market 
+Transactions. In any case in which IDA determines that a Consolidation Application 
+raises novel or complex issues, IDA will notify the Applicants that it intends to extend 
+the Consolidation Review Period by up to 90 days, to a maximum of 120 days. IDA will 
+generally seek to provide this notification within 21 days after the start of the 
+Consolidation Review Period. IDA may deem a Consolidation Application to raise novel 
+issues when disposition of the Consolidation Application requires IDA to consider an 
+issue that it has not previously addressed, either in these Guidelines or in a prior 
+Consolidation Review, or for which there is no clearly established international best 
+practice. IDA may deem a Consolidation Application to raise complex issues when 
+disposition of the Consolidation Application requires IDA to obtain significant factual 
+information or resolve difficult legal, factual or policy issues that cannot be adequately 
+resolved within the ordinary 30-day period. 
+5.3  
+Suspension of Consolidation Review Period Due to Failure to 
+Adequately Respond to Supplemental Information Requests 
+During the course of the Consolidation Review Period, IDA may request any of the 
+Applicants to provide supplemental information to assist IDA in assessing the 
+competitive impact of the Consolidation. (Requests for supplemental information are 
+discussed in Section 6 of these Guidelines.) In any case in which IDA requests 
+supplemental information, it will specify a reasonable period of time within which the 
+Applicant(s) are to provide the supplemental information. If the Applicant(s) request 
+additional time to comply with this request, or if they do not provide all supplemental 
+information by the date specified, IDA will deem the Consolidation Review Period to 
+have been suspended until such time as the Applicants provide all specified 
+supplemental information. IDA will inform the Applicants of the specific day on which the 
+Consolidation Review Period has been suspended. Once IDA determines that the 
+Applicants have provided all required supplemental information, the Consolidation 
+Review Period will resume beginning with the day following the day on which IDA made 
+such a determination. 
+27 
+6.  
+INFORMATION GATHERING 
+In order to assess the likely competitive effect of a Consolidation, IDA will often need to 
+obtain information (in addition to that provided with the Consolidation Application) from 
+the Applicants and other parties regarding the conditions in the relevant markets. This 
+Section describes the information gathering procedures that IDA will generally use in 
+conducting a Consolidation Review. 
+6.1  
+Requests for Supplemental Information from Applicants 
+Where necessary to assess the likely competitive impact of a Consolidation or where 
+appropriate, pursuant to Sub-sections 10.3.6.8, 10.4.6.8 and 11.6 of the Code, IDA will 
+request any of the Applicants to provide information in addition to that contained in their 
+Consolidation Application. 
+6.1.1  
+Requests for Response to Specific Questions 
+IDA may submit written questions to any of the Applicants. Any Applicant that submits 
+responses to such questions must provide responsive, accurate and complete written 
+answers. At the time it submits its answers, each Applicant must submit a statement 
+certifying that it has satisfied this obligation. 
+6.1.2  
+Requests for Documents 
+IDA may request any of the Applicants to produce specific documents or all documents 
+that fall within a particular category. Each Applicant must make an effort in good faith to 
+locate and produce all requested documents. At the time it submits the documents, 
+each Applicant must submit a statement certifying that it has satisfied this obligation. 
+The Applicant may either produce the original documents or certified true copies of such 
+documents. 
+6.1.3  
+Interviews 
+IDA may request shareholders, officers or employees of any of the Applicants to 
+participate in an interview. Following the interview, IDA may request the shareholder, 
+officer or employee who participated in the interview to provide written answers to 
+specific questions. Any shareholder, officer or employee of any Applicant that 
+participates in an interview must provide responsive, accurate and complete 
+information. 
+6.1.4  
+Inspection Requests 
+IDA may request any of the Applicants to allow it to physically inspect its accounts, 
+documents, records, facilities or operations. IDA will generally provide at least 3 working 
+days’ advance notice to such Applicant. 
+28 
+6.1.5  
+Requests for Reconsideration 
+An Applicant that believes that any information request by IDA is unnecessary or overly 
+broad may submit a written request to IDA to reconsider or narrow the information 
+request. The Applicant should submit the reconsideration request to IDA within 5 
+working days of receiving the information request. The reconsideration request should 
+describe, in good faith and with specificity, the basis for the Applicant’s objection and, 
+where feasible, propose alternative means by which IDA can obtain the information 
+necessary to assess the competitive impact of the proposed Consolidation. In any case 
+in which an Applicant submits a reconsideration request, IDA will deem the 
+Consolidation Review Period to be suspended on the day on which IDA initially 
+submitted the information request. The Consolidation Review Period will resume either 
+on the day on which IDA grants the reconsideration request or on the day on which the 
+requested information is submitted to IDA. 
+6.1.6  
+Consequences for Failure to Comply With Information Requests 
+An Applicant’s failure to respond accurately and completely within a reasonable period 
+of time can provide a basis for IDA to deny the Consolidation Application. In additi on, if 
+IDA concludes that a Licensee and/or Trustee-Manager/trustee has provided 
+inaccurate, incomplete or misleading responses, documents or information, it may treat 
+the action as a contravention of Sub-sections 10.3.6.8, 10.4.6.8 and/or 11.6 of the 
+Code, and impose appropriate sanctions .
+6.2  
+Procedures for Obtaining Information from Other Parties 
+In some cases, IDA may find it useful to obtain information from suppliers, competitors 
+or customers of any of the Applicants, as well as other interested parties.  
+There are several means by which IDA will do so including: 
+6.2.1  
+Public Consultations 
+Where appropriate, IDA will provide the public with an opportunity to comment regarding 
+a Consolidation. The procedures governing public consultations are contained in Sub-
+section 10.2 of these Guidelines. 
+6.2.2  
+Private Consultations 
+In those cases in which IDA does not conduct a public consultation, it may nonetheless 
+request for, or accept, comments from individual parties, as appropriate. IDA does not 
+assume any obligation to consider unsolicited comments. 
+29 
+6.3  
+Co-operation with Foreign Government Authorities 
+Where appropriate, and consistent with applicable international agreements, IDA will 
+seek to co-operate with foreign government authorities or agencies in gathering relevant 
+information. 
+6.4  
+Confidentiality 
+While IDA is committed to conducting Consolidation Reviews in a transparent manner, 
+IDA will take appropriate action to prevent the disclosure of commercially sensitive or 
+proprietary information which has been submitted pursuant to Sub-section 10.3.6.8 or 
+10.4.6.8 and Sub-section 11.6 of the Code. Requests for confidential treatment are 
+further addressed in Sub-section 11.7 of the Code. 
+7.  
+ANALYTICAL FRAMEWORK 
+IDA will not approve a Consolidation Application where IDA determines that the 
+Consolidation is likely to substantially lessen competition in any telecommunication 
+market within Singapore or harm public interest. In order to identify those 
+Consolidations 
+that 
+are 
+likely 
+to 
+“substantially 
+lessen 
+competition” in 
+any 
+telecommunication market within Singapore, IDA will apply economic analysis to 
+information regarding the Consolidation and the characteristics of the relevant 
+telecommunication markets. 
+This Section describes the analytical framework that IDA will generally use. This 
+framework distinguishes between Horizontal Consolidations and Non-horizontal 
+Consolidations. (Some Consolidations may have both horizontal and non-horizontal 
+aspects and where this occurs, IDA will assess each aspect of the Consolidation under 
+the appropriate standard.) IDA may modify this framework in any given Consolidation 
+Review, where necessary to better assess the likely competitive impact of the 
+Consolidation. 
+7.1  
+General Approach 
+7.1.1  
+The “Substantial Lessening of Competition” Standard 
+IDA will find that a Consolidation substantially lessens competition where the 
+Consolidation would be likely either to: (a) result in a significant reduction in existing 
+competition in the Singapore telecommunication market; or (b) significantly impede the 
+development of future competition in the Singapore telecommunication market. 
+7.1.2  
+Assessment of an Applicant’s Competitive Significance 
+In assessing an Applicant’s share in a telecommunication market, or otherwise 
+assessing the Applicant’s competitive role, where appropriate, IDA will aggregate the 
+30 
+market share of the Applicant and any entity that has Effective Control over the 
+Applicant, or over which the Applicant has Effective Control, or which is subject to 
+Effective Control by an entity that has Effective Control over the Applicant. 
+7.2  
+Horizontal Consolidations 
+Horizontal Consolidations pose the greatest threat to competition. In carrying out its 
+review, IDA will generally use the methodology described in Sub-sections 7.2.1 to 7.2.3 
+of these Guidelines. 
+7.2.1  
+Market Share Assessment 
+The starting point for IDA’s analysis of any proposed Horizontal Consolidation will be to 
+determine the Applicants’ shares in each telecommunication market within Singapore in 
+which they both compete. To do so, IDA will determine the relevant service or product 
+and geographic markets, and will then estimate the Applicants’ market shares. 
+7.2.1.1  
+Determining the Relevant Markets 
+IDA will first determine the relevant telecommunication markets within Singapore in 
+which the Applicants currently compete. 
+7.2.1.1.1  Service or Product Markets 
+The relevant market for a Service or product provided by an Applicant consists of both  
+the specific Service or product provided by the Applicant and any additional Service or 
+product that buyers regard as interchangeable with, or substitutes for, the Applicant’s 
+Service or product. To determine which Services or products are in the same service or 
+product market as the Applicant’s Services or products, IDA will consider all relevant 
+information. This may include determining which other Services or products have a 
+similar function, characteristic or potential customer base as the Applicant’s Services or 
+products. IDA may also consider which other services or products buyers would switch 
+to if the prices charged by the Post-Consolidation Entity for the Services or products 
+increase by a small but significant, non-transitory amount. 
+7.2.1.1.2  Geographic Markets 
+The relevant geographic market for a Service provided by an Applicant consists of the 
+geographic area in which the Applicant (and other entities that provide substitutable 
+Services) provides Services and any additional geographic locations from which buyers 
+would obtain those services if prices increase by a small but significant, non-transitory 
+amount. In general, the relevant market will consist of all locations within Singapore. 
+31 
+7.2.1.2  
+Determining Market Participants 
+For each telecommunication market within Singapore in which any of the Applicants 
+compete, IDA will seek to identify all other entities that participate in that market. 
+IDA will include only those entities that currently provide Services or products that 
+directly compete against, or are substitutes for, any of the Applicants’ Services or 
+products. 
+7.2.1.3  
+Determining Market Shares 
+IDA will next determine the unit of measurement to be used to assess the participants’ 
+telecommunication market shares. This may include unit or volume sales, revenues, 
+customer base or capacity. In determining which unit of measurement to use, IDA will 
+consider both the availability of reliable information and the extent to which a given unit 
+of measurement best reflects the actual competitive position of the market participants. 
+Once IDA has determined the unit of measurement, it will assign a market share to each 
+entity that currently participates in the telecommunication market. IDA will then 
+determine the market share of the Post-Consolidation Entity. 
+7.2.2  
+Assessing the Risk of Anti-competitive Impact 
+All things being equal, the larger the market share a Post-Consolidation Entity has, the 
+greater its ability to act anti-competitively. However, determining the Post-Consolidation 
+Entity’s market share is only part of IDA’s competitive analysis. IDA will consider 
+market-specific factors that could increase or decrease the ability of the Post-
+Consolidation Entity to act anti-competitively. Some of these factors are described 
+below: 
+7.2.2.1  
+Factors Likely to Increase the Risk of Unilateral Anti-competitive 
+Conduct 
+IDA will consider the extent to which the structure of the relevant telecommunication 
+market creates a heightened risk that, if the Consolidation Application is approved, the 
+Post-Consolidation Entity will have Significant Market Power. Some relevant factors that 
+IDA may consider include: (a) one of the Applicants is currently classified as a Dominant 
+Licensee in a market in which the proposed Consolidation would increase concentration 
+levels; (b) the Consolidation would result in the Post-Consolidation Entity having a 
+market share in excess of 40% in any telecommunication market within Singapore; (c) 
+prior to the Consolidation, the Applicants offered Services that consumers view as very 
+close substitutes for one another; (d) there are no “strong customers” that would have 
+the ability to resist any effort by the Post-Consolidation Entity to raise prices; or (e) 
+current customers of any of the Applicants would face significant impediment in the 
+event that, following the Consolidation, they sought to switch to alternate suppliers of 
+Services. 
+32 
+7.2.2.2  
+Factors Likely to Increase the Risk of Concerted Anti-competitive Action 
+IDA will also consider the extent to which the structure of the relevant 
+telecommunication market creates a heightened risk that, if the Consolidation 
+Application is approved, competing market participants would be likely to enter into, and 
+maintain, anti-competitive agreements. Some relevant factors that IDA may consider 
+include whether: (a) the market is a concentrated one, in which there are few other 
+significant participants that offer consumers a competitive alternative; (b) information 
+regarding individual telecommunication market participant’s price and production 
+decisions is publicly available; (c) there is a low degree of product differentiation; (d) 
+telecommunication market participants typically follow standardised marketing or pricing 
+practices; or (e) there are no “maverick” participants in the telecommunication market 
+that tend to deviate from industry norms. 
+7.2.2.3  
+Elimination of a Significant Market Participant 
+IDA will also consider whether any of the Applicants which has been a significant source 
+of innovation or price competition, would be eliminated as an independent competitor as 
+a result of the Consolidation. 
+7.2.3  
+Other Relevant Factors 
+IDA will also consider other relevant factors that may indicate that a proposed 
+Horizontal Consolidation would not be likely to substantially lessen competition. Some 
+of these factors are described in Sub-sections 7.4 to 7.4.5 of these Guidelines. 
+7.3  
+Non-horizontal Consolidations 
+As Non-horizontal Consolidations can often facilitate competition, IDA will generally 
+seek to deny or condition its approval of such Consolidations only if IDA concludes, 
+based on the evidence, that such Consolidations are likely to substantially lessen 
+competition. 
+7.3.1  
+Determination of Significant Market Power and Market Concentration 
+In assessing a proposed Non-horizontal Consolidation, IDA will first seek to determine 
+whether any of the Applicants has Significant Market Power. For purposes of reviewing 
+a proposed Non-horizontal Consolidation, IDA will make an initial presumption that an 
+Applicant has Significant Market Power if: (a) it is a Dominant Licensee; (b) it enjoys 
+government-granted exclusive rights (such as an exclusive right to provide a service) or 
+has control over “bottleneck” facilities used to provide Services; or (c) it has more than a 
+40% share in any telecommunication market, wherever located, in which it operates; or 
+(d) other relevant factors indicate that the Applicant has the ability to unilaterally restrict 
+output, raise prices, reduce quality or otherwise act independently of its competitors. 
+IDA will consider any reliable evidence that may rebut this presumption. In seeking to 
+determine market share, or otherwise assess the impact on competition, IDA will use 
+33 
+the basic market definition/market share approach described in Sub-sections 7.2.1 to 
+7.2.1.3 of these Guidelines. 
+7.3.2  
+Determining the Likelihood of Anti-competitive Effects 
+In those cases in which IDA determines that any of the Applicants has Significant 
+Market Power as described in Sub-section 7.3.1 of these Guidelines, IDA may consider 
+market-specific factors that could increase the likelihood that the Consolidation would 
+substantially lessen competition. Some of these factors are described below: 
+7.3.2.1  
+Elimination of a Potential Future Competitor 
+IDA will consider whether the Consolidation would be likely to prevent the development 
+of effective competition in any telecommunication market by precluding the future entry 
+of an effective competitor. This may occur where one of the Applicants currently has 
+Significant Market Power in a telecommunication market, or participates in a 
+concentrated telecommunication market, and the other Applicant(s) would be likely to 
+enter that market and become a significant competitor. Such “entry preclusion” is 
+especially likely where: (a) the Consolidation is a Vertical Consolidation; or (b) one of 
+the Applicants is required, pursuant to its Licence, to enter another Applicant’s market 
+within the foreseeable future.  
+7.3.2.2  
+Foreclosure/Increased Need for Dual-Level Entry by Future Competitors 
+In the case of a Vertical Consolidation, IDA will also consider whether the Consolidation 
+would be likely to substantially lessen competition or prevent the development of 
+effective competition in any telecommunication market by restricting the ability of 
+competitors to obtain or access: (a) an “upstream” input necessary to provide a Service; 
+or (b) a “downstream” facility necessary to deliver a Service to End Users. Such 
+restrictions can increase competitors’ costs and, in extreme cases, require future 
+entrants to simultaneously enter the “upstream” and “downstream” markets. A Vertical 
+Consolidation is likely to result in foreclosure and/or create the need for “dual-level 
+entry” where any of the Applicants has Significant Market Power and the Applicant: (a) 
+controls an “upstream” input that is necessary for the “downstream” Applicant and its 
+competitors to provide Services; or (b) controls “downstream” facilities that are 
+necessary for the “upstream” Applicant and its competitors to deliver Services to End 
+Users and, in either case, is not subject to (i) IDA’s jurisdiction; or (ii) an effective 
+regulatory regime, administered by another government authority, requiring that 
+Applicant to deal with the other Applicant’s competitors in a reasonable and non-
+discriminatory manner. 
+7.3.2.3  
+Market Distortion 
+IDA will also consider whether a Consolidation is likely to allow an Applicant with 
+Significant Market Power to distort competition in another Applicant’s market. In making 
+this determination, IDA will give careful consideration to the existence of any regulatory 
+34 
+regime, whether administered by IDA or any other government authority, that could 
+reduce the risk of such market distorting conduct. IDA may consult the relevant 
+government authorities or regulatory agencies in making this determination.  
+7.4  
+Considerations Applicable to All Consolidations 
+In the case of both Horizontal and Non-horizontal Consolidations, IDA will also consider 
+additional factors that may indicate that the Consolidation would not be likely to 
+substantially lessen competition. Some of these factors are described below: 
+7.4.1  
+Likelihood and Adequacy of New or Expanded Entry 
+The ability of the Post-Consolidation Entity to reduce output or raise prices, either alone 
+or in conjunction with other current market participants, in the Singapore 
+telecommunication market will be limited if there are other entities that are likely to enter 
+the market or expand existing production within a reasonably short period of time to the 
+extent necessary to offset any reduction in output or increase in price. If IDA determines 
+that timely and sufficient entry or expansion is likely, it will generally approve the 
+Consolidation Application.  
+In seeking to make this determination, IDA will consider whether there has been a 
+history of entry and expansion in the relevant telecommunication market and whether 
+there are impediments to future entry or expansion. Such impediments may include: (a) 
+technical factors (such as the need to use specialised or proprietary technology); (b) 
+access factors (such as the need to obtain access to another entity’s infrastructure in 
+order to provide service or to achieve significant economies of scale and scope); (c) 
+financial factors (such as the proportion of the Applicant’s costs that are sunk and the 
+scale of the sunk costs associated with the investments required to start up or expand a 
+business); (d) commercial factors (such as high advertising and retail costs or high 
+consumer switching costs); or (e) regulatory factors (such as limitations on the number 
+of licences or on the entities eligible to obtain a licence). IDA will also seek to identify 
+any entity that is committed to enter the market, or expand output, within the 
+foreseeable future. This may include entities that are obligated, pursuant to the terms of 
+the Licences granted by IDA, to do so. IDA will attempt to assess the extent to which 
+such entities are likely to become significant participants in the market. 
+7.4.2  
+Efficiencies 
+In a close case, in which a Consolidation may have some anti-competitive effect, IDA 
+will generally approve the Consolidation Application if it concludes, with reasonable 
+certainty, that: (a) the transaction will result in significant efficiencies, not the result of an 
+anti-competitive reduction in output, that could not have been achieved absent the 
+Consolidation; and (b) the Post-Consolidation Entity is likely to pass on a reasonable 
+portion of these efficiencies to its customers. Given that most Non-horizontal 
+Consolidations increase efficiency, and are less likely to restrict competition, IDA may 
+place more weight on claimed efficiencies when reviewing a proposed Non-horizontal 
+35 
+Consolidation than it will in reviewing a proposed Horizontal Consolidation. However, 
+efficiencies rarely, if ever, are likely to provide a basis for IDA to approve a 
+Consolidation that would result in the creation of an entity with a monopoly or near 
+monopoly in the Singapore telecommunication market. IDA is likely to give greater 
+weight to efficiency claims in cases in which the Applicants commit to making specific 
+price reductions following the Consolidation. 
+7.4.3  
+Failing Undertakings and Failing Divisions 
+Finally, IDA will generally approve a Consolidation Application for a Consolidation that 
+would otherwise be found to be likely to substantially lessen competition where any of 
+the Applicants is a “Failing Undertaking” or seeking to divest a “Failing Division.” 
+7.4.3.1  
+Failing Undertaking 
+A Failing Undertaking is an entity that: (a) is unable to meet its near-term financial 
+obligations; (b) is unlikely to be able to re-organise successfully through an insolvency 
+proceeding; (c) cannot find any reasonable alternative purchaser of its assets; and (d) is 
+likely to exit the telecommunication market, thereby removing its productive assets, 
+absent the Consolidation. A purchaser will be deemed to be a reasonable alternative 
+purchaser if it is willing to pay a commercially reasonable price for the entity even if that 
+price is lower than the price that the Applicant was prepared to pay. 
+7.4.3.2  
+Failing Division 
+A Failing Division is a portion of an entity that: (a) viewed on its own, has a sustained 
+negative cash flow; (b) cannot be sold, at a commercially reasonable price, to any other 
+purchaser; and (c) is likely to exit the telecommunication market, thereby removing its 
+productive assets, absent the Consolidation. 
+7.4.4  
+Other Relevant Factors 
+In conducting any Consolidation Review, IDA will consider any other relevant factors, 
+based on reliable information, that will enable it to assess the likely competitive impact 
+of the Consolidation. This may include anticipated changes in the legal or regulatory 
+environment, anticipated introduction of new services or technologies or changing 
+consumption patterns. 
+7.4.5  
+Other Public Interest Considerations 
+Notwithstanding the result of its analysis of the likely competitive impact of a 
+Consolidation, IDA may approve a Consolidation Application, approve the Consolidation 
+Application subject to Conditions or deny the Consolidation Application if IDA concludes 
+that doing so will serve the public interest. In any case in which IDA does so, it will 
+provide an explanation of the basis for its decision. 
+36 
+8.  
+SPECIAL SITUATIONS 
+This Section describes the way in which IDA will conduct its Consolidation Review in 
+certain special situations. 
+8.1  
+Consolidations with Entities that have Significant Market Power in 
+Markets Not Subject to IDA Regulation 
+IDA recognises that, in some cases, a Consolidation may involve an Applicant that has 
+Significant Market Power in a market that is not subject to IDA regulation, such as a 
+foreign telecommunication operator that has exclusive or special rights in its home 
+country, or a Singapore-based company that does not provide Services. In assessing 
+whether the Consolidation is likely to substantially lessen competition, IDA will give full 
+consideration to the ability of the non-licensed entity to use its market position in a 
+manner that would substantially lessen competition in the telecommunication markets 
+subject to IDA’s jurisdiction. IDA will also consider the need for, and likely effectiveness 
+of any Conditions, such as the imposition of structural separation or non-discrimination 
+obligations. 
+9.  
+DISPOSITION OF CONSOLIDATION APPLICATIONS 
+This Section describes the three types of actions that IDA may take at the conclusion of 
+a Consolidation Review. 
+9.1  
+Approval of the Consolidation Application 
+IDA may approve the Consolidation Application in full, without Conditions. 
+9.2  
+Denial of the Consolidation Application 
+IDA may deny the Consolidation Application. 
+9.3  
+Approval of the Consolidation Application Subject to Conditions 
+IDA may approve the Consolidation Application, subject to the Applicants’ agreement to 
+Conditions designed to reduce any anti-competitive harm or effect. Conditions that IDA 
+may impose include: 
+9.3.1  
+Structural Conditions 
+Structural conditions may involve the divestiture of certain operations of any of the 
+Applicants, or of an entity over which an Applicant has Effective Control, or of an entity 
+that has Effective Control over an Applicant, or of an entity that is subject to Effective 
+Control by an entity that also has Effective Control over an Applicant. 
+37 
+Structural conditions can also include requirements that certain operations of the Post-
+Consolidation Entity be operated at arm’s length from other operations. 
+9.3.1.1  
+Structural Separation 
+As a Condition of its approval of the Consolidation Application, IDA may require the 
+Applicants to agree that the Post-Consolidation Entity will conduct certain operations 
+through a structurally separate entity. The separate entity may be required to have 
+separate books of accounts, separate facilities, separate offices, separate personnel, 
+separate credit lines, and other appropriate forms of separation. Structural separation is 
+often appropriate in Vertical Consolidations in which one of the Applicants has 
+Significant Market Power. Structural separation can allow the Post-Consolidation Entity 
+to achieve certain integration efficiencies, while creating a “self-enforcing” means to 
+reduce the Post-Consolidation Entity’s ability and incentive to engage in, or benefit from, 
+access discrimination and cross-subsidisation. 
+9.3.1.2  
+Voluntary Partial Divestiture of Assets to an Acceptable Purchaser 
+In some cases, a Consolidation may be generally pro-competitive, but may raise a 
+competitive concern in one telecommunication market. For example, Licensee One may 
+participate in Telecommunication Market A, Telecommunication Market B and 
+Telecommunication Market C. Licensee Two may participate in Telecommunication 
+Market C, Telecommunication Market D and Telecommunication Market E. A 
+Consolidation between the two Licensees is unlikely to have any adverse competitive 
+impact on Telecommunication Markets A, B, D and E – but could result in creation of an 
+entity with Significant Market Power in Telecommunication Market C. Sub-sections 
+10.3.6.7 and 10.4.6.7 of the Code provide that IDA will not approve a Consolidation 
+Application for a Consolidation where IDA determines that the Consolidation is likely to 
+substantially lessen competition in the Singapore telecommunication market. As a 
+Condition of approval of the Consolidation Application, IDA may require any of the 
+Applicants to agree that certain assets will be divested to a third party, in an arm’s 
+length transaction. In the previous example, requesting the Licensees to voluntarily 
+divest some or all of their operations in Telecommunication Market C to a qualified 
+buyer could allow the Consolidation of Licensee One and Two, while preserving 
+competition in Telecommunication Market C. 
+9.3.1.2.1  Minimum Requirements 
+In order for a voluntary partial divestiture to constitute an adequate remedy, the 
+Applicants must agree to the following provisions. First, the divestiture must involve the 
+sale of sufficient assets to eliminate the risk that the Consolidation will create, preserve 
+or increase the Post-Consolidation Entity’s ability to substantially lessen competition. 
+Second, the divestiture must be made to an entity that, in IDA’s reasonable opinion, has 
+the ability and incentive to operate the divested assets as a viable, competitive 
+business. 
+38 
+9.3.1.2.2  Timing and Procedures 
+In those cases in which IDA requires the Applicants to agree to the voluntary partial 
+divesture of assets as a Condition of approval of the Consolidation Application, IDA will 
+generally require the divestiture to be successfully completed within a specified period 
+after the Consolidation date. This period typically will be no more than one year. IDA 
+may condition approval on the Applicants’ agreement that: (a) during the period 
+between the Consolidation and the partial divestiture, the operations to be divested will 
+be conducted on a structurally separate basis; and (b) if, at the conclusion of the 
+specified period, the divestiture has not occurred, the Post-Consolidation Entity will 
+appoint an independent consultant at its own expense, satisfactory to IDA, that will have 
+authority to negotiate a sale of the assets. 
+9.3.1.2.3  IDA’s Right to Approve Proposed Purchaser 
+In any case in which IDA approves the Consolidation Application subject to the 
+Applicants agreeing to a voluntary partial divestiture, IDA may also reserve the right to 
+approve the proposed buyer of the divested operations. IDA will not approve any 
+proposed buyer that lacks the ability and incentive to operate the divested assets as a 
+viable, competitive business. Rather, the Applicants will be required to demonstrate that 
+the proposed buyer: (a) will operate the divested business independently of the Post-
+Consolidation Entity; and (b) has adequate experience and funding. In appropriate 
+cases, IDA may require the Applicants to agree, as a Condition of IDA’s approval, to 
+appoint an independent consultant, to be funded by the Applicants, to prepare an 
+analysis of the suitability of the proposed buyer. Where the acquisition of the divested 
+Voting Shares/Units/Equity Interests or Voting Power in a Licensee, Designated 
+Business Trust or Designated Trust would itself constitute a Consolidation, the party to 
+which the divestiture is to be made must file a Consolidation Application. 
+9.3.2  
+Behavioural Safeguards 
+Behavioural safeguards are conditions that govern the Post-Consolidation Entity’s 
+conduct. Limited behavioural safeguards may be appropriate where a Consolidation is 
+generally pro-competitive, but raises specific competitive concerns that do not warrant 
+either denial of the Consolidation Application or imposition of structural conditions. 
+Examples are specified below: 
+9.3.2.1 
+Non-discrimination Requirements 
+As a Condition of its approval of the Consolidation Application, IDA may require the 
+Applicants to agree that the Post-Consolidation Entity will either: (a) provide access to 
+infrastructure, information or services to Licensees, other entities or End Users on a 
+reasonable and non-discriminatory basis; or (b) reject any preferential access to 
+infrastructure, information or services from an entity. IDA may also require the 
+39 
+Applicants to agree that the Post-Consolidation Entity will contract for independent 
+audits to confirm compliance or to periodically self-certify its compliance. 
+9.3.2.2  
+Accounting Separation 
+As a Condition of its approval of the Consolidation Application, IDA may require the 
+Applicants to agree that the Post-Consolidation Entity will account separately for 
+revenues from operations that are subject to effective competition and operations that 
+are not subject to effective competition, and to comply with rules governing allocation of 
+joint costs and transactions between the competitive and noncompetitive operations, in 
+order to deter cross-subsidisation. IDA may also require the Applicants to agree that the 
+Post-Consolidation Entity will contract for independent audits to confirm compliance or 
+to periodically self-certify its compliance. 
+9.3.2.3  
+Limitations on Joint Directors or Managers 
+A Consolidation may result in the Post-Consolidation Entity having an ownership 
+interest in two or more competing service providers. In this situation, as a Condition of 
+its approval of the Consolidation Application, IDA may require the Applicants to agree 
+that the Post-Consolidation Entity will not permit the same individual to hold a 
+directorship, or serve in an executive management position, in the competing service 
+providers. 
+9.3.2.4  
+Limitations on Information Sharing 
+In a Consolidation that results in two or more competing service providers being under 
+partial or total common ownership, as a Condition of its approval of the Consolidation 
+Application, IDA may require the Applicants to agree that measures will be taken to 
+ensure that the competing service providers neither provide nor receive non-public 
+information from one another, whether directly or indirectly. 
+9.3.2.5  
+Termination or Modification of Restrictive Existing Agreements 
+As a Condition of its approval of the Consolidation Application, IDA may require the 
+Applicants to agree to the termination or modification of any existing agreement that, 
+following the Consolidation, would be likely to substantially lessen competition. For 
+example, IDA could require an Applicant to agree to terminate or modify existing 
+agreements that: (a) impose early termination penalties on customers that seek to 
+switch to rival providers; (b) require any customer to make all or a specified portion of its 
+purchases of specific services from the Applicant; or (c) require any supplier to make all 
+or a specified portion of its sales to the Applicant. 
+40 
+9.3.3  
+Other Pro-competitive Conditions 
+IDA may require the Applicants to agree to other Conditions that are designed to 
+increase competition. These include Conditions designed to increase entry into 
+telecommunication markets that are not yet fully competitive. 
+9.4  
+Notification by IDA 
+IDA will notify the Applicants, in writing, as to whether their Consolidation Application 
+has been approved, denied or approved subject to Conditions. In any case in which IDA 
+denies or approves a Consolidation Application subject to Conditions, the notification 
+will provide an explanation of the basis on which IDA took this action. 
+9.5  
+Notification by Applicants of Acceptance or Rejection of Conditions 
+In any case in which IDA approves a Consolidation Application subject to Conditions, 
+the Applicants will have no fewer than 14 days from the date of IDA’s decision to notify 
+IDA as to whether they accept the Conditions or wish to withdraw their Consolidation 
+Application. 
+9.6  
+Sanctions for Post-Consolidation Failure of an Applicant to Comply with 
+Conditions 
+Any failure by an Applicant to comply with a Condition imposed by IDA, and accepted 
+by the Applicants, will constitute a contravention of the Code and may result in IDA 
+taking enforcement action.  
+10.  
+TRANSPARENCY 
+Public participation in the Consolidation Review process may assist IDA in developing a 
+better understanding of market conditions and the likely competitive effect of a 
+Consolidation. Therefore, IDA will provide notice and seek public comment where it 
+deems appropriate. This Section describes the means by which IDA will provide notice 
+and seek public comments as part of the Consolidation Review process. 
+10.1  
+Public Notification at the Start of the Consolidation Review Period 
+IDA will generally notify the public, by means of a notification posted on its website, of 
+each complete Consolidation Application that has been submitted. Notification will be 
+provided on the same date that IDA notifies the Applicants, pursuant to Subsection 
+3.4.1 of these Guidelines, that the Consolidation Application has been accepted for 
+review. 
+41 
+10.2  
+IDA’s Solicitation of Public Comments 
+Where appropriate, IDA will issue a consultation document, which will describe the 
+Consolidation, indicate issues of particular concern, and invite the public to submit 
+written comments. IDA is most likely to seek public comment in those cases in which: 
+(a) a Consolidation Application is submitted using the Long Form Consolidation 
+Application procedure; (b) a Consolidation raises novel or complex issues; (c) a 
+Consolidation involves a Dominant Licensee or another significant market participant; 
+(d) IDA requires additional facts about the telecommunication market conditions or the 
+likely competitive effect of the Consolidation; or (e) IDA would benefit from public input 
+regarding possible Conditions.  
+In those cases in which IDA seeks public comment, it will release the non-confidential 
+portions of the Statement or Abbreviated Statement submitted by the Applicants. IDA 
+will generally provide between 7 and 15 days for public comments. Commenting parties 
+should limit their submission to those issues that are directly relevant to the 
+Consolidation Application. Commenting parties should clearly articulate the basis for 
+their views regarding the likely competitive effect of the Consolidation, providing factual 
+support to the extent that it is feasible to do so. Unsupported allegations about the 
+Applicants’ prior or likely future conduct are strongly discouraged. Commenting parties 
+should provide a reasoned justification for any conditions that they propose. 
+IDA will consider all submissions to be public documents, and will make the 
+submissions available on IDA’s website. However, a commenting party may seek 
+confidential treatment of specific information that is proprietary or commercially sensitive 
+by submitting a separate confidential appendix, which may be referenced in the text of 
+its comments. Commenting parties may only seek confidential treatment for information 
+that is proprietary or commercially sensitive. IDA will not consider the submissions of 
+any commenting party that seeks unreasonably broad confidential treatment. 
+IDA will consider all properly and timely submitted comments, submitted pursuant to a 
+consultation document. IDA will generally address the significant points raised by the 
+commenting parties in its decision regarding the Consolidation Application. 
+10.3  
+Publication of Decisions 
+At the conclusion of the Consolidation Review, IDA will issue a decision describing the 
+Consolidation, the action taken by IDA (including the imposition of any Conditions), and 
+the rationale for IDA’s actions. IDA will make the decision available on its website. 
+11.  
+RECONSIDERATION OF OR APPEAL AGAINST IDA’S DECISION  
+Any person that is aggrieved by a decision rendered by IDA in response to a 
+Consolidation Application may seek reconsideration of IDA’s decision, or may appeal to 
+the Minister, pursuant to the procedures specified in Sub-section 11.9 of the Code. 
+42 
+PART IV – TENDER OFFER 
+12.  
+OBTAINING IDA’S WRITTEN APPROVAL FOR TENDER OFFER WHERE 
+THE TAKE-OVER CODE APPLIES 
+Part IV of these Guidelines applies to an acquisition of Voting Shares/Units/Equity 
+Interests or Voting Power in a Licensee, Designated Business Trust or Designated Trust 
+by an Acquiring Party in a situation where the Take-over Code is applicable 1 . 
+12.1  
+Rule 14 of the Take-over Code: Mandatory Offer 
+Rule 14 of the Take-over Code provides that, except with the Security Industry Council’s 
+consent, an Acquiring Party must extend a mandatory offer to the Licensee, Designated 
+Business Trust or Designated Trust if:  
+(a)  
+the Acquiring Party, together with parties acting in concert with it, acquire Voting 
+Shares in the Licensee, Units in the Designated Business Trust or Equity 
+Interests in the Designated Trust which carry 30% or more in the voting rights of 
+the Licensee, Designated Business Trust or Designated Trust; or 
+(b)  
+the Acquiring Party and parties acting in concert with it hold not less than 30% 
+but not more than 50% of the voting rights of the Licensee, Designated Business 
+Trust or Designated Trust and acquire in any period of 6 months, additional 
+Voting Shares in the Licensee, Units in the Designated Business Trust or Equity 
+Interests in the Designated Trust carrying more than 1% of the voting rights in the 
+Licensee, Designated Business Trust or Designated Trust. 
+12.2  
+Rule 15 of the Take-over Code: Voluntary Offer 
+Rule 15 of the Take-over Code provides for voluntary offers that will result in the 
+Acquiring Party, together with parties acting in concert with it, holding more than 50% of 
+the voting rights of the Licensee, Designated Business Trust or Designated Trust. 
+12.3  
+Rule 16 of the Take-over Code: Partial Offer 
+Rule 16 of the Take-over Code provides for partial offers made for Voting Shares in the 
+Licensee, Units in the Designated Business Trust or Equity Interest in the Designated 
+Trust that carry: 
+(a)  
+less than 30% of the voting rights of the Licensee, Designated Business Trust or 
+Designated Trust; or 
+1 The Take-over Code applies to all Singapore-incorporated listed companies and other Singapore 
+incorporated public companies with 50 or more shareholders and net tangible assets of S$5 million or 
+more. 
+43 
+(b) 
+not less than 30%, but not more than 50%, of the voting rights of the Licensee, 
+Designated Business Trust or Designated Trust; or 
+(c)  
+more than 50% of the voting rights of the Licensee, Designated Business Trust or 
+Designated Trust. 
+12.4  
+Rule 22 of the Take-over Code: Offer Timetable 
+Rule 22 of the Take-over Code sets out the applicable timelines relating to the making 
+of an Offer under the Take-over Code. 
+13.  
+PROCEDURES FOR SEEKING IDA’S WRITTEN APPROVAL 
+The Acquiring Party shall observe the following procedures before making any initial 
+public announcement of the Offer. 
+13.1  
+Partial Offer of at least 12% but less than 30% 
+Where an Acquiring Party intends to make a partial offer for the Voting Shares in a 
+Licensee, Units in a Designated Business Trust or Equity Interests in a Designated 
+Trust that will result in the Acquiring Party holding at least 12% but less than 30% of the 
+voting rights of the Licensee, Designated Business Trust or Designated Trust, and such 
+acquisition does not amount to a Consolidation, the following procedures apply: 
+(a)  
+the Acquiring Party shall concurrently: 
+(i)  
+announce a pre-conditional offer (i.e., an announcement that a partial offer 
+will be made and the Offer timetable under Rule 22 of the Take-over Code 
+will apply only after IDA’s written approval is obtained); and 
+(ii)  
+notify the Licensee and Trustee-Manager/trustee that it proposes to 
+acquire Voting Shares/Units/Equity Interests or Voting Power in the 
+Licensee, Designated Business Trust or Designated Trust by a partial 
+offer; and 
+(b)  
+the Licensee, Trustee-Manager/trustee and the Acquiring Party shall jointly 
+submit a Request for approval to IDA and obtain IDA’s written approval before 
+the Acquiring Party makes the partial offer. 
+Please refer to Sub-sections 10.3.7.1 and 10.4.7.1 of the Code for the process 
+applicable to the submission of the Request for approval to IDA. 
+44 
+13.2  
+Voluntary Offer or Partial Offer which amounts to Consolidation 
+Where an Acquiring Party intends to make a voluntary offer or a partial offer for Voting 
+Shares/Units/Equity Interests or Voting Power which amounts to a Consolidation (i.e., 
+including an acquisition of Voting Shares/Units/Equity Interests or Voting Power which 
+would result in the Acquiring Party holding at least 12% but less than 30% of the voting 
+rights of the Licensee, Designated Business Trust or Designated Trust and being able 
+to exercise Effective Control over the Licensee, Designated Business Trust or 
+Designated Trust), the following procedures apply: 
+(a)  
+the Acquiring Party shall concurrently: 
+(i)  
+announce a pre-conditional offer (an announcement that a voluntary or 
+partial offer will be made and the Offer timetable under Rule 22 of the 
+Take-over Code will apply only after IDA’s written approval is obtained); 
+and 
+(ii)  
+notify the Licensee and Trustee-Manager/trustee that it proposes to 
+acquire Voting Shares/Units/Equity Interests or Voting Power in the 
+Licensee, Designated Business Trust or Designated Trust by a voluntary 
+offer or partial offer (as the case may be) and that the acquisition amounts 
+to a Consolidation; and 
+(b)  
+the Licensee, Trustee-Manager/trustee and the Acquiring Party shall jointly file a 
+Consolidation Application with IDA and obtain IDA’s written approval before the 
+Acquiring Party makes the voluntary offer or partial offer (as the case may be). 
+Please refer to Sub-sections 10.3.7.2 and 10.4.7.2 of the Code for the process 
+applicable to the filing of the Consolidation Application to IDA. 
+13.3  
+Mandatory Offer 
+Where an Acquiring Party proposes to enter into any transaction for the acquisition of 
+Shares, Units or Equity Interests of a Licensee, Designated Business Trust or 
+Designated Trust that will trigger a mandatory offer under Rule 14 of the Take-over 
+Code for these Shares, Units or Equity Interests, the completion of the transaction must 
+be conditional on the Acquiring Party, the Licensee and Trustee-Manager/trustee (in the 
+case of a Designated Business Trust or Designated Trust) jointly filing a Consolidation 
+Application with IDA and obtaining IDA’s prior written approval for the acquisition. In this 
+respect, the acquisition of these Shares, Units or Equity Interests may be by way of a 
+conditional sale and purchase agreement which specifies the obtaining of IDA’s written 
+approval as a condition for completion of the transaction. Alternatively, the transaction 
+may be structured as a put and call option agreement in respect of such Shares, Units 
+or Equity Interests where the put and/or call options can be exercised only after IDA’s 
+written approval is obtained. 
+45 
+13.4  
+Compliance with Take-over Code 
+In addition to complying with the requirements in Section 10 of the Code and as further 
+explained in these Guidelines, the parties must ensure that they also comply with all the 
+applicable requirements of the Take-over Code. 
+A copy of the Take-over Code is available at the website of the Monetary Authority of 
+Singapore. 
+LF 1 
+ANNEX 1 
+LONG FORM CONSOLIDATION APPLICATION 
+1. List the names and headquarter addresses of the Applicant subject to the 
+Consolidation ( i.e., the Licensee, Designated Business Trust or Designated Trust in 
+which the Voting Shares/Units/Equity Interests or Voting Power is being acquired or 
+whose business is being acquired as a going concern). Indicate the names of the 
+Applicants’ primary contacts in connection with this Consolidation Application, 
+designations and contact information (mailing address, telephone number, fax number, 
+email address etc.). 
+2. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 1 based on the Applicant holding an attributable interest of 5% or more 
+(Subsidiary). For each Affiliate, indicate the Affiliate’s principal line of business and the 
+Applicant’s percentage Voting Shares/Units/Equity Interests or Voting Power. 
+3. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 1 based on the Affiliates holding an attributable interest of 5% or more in the 
+Applicant (Parent). For each Affiliate, indicate the Affiliate’s principal line of business 
+and the entity’s percentage Voting Shares/Units/Equity Interests or Voting Power in the 
+Licensee, Designated Business Trust or Designated Trust. Also indicate any entity in 
+which that Affiliate holds an attributable interest of 5% or more (Sibling). Indicate any 
+situation in which any Affiliate has special or preferential rights in the Licensee, 
+Designated Business Trust or Designated Trust. 
+4. List the name and address of the Applicant (whether or not a current Licensee, 
+Designated Business Trust or Designated Trust) that seeks to obtain Voting 
+Shares/Units/Equity Interests or Voting Power in the Licensee, Designated Business 
+Trust or Designated Trust or acquire the business of the Licensee as a going concern. 
+Indicate the name of the Applicant’s primary contact in connection with this 
+LF 2 
+Consolidation Application and his or her designation and contact information (mailing 
+address, telephone number, fax number, email address etc.). 
+5. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 4 based on the Applicant holding an attributable interest of 5% or more 
+(Subsidiary). For each Affiliate, indicate the Affiliate’s principal line of business and the 
+Applicant’s percentage Voting Shares/Units/Equity Interests or Voting Power. 
+6. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 4 based on the Affiliates holding an attributable interest of 5% or more in the 
+Applicant (Parent). For each Affiliate, indicate the Affiliate’s principal line of business 
+and the entity’s percentage Voting Shares/Units/Equity Interests or Voting Power in the 
+Licensee, Designated Business Trust or Designated Trust. Also indicate any entity in 
+which that Affiliate holds an attributable interest of 5% or more (Sibling). Indicate any 
+situation in which any Affiliate has special or preferential rights in the Licensee, 
+Designated Business Trust or Designated Trust. 
+7. Description of the Consolidation 
+Check each of the following that correctly describes the Consolidation: 
+___  The Applicant identified in response to Question 4 is seeking to acquire, whether 
+directly or indirectly, Voting Shares/Units/Equity Interests or Voting Power that 
+would result in the Applicant holding Voting Shares/Units/Equity Interests or 
+Voting Power of at least 12% in the Licensee, Designated Business Trust or 
+Designated Trust identified in Response to Question 1. 
+Specify the percentage of Voting Shares/Units/Equity Interests or Voting Power 
+sought to be acquired: 
+_______ 
+LF 3 
+___  The Applicant identified in response to Question 4 is seeking to acquire the 
+business of the Licensee, Designated Business Trust or Designated Trust as a 
+going concern. 
+In answering Questions 8 through 10, please aggregate the market share of the 
+Applicant and any entity that has Effective Control over the Applicant, or over which the 
+Applicant has Effective Control, or which is subject to Effective Control by an entity that 
+has Effective Control over the Applicant. 
+8. Using the methodology described in Sub-sections 7.2.1 to 7.2.1.3 of the Telecom 
+Consolidation and Tender Offer Guidelines, identify each telecommunication market 
+(including value-added services and equipment) within Singapore in which, based on 
+your best estimate, any of the Applicants has a market share of 5% or more. For each 
+such telecommunication market, indicate, based on your best available information, the 
+estimated market share of the 5 largest telecommunication market participants (based 
+on revenue, customers, or other appropriate measurement). 
+9. Identify any additional telecommunication market, wherever located, in which any of 
+the Applicants has a market share in excess of 25%. 
+10. Does the Consolidation satisfy either of the following criteria? (Y/N) 
+__ The Consolidation is a Horizontal Consolidation that will result in a Post-
+Consolidation Entity with more than a 15% market share in at least one 
+telecommunication market within Singapore. 
+__ The Consolidation is a Non-horizontal Consolidation in which at least one Applicant 
+has more than a 25% market share in at least one telecommunication market, whether 
+or not located in Singapore. 
+11. Do you wish to propose any Conditions to address possible competitive concerns 
+arising from the Consolidation? 
+___ (Y/N) 
+LF 4 
+If yes, please attach a separate statement describing the proposed Conditions and the 
+means by which they will address any possible competitive concerns. 
+12. Minimum Required Information 
+Check if you have attached each item listed below; mark N/A (not applicable) where, to 
+the best of your knowledge, no documents meeting the description exist: 
+__ Consolidation Agreement 
+__ Ancillary Agreements 
+__ Statement 
+__ Current annual report or financial statement for each Applicant 
+__ Business plans for each Applicant for the current and immediately previous years 
+__ All reports, studies or analyses prepared for the shareholders, directors, or executive 
+officers of each Applicant for the purposes of assessing the Consolidation and the 
+proposed operation of the Post-Consolidation Entity 
+__ Trust Deed (where relevant) 
+__ Chart indicating each of the Applicant’s Associates and Affiliates and the relevant 
+ownership interests, including any preferential or special rights 
+__ Information about any situation in which the Voting Shares/Units/Equity Interests 
+grant the holder thereof a special or preferential right, and any pending change in the 
+ownership structure of any of the Applicants in addition to the change that is the subject 
+of this application 
+__ Information on any anticipated significant changes in management or operations of 
+the Licensee/Designated Business Trust/Designated Trust  
+__ Consolidation Application Processing Fee (Applicants should make payment to IDA 
+of the sum of S$10,000 by way of money orders, postal orders, banker’s orders, 
+Interbank GIRO, cheques or telegraphic transfer for the amount of S$10,000. All bank 
+charges associated with such modes of payment shall be borne by the Applicants. 
+Note: IDA will not process this Consolidation Application unless the Applicants have 
+either provided all required information or have obtained an exemption from IDA in 
+respect of the provision of certain information. (Applicants that have obtained an 
+exemption should attach a copy of the exemption to this Consolidation Application.) IDA 
+LF 5 
+reserves the right to request the Applicants to provide additional information, where 
+necessary to assess adequately the competitive impact of the Consolidation. 
+13. Confidentiality 
+Have you indicated all material submitted as part of this Consolidation Application that 
+contains information for which you are requesting confidential treatment and the basis 
+on which such treatment is requested? 
+___ (Y/N) 
+Note: Requests to treat all information as confidential are not acceptable. 
+14. Certification 
+The undersigned hereby certify that they have made a diligent effort to fully complete 
+this Consolidation Application and that, to the best of their knowledge, all information 
+contained in this Consolidation Application form and the attachments thereto are 
+current, accurate and complete. The undersigned further certify that they will promptly, 
+fully and accurately respond to any IDA request for supplemental information and that, 
+even in the absence of a request, they will promptly notify IDA of any new or different 
+fact that is reasonably likely to have a material impact on IDA’s consideration of this 
+Consolidation Application. 
+Signature  
+Signature 
+Name:  
+Name: 
+Title:  
+Title: 
+Company:  
+Company: 
+Date Submitted:  
+Note: All terms used but not otherwise defined in this application form shall bear the 
+same meanings as defined in the Telecom Consolidation and Tender Offer Guidelines. 
+SF 1 
+ANNEX 2 
+SHORT FORM CONSOLIDATION APPLICATION 
+1. List the names and headquarter addresses of the Applicants subject to the 
+Consolidation ( i.e., the Licensee in which the Voting Shares/Units/Equity Interests or 
+Voting Power is being acquired or whose business is being acquired as a going 
+concern). Indicate the names of the Applicants’ primary contacts in connection with this 
+Consolidation Application, designations and contact information (mailing address, 
+telephone number, fax number, email address etc.). 
+2. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 1 based on the Applicant holding an attributable interest of 5% or more 
+(Subsidiary). For each Affiliate, indicate the Affiliate’s principal line of business and the 
+Applicant’s percentage Voting Shares/Units/Equity Interests or Voting Power. 
+3. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 1 based on the Affiliates holding an attributable interest of 5% or more in the 
+Applicant (Parent). For each Affiliate, indicate the Affiliate’s principal line of business 
+and the entity’s percentage Voting Shares/Units/Equity Interests or Voting Power in the 
+Licensee, Designated Business Trust or Designated Trust. Also indicate any entity in 
+which that Affiliate holds an attributable interest of 5% or more (Sibling). Indicate any 
+situation in which any Affiliate has special or preferential rights in the Licensee, 
+Designated Business Trust or Designated Trust. 
+4. List the name and address of the Applicant (whether or not a current Licensee, 
+Designated Business Trust or Designated Trust) that seeks to obtain Voting 
+Shares/Units/Equity Interests or Voting Power in the Licensee, Designated Business 
+Trust or Designated Trust or acquire the business of the Licensee, Designated Business 
+Trust or Designated Trust as a going concern. Indicate the name of the Applicant’s 
+primary contact in connection with this Consolidation Application and his or her 
+SF 2 
+designation and contact information (mailing address, telephone number, fax number, 
+email address etc.). 
+5. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 4 based on the Applicant holding an attributable interest of 5% or more 
+(Subsidiary). For each Affiliate, indicate the Affiliate’s principal line of business and the 
+Applicant’s percentage Voting Shares/Units/Equity Interests or Voting Power. 
+6. List each entity that constitutes an Affiliate of the Applicant identified in response to 
+Question 4 based on the Affiliates holding an attributable interest of 5% or more in the 
+Applicant (Parent). For each Affiliate, indicate the Affiliate’s principal line of business 
+and the entity’s percentage Voting Shares/Units/Equity Interests or Voting Power in the 
+Licensee, Designated Business Trust or Designated Trust. Also indicate any entity in 
+which that Affiliate holds an attributable interest of 5% or more (Sibling). Indicate any 
+situation in which any Affiliate has special or preferential rights in the Licensee, 
+Designated Business Trust or Designated Trust. 
+7. Description of the Consolidation 
+Check each of the following that correctly describes the Consolidation: 
+___ The Applicant identified in response to Question 4 is seeking to acquire, whether 
+directly or indirectly, Voting Shares/Units/Equity Interests or Voting Power that would 
+result in the Applicant holding Voting Shares/Units/Equity Interests or Voting Power of at 
+least 12% in the Licensee, Designated Business Trust or Designated Trust identified in 
+Response to Question 1. 
+Specify the percentage of Voting Shares/Units/Equity Interests or Voting Power sought 
+to be acquired: 
+_______ 
+SF 3 
+___ The Applicant identified in response to Question 4 is seeking to acquire the 
+business of the Licensee, Designated Business Trust or Designated Trust as a going 
+concern. 
+In answering Questions 8 through 10, please also aggregate the market share of the 
+Applicant and any entity that has Effective Control over the Applicant, or over which the 
+Applicant has Effective Control, or which is subject to Effective Control by an entity that 
+has Effective Control over the Applicant. 
+8. Using the methodology described in Sub-sections 7.2.1 to 7.2.1.3 of the Telecom 
+Consolidation and Tender Offer Guidelines, identify each telecommunication market 
+(including value-added services and equipment) within Singapore in which, based on 
+your best estimate, any of the Applicants has a market share of 5% or more. For each 
+such telecommunication market, indicate, based on your best available information, the 
+estimated market share of the 5 largest telecommunication market participants (based 
+on revenue, customers, or other appropriate measurement). 
+9. Does the Consolidation satisfy either of the following criteria? (Y/N) 
+__ The Consolidation is a Horizontal Consolidation that will result in a Post-
+Consolidation Entity with more than a 15% market share in any telecommunication 
+market within Singapore. If yes, please use the Long Form Consolidation Application. 
+__ The Consolidation is a Non-horizontal Consolidation in which at least one Applicant 
+has more than a 25% market share in at least one telecommunication market, whether 
+or not located in Singapore. If yes, please use the Long Form Consolidation Application. 
+10. Minimum Required Information 
+Check if you have attached each item listed below: 
+__ Abbreviated Statement 
+__ Consolidation Application Processing Fee (Applicants should make payment to IDA 
+of the sum of S$2,500 by way of money orders, postal orders, banker’s orders, 
+Interbank GIRO, cheques or telegraphic transfer. All bank charges associated with such 
+payment shall be borne by the Applicants. 
+SF 4 
+Note: IDA will not process this Consolidation Application unless the Applicants have 
+either provided all required information or have obtained an exemption from IDA in 
+respect of the provision of certain information. (Applicants that have obtained an 
+exemption should attach a copy of the exemption to this Consolidation Application.) IDA 
+reserves the right to request the Applicants to provide additional information, where 
+necessary to assess adequately the competitive impact of the Consolidation. 
+11. Confidentiality 
+Have you indicated all material submitted as part of this Consolidation Application that 
+contains information for which you are requesting confidential treatment and the basis 
+on which such treatment is requested? 
+___ (Y/N) 
+Note: Requests to treat all information as confidential are not acceptable. 
+12. Certification 
+The undersigned hereby certify that they have made a diligent effort to fully complete 
+this Consolidation Application and that, to the best of their knowledge, all information 
+contained in this Consolidation Application form and the attachments thereto are 
+current, accurate and complete. The undersigned further certify that they will promptly, 
+fully and accurately respond to any IDA request for supplemental information and that, 
+even in the absence of a request, they will promptly notify IDA of any new or different 
+fact that is reasonably likely to have a material impact on IDA’s consideration of this 
+Consolidation Application. 
+Signature  
+Signature 
+Name:  
+Name: 
+Title:  
+Title: 
+Company:  
+Company: 
+Date Submitted:  
+Note: All terms used but not otherwise defined in this application form shall bear the 
+same meanings as defined in the Telecom Consolidation and Tender Offer Guidelines.

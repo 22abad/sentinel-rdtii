@@ -1,0 +1,960 @@
+1 | P a g e
+LIST OF REGULATED ELECTRICAL EQUIPMENT 
+Note: Regulated Electrical Equipment are to be tested to the specified standards.
+Equipment that are tested and certified to the same standards of later revisions is also acceptable.  
+**New category * New Equipment 
+1 
+PLUG 
+TOP/PLUG 
+(15A and 
+below) 
+Flat Non-Rewirable 
+Two Pole Plug with 
+supply cord (max. 
+2.5A) 
+MS 1578:2003 
+BS EN 50075:1991 
+13 A Fused Plug 
+MS 589-1:2011 
+BS 1363:PT.1: 1995 
+15 A Plug 
+MS 1577:2003 
+No corresponding 
+international standard 
+Appliance Coupler 
+MS IEC 60320-1:2010 
+IEC 60320-1:2007 
+Interconnection 
+Coupler 
+MS IEC 60320-1:2010 
+MS IEC 60320-2-2:2011 
+IEC 60320-1:2007 
+IEC 60320-2-2: 1998 
+Adaptor (Multiways) 
+MS 589 PT.3:1998 
+BS 1363 PT.3:1995 
+Integrated Adaptor 
+MS 1144:1998 
+BS 5733:2010 
+*Travel Adaptor 
+IEC 60884-1:2006 
+IEC 60884-2-5:1995 
+Electrical Connector 
+(connecting device) 
+MS IEC 60998-1:2005 
+IEC 60998-1:2002 
+Connecting device 
+with screw type 
+clamping unit 
+MS IEC 60998-1:2005 
+MS IEC 60998-2-1:2005 
+IEC 60998-1:2002 
+IEC 60998-2-1:2002 
+Connecting device 
+with screw-less type 
+clamping unit 
+MS IEC 60998-1:2005 
+MS IEC 60998-2-2:2005 
+IEC 60998-1:2002 
+IEC 60998-2-2:2005 
+Connecting device 
+with insulation-
+piercing clamping 
+units 
+MS IEC 60998-1:2005 
+MS IEC 60998-2-3:2005 
+IEC 60998-1:2002 
+IEC 60998-2-3:2002 
+Twist-on connecting 
+device 
+MS IEC 60998-1:2005 
+MS IEC 60998-2-4:2005 
+IEC 60998-1:2002 
+IEC 60998-2-4:2004 
+Connecting boxes 
+MS IEC 60998-1:2005 
+MS IEC 60998-2-5:2005 
+IEC 60998-1:2002 
+IEC 60998-2-5:2003 
+2 
+SWITCH AND 
+DIMMER 
+General Purpose 
+Switch 
+MS IEC 60669-1:2004 
+IEC 60669-1:2007 
+*Door Bell & Chime 
+MS IEC 61558-1:2005 
+MS IEC 61558-2-8:2007 
+IEC 61558-1:2009 
+IEC 61558-2-8:2010 
+2 | P a g e
+Electronic Switch 
+MS IEC 60669-1:2004 
+MS IEC 60669-2-1:2004 
+IEC 60669-1:2007 
+IEC 60669-2-1:2009 
+Remote-control 
+Switch 
+MS IEC 60669-1:2004 
+MS IEC 60669-2-2:2004 
+IEC 60669-1:2007 
+IEC 60669-2-2:2006 
+Time Delay Switch 
+MS IEC 60669-1:2004 
+MS IEC 60669-2-3:2004 
+IEC 60669-1:2007 
+IEC 60669-2-3:2006 
+Cooker Control Unit 
+BS 4177:1992 
+3 
+SOCKET OUTLET 
+(15A and 
+below) 
+Electric Shaver Socket 
+Outlet 
+MS IEC 61558-1:2005 
+MS IEC 61558-2-5:2006 
+IEC 61558-1:2009 
+IEC 61558-2-5:2010 
+13A Switch & 
+unswitch socket 
+outlet 
+MS 589:PT.2:2011 
+BS 1363:PT 2:1995 
+15A socket outlet & 
+Plug 
+MS 1577:2003 
+No corresponding 
+international standard 
+Portable 2 pin socket 
+outlet class II 
+MS 1579: 2003 
+No corresponding 
+international standard
+*Portable cable 
+reel 
+MS 1141: 2006 
+IEC 61242: 2008 with 
+modification 
+4 
+FLUORESCENT 
+LAMPHOLDER / 
+STARTER 
+HOLDER 
+Lamp holder for 
+tubular fluorescent 
+lamp 
+MS IEC 60400: 2006 
+ IEC 60400: 2004 
+Starter holder for 
+tubular fluorescent 
+lamp 
+MS IEC 60400: 2006 
+IEC 60400: 2004 
+5 
+CEILING ROSE 
+Ceiling Rose 
+MS 770:1982  
+BS 67:1987 
+*Edison Screw 
+Lamp holder  
+MS IEC 60238:2008 
+IEC 60238:2004 
+6 
+BAYONET CAP 
+and 
+MULTIWAYS 
+ADAPTOR 
+Bayonet cap 
+Lampholder 
+IEC 61184:2008 
+Bayonet Lamp 
+Adaptor 
+MS 769:2006 with 
+IEC 61184:2008 
+IEC 61184:2008 
+with MS 769:2006 
+7 
+LAMP FITTING  
+Fixed general purpose 
+Luminaries (excluding 
+Tube/Bulb), 
+*Batten 
+Luminaries 
+(excluding 
+Tube/Bulb), 
+*Luminaries with 
+self-ballasted 
+florescent lamp. 
+MS IEC 60598-1:2006 
+MS IEC 60598-2-1:1997 
+IEC 60598-1:2003 
+IEC 60598-2-1:1987 
+Recessed Luminaries 
+(excluding Tube/Bulb) 
+MS IEC 60598-1:2006 
+MS IEC 60598-2-2:1998 
+IEC 60598-1:2003 
+IEC 60598-2-2:2011 
+3 | P a g e
+Glow-starter for 
+tubular fluorescent 
+MS IEC 60155: 1996 
+IEC 60155:2006 
+*Self ballasted 
+Compact Floresent 
+Lamp (CFL) with 
+Edison screw or 
+bayonet caps 
+MS IEC 60968:2006 
+MS IEC 60969:2006 
+IEC 60968:1999 
+IEC 60969:2001 
+*General and 
+safety for lamp 
+controlgear for use 
+on dc supplies up 
+to 250V and or ac 
+supplies up to 
+1000 V 
+MS IEC 61347-1:2003 
+IEC 61347-1:2007 
+*Lamp controlgear 
+: Particular 
+requirements for 
+d.c. or a.c. supplied 
+electronic 
+controlgear for LED 
+modules 
+MS IEC 61347-1:2003 
+MS IEC 61347-2-13:2011 
+(P) 
+IEC 61347-1:2007 
+IEC 61347-2-13:2006 
+*Lampholder 
+(Connectors for 
+LED-modules) 
+MS IEC 60838-1:2008 
+MS IEC 60838-2-2:2008 
+IEC 60838-1:2008 
+IEC 60838-2-2:2006 
+*LED Modules for 
+general Lighting 
+(eg. double capped 
+self-ballasted LED 
+Lamp) 
+MS IEC 62031:2011 with 
+MS IEC 60061-1: 2005 
+IEC 62031:2008 with 
+IEC 60061-1: 2005 
+*Self-ballasted 
+single capped LED-
+lamps for general 
+lighting services by 
+voltage > 50V 
+MS IEC 62560:2012 (P) 
+IEC 62560:2011 
+8 
+CAPACITOR for 
+FLUORESCENT 
+LAMP 
+Capacitors for use in 
+tubular fluorescent 
+lamp and other 
+circuits. 
+MS IEC 61048: 2006 
+MS IEC 61049: 1999 
+IEC 61048: 2006 
+IEC 61049: 1991 
+9 
+BALLAST / 
+CONTROL GEAR 
+/ DRIVER FOR 
+LAMP 
+Magnetic Ballast for 
+tabular fluorescent 
+lamp 
+MS IEC 61347-1: 2003 
+MS IEC 61347-2-8:2003 
+MS 141 PT.2:1993 
+IEC 61347-1: 2007 
+IEC 61347-2-8: 2000 
+IEC 60921:2004 with 
+modification 
+4 | P a g e
+Electronic Ballast for 
+fluorescent lamp 
+MS IEC 61347-1:2003 
+MS IEC 61347-2-3:2003 
+MS IEC 60929: 2008 with 
+MS IEC 61000-3-2: 2003 
+IEC 61347-1:2007 
+IEC 61347-2-3:2000 
+IEC 60929:2011 with 
+IEC 61000-3-2: 2009 
+10 
+CIRCUIT 
+BREAKER 
+including AC 
+CURRENT 
+OPERATED 
+EARTH 
+LEAKAGE 
+CIRCUIT 
+BREAKER and 
+MINIATURE 
+CIRCUIT 
+BREAKER 
+Residual Current 
+Circuit Breaker 
+(RCCB) 
+MS IEC 61008-1: 2007 
+MS IEC 61008-2-1: 2003 
+MS IEC 61008-2-2: 2003 
+IEC 61008-1: 2002 
+IEC 61008-2-1: 1990 
+IEC 61008-2-2: 1990 
+Residual Current 
+Breaker with 
+Overcurrent 
+Protection (RCBO) 
+MS IEC 61009-1: 2005 
+MS IEC 61009-2-1: 2003 
+MS IEC 61009-2-2: 2003 
+IEC 61009-1: 2003 
+IEC 61009-2-1: 1991 
+IEC 61009-2-2: 1991 
+Miniature Circuit 
+Breaker (MCB)for ac 
+supply 
+MS IEC 60898-1: 2007 
+ IEC 60898-1: 2003 
+Miniature Circuit 
+Breaker (MCB)for ac 
+& dc supply 
+MS IEC 60898-2: 2007 
+IEC 60898-2: 2003 
+Fuse Base & Carrier 
+up to 32A 
+MS IEC 60269-1:2011 
+MS IEC 60296-2:2011 
+IEC 60269-1:2006 
+IEC 60269-2:2006 
+5 | P a g e
+Fuse/Fuse Link up to 
+63A 
+MS IEC 60269-2:2011 
+MS IEC 60269-3:2011 
+IEC 60269-2:2006 
+IEC 60269-3:2010 
+Switch fuse up to 
+63A. 
+MS IEC 60947-1:2010 
+MS IEC 60947-3:2010 
+IEC 60947-1:2007 
+IEC 60947-3:2008 
+11 
+PORTABLE 
+LUMINAIRE    
+LAMP 
+Standing Lamp with 
+detachable or non-
+detachable mains 
+supply flexible cord, 
+Standing Lamp & 
+adaptor, 
+Table lamp with 
+detachable or non-
+detachable mains 
+supply flexible cord, 
+Table Lamp & 
+adaptor, 
+*Night Lamp 
+integral with direct 
+in plug. 
+*Portable LED 
+Lamp 
+MS IEC 60598-1: 2006 
+MS IEC 60598-2-4: 2003 
+IEC 60598-1:2003 
+IEC 60598-2-4: 1997 
+Hand Lamp & 
+adaptor, 
+MS IEC 60598-1: 2006 
+MS IEC 60598-2-8:2006 
+IEC 60598-1:2003 
+IEC 60598-2-8:2007 
+12 
+KETTLE 
+including 
+HEATING 
+ELEMENTS IF 
+SUPPLIED 
+SEPARATELY 
+Warming Plate 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-12:2003 
+IEC 60335-1:2004 
+IEC 60335-2-12:2002 
+Deep Fryer 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-13:2006 
+IEC 60335-1:2004 
+IEC 60335-2-13:2004 
+Heating Liquids such 
+as: 
+Coffee / Tea Maker, 
+Food Steamer, 
+Egg Boiler, 
+Jug, 
+Slow Cooker, 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-15:2004 
+IEC 60335-1:2004 
+IEC 60335-2-15:2002 
+6 | P a g e
+Steam Boat, 
+Kettle, 
+Airpot, 
+*Bottle Warmer, 
+*Sterillizer . 
+Multi-purpose cooker 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-9:2006 
+MS IEC 60335-2-13:2006 
+MS IEC 60335-2-15:2004 
+IEC 60335-1:2004 
+IEC 60335-2-9:2006 
+IEC 60335-2-13:2004 
+IEC 60335-2-15:2002 
+*Water 
+Dispenser/Filter  
+MS IEC 60335-1:2005 
+IEC 60335-1:2004 
+Water Dispenser  
+- Hot 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-15:2004 
+IEC 60335-1:2004 
+IEC 60335-2-15:2002 
+Water Dispenser  
+- Cold 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-24:2004 
+or MS 1597-2-75:2005 
+IEC 60335-1:2004 
+IEC 60335-2-24:2010 
+or IEC 60335-2-
+75:2005 
+Water Dispenser  
+– Hot and Cold 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-15:2004 
+with MS IEC 60335-2-
+24:2005 or MS 1597-2-
+75:2005 
+IEC 60335-1:2004 
+IEC 60335-2-15:2002 
+with IEC 60335-2-
+24:2010 or IEC 60335-
+2-75:2005 
+Built in Hob 
+MS IEC 60335-1:2005 
+IEC 60335-1:2004 
+IEC 60335-2-36:2002 
+13 
+KITCHEN 
+MACHINE 
+Blender, 
+Chopper, 
+Food Processor, 
+Juice Extractor, 
+Grinder , 
+Mixer. 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-14:2003 
+IEC 60335-1:2004 
+IEC 60335-2-14:2002 
+14 
+TOASTER / 
+OVEN (Cooking 
+Appliance) 
+Stationary Electric 
+Oven, 
+Induction Hob. 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-6:2007 
+or 
+MS IEC 60335-1:2005 
+MS 1597:Part 2-6:2003 
+IEC 60335-1:2004 
+IEC 60335-2-6:2005 
+Bread Maker, 
+Bread Toaster, 
+Portable Oven, 
+Induction Cooker,
+Grill, 
+Sandwich Maker/ 
+Waffle Maker, 
+Roaster. 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-9:2006
+IEC 60335-1:2004 
+IEC 60335-2-9:2006 
+Microwave Oven 
+MS IEC 60335-1:2005 
+IEC 60335-1:2004 
+7 | P a g e
+MS IEC 60335-2-25:2007 
+IEC 60335-2-25:2006 
+15 
+RICE COOKER 
+Rice Cooker 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-15:2004 
+IEC 60335-1:2004 
+IEC 60335-2-15:2002 
+16 
+REFRIGERATOR 
+Refrigerator, 
+Freezer, 
+Minibar. 
+MS IEC 60335-1:2005 
+MS 1597: Part 2-24:2005 
+IEC 60335-1:2004 
+IEC 60335-2-24:2005 
+with modification 
+17 
+IMMERSION  
+WATER HEATER 
+Fixed Immersion 
+Heater 
+MS IEC 60335-1:2005 
+IEC 60335-1:2004 
+IEC 60335-2-73:2002 
+Portable Immersion 
+Heater 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-74:2010 
+IEC 60335-1:2004 
+IEC 60335-2-74:2006 
+18 
+WATER HEATER 
+including 
+HEATING 
+ELEMENTS IF 
+SUPPLIED 
+SEPARATELY 
+Storage Water Heater 
+MS IEC 60335-1:2005 
+MS 1597-2-21:2011 or MS 
+IEC 60335-2-21:2005 
+IEC 60335-1:2004 
+IEC 60335-2-21:2004 
+with modification 
+Instantaneous Water 
+Heater 
+MS IEC 60335-1: 2005 
+MS 1597-2-35:2010 
+IEC 60335-1:2004 
+IEC 60335-2-35:2006 
+with modification 
+19 
+WASHING 
+MACHINE 
+Washing Machine 
+having drying 
+MS IEC 60335-1:2005 
+MS 1597:Part 2-7:2005 
+IEC 60335-1:2004 
+IEC 60335-2-7:2003 
+with modification 
+Washing Machine 
+with separate spin 
+container 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-4:2007 
+MS 1597:Part 2-7:2005 
+IEC 60335-1:2004 
+IEC 60335-2-4:2006 
+IEC 60335-2-7:2003 
+Tumbler Dryers 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-11:2003 
+IEC 60335-1:2004 
+IEC 60335-2-11:2003 
+Cloth Dryers 
+( on rack located ) 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-43:2007 
+IEC 60335-1:2004 
+IEC 60335-2-43:2005 
+*Dish Washer and 
+other utensils. 
+MS IEC 60335-1:2005 
+MS 1597:Part 2-5:2005 
+IEC 60335-1:2004 
+IEC 60335-2-5:2005 
+20 
+FAN 
+Moving-louver fan, 
+Ceiling fan, 
+Auto fan, 
+Pedestal fan, 
+Table fan,  
+Wall fan &  
+applies to their 
+separate regulators 
+and with blade. 
+MS IEC 60335-1:2005 
+MS 1597:Part 2-80:2010 
+MS 1220:2010 
+IEC 60335-1:2004 
+IEC 60335-2-80:2004 
+with modification for 
+ceiling fan only  
+IEC 60879:1986 with 
+modification 
+Ventilating fan, 
+*Decorative fan & 
+applies to their 
+separate 
+MS IEC 60335-1:2005 
+MS 1597:Part 2-80:2010 
+IEC 60335-1:2004 
+IEC 60335-2-80:2004 
+with modification for 
+ceiling type fan only  
+8 | P a g e
+regulators and fan 
+without blade.
+Range Hood 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-31:2003 
+IEC 60335-1-2004 
+IEC 60335-2-31:2002 
+Cleaning Appliances  
+(eg. Air Purifier) 
+MS IEC 60335-1:2003 
+MS IEC 60335-2-65:2006 
+IEC 60335-1:2004 
+IEC 60335-2-65:2005 
+Humidifiers   
+(eg.  Air Cooler) 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-98:2003 
+IEC 60335-1:2004 
+IEC 60335-2-98:2002 
+21 
+HAND 
+OPERATED 
+HAIR DRYER/ 
+HAIRCARE/ 
+SKIN CARE 
+Hair Dryer, 
+Hair Styling Set, 
+Hand Dryer, 
+*Ionic Facial 
+Steamer or similar 
+to it. 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-23:2007 
+IEC 60335-1:2004 
+IEC 60335-2-23:2005 
+22 
+IRON 
+Iron 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-3:2006 
+IEC 60335-1:2004 
+IEC 60335-2-3:2005 
+Fabric Steamer 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-85:2003 
+IEC 60335-1:2004 
+IEC 60335-2-85:2002 
+23 
+SHAVER 
+Shaver, 
+Hair Clippers. 
+MS IEC 60335-1:2005 
+IEC 60335-1:2004 
+IEC 60335-2-8:2008 
+24 
+VAPORISER 
+Mosquito Matt Vapor, 
+Aroma Vapor  
+(eg. Air Freshener). 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-101:2003 
+IEC 60335-1:2004 
+IEC 60335-2-101:2002 
+25 
+VACUUM 
+CLEANER 
+Vacuum Cleaner,  
+Water Suction 
+Cleaning. 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-2:2006 
+IEC 60335-1:2004 
+IEC 60335-2-2:2004 
+26 
+HI-FIDELITY 
+SET 
+Sub-woofer, 
+Amplifier, 
+Cassette Player, 
+Equalizer / Mixer, 
+Hi-Fi System, 
+Karaoke, 
+PA System, 
+Portable Hi-Fi System, 
+Portable Radio 
+Cassette, 
+Player / Recorder, 
+Radio, 
+Radio Alarm, 
+Tuner / Receiver, 
+Turn tables / Record 
+Players, 
+MS IEC 60065: 2007 
+IEC 60065: 2011 
+9 | P a g e
+Compact Disc Player, 
+*Audio/Video 
+Recorder up to 4 
+channels. 
+27 
+VIDEO and 
+VISUAL 
+DISPLAY UNIT 
+Electronic appliances 
+such as: 
+LCD,  
+LED,  
+Plasma,  
+CRT, 
+ and similar to it. 
+MS IEC 60065:2007 
+IEC 60065:2011 
+28 
+AUDIO and 
+VIDEO PLAYER 
+UNIT 
+VCD , 
+Laser Disc, 
+Video Cassette 
+Recorder,  
+DVD , 
+Video Rewinder, 
+Children Video Game. 
+MS IEC 60065: 2007 
+IEC 60065: 2011 
+29 
+**MASSAGER 
+*Foot Massagers, 
+*Massage Bed, 
+*Massage Chair, 
+*Massage Pads, 
+*Handheld 
+*Massagers, 
+*Massage Belts. 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-32:2003 
+IEC 60335-1:2004 
+IEC 60335-2-32:2002 
+30 
+**AIR 
+CONDITIONER 
+(Cooling 
+Capacity of 
+32,000 Btu/hr & 
+below) 
+*Split Air-
+conditioner, 
+*Portable  Air-
+conditioner, 
+*Ceiling Air-
+conditioner 
+IEC 60335-1:2004 
+IEC 60335-2-40:2005 
+31 
+CHRISTMAS 
+LIGHT 
+Lighting Chain, 
+Rope Light, 
+Decorative / Festive 
+Light. 
+MS IEC 60598-1:2006 
+MS IEC 60598-2-20:2005 
+IEC 60598-1:2003 
+IEC 60598-2-20:2010 
+32 
+DOMESTIC 
+POWER TOOLS 
+(Portable Type) 
+ Drill (Drill bit size up 
+to 15 mm) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-1:2011 
+IEC 60745-1:2006 
+IEC 60745-2-1:2008 
+Grinder (up to 100 
+mm) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-3:2010 
+IEC 60745-1:2006 
+IEC 60745-2-3:2006 
+Sander (up to 300 W) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-4:2011 
+IEC 60745-1:2006 
+IEC 60745-2-4:2006 
+Circular Saw and 
+circular knife (Cutting 
+Blade up to 160 mm) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-5:2010 
+IEC 60745-1:2006 
+IEC 60745-2-5:2006 
+10 | P a g e
+Spray gun for non-
+flammable liquid (up 
+to 100 bars) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-7:2005 
+IEC 60745-1:2006 
+IEC 60745-2-7:1989 
+Jig and Sabre Saw 
+(up to 60 mm) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-11:2011 
+IEC 60745-1:2006 
+IEC 60745-2-11:2006 
+Planer (up to 500 W) 
+MS IEC 60745-1:2011 
+MS IEC 60745-2-14:2011 
+IEC 60745-1:2006 
+IEC 60745-2-14:2006 
+Trimmer (up to 300 
+W) 
+Hedge trimmer and 
+Grass shears (up to 
+750 W) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-15:2011 
+IEC 60745-1:2006 
+IEC 60745-2-15:2006 
+Router and trimmer 
+(up to 500 W) 
+MS IEC 60745-1:2010 
+MS IEC 60745-2-17:2005 
+IEC 60745-1:2006 
+IEC 60745-2-17:2003 
+High Pressure Cleaner 
+MS IEC 60335-1:2005 
+IEC 60335-2-79:2007 
+IEC 60335-1:2004 
+IEC 60335-2-79:2005 
+Sewing Machine 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-28:2003 
+IEC 60335-1:2004 
+IEC 60335-2-28:2002 
+Portable Heating Tool 
+such as:  
+Soldering Gun, 
+Soldering Iron, 
+Heat Gun, 
+Hot Air Firelighters, 
+Glue gun. 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-45:2003 
+IEC 60335-1:2004 
+IEC 60335-2-45:2002 
+33 
+**ADAPTER / 
+CHARGER 
+Portable Battery 
+Charger (up to 12 V) 
+MS IEC 60335-1:2005 
+MS IEC 60335-2-29:2005 
+IEC 60335-1:2004 
+IEC 60335-2-29:2004 
+*Adaptor for IT 
+Equipment (up to 
+20V) 
+MS IEC 60950-1:2007 
+IEC 60950-1:2005 
+General electrical 
+appliances   
+Electronic Isolating 
+Transformer 
+MS IEC 61558-1:2005 
+MS IEC 61558-2-6: 2006 
+IEC 61558-1:2009 
+IEC 61558-2-6:2009 
+11 | P a g e
+*Switching mode 
+power supply 
+MS IEC 61558-1:2005 
+MS IEC 61558-2-17:2007 
+IEC 61558-1:2009 
+IEC 61558-2-17:2009 
+*Electric toys 
+MS IEC 61558-1:2005  
+MS IEC 61558-2-7: 2007 
+IEC 61558-1:2009 
+IEC 61558-2-7: 2007 
+Audio video 
+equipment 
+MS IEC 60065:2007 
+IEC 60065:2011 
+*IT & Office 
+products 
+MS IEC 60950-1:2007 
+IEC 60950-1:2005 
+Shavers 
+MS IEC 60335-1: 2005 
+IEC 60335-1: 2004 
+IEC 60335-2-8:2008 
+34 
+WIRE / CABLE / 
+CORD (non-
+armoured) 
+0.5mm² to 
+35mm² 
+Polyvinyl chloride 
+(PVC) Insulated 
+flexible cord and 
+cable 
+MS 140:1987 
+or 
+MS 2112-5:2009 
+BS 6500:2000 
+or 
+IEC 60227-1:2007 
+IEC 60227-5:2011 
+Rubber insulated cord 
+and flexible cables 
+MS 140:1987 
+BS 6500:2000 
+or 
+IEC 60245-1:2003 
+IEC 60245-4:2011 
+PVC-insulated cable 
+(non-armoured) for 
+electric power and 
+supply: 
+-  non-sheathed 
+MS 2112-3:2009 
+IEC 60227-3:1997 
+PVC-insulated cable 
+(non-armoured) for 
+electric power and 
+supply: 
+-  sheathed 
+MS 2112-4:2009 
+IEC 60227-4:1997 

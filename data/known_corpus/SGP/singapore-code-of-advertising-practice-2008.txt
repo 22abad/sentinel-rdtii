@@ -1,0 +1,2696 @@
+1
+Singapore
+Code of
+Advertising
+Practice
+(3rd Edition)
+February 2008
+Advertising Standards Authority of Singapore
+170 Ghim Moh Road
+#05-01 Ulu Pandan Community Building
+Singapore 279621
+Tel: 6461-1888
+Fax: 6467-9055
+Email: asas@case.org.sg
+ISBN number 978-981-05-8783-3
+2
+The Code has the
+support of the following
+organisations and
+government agencies
+whose representatives
+constitute the Advertising
+Standards Authority
+of Singapore
+Agri-Food & Veterinary Authority of Singapore
+Association of Accredited Advertising Agents, Singapore
+Association of Broadcasters (Singapore)
+Association of Media Owners (Singapore)
+Consumers Association of Singapore
+Direct Marketing Association of Singapore
+Health Sciences Authority
+Infocomm Development Authority of Singapore
+Media Development Authority
+MediaCorp Pte Ltd
+Pharmaceutical Society of Singapore
+Singapore Advertisers Association
+Singapore Association of Pharmaceutical Industries
+Singapore Medical Association
+Singapore Press Holdings Limited
+3
+Contents
+PREFACE ............................................................................................ 04
+I
+INTRODUCTION .......................................................................... 05
+i.
+The Advertising Control System ......................................... 05
+ii.
+The Code of Advertising Practices ...................................... 08
+II
+GENERAL PRINCIPLES ............................................................... 11
+III
+GUIDELINES ................................................................................ 15
+IV
+APPENDICES ............................................................................... 20
+A.
+Identification of Advertisements ................................................ 20
+B.
+“Sales” advertisements .............................................................. 21
+C.
+Children and Young People ........................................................ 23
+D.
+Interactive Advertisements......................................................... 25
+E.
+Direct Marketing .......................................................................... 26
+F.
+Medicinal and Related Products and Advertisements ............. 27
+Containing Health Claims
+G. Diseases to which no reference, or only limited reference,
+may be made in advertisements ................................................ 38
+H.
+Advertising for Slimming Products and Services ..................... 41
+I.
+Hair and Scalp Products ............................................................. 47
+J.
+Financial Services and Products ................................................ 50
+K.
+Advertising for Alcoholic Drinks ................................................ 52
+L.
+Environmental Claims ................................................................ 53
+M. Employment and Business Opportunities ................................. 54
+N. Motoring ...................................................................................... 55
+O. Others .......................................................................................... 56
+P.
+Statutes and statutory instruments with special relevance
+to advertising and related trading practices .............................. 58
+Q. Advertising for Audiotex Services ............................................. 65
+4
+Preface
+This Code seeks to promote a high standard of ethics in advertising
+by self-regulation against the background of national law and
+international law and practice, including the International Code of
+Advertising Practice published by the International Chamber of
+Commerce.
+It supersedes the two previous codes first published in 1976 and
+revised in 2003. The 2003 Code was issued to address advances in
+the social environment, advertising media, and technology. Since
+2003, further changes in media and technology have occurred. Also,
+the Council has had the occasion to evolve its practices and processes
+over the years. As with the 2003 revisions, however, the essential
+principles of the earlier Codes have not been changed. Explicit
+guidelines and interpretation shall be provided by the Advertising
+Standards Authority of Singapore on a case-to-case basis.
+In administering an industry committed to self-regulation, the
+Advertising Standards Authority of Singapore relies principally on a
+system of guidance and voluntary compliance, rather than punitive
+measures, to facilitate observance of this Code.  Effective
+enforcement therefore depends heavily on the support, co-operation,
+resources and obedience of participants in the industry. The Authority
+believes in the benefits of self-regulation, including the flexibility to
+resolve disputes and address concerns expeditiously and in an
+informal and consultative forum.
+5
+i
+THE ADVERTISING CONTROL SYSTEM
+1.
+The Code of Advertising Practice and ASAS
+1.1
+The Singapore Code of Advertising Practice (the Code) is a fundamental part
+of the system of control by which local advertising regulates its activities.
+1.2
+The Code has been endorsed by organisations representing advertisers,
+advertising agencies and media.  It is administered by the Advertising
+Standards Authority of Singapore (ASAS) Council to the Consumers
+Association of Singapore (CASE).  The Code will be used by ASAS to regulate
+local advertising activities.
+2.
+The Advertising Standards Authority of Singapore
+2.1
+ASAS comprises members drawn from the organisations representing
+advertisers, advertising agencies and media, government agencies and other
+supporting organisations.  The ASAS Council meets regularly to secure
+compliance with the Code and to keep it up to date.
+3.
+Responsibilities of ASAS, advertisers, agencies, and media
+3.1
+While ASAS provides individual advice and guidance to advertisers,
+advertising agencies and the media who are in doubt as to the acceptability
+of advertising, particularly prior to publication, ASAS is not geared, nor is it
+intended for it to become a clearing house for the approval of all advertising.
+3.2
+Responsibility for observing the Code rests primarily with the advertiser.  But
+it also applies to any advertising agency or medium involved in the publication
+of an advertiser’s message to the public.  The interpretation of the Code is
+vested in ASAS to ensure that this system of self-regulation works in the public
+interest.  ASAS will be bound by all existing legislation.
+4.
+Power of ASAS
+4.1
+ASAS shall be empowered to ask an advertiser or an advertising agency to
+amend or withdraw any advertisement that, in the opinion of ASAS, is contrary
+to the Code. It shall also be empowered to ask an advertiser or advertising
+agency to withhold such advertisement until it has been modified or, in the
+case where ASAS has requested for further information in order to decide
+whether an advertisement is contrary to the Code, pending receipt of such
+information and a decision.
+4.2
+ASAS is empowered to ask Media Owners to support the decisions of ASAS.
+ASAS shall be empowered to request its members to sanction parties which
+violate the Code, including the withdrawal of facilities, rights or services from
+parties concerned subject to legal constraints. Members shall use best efforts
+6
+to ensure that they have the power to sanction parties that violate the Code,
+e.g., by incorporating such power into their own membership rules or into
+their contracts with clients.
+4.3
+ASAS shall be empowered to rule on any disputes relating to breaches of the
+Code arising between members of the Singapore Advertisers Association,
+the Association of Accredited Advertising Agents, Association of Media Owners
+(Singapore) and Association of Broadcasters (Singapore). Such rulings shall
+be binding on members of the associations.
+4.4
+ASAS may also advise on any advertisement prepared and/or published by
+persons or companies outside the four associations, provided that any such
+advertisement is brought to the attention of ASAS in accordance with the
+procedure outlined below.
+4.5
+ASAS shall not be responsible for any loss or damage, whether direct or
+consequential, in any event.
+5.
+Procedure for making advertising complaints
+5.1
+Advertising complaints should be addressed to the Chairman of ASAS. All
+complaints should be in writing and accompanied by sufficient details of the
+complaint for ASAS to act.  Advice may be given by telephone to prospective
+complainants and others as to the scope of the Authority’s activities. However,
+investigations/deliberations will not begin until the complainant has provided
+a written confirmation and has paid the administrative fee according to the
+tariff published by ASAS.
+5.2
+The complainant will provide a cutting of the press or magazine advertisement
+or the full text of the radio, television or cinema commercial complained of.
+For advertisements with visual, audio or video elements, ASAS prefers to
+receive a copy of the advertisement in a form that allows such visual, audio or
+video elements to be observed. If the advertisement is in the vernacular, an
+English translation must be supplied.
+5.3
+All complaints should also be accompanied by the contact information,
+especially the postal address, of the complainant.
+5.4
+ASAS may call on the complainant, the person complained against or any
+other person for information that ASAS deems relevant in assessing the
+advertisement complained of.  Such requests for substantiation may be made
+by the Chairman or by the secretariat on behalf of the Chairman, and may
+specify deadlines for the information to be provided and sanctions to be applied
+if such deadlines are not met.
+5.5
+In requesting substantiation, whether from interested parties or independent
+outside parties, ASAS may take into account all factors to decide who is in the
+best position to provide the information. The cost of obtaining further
+information will be borne by the party ASAS calls upon to provide the
+information or, where ASAS requests information from an independent outside
+party, by whichever party ASAS deems appropriate. If the person called upon
+by ASAS fails to timely provide information or declines to finance the gathering
+7
+of information, ASAS has the discretion to either take no further action or to
+act on the basis of the information before it. In either event, ASAS will not be
+liable to any person for any loss or damage which is in any way related to
+such lack of information. Those who are bound by this Code will bind
+themselves to indemnify ASAS for all costs and expenses incurred in
+deliberating on complaints if such investigations/deliberations involve the
+employment or engagement of professional experts.
+5.6
+The ASAS council will meet to rule on complaints and other enquiries at regular
+intervals appropriate to the voluntary nature of its membership (but not less
+frequently than once every three months). Members of ASAS, other than the
+Chairman, will have one vote and all decisions will be by a simple majority of
+members present. In the event that the votes are divided, the Chairman will
+have a casting vote. A quorum will be constituted by one-third of existing
+members. Any member of ASAS who has a vested interest in a dispute must
+immediately declare that interest and be absent from all deliberations. The
+Chairman is responsible for ensuring that the council member of ASAS who
+has a vested interest will absent himself from all deliberations.
+5.7
+ASAS’s decision will be notified in writing to the interested parties, advising
+them of any action to be taken.
+5.8
+In addition to advertising complaints, all other enquiries should also be
+addressed to the Chairman of ASAS. ASAS’ advice on such matters will be
+communicated directly to the party concerned by the Chairman, or on his/her
+behalf, in writing.
+5.9
+Complainants and persons making enquiries of ASAS should allow a
+reasonable period (which will typically be between one and two months after
+all relevant information is in hand) for the members of the ASAS Council to
+study the  complaints/enquiries and to dispatch a reply or make a ruling. Where
+further information is required for ASAS to make a ruling or answer an enquiry,
+the time required to handle a complaint or enquiry will be extended
+accordingly.
+5.10 All members of ASAS will honour the confidential nature of all discussions.
+All deliberations of ASAS are confidential and must not be disclosed to third
+persons by any party without ASAS’s prior written permission.  ASAS is not
+obligated to disclose any information it may receive in the course of any
+investigation/deliberation to any party.
+6. Sanctions
+6.1
+The sanctions which exist are principally the withholding of advertising space
+or time from advertisers, and the withdrawal of trading privileges from
+advertising agencies.  Both these sanctions are applied by the media owners.
+6.2
+In addition, there is also a sanction of adverse publicity.  This is wielded by
+ASAS which may publish details of the outcome of investigations it undertakes
+naming those who have offended against the Code.
+7. ASAS Decision
+7.1
+The decision of ASAS on the interpretation of the Code shall be final.
+8
+ii.
+THE CODE OF ADVERTISING PRACTICES
+1.
+Preamble
+1.1
+All advertisements should be legal, decent, honest, and truthful.
+1.2
+All advertisements should be prepared with a sense of responsibility to the
+consumer and society.
+1.3
+All advertisements should conform to the principles of fair competition
+generally accepted in business, including:
+(a)
+Non-denigration;
+(b)
+Non-exploitation of goodwill;
+(c)
+Non-imitation.
+1.4
+All advertisements shall not subvert the shared values in Singapore’s society
+including:
+(a)
+Nation before community and society above self;
+(b)
+Family as the basic unit of society;
+(c)
+Community support and respect for the individual;
+(d)
+Consensus, not conflict; and
+(e)
+Racial and religious harmony.
+1.5
+All advertisements shall not subvert Singapore’s family values of:
+(a)
+Love, care, and concern;
+(b)
+Mutual respect;
+(c)
+Filial responsibility;
+(d)
+Commitment; and
+(e)
+Communication.
+1.6
+No advertisement should bring advertising into disrepute or reduce confidence
+in it as a service to industry and to the public.
+1.7
+This Code shall not intentionally suppress free and vigorous competition.
+1.8
+This Code shall protect the rights of consumers.
+9
+2.
+Scope
+2.1
+The primary objective of this Code is the regulation of commercial advertising.
+2.2
+The Code shall apply to all advertisements for any goods, services, and facilities
+appearing in any form, or any media, including but not limited to:
+(a)
+Advertisements in newspapers (including classified advertisements),
+magazines, brochures, leaflets, circulars, mailings, posters, plastic cards
+(including fare cards, cash cards), tickets and other printed publications;
+(b)
+Advertisements via facsimile transmissions and aerial announcements;
+(c)
+Advertisements displayed on buildings and vehicles;
+(d)
+Television, radio, cinema and video commercials;
+(e)
+Advertisements in information network services, electronic bulletin
+boards, on-line databases and Internet services;
+(f)
+Advertisements in non-broadcast electronic media such as computer
+games;
+(g)
+Mail orders;
+(h)
+Sales promotions;
+(i)
+Mailing lists;
+(j)
+Digital communications in every format, design and context including
+the world-wide web (Internet); and
+(k)
+Telephone, etc.
+2.3
+The Code shall be followed by all concerned with advertising whether as
+advertisers, advertising practitioners, sales promoters, agencies, or the media.
+2.4
+The Code shall be complied with for all advertisements appearing in Singapore
+regardless of their place of origin.  The Code recognises that enforcement
+may be difficult in this area (for example, advertisement received through the
+Internet and mail-order brochures from overseas), but would seek the co-
+operation of all parties concerned, including Internet operators and publishers.
+10
+2.5
+The following definitions apply to the Code:
+(a)
+An advertisement means any form of commercial communication for
+any goods or services, regardless of medium used, including advertising
+claims on packs, labels and point of sale material;
+(b)
+A product encompasses goods, services, ideas, prizes and gifts; and
+(c)
+A consumer is anyone who is likely to see a given advertisement.
+3.
+Interpretation
+3.1
+This Code is to be applied in the spirit as well as in the letter.
+3.2
+The Code will be issued by ASAS to regulate local advertising.
+3.3
+Conformity with the Code is assessed according to the advertisement’s
+probable impact when taken as a whole or in context.  This will depend on the
+audience, the medium, the nature of the product and any additional material
+distributed to consumers.
+3.4
+The fact that the content or form of an advertisement originates wholly or in
+part from other sources is not an excuse for non-compliance with the Code.
+3.5
+While an advertiser’s subsequent correction and appropriate redress for a
+contravention of the Code are desirable, they cannot excuse the original
+contravention of the Code.
+3.6
+ASAS shall have the discretion to publish details of the parties who have
+offended against the Code and the nature of the offence.
+3.7
+If the offending advertisement originates from overseas, ASAS shall have the
+discretion to seek overseas authority to help enforce the Code, in addition to
+Section I, (i), para 4.2 and 3.6 above.
+3.8
+ASAS shall not be responsible or liable for any loss or damage, whether direct
+or consequential, in any event.
+11
+1.
+Legality
+1.1
+Advertisements should not contain anything that is illegal or might incite anyone
+to break the law.  Nor should they appear to condone or lighten the gravity of
+illegal activities.
+1.2
+Advertisements should not contain anything that contravenes the ethical code
+of recognised professional bodies in Singapore.
+2.
+Decency
+2.1
+Advertisements should not contain anything that is offensive to the standards
+of decency prevailing among those who are likely to be exposed to them.
+3.
+Honesty
+3.1
+Advertisements should not abuse the trust of the consumer or exploit his lack
+of experience, expertise or knowledge.
+4.
+Fear, superstition, violence
+4.1
+Advertisements should not without justifiable reason play on fear. Advertisers
+may use an appeal to fear to encourage prudent behaviour provided such use
+is not disproportionate to the risk.
+4.2
+Advertisements should not exploit the superstitious.
+4.3
+Advertisements should not contain anything that might lead or lend support to
+acts of violence and anti-social behaviour, nor should they appear to condone
+or lighten the gravity of such acts.
+5.
+Truthful presentation
+5.1
+Advertisements should not mislead in any way by inaccuracy, ambiguity,
+exaggeration, omission or otherwise.  More specifically, advertisements should
+not:
+(a)
+Misrepresent any matter likely to influence consumers’ attitude to any product,
+advertiser, or promoter;
+(b)
+Misrepresent any information to mislead consumers into believing any matter
+that is not true, such as the source of the product, quality of the product,
+obligation (or non-obligation) in using a trial product, and others;
+(c)
+Mislead consumers about the price of goods or services;
+12
+(d)
+Underestimate the actual total price to be paid;
+(e)
+Mislead consumers to overestimate the value or mislead consumers regarding
+the conditions on the terms of payment such as hire purchase, leasing,
+instalment sales and credit sales; or
+(f)
+Mislead consumers regarding the terms of guarantee, delivery, exchange, return,
+repair and maintenance; and mislead consumers regarding the extent of benefits
+for charitable causes.
+5.2
+If a presentation (such as a speech, documentary and newsreel) is substantially
+an advertisement, it should be clearly stated as an advertisement.
+5.3
+Claims
+(a)
+Advertisements should not misuse research results or quotations from technical
+and scientific publications.
+(b)
+Statistics should not be so presented as to imply a greater validity than they
+really have.
+(c)
+Scientific terms should not be misused; scientific jargon and irrelevancies should
+not be used to make claims appear to have any scientific basis which they do
+not possess.
+6.
+Safety
+6.1
+Advertisements should not show a disregard for safety.  In particular:
+(a)
+Advertisements should not contain any visual presentation or any description
+of dangerous practices or of situations which show a disregard for safety, unless
+justifiable on educational or social grounds;
+(b)
+Special care should be taken in advertisements directed towards or depicting
+children and young people.  Refer to Appendix C for specific guidelines; and
+(c)
+Consumers should not be encouraged to drink and drive.
+7.
+Portrayal of persons
+7.1
+All persons should be portrayed in a manner respectful of their dignity. No
+person should be commoditised.
+8.
+Children and young people
+8.1
+Advertisements should not exploit the natural credulity of children or the lack
+of experience of young people, and should not strain their sense of loyalty.
+13
+8.2
+Advertisements addressed to or likely to influence children or young people
+should not contain anything that might result in harming them mentally, morally
+or physically.
+8.3
+Advertisements should not promote a lifestyle that is promiscuous or that
+denigrates or is detrimental to family values.  For more guidance see Appendix C.
+9.
+Social values
+9.1
+Advertisements should not:
+(a) Downplay the importance of patriotism and national unity;
+(b) Misinterpret national policies and goals for the benefit of any individual;
+(c) Distort the perception of Singaporeans and the quality of life in Singapore;
+(d) Distort the perceptions of citizens’ influence in national issues;
+(e) Discredit or be derogatory to Singapore as a democratic country or in any
+other way.
+9.2
+Advertisements should not promote or condone rude and inconsiderate
+behaviour.  Advertisements should not downplay the importance of having a
+caring and compassionate attitude for the less fortunate members of the
+community.
+9.3
+Advertisements should not adopt or encourage a confrontational approach to
+resolving societal conflicts or differences.  Advertisements should not exploit
+or fuel conflicts relating to national problems and controversial policies or issues.
+9.4
+Advertisements should be handled sensitively to minimise misinterpretation
+of intentions on ethnic issues.  Advertisements should not jeopardise inter-
+ethnic understanding or discriminate against any ethnic group or religion, or
+downplay the importance of mutual dependence amongst all groups.
+10. Family values
+10.1 Advertisements should not:
+(a) Downplay the importance of the family as a unit and foundation of society;
+(b) Undermine the perception of the family as a place of comfort and security;
+(c) Discredit mutual love, affection and support amongst family members.
+10.2 Advertisements should not encourage inconsiderate and disrespectful conduct
+amongst family members.
+14
+10.3 Advertisements should not denounce or discourage the responsibilities of
+honouring, supporting and providing for one’s parents and grandparents in
+their old age.
+10.4 Advertisements should not undermine the willingness among family members
+to stand by one another through ups and downs.
+10.5 Advertisements should not erode or downplay the importance of
+communication amongst family members in building trust and understanding.
+11. Non-denigration
+11.1 Advertisements should not unfairly attack or discredit other products,
+organisations or professions directly or by implication.
+12. Non-exploitation of goodwill or intellectual property
+12.1 Advertisements should not make unjustifiable use of the name, initials, logo
+and/or trade and service marks of any firm, company or institution.
+12.2 Advertisements should not take unfair advantage of another firm, person or
+institution’s goodwill in its name, trade name or other intellectual property, or
+the goodwill earned by other’s advertising and promotion campaigns.
+13. Non-imitation
+13.1 Advertisements should not be so similar in general layout, copy, slogans, visual
+presentation, music or sound effects to other advertisements or promotions as
+to be likely to mislead or confuse.
+13.2 Advertisers should comply with paragraph 2 in Article 10 of the ICC Code which
+states that:
+“Where an international advertiser has established a distinctive advertising
+campaign in one or more countries, other advertisers should not unduly imitate
+this campaign in the other countries where he operates, thus preventing him
+from extending his campaign within a reasonable period of time to such
+countries.”
+14. National Symbols
+14.1 Attention is drawn to the provisions governing the use of the Singapore Arms
+and Flag, and the National Anthem.  Details may be obtained from the offices
+of the Prime Minister or the Ministry of Information, Communications and the
+Arts.
+15
+1.
+Matters of fact
+1.1
+All descriptions, claims and comparisons that relate to matters of objectively
+ascertainable facts should be capable of substantiation.  Advertisers and
+advertising agencies are required to hold such substantiation ready for
+immediate production without delay to ASAS upon request.
+2.
+Use of research results
+2.1
+When a factual claim in an advertisement is said to be supported by the
+results of independent research, the advertiser and sales promoter should
+be able to show that those responsible for the research accept the
+advertisement as an accurate account of the research.
+3.
+Use of testimonials
+3.1
+Advertisements should not contain or refer to any testimonial or
+endorsement unless it is genuine and related to the personal experience
+of the party who provided the testimonial or endorsement.
+3.2
+Testimonials or endorsements that are obsolete or otherwise no longer
+applicable should not be used.
+3.3
+Particular care should be taken to ensure that testimonials based on
+fictitious characters are not framed so as to give the impression that real
+people are involved.
+3.4
+Testimonials or endorsements that are exceptional experiences (i.e. which
+do not reflect the experience that an average user of the product would
+ordinarily expect to have) should not be used.  Advertisers and advertising
+agencies are required to show substantiation that such testimonials or
+endorsements do indeed reflect the typical experience of ordinary users.
+3.5
+Except as provided in this clause 3.5, no advertisement shall use any
+testimonial to support a claim (whether generally or by any individual)
+that would be prohibited or unacceptable under any provision or Appendix
+of this Code. ASAS may, on a case by case basis, permit such testimonials
+to be used, if ASAS is satisfied, in its sole discretion, that such use would
+not be unfair or misleading. As a condition to permitting such testimonials
+to be used, ASAS may also require revisions to the advertisement to include
+such disclaimers and qualifications as ASAS deems fit.
+16
+4.
+Expression of opinion
+4.1
+This Code places no constraint upon the free expression of opinion,
+including subjective assessments of the quality or desirability of products,
+provided always that:
+(a)
+It is clear what is being expressed is an opinion;
+(b)
+It does not mislead consumers about any objectively ascertainable
+facts; and
+(c)
+The advertiser is prepared to explain, without delay, when requested
+to do so, why he believes his expression of opinion conforms to the
+Code.
+5.
+Quotation of prices
+The following provisions apply to any indication of cost in an advertisement.
+5.1
+Clarity
+If reference is made in an advertisement to more than one product, it should
+be clear to which product or version any quoted price relates.
+5.2
+Obligation to honour price advertised
+If a product is illustrated, and a price quoted in conjunction with the
+illustration, advertisers should ensure that what is illustrated can be
+purchased for the price shown.
+5.3
+Truthfulness
+If the price quoted does not include the product in its entirety (for example
+a lamp without its lamp shade), this fact and the additional price should be
+stated with no less prominence than the price itself.
+5.4
+Goods and Services Tax (“GST”)
+All prices should include GST where it applies, in accordance with published
+laws.
+6.
+Associated purchases
+6.1
+If a product cannot be purchased without purchasing other product(s) from
+the advertiser or promoter, this fact must be stated with no less prominence
+than the product itself.
+17
+7.
+Use of the word “free”
+7.1
+When a product is advertised or promoted as being “free”, incidental costs,
+which will necessarily be incurred by the consumer in acquiring it, should
+be clearly stated.
+7.2
+If the incidental cost that has to be incurred for acquiring the free product
+exceeds what it would normally cost to acquire the product from another
+source, the product should not be described as free.
+7.3
+Advertisers should not seek to recover the cost of the product that they
+describe as free in any manner, including:
+(a)
+Imposing additional fees they would normally not charge;
+(b)
+Inflating any incidental expenses they may legitimately recover; or
+(c)
+Altering the composition or quality, or increasing the price, of any
+other product which they require to be bought as a pre-condition of the
+consumer obtaining the “free” product.
+7.4
+Except in the context of a free trial, the word “free” should not be used if
+payment for a product is only deferred.
+7.5
+A trial may be described as free, although the consumer is expected to pay
+the cost of returning the goods, provided that the advertisement or the
+promoter has made clear his obligation to do so.
+7.6
+An offer that extends a product without cost for the purchase of another
+on a continuous basis should not claim that the product is free.
+8.
+Use of the word “discount”
+8.1
+When a product is being advertised or promoted as to be sold at a discount
+(or similar description such as a bargain), the discounted price must be
+lower than its usual price and cannot be offered indefinitely.  The word
+“discount” should not be used in the situation where the reduced price
+has become or would be reasonably perceived by the consumers as the
+usual price.
+9.
+Comparisons
+9.1
+Advertisements containing comparisons should not violate the principles
+of fair competition.
+9.2
+Where a comparison is made between the respective cash values or prices
+of goods that are not identical, the advertiser should clearly indicate that
+this is the case.
+18
+9.3
+All comparative advertisements should be so designed that they are clear
+and fair, and there is no likelihood of the consumer being misled as a result
+of the comparison.  The basis of comparison should be the same for the
+products being compared and the list of items used in the comparison
+should not be so chosen to provide an unfair advantage to the product
+advertised.
+10. Availability of products
+10.1 An advertiser should ensure that there is adequate supply of his products
+to meet foreseeable demand generated by his advertisement or promotion.
+He should make clear any limitations of the product’s availability unless
+such limitation is inherent in the nature of the product (e.g. theatre tickets).
+10.2 Products that cannot be supplied should not be advertised as a way to
+assess potential demand.
+11. Bait advertising
+11.1 Advertisers should not seek to entice consumers into a retailer’s premise
+with no real prospect of selling the advertised or promoted goods at the
+price offered.
+12. Switch selling
+12.1 It will be taken as prima facie evidence of misleading and unacceptable
+bait advertising for the purpose of switch selling if an advertiser’s or
+promoter’s salesmen seriously disparage or belittle the cheaper article
+advertised or indicate unreasonable delay in obtaining delivery or otherwise
+put difficulties in the way of its purchase.
+13. Protection of privacy and exploitation of the individual
+13.1 Advertisements should not explicitly portray or refer to any person or his
+property unless his prior permission has been obtained.
+13.2 The depiction in advertisements and sales promotions of the President
+and members of his family is prohibited.
+13.3 Advertisements and sales promotions should not manipulate (such as
+through electronic morphing) any persons or his property to create a
+misleading or untruthful presentation.
+13.4 Advertisements should not reproduce National Registration Identity Card
+(NRIC) or passport numbers in their entirety.
+19
+14. Guarantees
+14.1 Advertisements may contain the word “guarantee”, “guaranteed”,
+“warranty” or “warranted” or words having the same meaning only if the
+guarantee or warranty referred to improves the consumer’s legal right.
+14.2 The full terms of the guarantee as well as the remedial action open to the
+purchaser should be clearly set out in the advertisements, or should be
+available for the purchaser to inspect before they are committed to
+purchase.  Any substantial limitations should be spelled out in the
+advertisement.
+14.3 The period of the guarantee must be clearly stated in the advertisement.
+15. Identification of advertisers
+15.1 The identity of the advertiser should always be clearly stated.
+15.2 Mail orders, direct response, exhibition, trade promotion and on-line
+advertisements should state clearly the permanent address of the
+advertiser.
+16. Charitable Causes
+16.1 Advertisements claiming that the purchase of a product will support some
+charitable cause should not mislead as to the share of proceeds that will
+go to charity.
+17. Legibility of Disclaimers
+17.1 Disclaimers have to be legible to the unaided eye of the target viewer.  As
+a general rule of thumb, disclaimers should not be in a font size smaller
+than the smallest font used to make affirmative claims in an advertisement,
+subject to a minimum font size of 8.
+20
+APPENDIX A
+Identification of Advertisements
+1.
+There is an obligation on all concerned with the preparation and/or publication of
+an advertisement to ensure that anyone who looks at the advertisement is able to
+see, without reading it closely, that it is an advertisement and not editorial matter.
+2.
+Where an advertisement appears together with other subject matter and has the
+potential of being wrongly perceived, the following guidelines should apply:
+(a)
+The word “ADVERTISEMENT” should stand alone and should appear on top
+of every page in such size and weight of type as to be easily seen;
+(b)
+If the advertisement occupies part of a page, it should be separated from any
+adjacent matter by a distinct border;
+(c)
+By-lines naming employees of the medium’s owners should not be used.  It
+is, however, permissible to publish by-lines naming experts or well-known
+public figures; and
+(d)
+Particular care should be taken wherever the size and font in the advertisement
+is the same as or closely resembles that of the editorial matter.
+3.
+Where paid-for space, material or programming is in the style of the normal editorial,
+material or programming, whether paid for by the same or different advertisers,
+particular care is needed to ensure that no part can be mistaken for the normal
+editorial, material or programming matter.
+4.
+As a general rule, where an advertisement, a series of advertisements, or a
+supplement paid for by the same organisations under the same control extends
+over more than one page, it should normally be headed in bold letters with the
+words “Advertisement” or “Advertising Feature”.
+5.
+No guidance can cover every case.  It may not be enough merely to follow to the
+letter what is said above.  It may also be necessary to look again at each
+advertisement to see whether it is clearly distinguishable from the usual content of
+the medium in which it appears, and if not, to take steps to ensure that it is.
+21
+APPENDIX B
+“Sales” advertisements
+1.
+Comparative prices
+If a price comparison is made between a reduced price and a higher price quoted
+for goods of the same description, then the higher price must have been charged
+for a period of 28 consecutive days in the previous six months, unless a notice
+disclaiming this is displayed.
+2.
+Description of “sales” and goods
+2.1
+Claims or implications in an advertisement that goods are being “liquidated”,
+or that they are “damaged” or “salvaged” stock, or of similar description,
+should not be accepted without adequate verification.  Such expressions
+should not be used to describe any “sale” unless they may properly be applied
+to the goods advertised.
+2.2
+Expressions such as “by order - must be sold” are not acceptable unless an
+order has been made by the court, Official Receiver or Liquidator.
+2.3
+If “Liquidator’s Prices” are mentioned, the name and address of the Liquidator
+should be provided.  Expressions such as “3-Day Liquidation Sale” or
+“Liquidator’s Prices” are not acceptable where there is no liquidation in the
+legal sense to support the claim.
+2.4
+If expressions such as “Bankrupt Stock”, “Bankrupt Sale”, “Bankrupt Prices”
+are used, evidence of the bankruptcy should be provided.  In the absence of
+such evidence, the advertisement should not be accepted.
+2.5
+If expressions such as “Damaged by fire”, “Damaged by water”, “Salvaged
+Stock” are used, confirmatory evidence should be required to show the date
+and place of the occurrence, and that the actual goods to which the expressions
+are applied were involved.
+2.6
+The description “Clearance Sale” or similar expressions are not acceptable in
+advertisements except for an established trader, i.e., one who has carried on
+business continuously for a period of at least six months in Singapore.
+3.
+Name and address of itinerant advertisers
+3.1
+The name and permanent address of itinerant advertisers should be included
+in their advertisements.
+3.2
+Their advertisements are not acceptable unless they have provided media
+with the following information:
+22
+(a)
+In the case of a limited company, the registered address;
+(b)
+Where the advertiser is trading in a name other than his own, the registration
+number under the Business Registration Act;
+(c)
+When the advertiser is not a limited company or registered business, his own
+name and a verifiable permanent address.
+23
+APPENDIX C
+Children and Young People
+1.
+The way in which children perceive and react to advertisements depends on their
+age, experience and the context in which the message is delivered. ASAS will take
+these factors into account when assessing advertisements.
+2.
+Advertisements addressed to or featuring children should contain nothing that is
+likely to result in their physical, mental or moral harm. In particular, they should not
+be:
+2.1
+encouraged to enter strange places to talk to strangers.  Care is needed when
+they are asked to make collections, enter schemes or gather labels, wrappers,
+coupons and the like;
+2.2
+shown in hazardous situations or behaving dangerously in the home or outside
+except to promote safety.  Children should not be shown unattended in street
+scenes unless they are old enough to take responsibility for their own safety.
+Pedestrians and cyclists should be seen to observe the Highway Code.
+2.3
+shown using or in close proximity to any dangerous substance or equipment
+without direct adult supervision.
+2.4
+encouraged to copy any practice that might be unsafe for a child.
+3.
+Advertisements addressed to or featuring children should not exploit their credulity,
+loyalty, vulnerability or lack of experience:
+3.1
+They should not be made to feel inferior or unpopular for not buying the
+advertised product;
+3.2
+They should not be made to feel that they are lacking in courage, duty or
+loyalty if they do not buy or do not encourage others to buy a particular product;
+3.3
+It should be made easy for them to judge the size, characteristics and
+performance of any product advertised and to distinguish between real-life
+situations and fantasy;
+3.4
+Parental permission should be obtained before they are committed to
+purchasing complex and costly goods and services.
+3.5
+They should not be encouraged to make a nuisance of themselves to parents,
+teacher or others;
+24
+3.6
+They should not be shown to be disrespectful to adults or behaving in a way
+that is culturally, socially or morally unacceptable;
+3.7
+Advertisements should not make a direct appeal to children to purchase unless
+the product is one that would be likely to interest children and that they could
+reasonably afford. Mail order advertisers should take care when using youth
+media to promote products that are unsuitable for children;
+3.8
+Advertisements should not exaggerate what is attainable by an ordinary child
+using the product being advertised or promoted;
+3.9
+Advertisements should not actively encourage children to eat excessively
+throughout the day or to replace main meals with confectionery or snack
+foods; and
+3.10 Advertisements should not exploit the susceptibility of children towards
+charitable appeals and should explain the extent to which their participation
+will help in any charity-linked promotions.
+4.
+All advertisements related to children should not encourage excessive purchases
+in order to participate in events.
+25
+APPENDIX D
+Interactive Advertisements
+1.
+This appendix applies to commercial communications over the Internet and on-
+line services.
+2.
+The particular nature of Internet and electronic networks is one in which international
+communication is facilitated in a free, loosely-regulated context.  In addition to the
+principles in the Code, the Singapore government regulates such communication
+in laws and regulations with which the advertiser should familiarise himself.
+3.
+Advertisers should clearly indicate to system users whether or not their services
+are free of charge, and should not charge users unless such warning has been
+provided beforehand.
+4.
+Advertisers should store consumer data no longer than is necessary to allow a
+proper handling of an order, unless otherwise agreed by the consumer.
+5.
+Advertisers who offer products or services should provide a message of confirmation
+to the user on the purchase and allow the consumer to review the purchase.
+6.
+Advertisers should not transmit messages that contain pornographic, violent, racist
+or sexist content.
+7.
+Advertisers should not unduly imitate advertising campaigns of other advertisers.
+8.
+Commercial messages should only be posted to news groups, forums, bulletin
+boards or blogs that bear some relation to the content of the commercial message.
+Off-topic commercial messages are only appropriate when the conference
+administrator or systems operator has specifically made such messages allowable.
+26
+APPENDIX E
+Direct Marketing
+1.
+Direct marketing involves offering goods or services to consumers where the
+consumer does not need to visit any retail establishment or middleman prior to
+purchase or to meet face-to-face. Advertisers, promoters and all others involved in
+handling responses, via the mail, fax or the internet, must observe the Code.
+2.
+Advertisements should clearly state the full name and address of the advertisers so
+that such information can be retained by the consumer.  A separate address, for
+example, a P.O. Box number may also be given on the coupon for orders.
+3.
+The name of the advertiser should be prominently displayed at the address given
+in the advertisement.  Temporary accommodation addresses may not be used.
+4.
+Unless obvious from the context, the advertisements should include:
+4.1
+The main characteristics of the product or service;
+4.2
+The amount and quantity of any transport or transport charges;
+4.3
+Any GST payable, unless the advertisement is addressed exclusively to the
+trade;
+4.4
+A statement that goods can be returned, if applicable;
+4.5
+Any limitation to the offer and any conditions that affect its validity; and
+4.6
+The estimated delivery time.  Consumers should be advised of orders which
+cannot be fulfilled within 30 days.  Those who have paid in advance should be
+offered a refund but if they prefer to wait, they should be given a firm dispatch
+date or fortnightly progress report.
+5.
+Advertisers should take particular care with packaging that may fall into the hands
+of children.
+27
+APPENDIX F
+Medicinal and Related Products and Advertisements
+Containing Health Claims
+1.
+Preamble
+1.1
+This section supplements the general provisions of the Code contained in
+Section III.  Special care should be taken by advertisers to ensure that the
+spirit as well as the letter of those provisions is scrupulously observed.
+2.
+Interpretation
+2.1
+The word “product” in this section is to be taken as referring also to treatments
+and courses of treatment and to medical devices, except where the context
+does not permit, or is expressly provided otherwise.
+3.
+Scope
+3.1
+This section of the Code applies to the following categories of advertisement:
+3.1.1 Those for medicines, medical and surgical treatments and medical
+devices.
+3.1.2 Those for toilet and other products which claim or imply therapeutic or
+prophylactic qualities.
+3.1.3 Those for any product advertised, whether wholly or in part, upon the
+basis that it may improve, restore or maintain the user’s health or his
+physical or mental condition.
+3.2
+Individual advertisements published by or under the authority of a
+Government Ministry or Department, and advertisements addressed to
+registered medical or dental practitioners, pharmacists, registered medical
+auxiliaries or nurses, either directly or through publication in their respective
+professional journals, are excluded from the application of such of the
+restrictions within this section of the Code as are from time to time considered
+by ASAS to be inappropriate, bearing in mind the source of the advertisement
+and the professional qualifications of those to whom it is addressed; provided
+always that such advertisements conform in every respect to the provisions
+of Sections I and II of this Code.
+3.3
+There shall not appear in any advertisement of any food for sale the words
+“recommended by the Medical Profession” or any word or words or pictorial
+representations that may imply or suggest that the food is recommended,
+prescribed or approved by medical practitioners.
+28
+4.
+Impressions of professional advice or support
+4.1
+Claims of medical or other professional support for any other product whether
+in copy or illustration, or otherwise, should be substantiated and the extent of
+such support should not be exaggerated in any way.
+4.2
+Detailed evidence should be held ready for supply to ASAS in support of any
+reference to tests, whether carried out by the advertiser or otherwise.
+4.3
+Reference to tests, trials, research, doctors’ preference or prescribing habits
+or the use of the product or treatment in hospitals, clinics and the like may
+only be used if they are fully substantiated.  References to tests or trials
+conducted in a named professional or official organisation are permissible
+only if authorised and approved by the authority of the hospital or other
+organisation concerned.  Moreover, they are acceptable only if the study and
+findings have been openly published in a peer-reviewed scientific or medical
+journal.
+4.4
+Where reference is made in an advertisement to a test or other research that
+has been carried out other than by an independent organisation or without
+independent medical supervision, this fact should be clearly indicated.
+Moreover, such test or research is acceptable only if the study and findings
+have been openly published in a peer-reviewed scientific or medical journal.
+4.5
+Professional journals should not be named or quoted without permission,
+and references to such journals should not give any unjustified impression of
+professional support.  Only peer-reviewed journals may be quoted in this
+regard.
+4.6
+References to doctors, dentists, nurses and the like contained in any
+advertisement should refer only to those registered in Singapore unless it is
+made clear that the person referred to is not registered, and are acceptable
+only when the relevant Professional Body confirms in writing that such
+reference does not contravene their ethical code.
+4.7
+Advertisements should not refer to any ”College”, “Hospital”, “Clinic”,
+“Institute”, “Laboratory”, or similar establishment unless there exists a bona-
+fide establishment corresponding to the description used, which is under the
+regular and effective supervision of a registered medical practitioner or other
+person holding an appropriate recognised qualification.  Such reference will
+also clearly state if the establishment is connected in any way with the product
+being advertised.
+4.8
+No address, title or description that implies that a product is from any hospital
+or official source, or is other than a proprietary product, is acceptable for
+advertising unless substantiation is available from the advertiser.
+29
+4.9
+Where non-medical professionals are involved, and where words are those
+likely to give rise to confusion with medical professionals, an explanation
+such as a footnote should be included.  Where the term Dr. or Doctor appears,
+the footnote should include the words “not a medical doctor” or equivalent.
+5.
+Unacceptable general claims
+5.1
+Cure
+5.1.1 No advertisement should employ any word, phrase or illustration that
+claims or implies the cure of any ailment, illness or disease, as distinct
+from the relief of its symptoms.
+5.2
+Diagnosis, prescription or treatment by correspondence
+5.2.1 No advertisement should contain any offer to diagnose, advise, prescribe
+or treat by correspondence.
+5.2.2 No advertisement should refer to any skill or service relating to treatment
+of any ailment, disease, injury or condition affecting the human body so
+as to induce any person to seek the advice of the advertiser of any person
+referred to in the advertisement.
+5.3
+Prevention of ageing
+5.3.1 No advertisement should contain any claim to provide rejuvenation, that
+is to prevent, retard or reverse the physiological changes and
+degenerative conditions brought about by, or associated with, increasing
+age.
+5.4
+Appeals to fear, and exploitation of credulity
+5.4.1 No advertisement should cause those who see it unwanted anxiety lest
+they are suffering (or may, without responding to the advertiser’s offer,
+suffer) from any disease or condition of ill health; or falsely suggest that
+any product is necessary for the maintenance of health or the retention
+of physical or mental capacities, whether by people in general or by
+particular groups.
+5.5
+Conditions requiring medical attention
+5.5.1 No advertisement should offer any product for any condition which needs
+the attention of a registered medical or other qualified practitioner.  See
+the list of diseases in Appendix G to which no or only limited reference
+may be made.
+30
+5.6
+Encouragement of excess
+5.6.1
+No advertisement should encourage, directly or indirectly,
+indiscriminate, unnecessary or excessive use of products within the
+scope of this section of the Code.
+5.7
+Exaggeration
+5.7.1
+No advertisement should make exaggerated claims, in particular
+through the selection of testimonials or other evidence
+unrepresentative of a product’s effectiveness, or by claiming that it
+possesses some special property or quality that is incapable of being
+established.
+5.8
+Refund of money
+5.8.1
+Advertisements of medicinal products, other than appliances, should
+not contain any offer to refund money to dissatisfied users.
+5.9
+Testimonials
+5.9.1
+No advertisements should contain any testimonial that conflicts with
+the provisions of Appendix F clause 4.3 of the Code.  Testimonials
+given by doctors or other qualified practitioners who are not registered
+in Singapore are unacceptable as this is a direct contravention of the
+Medical Registration Act and indirect contravention of the professional
+code of ethics.
+5.10 “Non-content claims”
+5.10.1 No advertisement should rest on claims that a product does not contain
+a given ingredient which is in common use in competitive products in
+any way which may give the impression that the ingredient is generally
+unsafe or harmful.
+6.
+Unacceptable claims: particular products
+6.1
+Diseases and conditions to which reference may not be made
+6.1.1
+Particular attention is drawn to the diseases and conditions listed in
+Appendix G and the provisions contained therein.
+6.2
+Abortifacients
+6.2.1
+Advertisements should not claim or imply that any products, medicines
+or treatments offered therein will induce miscarriage.
+31
+6.3
+Analgesics
+6.3.1
+Advertisements for analgesics should not make exaggerated claims
+about the speed with which a product can relieve pain.
+6.3.2
+Advertisements should not make exaggerated claims or implications
+about the certainty and speed with which the product can relieve the
+symptoms of the common cold or influenza, or reduce a fever or a
+raised body temperature.
+6.4
+Anti-perspirants and deodorants
+6.4.1
+Advertisements should make no claim for products taken by mouth
+that claim body deodorants effect.
+6.4.2
+Advertisements for anti-perspirants should not make exaggerated
+claims to keep skin dry either absolutely, or for a specific period.
+6.5
+Antiseptics, germicides and disinfectants
+6.5.1
+No advertisement for any products in these categories should claim
+or imply:
+(a)
+That it offers complete protection against diseases, or the danger of
+infection.
+(b)
+That it is a substitute for cleanliness.
+6.5.2
+Advertisements should not exaggerate the dangers of the presence
+of germs in the normal domestic situation.
+6.6
+Bust developers
+6.6.1
+Advertisers for preparations and devices purporting to promote
+enlargement of the breasts are not acceptable.  Similarly, the
+substitution of non-specific words for enlargement like “bust toning”,
+or “bust improvement” is not acceptable unless the advertisement
+clearly shows how this differs from enlargement per se.
+6.6.2
+Exercise and courses, including exercise that may have an incidental
+effect on the bust line, may not be advertised in such a way as to place
+predominant emphasis on any effect of improving, increasing or
+enlarging the bust line.
+6.6.3
+Every advertisement of a product, service or other activity that  purports
+to alter the shape or appearance of the breasts or the bust line shall
+contain the following disclaimer:
+“There is no scientific proof that any non-surgical treatment currently
+available can enlarge breasts.”
+Such disclaimer shall be in such placement, font and weight as to be
+clearly legible.
+32
+6.7
+Contraceptives, birth control
+6.7.1
+There is no objection under the Code to the advertising of contraceptive
+methods, either in general or particular, provided a reference is made
+in appropriate cases to the fact that certain methods are available only
+on prescription.
+6.7.2
+The effectiveness or safety of particular methods in comparison with
+others should not be exaggerated.
+6.7.3
+Condom advertisements should also adhere to the following:
+(a)
+Should be in good taste
+(b)
+Should not promote promiscuity
+(c)
+May include pack shots provided they are not suggestive or offensive
+(d)
+Should not have erotic settings
+(e)
+Should not include superlative claims
+(f)
+Should focus on the protective function rather than the pleasure-
+enhancing aspect of condoms
+6.8
+Corns
+6.8.1
+Products for the removal of corns may be advertised subject to medical
+approval of the product for this purpose.
+6.9
+Cosmetics
+6.9.1
+Claims that a product contains ingredients with special properties
+should be supported by acceptable evidence that the ingredients are
+beneficial for the purpose referred to.
+6.9.2
+Advertisements should not contain any claim or implication that any
+preparation will promote rejuvenation (i.e. remove, reverse or retard
+the physiological and degenerative conditions brought about by or
+associated with increasing age) of the skin or muscles, or that
+hormones or vitamins remove or delay the formation of wrinkles.
+6.9.3
+Claims that a cosmetic product has a particular physiological effect
+should be backed by evidence specifically directed at establishing this
+within the context of established scientific knowledge.  When the effect
+claimed is of a novel unique kind, such substantiation should include
+data from practical trials, on human subjects, of adequate rigour in
+both design and execution, and also subject to the provisions of clauses
+4.3, 4.4 and 4.5 of this Appendix.
+33
+6.9.4
+When any specific physiological or biological effect is attributed to
+the inclusion of a particular ingredient or ingredients in a cosmetic,
+substantiation should address the need adequately to distinguish
+between the effect(s) caused by the ingredient(s) concerned and those
+caused either by other elements in the formulation of the cosmetic, or
+by its mode of application.
+6.9.5
+It should not be claimed that products which confer a cosmetic benefit
+through their (partial) absorption by the skin offer any systemic nutritive
+benefit i.e. that they amount to foods within the meaning of the Sale
+of Food Act (Chapter 283).
+6.9.6
+All advertisements for cosmetics should conform to the requirements
+of clause 5.3 above (Prevention of ageing) of this Appendix.
+6.9.7
+Advertisements for cosmetics that are intended to prevent or delay
+particular skin changes caused by environmental factors, or to repair
+skin damage so caused, may reasonably draw attention to the
+appearance of premature ageing that such environmental factors can
+produce if not effectively combated.
+6.9.8
+Statements relating to changes in the structure or renewal rate of skin
+cells should not exaggerate the effect of such changes on the general
+appearance of the skin.
+6.10 Depilatories
+6.10.1 Advertisements for “electric pencils” and similar products, offered
+for lay use, are unacceptable, as are claims for products the
+effectiveness of which is claimed to be based upon their “radioactive”
+properties.
+6.11 Gargles
+6.11.1 Antiseptic gargles should not be presented as cough treatments.
+6.12 Hay fever and other allergic conditions
+6.12.1 Advertisements referring to hay fever or other allergy causing coughs,
+sneezing or catarrh may not suggest that the product will clear up the
+condition itself unless it contains appropriate antigens or is universally
+effective against the condition or allergy.  Claims for products that do
+not contain antigens should be limited to the temporary relief of
+symptoms.
+6.13 Hair and Scalp Products
+6.13.1 See Appendix I.
+34
+6.14 Headaches
+6.14.1 Advertisements should not claim or imply that the product advertised
+is suitable for the treatment of serious, frequent or regular attacks.
+6.14.2 Advertisements should not encourage people to take medicines of
+any kind before a headache so as to prevent it.
+6.14.3 No products may be advertised as a course of treatment for headaches.
+6.15 Hearing aids
+6.15.1 Where an advertisement states the price of a hearing aid, the advertiser
+should specify the upper and lower limits of his overall price range.
+6.15.2 The names of hearing aids should not in themselves exaggerate the
+product’s effectiveness (e.g. such names as “Magic Sound” and
+“Miracle Ear” are not acceptable).
+6.15.3 Advertisements for hearing aids on rental basis are subject to the rules
+applying to the hire of domestic appliances.
+6.16 Hearing aid exhibitions
+6.16.1 Advertisements for such exhibitions should only be accepted where
+the organiser has given an undertaking:
+(a)
+That he will ensure the presence of at least one registered dispenser
+at all times throughout the period the exhibition is open.
+(b)
+That he will offer for inspection a comprehensive range of models of
+hearing aids.
+(c)
+That he will make available for purposes of testing at least one pure
+tone and one speech audiometer.
+6.16.2 The full name and address of the advertiser’s head office should be
+prominently stated in any advertisement for a hearing aid show or
+exhibition, and no impression should be given that such events are
+other than commercially promoted.
+6.17 Height increase courses
+6.17.1 Advertisements for products or courses of treatment purporting to
+increase height are not acceptable.
+6.17.2 This ruling does not apply to advertisements for “elevator” shoes and
+similar products.
+35
+6.17.3 General courses of physical development, one consequence of which
+may be to increase the apparent height through improvement of
+posture, may not be advertised in such a way as to place predominant
+emphasis upon increasing height.
+6.18 Herbal, homeopathic and acupuncture remedies
+6.18.1 For the purpose of this Code, claims made for herbal and homeopathic
+products and acupuncture treatment will be assessed in the light of
+expert opinion.  No claims will be acceptable in advertisements by
+non-orthodox practitioners, or for products based upon their principles,
+which would not be allowed to orthodox practitioners or products
+based upon orthodox principles.  Nor should any advertisement by or
+for non-orthodox products or practitioners seek to cast doubt on, or
+claim superiority to, orthodox practitioners or products.
+6.19 Hormones and cell extracts
+6.19.1 Advertisements addressed to the general public should not contain
+any exaggerated claim to efficacy based merely upon the fact that a
+product includes hormones or animal cell extracts.
+6.20 Hypnosis, hypnotherapy, psychology, psychoanalysis or psychiatry
+6.20.1 Advertisements addressed to the general public should be restricted
+to visiting card particulars only; i.e. name, address, and telephone
+number, hours of consultation, description of professional status, e.g.
+hypnotherapist.
+6.21 Indigestion remedies
+6.21.1 References to nausea, lack of appetite or aversion from food, which
+may well be symptoms of more serious conditions, are unacceptable
+in connection with claims for indigestion remedies.
+6.22 Laxatives
+6.22.1 Laxatives should not be advertised for habitual or indiscriminate use,
+for the relief of abdominal pain or backache, for any benefit to
+complexion or appearance, or for the relief of indigestion, other than
+abdominal discomfort owing to constipation.
+6.23 Piles (Haemorrhoids)
+6.23.1 Advertisements should not contain any offer of products for the
+treatment of haemorrhoids unless the directions for use on the
+container itself or its labels include advice to the effect that persons
+who suffer from haemorrhoids should consult a doctor.
+36
+6.24 Polyunsaturated fats
+6.24.1 Advertisements addressed to the general public for food products (or
+food supplements) containing polyunsaturated fats or polyunsaturated
+fatty acids should not contain any claim that the inclusion of such fats
+in the diet or substitution for other fats of different chemical constitution
+offers any specific health benefit.
+6.25 Procaine
+6.25.1 No advertisement should contain any claim for slowing down the
+process of ageing based upon a product’s procaine or any other
+content.
+6.26 Protein claims
+6.26.1 Protein claims in food advertising must conform to the Food
+Regulations.
+6.26.2 Reference to proteins in other advertisements should avoid giving
+any impression that their inclusion in non-food products offers any
+nutritive benefit.
+6.27 Rheumatic and allied pains
+6.27.1 Advertisements may not refer to any medicines, products, appliances
+or devices in terms calculated to induce their use for the treatment of
+any form of arthritis, or chronic or persistent rheumatism.
+6.27.2 There is no generally accepted evidence that copper bangles (or other
+objects to be worn or carried) can alleviate rheumatic or muscular
+pains and such claims for them are not acceptable.
+6.27.3 Bath additives may be offered to encourage the taking of hot baths for
+their soothing effect on muscular pains or stiffness, but no claim should
+be made, such as references to spa water, which suggests that the
+additives themselves provide any medical benefit.
+6.28 Slimming
+6.28.1 Advertisements for any product or treatment offered as a means of,
+or aid to, slimming whether in the sense of weight loss or figure control,
+should conform to the detailed guidance in Appendix H.
+6.29 Toothpaste and other similar products
+6.29.1 Prevention of decay
+37
+(a)
+Fluoride toothpaste. Certain formulations containing fluoride have
+been shown by independent medical research to reduce the incidence
+of tooth decay in children.  Claims made for such products should not
+exaggerate the results or applicability of such research. Claims as to
+the effectiveness of such products should be related to the need to
+brush the teeth regularly.
+(b)
+Other toothpaste.  Claims may indicate that regular brushing with the
+toothpaste may help fight tooth decay.
+6.29.2 Hygiene
+(a)
+Bad breath. It should not be claimed that any toothpaste or other
+product will completely destroy bacteria causing mouth odour or that
+it will provide long-lasting freedom from mouth odour.
+(b)
+Food particles. No advertisement for toothpaste or tablets intended
+to clean the teeth should suggest that the product would remove all
+food particles from the teeth or gums.  It should not be claimed that
+tablets could take the place of brushing after meals.
+6.30 Vitamins, pro-vitamins and minerals
+6.30.1 No advertisement for a product containing vitamins, pro-vitamins or
+minerals should make any claim:
+(a)
+That there is evidence of general or widespread vitamin or mineral
+deficiency.
+(b)
+That a full varied and properly prepared diet needs to be supplemented
+by vitamin or mineral products.
+(c)
+That good looks and good health are better maintained or that
+irritability and lack of energy can be avoided merely through the
+consumption of additional vitamins or minerals.
+(d)
+That the application of vitamins to the skin, hair or nails is in any way
+beneficial.
+(e)
+That the inclusion of vitamins in suntan lotions has any effect either in
+promoting suntan or preventing sunburn.
+6.30.2 No advertisement addressed to the general public is acceptable for a
+vitamin preparation that contains folic acid in quantities that may cause
+it to have the effect of masking the symptoms of pernicious anaemia.
+6.30.3 Iron preparations: products offered for the symptoms of nutritional
+iron deficiency should provide an appropriate dosage of iron.
+38
+APPENDIX G
+Diseases to which no reference, or only limited reference,
+may be made in advertisements
+Advertisements may not refer to any medicine, products, appliance or device in terms
+likely to lead to its use for treatment of any of the following:
+A
+Ageing, except for prevention of photo
+aging
+Aids (Autoimmune Deficiency Syndrome)
+Alopecia (baldness)
+Amenorrhoea
+Anamis, other than that caused by dietary
+deficiency
+Arterio-sclerosis
+Artery troubles
+Arthritis
+Asthma, except for products advertised
+solely for the alleviation of an attack of
+asthma, and the advertisement should
+contain a recommendation that sufferers
+should seek medical advice.
+Auditory system, and structural or organic
+ailment
+B
+Barber’s rash (sycosis)
+Backache (where the reference is to chronic
+or persistent)
+Bleeding disease
+Blood, disorder or disease
+Breasts, disease of, or development
+C
+Cancer
+Carbuncles
+Cardiac symptoms, heart troubles
+Cataract
+Cerebral disorders or disease
+Conception and pregnancy
+Controlled drug addiction
+Convulsions (fits)
+Circulatory conditions, except minor
+conditions such as chilblains, restless legs
+D
+Dermatitis (see Skin disease)
+Diabetes
+Diseased ankles
+Disseminated (or multiple) sclerosis
+39
+E
+Ears, any structural or organic defect of
+the auditory system
+Enlarged glands
+Epilepsy
+Erysipelas
+Eyes, any structural or organic defect of
+the optical system
+F
+Fits (convulsions)
+Frigidity
+Fungal infections, except athlete’s foot
+G
+Gallstones
+Gingivitis
+Glands, enlarged, or glandular conditions
+Glaucoma
+Goitre
+H
+Heart troubles, cardiac symptoms
+Haemorrhagic disease
+Hypertension, or symptoms thereof
+I
+Impetigo
+Impotence
+Indigestion, where the reference is to
+chronic or persistent
+Infections, except for relief of symptoms
+Infertility
+Insanity
+Insomnia, where the reference is to chronic
+or persistent
+K
+Kidneys, disorders or disease of the
+L
+Lazy eye
+Leg troubles
+Leprosy
+Leucorrhoea
+Leukaemia
+Liver, disorders or disease
+Locomotors ataxia
+Lupus
+M
+Menopausal ailments, except minor
+associated conditions
+40
+Menstrual disorders
+Migraine
+Multiple (or disseminated) sclerosis
+O
+Obesity or overweight, see Appendix H -
+Slimming
+Osteoarthritis
+P
+Paralysis
+Pernicious anaemia
+Phlebitis
+Prolapsed
+Psoriasis, except for temporary relief
+Purpura
+Pyorrhoea
+R
+Rheumatism (and backache) where the
+reference is to chronic or persistent, to
+include “except for relief of symptoms”
+Rheumatoid arthritis
+S
+Scabies
+Sexual weakness and loss of Libido
+Skin diseases, except those of minor and
+specified nature
+Seborrhoea
+Sexual function
+Squint
+Sycosis (barber’s rash)
+T
+Thrombosis
+Tuberculosis
+U
+Ulcers (all except mouth ulcers)
+Urinary infections
+V
+Varicose veins (except where the reference
+is confined to relief by elastic stockings)
+Vascular disorders or diseases
+Venereal diseases
+Verrucae of the feet
+W
+Whooping cough, except for the alleviation
+of symptoms
+41
+APPENDIX H
+Advertising for Slimming Products and Services
+1.
+Introduction: What is slimming?
+1.1
+Publishers must ensure that all advertising offered for publication in either a
+weight loss or a figure control platform is vetted by the appropriate media
+body before publication.
+1.2
+When a new product or new formulation is introduced or when new claims
+are made for an existing product, full substantiation for all new claims should
+be submitted at the same time as the copy or illustrations for the proposed
+advertisement. Independent testimony from published journals/reports will
+be required as to any physiological effects claimed.  Testimonials from users
+of a product do not constitute substantiation.
+1.3
+The advertiser must ensure that his audience is entirely clear which of the
+possible ways of achieving “slimness” is provided or helped by his product.
+The word “slim” is used, so far as human beings are concerned, to cover
+quite different basic situations: losing weight, and controlling the figure so as
+to achieve an impression of slimness either by the strengthening of muscles
+or by the wearing of garments.
+2.
+Weight Loss
+2.1
+General Principles
+2.1.1
+References to weight loss in what follows are to be taken as referring
+also to weight limitation and control.
+2.1.2
+There may be many reasons for being overweight, either medical or
+physical.  Dieters should be advised, in either the advertisement or
+packaging, to consult their doctors before embarking upon a slimming
+course.
+2.1.3
+Obesity is a condition sometimes requiring qualified medical attention
+and treatment.  No claims referring to obesity should be made in
+advertisements directed to the public (See Appendix G)
+2.1.4
+The only way for a person to lose weight, other than temporarily, is by
+taking in less energy (calories) than the body is using, i.e. burning up
+the excess fat his body has stored. A diet is the only practicable self-
+treatment for achieving a reduction in this excess fat.
+42
+2.1.5
+Diet plans, and aids to the dieting of the kinds dealt with below, are
+therefore the only products that may be offered in advertisements as
+capable of effecting any loss in weight.  Claims that weight loss or
+slimming can be achieved wholly by other means are not acceptable
+in advertisements addressed to the public.
+2.1.6
+Temporary weight loss can be achieved by the expulsion of water
+from the body.  This may not be represented in advertisements as a
+method of slimming.
+2.1.7
+The condition of being overweight in young people is sometimes
+associated with a defective action of the glands and they should be
+advised to consult their doctors before embarking upon a slimming
+diet.
+2.2
+Diet Plans
+2.2.1
+Evidence will be required from the advertiser to show that his
+suggested diet(s) will provide adequate amount of proteins, vitamins
+and minerals, and that the diet is capable of achieving the results
+claimed for it, when followed by the kind of person for whom it is
+intended.
+2.2.2
+No claim, direct or indirect, should be made in any advertisement for
+a diet that it contains any ingredient that in itself has the property of
+hastening the process of weight loss.  There is no ground for supposing
+that any specific foods have particular properties that speed up the
+metabolic processes which cause excess fat to be “burnt-up” and thus
+weight to be lost.
+2.2.3
+Advertisements for “crash” diets are unacceptable.
+2.3
+Aids to dieting - General
+2.3.1
+Diet aids, such as foods, food substitutes, or appetite depressants,
+may not be advertised except in terms that make clear that they can
+only be effective when taken in conjunction with or as part of a calorie-
+controlled diet. Such effectiveness should be clearly substantiated with
+results of human trials that can take into account the placebo effect,
+i.e., the trials should be independently conducted double-blind placebo-
+controlled trials published in peer-reviewed scientific or medical
+journals. Due prominence should also be given in all advertisements
+to the part played by the diet.
+2.3.2
+Any diets provided in conjunction with diet aids, whether on packaging,
+in advertisements or otherwise, must conform to the advice given
+above on diet plans. Details of the diets proposed should therefore be
+enclosed, with appropriate substantiation, when clearance of
+advertising is being sought.
+43
+2.3.3
+Advertisements for diets aids should also conform to the advice given
+above as to the non-acceptability of certain claims for the individual
+effectiveness of specific foods or other diet ingredients.
+2.4
+Foods
+2.4.1
+Advertisements for food offered as diet aids should give a quantitative
+statement of the ingredients contained in it on which the claim of
+special suitability is based.
+2.4.2
+Particular care should be taken to ensure that advertisements for meal
+substitutes do not imply that these products are effective if consumed
+in addition to normal meals rather than instead of them.
+2.5
+Appetite Depressants
+2.5.1
+Advertisements for appetite depressants should make clear how they
+work and will only be regarded as acceptable when adequate evidence
+has been provided by advertisers that the product is safe and effective
+at the level of consumption suggested.  Adequate substantiation is
+detailed in clause 2.3.1 of this Appendix.
+2.5.2
+Claims for the effect of appetite depressants should not be expressed
+in terms of food equivalent e.g. equal to two eggs and ham.
+2.6
+Weight loss products in general
+2.6.1
+No “weight loss” product should be advertised on the basis of claims
+of weight loss in spite of no change (or even an increase) in the amount
+of food eaten, thus tending to remove due emphasis from the primary
+importance of maintaining a balanced calorie-controlled diet.
+3.
+Figure control
+3.1 General Principles
+3.1.1
+Figure control may be achieved in two ways: exercise and garments
+(e.g. corsets)
+3.1.2
+It is possible by exercise to add strength to muscles and thus to aid
+their ability to decrease bulges where muscles are slack.  An
+improvement in posture may also benefit the figure.  Exercise may be
+active or passive.
+3.2
+Exercise
+3.2.1
+No claims will be accepted for exercise-based products on the basis
+that they may also lead to weight loss except where such weight loss
+is clearly identified as the result of the use of calories in such exercise.
+Diet sheets or diets aids distributed together with exercises or other
+44
+aids will not be taken as any grounds for allowing weight loss claims
+to be made.
+3.2.2
+Exercise only operates slowly to improve muscle tone.  Claims for
+exercise products therefore should not suggest dramatic
+improvements over short periods.
+3.2.3
+Some strenuous exercise programmes may impose additional
+demands on physical exertion, sometimes beyond the ability of some
+individuals.  Advertisements for such products may be required to
+include advice to purchasers to check with a doctor the advisability of
+their undertaking the exercises proposed.
+3.2.4
+The effect of this category of product may not be described by the use
+of the word “slim”.  Where the name of the product itself, or of the
+manufacturer, contains the word slim, either alone or in combination,
+particular care should be taken in the copy to avoid any
+misunderstanding by the suggestion of possible weight-loss benefits.
+3.3
+Garments
+3.3.1
+Advertisers of corsets and similar products should always take
+particular care to ensure that no hint or suggestion occurs in either
+copy or illustration that might lead a reader to suppose that these
+products make any contribution to weight loss.  Nor should there be
+any suggestion that they confer any permanent, physiological benefits
+comparable to those afforded by exercise.
+3.3.2
+The effect of this category of product may not be described by the use
+of the word slim (unless so qualified as to make sure the true effect
+plain).  Where the name of the product itself, or of the manufacturer,
+contains the word “slim” either alone or in combination, particular
+care should be taken in the copy to avoid any misunderstanding by
+the suggestion of possible weight-loss benefits.
+4.
+Combined methods
+4.1
+Slimmer clubs
+4.1.1
+The purpose of these clubs is fundamentally to provide psychological
+support for those who find difficulty in sticking to a diet.
+Advertisements for such clubs are acceptable provided the
+advertisements do not make claims inconsistent with the advice in
+this code.
+4.2
+Clinics and health clubs
+4.2.1
+Insofar as any clinic or club offers treatment aimed at the achievement
+of weight loss or figure control, any claims made must conform to the
+advice given in this Code.
+45
+4.2.2
+Many clubs and clinics offer treatments other than those for weight
+loss or figure control. Such treatments should not be referred to in
+advertisements in contexts that may suggest that they have any weight
+loss or figure control effect.
+4.3
+Courses
+4.3.1
+Some advertisers offer “slimming courses” which consists of books,
+records, tapes or other media containing advice on how best to achieve
+either weight loss or figure control.  Advertising for such courses should
+conform to the relevant advice given in the Code depending upon the
+methods recommended.
+4.3.2
+Advertisements for courses should make clear that what is offered is
+advice in the form of a book, record, tape or other media.
+5.
+General claims
+5.1
+Use of the word “slim”
+5.1.1
+Claims as to uniqueness, novelty or a greater degree of efficacy than
+other products should not be made unless there is adequate
+substantiation for the product’s difference in significant respects from
+other available slimming products.  Care should be taken not to suggest
+that given methods “cannot fail, must work”.  Because of the enormous
+variations between individuals in terms of weight, build and physical
+condition as well as in psychological preparedness, the most that can
+be claimed for any method is a high probability of success.
+5.2
+Vitamins, pro-vitamins, minerals and related oral supplements
+5.2.1
+These have no effect on slimming.
+5.2.2
+Well balanced diets are not deficient in vitamin or trace mineral
+elements.  However, it is possible that certain slimming diets,
+particularly “crash” diets and poorly planned diets may contain less
+than the recommended daily requirements of vitamins and minerals.
+Consequently, vitamin/mineral supplements may be offered to
+safeguard against such deficiencies but it must be made clear they do
+not contribute to weight reduction.
+5.3
+Illustrations
+5.3.1
+Where there is any claim or implication that a person depicted in an
+illustration has benefited from the product or service being offered,
+that illustration must conform to the advice given in clause 5.1 above.
+5.3.2
+Other illustrations of individuals should not be presented in such a
+way as to suggest that the subject has enjoyed any particular benefit
+of the kind discussed above.
+46
+5.4
+Products, the efficacy of which for slimming (weight reduction or figure control)
+has not yet been adequately substantiated, may not be advertised.
+5.4.1
+The following are instances of products and methods for which
+slimming (weight loss or figure control) claims are not acceptable:
+(a)
+Massage or vibrator machines;
+(b)
+Inflatable garments;
+(c)
+Sauna and Turkish baths, or related wrap treatments;
+(d)
+Products based upon osmosis;
+(e)
+Bath essences, soaps;
+(f)
+Products claiming to increase the metabolic rate of the body;
+(g)
+Diuretics laxatives;
+(h)
+Hypnosis.
+5.4.2
+It will not be regarded as sufficient to validate the advertising of any
+of these categories of product as efficacious in themselves for weight
+or figure control, that a diet plan or dieting aids or an exercise scheme
+or treatment is offered with them.
+47
+APPENDIX I
+Hair and Scalp Products
+1.
+Claims relating to baldness, hair loss, hair growth, etc.
+1.1
+No advertisement, unless approved by the relevant government authority
+should contain any claim or implication that:
+(a)
+Baldness can be prevented or its progress retarded;
+(b)
+Hair loss or thinning of the hair can be arrested or reversed;
+(c)
+Hair growth can be stimulated or improved;
+(d)
+Hair roots can be fed or nourished; or
+(e)
+The hair itself can be strengthened or its health, as distinct from its appearance,
+improved.
+1.2
+Every advertisement of a product (except certain registered medicinal products)
+or service that purports to affect baldness, hair loss or hair growth shall contain
+the following disclaimer:
+“There is no scientific proof that any product (except certain registered
+medicinal products) or service can retard hair loss or promote hair growth.”
+Such disclaimer shall be in such placement, font and weight as to be clearly
+legible.
+This disclaimer may be waived for registered medicinal products that have
+been approved for the treatment of hair loss by the Health Sciences Authority.
+2.
+Dandruff, greasy hair and other hair or scalp conditions
+2.1
+Advertisements for a product or treatment offered for the control of dandruff
+or greasy hair should not contain any claim or implication that either condition
+can be permanently prevented, and should plainly state that effective control
+is dependent upon regular use. Nor should such advertisements contain any
+exaggerated claim or implication as to effectiveness.
+2.2
+No advertisement should contain any offer of a product or treatment of any
+condition of the hair or scalp which may be a symptom of a systemic disease
+or malfunction.
+48
+2.3
+No advertisement should contain any offer of a medicated product or treatment
+for any condition of the hair scalp (other than those covered by clause 2.1
+above) unless it is stated either in the advertisement itself, or in the directions
+for use supplied with the product, that any person suffering from the condition
+that the product or treatment is intended to alleviate, should consult a doctor.
+2.4
+In consumer advertising, unfamiliar words should not be used for common
+conditions such that consumers may be in any way confused or worried.  Thus,
+by way of example, seborrhoea, pityriasis and alopecia should not be used in
+place of excess grease, dandruff and baldness.
+3.
+Wigs, hairpieces, etc.
+3.1
+Advertising for wigs, hairpieces and other ways of adding hair to the
+consumer’s own should be so drafted as to make quite clear the nature of the
+product or process being offered and in particular should avoid any copy or
+illustration that might suggest the re-growth of hair or the arrest of the retarding
+of the balding or thinning process.  Claims that such products or processes
+are undetectable, permanently or absolutely secure are unacceptable.
+4. Individual treatment
+4.1
+No advertiser should offer individual diagnosis, prescription or treatment by
+post for any condition of the hair or scalp.
+4.2
+Advertisers offering individual treatment at their premises are required to
+restrict their advertisements, except as provided in clause 4.4 below, to visiting
+card particulars, i.e., name, address, telephone number and hours of business
+with a brief general indication of their business, e.g. hair treatment, trichologist,
+etc.  No illustrations are permissible.
+4.3
+No mention may be made in any advertisement covered by clause 4.2 above of:
+(a)
+Any condition of which treatment is offered;
+(b)
+The methods of treatment employed; and
+(c)
+The effects claimed for any such treatment.
+4.4
+The restrictions in clause 4.2 and 4.3 above apply to all advertisements in
+newspapers, magazines or the cinema, to posters, signs and unsolicited
+material sent or delivered directly to the consumer.  Advertising material that
+has been requested may go beyond these restrictions, provided that in all
+other respects it conforms to the requirements of the other clasuses in this
+Appendix.
+49
+5.
+Hair transplantation
+5.1No advertisement is acceptable from any establishments offering hair transplant.
+6.
+Hair thickeners
+6.1
+Hair thickeners, that is to say products that temporarily coat the individual
+strands of hair with a substance that thereby lends bulk, may be advertised
+provided that it is abundantly clear that the thickening that takes place is
+artificial and in no way conduces to any permanent improvement in the health
+or thickness of the hair or its rate of growth. Particular care must be taken to
+avoid offending the provisions of clause 1.1 of this Appendix.
+7.
+Cosmetics
+7.1
+Provided that advertisements for hair creams, brilliantine, shampoos, hair
+fixatives, hair lotions, hair dye and similar products do not contravene any of
+the advice in any section of the Code, they are not subject to any additional
+restrictions.  It should be noted that the restriction on diagnosis and advice by
+post does not apply to the giving of the advice on the suitability of hair colorants
+or other cosmetics.
+7.2
+Products offered for the mending of split ends of hair should contain no claims
+that suggest that their action is other than of transient effect.
+8.
+Advertisers offering products or treatments in more than one
+of the above categories
+8.1
+Where an advertiser offers a range of products and treatments for various
+conditions of the hair and scalp, he should take particular care to ensure that
+they are clearly differentiated in any advertisement.  In particular, it is not
+permissible for any advertiser to circumvent the intentions of the paragraph
+dealing with individual treatments by linking the availability of such treatments
+to an offer of the other products or treatments or cosmetics devices, advertising
+for which is permitted in less restricted terms.
+50
+APPENDIX J
+Financial Services and Products
+1.
+Explanation
+1.1
+Advertisements addressed to the general public for capital or financial products
+or services, or financial information should take special care to ensure that
+the public are fully aware of the nature of any commitment into which they
+may enter as a result of responding to the advertisement.
+1.2
+Unspecified advertisements, that is to say those which are limited to indicating
+in general terms the availability of investment opportunities, are not acceptable
+unless explanatory material concerning the facilities or opportunities available
+will be provided free of charge for those who request them.
+2.
+Details of benefits
+2.1
+Advertisements that contain details, including those given by way of example,
+of the benefits that may accrue through investing in a given investment should
+be understood easily and must not take advantage of people’s inexperience
+or gullibility.
+3.
+Growth rates and rates of return
+3.1
+Where an advertisement contains any forecast or projection of a specific
+growth rate, or a specific rate of return, it should make clear the basis upon
+which the forecast or projection is made; whether reinvestment of income is
+assumed; whether account has been taken and if so how, of the incidence of
+any taxes or duties; and whether the forecast or projected return will be subject
+to any deductions, either upon premature realisation or otherwise.
+3.2
+Where growth or return is indicated through the use of money equivalents,
+the net annual rate that is assumed should be cited in effective percentage
+terms, and should be calculated upon the same basis as any quoted in the
+support of the claim.
+3.3
+When any advertisement quotes past experience in support of a forecast or
+projected growth rate it should not mislead in relation to present prospects
+and should indicate the circumstances and the period of such experience in
+such a way that the reliability of the forecast or the projected growth rate can
+fairly be assessed.
+3.4
+All advertisements making claims whether specific or not as to growth rate of
+return should include a note, to be given due prominence, to the effect that
+past experience is not necessarily any guide to the future.
+51
+3.5
+Where rates of return are expressed as gross the tax position should be clearly
+explained.
+4.
+Moneylender advertisements
+4.1
+Advertisers submitting loan advertisements must provide a copy of their
+Moneylender’s Licence issued by the Registrar of Moneylenders to the
+advertising department of the relevant media owner.
+4.2
+Advertisements must carry the name of the moneylending business/company.
+5.
+The nature of the contract
+5.1
+The type of contract forming the basis of the product or service advertised
+(and especially any charges, expenses or penalties) should be made clear,
+and wherever the nature of the investments underlying the contract or to
+which it is linked is material to its choice, a fair description of investment
+objectives and of such investments should be given.
+6.
+Tax
+6.1
+Where a claim is made in an advertisement as to the return offered by a given
+investment, and the achievement or maintenance of the return quoted is
+dependent in part upon the assumed effects of tax or duty, the advertisement
+should make it clear that no undertaking can be given that the fiscal system
+may not be revised with consequent effect upon the return offered.
+6.2
+The phrases tax-free, tax-paid and others making similar claims, should not
+be used without qualifications as to the particular tax(es) and/or duties involved.
+In particular the advertiser should state as clearly as possible what liabilities
+may arise and by whom they will be paid.
+7.
+Other restrictions
+7.1
+Where an advertiser reserves the right under certain circumstances to defer
+requests for repayment of any sum invested for which in normal circumstances
+immediate repayment might be demanded by the investor the maximum
+period during which repayment may be withheld should be stated in the
+advertisement.
+7.2
+Where investors are offered planned withdrawal of capital as an income
+equivalent, e.g. by cashing in unit trusts, the advertiser should ensure that the
+effect of such withdrawals upon capital invested is clearly explained.
+7.3
+Advertisements that may lead to the employment of money in anything the
+value of which is not guaranteed should indicate that the value of the investment
+can go down as well as up.  Where values are guaranteed sufficient detail should
+be included to give the readers a fair view of the nature of the guarantee.
+52
+APPENDIX K
+Advertising for Alcoholic Drinks
+1.
+Children should not be portrayed in advertisements for alcoholic drinks; however,
+in a scene where it would be natural for them to be present (e.g. in a family situation),
+they may be included, provided that it is made clear that they are not drinking
+alcoholic beverages.
+2.
+Advertisements should not be directed at young people or in any way encourage
+them to start drinking.  Anyone shown drinking should be obviously over 18.
+3.
+Advertisements should not emphasise the stimulant, sedative, or tranquillising
+effects of any drink.
+4.
+Advertisements should not give the general impression that:
+(a)
+A drink is being recommended mainly for its intoxicating effect; or
+(b)
+Drinking is necessary for social success or acceptance.
+5.
+Advertisements should not depict activities or locations where drinking alcohol
+would be unsafe or unwise.  In particular, advertisements should not encourage or
+condone the consumption of alcohol while operating machinery, driving, engaging
+in any activity relating to water or heights, or any other activity that requires
+concentration in order for the job to be done safely.
+6.
+Advertisements should never encourage over-indulgence and excessive
+consumption.
+53
+APPENDIX L
+Environmental Claims
+1.
+The basis of any claim should be explained clearly and should be qualified where
+necessary. Unqualified claims can mislead if they omit significant information.
+2.
+Claims such as “environmentally friendly” or “wholly biodegradable” should not
+be used without qualification unless advertisers can provide convincing evidence
+that their product will cause no environmental damage.  Qualified claims and
+comparisons such as “greener” or “friendly” may be acceptable if advertisers can
+substantiate that their product provides an overall improvement in environmental
+terms either against their competitors’ or their own previous products.
+3.
+Where there is significant division of scientific opinion or where evidence is
+inconclusive this should be reflected in any statements made in the advertisements.
+Advertisers should not suggest that their claims command universal acceptance if
+it is not the case.
+4.
+If a product has never had a demonstrably adverse effect on the environment,
+advertisers should not imply that the formulation has been changed to make it
+safe.  It is legitimate however, to make claims about a product whose composition
+has been changed or has always been designed in a way that omits chemicals
+known to cause damage to the environment.
+5.
+The use of extravagant language should be avoided, as should bogus and confusing
+scientific terms.  If it is necessary to use a scientific expression, its meaning should
+be clear.
+54
+APPENDIX M
+Employment and Business Opportunities
+1.
+Advertisers should distinguish clearly between offers of employment and business
+opportunities.
+2.
+Homework schemes require participants to make articles, perform services or other
+facilities at or from home.  Advertisements for homework schemes and business
+opportunities should contain:
+2.1
+The name and contact details of the advertisers;
+2.2
+Where possible, a clear description of the work involved and the extent of
+investors’ commitments, including any financial investment; the support
+available should not be exaggerated; and
+2.3
+No unrepresentative or exaggerated earning figures.
+55
+APPENDIX N
+Motoring
+1.
+Advertisements for motor vehicles, fuel or accessories should avoid portraying or
+referring to practices that encourage anti-social behaviour.
+2.
+Advertisers should not portray speed in a way that might encourage motorists to
+drive irresponsibly or to break the law.
+3.
+Vehicles should not be depicted in dangerous or unwise situations in a way that
+would encourage irresponsible driving.  Their capabilities may be demonstrated
+on a track or circuit provided it is clearly not in use on a public highway.
+4.
+Care should be taken in cinema advertisements and those in electronic media where
+the moving image may give the impression of exceptional speed.  In all cases where
+vehicles are shown in normal driving circumstances on the public road they should
+be seen not to exceed speed limits.
+5.
+When making environmental claims for their products, advertisers should conform
+with the Appendix on Environmental Claims.(Appendix L)
+6.
+Prices quoted should correspond to the vehicles illustrated.  For example, it is not
+acceptable to feature only a top-of-the-range model alongside the starting price for
+that range.
+7.
+Safety claims should not exaggerate the benefit to consumers.  Advertisers should
+not make absolute claims about safety unless they hold evidence to support them.
+56
+APPENDIX O
+Others
+1. “Chartered” status
+1.1
+“Chartered” is a professional designation identifying membership of an
+institution with a Royal Charter from the British Crown, and should only be
+used by duly qualified members of that institution.  Other members of the
+same profession should not be described as “chartered”.
+2.
+Commemorative and other items produced in limited
+edition
+2.1
+The number of articles to be produced in any limited edition should be stated
+in all advertising and promotional material containing any claim that the edition
+is limited.  Where an edition is limited by the number of persons applying
+within a given period of time, it should be described as an edition limited by
+time, and the advertiser should offer to inform all purchases of the number of
+articles eventually produced.
+2.2
+Advertisements for articles made of precious metal should state the amount
+and the fineness of the metal involved in the pieces on offer.
+2.3
+Advertisements that make claims about the investment potential of the articles
+on sale should not make any unsubstantiated guarantee of any future increase
+in value.
+3.
+Property advertising
+3.1
+Advertisements for real property located locally or abroad, whether for sale
+or for rent, should not mislead or exaggerate on such matters as:
+3.1.1
+the land itself and any buildings erected or to be erected thereon;
+3.1.2
+the physical nature - including furnishings and amenities - and
+appearance
+of buildings and flats, and their surroundings;
+3.1.3
+the legal title and formalities;
+3.1.4
+rights and easement of any kind;
+3.1.5
+planning, building and sanitary requirements;
+3.1.6
+taxes, rates and other costs; and
+3.1.7
+the price, terms of payment and load facilities.
+57
+4.
+Matchmaking advertising
+4.1
+Advertisements should not guarantee marriages.
+4.2
+Advertisements will be restricted to the classified section in print publications.
+4.3
+Advertisements should not contain visuals.
+4.4
+Exemption
+4.4.1
+Dating agencies accreditied with the Ministry of Community, Youth
+and Sports are exempt from clause 4.2 and 4.3 above. ASAS also will
+consider, at its discretion, granting exemptions from clause 4.2 and
+4.3 on a case-by-case basis.
+58
+APPENDIX P
+Statutes and statutory instruments with special relevance
+to advertising and related trading practices
+This table should not be taken to be an exhaustive list of legislation and statutory
+instruments relevant to advertising and related trading practices.
+Acts of Parliament can be found on the Singapore Statues Online website
+(statutes.agc.gov.sg).
+A
+Accountants Act, Cap 2 (s56)
+• Accountants (Public Accountants) Rules
+Sets up body responsible for accountants
+and rule making, which includes
+restrictions on advertising
+Architects Act, Cap 12 (s10)
+• The Schedule (Code of Professional
+Conduct and Ethics) Part I
+Sets up body responsible for architects;
+and contains power for restrictions on
+advertising
+B
+Banking Act, Cap 19 (s4A, 4B, 5)
+Restriction on deposit-taking business and
+soliciting deposits, and use of the word
+bank
+Betting Act, Cap 21 (s3(e), 6)
+Prohibits advertisement of common
+betting-house
+Broadcasting Act, Cap 28 (s6, 9)
+• Audiotext Code of Practice
+• Broadcasting (Class Licence) Notification
+• Internet Code of Practice
+• Radio Programme Sponsorship Code
+• Television Programme Sponsorship Code
+Regulates broadcast programmes,
+including advertising
+Building Control Act, Cap 29 (s49)
+• Building Control (Advertisement)
+Regulations
+• Building Control (Outdoor Advertising)
+Regulations
+Controls outdoor advertising
+59
+C
+Casino Control Act 2006 (s200)
+Authority may make regulations relating
+to casino advertising
+Charities Act, Cap 37 (s33, 35)
+Requirements for advertising or sales
+campaign by professional fund raiser
+Chit Funds Act, Cap 39 (s5)
+Restricts the use of the words “chit” or
+“chit funds” in advertisements
+Co-Operative Societies Act, Cap 62
+Prohibits advertising of financial services
+to members of the public through the mass
+media
+Common Gaming Houses Act, Cap 49 (s4, 5)
+Advertising relating to gambling may
+offend provisions of this Act.
+Companies Act, Cap 50 (s401)
+Prohibits false and misleading statements
+made regarding a corporation’s capital in
+advertisements
+Consumer Protection (Fair Trading) Act,
+Cap 52A (2nd Schedule, No. 14)
+Making representations in an objective form
+without stating that it is an advertisement
+is specified as an unfair practice.
+Consumer Protection (Trade Descriptions
+and Safety Requirements) Act, Cap 53 (s2,
+7, 10, 20)
+Prohibits, inter-alia, misleading statements
+about goods and services made in
+advertisements.
+Copyright Act, Cap 63 (s139, s261C)
+Governs copyrights in all matters, including
+advertising material in all media.
+Currency Act, Cap 69 (s20)
+Provides restrictions on the use of
+photographs, drawing or design of notes
+in advertisements, etc.
+Customs Act, Cap 70 (s82)
+Restricts advertising regarding duty free
+shops to licensees only.
+D
+Defamation Act, Cap 75
+Governs the law relating to libel and
+slander and other malicious falsehoods.
+Dentists Act, Cap 76 (s26)
+Sets up body responsible for dentists and
+contains power for restrictions on
+advertising.
+60
+E
+Electricity Act, Cap 89A (s82)
+Prohibits a person from advertising or
+otherwise hold himself out as an electrical
+worker or as a licensed electrical worker.
+Employment Agencies Act, Cap 92
+• Employment Agency Licence Conditions
+Establishes a system of licensing of
+employment agencies, and enables the
+government to make regulations for
+proper conduct, including regulations to
+control advertising by agencies.
+Endangered Species (Import and Export)
+Act 2006 (s4)
+Prohibits advertisement of endangered
+species.
+F
+Films Act, Cap 107 (s22, 31)
+• Guidelines on Promotional Materials for
+Films and Videos
+Regulates advertising of films.
+Finance Companies Act, Cap 108 (s4)
+• Finance Companies (Advertisements)
+Regulations
+Controls advertising by finance companies.
+Financial Advisers Act, Cap 110 (s21, 25)
+Regulates written communications
+(including advertisements) of financial
+advisers and life insurance brokers
+G
+Gas Act, Cap 116A (s11)
+Prohibits a person from advertising or
+otherwise hold himself out or conduct
+himself in any way or by any means as a
+gas service worker
+Goods and Services Tax Act, Cap 117a
+• Goods and Services Tax (General)
+Regulations
+Price to include GST in advertisements
+H
+Health Products Act 2007
+• Health Products (Medical Devices)
+Regulations
+Regulates advertisement of health
+products
+Housing Developers (Control and
+Licensing) Act, Cap 130 (s6, 22)
+• Housing Developers Rules
+Provides for the control, licensing, and
+advertisements of licensed housing
+developers.
+Human Organ Transplant Act, Cap 131A
+(s15)
+Prohibits advertisements relating to buying
+or selling of organs or blood.
+61
+I
+Indecent Advertisements Act, Cap 135
+Controls advertisements of treatment of
+sexually transmitted diseases, infirmities
+relating to sexual intercourse, and
+aphrodisiacs.
+Innkeepers Act, Cap 139 (s7)
+Provides for exhibition of statement of
+innkeeper’s liability; and advertisement in
+newspapers of intended sales of certain
+goods.
+Insurance Act, Cap 142 (s25, 35T)
+Regulates the insurance businesses,
+including powers to regulate advertising.
+Internal Security Act, Cap 143 s(20, 25)
+Prohibits printing etc. of subversive
+documents and publications; posting of
+placards.
+L
+Land Surveyors Act, Cap 156 (s10)
+Sets up body responsible for land
+surveyors; and contains power for
+restrictions on advertising.
+Legal Profession Act, Cap 161
+• Legal Profession (Publicity) Rules
+Sets up body responsible for lawyers;
+contains power for restrictions for
+advertising.
+M
+Massage Establishment Act, Cap 173 (s9)
+Regulates, inter-alia, the display and
+publication of advertisement of massage
+establishments.
+Media Development Authority of
+Singapore Act, Cap 172 (s17)
+• Code of Practice for Market Conduct in
+the Provision of Mass Media Services
+Sets up body responsible for media
+development.
+Medical Registration Act, Cap 174 (s17, 64,
+65)
+Sets up body responsible for medical
+practitioners; contains power for
+restrictions on advertising.
+Medicines (Advertisement and Sale) Act,
+Cap 177
+Prohibits certain advertisements relating
+to medical matters.
+Medicines Act, Cap 176 (s49-53)
+• Medicines (Medical Advertisements)
+Regulations
+Prohibits, inter-alia, certain advertisements
+relating to medical matters.
+Miscellaneous Offences (Public Order and
+Nuisance) Act, Cap 184 (s11)
+Prohibits the affixing of advertisements at
+public and private properties; and prohibits
+operation of advertising by gramophones,
+loudspeakers without permission, etc.
+62
+Money-Changing 
+and 
+Remittance
+Businesses Act, Cap 187 (s5, 6)
+Prohibits advertisements by unlicensed
+money changers and remittance
+businesses.
+Moneylenders Act, Cap 188 (s12, 13)
+Governs advertising by moneylenders.
+Penalises, inter-alia, the harassment of
+debtors.
+N
+National Emblems (Control of Display) Act,
+Cap 196
+Regulates advertisements which feature
+the state flag, state crest, National Anthem
+or flags of other countries
+National Registration Act, Cap 201 (s13)
+Prohibits inter-alia the reproduction of an
+identity card.
+P
+Parliamentary Elections Act, Cap 218 (s2,
+61, 70, 78, 78A-B, 78E, 79)
+• Parliamentary Elections (Election
+Advertising) Regulations
+Prohibits canvassing on Polling Day, and
+dissuasion from voting.
+Penal Code, Cap 224
+Provides for offences relating to
+documents, currency notes, banks notes,
+defamation, religion, public health, safety,
+convenience, decency and morals, coin
+and government stamps, armed forces,
+public tranquillity, public servants, against
+the state, etc.
+Pharmacists Registration Act, Cap 234
+Sets up body for pharmacists; contains
+power for restrictions on advertising.
+Police Force Act, Cap 235 (s86)
+Prohibits unauthorised advertisements of
+security services.
+Presidential Elections Act, Cap 240A (s42,
+59, and 60)
+Regulates advertising in relation to
+presidential elections including the
+prohibition to canvass by various means
+on polling day
+Private Hospitals and Medical Clinics Act,
+Cap 248 (s22)
+• Private Hospitals and Medical Clinics
+(Publicity) Regulations
+Provides guidelines on advertising and
+publicity for private hospitals, medical and
+dental clinics, nursing homes and clinical
+laboratories.
+Private Investigation and Security
+Agencies Act, Cap 249 (s5)
+Prohibits advertising by unlicensed private
+investigators
+Professional Engineers Act, Cap 253 (s9)
+• Professional Engineers (Code of
+Professional Conduct and Ethics) Rules
+63
+Sets up body for engineers; contains
+power for restriction on advertising.
+Public Utilities Act, Cap 261 (s40)
+Prohibits a person from advertising or
+otherwise hold himself out as a water
+service worker or as a licensed water
+service worker.
+R
+Rapid Transit Systems Act, Cap 263A (s45)
+• Rapid Transit Systems (Advertisements
+on Trains) Regulations
+Regulates advertising on railway premises
+Road Traffic Act, Cap 276 (s140)
+Provisions to restrict the use of vehicles
+and animals, of sandwichmen and other
+persons on roads for the purposes of
+advertisement of such a nature or in such
+a manner as to be likely to be a source of
+danger or to cause obstruction to traffic.
+S
+Sale of Drugs Act, Cap 282 (s26)
+Provisions to prohibit or regulate the sale,
+advertisement for sale, or importation of
+specified drugs.
+Sale of Food Act, Cap 283 (s17, 40, 56)
+• Food Regulations
+• Sale of Food (Prohibition of Chewing
+Gum) Regulations
+Contains certain requirements as to
+advertising and labelling of food.
+Securities and Futures Act, Cap 289 (s251,
+282L, 300, 341)
+• Securities and Futures (Licensing and
+Conduct of Business) Regulations
+• Securities and Futures (Offers of
+Investments) (Business Trusts) (No. 2)
+Regulations
+• Securities and Futures (Offers of
+Investments) (Collective Investment
+Schemes) Regulations
+• Securities and Futures (Offers of
+Investments) (Shares and Debentures)
+Regulations
+Restrictions on advertisements relating to
+securities and futures.
+Singapore Arms and Flag and National
+Anthem Act, Cap 296
+Regulates the use, display, and
+advertising of the Singapore Arms, Flag
+and performance of the national Anthem.
+Singapore Totalisator Board Act, Cap 305A
+(s16)
+Specifies that certain advertisements
+relating to totalisator agencies are not
+unlawful
+Smoking (Control of Advertisements and
+Sale of Tobacco) Act, Cap 309
+Prohibition on advertisements relating to
+smoking.
+Street Works Act, Cap 320A
+• Street Works (Advertisements on Road
+Structures, Road Related Facilities and
+Public Streets) Regulations
+64
+Contains regulations on advertisements on
+road structures, road related facilities and
+public streets
+T
+Telecommunications Act, Cap 323 (s26)
+• Code of Practice for Provision of Premium
+Rate Services
+• Telecom Competition Code
+• Telecommunications (Dealers) Regulations
+Regulates the advertising of telecommunication
+products and services through rules and
+codes or practice.
+Trade Marks Act, Cap 332
+Governs law relating to trade marks.
+Traditional Chinese Medicine Practitioners
+Act, Cap 333A (s24)
+• Traditional 
+Chinese 
+Medicine
+Practitioners (Practice, Conduct and.
+Ethics) Regulations
+Regulates advertising by traditional
+chinese medicine practitioners.
+Travel Agents Act, Cap 334 (s28)
+• Travel Agents Regulations
+Regulates advertising by travel agents.
+U
+Undesirable Publications Act, Cap 338
+Prevents the distribution or reproduction
+of obscene or objectionable publications.
+V
+Vandalism Act, Cap 341 (s2)
+Provides for exemplary punishment for
+acts of vandalism which includes writing,
+drawing, painting, display of advertisements
+on public/private property, etc.
+W
+Weights and Measures Act, Cap 349 (s16,
+18)
+Lays down requirements for weights and
+measures on labels and packs and gives
+power to make specific regulations.
+65
+APPENDIX Q
+Advertising for Audiotex Services
+1.
+Introduction: What are Audiotex Services?
+1.1
+Audiotex services are interactive telecommunication services offered via a
+telephone service. Typically, the services use a 1-900 number in which
+customers are charged a premium over and above the normal connection
+charges.
+1.2
+Such service providers offer, among other things, information, ring tone
+downloads and friendship services or chatlines.
+1.3
+Some of these services, particularly those offering chatlines have been abused
+by men who prey on schoolgirls.
+1.4
+The following rules governing the advertising of such services have been
+drawn up principally to protect the interest of these schoolgirls.
+2.
+Guidelines
+2.1
+Advertisements for chat and similar interactive services must be clear and
+unambiguous that such services are available.
+2.2
+Advertisers should clearly indicate to system users whether or not their
+services are free of charge, and should not charge users unless such warning
+has been provided beforehand. Advertisements should indicate the cost of
+the services.
+2.3
+Where an advertisement does not specifically mention the availability of chat,
+that service must not be made available on the 1-900 number. That is, a service
+provider offering ring-tone downloads must not also make available a chat
+services as an option when customers call the advertised 1-900 number.
+2.4
+Advertisements for chatline and related services must include the company’s
+name and office number.
+2.5
+Chatline advertisements should always include:
+(a)
+ the legal age limit for callers
+(b)
+warnings on the dangers of meeting up with strangers encountered through
+chatlines.
+2.6
+Where an advertisement gives the website address (uniform resource locator
+or url) for non-chat services, that page must not contain links or 1-900 numbers
+to chat services.
+2.7
+Advertisements for chatlines and related services should not contain lewd or
+sexually suggestive material.

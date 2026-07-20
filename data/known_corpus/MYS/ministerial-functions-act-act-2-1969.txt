@@ -1,0 +1,150 @@
+Home
+| Databases
+| WorldLII
+| Search
+| Feedback
+Malaysian Legislation
+You are here:
+CommonLII >>
+Databases >>
+Malaysian Legislation >>
+Ministerial Functions Act 1969
+Database Search
+| Name Search
+| Noteup
+| Download
+| Help
+Ministerial Functions Act 1969
+LAWS OF MALAYSIA
+REPRINT
+PUBLISHED BY
+THE COMMISSIONER OF LAW REVISION, MALAYSIA
+UNDER THE AUTHORITY OF THE REVISION OF LAWS ACT 1968
+IN COLLABORATION WITH MALAYAN LAW JOURNAL SDN BHD AND
+PERCETAKAN NASIONAL
+MALAYSIA BHD
+2006
+Act 2
+MINISTERIAL FUNCTIONS
+ACT 1969
+Incorporating all amendments up to 1 January 2006
+002e.fm Page 1 Monday, March 27, 2006 10:55 AM
+PREPARED FOR PUBLICATION BY
+MALAYAN LAW JOURNAL SDN BHD
+AND PRINTED BY
+PERCETAKAN NASIONAL MALAYSIA BERHAD
+KUALA LUMPUR BRANCH
+2006
+2
+MINISTERIAL FUNCTIONS ACT 1969
+Date of Royal Assent ... ... ... ... 15 February 1969
+Date of publication in the Gazette ... ... 27 February 1969
+PREVIOUS REPRINTS
+First Reprint ... ... ... ... ... 1992
+Second Reprint ... ... ... ... 1999
+002e.fm Page 2 Monday, March 27, 2006 10:55 AM
+Ministerial Functions 3
+LAWS OF MALAYSIA
+Act 2
+ARRANGEMENT OF SECTIONS
+MINISTERIAL FUNCTIONS ACT 1969
+Section
+1. Short title
+2. Functions, styles and titles of Ministers
+3. Effect of transfer of functions and change of style and title
+4. Reference in written laws
+5. Repeal and saving
+002e.fm Page 3 Monday, March 27, 2006 10:55 AM
+002e.fm Page 4 Monday, March 27, 2006 10:55 AM
+Ministerial Functions 5
+LAWS OF MALAYSIA
+Act 2
+MINISTERIAL FUNCTIONS ACT 1969
+An Act to make provisions for declaring the functions and the
+transfer of functions of Ministers, for declaring the styles and
+titles of Ministers, and for incidental and connected purposes.
+[Throughout Malaysia--27 February 1969]
+BE IT ENACTED by the Seri Paduka Baginda Yang di-Pertuan
+Agong with the advice and consent of the Dewan Negara and
+Dewan Rakyat
+in Parliament assembled, and by the authority of
+the same, as follows:
+Short title
+1. This Act may be cited as the Ministerial Functions Act 1969.
+Functions, styles and titles of Ministers
+2. (1) The Yang di-Pertuan Agong may by order notify in the
+Gazette--
+(a) that a Minister has been conferred with any functions
+or has been charged with any responsibility in respect
+of a particular
+department or subject or that any
+transfer, to any other Minister, of any of the functions
+or responsibility referred to has been
+made;
+(b) that any style or title has been assigned to any Minister
+(except the Prime Minister) or that any change in any
+style and title
+referred to has been made.
+(2) An order made by the Yang di-Pertuan Agong under this
+section--
+(a) may provide for the transfer of any property, rights or
+liabilities held, enjoyed or incurred by any Minister in
+connection
+with any functions conferred or
+transferred; and
+002e.fm Page 5 Monday, March 27, 2006 10:55 AM
+6 Laws of Malaysia ACT 2
+(b) may contain such other provisions as may be
+necessary or expedient for the purpose of giving effect
+to the order.
+Effect of transfer of functions and change of style and title
+3. Where an order is made by the Yang di-Pertuan Agong under
+section 2 anything commenced, or done before the order came into
+force
+by or under the authority of the Minister whose functions
+and responsibility have been transferred or whose style or title is
+changed
+may be continued or completed by that Minister.
+Reference in written laws
+4. Any reference in any written law or in any instrument,
+contract or legal proceedings to any Minister as such by the style
+or
+title of his office shall unless the context otherwise requires, be
+construed as a reference to the Minister for the time being
+conferred with the functions or charged with the responsibility or
+to the Minister for the time being assigned with such style
+or title.
+Repeal and saving
+5. The Ministers of the Federal Government (Transfer of
+Functions) Ordinance 1951 [No. 15 of 1951], is hereby repealed:
+Provided
+that orders made under that Ordinance or any other
+written law relating to the transfer of functions of a Minister or
+public officer
+which were in force immediately before the
+commencement of this Act shall be deemed to have been made
+under this Act and shall
+remain in force, and may be amended or
+revoked, accordingly.
+002e.fm Page 6 Monday, March 27, 2006 10:55 AM
+Ministerial Functions 7
+LAWS OF MALAYSIA
+Act 2
+MINISTERIAL FUNCTIONS ACT 1969
+LIST OF AMENDMENTS
+LIST OF SECTIONS AMENDED
+Amending law Short title In force from
+� NIL �
+Section Amending authority In force from
+� NIL �
+002e.fm Page 7 Monday, March 27, 2006 10:55 AM
+CommonLII:
+Copyright Policy
+|
+Disclaimers
+|
+Privacy Policy
+|
+Feedback
+URL: http://www.commonlii.org/my/legis/consol_act/mfa1969251
+(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1a89befedc8c1ea',t:'MTc4Mzk0OTA3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();

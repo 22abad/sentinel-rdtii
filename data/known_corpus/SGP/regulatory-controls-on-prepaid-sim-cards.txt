@@ -1,0 +1,141 @@
+Skip to main content
+Select a profile
+About IMDA
+Next level
+Programmes & Grants
+Regulations & Licences
+Next level
+Proposal Submission
+Activities
+Resources
+Next level
+Toggle search bar
+Close
+
+Be aware of scammers impersonating as IMDA officers or misrepresenting our policies. Government officials will NEVER call you to transfer money, verify refunds, disclose bank log-in details or request for your personal information. For scam-related advice, please call the ScamShield Helpline at 1799 or go to www.ScamShield.gov.sg.
+
+Architects of SG's Digital Future Resources Press Releases, Factsheets and Speeches Full SMS Sender ID Registration Is To Be Required
+Full SMS Sender ID Registration is to be required by January 2023
+17 OCT 2022
+|
+5 MINS READ
+
+Public Consultation shows strong support for IMDA’s proposed measures
+
+SINGAPORE – 14 OCT 2022
+
+The Infocomm Media Development Authority (IMDA) is set to implement two new measures following a public consultation. 
+
+First, registration with the Singapore SMS Sender ID Registry (“SSIR”) will be mandatory for all organisations that use SMS Sender IDs so that only bona fide organisations can use such Sender IDs.
+
+Second, telecom operators will implement SMS anti-scam filtering solutions within their mobile networks, to automatically filter potential online scam messages before they reach consumers.
+
+This is part of the multi-pronged effort by IMDA and other stakeholders to further safeguard SMS as a communications channel and protect consumers from online scams in Singapore.
+
+Full SMS Sender ID Registration
+
+With the setting up of the SSIR in March 2022, there was a 64% reduction in online scams in Singapore through SMS from Q4 2021 to Q2 2022. Scam cases perpetrated via SMSes make up around 8% of scam reports in Q2 2022, down from 10% in 2021.
+
+The current SSIR is a voluntary regime, which means only organisations that want to proactively protect their Sender IDs register with the SSIR. Moving forward, registration will be made mandatory. This means that only bona fide Sender IDs belonging to organisations will be allowed. All other Sender IDs will be blocked. The full registration requirement will take effect on 31 January 2023 as part of the efforts to build stronger anti-scam capabilities through the scams registry.
+
+IMDA noted the support for the proposal by both the public and merchants. Implementation by January 2023 is driven by the need to act proactively to strengthen the SSIR.
+
+As some organisations may need more time to prepare and register, their SMS cannot be clearly differentiated from other SMS that come from unknown sources and may be scam messages. Therefore, as a transition measure, all non-registered SMS Sender-IDs after 31 January 2023 will be channelled to a Sender ID with the header “Likely-SCAM”. This is akin to a “spam filter and spam bin” and will be in place for around 6 months. Consumers are advised to exercise caution upon receiving such SMS as these are non-registered Sender IDs. Merchants are also urged to have their Sender IDs registered as early as possible with the SSIR.
+
+Anti-Scam SMS Filtering Solutions
+
+Machine-reading technology has made it possible to identify and filter potential scam messages upstream. Specifically, these solutions can detect malicious links within SMSes sent via our telecoms network. IMDA notes the public’s support for this proposal. Key mobile operators (Singtel, Starhub, and M1) will implement anti-scam filtering solutions in their networks from end-October 2022.
+
+If the public has any information relating to online scams, including malicious SMS, URLs and other links, please submit it online at https://www.police.gov.sg/i-witness. They can also submit information on malicious SMSes via the ScamShield app or website (www.scamshield.org.sg/report).
+
+ 
+IMDA continues to partner the public in the fight against online scams in Singapore
+
+These new measures by IMDA form part of an ongoing multi-layered approach to strengthen protection against online scams. This has been done with the telecom operators to systemically reduce scam calls and SMS coming through the communication networks. (Please see Annex A (340.64KB) for a summary of the multi-layered approach to combat scam SMS and scam calls).
+
+Combatting scams is a whole of society effort, and the public should continue to remain vigilant. Scammers will continue to change their methods and tactics and there is no fool-proof measure even as we continue to monitor and implement additional safeguards. IMDA will continue to work with other stakeholders in the fight against scams. A discerning public is the key in this fight, where consumers are individually alert and raise collective awareness by sharing scam prevention tips with friends and loved ones.
+
+Quotes from organisations
+Quote from Singapore Business Federation
+
+“SMS is a convenient and effective channel which many businesses rely on to communicate with their customers. However, given the increase in number of SMS scams, it is important for businesses to assure their customers that these are from legitimate sources. SBF welcomes the Full SMS Sender ID Registry (SSIR) Regime which further strengthens the security of this communication channel. This new regime will be helpful to businesses and enable them to continue providing timely and trusted information to customers via SMS.”
+
+Mr Wong Wai Meng, Chairman, Singapore Business Federation Digitalisation Committee
+
+Quote from Singapore International Chamber of Commerce
+
+“Everyone must play their part by staying vigilant as scammers will continue to adapt their tactics to try and deceive the public. As a Chamber, we support IMDA’s efforts to combat scams and make it safer for businesses to communicate through telecommunications channels.”
+
+Victor Mills, Chief Executive
+
+Quote from European Chamber of Commerce (Singapore)
+
+“EuroCham is committed to supporting any collaboration between European companies and Singaporean authorities to tackle new and emerging threats to the Singaporean community, including scams where digital technologies are misused for malicious purposes. The Proposed Full SMS Sender ID Regime by IMDA will significantly reduce the ability for fraudsters to send messages that impersonate a brand and block fraudulent messages and will ensure that SMS remains a trusted channel of communication for brands and consumers alike”
+
+Nele Cornelis, Executive Director
+
+Resources:
+
+Annex A: Summary of the multi-layered approach to combat scam SMS and scam calls (340.64KB)
+Media Factsheet - Full SMS Sender ID Registry Regime (172.28KB)
+
+LAST UPDATED: 26 JUL 2024
+
+Share:
+
+Issued by the Infocomm Media Development Authority (IMDA)
+For media clarifications, please contact:
+Explore related tags
+Data protection Regulation
+Explore more
+Related Programmes
+Data Protection Essentials (DPE) Programme
+DIGITAL SOLUTION
++1
+Data Protection Essentials (DPE) Programme
+
+Designed to be easy-to-implement, holistic and cost-effective, the Data Protection Essentials supports SMEs in acquiring a...
+
+Policy Prototyping
+PROGRAMME
+Policy Prototyping
+
+With the objective to promote responsible use of data and support businesses’ data-driven innovation while building consumer...
+
+Anti-Scam Measures
+PROGRAMME
++1
+Anti-Scam Measures
+
+To better protect Singaporeans from spoofed SMSes, all organisations that send SMS messages to Singapore mobile users with an...
+
+View all programmes
+Stay tuned for our newsletter
+
+Subscribe now
+
+To offer you a better experience, this site uses cookies. Read more about cookies in our Privacy Statement.
+
+Close
+Infocomm Media Development Authority
+About IMDA
+Careers at IMDA
+Contact us
+Feedback
+FAQs
+Sitemap
+Subscribe to Newsletter
+Linked In
+Facebook
+Instagram
+Youtube
+Report Vulnerability
+Privacy Statement
+Terms of Use
+Reach
+© 2026, Government of Singapore
+Last updated 26 JUL 2024
+
+Click here to select which profile you belong to. You can change this profile anytime!
+
+Ok, got it

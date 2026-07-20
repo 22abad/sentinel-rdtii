@@ -1,0 +1,379 @@
+Skip to main content
+Report a cybercrime here
+
+LOGIN
+
+Individuals & families Small & medium businesses Large organisations & infrastructure Government
+ASD Approved Cryptographic Algorithms
+You are here
+Home
+About the ACSC
+View all content
+View all guidance
+ASD Approved Cryptographic Algorithms
+Guidelines for Cryptography
+
+This chapter of the ISM provides guidance on cryptography.
+
+This section of the ISM provides guidance on ASD Approved Cryptographic Algorithms.
+
+Evaluated cryptographic implementations
+
+Implementations of the algorithms in this section need to undergo an ACE before they can be approved to protect classified information.
+
+High assurance cryptographic algorithms
+
+High assurance cryptographic algorithms, which are not covered in this section, can be used for the protection of highly classified information if they are suitably implemented in HACE. Further information on high assurance cryptographic algorithms can be obtained from the ACSC.
+
+ASD Approved Cryptographic Algorithms
+
+There is no guarantee of an algorithm’s resistance against currently unknown attacks. However, the algorithms listed in this section have been extensively scrutinised by industry and academic communities in a practical and theoretical setting and have not been found to be susceptible to any feasible attacks. There have been some cases where theoretically impressive security vulnerabilities have been found; however, these results are not of practical application.
+
+AACAs fall into three categories: asymmetric/public key algorithms, hashing algorithms and symmetric encryption algorithms.
+
+The approved asymmetric/public key algorithms are:
+
+Diffie-Hellman (DH) for agreeing on encryption session keys
+Digital Signature Algorithm (DSA) for digital signatures
+Elliptic Curve Diffie-Hellman (ECDH) for key exchange
+Elliptic Curve Digital Signature Algorithm (ECDSA) for digital signatures
+Rivest-Shamir-Adleman (RSA) for digital signatures and passing encryption session keys or similar keys.
+
+The approved hashing algorithm is Secure Hashing Algorithm 2 (SHA-2) (i.e. SHA-224, SHA-256, SHA-384 and SHA-512).
+
+The approved symmetric encryption algorithms are Advanced Encryption Standard (AES) using key lengths of 128, 192 and 256 bits, and Triple Data Encryption Standard (3DES) using three distinct keys.
+
+Where there is a range of key sizes for an algorithm, some of the smaller key sizes are not approved as they do not provide an adequate safety margin against possible future attacks. For example, advances in integer factorisation methods could render smaller RSA moduli vulnerable.
+
+Using ASD Approved Cryptographic Algorithms
+
+If cryptographic equipment or software implements unapproved algorithms, as well as AACAs, it is possible that these unapproved algorithms could be used without a user’s knowledge. In combination with an assumed level of security confidence, this can represent a security risk. As such, organisations can ensure that only the AACA can be used by disabling the unapproved algorithms (which is preferred) or advising users not to use the unapproved algorithms via usage policies.
+
+Security Control: 0471; Revision: 6; Updated: Jun-20; Applicability: O, P
+Only AACAs are used by cryptographic equipment and software.
+
+Approved asymmetric/public key algorithms
+
+DH and DSA are vulnerable to different attacks than ECDH and ECDSA. As a result, ECDH and ECDSA offer more effective security per bit increase. This leads to smaller data requirements which in turn means that elliptic curve variants have become de facto global standards. For reduced data cost, and to promote interoperability, ECDH and ECDSA should be used when possible.
+
+Security Control: 0994; Revision: 5; Updated: Sep-18; Applicability: O, P
+ECDH and ECDSA are used in preference to DH and DSA.
+
+Using Diffie-Hellman
+
+A modulus of 2048 bits for correctly implemented DH provides 112 bits of effective security strength. Taking into account projected technological advances, it is assessed that 112 bits of effective security strength will remain secure until 2030.
+
+When DH in a prime field is used, the prime modulus impacts the security of the algorithm. The security considerations when creating such a prime modulus can be found in NIST SP 800-56A Rev. 3, along with a collection of commonly used secure moduli.
+
+Security Control: 0472; Revision: 5; Updated: Dec-20; Applicability: O, P
+When using DH for agreeing on encryption session keys, a modulus of at least 2048 bits is used.
+
+Security Control: 1629; Revision: 0; Updated: Dec-20; Applicability: O, P
+When using DH for agreeing on encryption session keys, a modulus and associated parameters are selected according to NIST SP 800-56A Rev. 3.
+
+Using the Digital Signature Algorithm
+
+A modulus of 2048 bits for correctly implemented DSA provides 112 bits of effective security strength. Taking into account projected technological advances, it is assessed that 112 bits of effective security strength will remain secure until 2030.
+
+Security Control: 0473; Revision: 5; Updated: Dec-20; Applicability: O, P
+When using DSA for digital signatures, a modulus of at least 2048 bits is used.
+
+Security Control: 1630; Revision: 0; Updated: Dec-20; Applicability: O, P
+When using DSA for digital signatures, a modulus and associated parameters are generated according to FIPS 186-4.
+
+Using Elliptic Curve Cryptography
+
+The curve used within an elliptic curve algorithm impacts the security of the algorithm. Only approved curves should be used.
+
+Security Control: 1446; Revision: 1; Updated: Sep-18; Applicability: O, P
+When using elliptic curve cryptography, a curve from FIPS 186-4 is used.
+
+Using Elliptic Curve Diffie-Hellman
+
+When using a curve from FIPS 186-4, a base point order and key size of at least 224 bits for correctly implemented ECDH provides 112 bits of effective security strength. Security of a curve selected from another source cannot be assumed to have the same security using base point order and key size alone.
+
+Security Control: 0474; Revision: 5; Updated: Dec-20; Applicability: O, P
+When using ECDH for agreeing on encryption session keys, a base point order and key size of at least 224 bits is used.
+
+Using the Elliptic Curve Digital Signature Algorithm
+
+When using a curve from FIPS 186-4, a base point order and key size of 224 bits for correctly implemented ECDSA provides 112 bits of effective security strength. Security of a curve selected from another source cannot be assumed to have the same security using base point order and key size alone.
+
+Security Control: 0475; Revision: 5; Updated: Dec-20; Applicability: O, P
+When using ECDSA for digital signatures, a base point order and key size of at least 224 bits is used.
+
+Using Rivest-Shamir-Adleman
+
+A modulus of 2048 bits for correctly implemented RSA provides 112 bits of effective security strength. Taking into account projected technological advances, it is assessed that 112 bits of effective security strength will remain secure until 2030.
+
+Security Control: 0476; Revision: 6; Updated: Dec-20; Applicability: O, P
+When using RSA for digital signatures, and passing encryption session keys or similar keys, a modulus of at least 2048 bits is used.
+
+Security Control: 0477; Revision: 6; Updated: Sep-18; Applicability: O, P
+When using RSA for digital signatures, and for passing encryption session keys or similar keys, a key pair for passing encrypted session keys that is different from the key pair used for digital signatures is used.
+
+Approved symmetric encryption algorithms
+
+The use of Electronic Codebook Mode with block ciphers allows repeated patterns in plaintext to appear as repeated patterns in ciphertext. Most plaintext, including written language and formatted files, contains significant repeated patterns. As such, an adversary can use this to deduce possible meanings of ciphertext. The use of other modes such as Galois/Counter Mode, Cipher Block Chaining, Cipher Feedback or Output Feedback can prevent such attacks, although each has different properties which can make them inappropriate for certain use cases.
+
+Security Control: 0479; Revision: 4; Updated: Sep-18; Applicability: O, P
+Symmetric cryptographic algorithms are not used in Electronic Codebook Mode.
+
+Using the Triple Data Encryption Standard
+
+Using three distinct keys for 3DES is deemed the only secure option for practical purposes. All other keying options are susceptible to attacks that reduce the security of 3DES and are therefore not deemed secure. Where practical, organisations should use an approved implementation of AES, instead of 3DES.
+
+Security Control: 0480; Revision: 6; Updated: Sep-18; Applicability: O, P
+3DES is used with three distinct keys.
+
+Protecting highly classified information
+
+ASD has approved the following cryptographic algorithms for the protection of highly classified information when used in an evaluated implementation.
+
+Recommended algorithms and key sizes should be given preference in order to ensure interoperability with the Commercial National Security Algorithm (CNSA) Suite.
+
+Purpose
+
+	
+
+Algorithm
+
+	
+
+Approved for
+SECRET
+
+	
+
+Approved for
+TOP SECRET
+
+	
+
+Recommended
+
+
+
+
+Encryption
+
+	
+
+AES
+
+	
+
+AES-128
+AES-192
+AES-256
+
+	
+
+AES-256
+
+	
+
+AES-256
+
+
+
+
+Hashing
+
+	
+
+SHA-2
+
+	
+
+SHA-256
+SHA-384
+SHA-512
+
+	
+
+SHA-384
+SHA-512
+
+	
+
+SHA-384
+
+
+
+
+Digital signatures
+
+	
+
+ECDSA
+
+	
+
+NIST P-256
+NIST P-384
+NIST P-521
+
+	
+
+NIST P-384
+NIST P-521
+
+	
+
+NIST P-384
+
+
+
+
+RSA
+
+	
+
+3072 bit key
+or larger
+
+	
+
+3072 bit key
+or larger
+
+	
+
+3072 bit key
+
+
+
+
+Key exchange
+
+	
+
+DH
+
+	
+
+3072 bit key
+or larger
+
+	
+
+3072 bit key
+or larger
+
+	
+
+3072 bit key
+
+
+
+
+ECDH
+
+	
+
+NIST P-256
+NIST P-384
+NIST P-521
+
+	
+
+NIST P-384
+NIST P-521
+
+	
+
+NIST P-384
+
+
+
+
+RSA
+
+	
+
+3072 bit key
+or larger
+
+	
+
+3072 bit key
+or larger
+
+	
+
+3072 bit key
+
+Security Control: 1232; Revision: 5; Updated: May-19; Applicability: S, TS
+AACAs are used in an evaluated implementation.
+
+Security Control: 1468; Revision: 5; Updated: Oct-19; Applicability: S, TS
+Preference is given to using the CNSA Suite algorithms and key sizes.
+
+Further information
+
+Further information on selecting evaluated products can be found in the evaluated product acquisition section of the Guidelines for Evaluated Products.
+
+Further information on DH can be found in Diffie, W and Hellman, ME, New Directions in Cryptography, IEEE Transactions on Information Theory, vol. 22, is. 6, pp. 644-654, November 1976.
+
+Further information on DSA can be found in FIPS 186-4, Digital Signature Standard (DSS), at https://csrc.nist.gov/publications/detail/fips/186/4/final.
+
+Further information on ECDH can be found in:
+
+American National Standards Institute (ANSI) X9.63-2011 (R2017), Public Key Cryptography for the Financial Services Industry, Key Agreement and Key Transport Using Elliptic Curve Cryptography, at https://infostore.saiglobal.com/en-au/Standards/ANSI-X9-63-2011-R2017--2086_SAIG_ABA_ABA_5343/
+ANSI X9.42-2003 (R2013), Public Key Cryptography for the Financial Services Industry, Agreement of Symmetric Keys Using Discrete Logarithm Cryptography, at https://infostore.saiglobal.com/en-au/Standards/ANSI-X9-42-2003-R2013--2071_SAIG_ABA_ABA_5311/
+NIST SP 800-56A Rev. 3, Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography, at https://csrc.nist.gov/publications/detail/sp/800-56a/rev-3/final.
+
+Further information on ECDSA can be found in:
+
+ANSI X9.63-2011 (R2017), Public Key Cryptography for the Financial Services Industry, Key Agreement and Key Transport Using Elliptic Curve Cryptography, at https://infostore.saiglobal.com/en-au/Standards/ANSI-X9-63-2011-R2017--2086_SAIG_ABA_ABA_5343/
+ANSI X9.62-2005, Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA), at https://infostore.saiglobal.com/en-au/Standards/ANSI-X9-62-2005-2085_SAIG_ABA_ABA_5340/
+FIPS 186-4, Digital Signature Standard (DSS), at https://csrc.nist.gov/publications/detail/fips/186/4/final.
+
+Further information on the CNSA Suite can be found in the CNSA Suite and Quantum Computing FAQ at https://apps.nsa.gov/iaarchive/library/ia-guidance/ia-solutions-for-classified/algorithm-guidance/cnsa-suite-and-quantum-computing-faq.cfm.
+
+Further information on RSA can be found in Internet Engineering Task Force (IETF) Request for Comments (RFC) 8017, PKCS #1: RSA Cryptography Specifications Version 2.2, at https://tools.ietf.org/html/rfc8017.
+
+Further information on SHA can be found in FIPS 180-4, Secure Hash Standard (SHS), at https://csrc.nist.gov/publications/detail/fips/180/4/final.
+
+Further information on AES can be found in FIPS 197, Advanced Encryption Standard (AES), at https://csrc.nist.gov/publications/detail/fips/197/final.
+
+Cryptographic fundamentals
+ASD Approved Cryptographic Protocols
+Transport Layer Security
+Secure Shell
+Secure/Multipurpose Internet Mail Extension
+Internet Protocol Security
+Cryptographic system management
+Download
+Guidelines for Cryptography (December 2020).pdf
+Guidelines for Cryptography (December 2020).docx
+Content written for
+
+View all content
+First published:
+02 Dec 2020
+Last updated:
+02 Dec 2020
+Get alerts on new threats AlertService Report a cybercrime or cyber security incident
+About the ACSC
+News
+Publications
+View all content
+Cyber security threats
+Media releases
+Glossary
+Accessibility
+Copyright
+Disclaimer
+Privacy
+Careers
+
+Australian Cyber Security Hotline
+
+1300 CYBER1(1300 292 371)
+
+Contact us
+Social media terms of use
+   
+Back to top

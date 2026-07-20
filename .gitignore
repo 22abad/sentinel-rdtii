@@ -60,8 +60,10 @@ requirements/Hackthon Knowledge Products/
 *.avi
 *.webm
 
-# KNOWN law full-text corpus — bulk text kept local (RAG input); index is tracked
-data/known_corpus/*/
+# KNOWN law full-text corpus (Round-1 economies AUS/MYS/SGP) is now COMMITTED
+# so a judge's live run can serve official baseline texts from the local cache
+# when a portal fetch is slow or fails — no live download needed. (Was local-
+# only; committing ~47MB of official legal text is well within GitHub limits.)
 
 # Crawler download scratch
 downloads/

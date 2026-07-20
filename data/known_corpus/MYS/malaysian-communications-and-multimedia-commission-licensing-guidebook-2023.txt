@@ -1,0 +1,2695 @@
+Page 1 of 77
+Suruhanjaya Komunikasi dan Multimedia Malaysia  
+Malaysian Communications and Multimedia Commission
+LICENSING GUIDEBOOK
+Updated as of 
+1 st April 2023 
+Malaysian Communications and Multimedia Commission 
+MCMC Tower 1, Jalan IMPACT, Cyber 6 
+63000 Cyberjaya, Selangor Darul Ehsan  
+MALAYSIA 
+T: +60 3 86 88 80 00 
+F: +60 3 86 88 10 02 
+W: 
+Notice: 
+The information in this document is intended as a guide only. For this 
+reason, it should not be relied on as legal advice or regarded as a 
+substitute for legal advice in specific cases. Parties should still refer to the 
+legislative provisions contained in the law. 
+Page 2 of 77
+LICENSING GUIDEBOOK 
+TABLE OF CONTENTS 
+1. INTRODUCTION ............................................................................................................................ 3
+2. Eligibility of Persons Applying for Licence ...................................................................... 7
+3. Individual Licence ......................................................................................................................... 8
+4. Class Licence ................................................................................................................................. 26
+5. Fees and Rebates ........................................................................................................................ 29
+CONTACTING MCMC ........................................................................................................................ 30
+ANNEXURE 1 ......................................................................................................................................... 31
+ANNEXURE 2 ......................................................................................................................................... 37
+ANNEXURE 3 ......................................................................................................................................... 38
+ANNEXURE 4 ......................................................................................................................................... 39
+ANNEXURE 5 ......................................................................................................................................... 46
+ANNEXURE 6 ......................................................................................................................................... 47
+ANNEXURE 7 ......................................................................................................................................... 50
+ANNEXURE 8 ......................................................................................................................................... 51
+ANNEXURE 9 ......................................................................................................................................... 53
+ANNEXURE 10 ...................................................................................................................................... 61
+ANNEXURE 11 ...................................................................................................................................... 65
+ANNEXURE 12 ...................................................................................................................................... 69
+ANNEXURE 13 ...................................................................................................................................... 70
+ANNEXURE 14 ...................................................................................................................................... 71
+This Guidebook provides a guide to the type of information that is required in all licence applications and the 
+criteria applied by the Malaysian Communications and Multimedia Commissions (MCMC) in evaluating all licence 
+applications. It is hoped that this guidebook is able to assist the licence applicants, investors and interested parties 
+on the processes involved in issuing a licence or any applications in relation to the licence under the 
+Communications and Multimedia Act 1998 (CMA). MCMC reserves the right to change and / or amend this 
+document as and when needed. 
+Page 3 of 77
+1.
+INTRODUCTION 
+1.1.
+The Communications and Multimedia Act 1998 (CMA) establishes a framework 
+to promote Malaysia’s national policy objectives for the communications and 
+multimedia industry and seeks to provide a generic set of regulatory provisions 
+based on generic definitions of market and service activity. 
+1.2.
+The licensing provisions under the CMA are designed to allow flexibility with 
+respect to licensing structures as the licensing requirements vary over time with 
+the evolution of the communications and multimedia industry. As the industry 
+evolves towards convergence, licences under the CMA are formulated to be 
+both technology and service neutral. The licensing regime allows a licensee to 
+undertake activities that are market specific. This creates opportunities for 
+expansion into the industry and provides for a more effective utilisation of 
+network infrastructure.  
+1.3.
+Under the CMA, there are four categories of licensable activities. Within the said 
+four categories, there are two types of licences:  
+a)
+Individual licence requires a high degree of regulatory control which is for 
+a specified person to conduct a specified activity and may include special 
+licence conditions; and 
+b)
+Class licence is a ‘light-handed’ form of regulation which is designed to 
+promote industry growth and development with easy market access. 
+Standard licence conditions apply to both individual and class licences and 
+these conditions are set out in the Schedule of the CMA, as well as the 
+Communications and Multimedia (Licensing) Regulations 2000. 
+Individual  
+ Network Facilities Provider (NFP) 
+ Network Service Provider (NSP) 
+ Content Applications Service Provider (CASP) 
+Class 
+ Network Facilities Provider (NFP) 
+ Network Service Provider (NSP) 
+ Content Applications Service Provider (CASP) 
+ Applications Service Provider (ASP) 
+Page 4 of 77
+a)
+Network Facilities Providers – are the owners/providers of network 
+facilities, namely infrastructure such as, cables, towers, satellite earth 
+stations, broadband fibre optic cables, telecommunications lines and 
+exchanges, 
+radiocommunications 
+transmission 
+equipment, 
+mobile 
+communications base stations and broadcasting transmission towers and 
+equipment. These represent the fundamental building blocks of the 
+convergence model upon which network, applications and content services 
+are provided. 
+b)
+Network Service Providers – provide the basic connectivity and 
+bandwidth to support a variety of applications. Network services enable 
+connectivity or transport between different networks. A network service 
+provider usually owns or deploys the said network facilities. However, a 
+licensee providing connectivity services may use the network facilities 
+owned by another licensee. 
+c)
+Applications Service Providers – provide particular functions such as 
+voice services, data services, Internet access and messaging services. 
+Applications services are essentially the functions or capabilities which are 
+delivered to end-users. These are retail services. 
+d)
+Content Applications Service Providers – these represent a special 
+subset of applications service providers such as television and radio 
+broadcast services, and services such as online publishing (currently 
+exempt from licensing requirements) and the provisioning of information 
+services. 
+1.4.
+Individual licences must be applied for and are granted by the Minister 1 . 
+Special or additional licence conditions may be imposed and such licence 
+conditions are declared by the Minister. The Minister also has the power to 
+modify, vary, revoke or impose special or additional licence conditions at any 
+time. However, the affected licensees will be notified of the intention to do so 
+to enable them to make the appropriate submissions. 
+1.5.
+The Minister may grant a class licence in respect of any matter requiring a class 
+licence under the CMA. Unlike an individual licence, a class licence merely 
+requires registration , which is an administrative process. 
+1.6.
+The following table provides a summary of licensable activities and the types of 
+licence required for the relevant activity: 
+1 Minister for the time being charged with the responsibility for communications and multimedia. 
+Page 5 of 77
+Network 
+Facilities 
+Provider 
+ Earth Stations; 
+ Fixed links and cables; 
+ Radiocommunications 
+transmitters and links; 
+ Satellite hubs; 
+ Satellite control station; 
+ Space station; 
+ Submarine cable landing 
+centre; 
+ Towers, poles, ducts and 
+pits used in conjunction 
+with other network 
+facilities; or 
+ Such other network 
+facilities which are not 
+exempt under the CMA or 
+not subject to a class 
+licence under Part IV of the 
+Licensing Regulations 2 or 
+not listed in this 
+subparagraph.  
+ Niche or limited 
+purpose network 
+facilities 
+ Broadcasting and 
+production 
+studios; 
+ Incidental network 
+facilities; or 
+ Private 
+network 
+facilities. 
+Network 
+Service 
+Provider 
+ Bandwidth services; 
+ Broadcasting distribution 
+services; 
+ Cellular mobile services; 
+ Access applications service; 
+ Space services; 
+ Switching services; 
+ Gateway services; or 
+ Such other network 
+services which are not 
+exempt under the CMA or 
+not subject to a class 
+licence under Part IV of the 
+Licensing Regulations or 
+not listed in this 
+subparagraph.  
+ Niche customer 
+access; or 
+ Niche connection 
+services 
+ Incidental network 
+services; 
+ LAN services; or 
+ Private 
+network 
+services.  
+Applications 
+Service Provider 
+ PSTN telephony; 
+ Public cellular services; 
+ IP telephony; 
+ Public payphone 
+services; 
+ Public switched data 
+services; 
+ Audiotext hosting 
+services provided on 
+an opt-in basis; 
+ Electronic 
+transaction 
+service; 
+ Interactive 
+transaction 
+service; 
+ Networked 
+advertising 
+boards and 
+Cineplex; or 
+2 Communications and Multimedia (Licensing) Regulations 2000. 
+Page 6 of 77
+ Directory services;  
+ Internet access 
+services;  
+ Messaging services; or 
+ Cloud service. 
+ Web hosting or 
+client server. 
+Content 
+Applications 
+Service Provider 
+ Satellite broadcasting;  
+ Subscription Broadcasting;  
+ Terrestrial free to air TV; 
+ Terrestrial radio 
+broadcasting; or 
+ Such other content 
+applications services which 
+are not exempt under the 
+CMA or not subject to a 
+class licence under Part IV 
+of the Licensing 
+Regulations or not listed in 
+this subparagraph. 
+ Content applications 
+service limited in its 
+availability to: 
+i. vehicles, vessels, 
+railway or aircraft 
+used for hire or 
+reward or for any 
+other valuable 
+consideration;  
+ii. a single commercial 
+or residential 
+building; or 
+iii. a restricted 
+geographical area; 
+ Content applications 
+service of limited 
+appeal or which is 
+targeted to a special 
+interest group and 
+available through 
+subscription by 
+persons using 
+equipment specifically 
+designed for receiving 
+the said service; 
+ Content applications 
+service where the 
+content is remotely 
+generated and 
+distributed through a 
+network service and 
+displayed on a screen;  
+ Content applications 
+service for distance 
+learning purpose; or 
+ Content applications 
+service linked or 
+associated specifically 
+to a sporting, cultural 
+or other one-off event. 
+ Internet content 
+applications 
+services. 
+Page 7 of 77
+2.
+Eligibility of Persons Applying for Licence 
+2.1.
+Individual Licence 
+The following persons or classes of persons shall be ineligible to apply for an 
+individual licence: 
+a)
+A foreign company as defined under the Companies Act 2016 [Act 777]; 
+b)
+An individual or a sole proprietorship; 
+c)
+A partnership; and 
+d)
+Such other persons or classes of persons as may be decided by the 
+Minister from time to time. 
+2.2.
+Class Licence 
+The following persons or classes of persons shall be ineligible to be registered 
+as a class licensee: 
+a)
+A foreign individual who is not a permanent resident; and 
+b)
+A foreign company as defined under the Companies Act 2016. 
+It should be noted that in the case of class licences, the Minister may, for good 
+cause or as the public interest may require, permit either of the above to apply 
+to be registered as a class licensee. 
+Page 8 of 77
+3.
+Individual Licence  
+
+New Individual Licence Application 
+3.1.
+An applicant who wishes to provide network facilities and/or, network service 
+and/or content applications services, which require an individual licence, will 
+have to submit the following to MCMC: 
+a)
+A duly completed Form A ( ANNEXURE 1 ) together with an application 
+fee of RM10,000.00 per licence pursuant to Table A of the First Schedule 
+of the Licensing Regulations. The fee is payable via online transfer to 
+MCMC’s account, details of which will be provided by MCMC upon 
+complete submission; 
+b)
+Details as per the checklist attached ( ANNEXURE 2 ); and 
+c)
+Applicant must ensure that it fulfils the following: 
+i.
+Paid-up capital of a minimum of RM2,000,000.00 if the applicant 
+wishes to apply for a Network Facilities Provider Individual licence 
+and/ or a Network Service Provider Individual licence. For a 
+Content 
+Applications 
+Service 
+Provider 
+Individual 
+licence 
+application, the applicant must have a paid-up capital of a 
+minimum RM500,000.00; 
+ii.
+Net tangible assets of the applicant’s latest audited accounts must 
+be at least RM500,000.00; 
+iii.
+Bumiputera shareholding requirement of at least 30%.  
+d)
+Such additional information or documents as may be requested by 
+MCMC to be submitted within a stipulated timeline. Failure to submit 
+within the stipulated timeline shall result in the application being 
+withdrawn without affecting the right of the applicant to make a fresh 
+application.  
+3.2.
+Regulation 6 (2) of the Communications and Multimedia (Licensing) Regulations 
+2000 (Licensing Regulations) states that any person applying for an individual 
+licence for the provision of a particular facility or service shall submit, wherever 
+applicable, the following details: 
+a)
+The information required under the CMA and Regulation 7 of the 
+Licensing Regulations; and 
+b)
+Such other information or document as MCMC may require in writing or 
+pursuant to any administrative guideline issued by MCMC. 
+Page 9 of 77
+3.3.
+Regulation 7 of the Licensing Regulations lists out the information that should 
+be submitted (for the purpose of an individual licence) which is outlined below. 
+a)
+Particulars of the applicant, which should include the following: 
+i.
+Name of the applying company, date and place of incorporation, 
+business and registered address, contact telephone number, 
+facsimile number, e-mail address and name and designation of a 
+contact person within the applicant’s organisation; 
+ii.
+Detailed information on corporate and shareholding structure 
+including relationship with holding or associated companies 
+clearly indicating the ultimate ownership, both direct and indirect 
+(2nd tier/3rd tier). If the holding company is a public entity, then 
+details of the public listing should be provided; 
+iii.
+Detailed composition of the Board of Directors and key 
+management team inclusive of individual shareholders should 
+also be provided. Where possible, brief resumes of the key 
+management 
+team 
+indicating 
+relevant 
+prior 
+experience, 
+qualifications and other source of expertise should be provided; 
+and 
+iv.
+Details of the applicant’s current activities (where applicable). 
+b)
+The anticipated operating and capital expenditure, proposed financing 
+plan including the sources of financing, whether domestic or foreign. The 
+financial plan/business plan for the proposed activity should include: 
+i.
+A breakdown of the proposed capital expenditure and working 
+capital requirements for the first 5 years of operation; 
+ii.
+Projected profit and loss account including details of revenue (the 
+method of calculation should be clearly outlined), balance sheet 
+and budgeted cash flow statements, showing the amount of 
+capital to be invested on an annual basis for 5 years. All 
+assumptions 
+used 
+(asset 
+depreciations 
+policies, 
+annual 
+increase/decrease in operating expenditure) shall be clearly 
+explained; 
+iii.
+Projected volume of business, indicative prices for the services and 
+market share for the first 5 years of operation; 
+iv.
+The forecast internal rate of return and payback period of the 
+investment; 
+Page 10 of 77
+v.
+The segment of the market that the applicant will target (e.g. 
+specific geographical area, activity, end-user or other service 
+providers); and 
+vi.
+Sufficient documentary evidence to prove that the applicant has 
+the financial capability to meet the capital investment required in 
+carrying out the activity proposed. In addition, details of proposed 
+financing structure including proposed sources of funds (whether 
+domestic or foreign) and credit facilities available should be 
+included. This would include financing from venture capitalists or 
+holding companies.  
+vii.
+The applicant must show proof of the availability of at least 10% 
+of the amount of the total CAPEX and OPEX projected for 5 
+years in the detailed business plan submitted to MCMC in its 
+licence application. This 10% of the amount of the total CAPEX 
+and OPEX must be clearly shown in the company’s accounts. 
+c)
+The proposed operating procedures including a disaster recovery plan. 
+This would include contingency measures, contact point in the event of 
+emergency, details of measures undertaken to ensure network and data 
+security. 
+d)
+Any other licences held by the applicant under the CMA, its group of 
+companies and any company which is deemed to be associated with a 
+director of the applicant by virtue of Section 197 of the Companies Act 
+2016. 
+e)
+Corporate information including the particulars of the companies 
+referred to in the paragraph above and particulars disclosing the 
+ultimate beneficial shareholders of the applicant and any company 
+referred to in the paragraph above which hold a licence together with 
+information detailing the direct and indirect shareholdings of all their 
+shareholders. 
+f)
+Certified true copies 3 of the Memorandum and Articles of Association, 
+Form 9, full sets of Form 24, 32A (if applicable), 44, 49 and Annual Returns 
+under the Companies Act 2016/ Super Form (for companies 
+incorporated under the Companies Act 2016) of the applicant which have 
+3 All photocopies must be certified by the Director or the Company Secretary.
+Page 11 of 77
+been filed with the Companies Commission of Malaysia. The financial 
+information of the applicant should include the following: 
+i.
+The latest copies of detailed audited accounts (profit and loss 
+accounts, balance sheets, cash flow statements and auditors’ report) 
+for the last three financial years, together with the most recently 
+published interim results; 
+ii.
+If the applicant is a newly formed company, the applicant’s 
+shareholders’ detailed audited accounts for the last three financial 
+years, together with the most recently published interim results (if 
+available). Bankers’ confirmation of deposits and/or available credit 
+facilities should also be included. For individual shareholders, 
+documentary evidence of the shareholder’s creditworthiness should 
+be given. This may be in the form of bankers’ confirmation of 
+deposits or letter of support from an established financial institution; 
+and 
+iii.
+Paid-up capital and relevant certificates confirming the same. 
+g)
+The proposed technical and service rollout for the next 5 years. This 
+would include a description of the activities that will take place in a given 
+timeframe such as commencement of service, equipment requisition, 
+proposed marketing activity and rates for the services. 
+h)
+Submission of a rollout plan  
+i.
+All applicants must provide a rollout plan , which is extracted from 
+the Detailed Business Plan submitted to MCMC by the applicant, 
+when it makes an application for an individual licence under the 
+CMA. 
+ii.
+The rollout plan submitted must make sense and be justified with 
+all assumptions and figures properly explained in the Detailed 
+Business Plan submitted by the applicant. 
+iii.
+The rollout plan must be a plan that reflects the licensable activity 
+undertaken and the specific type of licence issued.   
+iv.
+Rollout plan shall mean the commercial provisioning or 
+deployment of any network facilities, network service and content 
+applications service which the Licensee is authorised to own or 
+provide, under the relevant individual licence issued to it under 
+the CMA.  
+Page 12 of 77
+v.
+This rollout plan will be appended as a special licence condition in 
+the relevant individual licence(s) issued. 
+IMPORTANT NOTE 
+The rollout plan submitted to MCMC in an application made for any individual 
+licence SHALL NOT  INCLUDE  the provisioning or deployment of any network 
+facilities and/or network service that the applicant proposes to  provide or 
+deploy  under the Communications and Multimedia (Universal Service 
+Provision) Regulations 2002. The applicant shall submit a Board of Directors’ 
+Resolution in relation to this matter (please refer to ANNEXURE 3 ). 
+i)
+A description of the nature of the facilities, service, application or content 
+and area of coverage and the types of technology to be used. Detailed 
+information on network diagram, interconnection interface requirements 
+and range of application services should be provided.  
+3.4.
+The applicant should identify the range of services to be provided and the 
+components of the services. For example, those applying for network facilities 
+provider licence would have to indicate the network facility for which the licence 
+is being applied (e.g. earth station, fixed links etc.). In addition, the applicant 
+should also notify MCMC if the services it intends to provide are in collaboration 
+with foreign network facilities and/or service providers. 
+3.5.
+A description of the resources required for the provision of the services should 
+be outlined. This would include identifying the relevant bands in the spectrum 
+plan or type of numbering or electronic addresses required (where applicable).  
+3.6.
+In addition to the information required pursuant to Regulation 7 of the 
+Licensing Regulations, the applicant shall also submit an impact analysis report 
+together with its application containing the following: 
+a)
+How the applicant’s operations will benefit/impact the country generally 
+and the communications and multimedia industry specifically and 
+contribute towards making Malaysia a communications and multimedia 
+global hub; 
+b)
+Strategies that will be adopted to compete effectively in the 
+communications and multimedia market; 
+c)
+An economic and market study on the potential demand for the activity 
+being proposed/the projected market share that the applicant will be 
+able to acquire in the next 5 years;  
+Page 13 of 77
+d)
+Details of technological innovations to be utilised in the provision of 
+service or carrying out of activity;  
+e)
+Details of any initiatives undertaken towards sharing of infrastructure; 
+and 
+f)
+Any other relevant information.  
+3.7.
+A Board of Directors’ resolution in support of the application must be provided 
+with the above submission. 
+3.8.
+The applicant may submit any other information not specified above which may 
+be considered helpful to the application. 
+3.9.
+MCMC reserves the right to request for clarification or any further information 
+from the applicant regarding its application. 
+3.10. MCMC reserves all rights not to accept any licence applications which are 
+deemed incomplete.  
+3.11. The Individual Licence Application Template is annexed as ANNEXURE 4 . 
+3.12. The applicant shall submit its application together with all required information 
+and documents via email to licensing@mcmc.gov.my , addressed to the Head 
+of the Licensing Department. 
+
+Renewal of Individual Licence Application 
+3.13. An applicant who wishes to renew its individual licence(s) will have to submit 
+the following to MCMC before the expiry of its licence(s): 
+a)
+A duly completed Form A ( ANNEXURE 1 ) together with an application 
+fee of RM25,000.00 per licence pursuant to Table A of the First Schedule 
+of the Licensing Regulations. The fee is payable via online transfer to  
+MCMC’s account, details of which will be provided by MCMC upon 
+complete submission;  
+b)
+Details as per the checklist attached ( ANNEXURE 5 ); and 
+c)
+Such additional information or documents as may be requested by 
+MCMC to be submitted within a stipulated timeline. Failure to submit 
+within the stipulated timeline given shall result in the application being 
+withdrawn without affecting the right of the applicant to make a fresh 
+application.  
+Page 14 of 77
+3.14. This matter falls under Section 34 of the CMA and the application process is 
+stipulated in Regulation 11 of the Licensing Regulations. 
+3.15. Notwithstanding Section 34 of the CMA, the licensee should submit the renewal 
+licence application not later than 120 days from the expiry date of its licence. 
+3.16. The licensee is required to submit the following: 
+a)
+Form A ( ANNEXURE 1 ); 
+b)
+Memorandum and Articles of Association; 
+c)
+Certified true copies of relevant forms with the Companies Commission; 
+d)
+Financial performance for the past 5 years. The licensee is required to 
+explain the profitability and revenue’s growth or the losses incurred over 
+the past 5 years; and 
+i.
+The licensee’s presence in the market, namely its performance, 
+dependence on its services and role played in enhancing the 
+industry;  
+ii.
+Organisation chart; 
+iii.
+Management / shareholding – whether the management of the 
+licensee has been consistent, competent and professional;  
+iv.
+Number of subscribers / types of subscribers / market share of its 
+subscribers; 
+v.
+The licensee’s contribution towards industry development, such 
+as, its support towards new/ smaller service providers that 
+provides applications services or Mobile Virtual Network 
+Operators (MVNOs) (if any); 
+vi.
+Contribution towards local content/ broadband penetration (if 
+any); 
+vii.
+Coverage of service; 
+viii.
+Major technology introduced to the industry/ investment in the 
+country’s infrastructure (if any); 
+ix.
+Capacity building activities for its employees; 
+x.
+Universal Service Provision roll out details (if any); 
+xi.
+Corporate social responsibility initiatives that has been 
+undertaken by the Licensee for the past 5 years (if any); and 
+Page 15 of 77
+xii.
+Any other information that MCMC may require. 
+3.17. The Licensee should ensure that it does not have any outstanding regulatory 
+compliance issues (e.g. outstanding of licence fee/USP fund contribution, 
+compounds / enforcement action with MCMC at the time it submit its renewal 
+application to MCMC). 
+3.18. There is a presumption of renewal of the individual licence if the licensee has 
+complied to the following items set out in Section 34 of the CMA: 
+a)
+Terms and conditions of its individual licence; 
+b)
+Complied with the provisions of the CMA; and 
+c)
+Complied with any instrument issued, made or given by the Minister or 
+MCMC.  
+3.19. MCMC requires all of the above information to be submitted afresh, at the time 
+of a particular application, notwithstanding the fact that the Licensee may have 
+already submitted these documents at the time it first applied for the licences. 
+3.20. A Board of Directors’ resolution in support of the application must be provided 
+with the above submission. 
+3.21. MCMC reserves the right to reject applications for renewal which are 
+incomplete, and MCMC further reserves the right to request for clarification or 
+further information from the relevant parties concerned with regard to this 
+renewal application. 
+3.22. The applicant shall submit its application together with all required information 
+and documents via email to licensing@mcmc.gov.my , addressed to the Head 
+of the Licensing Department. 
+
+Variation of Individual Licence Application 
+3.23. An applicant who wishes to vary its network facilities and/or, network service 
+and/or content applications services licences will have to submit the following 
+to MCMC: 
+a)
+A formal letter justifying the reasons for the variation together with an 
+application fee of RM1,000.00 per licence pursuant to Table A of the First 
+Schedule of the Licensing Regulations. The fee is payable via online 
+transfer to MCMC’s account, details of which will be provided by MCMC 
+upon complete submission; and 
+Page 16 of 77
+b)
+Such additional information or documents as may be requested by 
+MCMC to be submitted within a stipulated timeline. Failure to submit 
+within the stipulated timeline shall result in the application being 
+withdrawn without affecting the right of the applicant to make a fresh 
+application.  
+3.24. This matter falls under Section 33 of the CMA, and the application process is 
+stipulated in Regulation 12(2) of the Licensing Regulations. 
+3.25. Regulation 12(2) of the Licensing Regulations lists out the information that 
+should be submitted (for the purpose of the variation of an individual licence 
+to provide a particular facility or service) which is outlined below: 
+a)
+The proposed dates wherein the proposed modification, variation or 
+revocation or proposed additions shall become valid; 
+b)
+The details of the proposed modification, variation, revocation or 
+additions and the reasons for them; 
+c)
+The prescribed fee as set out in Table A of the First Schedule; and 
+d)
+Any other details MCMC may require in writing or pursuant to any 
+administrative guideline issued by MCMC. 
+3.26. In addition to the information required pursuant to Regulation 12(2) of the 
+Licensing Regulations, the Licensee shall also submit an impact analysis report 
+together with its application containing the following:  
+a)
+How the applicant’s operations will benefit/impact the country generally 
+and the communications and multimedia industry specifically and 
+contribute towards making Malaysia a communications and multimedia 
+global hub; 
+b)
+Strategies that will be employed to compete effectively in the 
+communications and multimedia market; 
+c)
+An economic and market study on the potential demand for the activity 
+being proposed/the projected market share that the applicant will be 
+able to acquire in the next 5 years;  
+d)
+Details of technological innovations to be utilised in the provision of 
+service or carrying out of activity;  
+e)
+Details of any initiatives undertaken towards sharing of infrastructure; 
+and 
+f)
+Any other relevant information.  
+Page 17 of 77
+3.27. The Licensee may submit any other information not specified above which 
+might be considered helpful to the application. 
+3.28. The Licensee should ensure that it does not have any outstanding regulatory 
+compliance issues (e.g. outstanding of licence fee/USP fund contribution, 
+compounds / enforcement action with MCMC) at the time it submit its variation 
+application to MCMC. 
+3.29. MCMC reserves the right to request for clarification or any further information 
+from the applicant regarding its application. 
+3.30. MCMC reserves all rights not to accept any licence variation applications which 
+are deemed incomplete. 
+3.31. A Board of Directors’ resolution in support of the application must be provided 
+with above submission.  
+
+Transfer or Assignment of Individual Licence Application 
+3.32. An applicant who wishes to transfer or assign its individual licence(s) will have 
+to submit the following to MCMC: 
+a)
+A formal letter that provides the details of the transfer/ assignment 
+together with an application fee of RM5,000.00 per licence pursuant to 
+Table A of the First Schedule of the Licensing Regulations. The fee is 
+payable via online transfer to MCMC’s account, details of which will be 
+provided by MCMC upon complete submission; and 
+b)
+The transferee/ assignee must fulfil the following requirement: 
+i.
+Paid-up capital of a minimum of RM2,000,000.00 if the transfer or 
+assignment is in relation to a Network Facilities Provider Individual 
+licence and/ or a Network Service Provider Individual licence. For 
+a Content Applications Service Provider Individual licence 
+application, the transferee/ assignee must have a paid-up capital 
+of a minimum RM500,000.00; 
+ii.
+Net tangible assets of the transferee/ assignee’s latest audited 
+accounts must be at least RM500,000.00; 
+iii.
+Bumiputera shareholding requirement of at least 30%.  
+c)
+Such additional information or documents as may be requested by 
+MCMC to be submitted within a stipulated timeline. Failure to submit 
+within the stipulated timeline shall result in the application being 
+Page 18 of 77
+withdrawn without affecting the right of the applicant to make a fresh 
+application.  
+3.33. This matter falls under Section 36 of the CMA, and the application process is 
+stipulated in Regulation 16 of the Licensing Regulations. 
+3.34. The Licensee is required to submit the following information to MCMC, should 
+it wishes to effect the said transfer/ assignment: 
+Information on the transferor/assignor and transferee/ assignee: 
+a)
+Name of company; 
+b)
+Principal business activity of the company. Please highlight and explain 
+if this will change as a consequence of the transfer/ assignment exercise; 
+c)
+Date and place of incorporation; 
+d)
+Registered address, contact and fax numbers; 
+e)
+Principal place of business, contact and fax numbers; 
+f)
+Issued and paid-up capital; 
+g)
+Management and organisational structure of transferee/ assignee; 
+h)
+Contact person (Name and designation); 
+i)
+Directors; 
+j)
+Holders of licences under the CMA – to specify type, date of issuance 
+and/or registration and duration of licence; 
+k)
+List of key members in the transferee’s/ assignee’s management and 
+technical team; 
+l)
+Details on the financial performance of the transferee/ assignee over the 
+past 5 years in order for MCMC to assess the financial viability of the said 
+entity; 
+m)
+Shareholding structure (names of shareholders, amount of shares (RM) 
+and percentage (%) of shares held). Please disclose the ultimate 
+beneficial shareholders of the transferee/ assignee, and all associated or 
+subsidiary companies within the group, detailing the direct and indirect 
+shareholdings of all their shareholders; and 
+n)
+Company structure (holding company, subsidiary company and 
+associate company). 
+Page 19 of 77
+3.35. Company Forms: 
+a)
+Memorandum and Articles of association; 
+b)
+Forms 9, 13, full sets of Form 24, 32A (if applicable), 44 and 49; 
+c)
+Latest Annual Returns under the Companies Act 2016 which has been 
+filed with the Companies Commission; and 
+d)
+Super Form (for companies incorporated under the Companies Act 
+2016). 
+3.36. Information on the transfer/ assignment: 
+a)
+Explanation about the relationship between the transferor/ assignor and 
+the transferee/ assignee and to provide the rationale or reasons for this 
+transfer/ assignment exercise. Reasons proffered must be compelling 
+and clear, as this will have a bearing on whether the said transfer/ 
+assignment will be permitted; 
+b)
+Explanation whether this transfer/ assignment exercise will affect any 
+rollout plan submitted to MCMC. If yes, the transferor/ assignor should 
+provide details on how this is expected to be managed by the transferee/ 
+assignee. If the transferor/ assignor has not been able to rollout the 
+proposed facilities/services, the transferor/ assignor should indicate this 
+clearly and explain clearly why this is so. If the transferor/ assignor has 
+no intention of deploying any new facilities/services, please explain why 
+this is the case; 
+c)
+Explanation on how the parties concerned (transferor/ assignor and 
+transferee/ assignee) are going to manage this change with regard to 
+existing customers that the transferor/ assignor has; 
+d)
+Explanation whether the transferor’s/ assignor’s disaster recovery plan 
+and operational plans be fully subsumed by the transferee/ assignee. If 
+no, please provide details on what measures the transferee/ assignee will 
+be undertaking here; 
+e)
+Details and explanation about the transferee’s/ assignee’s plan in dealing 
+with the existing interconnection arrangements of the transferor/ 
+assignor in undertaking this transfer/ assignment exercise; 
+f)
+Details and explanation about how the transferee/ assignee intends to 
+deal with the spectrum, apparatus and numbering resources (if 
+applicable) held by the transferor/ assignor in undertaking this transfer/ 
+assignment exercise; and 
+Page 20 of 77
+g)
+Details of any outstanding regulatory issues that the transferor/ assignor 
+and/or transferee/ assignee may have with MCMC. These include 
+settlement of licence fees, spectrum and apparatus assignment fees and 
+universal service provision fund contribution. The details of any fine or 
+penalties paid and enforcement matters that were pursued against the 
+transferor/ assignor and/or transferee/ assignee over the past 5 years 
+should be included in the transfer/ assignment application to MCMC.  
+3.37. A Board of Directors’ resolution from the transferor/ assignor and transferee/ 
+assignee in support of the application must be provided with the above 
+submission. 
+3.38. MCMC requires all of the above information to be submitted afresh, at the time 
+of a particular application, notwithstanding the fact that the transferor/assignor 
+and/or transferee/ assignee may already be an existing holder of a licence under 
+the CMA.  
+3.39. MCMC reserves the right to reject the application for transfer/ assignment 
+which are incomplete, and MCMC further reserves the right to request for 
+clarification or further information from the relevant parties concerned with 
+regard to this transfer/ assignment application. 
+3.40. The applicant shall submit its application together with all required information 
+and documents via email to licensing@mcmc.gov.my , addressed to the Head 
+of the Licensing Department.
+3.41. Figure 1 below summarises the information required for individual licence 
+related application: 
+Page 21 of 77
+Figure 1 
+
+Individual Licence Assessment Criteria 
+3.42. MCMC will consider an application together with the accompanying 
+information on its merits. However, the merits of each application will be 
+evaluated against a set of criteria which may include, but is not limited to the 
+following: 
+a)
+Financial/Business plan 
+In examining the financial plan, MCMC will consider whether the 
+applicant possesses the financial capability to carry out the activity in 
+N EW I NDIVIDUAL L ICENCE A PPLICATION
+o
+Regulations 6(2) & 7 of the Licensing Regulations 
+•
+Applicant’s shareholders, etc.
+•
+Target market 
+•
+Financial information 
+•
+Operating procedures 
+•
+Area of coverage 
+•
+Feasibility study 
+•
+Proposed technical and services rollout 
+•
+Description of activity 
+•
+Type of technology 
+V ARIATION OF I NDIVIDUAL L ICENCE A PPLICATION 
+o
+Section 33 of the CMA 
+o
+Regulations 12(2) of the Licensing Regulations 
+•
+Proposed variation, revocation or additions and the reasons for them 
+•
+Benefit and impact analysis on the variation
+•
+Details of technological innovations to be utilised in the provisions of service 
+TRANSFER AND ASSIGNMENT OF INDIVIDUAL LICENCE
+o
+Section 36 of the CMA 
+o
+Regulation 16 of the Licensing Regulations 
+•
+Information on transferor/ assignor and 
+transferee/ assignee 
+•
+Transferee’s/ Assignee’s shareholders, 
+etc. 
+•
+Relationship between transferor and 
+transferee 
+•
+Explanation on managing transfer/ 
+assignment of operation 
+•
+Any outstanding regulatory issues with 
+MCMC 
+R ENEWAL OF I NDIVIDUAL L ICENCE A PPLICATION 
+o
+CMA Section 34 
+o
+Regulation 11 of the Licensing Regulations
+•
+Licensee’s current management, shareholders, etc. 
+•
+Past financial performance 
+•
+Licensee’s performance in the market 
+Page 22 of 77
+question. Any information on the financial standing of the applicant will 
+be considered, including (where applicable) ratings given by rating 
+agencies.  
+MCMC will also look into the feasibility of the business plan vis-à-vis the 
+assumptions provided by the applicant and evaluate this against the 
+current market environment.  
+b)
+Applicant’s background 
+The applicant’s chain of ownership (extending to even 2nd or 3rd level) 
+will be considered. If the applicant is an established company, the 
+revenue earnings and the business segment in which the applicant is 
+involved in would also be taken into account.  
+c)
+Newly incorporated companies 
+A new incorporated company with no revenue track record will be 
+considered based on other criteria such as funding from venture 
+capitalists or holding companies, innovative services to be provided and 
+relevant expertise. 
+d)
+Shareholdings 
+i.
+In assessing the shareholding structure of any applicant, MCMC 
+will take into account the need to encourage more local Small 
+Medium Industry/ SMIs (i.e. locally incorporated companies and 
+where the majority of shares are held by Malaysians) to participate 
+in the local ICT industry, particularly the applications services 
+market.  
+ii.
+MCMC will also take into account any specific policy determined 
+by the Minister in relation to shareholdings in companies applying 
+for CASP licence.  
+e)
+Major projects undertaken and proven managerial and technical 
+expertise  
+Any applicant who possesses relevant managerial and technical expertise 
+(from not only a local perspective but where possible a global one) to 
+carry out the proposed activity may have an advantage. MCMC will also 
+consider any previous major projects undertaken by the applicant 
+relating to ICT and whether the applicant has any relevant experience in 
+the communications and multimedia industry. Initiatives undertaken, 
+particularly in the area of research and development, by the applicant 
+Page 23 of 77
+and/or its holding or associated companies (where applicable) will also 
+be considered.  
+f)
+Benefits/Impact Analysis  
+MCMC will also consider the benefits that will be brought by the 
+applicant to the overall communications and multimedia industry.  
+g)
+Technological and Service Innovations 
+MCMC will consider technological and/or service innovations the 
+applicant proposes to provide.  
+h)
+Target Market 
+MCMC will consider what the target market of the proposed activity is 
+and would look upon favourably on proposals that cover not only urban 
+but rural areas as well.  
+i)
+Other Policies 
+In evaluating the licence application, regard will be made to any general 
+policy decisions made by the Minister on the licensing framework. 
+3.43. MCMC may, as it deems fit, request that an undertaking pursuant to Section 43 
+of the CMA be given with regard to any representation made by the applicant 
+in its application.  
+
+Individual Licensee’s Obligations  
+3.44. The licensees are encouraged to read and understand the terms and conditions 
+of its individual licence. All licensees are required to adhere to all provisions 
+under the CMA and its subsidiary legislation, terms and conditions in its 
+individual licences, any other written laws or provisions related to the 
+communications and multimedia industry as well as any other instruments 
+issued, made or given by the Minister or MCMC. 
+3.45. The summary of its special licence conditions are as follows: 
+a)
+Licensees are to understand the scope of each licence condition; 
+b)
+Licensees are to rollout the activity within 12 months from the date of the 
+licence; 
+c)
+Licensees are to pay annual licence fees on the anniversary of each 
+individual licence; 
+Page 24 of 77
+(On the first anniversary of the licence and annually thereafter a sum of 
+RM50,000.00 per licence as initial payment of the applicable annual licence 
+fee or 0.5% of the gross annual turnover whichever is higher); 
+d)
+Each individual licensee shall submit its audited accounts to MCMC within 
+three (3) months from the end of its financial year; 
+e)
+On Universal Service Provision (USP), all licensees are to submit a certified 
+true copy of return of net revenue (RONR) derived from designated 
+services and non-designated services of the calendar year and a licensed 
+external auditor’s declaration certifying the RONR form; 
+f)
+Licensees are to permit network interconnection with other service 
+providers; and 
+g)
+Licensees are to provide a contact person’s name and contact details (e.g. 
+telephone, fax number, email ID etc.) and update MCMC should there be 
+any changes. 
+3.46. Issues related to the payment of annual licence fee and the responsibility to 
+submit the audited accounts are the key responsibilities of a licensee that is 
+non-negotiable in any given circumstance. Such obligations do not take into 
+consideration of the current situation of a company. Examples of current 
+situations that are considered as non-negotiable are as follows: 
+a)
+The company is not in operations; 
+b)
+The company is not profitable; and 
+c)
+The company was not successful in obtaining tender(s). 
+3.47. Licences issued can be suspended or cancelled if it does not adhere to the 
+above obligation(s). 
+
+Surrender of Individual Licence 
+3.48. The licensee can opt to surrender of its individual licence(s) if it is no longer 
+involved in the provisioning of the licensable activities under the CMA. This 
+matter falls under Section 35 of the CMA. 
+3.49. The licensee is required to submit by way of written notice, the intent to 
+surrender its individual licence and enclose the original copy(s) of its individual 
+licence(s) to MCMC. 
+3.50. The surrender shall take effect on the date MCMC receives the individual licence 
+and the notice under subsection 35(1) of the CMA, or where a later date is 
+specified in the notice, on that date. 
+Page 25 of 77
+3.51. The surrender of an individual licence shall be irrevocable unless the Licensee 
+has expressed it to take effect on a later date and before that date MCMC, by 
+notice in writing to the licensee, allows the surrender to be withdrawn. 
+3.52. It is prudent for a licensee which is unable to meet its obligation to consider the 
+option of surrendering its individual licence(s) to MCMC before its anniversary 
+date, as this reflects responsible behaviour that will be viewed favourably by 
+MCMC. 
+
+Evaluation and Approval of Individual Licence Application 
+3.53. MCMC is deemed by the CMA to complete processing of all licence 
+application(s) and make a recommendation to the Minister within sixty (60) 
+working days of receipt of all relevant and complete 4 information from the 
+applicant. If the Minister agrees with the recommendation, the Minister will 
+grant the application(s) made. For new individual licence(s), MCMC will only 
+effect registration of the individual licence(s) upon payment of the approval fee 
+of RM50,000.00 per licence and inform the applicant.  
+3.54. Under the CMA, if the Minister neither grants, nor refuses to grant, any licence 
+application(s) within thirty (30) working days from the receipt of the 
+recommendation by MCMC, the Minister is deemed, at the end of the period, 
+to have refused to grant the application(s) unless the applicant receives a 
+written notice approving the application for an individual licence after the said 
+period. 
+3.55. If the Minister rejects the application(s), the applicant will be informed of the 
+rejection in writing and reasons for the rejection.  
+3.56. The diagram below summarises the workflow for an Individual licence 
+application process. 
+4 MCMC’s Management shall be the sole arbiter of the completeness and relevance of the information required for 
+purposes of evaluating and processing of all licence applications.
+Submission 
+of licence 
+application
+Evaluation of 
+the 
+submission
+Recommend 
+to the 
+Minister
+Notify 
+Minister’s 
+decision to 
+applicant
+Page 26 of 77
+4.
+Class Licence
+4.1.
+An applicant who wishes to provide network facilities and/or, network service 
+and/or applications service or content applications service which are subject to 
+a class licence will have to submit the following to MCMC: 
+a)
+Two copies of the duly completed Form D ( ANNEXURE 6 ); 
+b)
+A registration fee of RM2,500.00 per licence pursuant to Table B of the 
+Second Schedule of the Licensing Regulations. The fee is payable via 
+online transfer to MCMC’s account, details of which will be provided by 
+MCMC upon complete submission; 
+c)
+Details as per the checklist attached ( ANNEXURE 7 ); and 
+d)
+Such additional information or document as may be requested by 
+MCMC. 
+4.2.
+Regulation 25 (2) of the Licensing Regulations states that the Form D submitted 
+for a class licence shall be accompanied by: 
+a)
+The particulars of the applicant:  
+i.
+Certified copies of relevant documents in support of the legal 
+status of applicant (company / partnership / individual / society / 
+others). As an example, applicants which companies are locally 
+incorporated would be required to furnish the relevant Forms 9, 
+24, 44 and 49 together with the memorandum and articles of 
+association / Super Form (for companies incorporated under the 
+Companies Act 2016); and 
+ii.
+Organisation chart (for company / partnership / society).  
+b)
+A description of the network facilities, network service, applications 
+service or content applications service which is operated or provided by 
+the applicant in the following form: 
+i.
+Introduction – brief description of network facility/network 
+service/applications service/content applications service; and  
+ii.
+Operating procedures including a network topology and/or 
+business model. 
+4.3.
+For applications to register as network facilities and/or network service class 
+licensee, the applicant would also be required to provide the following: 
+a)
+A description of the network (inclusive of network topology and 
+configuration of the network); 
+Page 27 of 77
+b)
+A description of the equipment to be used (inclusive of technical 
+specification, capability, location and coverage); 
+c)
+Channelling plan of the frequency (where appropriate); 
+d)
+Details of proposed customers and scope of the activities or services to 
+be provided (inclusive of duration, whether meant for purposes of 
+meeting special requirements such as coverage of specific events, etc.); 
+and 
+e)
+Such other information or document MCMC may require.  
+4.4.
+Figure 2 below summarises the information required for individual licence 
+related application 
+Figure 2 
+4.5.
+The Class Licence Application Template is annexed as ANNEXURE 8 . 
+4.6.
+Any party that is keen to register itself as a Network Facilities Provider / Network 
+Service Provider Class licensee is advised to first read the Ministerial Guidelines 
+on Class Licences that was issued on 17 September 2002 and ensure that the 
+scope of the facilities and/or services to be provided falls within the ambit of 
+the said guidelines (The Ministerial Guidelines is annexed as ANNEXURE 9 ). The 
+Guidelines also illustrates the Niche and Limited purpose of Network Facilities 
+and Network Service with relevant examples. 
+4.7.
+Any party intending to provide limited content applications service is advised 
+to refer to the Ministerial Determination on the Guidelines on Limited Content 
+Applications Service, Determination No. 4 of 2003 that was issued on 17 July 
+2003 which provides clarification of criteria for limited content (The Limited 
+Content Ministerial Determination is annexed as ANNEXURE 10 ). 
+R EGISTRATION A PPLICATION 
+o
+Regulation 25(2) of the Licensing Regulations
+•
+Applicant’s particulars 
+•
+Description of activity 
+•
+Other information as may be required 
+Page 28 of 77
+Process and Registration for Class Licence Application 
+4.8.
+All class licence applications together with all required information and 
+documents shall be submitted  via email to licensing@mcmc.gov.my , addressed 
+to the Head of the Licensing Department. 
+4.9.
+MCMC will process and register current class licensees (re-registration) within 
+seven (7) working days and process new class licence applications within 
+fourteen (14) working days from the date of receipt of all relevant and 
+complete 5 information from the applicant. 
+4.10. The diagram below summarises the workflow for Class licence application 
+process. 
+5 MCMC shall be sole arbiter of the completeness and relevance of the information required for purposes of 
+processing licence applications.
+Submission 
+of licence 
+application
+Evaluation 
+of the 
+submission
+Register the 
+applicant 
+under the 
+class licence
+Notify the 
+applicant
+Page 29 of 77
+5.
+Fees and Rebates  
+Individual Licence 
+5.1.
+For an individual licence, the applicable fees are as follows: 
+a)
+Application fee: RM10,000.00 per licence (non-refundable); 
+b)
+Approval fee: RM50,000.00 per licence; and 
+c)
+Annual licence fee:  0.5% of Gross Annual Turnover or RM50,000.00 (per 
+licence) whichever is higher. 
+5.2.
+The list of all applicable licence fees are as per table below: 
+Types of fees 
+Fees (RM) 
+Approval fee 
+50,000.00 
+Application fee 
+10,000.00 
+Processing fee for renewal and renewal of an individual licence 
+25,000.00 
+Application for certified true copy of an individual licence 
+10.00 per page 
+Fee for change of particulars of an individual licence 
+100.00 
+Application for variation of special or additional conditions 
+attached to an individual licence 
+1,000.00 
+Application for assignment or transfer of an individual licence 
+5,000.00 
+Fee for replacement of individual licence 
+10.00 per page 
+Fee for making a copy of, or taking extracts from, the register 
+1.00 per page  
+Class Licence
+5.3.
+A registration fee of RM2,500.00 per licence. 
+5.4.
+The list of all applicable licence fees are as per table below: 
+Types of fees 
+Fees (RM) 
+Registration and annual registration fees 
+2,500.00 
+Application for certified true copy of class licence registration 
+notice 
+10.00 per page 
+Application for certified true copy of class licence  
+10.00 per page 
+Fee for change of particulars in the registration notice of class 
+licence r 
+50.00 
+Fee for making a copy of, or taking extracts from, the register 
+1.00 per page 
+1.00 per page 
+Page 30 of 77
+Rebates for Individual Licence 
+5.5.
+The Licensing Regulations provides rebates on applicable annual fees for 
+holders of individual licenses. To obtain rebates on the annual fees payable, the 
+individual licensee must have incurred expenses on items related to industry 
+development.  
+5.6.
+For purpose of licence fee rebates, the eligible industry development items are: 
+a)
+Research and Development (R&D); 
+b)
+Skills training; 
+c)
+Minority investments in Small and Medium Industry (SMIs);  
+d)
+Malaysian value added procurement from Malaysian SMIs; and 
+e)
+Local content and production. 
+5.7.
+For further information on what these items are, please refer to ‘Revised 
+Information Paper on Eligible Deductions for Individual Licence Fee 
+Rebates’ . 
+5.8.
+Individual Licensee who wishes to apply for rebates on annual fees payable will 
+have to submit the following to MCMC: 
+a)
+A duly completed Application Form for Rebates ( ANNEXURE 11 ); 
+b)
+Details as per the checklist ( ANNEXURE 12 );  
+c)
+Self-calculation of rebate entitlement ( ANNEXURE 13 ); and  
+d)
+Application template ( ANNEXURE 14 ). 
+CONTACTING MCMC 
+More information on the above may be obtained by writing to the following address: 
+Head, Licensing Department  
+Licensing and Monitoring Division 
+Malaysian Communications and Multimedia Commission 
+Level 11, MCMC Tower 1, Jalan IMPACT, Cyber 6 
+63000 Cyberjaya 
+Selangor Darul Ehsan 
+Tel No. 
+: 
++603-86 88 80 00 
+Fax No. 
+: 
++603-86 88 10 02 
+Email  
+: 
+licensing@mcmc.gov.my
+Page 31 of 77
+ANNEXURE 1 
+Page 32 of 77
+A. BUTIR-BUTIR PEMOHON PARTICULARS OF APPLICANT 1. Nama Pemohon dan No. Syankat Name of applicant and Company No. Co 2. Pejabat Berdaftar Registered office No. Telefon ] Telephone No. Fax. No 3. Tempat pemiagaan utama Principal place of buzines: Telephone No. Fay. No. MCMC / Licence Application Procedure and Licensing Criteria Page 32 of 77
+Page 33 of 77
+4. Butir-butir pemegang saham pemohon* Particulars if shareholding of the applicant* Nama se Peo . Alamat Jumlah dan ‘0 Name No. Syarikat Address sabam yang NEIC Xo dipegang Paz:port Xo. Number and %o of Company No. Shares held *Sila nyatakan pemegang saham benefisian terakhir *Please indicate ultimate beneficial shareholder 5. Adakah pemohon kim memegang apa-apa penguntukan spektrum. penguntukan radas atau penguntukan kelas? Does the applicant currently hold a spectrum assignment, apparatus assignment or a class assigninent? © Ya: Yes O Tidak ' No Jika ya. sila berikan butir-butir if ves, please provide particulars MCMC / Licence Application Procedure and Licensing Criteria Page 33 of 77
+Page 34 of 77
+6. Adakah pemohon telah diuntukkan apa-apa nombor atau apa-apa alamat elektronik? Has the applicant been assigned any numbers or any electronic addresses? O Yai Yes O Tidak ' No Jika ya, sila berikan butur-butir Ifyes, please provide particulars 7. Adakah pemohon membuat apa-apa usahasama? Has the appliacnt entered into any jomt ventures? O Ya? Yes O Tidak ‘ No Jika ya. sila berikan butir-butir Ifves, please provide particulars (a) Pernahkan pemohon dibenkan lesen di bawah Akta Telekomunikasi 1950? Has the applicant been licensed under the Telecommunication Act 1950? O Ya‘ Yes O Tidak ‘ No (b) Pernahkah pemohon diberikan lesen di bawah Akta Penyiaran 1988? Has the applicant has been licensed under the Broadcasting .Act 1988? O Ya: Yes O Tidak ' No 9. Adakah lesen pemohon di bawah subperenggan 8(a) atau (b) pemnah digantung atau dibatalkan? Was the applicant's licence under subparagraph Sta) or (b) ever suspended or revoked? O Ya‘ Yes O Tidak : No Jika ya. sila berikan butur-butir Ifves, please provide particulars MCMC / Licence Application Procedure and Licensing Criteria Page 34 of 77
+Page 35 of 77
+PENGAKUAN DECLARATION . Adakah penerima, atau penerima dan pengurus. pernah dilantik berkenaan dengan apa-apa harta pemohon? Has a receiver, or receiver and manager, been appointed in respect of any of the applicant's assets? O Ya‘ Yes O Tidak : No . Adakah pemohon telah mencapai kata sepakat atau membuat perkiraan dengan penuutang? Has the applicant entered into a compromise or arrangement with creditors? oO Ya: Yes oO Tidak ‘ No . Adakah petisyen telah dikemukakan ke mahkamah untuk menggulungkan pemohon? Has a petition been presented in court for the winding up of the applicant? O Ya. Yes O Tidak No MAKLUMAT INFORMATION . Maklumat dua orang iaitu dua pengarah atau seorang pengarah dan setiausaha syarikat pemohon yang boleh dihubungi untuk maklumat lanjut: Particulars of two persons namely nwo directors or a director and the company secretary of the applicant who may be contacted for further information: Nama Jawatan No. Telefon Alamat Name Position | Telephone No. Address MCMC / Licence Application Procedure and Licensing Criteria 2. Apa-apa maklumat tambahan yang dianggap berkaitan dengan permehonan ini .iny additional information considered relevant to this application: Page 35 of 77
+Page 36 of 77
+Kanu, pemohon, dengan ini mengaku daan mengesahkan bahawa kami layak memohon untuk mendapatkan lesen individu ini di bawah Akta dan semua maklumat yang diberikan dalam permohonan imi dan dalam lampiran yang dikepilkan adalah benar dan tepat. We, the applicant, declare and confirm that we are eligible to apply for an individual licence under the Act and that all the information given in this application and in the attached annexes is ue and accurate. Tankh: Date: Ditandatangani oleh: Signed by: Untuk dan bagi pihak: for and on behalf of: NOTA: NOTE: Jika ruang yang disediakan tidak mencukupi untuk membenkan butir-butir, sila kepilkan lampiran. Setiap lampiran mestilah ditandatangan ringkas oleh seorang yang menandatangam permohonan ini. Of the spaces is insufficient to provide the particulars, please attach annexes. Any annex should be initialed by the signatory to this application. MCMC / Licence Application Procedure and Licensing Criteria Page 36 of 77
+ANNEXURE 2 
+Page 37 of 77 
+Checklist for Submission of Application for Individual Licence 
+Please ensure that the application is submitted together with the required supporting documents as per 
+Regulation 7 of the Communications and Multimedia (Licensing) Regulations 2000. A checklist is 
+provided below for reference. 
+1.
+Form A. 
+2.
+Form 9 (Incorporation of Company) and Form 13 (if applicable) from Register of Companies. 
+3.
+Latest audited accounts, memorandum and articles of association and certified true copies of 
+Form 24, 32A (if applicable), 44, and 49 or any other relevant documents under the Companies 
+Act 2016 of the applicant which have been filed with the Registrar of Companies. 
+4.
+Corporate information including the particulars of the companies referred to in Subregulation 
+(7)(d) and particulars disclosing the ultimate beneficial shareholders of the applicant and any 
+company referred to in Subregulation (7)(d) which hold a licence together with information 
+detailing in the direct and indirect shareholding of all their shareholders. 
+5.
+Any other licences held by the applicant under the CMA, its group of companies and any 
+company which is deemed to be associated with a director of the applicant by virtue of Section 
+197 of the Companies Act 2016. 
+6.
+A description of the nature of the facilities, service, applications or content and area of coverage 
+and the types of technology to be used. 
+7.
+Anticipated operating and capital expenditure, proposed financing plan including the sources 
+of financing, whether domestic or foreign. The minimum requirement for paid-up capital is 
+RM2,000,000.00 for an application for a Network Facilities Provider Individual licence and a 
+Network Service Provider Individual licence, and RM500,000.00 for an application for a Content 
+Applications Service Provider Individual licence. This minimum requirement is necessary to 
+indicate the financial capability of an applicant. 
+8.
+The proposed technical and service roll-out. 
+9.
+The proposed operating procedures including a disaster recovery plan. 
+10.
+Copies of any documentation on details of spectrum assignment or apparatus assignment. 
+Particulars of the above must be stated in the Form A (item no. 5) 
+11.
+Copies of the details of the application (if any) on spectrum assignment or apparatus 
+assignment submitted to MCMC. 
+Particulars of the above must be stated in the Form A (item no. 6) 
+12.
+Joint venture (if applicable) – copies of documentation on compliance with the Foreign 
+Investment Committee requirements. 
+13.
+A copy of any letter and supporting documents from the relevant authority on the suspension 
+or revocation of the licence as per item no.9. 
+14.
+Board of Directors’ Resolution in support of the application and understanding of the 
+requirement of service roll-out in the details business plan. 
+15.
+Attachments must be initialled by the signatory. 
+16.
+Kindly note that all new Individual licence submissions and proof payment of RM10,000.00 
+payable to Suruhanjaya Komunikasi dan Multimedia Malaysia via online transfer 
+(details will be provided upon complete submission) – being the application fee for each 
+licence applied s hall be submitted in PDF version ONLY to our official email at 
+licensing@mcmc.gov.my. The Total attachment size limit is 20MB per email.     
+Note: 
+All photocopies must be certified by the Director or the Company Secretary. 
+Company rubber stamp must be affixed on the last page of the application form. 
+Page 38 of 77
+ANNEXURE 3
+BOARD OF DIRECTORS’ RESOLUTION: SERVICE ROLL-OUT 
+We……………………………[name and company number] hereby confirm that we 
+understand that the rollout plan(s) submitted in our detailed business plan to MCMC in 
+our application for a  ................................[type of licence to be specified in full]  individual 
+licence, under the Communications and Multimedia Act 1998,  SHALL NOT INCLUDE the 
+provisioning or deployment of any network facilities/network service undertaken by us 
+under the Communications and Multimedia (Universal Service Provision) Regulations 
+2002 (including any amendment or replacement enacted thereafter). 
+Page 39 of 77
+ANNEXURE 4 
+OVERVIEW OF APPLICANT COMPANY  
+Company’s background 
+Name of Company 
+Date of incorporation 
+Place of incorporation 
+Registered and Business Address 
+Issued and Paid-up capital (RM) 
+The minimum requirement for paid-up capital is RM2,000,000.00 
+for an application for a Network Facilities Provider Individual 
+licence and a Network Service Provider Individual licence, and 
+RM500,000.00 for an application for a Content Applications 
+Service Provider Individual licence.  
+Shareholding structure 
+Names of shareholders and percentage of shares held: 
+Shareholders 
+Amount of shares 
+(RM) 
+Percentage of 
+shares (%) 
+Note: 
+ Please indicate percentage of local and foreign shareholders. 
+ Please indicate the ultimate ownership both direct and indirect
+Company structure (if applicable) 
+ Holding company 
+ Subsidiary company 
+ Associate company 
+Contact 
+Telephone: 
+Fax: 
+E-mail: 
+Contact person 
+Name: 
+Designation: 
+Directors 
+As per Form 49 
+Holders of CMA 98 licence 
+Any other licences held under CMA 98 
+MSC status 
+To attach MSC certificate and kindly list the activities recognized 
+under MSC status. 
+1.
+To attach certified true copies (certified by the director or company secretary) of the following 
+documents: 
+1.1.
+Memorandum and articles of association; 
+1.2.
+Form 9, 13, 24, 32a, 44 and 49; 
+1.3.
+Latest annual return under the Companies Act 2016 which has been filed with the 
+Companies Commission; and 
+1.4.
+Super Form (for companies incorporated under the Companies Act 2016). 
+Page 40 of 77
+2.
+Information on any achievements and awards received by the applicant on its group of 
+companies. 
+Management and technical team 
+3.
+List of key members is Applicant’s management and technical team.
+4.
+A brief resume of the key management and technical team – relevant prior experience and 
+academic qualification.
+5.
+Proposed or current organisational structure for the proposed business. To state whether new 
+employees will be recruited for the proposed business. If so, how many and what sort of 
+expertise will be required:
+Year 1 
+Year 2 
+Year 3 
+Year 4 
+Year 5 
+Management 
+Technical 
+
+Professional 
+
+Non professional 
+Finance / Admin / HR 
+
+Professional 
+
+Non professional 
+Marketing & Sales 
+
+Professional 
+
+Non professional 
+Customer service 
+
+Professional 
+
+Non professional 
+Others 
+Total employment 
+6.
+Other source of expertise.
+Current business activities of applicant
+7.
+Details of current business activities.
+PROPOSED BUSINESS 
+Description of facilities and/or services 
+8.
+To indicate clearly the range of facilities and/or services to be provided. For example, if an 
+applicant is applying for NFP(I) licence, to indicate the type of network facility as stated under 
+Regulation 19(1) of the Communications and Multimedia (Licensing) Regulations 2000 (e.g. 
+Fixed links and cables, earth stations etc.).
+9.
+Details of facilities and/or services to be provided. Discuss the function and value in which the 
+customer will gain from it. 
+10.
+Strategies that will be employed to compete effectively in the Communications and Multimedia 
+Industry.
+Page 41 of 77
+Target Market 
+11.
+An applicant must be able to show the potential demand for its proposed service. This should 
+include information on market surveys conducted, if any and other relevant sources. 
+Service coverage and roll-out 
+12.
+Service coverage plan for 5 years.
+13.
+Technical and service roll out time line for 5 years (i.e. equipment requisition, commencement 
+of service).
+14.
+Confirmation collectively by Board of Directors not to include the USP projects as a rollout plan 
+via Board of Directors Resolution (draft Board of Directors Resolution as per ANNEXURE 3 ). 
+Network Topology 
+15.
+To attach appropriate network diagram.
+16.
+Detailed information on network diagram should include the interconnection interface, where 
+applicable. 
+Commercial and/or interconnection arrangement 
+17.
+Collaboration with other local and/or foreign network facilities and/or service providers (e.g. 
+leasing of lines and/or facilities). 
+Technology 
+18.
+Type of technology to be used. 
+19.
+To identify any required frequency bands in the spectrum plan or type of numbering or 
+electronic addresses. 
+PROPOSED OPERATING PROCEDURES 
+Disaster recovery plan 
+20.
+Details of contingency measures i.e. identified possible disaster scenarios, plan for business 
+continuity and risk management and develop resiliency design and recovery strategy. 
+21.
+Contact point in the event of emergency. 
+22.
+Details of measures undertaken to ensure network and data security. 
+Assured QoS and Helpdesk Services 
+23.
+Effort and initiatives to ensure maximum Quality of Services and smooth helpdesk services. 
+FINANCIAL ANALYSIS 
+Past Financial performance  
+24.
+Kindly fill in the following table:  
+Year 1 
+(RM) 
+Year 2 
+(RM) 
+Year 3 
+(RM) 
+Sales 
+Net profit / (Loss) before taxation 
+Page 42 of 77
+Year 1 
+(RM) 
+Year 2 
+(RM) 
+Year 3 
+(RM) 
+Current assets 
+Current liabilities 
+Inventory 
+Cash in hand / bank balance 
+Retained profit / (Accumulated losses) 
+Shareholders’ fund 
+25.
+To attach certified true copies (certified by the Director or Company Secretary) of audited 
+financial statements for the last 3 financial years to support the above figures.  
+26.
+For a newly formed company: 
+26.1.
+If the shareholder is a company, kindly provide the shareholder’s audited accounts for 
+the last 3 financial years and documentary evidence of the shareholder’s 
+creditworthiness, this may be in form of banker’s confirmation of deposits or deposits 
+and/or available credit facilities. 
+26.2.
+If the shareholder is an individual, kindly provide documentary evidence of the 
+shareholder’s creditworthiness, this may be in the form of bankers’ confirmation of 
+deposits or letter of support from financial institution.   
+Anticipated capital and operating expenditure  
+27.
+Breakdown of capital and operating expenditure for 5 years plan with relevant assumptions. 
+Please note that the format and items in the table below are meant as a guide only:  
+Capital Expenditure of the proposed business 
+Year 1 
+(RM) 
+Year 2  
+(RM) 
+Year 3 
+(RM) 
+Year 4 
+(RM) 
+Year 5 
+(RM) 
+Item 1 
+Item 2 
+Total Capital Expenditure 
+Operating Expenditure of the proposed business 
+Item 1 
+Item 2 
+Total Operating Expenditure 
+Proposed financing 
+28.
+Proposed sources of funds (domestic or foreign, credit facilities, venture capitalist or holding 
+company).  
+29.
+To attach documentary evidence e.g. Letter of offer from financial institutions.  
+Financial projection 
+30.
+Profit and loss projection for 5 years with relevant assumptions. Please note that the format and 
+items in the table below are meant as guide only:  
+Assumptions 
+Year 1  
+(RM) 
+Year 2  
+(RM) 
+Year 3  
+(RM) 
+Year 4  
+(RM) 
+Year 5 
+(RM) 
+Page 43 of 77
+Market demand (𝑎)
+Penetration (%)  (𝑏)
+Estimated no. Of subscribers (𝑎) × (𝑏)
+Customers unsubscribe (%) (𝑐)
+No. of subscribers [(𝑎) × (𝑏)] −(𝑐)
+Financial projection of the proposed business 
+Year 1  
+(RM) 
+Year 2  
+(RM) 
+Year 3  
+(RM) 
+Year 4  
+(RM) 
+Year 5 
+(RM) 
+Sales: 
+Service 1 
+Service 2 
+Total sales 
+Direct costs: 
+Direct cost 1 
+Direct cost 2 
+- Total direct costs 
+Net profit 
+- Total operating expenditure 
+Income before interest and tax 
+- Interest expense 
+Income before tax 
+31.
+To include details and method of calculation of sales e.g. number of subscribers’ sales per 
+subscriber, installation and activation fee. 
+32.
+To clearly explain all assumptions used. 
+33.
+Cash flow projection for 5 years with relevant assumptions. Please note that the format and 
+items in the table below are meant as a guide only:  
+Cash flow projection 
+Year 1  
+(RM) 
+Year 2  
+(RM) 
+Year 3  
+(RM) 
+Year 4  
+(RM) 
+Year 5 
+(RM) 
+Sales 
+Debtor 
+Bank load /funding  
+Other receipts 
+Total cash inflow (𝐴)
+Leased lines 
+Capital expenditure 
+Administration 
+Licence fees 
+Bank loan repayment 
+Accruals 
+Total cash outflow (𝐵)
+Net cashflow (𝐴) −(𝐵)
+Opening balance 
+Closing balance 
+Page 44 of 77
+34.
+Balance sheet projection for 5 years with relevant assumptions. Please note that the format and 
+items in the table below are meant as a guide only:  
+Cash flow projection 
+Year 1  
+(RM) 
+Year 2  
+(RM) 
+Year 3  
+(RM) 
+Year 4  
+(RM) 
+Year 5 
+(RM) 
+Buildings  
+Motor vehicles 
+Office equiptments  
+Total fixed assets (𝐴)
+Cash and banks balance 
+Trade debtors  
+Deposit and prepayment  
+Total current assets (𝐵)
+Trade creditors  
+Accruals  
+Total Current Liabilities (𝐶)
+Net current assets / (liabilities) (𝐵) −(𝐶)
+Net assets / (liabilities) [(𝐴) −(𝐵)]
+Financed by: 
+Share capital 
+Accumulated profits 
+Shareholders’ equity 
+35.
+Feasibility study of business plan – the write up should explain on how the proposed business 
+plan can be successful as per financial projection given, taking into account: 
+35.1.
+Market study or research that has been done; 
+35.2.
+Experience gained in the industry; 
+35.3.
+Attractive service package and/or marketing activities;  
+35.4.
+Relationship with incumbent players; 
+35.5.
+Such other factors as any be relevant.  
+VALUE PROPOSITION / COMPETITIVE ANALYSIS 
+36.
+In this section of the write up, an applicant would be expected to address the following issues: 
+36.1.
+An applicant is encouraged to conduct an economic and market study on the potential 
+demand for the activity being proposed. Please mention the study conducted and the 
+result achieved. 
+36.2.
+Impact analysis – to mention the benefit or impact to the country and the 
+communications and multimedia industry and contribution towards making Malaysia a 
+communications and multimedia global hub if applicant is granted a licence. 
+36.3.
+The projected market share that applicant will be able to acquire in the next 5 years 
+and strategy that will be adopted to achieve the same. 
+Page 45 of 77
+36.4.
+To indicate how the proposed facilities and/or services differ from others that are now 
+in the market.  
+36.5.
+Initiatives undertaken towards sharing of infrastructure and supporting other players in 
+the industry. Please give sufficient details of current and proposed plans.  
+ANY OTHER RELEVANT INFORMATION OR APPENDICES 
+37.
+Any other information, which may be considered helpful to this application.  
+ANNEXURE 5 
+Page 46 of 77 
+Checklist for Submission of Renewal Application for Individual Licence 
+Please ensure that the application is submitted together with the required supporting document. A checklist is 
+provided below for reference.  
+N ote: 
+All photocopies must be certified by the Director or the Company Secretary. 
+Company rubber stamp must be affixed on the last page of the application form. 
+1.
+Submit the licence application not later than 120 days from the expiry date of its licences.
+2.
+Form A
+3.
+Certified true copies of Form 24, 32A (if applicable), 44, and 49 or any other relevant documents
+under the Companies Act 2016 of the applicant which have been filed with the Registrar of
+Companies.
+4. 
+Financial performance for the past 5 years. The licensee is required to explain the profitability 
+and revenue growth or the losses incurred over the past 5 years. 
+5.
+Presence in the market, namely its performance, dependence on its services and role played in
+enhancing the industry:
+i.
+Organisation chart;
+ii.
+Management / shareholding – whether the management of the licensee has been
+consistent, competent and professional;
+iii.
+Number of subscribers / types of subscribers / market share of its subscribers;
+iv.
+The licensee’s contribution towards industry development; such as, its support towards
+new / smaller service providers that provides applications services or Mobile Virtual
+Network Operators (MVNOs) (if any);
+v.
+Contribution towards local content / broadband penetration (if any);
+vi.
+Coverage of service;
+vii.
+Major technology introduced to the industry / investment in the country’s infrastructure
+(if any);
+viii.
+Capacity building activities for its employees;
+ix.
+Universal Service Provision roll out details (if any);
+x.
+Corporate social responsibility initiatives that has been undertaken by the Licensee for
+the past 5 years (if any); and
+xi.
+Any other information that MCMC may require.
+6.
+Board of Directors’ Resolution in support of the application.
+7. 
+Kindly note that all renewal of Individual licence submissions and proof payment of 
+RM25,000.00 payable to Suruhanjaya Komunikasi dan Multimedia Malaysia via online transfer 
+(details will be provided upon complete submission) – being the application fee for each licence 
+renewal applied shall be submitted in PDF version ONLY to our official email at 
+licensing@mcmc.gov.my. The Total attachment size limit is 20MB per email.       
+Page 47 of 77
+ANNEXURE 6 
+Page 48 of 77
+(b) Kedudukan pemohon di sisi undang-undang Legal stanis of applicant O Syanikat Company © Persatuan Society © Perkongsian Parmership (©) Lain-lain Others * Otndvidotndiioad = (I *Sila nyatakan dan berikan butu-butir dalam lanspiran *Please specifi and provide particulars in annex (c) Alamat dddress No. Telefon Telephone No. | Fax No. Alamat e-mel E-mail address 3. Perihalan am kemudahan perkhidmatan aktiviti yang akan dipunyai atau diberi atau dikendalikan oleh pemohon: General description of facilities. service activin to be owned or provided or operated bv the icant: 4. Kemudahan perkhidmatan terletak akan diberikan di (sila berikan pengenalpastian spt. Protokol intemet alamat laman web. jika terpakai): The facilities services ave located provided at (please provide on-line identification e.g. interner protocol web site address, where applicable}: No. Telefon Telephone No. Fax No. Do Fax No. Pratedres [ E-mail address MCMC / Licence Application Procedure and Licensing Criteria Page 48 of 77
+Page 49 of 77
+3. Saya Kami. | pemohon. dengan ini mengaku dan mengesahkan bahawa semua maklumat yang diberikan dalam pemiohonan ini dan apa-apa lampiran yang dikepilkan adalah benar dan tepat. ite, the applicant, declare and confirm that all the information given in this application and in the atrached annexes is nue and accurate. Dare L_____ Date: Ditandatangani oleh Signed by untuk dan bagi pihak for and on behalf of [ NOTA: NOTE: Jika ruang yang disediakan tidak mencukupi uatuk memberikan butir-butir. sila kepilkan lampiran. Setiap lampiran mestilah ditandatangan ringkas oleh orang yang menandatangani permohonan ini. Uf the space is insufficient to provide particulars, please artach annexes. Aim annex should be initialled by the signatory to this application. Borang ini boleh cimuat tunun di www skim. gov.1ny This for can be downloaded from www.skmen. gov my MCMC / Licence Application Procedure and Licensing Criteria Page 49 of 77
+CHECKLIST FOR CLASS LICENCE APPLICATION
+To:  
+Head of Licensing Department 
+Licensing and Monitoring Division 
+Malaysian Communications and Multimedia Commission 
+From: 
+Name 
+: ………………………………………………………………. 
+Position 
+: ………………………………………………………………. 
+Company 
+: ………………………………………………………………. 
+I/We hereby submit Registration Notice for Class Licence and confirm that the following documentation is submitted 
+together with the duly completed form: 
+(Please tick in the boxes provided). 
+ 
+ 
+ 
+ 
+ 
+ 
+1)
+Registration Notice (Form D) – Two (2) original scanned copies.
+2)
+Certified copies of relevant documents to verify the legal status of the applicant:
+For companies - Form 9, Form 13, Form 24 or Latest Annual Return, Form 44, Form 49 and 
+Memorandum and Articles of Association / Super Form (for companies incorporated under 
+the Companies Act 2016).
+a.
+For Enterprises / Partnerships / Individual(s) – copy of Identity Card (‘I.C’), 
+Companies Commission of Malaysia (‘SSM’) form, Registry of Societies of Malaysia 
+(‘ROS’) form and any other documents which may be required by MCMC.
+3)
+Payment of RM2,500.00, made payable to Suruhanjaya Komunikasi dan Multimedia 
+Malaysia - via online transfer (details will be provided upon complete submission).
+4)
+Company profile (for companies/partnership/society) including organization chart.
+5)
+Information on the facilities/services to be deployed:
+a.
+Brief description of network (s)/service(s) /facilities and other necessary information 
+(example: (i) Messaging service or ‘SMS’ provisioning – explain what are the short 
+code arrangements made and provide documentary evidence of such 
+arrangements; (ii) Purchase of bandwidth – document to show a contract between 
+the applicant and the relevant NSP (I) service provider).
+b.
+Proposed operating procedures (example: network topology/diagram or 
+agreement with Vision Four for a CASP Class Licence application).
+c.
+Any other relevant supporting documents (example: stamped contractual 
+agreement(s), offer letter(s), etc.) as may be required by the MCMC.
+6)
+To affix a company stamp next to the signature of the applicant in Form D.
+7)
+Kindly note that all Class licence applications and proof of payment shall be submitted in 
+PDF version ONLY to our official email at licensing@mcmc.gov.my. The Total attachment 
+size limit is 20MB per email.
+ 
+ Signature: ………………………………………… 
+Date: ……………………………………………… 
+ Page 50 of 77
+Page 51 of 77
+ANNEXURE 8 
+OVERVIEW OF THE APPLICANT COMPANY 
+Company’s background  
+Name of company 
+Date of incorporation 
+Place of incorporation 
+Business Address 
+Issued and paid up capital 
+Shareholding structure 
+Contact 
+Telephone no. 
+Fax no.  
+Contact person 
+Name 
+Telephone no. 
+E-mail
+1.
+To attach certified true copies of the following documents:
+a.
+Form 9, 13, 24, 32a, 44, and 49; and
+b.
+Super Form (for companies incorporated under the Companies Act 2016).
+Management and technical team 
+2.
+List of key members in Applicant’s management and technical team.
+3.
+A brief resume of the key management and technical team – relevant prior experience and
+academic qualification.
+4.
+Proposed or current organization structure for the proposed business. To state whether new
+employees will be recruited for the proposed business. If so, how many and what sort of expertise
+will be required.
+Current business activities of applicant 
+5.
+Details of current business activities
+PROPOSED BUSINESS  
+Description of facilities and/or services 
+1.
+To indicate clearly the range of facilities or services to be provided.
+Target market 
+2.
+An applicant must be able to show the potential demand for its proposed service.
+Page 52 of 77
+Commercial arrangement 
+3.
+To indicate clearly any commercial arrangement with the individual licensee(s) for the proposed
+service.
+Technology 
+4.
+Type of technology to be used.
+5.
+To identify any required frequency bands in the spectrum plan.
+Network topology 
+6.
+To attach appropriate network diagram.
+7.
+Detailed information on network diagram should include the interconnection interface, where
+applicable.
+Page 53 of 77
+ANNEXURE 9 
+Page 54 of 77
+(2) Degree of reliance by the general public on the network facility The degree of reliance by the general public on the network facility should be low, In ascertaining the deyree of reliance by the yeneral public on the network facility, the following shall be considered (a) The activity or activities for which the network facility is to be used rather than the capabilities of the network facility itself, and (b) The substitutability of the network facility by other network facility providers Generally facilities which are used for only specified purposes regardless of capability and are substitutable, would fall within a class licence. (3) ~~ Degree or reliance on the network facility by other service providers in providing downstream activities The term “downstream activities” refers to those activities that are dependent on the availability of the network facility for such activities to be provided. The degree of reliance by other service providers on a network facility should be low. In ascertaining the degree of reliance by the other service providers the following shail be considered: (a) Whether the support provided to downstream activities is critical; or &) Whether it is a bottleneck facility. Generally where the support is not critical or there are available substitutes, the facilities would be considered as falling within a class licence. 5. A niche of limited network facility shall not be used to support network services, applications services or content applications services which fall within individual license Mustrations of Niche or Limited Purpose Network Facilities 6. As a further illustration, the following are examples of network facilities that would be niche or limited purpose (1) Radiocommunications transmitters for public mobile radio network service MCMC / Licence Application Procedure and Licensing Criteria Page 54 of 77
+Page 55 of 77
+@) Q) @) 6) (6) Public mobile radio network service is a public two-way radiocommunications system that provides a network connection service between the mobile radio access devices, The communications traffic may pass through any of the channel or group of channels selected automatically by the system or access device being served by fixed radio base stations. Radiocommunications transmitters for public radio paging network service Public radio paging network service is a public one-way or two-way tadiocommunications system which provides a network service delivering paging messages to mobile radio paging access devices being served by fixed radio paging base stations. Radiocommunication transmitters and links for broadband point-to-point and point-to-multipoint wireless Imernet network service. Wireless broadband point-to-point and point-to-multipoint network service is a public radiocommunications system which provides a network connection service between a fixed radiocommunications devices or point communicating with one or many fixed radiocommunications devices or points. Radiocommunications transmitters and links for public wireless video communications network Public wireless video communications metwork service is a@ public tadiocommunications system which provides a network service for the carrmge and distribution of video between video programme source and receivers. Radiocommunications transmitters and links for public wireless data network service. Wireless data network service is a public radiocommunications system which provides a network service between the mobile radio data access devices in which the data communications traffic between them are being served by fixed radio base stations. Network of broadband access switches or multiplexers and fixed links and cables offered for the sole purpose of end users in a building or a single clustered building complex. MCMC / Licence Application Procedure and Licensing Criteria Page 55 of 77
+Page 56 of 77
+Anmeadments 7 The Minister may from time to time amend these guidelines on the recommendation of the Commission. Issued 17 September 2002 KIKM:GKM (35)23/494/10(1) fuselings ¢ DATUK AMAR LEO MOGGIE Minister of Energy, Communications and Multimedia MCMC / Licence Application Procedure and Licensing Criteria Page 56 of 77
+Page 57 of 77
+KEMENTERIAN TENAGA, KOMUNIKAS! DAN MULTIMEDIA, MALAYSIA TINGKAT 1. WISMA DAMANSARA. 50668 KUALA LUMPUR No. Telefon: 03-2553413 G3. 26942527 No. Fats 03-2558054 MENTERI TENAGA, KOMUNIKAS! DAN MULTIMEDIA, MALAYSIA. MINISTER OF ENERGY, COMMUNICATIONS AND MULTIMEDIA, MALAYSIA COMMUNICATIONS AND MULTIMEDIA ACT 1998 MINISTERIAL GUIDELINES ON CLASS LICENCES FOR NETWORK SERVICES MINISTERJAL GUIDELINES NO. 2 of 2002 IN exercise of the powers conferred by regulation 29 of the Communications and Multimedia (Licensing) Regulations 2000 (“Regulations”), the Minister issues the following Guidelines: Citation and Comecacement ! These Guidelines may be cited as the “Ministerial Guidelines on Class Licences for Network Services” 2. These Guidelines shail come into operation on [17th September 2002] Introduction 3. These Guidelines have been prepared to explain the criteria for registration under a network services provider class licence and to clarify the meaning of “niche customer access services” and “niche connection service” for the purposes of administering the Act and the Regulations. 4 Customer access service refers to services that enable a customer to access an applications service provided over a network. 5 Connection service refers to services that provide any-to-any connectivity between networks thus enabling the end users to communicate with each other despite being directly connected to different networks. MCMC / Licence Application Procedure and Licensing Criteria Page 57 of 77
+Page 58 of 77
+Criteria for Network Service Class Licence 6, In general, a network service, which has minimal impact on the general public and the communications market, will fall under the meaning of “niche” if it satisfies all the following criteria (a) Retail network service activity The focus of the network service activity is on retailing to end users. Provision of network services to other service providers shall not be classified as niche (b) Service is provided to a limited number of persons to mest special requirements The network service shall be provided to a limited number of persons to meet special requirements. Examples include availability of a network service for tourists to particular area or a particular business operation. Factors which may be relevant in determining whether a network service is provided to limited number of persons to meet special requirements are as follows {I} Special requirements may be identifiable by specialised applications or apparatus to acceas the network service, and {I)Limited mumber of persons must be a group whose members identify themselves as members of that group by virtue of shared or common interests or requirements and docs not include groups which are formed arbitrarily or solely for the purpose of using the service (ec) Specific and limited purpose A network service must be provided for a specific and limited purpose, and/ may be for a specific duration for which the network service is required Examples include use of network services for special events such as coverage of sporting or cultural events and festivals. (d) — Degree or reliance by the genera! public on the network service MCMC / Licence Application Procedure and Licensing Criteria Page 58 of 77
+Page 59 of 77
+The degree of reliance by the general public on the network service should be low. In ascertaining the degree of reliance by the general public on the network service, the following shall be considered: (1) The activity or activities for which the network service is 10 be used rather than the capabilities of the network service itself, and (1) The substitutabilny of the network service by other network service providers Generally where the actual activity is restricted regardless of capability and the network service is substitutable, the activity would fall within a class license 7. A niche customer access service and niche connection service cannot be used to support applications services or content applications services which fall within individual licence activities, 8. Mlustrations of Niche Customer Access or Niche Connection Services As a further illustration, the following are examples of network services that would be niche (1) Public mobile radio network service Public mobile radio network service is a public two-way radiocommunications system which provides a network connection service between the mobile radio access devices. The communications traffic may pass through any of the channel or group of channels selected autornatically by the system or access device being served by fixed radio base stations (2) One or two way radio paging network service Public radio paging network service is a public one-way or two-way radiocommunications system which provides a network service delivering paging messages to mobile radio paging access devices being served by fixed radio paging base stations G3) Broadband point-to-point and point-to-multipoint wireless internet network service for purposes of connecting end users to the Intemet Access Service Provider MCMC / Licence Application Procedure and Licensing Criteria Page 59 of 77
+Page 60 of 77
+Wireless broadband point-to-point and point-to-multipoiny network service is a public radiocommunications system which provides a network connection service between a fixed radiocommunications service device or point communicating with one or many fixed radiocommunications devices or points. (4) Wired/Wireless video communications network for carrying video for purposes of monitoring, teaching, supervision, occasional events and surveillance information Public wireless video communications network service is a public tadiocommunications system which provides a network service for the carriage and distribution of video between video programme source and receivers. (5) Terrestrial wireless fixed/mobile data network service for the specific purposes of messaging, surveillance, ticketing, or inventory management Wireless data network service is a public radiocommunications system which provides a network service between the mobile radio data access devices in which the data communications traffic between them are being served by fixed radio base stations. (6) Broadband network customer access service offered for the sole purpose of connecting end users in a building or a single clustered building complex to the Intemet Access Service Provider 9, Amendments The Minister may from time to time amend these guidelines on the recommendation of the Commission Issued : 17 September 2002 KTKM 2 BKM (5) 23/494/10 (2) an) DATUK AMAR LEO MOGGIE Minister of Energy, Communications and Multimedia MCMC / Licence Application Procedure and Licensing Criteria Page 60 of 77
+Page 61 of 77
+ANNEXURE 10 
+Page 62 of 77
+CLARIFICATION OF CRITERIA FOR LIMITED CONTENT 4. Targeted to a special interest group (a) Content that is targeted to special interest groups must be relevant to the specific requirements of the group. “Special interest groups” must be differentiated from general interest groups based on similarities such as sex, race, religion, ethnicity or occupation. A special interest group may also be identifiable by membership of a sporting, cultural, or professional association, club or organization or a common need or requirement such as that of students in a school of university. (b) = The term special interest group does not include groups that are formed arbitrarily. For exampte, it does not include groups such as the aged unless the service in question addresses interests or tastes that are common to all or most aged people. Similarly the term does not cover general groups such as youths, farmers or tourists who happen to be in the country or at a particular public place unless they consciously share some commen lawful purpose. Content that is of a general nature or content that can be of interest to many groups cannot be limited content. (c) The test for a service that is targeted to a special interest group is whether the content sufficiently addresses a specific need or tequirament of the targeted group to prevent it from being either pervasive or influential. Consideration of the target audience or users, including its size will therefore be of particular importance in deciding whether the service is indeed of limited appeal or whether it possesses the pervasiveness which requires a more interventionist form of regulation. Accessibility issues will also be relevant where the restricted availabilty of a service limits its appeal 5. Available in a restricted geographical area (a) A content applications service may be restricted to a geographical area so that only those who are within that area have access to it. Examples of such services are networked content applications services in hotels, highway rest areas, buildings, trains, airport, rail and bus terminals. MCMC / Licence Application Procedure and Licensing Criteria Page 62 of 77
+Page 63 of 77
+(b) Where the service is transmitied by wireless means, these services. will generally be low powered services which can be received only within the perimeter of the intended service area. Where the service is delivered by wired means, these services wil generally be available on a smail network or a subset of a small network. (c) Apart from the geographical area covered, it will also be necessary to consider the number of people of premises which have access to the service. For this reason, a service in an urban area with a high population density will need to cover a smaller area than a comparable service in a rural area to be considered a “limited” service. (d) Thus the test for a service that is restricted to a geographical area will cover both whether it can only be accessed in the designated area of areas as well as the features of the designated areas in terms of population and reach. 6. Available for a short time (a) A service may be provided for a short period of time, generally to cater for social, cultural or sporting events. Such a service will be “one-off in nature. (6) In contrast, a service which is available for a substantial part of the day, week or year and is expected to be available indefinitely, would fot be considered “limited” by virtue of this criterion. 7. Content of Limited Appeal (a) Aservice may be of imited appeal by virtue of the content provided. Factors that may be relevant to the appeal of the content may include the level of public interest in the content, the social or cultural relevance of the content, and whether the content is specialized to a small audience or group of users. {b) The level of public interest in a content applications service of limited appeal may be small due to the specialized nature of the content Provided and its relevance to only small sections of the population. {c) The test for a service of limited appeal ie whether the content provided is sufficiently specialized or narrow in scope so as to MCMC / Licence Application Procedure and Licensing Criteria Page 63 of 77
+Page 64 of 77
+appeal to only small sections of the population Le. it would lack pervasiveness or influence by its very nature. AMENDMENTS 8. This determination may be amended from time to time in accordance with the provisions of the Act. Made: 17 July 2003 ( KTKM(S) 110/186/2-19(15) —G DATUK AMAR LEO MOGGIE Minister of Energy, Communications and Mullimedia MCMC / Licence Application Procedure and Licensing Criteria Page 64 of 77
+Page 65 of 77
+ANNEXURE 11 
+SURUHANJAYA KOMUNIKASI DAN MULTIMEDIA MALAYSIA 
+MALAYSIAN COMMUNICATIONS AND MULTIMEDIA COMMISSION 
+BORANG PERMOHONAN UNTUK REBET BAGI FI TAHUNAN LESEN INDIVIDU / 
+APPLICATION FORM FOR REBATES ON INDIVIDUAL LICENCE ANNUAL FEE 
+Tandakan ( / ) mana- mana yang berkenaan 
+Tick ( / ) whichever is applicable 
+1. 
+Permohonan untuk rebet pembangunan industri di bawah kategori*  
+Application for rebates on industry development under the category* 
+(a)
+Penyelidikan dan Pembangunan  
+[ 
+] 
+Research and Development 
+(b) 
+Kemahiran dan latihan  
+[ 
+] 
+Skills and training 
+(c)  
+Pelaburan minoriti di dalam Industri Kecil dan Sederhana (IKS) 
+[ 
+] 
+Minority investments in Small and Medium  
+Industry (SMIs)  
+(d)
+Perolehan nilai tambah daripada IKS Malaysia 
+[ 
+] 
+Value Added Procurement from Malaysian SMIs 
+(e) 
+Kandungan dan penerbitan tempatan 
+[ 
+] 
+Local content and production 
+*
+Untuk maklumat lanjut berkenaan kategori yang berkaitan dengan rebet pembangunan industri, sila rujuk 
+Kertas Maklumat – Kelayakan Pemotongan untuk Rebet Fi Lesen Individu di laman web kami di 
+* 
+For further clarification on the applicable category of industry development rebates, please refer to 
+Information Paper – Eligible Deductions for Individual Licence Fee Rebates available at our website at 
+Page 66 of 77
+A. 
+BUTIR-BUTIR PEMOHON 
+PARTICULARS OF APPLICANT
+1.
+Nama pemohon dan No. Syarikat 
+Name of applicant and Company No. 
+……………………………………………………………………………………………………….……………………………………………
+………………………………………………………........................................................................................................................ 
+2.
+Jenis lesen individu yang dipegang, No. Lesen dan tarikh lesen dikeluarkan 
+Type of individual licence held, Licence No. and date of issuance of licence
+……………………………………………………………………………………………………….……………………………………………
+………………………………………………………........................................................................................................................ 
+3.
+Pejabat berdaftar 
+Registered office 
+……………………………………………………………………………………………………….……………………………………………
+………………………………………………………........................................................................................................................ 
+No. Telefon………………………………………No. Faks………………………………………. 
+Telephone No. / Fax No. 
+Alamat e-mel…………………………………………………………….. 
+E-mail address 
+4.
+Tempat perniagaan utama 
+Principal place of business 
+……………………………………………………………………………………………………….……………………………………………
+………………………………………………………........................................................................................................................ 
+No. Telefon………………………………………No. Faks………………………………………. 
+Telephone No. / Fax No. 
+Alamat e-mel…………………………………………………………….. 
+E-mail address 
+B. 
+Pengesahan  
+Page 67 of 77
+Confirmation  
+1. 
+Adakah pemohon telah mematuhi kesemua keperluan seperti yang  
+Ya / Tidak 
+dinyatakan dalan kertas penerangan bertajuk “Eligible Deductions  
+for Individual Licence Fee Rebates“ ? 
+Has the applicant complied with the requirements set out in the information  
+Yes / No 
+paper titled “Eligible Deductions for Individual Licence Fee Rebates“?
+2. 
+Adakah pemohon telah membayar jumlah sebanyak RM50,000.00 
+Ya / Tidak 
+sebagai bayaran permulaan fi lesen tahunan yang terpakai? 
+Has the applicant paid the sum of RM50,000.00 as initial payment of the  Yes / No 
+applicable annual licence fee? 
+3. 
+Adakah pemohon telah mengemukakan akaun terauditnya kepada 
+Ya / Tidak 
+Suruhanjaya?  
+Has the applicant submitted its audited accounts to the Commission? 
+Yes / No 
+C.
+MAKLUMAT 
+INFORMATION 
+1.
+Maklumat dua orang iaitu dua pengarah atau seorang pengarah dan pegawai syarikat 
+pemohon yang boleh dihubungi untuk maklumat lanjut: 
+Particulars of two persons namely two directors or a director and an officer of the applicant who 
+may be contacted for further information: 
+Nama 
+Name
+Jawatan 
+Position 
+No. Telefon 
+Telephone No. 
+Alamat 
+Address 
+2.
+Apa –apa maklumat tambahan yang dianggap berkaitan dengan permohonan ini: 
+Any additional information considered relevant to this application: 
+Page 68 of 77
+……………………………………………………………………………………………………….……………………………………………
+………………………………………………………........................................................................................................................
+....................................................................................................... 
+Kami………………………………………………………, pemohon, dengan ini mengaku dan mengesahkan bahawa 
+kami layak memohon untuk mendapatkan rebet bagi fi tahunan lesen individu di bawah Akta 
+Komunikasi dan Multimedia 1998 dan semua maklumat yang diberikan dalam permohonan ini dan 
+dalam lampiran yang dikepilkan adalah benar dan tepat. 
+We………………………………………………………, the applicant, declare and confirm that we are eligible to apply 
+for rebates on individual licence annual fee under the Communications and Multimedia Act 1998 and that 
+all the information given in this application and in the attached annexes is true and accurate. 
+Tarikh: …………………………………… 
+Date: 
+Ditandatangani oleh…………………………………………………….] 
+Signed by 
+untuk dan bagi pihak……………………………………………………] 
+for and on behalf of 
+*Nota: 
+Jika ruang yang disediakan tidak mencukupi untuk memberi butir- butir, sila kepilkan lampiran. Setiap 
+lampiran mestilah ditandatangani ringkas oleh orang yang menandatangani permohonan ini. 
+*Note: 
+If space is insufficient to provide the particulars, please attach annexes. Any annex should be initialed by the 
+signatory to this application. 
+Page 69 of 77
+ANNEXURE 12 
+S u r u h a n j a y a  K om u n i k a s i  d a n M u l t i m e d i a  M a l a y s i a 
+Malaysian Communications and Multimedia Commission 
+APPLICATION FOR REBATES ON INDIVIDUAL LICENCE ANNUAL FEE CHECKLIST  
+Please ensure that the application is submitted together with the required supporting information and 
+documents as set out in the Revised Information Paper titled “Eligible Deductions for Individual Licence 
+Fee Rebates” (“Rebates Paper”) that was published on 8 November 2005.  
+To assist the applicant, a short checklist is provided below for reference. However, the items set out in 
+the checklist are not exhaustive and each applicant is expected to have read and complied with the 
+requirements set out in the Rebates Paper.  
+1.  Application Form for rebates on individual licence annual fee duly completed.  
+
+2.
+Company’s Audited Financial Statements i.e. preceding financial year. (This is required if 
+the document has yet to be submitted by the applicant to MCMC).  
+
+3.
+The Appendixes (i.e. Appendixes A to E) set out in the Rebates Paper to be completed 
+and duly attached to the Application Form (the number of Appendixes would depend 
+on the applicable category of industry development rebates that is being applied for).  
+
+4.
+Certified true copies of the accounts and invoices/receipts of expenses submitted. The 
+certification must be by a Director or Senior Officer of the Company. 
+
+5.
+Under each of the five (5) category of industry development items, to provide write  
+up justifying whether the specific items being claimed fall within the definition  
+provided in the Rebates Paper and support the policy objectives stated therein 
+
+6.
+A duly completed template titled “Self-calculation of rebate entitlement based on the 
+expenditure items submitted under the five (5) categories of industry development 
+items”.  
+Kindly refer to document template titled “Self Calculation of Rebates Entitlement  
+(Based on the expenditure items submitted under the five (5) categories of industry 
+development items) Refer link  
+
+7.
+Submissions (inclusive of attached documentation) to be made in two (2) sets.   
+[One (1) original copy and one (1) duplicate copy] 
+
+Note: All photocopies must be certified by the Director or the Company Secretary.  
+Company rubber stamp must be affixed on the last page of the application form.   
+Page 70 of 77
+ANNEXURE 13 
+MALAYSIAN COMMUNICATIONS AND MULTIMEDIA COMMISSION 
+SELF CALCULATION OF REBATE ENTITLEMENT BASED ON THE EXPENDITURE ITEMS SUBMITTED UNDER THE 
+FIVE (5) CATEGORY OF INDUSTRY DEVELOPMENT ITEMS  
+PLEASE FILL IN CAPITAL / BLOCK LETTERS AND CHECKED BOXES WHERE APPLICABLE  
+A.
+Information on Applicant  
+Company Name:  
+Type of Licence Held: 
+3)
+ Licence Tenure Period  
+(a) 
+Network Facilities Licence [NFP(I)] 
+(a) 
+NFP(I) 
+(b) 
+Network Service Licence [NSP(I)]  
+(b) 
+NSP(I) 
+(c) 
+Content Applications Service Licence [CASP(I)] 
+(c) 
+CASP(I) 
+B.
+Maximum rate 0.5% of GAT & Rebates Entitlements as per MCMC’s Notification Letter (Phase 2 – 
+process)  
+PLEASE FILL IN FIGURES AS PER ATTACHMENT 1 OF MCMC’S NOTIFICATION LETTER (PHASE 2 – PROCESS)  
+RM 
+Gross Annual Turnover (GAT) as per Preceding Audited Accounts  
+AAA 
+OR 
+Applicable GAT as per Note state in Audited Accounts (if applicable) 
+AAA 
+Maximum rate of 0.5% of GAT – applicable Annual Licence Fee  
+BBB 
+Maximum rebate entitlement as per MCMC’s Notice  
+CCC 
+C.
+Rebates Applied  
+PLEASE FILL IN FIGURES AND CHECKED BOXES WHERE APPLICABLE 
+D. Calculation of Rebates Applied as a Percentage Ratio to Applicable GAT  
+8)
+Please fill in figures and do calculation as per formula given  
+= Total amount applied for rebates on Industry Development (Eligible Deductions)𝐃𝐃𝐃 
+Applicable GAT as per Audited Accounts (𝐀𝐀𝐀)
+×  100
+= RM 𝐃𝐃𝐃
+RM 𝐀𝐀𝐀 ×  100
+=  𝐄𝐄𝐄 %
+E.
+Actual Rebate Entitlement based on threshold as per Column 3, Table B of the Licensing Regs.  
+(a) Please match and check percentage ratio (fee) as per threshold in table below  
+Percentage Ratio to Applicable GAT 
+% of rebates 
+entitled 
+Applicable percentage ratio (EEE) 
+More than 15%  
+100% 
+6% to 15%  
+66% 
+2.5% and above but less than 6%  
+33% 
+Less than 2.5 %  
+0% 
+(b) Please fill in figures and do calculation as per formula given below  
+= % of Rebate Entitled as per threshold × Maximum Rebate Entitlement (𝐂𝐂𝐂)
+=  𝐀𝐂𝐓𝐔𝐀𝐋 𝐑𝐄𝐁𝐀𝐓𝐄 𝐄𝐍𝐓𝐈𝐓𝐋𝐄𝐌𝐄𝐍𝐓 (𝐑𝐌) 
+Industry Development Expenditure (Eligible Deductions) Applied under Five (5) Categories  
+RM 
+(a) 
+Research and development  
+Amount Applied  
+(b) 
+Skills and training  
+Amount Applied  
+(c) 
+Minority investments in SMEs 
+Amount applied: ( RM                 ) 
+*(x1.5) 
+Amount Applicable 
+(d) 
+Malaysian value added procurement from 
+Malaysian SMEs  
+Amount applied: (RM                 )  
+*(0.25) 
+Amount Applicable 
+(e) 
+Local content and production  
+Amount Applied 
+Total Amount Applied for Rebates on Industry Development (Eligible Deductions)  
+DDD 
+Sum of items applied in (a), (b), (c), (d) & (e) above  
+Note :  
+*AMOUNT APPLIED NEEDS TO BE REDUCED BASED ON WEIGHTED AVERAGE AS PER 
+COLUMN 2, TABLE B OF LICENSING REGS.  
+Page 71 of 77
+ANNEXURE 14 
+MALAYSIAN COMMUNICATIONS AND MULTIMEDIA COMMISSION 
+(LICENCE FEE REBATES APPLICATION TEMPLATE) 
+Note:  
+1. Only an Individual licence holder (i.e. NFP, NSP and CASP) that is required to pay the maximum 
+yearly licence fees (i.e. 0.5% of Gross Annual Turnover) is eligible to apply for rebate.  
+2. The applicant is advised to read and adhere to the Information Paper on “Revised Information 
+Paper – Eligible Deductions for Individual Licence Fee Rebates” published on MCMC’s website 
+before submitting any applications to MCMC.  
+3. The applicant may submit any other information not specified below which may be considered 
+helpful to this application.  
+4. The applicant to provide certified true copies of the accounts and invoices/receipts of expenses 
+submitted. The certification must be by the CEO or any person authorized on his behalf.  
+5. The submissions are to be made in two (2) sets [One (1) original copy and one (1) duplicate 
+copy]. To also have softcopies of the appendices in one compact disc (CD)  
+6. MCMC reserves all rights not to accept applications which are incomplete.  
+7. MCMC reserves the right to request clarification or any further information from the applicant 
+regarding its application.  
+ELIGIBILITY CRITERIA FOR LICENCE FEE REBATES  
+Please indicate (  ) where applicable  
+1. The applicant must be a licensee  
+
+2. The expenditure must be incurred by the licensee  
+
+ELIGIBILITY INDUSTRY DEVELOPMENT ITEMS   
+RESEARCH & DEVELOPMENT (R&D)  
+Eligibility  
+a.
+R&D should be conducted in Malaysia  
+
+b.
+R&D activities confined to the communications and multimedia sector  
+
+Allowable cost  
+Total cost of the eligible R&D  
+Application Procedure  
+a.
+To complete Appendix A of the rebates guideline. 
+Appendix A  
+
+R&D Project List  
+No. 
+Title 
+Duration 
+Date of 
+completion 
+Cost (RM) 
+In-house / 
+Outsourced 
+Total 
+Page 72 of 77
+
+Report  
+Executive Summary (for each R&D project)  
+1. Title of the project  
+2. Brief description of the project  
+3. Project objective  
+4. Deliverables  
+5. Officer-in-charge  
+6. Results  
+7. Direct benefits to the company  
+8. Impact to the communications and multimedia industry  
+9. Evidence that the R&D project has resulted in the production of new or substantially 
+improved technology, material, devices, products, processes, systems or services.  
+The write-up shall not exceed 3 pages.  
+b. Declaration – must be signed by the CEO or any person authorized on his behalf. 
+SKILLS & TRAINING  
+Eligibility  
+a. Training programmes must be direct benefit to their business operations or related to 
+the business needs of the SMIs to which they have investments in.  
+
+b. Training programmes must be structured and include specific training objectives, a 
+programme of training activities or lessons plans, specified duration training, guided 
+instruction by qualified instructors or trainers and test(s) to assess attainment of training 
+objectives.  
+
+Allowable cost  
+a.
+For on-site, in-house, external or overseas training, cost for qualifying programmes include:  
+
+Course fees for approved training programmes or other programmes by other training 
+providers.  
+
+Remuneration of employers’ trainers or instructors, pro-rated to the duration of 
+approved in-house training programmes.  
+
+Fees paid to external or foreign trainers or instructors for the duration of the training 
+programmes.  
+
+Consumable training materials.  
+
+Cost of travel including associated accommodation and subsistence (in accordance with 
+licensee’s company policy and to be verified by the Head of Human Resource) for 
+overseas training.  
+
+The cost of training will apply to employees of the licensee only.  
+b.
+Expenses for training equipment and the setting up of training room(s).  
+c.
+In the case of already set-up training facilities, only the incremental cost expensed in the 
+financial year for maintenance and upgrading is considered allowable cost.  
+Application procedure 
+a.
+To complete Appendix B of the rebates guideline. 
+Page 73 of 77
+APPENDIX B  
+(where applicable)  
+
+Domestic/Local Training  
+No. 
+Title 
+Type* 
+Institution / 
+Organizer 
+Location 
+Period 
+No. of 
+Attendees 
+Total cost 
+(RM) 
+Total 
+*Type: In-house/external/computer based  
+Report  
+Brief synopsis of each course (not more than one page each) 
+
+Overseas Training (course/seminar/workshop) 
+No. 
+Title 
+Institution / 
+Organizer 
+Location 
+Period 
+No. of 
+Attendees 
+Total cost 
+(RM) 
+Total 
+Report  
+Brief synopsis of each course (not more than one page each) 
+
+Remuneration of employers’ trainers or instructors  
+No. 
+Name 
+Date of 
+Training 
+Description 
+Account reference 
+Amount (RM) 
+Total 
+
+Purchase of Training Equipment/Setting Up Training Rooms(s)  
+No. 
+Date of 
+purchase 
+Quantity  
+Description of 
+Material  
+Name of the 
+supplier 
+Invoice No.  
+Value (RM) 
+Total 
+
+Infrastructure Upgrading & Maintenance  
+Applies to a licensee which already set-up training facilities, only the ‘incremental cost’ 
+expensed in the financial year for maintenance and upgrading is considered allowable cost  
+No. 
+Invoice No. 
+Date 
+Work Description 
+Name of the 
+Company 
+Amount (RM) 
+Total 
+b.
+Declaration – must be signed by the CEO or any person authorized on his behalf.
+Page 74 of 77
+MINORITY INVESTMENT IN SMI  
+Definition of SMI  
+(Ministry of International Trade Industry (MITI), effective 1 st January 2014)*:  
+CATEGORY 
+SMALL INDUSTRY 
+MEDIUM INDUSTRY 
+Manufacturing 
+Sales turnover from RM300,000 to 
+less than RM15mil OR ; employees 
+from 5 to less than 75   
+Sales turnover from RM15mil to not 
+exceeding RM50mil  OR ; employees 
+from 75 to not exceeding200   
+Services and Other 
+Sectors 
+Sales turnover from RM300,000 to 
+less than RM3mil OR ; employees 
+from 5 to less than 30 
+Sales turnover from RM3mil to not 
+exceeding RM20mil OR ; employees 
+from 30 to not exceeding 75 
+*Source: http://www.smecorp.gov.my/vn2/node/533 
+Eligibility  
+A 10% to 50% investment in SMI (should not be more than 50% of the share capital of the SMI)  
+Allowable Cost  
+The investment cost allowable includes:  
+a.
+The initial investment paid to the shareholder equity (one-off)  
+b.
+Any incremental investment to increase the shareholder’s equity 
+Application Procedure  
+a.
+To complete Appendix C of the rebates guideline. 
+APPENDIX C  
+
+SMI Listing  
+No. 
+SMI 
+Company 
+Type of 
+business 
+Paid-up 
+Capital (RM) 
+Licensee’s 
+Investment in SMI 
+(RM) 
+% of licensee’s 
+stake in company 
+Total 
+b.
+Declaration – must be signed by the CEO or any person authorized on his behalf. 
+MALAYSIAN VALUE ADDED PROCUREMENT FROM MALAYSIAN SMI  
+Definition of Value Added  
+The products or services procured from local SMIs which contain elements of enhancement which would 
+contribute towards the creation of high technology and specialised companies. This would be high 
+precision products or services which require a high level of expertise (refer to attachment 2 for list of 
+values added products and services).  
+Eligible Deductions  
+The supply price of the products and services less the amount spent on imported products and services 
+(including all components, embedded software and design, manufacturing, assembly and supply 
+services). The company must also procure 40% or more of Malaysian value added products and services 
+from Malaysian SMI. 
+Application Procedure  
+Page 75 of 77
+a.
+To complete Appendix D of the rebates guideline. 
+APPENDIX D  
+Procurement 
+Date. 
+Invoice 
+No.  
+Amount 
+(RM) 
+SMI 
+Company 
+No. of 
+employee 
+(SMI 
+company) 
+Annual 
+turnover 
+(SMI 
+company) 
+MITI 
+certificate 
+attached 
+(Yes/No) 
+Total 
+Applicants should provide a short write up indicating clearly how each product or service procured fall 
+within the definition of Malaysian value added as outlined in the Revised Information Paper.  
+b.
+Declaration – must be signed by the CEO or any person authorized on his behalf. 
+LOCAL CONTENT AND PRODUCTION  
+Eligibility  
+ Programme must be a first release programme 
+
+ Programme must fulfil the local content requirement 
+
+Allowable Cost  
+Total purchase price or production cost of the qualifying programmes 
+Application Procedure  
+a.
+To complete Appendix E of the rebates guideline. 
+APPENDIX E 
+Eligible criteria for deductions 
+Tick (  ) 
+where 
+applicable 
+Remarks  
+a.
+First Release Programmes (referring to local programmes only) 
+i.
+A programme (except a feature film or telemovie) is a first 
+release programme when it is first broadcast in Malaysia; 
+if it has been acquired by the licensee, or its programme 
+supplier, within 2 years of the completion of production of 
+the programme. 
+ii.
+A programme that is  a feature firm or telemovie is a  first 
+release  programme when it is first broadcast by a licensee 
+in Malaysia (whether or not the program has already been 
+broadcast in Malaysia by a subscription television 
+broadcasting  
+b. Local Content  
+i.
+Programme material  
+A programme which has a predominantly Malaysian orientation, 
+reflecting Malaysian identity and culture or is about Malaysians 
+ii.
+Creative control by Malaysians 
+A programme is produced under the creative control of Malaysians if: 
+A.
+Producer  
+Page 76 of 77
+Eligible criteria for deductions 
+Tick (  ) 
+where 
+applicable 
+Remarks  
+
+The producer of the programme is, or a 
+significant proportion of (not less than two-third) 
+the producers of the programme are Malaysian. 
+
+The producer must control and be the central  
+B.
+Other key creative personnel  
+
+The 
+director(s), 
+writer(s), 
+composer(s), 
+technician(s), editor(s) are Malaysian; and  
+
+Not less than two-thirds of the leading actors or 
+on-screen 
+presenters 
+appearing 
+in 
+the 
+programme are Malaysians 
+iii.
+Production  
+
+30-40% of the overall cost of production of a 
+programme must be spent in Malaysia.  
+
+At least 60% of the total post-production cost is spent 
+in Malaysia.  
+
+Negative processing and bulk printing (where 
+applicable) of the films must be done in local 
+laboratories.  
+
+Editing works, ’pasca produksi ’ and animation must be 
+made in local companies that offer such facilities and 
+services.  
+
+Music (or rearrangement of music) and background 
+voice used in a programme must be produced by 
+local music producers. The background voice must 
+belong to a Malaysian. 
+Report on Local Content and Production  
+Production Title:   
+Production Budget:  
+Production Type:  Feature  
+Telemovie  
+TV Series (No. of Episodes)  
+Short Drama  
+Cartoons   
+Documentary  
+Others, please specify  
+Running Time ______________ mins  
+Gauge    ______________ mm x Eps  
+Schedule & Budget based on script:  
+Producer(s):  
+Production Company:  
+Address:  
+Telephone No:  
+Fax No:  
+E-mail: 
+Declaration – must be signed by the CEO or any person authorized on his behalf. 
+Page 77 of 77
+ATTACHMENT 1  
+Declaration  
+I/We hereby verify that the information given above is true and complete.  
+The Company shall keep all the relevant documents and allow MCMC or its appointed agents to carry 
+out an audit on the particular request.  
+The Company also hereby consents to any disclosure by the MCMC of this report or any information on 
+the company to firms or consultants acting in professional capacity for or on behalf of the MCMC.  
+Authorised Signature:  
+Name:  
+Designation:  
+Date:  
+Company’s stamp 
