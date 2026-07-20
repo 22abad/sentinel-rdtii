@@ -381,28 +381,16 @@ export function AuditPanel({
   const [exportError, setExportError] = useState("");
   const [showExportPreview, setShowExportPreview] = useState(false);
 
-  // Sort/filter the result list under the top bands. Filter by review status,
-  // sort by pillar·indicator (natural order otherwise).
+  // Filter the result list under the top bands by review status.
   const [reviewFilter, setReviewFilter] = useState<"all" | "clean" | "review">("all");
-  const [sortByPillar, setSortByPillar] = useState(false);
   const cleanCount = mappings.filter((m) => !m.requires_human_review).length;
   const reviewCount = mappings.length - cleanCount;
-  const visibleMappings = (() => {
-    const filtered =
-      reviewFilter === "all"
-        ? mappings
-        : mappings.filter(
-            (m) => (reviewFilter === "clean") === !m.requires_human_review,
-          );
-    if (!sortByPillar) return filtered;
-    return [...filtered].sort(
-      (a, b) =>
-        a.pillar - b.pillar ||
-        String(a.indicator).localeCompare(String(b.indicator), undefined, {
-          numeric: true,
-        }),
-    );
-  })();
+  const visibleMappings =
+    reviewFilter === "all"
+      ? mappings
+      : mappings.filter(
+          (m) => (reviewFilter === "clean") === !m.requires_human_review,
+        );
 
   const mappingsForExport = exportMappings ?? mappings;
   const previewRows = mappingsToExcelPreviewRows(
@@ -552,7 +540,7 @@ export function AuditPanel({
       {/* document-level rows above the result list */}
       {mappings.length > 0 && <DocumentInfoRows mappings={mappings} />}
 
-      {/* sort / filter bar — review status + sort by pillar */}
+      {/* review-status filter — 3 buttons filling the row */}
       {mappings.length > 0 && (
         <div className="doc-info-filterbar nodrag">
           {(
@@ -571,14 +559,6 @@ export function AuditPanel({
               {label}
             </button>
           ))}
-          <button
-            type="button"
-            className={`doc-info-chip doc-info-sort ${sortByPillar ? "active" : ""}`}
-            title="Sort results by pillar · indicator"
-            onClick={() => setSortByPillar((v) => !v)}
-          >
-            ↕ PILLAR
-          </button>
         </div>
       )}
 

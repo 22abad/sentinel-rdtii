@@ -2562,6 +2562,13 @@ textarea {
 .swiss-form .mapping-row.open .mapping-row-head {
   background: rgba(17, 24, 39, 0.05);
 }
+/* rows needing human review get a yellow head (wins over hover/open) */
+.swiss-form li.mapping-row.needs-review .mapping-row-head {
+  background: #f7d445;
+}
+.swiss-form li.mapping-row.needs-review .mapping-row-head:hover {
+  background: #eec700;
+}
 .swiss-form .mapping-row-code {
   min-width: 72px;
   font-family: inherit; /* Inter, like the reference index numbers */
@@ -2740,19 +2747,17 @@ textarea {
   font-size: 0.8rem;
 }
 
-/* sort/filter bar under the document bands */
+/* review-status filter — 3 equal buttons filling the row, divided by lines */
 .swiss-form .doc-info-filterbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
   border-top: 1.5px solid #111827;
 }
 .swiss-form .doc-info-chip {
-  min-height: 26px;
-  padding: 2px 10px;
-  border: 1.5px solid #111827;
+  min-height: 40px;
+  padding: 0 8px;
+  border: none;
   border-radius: 0;
   background: transparent;
   color: #111827;
@@ -2760,14 +2765,15 @@ textarea {
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.04em;
+  white-space: nowrap;
   cursor: pointer;
+}
+.swiss-form .doc-info-chip + .doc-info-chip {
+  border-left: 1.5px solid #111827;
 }
 .swiss-form .doc-info-chip.active {
   background: #111827;
   color: #f3f1ea;
-}
-.swiss-form .doc-info-chip.doc-info-sort {
-  margin-left: auto;
 }
 
 .swiss-form a.doc-info-link {
