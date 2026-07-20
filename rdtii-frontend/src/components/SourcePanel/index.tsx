@@ -296,32 +296,30 @@ export function SourcePanel({
       </label>
 
       <div className="stacked text-area-label">
-        <div className="source-bar">
-          <span>
-            {activeMapping
-              ? t("source.auditHighlight")
-              : t("source.sourceText")}
-          </span>
-        </div>
-
         {activeMapping ? (
           <SourceView
+            title={t("source.auditHighlight")}
             text={text}
             activeMapping={activeMapping}
             sourceRef={sourceRef}
             onClick={() => setActiveKey(null)}
           />
         ) : (
-          <textarea
-            ref={textareaRef}
-            value={text}
-            onChange={(e) => {
-              e.target.style.height = "auto";
-              e.target.style.height = `${e.target.scrollHeight}px`;
-              onTextChange(e);
-            }}
-            placeholder={t("source.placeholder")}
-          />
+          <>
+            <div className="source-bar">
+              <span>{t("source.sourceText")}</span>
+            </div>
+            <textarea
+              ref={textareaRef}
+              value={text}
+              onChange={(e) => {
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+                onTextChange(e);
+              }}
+              placeholder={t("source.placeholder")}
+            />
+          </>
         )}
       </div>
 
