@@ -1,0 +1,1160 @@
+Home
+| Databases
+| WorldLII
+| Search
+| Feedback
+Malaysian Legislation
+You are here:
+CommonLII >>
+Databases >>
+Malaysian Legislation >>
+Financial Procedure Act 1957 (Revised 1972)
+Database Search
+| Name Search
+| Noteup
+| Download
+| Help
+Financial Procedure Act 1957 (Revised 1972)
+LAWS OF MALAYSIA
+REPRINT
+PUBLISHED BY
+THE COMMISSIONER OF LAW REVISION, MALAYSIA
+UNDER THE AUTHORITY OF THE REVISION OF LAWS ACT 1968
+IN COLLABORATION WITH MALAYAN LAW JOURNAL SDN BHD AND
+PERCETAKAN NASIONAL
+MALAYSIA BHD
+2006
+Act 61
+FINANCIAL PROCEDURE ACT 1957
+Incorporating all amendments up to 1 January 2006
+061e.fm Page 1 Friday, March 31, 2006 3:49 PM
+PREPARED FOR PUBLICATION BY
+MALAYAN LAW JOURNAL SDN BHD
+AND PRINTED BY
+PERCETAKAN NASIONAL MALAYSIA BERHAD
+KUALA LUMPUR BRANCH
+2006
+2
+FINANCIAL PROCEDURE ACT 1957
+First enacted ... ... ... ... ... 1957(OrdinanceNo.62
+of 1957)
+Revised ... ... ... ... ... ... 1972 (Act 61 w.e.f.
+1 March 1972)
+PREVIOUS REPRINTS
+First Reprint ... ... ... ... ... 1983
+Second Reprint ... ... ... ... 1993
+Third Reprint ... ... ... ... ... 1999
+061e.fm Page 2 Friday, March 31, 2006 3:49 PM
+3
+LAWS OF MALAYSIA
+Act 61
+ARRANGEMENT OF SECTIONS
+FINANCIAL PROCEDURE ACT 1957
+PART I
+PRELIMINARY
+Section
+1. Short title
+2. (Omitted)
+3. Interpretation
+PART II
+ACCOUNTING OFFICERS
+4. Duties of accounting officers
+5. Bank accounts
+PART III
+CONTROL AND MANAGEMENT OF
+PUBLIC FINANCES
+6. Management and control of Consolidated Funds
+7. Consolidated Fund accounts
+8. Custody and investment of moneys
+9. Trust accounts
+10. Government trust funds
+11. Contingencies Fund
+12. State Reserve Fund
+13. Payment of moneys
+14. Guarantees
+061e.fm Page 3 Friday, March 31, 2006 3:49 PM
+4 Laws of Malaysia ACT 61
+Section
+14A. Refunds, etc., charged on Consolidated Funds
+15. Estimates and virement
+15A. Controlling officers
+16. Yearly statement of accounts
+17. Write-off
+18. Surcharge
+19. Notification of surcharge
+20. Withdrawal of surcharge
+21. Recovery of surcharge
+PART IV
+STATE FINANCIAL AND
+ACCOUNTING PROCEDURE
+22�35. (Consolidated with Part III)
+PART V
+REGULATIONS
+36. Regulations
+FIRST SCHEDULE
+SECOND SCHEDULE
+THIRD SCHEDULE
+061e.fm Page 4 Friday, March 31, 2006 3:49 PM
+5
+LAWS OF MALAYSIA
+Act 61
+FINANCIAL PROCEDURE ACT 1957
+An Act to provide for the control and management of the public
+finances of Malaysia, and for financial and accounting procedure,
+including procedure for the collection, custody and payment of the
+public moneys of the Federation and of the States, and the
+purchase, custody and disposal of public property, other than land,
+of the Federation and of the States and for matters connected
+therewith.
+[Peninsular Malaysia--1 January 1958, L.N. 1/1958;
+Sabah and Sarawak--1 January 1964, L.N. 348/1963]
+PART I
+PRELIMINARY
+Short title
+1. (1) This Act may be cited as the Financial Procedure Act
+1957.
+*(2) This Act shall not apply to the Railway Administration
+established under the Railway Ordinance 1948 [M.U. 8 of 1948],
+nor to any person in the service of that Administration.
+2. (Omitted).
+Interpretation
+3. In this Act, unless the context otherwise requires--
+"accounting officer" includes every public officer who is
+charged with the
+duty of collecting, receiving, or accounting for,
+or who in fact collects, receives or accounts for, any public
+*NOTE--The Railway
+Ordinance 1948 has been repealed and the Railway Administration in
+existence under the said Ordinance is dissolved--see sections
+105 and 92, Railways Act
+1991 [Act 463].
+061e.fm Page 5 Friday, March 31, 2006 3:49 PM
+6 Laws of Malaysia ACT 61
+moneys, or who is charged with the duty of disbursing, or who
+does in fact disburse, any public moneys, and every public officer
+who is charged with the receipt, custody or disposal of, or the
+accounting for, public stores or who in fact receives, holds or
+disposes of public stores;
+"bank" in relation to the Consolidated Fund of a State, but not
+in relation to the Federal Consolidated Fund means any office or
+branch in Malaysia of a bank licensed under the provisions of the
+Banking and Financial Institutions Act 1989 [Act 372] or such
+other banks registered under the Co-operative Societies Act 1993
+[Act 502] or established under any written law as may be approved
+by the Minister;
+"Consolidated Fund" means the Federal Consolidated Fund and
+the Consolidated Funds of the States as constituted by Article
+97(1)
+and (2) of the Federal Constitution, and references to the
+Consolidated Revenue Account, Consolidated Loan Account and
+Consolidated
+Trust Account are references to the accounts of the
+particular Fund intended;
+"Enactment" means a law made by the Legislature of a State,
+including Sarawak;
+"financial authority" used in relation to the Federal
+Consolidated Fund means the Treasury and in relation to the
+Consolidated
+Fund of a State means the State financial authority
+and "State financial authority" means the principal officer, by
+whatever title
+called, in charge of the financial affairs of a State;
+"financial year" means a period of twelve months ending on the
+31st day
+of December in any year;
+"Legislature"in relation to the Federal Consolidated Fund
+means the Dewan Rakyat and in relation to the Consolidated Fund
+of a
+State means the Legislative Assembly of that State;
+"Menteri Besar or Chief Minister" in relation to the
+Consolidated Fund or estimates
+of a State means--
+(a) in the case of Sabah, the Minister responsible for
+finance in the State; and
+(b) in the case of the other States, the Menteri Besar or
+Chief Minister of the State and includes the State
+financial authority
+of the State, acting in accordance
+with any directions given to him by the Menteri Besar
+or Chief Minister;
+061e.fm Page 6 Friday, March 31, 2006 3:49 PM
+Financial Procedure 7
+"public moneys" means all revenue, loan, trust and other
+moneys and all bonds, debentures, and other securities whatsoever
+raised
+or received by or on account of the Federation or by or on
+account of a State but does not include Zakat, Fitrah, Baitul Mal
+or
+similar Islamic religious revenues;
+"public services of the Federation" means the services specified
+in paragraph (1)(a), (b), (c), (d), (f) and (h) of Article 132
+of the
+Federal Constitution;
+"public stores" means chattels the property of or in the
+possession or under the control of the Federation or of a State;
+"State
+accounting officer" means an accounting officer in the
+service of and engaged in handling the public moneys or public
+stores of
+a State.
+PART II
+ACCOUNTING OFFICERS
+Duties of accounting officers
+4. Every accounting officer shall be subject to this Act and shall
+perform such duties, keep such books and render such accounts
+as
+may be prescribed by or under this Act or by instructions issued
+by the Treasury in matters of financial and accounting procedure
+not inconsistent therewith:
+Provided that a State accounting officer shall in addition be
+subject to any instructions of the State financial authority not
+inconsistent with the foregoing.
+Bank accounts
+5. No accounting officer shall open any public or official
+account in any bank without the authority in writing of the
+Treasury
+in respect of public moneys of the Federation, or of the
+State financial authority in respect of public moneys of a State,
+and
+no accounting officer shall overdraw and no bank shall permit
+an overdraft on any public or official account unless the same be
+authorized by the Treasury, in respect of an account of public
+moneys of the Federation, or under the authority of a law made in
+accordance with Article 111 of the Federal Constitution.
+061e.fm Page 7 Friday, March 31, 2006 3:49 PM
+8 Laws of Malaysia ACT 61
+PART III
+CONTROL AND MANAGEMENT OF
+PUBLIC FINANCES
+Management and control of Consolidated Funds
+6. (1) The management of the Federal Consolidated Fund and
+the supervision, control and direction of all matters relating to the
+financial affairs of the Federation not specifically assigned to any
+other person by any other law shall, subject to the Federal
+Constitution and this Act, vest in the Minister.
+(2) The management of the Consolidated Fund of a State and
+the supervision, control and direction of all matters relating to the
+financial affairs of a State not specifically assigned to any other
+person by any other law shall, subject to the Federal Constitution,
+the Constitution of the State and this Act, vest in the State
+financial authority.
+Consolidated Fund accounts
+7. There shall be maintained by the financial authority in
+respect of the Consolidated Fund three separate accounts--
+(a) an account
+to be called the Consolidated Revenue
+Account in which account shall be kept of all moneys
+in the Fund other than such moneys as
+are mentioned
+in paragraphs (b) and (c);
+(b) an account to be called the Consolidated Loan
+Account in which account shall be kept of all moneys
+received by way of loan
+upon the public credit of the
+Federation or of the State, as the case may be; and
+(c) an account to be called the Consolidated
+Trust
+Account in which account shall be kept of all moneys
+received subject to a trust and to be applied in
+accordance with the terms of the trust.
+Custody and investment of moneys
+8. (1) Moneys paid to the Consolidated Fund may be kept with
+such bank or banks as the financial authority shall from time to
+time
+direct.
+061e.fm Page 8 Friday, March 31, 2006 3:49 PM
+Financial Procedure 9
+(2) All such moneys paid into a bank shall be deemed to be
+public moneys, the property of the Federation or of a State, as the
+case may be, lent by the Federation or the State to the bank.
+(3) (a) Moneys standing to the credit of the Federation with
+any
+bank, or otherwise held by the Federation, may be invested
+by the Minister--
+(i) on deposit in any bank;
+(ii) in any of the investments authorized by the
+Trustee Act 1949 [Act 208], for the investment of
+trust funds;
+(iii) in any joint fund maintained by the Crown Agents
+for such investment; or
+(iv) as otherwise authorized by federal law or by
+resolution of the Dewan Rakyat,
+and the investments together with any interest received therefrom
+shall form part of the Federal Consolidated Fund.
+(b) Moneys
+standing to the credit of a State with any bank,
+or otherwise held by the State, may be invested by the State
+financial authority--
+(i) on deposit in any bank;
+(ii) in securities issued or to be issued by the Federal
+Government;
+(iii) with the written authority of the Treasury, in any
+of the investments authorized by the Trustee Act
+1949, for the investment of trust funds, or in any
+joint fund maintained by the Crown Agents for
+such investment; or
+(iv) subject to the authority of State law or a resolution
+of the Legislature in any undertaking after
+consultation with the Treasury,
+and the investments, together with any interest received
+therefrom, shall form part of the Consolidated Fund of the State.
+(c)
+In subparagraph (b)(ii) "securities" includes stocks,
+funds, shares and bonds, and debentures and other instruments
+creating or
+evidencing a charge or lien on assets.
+061e.fm Page 9 Friday, March 31, 2006 3:49 PM
+10 Laws of Malaysia ACT 61
+(4) Interest received from the investment of any moneys in
+accordance with subsection (3) shall be accounted in the
+Consolidated
+Revenue Account except that where it is so
+provided in any law or under the terms of any trust the interest
+received from the investment
+of any moneys standing to the credit
+of any trust account in the Consolidated Trust Account shall be
+paid to the credit of that
+trust account.
+(5) The investments specified in the First Schedule shall be
+authorized for the purposes of subparagraph (3)(a)(iv).
+Trust accounts
+9. (1) The financial authority may establish such trust accounts
+as may be deemed necessary for the proper accounting of moneys
+in the Consolidated Trust Account.
+(2) The following moneys shall be paid to the credit of the
+trust account to which they relate:
+(a) all moneys appropriated for the purposes of any trust
+account;
+(b) all moneys received from the sale to any person or
+department of any articles purchased or produced, or
+for work paid for,
+with moneys standing to the credit
+of a trust account;
+(c) all moneys paid by any person for the purpose of any
+trust account; and
+(d) repayment of any loan or advance made from moneys
+standing to the credit of the trust account and where
+applicable any interest
+as provided in subsection 8(4).
+(3) Subject to any law and the terms of any trust, the financial
+authority shall in respect of
+any trust account or class of trust
+accounts specify the persons by whom and the manner in which
+the account or class of accounts
+shall be controlled.
+(4) Subject to any law and the terms of any trust, the financial
+authority may direct that any trust account
+shall be closed and
+thereupon after all liabilities of the account have been met the
+account shall be closed accordingly.
+061e.fm Page 10 Friday, March 31, 2006 3:49 PM
+Financial Procedure 11
+(5) Subject to any law and the terms of any trust, the financial
+authority may direct that any moneys standing to the credit of
+any
+trust account which are not required for the purposes of that
+account and the balance of moneys standing to the credit of a
+trust
+account closed under subsection (4) shall be paid as provided in
+subsection (6).
+(6) Where any moneys are required in accordance with
+subsection (5) to be paid the moneys shall, to such extent as they
+were appropriated
+out of moneys standing to the credit of the
+Consolidated Loan Account, be paid to the Consolidated Loan
+Account and the balance
+shall be paid to the Consolidated
+Revenue Account.
+Government trust funds
+10. (1) (a) There shall be paid from the Federal Consolidated
+Fund into each of the funds specified in the Second Schedule such
+sums as may from time to time be appropriated for the purposes of
+the fund by federal law.
+(b) There shall be paid from the Consolidated Fund of a
+State into the funds specified in subparagraphs (i) and (ii) such
+sums
+as may from time to time be appropriated for the purposes of
+those funds by State law--
+(i) in the case of Sabah and Sarawak, into any fund
+established and placed under the State financial
+authority by or in accordance with State law; and
+(ii) in the case of the other States, into each of the
+funds specified in the
+Third Schedule or in
+accordance with paragraph (4)(b).
+(2) The Minister in the case of a fund specified in the Second
+Schedule and the State financial authority in the case of a fund
+specified in the Third Schedule may apply the fund for the
+general purposes thereof or, subject to any written law, for such
+particular
+purposes as may from time to time be specified by
+resolution of the Legislature.
+(3) All moneys not applied in accordance with subsection (2)
+shall be paid by the Minister or the State financial authority, as
+the case may be, into the Consolidated Fund and shall be
+accounted in a separate account in the Consolidated Trust
+Account to
+be applied in the manner provided in subsection (2).
+061e.fm Page 11 Friday, March 31, 2006 3:49 PM
+12 Laws of Malaysia ACT 61
+(4) (a) The Dewan Rakyat may from time to time by
+resolution amend, delete from or add to the Second Schedule.
+(b) The Legislative
+Assembly of a State, other than Sabah
+or Sarawak, may from time to time by resolution specify funds for
+the purposes of this section
+and subparagraph (1)(b)(ii),
+subsections (2) and (3) shall apply to such funds as they apply to
+the funds specified in the Third
+Schedule.
+Contingencies Fund
+11. (1) In accordance with Article 103 of the Federal
+Constitution, a Contingencies Fund for federal purposes is hereby
+created
+consisting of moneys from time to time appropriated
+thereto.
+(2) All moneys appropriated to the Contingencies Fund shall
+be paid from the Federal Consolidated Fund into the
+Contingencies Fund
+and shall be applied by the Minister in
+accordance with subsection (3), and all moneys not so applied
+shall be paid into the Federal
+Consolidated Fund and shall be
+accounted in a separate account in the Consolidated Trust
+Account.
+(3) The Minister may, if he is satisfied that there has arisen an
+urgent and unforeseen need for expenditure for federal purposes
+for which no other provision exists and for which funds cannot be
+provided under subsection 15(4), make advances from the
+Contingencies
+Fund to meet that need.
+State Reserve Fund
+12. All moneys appropriated to the State Reserve Fund created
+by Clause (6) of Article 109 of the Federal Constitution shall be
+paid from the Federal Consolidated Fund into the State Reserve
+Fund and shall be applied by the Minister in accordance with that
+Article and all moneys not so applied shall be paid into the Federal
+Consolidated Fund and shall be accounted in a separate account
+in
+the Consolidated Trust Account.
+Payment of moneys
+13. (1) No moneys shall be withdrawn from the Consolidated
+Fund except in the manner provided by this section.
+061e.fm Page 12 Friday,
+March 31, 2006 3:49 PM
+Financial Procedure 13
+(2) The Minister or the Menteri Besar or Chief Minister, as
+the case may be, shall by warrant under his hand authorize the
+issue
+from the Consolidated Fund of such sums as may be
+required to meet the cost of any service charged upon the
+Consolidated Fund,
+and those sums shall be accounted in the
+Consolidated Revenue Account:
+Provided that this subsection shall not apply to sums issued
+from the Consolidated Fund to meet the cost of any service
+charged
+upon the Consolidated Fund--
+(a) authorized by law to be met from moneys accounted in
+the Consolidated Loan Account or the Consolidated
+Trust Account; and
+(b) withdrawn from the Consolidated Fund in accordance
+with subsection (4) or (5).
+(3) (a) (i) The Minister may by warrant under his hand
+authorize the issue from the Federal Consolidated Fund of sums
+to meet the
+expenditure appropriated by a Supply Act or
+authorized by law in accordance with Article 102 of the Federal
+Constitution and such
+sums shall be accounted in the
+Consolidated Revenue Account.
+(ii) The Menteri Besar or Chief Minister may by
+warrant under his hand authorize the issue from the Consolidated
+Fund of the State of sums to meet the expenditure appropriated
+by
+a Supply Enactment or authorized by law for part of a year before
+the passing of the Supply Enactment, and the sums shall be
+accounted in the Consolidated Revenue Account:
+Provided that in neither of the above cases shall the aggregate
+of the sums under each purpose of expenditure exceed the total
+sum so appropriated or authorized in respect of the purpose.
+(b) Notwithstanding any general or specific authority which
+may have
+been given by him, it shall be within the discretion of
+the Minister or the Menteri Besar or Chief Minister, as the case
+may be,
+to limit or suspend any expenditure so authorized.
+(4) The Minister or the Menteri Besar or Chief Minister, as the
+case may be,
+may by warrant under his hand authorize the issue
+from the Consolidated Fund of sums to be applied for the
+purposes for which funds
+shall have been appropriated by or in
+accordance with any written law authorizing the raising of a loan
+061e.fm Page 13 Friday,
+March 31, 2006 3:49 PM
+14 Laws of Malaysia ACT 61
+and those sums shall be accounted in the Consolidated Loan
+Account.
+(5) (a) No moneys accounted in the Consolidated Trust
+Account shall be withdrawn from the Consolidated Fund except
+for the purposes
+of a trust or under the authority of a law.
+(b) The financial authority or any person specified under
+subsection 9(3) in respect
+of any trust account or class of trust
+accounts may withdraw moneys accounted in the Consolidated
+Trust Account.
+(6) Every warrant issued under this section for the service of
+any financial year shall lapse and cease to have any effect at the
+close of one calendar month following the financial year; and no
+payment in respect of any service authorized under the warrant
+shall be made during that month except in respect of work
+performed, goods received, services rendered or any other
+contractual
+arrangement made prior to the end of that year and
+properly chargeable to the accounts of that year.
+Guarantees
+14. (1) No guarantee involving a financial liability shall be
+binding upon the Federal Government, unless it is entered into
+with
+the written authority of the Treasury or in accordance with
+federal law.
+(2) No guarantee involving a financial liability shall be
+binding upon a State unless it is entered into under a State law
+passed
+in accordance with Clause (3) of Article 111 of the Federal
+Constitution and such guarantee shall not be given except with
+the
+approval of the Federal Government and subject to such
+conditions as may be specified by it.
+Refunds, etc., charged on Consolidated Funds
+14A. Where any law provides for the payment of any refund,
+rebate or drawback in respect of any money paid into the
+Consolidated
+Fund under the authority of any law, and accounted
+in the Consolidated Revenue Account, the amount of the refund,
+rebate or drawback
+shall be charged on the Consolidated Fund.
+061e.fm Page 14 Friday, March 31, 2006 3:49 PM
+Financial Procedure 15
+Estimates and virement
+15. (1) The estimates of expenditure laid before the Legislature
+in accordance with the Federal Constitution or the Constitution
+of
+any State in respect of any financial year shall show such
+subdivisions of expenditure as may be proposed for each purpose.
+(2) (a) For every purpose of expenditure involving the
+payment of personal emoluments the estimates shall show such
+number of
+public offices as are remunerated at monthly rates of
+salary as may be authorized for the purpose and the total amount
+of personal
+emoluments, excluding emoluments for public offices
+specified in paragraph (b) hereof, provided therefor.
+(b) The Treasury or the
+State financial authority with the
+prior approval of the Treasury, may, if it considers it essential and
+expedient to do so for
+the proper performance of a service related
+to the same purpose as provided for in paragraph (a) hereof but
+paid for out of moneys
+accounted for in a trust account, specify by
+warrant any of the public offices authorized under paragraph (a)
+to be employed for
+the purpose of that service and in such a case
+the personal emoluments of such offices and all incidental
+expenses thereto may
+be paid from the appropriate provision
+authorized for such service and accounted for in the same trust
+account.
+(3) (a) Except in accordance with federal law, no addition to
+the public offices provided under any purpose of the Federal
+estimates
+may be made nor may the appropriation of the
+established salaries under any purpose be altered either as regards
+the number of
+appointments or the rates of personal emoluments,
+unless the approval of the Treasury shall first have been obtained.
+(b) Subject
+to Article 112 of the Federal Constitution, no
+addition to the public offices provided under any purpose of the
+State estimates
+may be made nor may the appropriation of the
+established salaries under any purpose be altered either as regards
+the number of
+appointments or the rates of personal emoluments,
+unless the approval of the Menteri Besar or Chief Minister shall
+first have been
+obtained.
+(4) If the exigencies of the public service render it necessary
+to alter the proportions assigned to the subdivisions under a
+purpose
+of expenditure shown in the estimates referred to in
+subsection (1) or to create a new subdivision, the Treasury or the
+061e.fm
+Page 15 Friday, March 31, 2006 3:49 PM
+16 Laws of Malaysia ACT 61
+Menteri Besar or Chief Minister, as the case may be, may direct
+that there shall be applied in aid of any subdivision which may
+be
+deficient or any new subdivision a further sum out of any surplus
+arising on any other subdivision of the same purpose provided
+that the amount appropriated under any purpose of expenditure by
+a Supply Act or Enactment is not thereby exceeded.
+Controlling
+officers
+15A. (1) The Minister or the Menteri Besar or Chief Minister, as
+the case may be, may appoint, in respect of each purpose of
+expenditure
+provided for any financial year in the estimates, a
+controlling officer to control, subject to any directions given by
+the financial
+authority, the expenditure authorized under that
+purpose and to be the chief accounting officer in respect of all
+public moneys
+collected, received or disbursed and all public
+stores received, held or disposed of by or on account of the
+department or service
+for which the purpose is provided.
+(2) Every controlling officer shall, subject to any written law
+and of any instructions issued
+by the financial authority under
+section 4, prescribe the extent to which the powers and duties
+conferred or imposed upon him may
+be exercised or performed on
+his behalf by any accounting officer under his control, and give
+such directions as may be necessary
+to secure the proper exercise
+or performance of such powers and duties.
+(3) Every controlling officer shall, if so required by the
+Minister or the State financial authority, as the case may be, to
+the
+extent that he is responsible for the control of the public
+moneys to which any part of the statements referred to in section
+16
+relates, certify under his hand, subject to such explanation or
+qualification as he may think necessary, the correctness of that
+part of the statement and the propriety of the charges shown
+therein.
+(4) Every controlling officer shall report in writing to the
+appropriate Service Commission and financial authority every
+event
+of possible surcharge under paragraph 18(a), (b), (c), (d) or
+(e) which arises or occurs under his control.
+(5) The officer appointed under subsection (1) to be
+controlling officer in respect of each purpose of expenditure
+provided for
+any financial year shall be designated by the title of
+his office in the estimates of expenditure in respect of that year
+061e.fm
+Page 16 Friday, March 31, 2006 3:49 PM
+Financial Procedure 17
+laid before the Legislature pursuant to Article 99 of the Federal
+Constitution or pursuant to the Constitution of the State, and
+such
+designation in the estimates shall constitute sufficient notification
+of the appointment.
+Yearly statement of accounts
+16. (1) The financial authority shall, for the purposes of section
+9 of the Audit Act 1957 [Act 62], as soon as practicable after
+the
+end of every financial year prepare in respect of that year--
+(a) a full and particular statement of the Consolidated
+Revenue
+Account showing under the purposes and
+subdivisions of the estimates laid before the
+Legislature in respect of that year the amounts
+estimated to be received and spent in that year and the
+amounts actually received and spent together with
+amounts actually received
+and spent under any
+purposes and subdivisions not included in the
+estimates so laid;
+(b) a full and particular statement of the Consolidated
+Loan Account showing receipts and expenditure of
+loan moneys;
+(c) a statement of receipts and expenditure of moneys
+accounted in the Consolidated Trust Account;
+(d) a statement of the accounts of any fund created by the
+Federal Constitution or by or under section 10 and not
+accounted in
+the Consolidated Trust Account;
+(e) so far as is practicable, a statement of the assets and
+liabilities of the Federation or the State at the end of
+the financial
+year, the manner in which the assets are
+invested or held, and the general purposes in respect
+of which the liabilities are outstanding;
+and
+(f) such other statements as the financial authority may
+think fit.
+(2) As soon as possible after the Auditor General has caused
+the statements referred to in subsection (1) to be examined and
+audited
+they shall be laid before the Legislature.
+061e.fm Page 17 Friday, March 31, 2006 3:49 PM
+18 Laws of Malaysia ACT 61
+Write-off
+17. The Minister in respect of public moneys, revenue and stores
+of the Federation and the Menteri Besar or Chief Minister in
+respect
+of public moneys, revenue and stores of the State shall
+have power--
+(a) to write off losses or deficiencies of public moneys
+and the value of lost, deficient, condemned,
+unserviceable or obsolete stores; and
+(b) to abandon irrecoverable amounts of revenue, debts
+and overpayments.
+Surcharge
+18. If it appears to the appropriate Service Commission, after
+consultation with the financial authority, that any person who is
+or
+was in the employment of the Federal Government or the
+Government of a State--
+(a) has failed to collect any moneys owing to the Federal
+Government or the Government of the State for the
+collection of which
+he is or was responsible;
+(b) is or was responsible for any improper payment of
+public moneys of the Federal Government or the
+Government of the State or for any payment of public
+moneys which is not duly vouched;
+(c) is or was responsible for any deficiency in, or for the
+destruction of, any public moneys, stamps, securities,
+stores, or other
+property of the Federal Government or
+the Government of the State;
+(d) being or having been an accounting officer, fails or
+has failed to keep proper accounts or records; or
+(e) has failed to make
+any payment, or is or was
+responsible for any delay in the payment, of public
+moneys of the Federal Government or the Government
+of the State to any person
+to whom such payment is
+due under any law or under any contract, agreement or
+arrangement entered into between that person and
+the
+Federal Government or the Government of the State,
+061e.fm Page 18 Friday, March 31, 2006 3:49 PM
+Financial Procedure 19
+and if a satisfactory explanation is not, within a period specified
+by the Commission, furnished to the Commission with regard to
+the failure to collect, improper payment, payment not duly
+vouched, deficiency or destruction, or failure to keep proper
+accounts
+or records, or failure to make payment, or delay in
+making payment, the Commission may surcharge against the said
+person a sum
+not exceeding the amount of any such amount not
+collected, such payment, deficiency, or loss or the value of the
+property destroyed,
+as the case may be; and with regard to the
+failure to keep proper accounts or records, or the failure to make
+payment, or the delay
+in making payment, the Commission may
+surcharge against the said person such sum as the Commission
+may think fit.
+Notification of surcharge
+19. The Chairman of the appropriate Service Commission shall
+cause the head of the department of the person surcharged to be
+notified
+of any surcharge made under section 18 and the head of
+department shall thereupon notify the person surcharged.
+Withdrawal of surcharge
+20. The appropriate Service Commission may at any time
+withdraw any surcharge in respect of which a satisfactory
+explanation has
+been received or if it otherwise appears that no
+surcharge should have been made, and the Chairman of the
+Commission shall at once
+cause the head of department to be
+notified of such withdrawal.
+Recovery of surcharge
+21. The amount of any surcharge made under section 18 and not
+withdrawn under section 20 shall be a debt due to the Government
+concerned
+from the person against whom the surcharge is made
+and may be sued for and recovered in any court at the suit of that
+Government
+and may also be recovered by deduction--
+(a) from the salary of the person surcharged if the
+Minister or the Menteri Besar or Chief
+Minister so
+directs; or
+(b) from the pension of the person surcharged if the
+Minister so directs,
+061e.fm Page 19 Friday, March 31, 2006 3:49 PM
+20 Laws of Malaysia ACT 61
+by equal monthly instalments not exceeding one-fourth of the total
+monthly salary or pension, as the case may be, of the officer.
+PART IV
+STATE FINANCIAL AND ACCOUNTING PROCEDURE
+22�35. (Consolidated with Part III).
+PART V
+REGULATIONS
+Regulations
+36. (1) The Yang di-Pertuan Agong may, after consulting the
+National Finance Council, make regulations to be called Financial
+Regulations
+not inconsistent with this Act for the purposes of this
+Act and without prejudice to the generality of this provision the
+regulations
+may provide for--
+(a) the collection, receipt, custody, issue, expenditure,
+due accounting for, care and management of all public
+moneys and the
+guidance of all persons concerned
+therein;
+(b) the more effectual record, examination, inspection and
+departmental check of all receipts and expenditure and
+the keeping of
+all necessary books and accounts;
+(c) the forms for all books and documents whatever
+required under this Act;
+(d) the purchase, safe custody, issue, sale or other
+disposal or writing off of stores and other property of
+the Federation and
+of the States, and the proper
+accounting for, and stocktaking of, such stores and
+property;
+(e) the preparation of estimates of revenue and
+expenditure in the Federation and in the States;
+(f) the authorization of rates of payment of public funds
+for specific purposes where such rates of payment are
+not provided by
+law;
+061e.fm Page 20 Friday, March 31, 2006 3:49 PM
+Financial Procedure 21
+(g) the making of advances to public officers and other
+persons and the rates and limits of such advances and
+the rates of interest
+thereon.
+(2) Regulations made under this section shall when made have
+full force and effect and shall be laid before the Dewan Rakyat as
+soon as possible after they are made.
+*FIRST SCHEDULE
+[Subsection 8(5)]
+INVESTMENTS AUTHORIZED FOR PURPOSES OF FEDERAL
+CONSOLIDATED FUND
+Aerospace Industries (M) Sdn. Bhd. (AIM), Ordinary Shares.
+Edaran Otomobil Nasional Bhd. (EON), Ordinary Shares.
+Malaysia Rubber
+Development Corporation Bhd. (MARDEC), Ordinary Shares.
+Perbadanan Nasional Bhd. (PERNAS), Ordinary Shares.
+HICOM Bhd. (HICOM),
+Ordinary Shares.
+Perusahaan Otomobil Nasional Bhd. (PROTON), Ordinary Shares.
+SME Ordinance Sdn. Bhd. (SME), Ordinary Shares.
+Bank Bumiputra (M) Bhd. (BBMB), Ordinary Shares.
+Bank Industri (M) Bhd. (Bank Industri), Ordinary Shares.
+Bank Pembangunan (M) Bhd. (BPMB), Ordinary Shares.
+Petroliam Nasional
+Bhd. (PETRONAS), Ordinary Shares.
+Syarikat Perumahan Pegawai-pegawai Kerajaan Sdn. Bhd. (SPPK), Ordinary Shares.
+STLR Sdn. Bhd.
+(STLR), Ordinary Shares.
+Composite Technology Research (M) Sdn. Bhd. (CTRM), Ordinary Shares.
+Naval Dockyard Sdn. Bhd. (Naval Dockyard), Ordinary Shares.
+*NOTE--This Schedule only includes amendments up to 1999.
+061e.fm Page 21 Friday, March 31, 2006 3:49 PM
+22 Laws of Malaysia ACT 61
+Pos Malaysia Bhd. (PMB), Ordinary Shares.
+Malaysia Technology Development Corporation Sdn. Bhd. (MTDC),
+Ordinary Shares.
+Institut Jantung Negara Sdn. Bhd. (IJN), Ordinary Shares.
+Malaysia Airport Bhd. (MAB), Ordinary Shares.
+Keretapi Tanah Melayu Bhd. (KTM), Ordinary Shares.
+Syarikat Percetakan Nasional Sdn. Bhd. (SPN), Ordinary Shares.
+Johor Port Sdn.
+Bhd. (Johor Port), Ordinary Shares.
+Kelang Port Management Sdn. Bhd. (KPM), Preference Share.
+Sistem Penerbangan (M) Bhd. (MAS),
+Preference Share.
+Malaysian International Shipping Corporation Bhd. (MISC), Ordinary Shares
++ Preference Share.
+Perwaja Terengganu Sdn. Bhd. (PTSB), Ordinary Shares + Preference Share.
+Bank Islam (M) Sdn. Bhd. (BIMB), Ordinary Shares + Preference
+Share.
+Syarikat Telekom (M) Bhd. (STM), Ordinary Shares + Preference Share.
+Tenaga Nasional Bhd. (TNB), Ordinary Shares + Preference
+Share.
+*SECOND SCHEDULE
+[Paragraph 10(1)(a)]
+FEDERAL GOVERNMENT TRUST FUNDS
+Association of South-East Asia Fund.
+Conveyance Advance Fund.
+Co-operative Credit Fund.
+Development Fund.
+Housing Loans Fund.
+Industrial Technical Assistance for small Medium Industries Trust Fund.
+*NOTE--This Schedule only includes amendments up to 2003.
+061e.fm Page 22 Friday, March 31, 2006 3:49 PM
+Financial Procedure 23
+Inter-administration Current Account.
+Kumpulan Wang Amanah Kerusi Pengajian Melayu di Universiti Leiden,
+Netherlands
+Kumpulan Wang Amanah Kontraktor-kontraktor.
+Kumpulan Wang Amanah Pembangunan Ekonomi Belia.
+Kumpulan Wang Amanah Pembiayaan Komputer Anggota Perkhidmatan Awam.
+Kumpulan Wang Amanah Pinjaman Perumahan kepada Golongan Berpendapatan
+Rendah.
+Kumpulan Wang Pendahuluan untuk Negeri.
+Kumpulan Wang Amanah Tabung Pelarasan Industri.
+Kumpulan Wang Skim Biasiswa Sukan Persekutuan, Kementerian Belia dan Sukan.
+Kumpulan Wang Luar Jangka.
+Kumpulan Wang Jabatan Penerbangan Awam.
+Kumpulan Wang Jabatan Perkhidmatan Pos.
+Kumpulan Wang Cadangan Untuk Negeri.
+Kumpulan Wang Majlis Penyelidikan dan Kemajuan Sains.
+Kumpulan Wang Kebajikan dan Kemudahan Bagi Penuntut Di Luar Negeri.
+Kumpulan
+Wang Kredit Pertanian Jangka Pendek.
+Kumpulan Wang Perpustakaan.
+Loans to Statutory and other Bodies Fund.
+Miscellaneous Advances Account.
+National Trust Fund.
+Overseas Malayans' Trust Fund.
+Pensions Trust Fund.
+Personal Advances (Public Officers) Fund.
+Royal Loans Trust Fund.
+Sarawak Refrigerator Advance Fund.
+Self-accounting Departments Clearance Account.
+Sinking Funds Account
+061e.fm Page 23 Friday, March 31, 2006 3:49 PM
+24 Laws of Malaysia ACT 61
+Social and Welfare Services Trust Fund.
+Sodium Arsenite Livestock Compensation Trust Account.
+Supplies Department Trading Account.
+Tabung Amanah Lembaga Peperiksaan.
+Tabung Amanah Taman Laut dan Rezab Laut.
+Tabung Kumpulan Wang Amanah Pustaka Peringatan P. Ramlee.
+Tabung Modal Pusingan Jabatan Pembangunan Koperasi.
+Tabung Pusingan Pinjaman
+Pelajaran Persekutuan.
+Telecommunication Fund.
+Telecommunications Renewals Fund.
+The Majlis Kebangsaan bagi Hal Ehwal Agama Islam (Malaysia Barat) Fund.
+Tin Buffer Stock Contributors Advance.
+Treasury Main Clearance Account Fund.
+Tunku Zaidah binti Tunku Zakaria Trust Fund.
+Unallocated Stores and Works Account.
+*THIRD SCHEDULE
+[Paragraph 10(1)(b)]
+STATE GOVERNMENT TRUST FUNDS
+Agricultural Short-term Credit Account.
+Contingencies Fund.
+Conveyance Advance Fund.
+Development Fund.
+Housing Loans Fund.
+Inter-administration Current Account.
+*NOTE--This Schedule only includes amendments up to 1999.
+061e.fm Page 24 Friday, March 31, 2006 3:49 PM
+Financial Procedure 25
+Loans to Statutory and other Bodies Fund.
+Personal Advances (Public Officers) Fund.
+Self-accounting Departments' Clearance Account.
+Sinking Funds Account.
+Treasury Main Clearance Account Fund.
+Unallocated Stores and Works Account.
+061e.fm Page 25 Friday, March 31, 2006 3:49 PM
+26
+LAWS OF MALAYSIA
+Act 61
+FINANCIAL PROCEDURE ACT 1957
+LIST OF AMENDMENTS
+Amending law Short title In force from
+L.N. 123/1958 Resolution under section 10(4) 01-05-1958
+L.N. 386/1958 Resolution under section 10(4) 25-12-1958
+Act 36/1961 Financial
+Procedure (Amendment) Act
+1961
+01-01-1961
+L.N. 260/1962 Resolution under section 10(4) 11-10-1962
+L.N. 183/1963 Resolution under section 10(4) 25-07-1963
+L.N. 348/1963 Modification
+of Laws (Financial
+Procedure and Audit) (Extension) Order
+1963
+16-09-1963
+L.N. 124/1964 Resolution under section 10(4) 23-04-1964
+Act 28/1964 Financial Procedure (Amendment) Act
+1964
+30-07-1964
+L.N. 331/1964 Resolution under section 10(4) 15-10-1964
+L.N. 36/1965 Resolution under section 10(4) 04-02-1965
+L.N. 266/1965 Modification
+of Laws (Financial
+Procedure and Audit) (Extension)
+(Amendment) Order 1965
+01-08-1964
+Act 70/1966 Development Funds Act 1966 01-01-1967
+(s. 11)
+Ord. 17/1970
+(P.U.(A)9/1970)
+Emergency (Essential Powers)
+Ordinance 1970
+01-01-1970
+P.U.(A)359/1970 Financial Procedure (Amendment of the
+Second Schedule) Order 1970
+02-10-1970
+Act A39 Financial Procedure (Amendment) Act
+1971
+01-01-1970
+061e.fm Page 26 Friday, March 31, 2006 3:49 PM
+Financial Procedure 27
+Act A115 Telecommunications (Amendment)
+1972
+04-04-1972
+P.U.(A)153/1972 Revision of Laws (Financial Procedure)
+Order 1972
+02-06-1972
+Act A151 Financial Procedure (Amendment) Act
+1972
+13-10-1972
+Act A259 Financial Procedure And Development
+Funds (Amendment) Act 1974
+16-08-1974
+Act A277 Financial Procedure and Development
+Funds (Amendment) Act 1975
+31-01-1975
+P.U.(A)279/1975 Essential (Rukun Tetangga) Regulations
+1975
+12-09-1975
+Act A354 Constitution (Amendment) Act 1976 27-08-1976
+Act A398 Financial Procedure (Amendment) Act
+1977
+10-06-1977
+Act A458 Financial Procedure (Amendment) Act
+1979
+10-08-1979
+P.U.(B)269/1984 Resolution under section 10(4) 22-06-1984
+P.U.(B)20/1985 Resolution under section 10(4) 25-01-1985
+P.U.(B)580/1985
+Resolution under section 10(4) 29-11-1985
+P.U.(B)308/1987 Resolution under section 10(4) 12-06-1987
+P.U.(B)438/1987 Resolution
+under section 10(4) 01-01-1987
+P.U.(B)659/1987 Resolution under section 10(4) 11-12-1987
+P.U.(B)660/1987 Resolution under section
+10(4) 11-12-1987
+P.U.(B)661/1987 Resolution under section 10(4) 11-12-1987
+P.U.(B)687/1987 Resolution under section 10(4) 25-12-1987
+P.U.(B)688/1987 Resolution under section 10(4) 25-12-1987
+P.U.(B)689/1987 Resolution under section 10(4) 25-12-1987
+P.U.(B)690/1987
+Resolution under section 10(4) 25-12-1987
+P.U.(B)691/1987 Resolution under section 10(4) 25-12-1987
+P.U.(B)692/1987 Resolution
+under section 10(4) 25-12-1987
+Act 339 National Trust Fund Act 1988 19-02-1988
+Amending law Short title In force from
+061e.fm Page 27 Friday, March 31, 2006 3:49 PM
+28 Laws of Malaysia ACT 61
+P.U.(B)384/1990 Resolution under section 10(4) 20-07-1990
+P.U.(B)418/1990 Resolution under section 10(4) 03-08-1990
+P.U.(B)147/1991
+Resolution under section 10(4) 08-03-1991
+P.U.(B)279/1991 Resolution under section 10(4) 01-06-1991
+P.U.(B)390/1991 Resolution
+under section 10(4) 02-08-1991
+P.U.(B)522/1993 Resolution under section 10(4) 19-11-1993
+P.U.(A)378/2000 Revision of Laws (Rectification
+of
+Financial Prosedure Act 1957) Order
+2000
+31-08-1999
+P.U.(A)75/2003 Financial Procedure Act 1957 14-03-2003
+Amending law Short title In force from
+061e.fm Page 28 Friday, March 31, 2006 3:49 PM
+29
+LAWS OF MALAYSIA
+Act 61
+FINANCIAL PROCEDURE ACT 1957
+LIST OF SECTIONS AMENDED
+Section Amending authority In force from
+3 Act 36/1961 01-01-1961
+Act A151 13-10-1972
+Act A398 10-06-1977
+5 Act A398 10-06-1977
+8 Act A151 13-10-1972
+9 Act A398 10-06-1977
+13 Act 36/1961 01-01-1961
+Act A259 16-08-1974
+Act A277 31-01-1975
+Act A398 10-06-1977
+14 Act A398 10-06-1977
+14A Act 36/1961 01-01-1961
+15 Act 36/1961 01-01-1961
+Act 28/1964 30-07-1964
+Act A39 01-01-1970
+Act A398 10-06-1977
+15A Act 36/1961 01-01-1961
+Act A398 10-06-1977
+Act A458 10-08-1979
+061e.fm Page 29 Friday, March 31, 2006 3:49 PM
+30 Laws of Malaysia ACT 61
+16 Act 36/1961 01-01-1961
+Act A398 10-06-1977
+18 Act 36/1961 01-01-1961
+Act A398 10-06-1977
+Act A458 10-08-1979
+22 Act 36/1961 01-01-1961
+24 Act 36/1961 01-01-1961
+26 Act 36/1961 01-01-1961
+27 Act 36/1961 01-01-1961
+29 Act 36/1961 01-01-1961
+Act 28/1964 30-07-1964
+Act A39 01-01-1970
+29A Act 36/1961 01-01-1961
+30 Act 36/1961 01-01-1961
+32 Act 36/1961 01-01-1961
+Second Schedule L.N. 123/1958 01-05-1958
+L.N. 386/1958 25-12-1958
+Act 36/1961 01-01-1961
+L.N. 260/1962 11-10-1962
+L.N. 183/1963 25-07-1963
+L.N. 124/1964 23-04-1964
+L.N. 331/1964 15-10-1964
+L.N. 36/1965 04-02-1965
+P.U.(A)359/1970 12-10-1970
+P.U.(B)269/1984 22-06-1984
+P.U.(B)20/1985 25-01-1985
+Section Amending authority In force from
+061e.fm Page 30 Friday, March 31, 2006 3:49 PM
+Financial Procedure 31
+P.U.(B)580/1985 29-11-1985
+P.U.(B)308/1987 12-06-1987
+P.U.(B)438/1987 01-01-1987
+P.U.(B)659/1987 11-12-1987
+P.U.(B)660/1987 11-12-1987
+P.U.(B)661/1987 11-12-1987
+P.U.(B)687/1987 25-12-1987
+P.U.(B)688/1987 25-12-1987
+P.U.(B)689/1987 25-12-1987
+P.U.(B)690/1987 25-12-1987
+P.U.(B)691/1987 25-12-1987
+P.U.(B)692/1987 25-12-1987
+P.U.(B)384/1990 20-07-1990
+P.U.(B)418/1990 03-08-1990
+P.U.(B)147/1991 08-03-1991
+P.U.(B)279/1991 01-06-1991
+P.U.(B)390/1991 02-08-1991
+P.U.(B)522/1993 19-11-1993
+P.U.(A)378/2000 31-08-1999
+P.U.(A)75/2003 14-03-2003
+Third Schedule Act 70/1966 01-01-1967
+(s.11)
+Section Amending authority In force from
+061e.fm Page 31 Friday, March 31, 2006 3:49 PM
+CommonLII:
+Copyright Policy
+|
+Disclaimers
+|
+Privacy Policy
+|
+Feedback
+URL: http://www.commonlii.org/my/legis/consol_act/fpa19571972252
+(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1a888a539e13e7b',t:'MTc4Mzk0ODI4OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();

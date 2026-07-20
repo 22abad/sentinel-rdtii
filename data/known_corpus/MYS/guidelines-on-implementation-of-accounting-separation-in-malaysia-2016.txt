@@ -1,0 +1,5703 @@
+Malaysian Communications and Multimedia Commission 
+VERSION 1: REVISION 1 
+GUIDELINES ON IMPLEMENTATION OF                   
+ACCOUNTING SEPARATION IN MALAYSIA 
+1 November 2016 
+CONTENTS 
+LIST OF TABLES 
+VIII
+LIST OF FIGURES 
+IX
+1.
+INTRODUCTION 
+1
+1.1
+Outcome of Public Inquiry Process 
+1
+2.
+SCOPE AND COVERAGE OF ACCOUNTING SEPARATION 
+4
+2.1.
+Scope of AS 
+4
+2.2.
+Fixed Network Services 
+5
+2.3.
+Mobile Network Services 
+8
+3.
+ACCOUNTING SEPARATION PRINCIPLES AND POLICIES 
+11
+3.1.
+Overview and General Principles 
+11
+4.
+REVENUE RECOGNITION AND ATTRIBUTION 
+12
+4.1.
+Overview and general principles 
+12
+5.
+COST ATTRIBUTION 
+13
+5.1.
+Overview of Cost Attribution 
+13
+5.2.
+Cost Causation and Cost Drivers 
+14
+5.3.
+Cost Categories used by Operators in Malaysia 
+16
+5.4.
+Steps Required for Cost Attribution 
+17
+5.4.1. Direct costs
+17 
+5.4.2. Directly attributable costs
+17 
+5.4.3. Indirectly attributable costs
+18 
+5.4.4. Unattributable costs
+19 
+5.5.
+Developing the Cost Attribution Process and Systems 
+19
+5.6.
+Cost Categories and Cost and Capital Employed Attribution for 
+Fixed Operators 
+20
+5.7.
+Cost Categories and Cost and Capital Employed Attribution for 
+Mobile Operators 
+20
+6.
+TRANSFER CHARGES 
+21
+6.1.
+Transfers at Market Prices 
+21
+6.2.
+Transfers at Cost plus Cost of Capital 
+22
+6.3.
+Cost of Capital 
+22
+6.4.
+Demonstration of Transfer Charges 
+24
+6.5.
+Fixed Network 
+24
+6.6.
+Mobile Networks 
+25
+7.
+FORMAT OF REGULATORY FINANCIAL STATEMENTS 
+26
+7.1.
+Overview 
+26
+7.2.
+Requirements for Large Operators 
+26
+7.3.
+Requirements for Small Operators 
+26
+8.
+RECONCILIATION 
+28
+8.1.
+Overview 
+28
+8.2.
+Reconciliation Statements for Large Operators 
+28
+8.3.
+Reconciliation Statements Small Operators 
+29
+9.
+CURRENT COST ACCOUNTING METHODOLOGY 
+31
+9.1.
+Overview of Asset Valuation Methods 
+31
+10.
+AUDIT AND DOCUMENTATION REQUIREMENTS 
+32
+10.1. Overview of audit opinion for large operators 
+32
+10.2. Audit scope 
+33
+10.3. Documentation 
+36
+10.4. Maintenance of accounting records and responsibilities 
+37
+11.
+IMPLEMENTATION PLAN 
+39
+11.1. Implementation Timetable 
+39
+APPENDIX A: FORMAT OF ACCOUNTS FOR SMALL OPERATORS 
+41
+A.1  
+Small Operator Wholesale Income Statement 
+41
+A.2  
+Small Operator Retail Income Statement 
+42
+A.3  
+Small Operator Other Business Income Statement 
+43
+A.4  
+Small Operator Net Asset Statement 
+44 
+APPENDIX B: FORMAT OF ACCOUNTS FOR LARGE OPERATORS 
+46
+B.1  
+Fixed Operators 
+46
+B.1.1 Wholesale Service Income Statements
+46 
+B.1.2 Consolidated Wholesale Income Statement
+48 
+B.1.3. Retail Service Income Statements
+51 
+B.1.4 Consolidated Retail Income Statement
+52 
+B.1.5 Wholesale Mean Capital Employed by Service
+54 
+B.1.6 Retail Mean Capital Employed by Service
+54 
+B.1.7 Consolidated Mean Capital Employed
+59 
+B.1.8 Other Business Income Statement Format
+60 
+B.1.9 Network Unit Cost by Service
+61 
+B.1.10 Statement of Costs on a Current Cost Basis: Network   Activity 
+Statement
+64 
+B.2  
+Mobile Network 
+65
+B.2.1 Wholesale Service Income Statements
+65 
+B.2.2. Retail Service Income Statements
+67 
+B.2.3 Other Business Income Statement Format
+69 
+B.2.4 Consolidated Income Statement
+70 
+B.2.5 Mean Capital Employed by Service                                       
+(Wholesale and Retail)
+73 
+B.2.6 Consolidated Mean Capital Employed
+74 
+B.2.7 Network Unit Cost by Service
+75 
+B.2.8 Statement of Costs on a Current Cost Basis: Network Activity 
+Statement
+78 
+APPENDIX C: CALCULATION OF CURRENT COSTS 
+79
+C.1  
+Historical Costs 
+79
+C.1.1 Example of historical cost valuation
+79 
+C.1.2 Assets to be valued using historical costs
+79 
+C.2  
+Absolute valuation 
+79
+C.2.1. Example of absolute valuation using existing assets
+80 
+C.2.2  Assets to be valued with absolute valuation using existing      
+assets
+81 
+C.3  
+Modern Equivalent Asset valuation 
+82
+C.3.1 Examples of MEA valuation 
+82 
+C.3.1.1 Example 1 – Increased capacity 
+      83 
+           C.3.1.2 Example 2 – Reduced operating costs 
+85 
+C.4  
+Assets to be valued using MEAs 
+86 
+C.5  
+Price Indices 
+87
+C.5.1 Example of Price Index Valuation 
+88 
+C.5.2 Assets to be valued using price indices 
+88 
+C.6  
+Adjustments to Depreciation 
+89 
+C.7  
+Holding gains and losses 
+89 
+C.8  
+Supplementary depreciation 
+89 
+C.9  
+Backlog depreciation 
+91 
+APPENDIX D: COST ATTRIBUTION GUIDELINES 
+93
+D.1
+Fixed Network: Methods of Attributing Operating Costs 
+93
+D.2
+Fixed Network: Methods of Attributing Capital Employed 
+96
+D.3
+Mobile Network: Methods of Attributing Operating Costs 
+101
+D.4
+Mobile Network: Methods of Attributing Capital Employed 
+104
+APPENDIX E: SIGNIFICANT ACCOUNTING POLICIES 
+107
+E.1 
+Fixed Network 
+107
+E.1.1. Fixed Assets 
+107 
+E.1.2 Financial Assets 
+108 
+E.1.3  Grants and Universal Service Provision (USP) Funding 
+108 
+E.1.4  Revenue 
+109 
+E.2 
+Mobile Networks 
+109
+E.2.1  Basis of consolidation 
+109 
+E.2.2  Fixed Assets 
+110 
+E.2.3  Intangibles 
+111 
+E.2.4  Current Assets 
+111 
+E.2.5  Grants and USP Funding 
+111 
+E.3 
+Common Accounting Policies 
+112
+E.3.1  Borrowing Costs 
+112 
+E.3.2  Provisions for Liabilities and Charges. 
+112 
+E.3.3  Significant Related Party Transactions 
+112 
+E.3.4  Financial Instruments 
+112 
+APPENDIX F: ACCOUNTING SEPARATION - OPERATOR DOCUMENTATION 113
+F.1 
+Illustrative Template 
+113 
+F.2
+Documentation should follow the AS Guidelines structure 
+114
+F.3
+Accounting Separation Principles and Policies 
+115
+F.4
+Revenue recognition and attribution 
+115
+F.5
+Cost Attribution 
+116
+F.5.1 Example Cost Attribution Documentation 
+116
+F.6
+Transfer Charges 
+117
+F.7
+Reconciliation 
+118
+F.8
+Scope and Development of Documentation 
+118 
+ABBREVIATIONS AND GLOSSARY 
+Term 
+Definition 
+ABC 
+Activity Based Costing 
+AS 
+Accounting Separation 
+Attribution 
+The process of attributing direct and directly attributable 
+costs to services or products 
+Apportionment 
+The allocation of unattributable costs in a proportional 
+manner 
+BU 
+Bottom-up 
+CCA 
+Current Cost Accounting 
+CMA 
+Communication and Multimedia Act 1998 
+DSL 
+Digital Subscriber Line  
+ERP 
+Enterprise Resource Planning 
+FAR 
+Fixed Asset Register 
+FAC 
+Fully Allocated Cost 
+FCM 
+Financial Capital Maintenance 
+GL 
+General Ledger 
+HCA 
+Historic Cost Accounting 
+HSBB 
+High Speed Broadband 
+HR 
+Human Resources 
+IBP 
+International Best Practise 
+LRIC 
+Long Run Incremental Cost 
+MASB 
+Malaysian Accounting Standards Board 
+MCE 
+Mean Capital Employed 
+MCMCA 
+Malaysian Communications and Multimedia Commission 
+Act 1998 
+MEA 
+Modern Equivalent Asset 
+MFRS 
+Malaysian Financial Reporting Standard 
+MIA 
+Malaysian Institute of Accountants 
+MVNO 
+Mobile Virtual Network Operators 
+NPV 
+Net Present Value 
+NRV 
+Net Realisable Value 
+OCM 
+Operating Capital Maintenance 
+PI 
+Public Inquiry 
+PSTN 
+Public Switched Telephone Network 
+PV 
+Present Value 
+RAN 
+Radio Access Network 
+RFS 
+Regulatory Financial Statements 
+MCMC 
+Malaysian Communication and Multimedia Commission 
+SMP 
+Significant Market Power 
+SMS 
+Short Messaging Services 
+USP 
+Universal Service Provision 
+VOIP 
+Voice over Internet Protocol 
+WACC 
+Weighted Average Cost of Capital 
+WiMAX 
+Worldwide Interoperability for Microwave Access 
+LIST OF TABLES 
+Table  1 Fixed Network Services 
+5
+Table  2 Mobile Network Services 
+8
+Table  3 Reconciliation of Consolidated Income Statement              
+(Large Operators) 
+28
+Table  4 Reconciliation of Consolidated Mean Capital Employed      
+(Large Operators) 
+29
+Table  5 Reconciliation of Consolidated Income Statement             
+(Small Operators) 
+29
+Table  6 Reconciliation of Net Asset Statement (Small Operators) 
+30
+Table  7 AS Implementation Timetable 
+39
+Table  8 Small operator Wholesale Income Statement 
+41
+Table  9 Small Operator Retail Income Statement 
+42
+Table 10 Small Operator Other Business Income Statement 
+43
+Table 11 Small Operator Net Asset Statement 
+44
+Table 12 Fixed  : Wholesale Income Statement Format for Each Service 
+46
+Table 13 Fixed  : Wholesale Average Unit Revenue and Cost Statement 
+for Each Service 
+48
+Table 14 Fixed  : Consolidated Wholesale Income Statement by Service 
+49
+Table 15 Fixed  : Retail Income Statement Format for Each Service 
+51
+Table 16 Fixed  : Retail Average Unit Revenue and Cost Statement 
+52
+Table 17 Fixed  : Consolidated Retail Income Statement by Service 
+53
+Table 18 Fixed  : Wholesale Mean Capital Employed by Service 
+55
+Table 19 Fixed  : Retail Mean Capital Employed by Service 
+57
+Table 20 Fixed  : Consolidated Mean Capital Employed 
+59
+Table 21 Fixed  : Residual Income Statement 
+60
+Table 22 Fixed  : Network Element Unit Cost Statement 
+61
+Table 23 Fixed  : Service Routing Factors 
+62
+Table 24 Fixed  : Network Unit Costs by Service 
+63
+Table 25 Fixed  : Network Activity Statement 
+64
+Table 26 Mobile: Wholesale Income Statement 
+65
+Table 27 Mobile: Wholesale Average Unit Revenue and Cost Statement 
+66
+Table 28 Mobile: Retail Income Statement 
+67
+Table 29 Mobile: Retail Average Unit Revenue and Cost Statement 
+68
+Table 30 Mobile: Residual Income Statement 
+69
+Table 31 Mobile: Consolidated Income Statement by Service 
+71
+Table 32 Mobile: Mean Capital Employed by Service 
+73
+Table 33 Mobile: Consolidated Mean Capital Employed 
+74
+Table 34 Mobile: Network Element Unit Cost Statement 
+75
+Table 35 Mobile: Network Routing Factors 
+76 
+Table 36 Mobile: Network Unit Costs by Service 
+77 
+Table 37 Mobile: Network Activity Statement 
+78 
+Table 38 Calculation of NRC from GBV 
+81
+Table 39 Comparison of Existing Asset and MEA Asset 
+84 
+Table 40 Calculation of NRC Given Increased MEA Capacity 
+84 
+Table 41 Comparison of Existing Asset and MEA Asset 
+85 
+Table 42 Calculation of NRC Given Lower MEA Opex 
+86 
+Table 43 Price Index Example 
+87 
+Table 44 Supplementary Depreciation (10% p.a. price increase) 
+90 
+Table 45 Supplementatry Depreciation (10% p.a. price fall) 
+90 
+Table 46 Backlog Depreciation Calculation 
+92 
+LIST OF FIGURES 
+Figure 1: Cost Attribution Overview 
+14 
+Figure 2: Highly Simplified Example of Cost Causation in a 
+Telecommunications Network 
+16 
+Figure 3: Transfer Charge at Market Prices 
+21 
+Figure 4: Transfer Charge at Cost plus Cost of Capital 
+22 
+Page 1  
+1.
+INTRODUCTION 
+1.1 Outcome of Public Inquiry Process 
+MCMC’s final views and decisions on the implementation of accounting separation (AS) 
+were set out in its Public Inquiry Report on Implementation of Accounting Separation 
+in Malaysia ( PI Report ) released on 30 November 2012. 
+Prior to the publication of the Public Inquiry (PI) Report, MCMC consulted widely and 
+openly with all interested stakeholders, including: 
+(i)
+Consultations with a broad range of licensees prior to the release of a PI Paper 
+on 7 September; 
+(ii)
+Publication of a PI Paper on 7 September 2012, which set out MCMC’s 
+preliminary views on the implementation of AS and the form it might take and 
+requested comments from interested parties; 
+(iii)
+Clarification session on 27 September 2012 during which MCMC responded to 
+questions raised by stakeholders in relation to the PI Paper; 
+(iv)
+Written submissions from interested parties by 31 October 2012; and 
+(v)
+Discussion with the Malaysian Institute of Accountants (MIA) on matters 
+relating to audits. 
+Having considered all the submissions received, MCMC issued the PI Report. 
+As noted in the PI Report, all operators will be subject to the requirement to implement 
+AS.  In response to the industry’s concerns regarding cost and administrative burden, 
+MCMC has decided to adopt a two-level approach to AS. Detailed reporting will apply 
+to those operators whose revenue and total assets in Malaysia both exceed RM 3 
+billion. Entities whose revenue or total assets fall below this threshold (“Small 
+Operators”) are required to submit less detailed regulatory financial statements (RFS) 
+as specified in Appendix A of these Guidelines, on a historic cost basis only. 
+Page 2  
+1.2 Purpose of the Guidelines  
+Accounting separation (AS) involves the production of regulatory financial statements 
+at the level of individual services or business units within an operating company. It 
+requires: 
+
+A set of AS principles and policies;  
+
+The production of RFS (separate accounts) based on sound analysis and 
+economic principles of cost causation; 
+
+The need to fairly present the financial interactions between different parts of 
+the operators’ business and the transactions between them (transfer charges); 
+
+The need to fairly present the profitability of different retail and wholesale 
+products and services; 
+
+A reconciliation back to the firms’ audited accounts lodged with Bursa Malaysia 
+or Companies Commission;  
+
+Relevant supporting documentation to explain the regulatory financial 
+statements; and  
+
+To be subjected to independent verification (audit) for detailed reporting or 
+self-certification for abbreviated reporting;  
+The Guidelines set out in this document are based on MCMC’s final views, as set out 
+in the PI Report.  
+The revision (Rev.1) is done to provide greater clarity to service providers and to 
+standardise, to the extent possible the RFS submissions. 
+The purpose of the Guidelines is to:   
+(i)
+provide a structured approach to Operator’s adherence when submitting AS 
+financial reports and related information to MCMC 
+(ii)
+help promote the comparability of information submitted by operators; 
+(iii)
+ensure that Operators report to MCMC based on a common timetable, and on 
+a consistent and accurate basis; 
+Page 3  
+(iv)
+assist Operators to better understand MCMC’s information requirements when 
+preparing the AS documentation for submission to MCMC for review.  
+Further to the requirement to submit RFS annually, MCMC may require, from time to 
+time, any Licensee to provide further information in relation to specific studies or 
+investigations. 
+Page 4  
+2.
+SCOPE AND COVERAGE OF ACCOUNTING SEPARATION 
+2.1.
+Scope of AS  
+As set out in the PI Report, MCMC has decided that: 
+(i)
+Operators with revenues or total assets, arising in Malaysia, fall below RM3 
+billion in any financial year, are subject to an abbreviated RFS requirement 
+whereby their accounts are separated by wholesale and retail segments. The 
+formats of the required statements are provided in Appendix A of these 
+Guidelines. 
+(ii)
+The abbreviated RFS has to be accompanied by a statement signed by a 
+company director confirming that the RFS are properly prepared in accordance 
+with the submitted documentation and comply with the regulatory obligations. 
+(iii)
+ Fixed and mobile operators who exceed the small operator threshold, are 
+required to implement AS and submit to MCMC detailed RFS as described in 
+Appendix B of these Guidelines; 
+(iv)
+The detailed RFS is subjected to audit requirement as set out in Section 10 of 
+these Guidelines; 
+(v)
+The detailed RFS should be prepared for the specified services at both the 
+wholesale and retail level. The services to be separated will be reviewed from 
+time to time  as circumstances change (e.g. following the emergence of new 
+services);  
+(vi)
+AS obligations apply only to telecommunications activities carried out in 
+Malaysia. Non-telecommunication activities and revenue generated outside 
+Malaysia will be reported under Residual Business; and 
+(vii)
+The RFS should be accompanied by complete accounting documentation that 
+specifies the accounting policies and methods adopted in the preparation of 
+RFS.  Among others, documentation should be submitted on methodology 
+adopted to allocate revenue by services, transfer pricing, allocation/attribution 
+of network cost and non-network cost by services including the drivers used 
+and the network diagram that clearly outlines all network elements in the 
+routing factor tables. 
+Page 5  
+2.2.
+Fixed Network Services 
+For fixed operators ten wholesale and eight retail services have been identified, along 
+with a “residual” category for any remaining activities.  The identified services are 
+provided below in Table 1. 
+Table 1 Fixed Network Services 
+Market 
+Services 
+Wholesale 
+Wholesale exchange lines 
+Wholesale local access – copper 
+Wholesale local access – fibre 
+Wholesale broadband access 
+Wholesale leased lines 
+Backhaul services 
+Call origination 
+Call termination 
+Transit services 
+Interconnection circuits 
+Other 
+Market 
+Services 
+Retail 
+Retail exchange lines – business 
+Retail exchange lines – residential 
+Local calls 
+National calls 
+International calls 
+Calls to mobiles 
+Leased lines 
+Broadband 
+Other 
+Residual 
+Non Telecommunication Activities   
+Revenue generated outside Malaysia 
+The services listed in Table 1 are based on information that was gathered from 
+operators. In a dynamic industry, such as telecommunications, the services provided 
+are likely to evolve frequently and MCMC intends to review these services from time 
+to time.   
+Page 6  
+The wholesale services are defined as follows: 
+(i)
+Wholesale exchange lines: all wholesale residential and business exchange lines 
+including rental and connection services. 
+(ii)
+Wholesale local access - copper: all unbundled local loop (LLU) products (full 
+access, line sharing, sub-loop and bitstream services) provided over existing 
+copper networks, including services supplied to third party ISPs but excluding 
+services provided over alternative technologies and wholesale broadband 
+access services.  This includes rental and connection services. 
+(iii)
+Wholesale local access - fibre: all access services provided over fibre, such as 
+Layer 2 HSBB Network Services and Layer 3 HSBB Network Service.  This 
+includes rental and connection services. 
+(iv)
+Wholesale broadband access: all wholesale broadband products over existing 
+copper and fibre broadband networks, including those to third-party internet 
+service providers (ISPs) such as DSL Resale.  This includes rental and 
+connection services.  
+(v)
+Wholesale leased lines: all wholesale trunk and terminating segments of 
+analogue and digital leased lines.  This includes rental and connection services. 
+(vi)
+Backhaul services: all backhaul services provided to other operators, including 
+trunk and terminating segments and rental and connection services. 
+(vii)
+Call origination: all calls originating from the fixed network i.e. Fixed Network-
+to-Fixed Network, Fixed Network-to-Mobile Network and Fixed Network-to-
+international outgoing calls. This includes, but is not limited to calls using toll 
+free 1300, freephone using 1800 and equal access services.  
+(viii)
+Call termination: all calls terminating on a fixed network i.e. Fixed Network-to-
+Fixed Network, Mobile Network-to-Fixed Network and international incoming 
+calls-to-Fixed Network. 
+(ix)
+Transit services: the domestic and international transit of calls on a fixed 
+network at which other networks interconnect. E.g. Incoming international 
+voice minutes terminating on other operator’s network in Malaysia via a fixed 
+network or incoming international voice minutes transiting in Malaysia. 
+Page 7  
+(x)
+Interconnection circuits: all interconnection circuits between the exchanges of 
+two interconnecting operators in order to allow traffic to pass between their 
+networks. 
+(xi)
+Other: Any other wholesale services that are not specifically identified for 
+example infrastructure sharing, network co-location, tenancy services, vendor 
+compensation, etc. 
+The retail services are specified as follows: 
+(i)
+Retail exchange lines - business: Non-residential public switched telephone 
+network (PSTN) and integrated services digital network (ISDN) access lines 
+provided over the fixed public telecommunications network, including rental 
+and connections. 
+(ii)
+Retail exchange lines - residential: Residential public switched telephone 
+network (PSTN) and integrated services digital network (ISDN) access lines 
+provided over the fixed public telecommunications network, including rental 
+and connections. 
+(iii)
+Local calls: Residential and non-residential local calls provided at a fixed 
+location. 
+(iv)
+National calls: Residential and non-residential national calls provided at a fixed 
+location. 
+(v)
+International calls: Residential and non-residential international calls provided 
+at a fixed location. 
+(vi)
+Calls to mobiles: Residential and non-residential calls provided at a fixed 
+location that are made to mobile telephony networks. 
+(vii)
+Leased lines: All analogue and digital retail national and international leased 
+lines (terminating and trunk segments), regardless of capacity and distance 
+and including rental and connection services. 
+(viii)
+Broadband: Residential and non-residential retail broadband services over 
+existing copper and fibre networks of all speeds and including rental and 
+connection services. 
+(ix)
+Other:  Any other retail services, including, for example, value added services, 
+dial-up internet services (if applicable), directory enquiry, payphone services, 
+content, breach of contract (e.g. early termination), etc. 
+Page 8  
+Residual  
+The residual market contains revenue derived from non-telecommunication activities 
+(such as equipment/asset sales) and/or revenue generated outside Malaysia. It is 
+necessary for the purposes of reconciling with the audited accounts (see Section 9). 
+2.3.
+Mobile Network Services 
+For mobile operators seven wholesale and five retail services have been identified, 
+along with a “residual” category.  
+The mobile services are set out in Table 2 and defined below:  
+Table 2 Mobile Network Services 
+The wholesale services are specified as follows: 
+(i)
+Call origination:  This includes all calls originating from the mobile network i.e. 
+Mobile Network-to-Mobile Network, Mobile Network-to-Fixed Network and 
+Mobile Network-to-international outgoing calls. This includes, but is not limited 
+to calls using toll free 1300, freephone using 1800 and equal access services. 
+Market 
+Services 
+Wholesale 
+Call origination 
+Call termination 
+MVNO access 
+National roaming 
+Inbound international roaming 
+RAN Sharing 
+Backhaul services 
+Other 
+Retail 
+Connections and subscription 
+Voice 
+SMS 
+Data 
+Outbound international roaming 
+Other 
+Residual 
+Non Telecommunication Activities 
+Revenue generated outside Malaysia  
+Page 9  
+(ii)
+Call termination:  This includes all calls terminating on the mobile network i.e. 
+Mobile Network-to-Mobile Network, Fixed Network-to-Mobile Network and 
+international incoming calls-to-Mobile Network. 
+(iii)
+MVNO access: The provision of mobile services (e.g. voice, SMS and data) to 
+mobile virtual network operators. 
+(iv)
+National and inbound international roaming: The provision of wholesale 
+roaming services to other mobile networks. 
+(v)
+Radio Access Network (RAN) Sharing: Refers to any kind of active and passive 
+sharing of radio access network. 
+(vi)
+Backhaul services: The link from the base station to the core network via any 
+technologies such as analogue and digital leased lines, microwave and VSAT. 
+(vii)
+Other: All other wholesale services such as transit services, SMS and MMS 
+termination, mobile number portability, infrastructure sharing, network co-
+location, vendor compensation, etc. 
+The retail services are specified as follows: 
+(i)
+Connections and subscription: The connection fees and monthly subscription. 
+(ii)
+Voice: All calls (on-net, off-net national and international to mobile and fixed 
+networks) provided over mobile networks, whether pre-paid or post-paid. 
+(iii)
+Short messaging services (SMS): All SMS (on-net, off-net national and 
+international to mobile and fixed networks) provided over mobile networks 
+whether pre-paid or post-paid. 
+(iv)
+Data: All data services provided over mobile networks whether pre-paid or 
+post-paid such as internet access, video calls and multimedia messaging 
+services (MMS). 
+(v)
+Outbound international roaming: All voice calls, SMS and data services provided 
+to international roaming customers. 
+(vi)
+Other: All other retail services, such as content, value added services (e.g. 
+itemised billing, voicemail, caller identification, etc.), breach of contract (e.g. 
+early termination), sale of devices (SIM, handset, etc.), 5 digit SMS, bulk SMS 
+and directory enquiry services. 
+Page 10  
+Residual  
+Again, a general residual category is included for revenue derived from non-
+telecommunication activities (such as equipment sales) and/or revenue generated 
+outside Malaysia. This is necessary for the purposes of reconciling with the audited 
+accounts (see Section 9). 
+Page 11  
+3.
+ACCOUNTING SEPARATION PRINCIPLES AND POLICIES 
+3.1.
+Overview and General Principles 
+The starting point for AS is the operator’s audited accounts.  This means that the RFS 
+will also need to comply with: the Malaysian Companies Act and the applicable 
+accounting standards; fundamental accounting concepts and principles; the 
+accounting policies of the company; and the format and content of certain financial 
+statements. 
+The fundamental principles of financial information reporting are relevance, 
+reliability, comparability (over time and across reporting entities), intelligibility, 
+materiality, and consistency (of treatment over time).  In the case of AS there is 
+also the need for transparency, causality and objectivity in the attribution of 
+revenues, costs, assets and liabilities to different services. 
+When producing RFS, operators should use accounting policies that are consistent with 
+their statutory accounting policies.  These accounting policies should follow closely the 
+Financial Reporting Standards required by the Malaysian Accounting Standards Board 
+(MASB) in terms of recognition and disclosure of material transactions and balances, 
+and their effect on the Income Statement and Mean Capital Employed (MCE).   
+RFS should be reconciled to the group’s audited accounts, which consolidate, on a 
+historic cost basis, the financial statements of the holding company and all subsidiary 
+undertakings.  Where a subsidiary company’s accounting policies do not conform to 
+the group’s policies, these should be adjusted on consolidation in order to present the 
+financial information on a consistent basis. 
+Appendix E describes the most significant and relevant accounting policies for the 
+purposes of producing RFS.  When RFS is produced for a certain year, the accounting 
+policies should match those in the operators’ corresponding audited accounts. 
+Page 12  
+4.
+REVENUE RECOGNITION AND ATTRIBUTION 
+4.1.
+Overview and general principles 
+For the purposes of preparing RFS, operators should apply the same accounting 
+policies for revenue recognition that they use in their audited accounts. 
+Revenues should be recognised when it is probable that the economic benefits 
+associated with the transaction will flow to the operator and the amount of the revenue 
+can be measured reliably.   
+The majority of revenues can be directly identified to the services and products 
+specified in Table 1 and Table 2 above.  In any instances where revenues cannot be 
+attributed directly, they should be attributed to the relevant activities on the basis of 
+causation.  
+Page 13  
+5.
+COST ATTRIBUTION 
+5.1.
+Overview of Cost Attribution 
+The historic cost information underlying the audited accounts is the starting point for 
+attributing costs to different services.  Since all costs are attributed or, where that is 
+not possible, apportioned to services, the process is referred to as fully-allocated 
+costing.  The same process is used in current cost accounting (CCA) but the latter 
+involves additional depreciation entries.  An overview of the cost attribution process is 
+provided in Figure 1. 
+The first step in cost attribution is to organise the company’s costs into those 
+associated with: 
+(i)
+Activities, normally within broad categories of functional groupings such as 
+maintenance or marketing and sales functions; and 
+(ii)
+Network plant groups such as switching and within each plant group by more 
+detailed network components. 
+Once costs have been attributed to activities or plant groups they can then be 
+attributed to products and services (either directly or indirectly). 
+The cost attribution process should reflect the principle of cost causation, as far as 
+possible.  Costs can be attributed to services in a number of ways.  For example,  
+(i)
+Network costs (such as depreciation of equipment, maintenance and other 
+support costs) can be attributed directly to plant groups and then to services 
+based on service volumes and engineering studies and analysis of how different 
+services use different types of equipment. 
+(ii)
+Other types of costs, such as payroll costs for engineering and field staff, can 
+be attributed in an intermediate step to network plant groups and or support 
+functions using activity based costing (ABC 1 ) or surveys, and then attributed to 
+services in the same manner as those plant categories or support functions are 
+attributed to services. 
+1
+Staubus, George J., Activity Costing and Input-Output Accounting (Richard D. Irwin, 
+Inc., 1971).
+Page 14  
+Figure 1: Cost Attribution Overview 
+Source: NERA. 
+For the purposes of attribution to different services, a firm’s costs are categorised as 
+follows: direct; directly attributable, indirectly attributable and unattributable.  These 
+categories are described, with examples, in Section 5.4 below. 
+5.2.
+Cost Causation and Cost Drivers 
+The identification of cost causation is a precondition for developing an appropriate cost 
+attribution method.  The term “cost driver” is normally used to describe any factor that 
+causes a change in the cost of an activity to be incurred.  An activity can have more 
+than one cost driver. For example, in a fixed local access network, the external line 
+plant maintenance costs in the local distribution side of the local switch will be driven 
+mainly by the number of faults and also by the time taken to repair the faults.   
+Page 15  
+The attribution of costs can be undertaken for all types of telecommunication network, 
+both fixed and mobile, although there will be some specific aspects and features of 
+network design and operation in each type of network.  
+Figure 2 below shows a highly simplified view of cost causation in a 
+telecommunications network.  The arrows show the general direction of causation. 2
+Thus, for example, network plant assets (capital costs) are caused by the need to 
+provide network services.  In some cases, the relationship between cost categories 
+operates in both directions (indicated by the arrows pointing in both directions).  This 
+is because one cost category both drives and is driven by another cost category.  
+The process of deriving fully allocated costs essentially involves reversing the direction 
+of the arrows in the diagram and attributing the different types of cost to the services 
+that directly or indirectly give rise to them.  For example, plant capital costs are 
+attributed to services according to the extent to which each service uses the equipment 
+concerned.  
+2
+To prevent the diagram from becoming unmanageable, not all the relevant arrows are 
+shown.  For example, no arrow is shown from General Management to Accommodation 
+even though the former would require the latter as an input.
+Page 16  
+Figure 
+2: 
+Highly 
+Simplified 
+Example 
+of 
+Cost 
+Causation 
+in 
+a 
+Telecommunications Network  
+Source: NERA.
+Any fully allocated costing system requires a substantial amount of information about 
+cost drivers and the linkages between different cost categories.  More examples are 
+provided in the following sections.  
+5.3.
+Cost Categories used by Operators in Malaysia 
+MCMC have been provided with the cost categories (account codes or chart of 
+accounts) which are currently used in the general ledger systems of the operators.  
+While there are differences between the operators, in general: 
+(i)
+Operating costs are either analysed by account type or natural expense, such 
+as payroll (salaries and wages); or 
+(ii)
+By cost centre or function such as marketing; and 
+(iii)
+Depreciation is analysed by plant group.  
+This provides the starting point for cost attribution to services.  However, apart from 
+the identification of the direct costs of different services, which is used for the purpose 
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Base Stations
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Market and
+Regulatory
+Costs
+Interconnection
+Payments
+Voice, SMS and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Apportioned
+Costs
+Direct
+Costs
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Base Stations
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Marketing &
+Regulatory
+Costs
+Interconnection
+Payments
+Voice, SMS and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Apportioned
+Costs
+Direct
+Costs
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Base Stations
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Market and
+Regulatory
+Costs
+Interconnection
+Payments
+Voice, SMS and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Apportioned
+Costs
+Direct
+Costs
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Base Stations
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Corporate
+& 
+Regulatory 
+Costs
+Interconnection
+Payments
+Voice, SMS and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Costs
+Direct
+Costs
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Base Stations
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Market and
+Regulatory
+Costs
+Interconnection
+Payments
+Voice, SMS and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Costs
+Direct
+Costs
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Base Stations
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Marketing &
+Regulatory
+Costs
+Interconnection
+Payments
+Voice, SMS and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Costs
+Direct
+Costs
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Base Stations
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Market and
+Regulatory
+Costs
+Interconnection
+Payments
+Voice, SMS and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Costs
+Direct
+Costs
+Capital Plant
+e.g.
+. Exchanges,
+Transmission
+Maintenance
+Transport
+General
+Management
+Computing
+Personnel
+Accommodation
+Corporate
+& 
+Regulatory 
+activities
+Interconnection
+Payments
+Voice and
+Data Calls,
+VAS, and Call
+Termination
+Final
+Services
+directly
+attributable
+indirectly
+attributable
+non-
+attributable
+Direction of cost causation
+Costs
+Direct
+Costs
+Other 
+costs 
+Page 17  
+of calculating gross margins, there appears to be no process of attributing network 
+costs to services at present.     
+5.4.
+Steps Required for Cost Attribution  
+Following the principle of cost causation, each item of cost will need to be attributed 
+to the products and services provided by an operator.  Each cost item may be 
+considered to fall into one of the following categories. 
+5.4.1.
+Direct costs 
+There are relatively few direct costs in telecommunications networks.  They are those 
+costs that: 
+(i)
+Are only needed to provide a specific service or set of services; 
+(ii)
+Are recorded against the relevant product or service in the operator's 
+accounting system; and 
+(iii)
+Can be directly and unambiguously identified to a product or service. 
+For example, interconnection payments to other operators are a direct cost of 
+providing call services and can be identified with the services that give rise to them. 
+5.4.2.
+Directly attributable costs 
+Directly attributable costs are shared by a number of services but are still directly 
+related to those services.  Most network plant and equipment costs fall into this 
+category.  Examples include: 
+(i)
+The cost of exchange lines in a fixed network (links between distribution points 
+and exchanges) is driven by the number of lines and their length.  This cost 
+can be attributed to different services such as retail line rentals, wholesale line 
+rental (WLR) and LLU based on the numbers of lines, their length and the 
+technology provided for each service. 
+(ii)
+The amount of switching equipment required and hence its costs are typically 
+driven by the total volume of traffic using such equipment.  For example, 
+processor costs are driven by busy hour call attempts and port costs by busy 
+hour call minutes.  The costs can therefore be attributed to different services 
+based on their respective shares of the traffic handled by the switching 
+equipment. 
+Page 18  
+(iii)
+Some aspects of a mobile network operator’s requirements for media gateways 
+(MGW) are driven by the number of subscribers supported while other aspects 
+are driven by the volume of traffic in the busy hour (because mobile networks 
+are sized in order to handle traffic at peak times).  In calculating the directly 
+attributable cost, the first step is to split costs into those which are subscriber-
+related and those which are call-related.  The next step would be to split call 
+costs into those corresponding to different call services.  These attributions 
+should be based on the average number of MGWs used per call (captured in a 
+routing factor), the number of calls and the average duration of calls. 
+(iv)
+Transmission equipment costs are driven by the number of circuits, which in 
+turn is driven by services such as calls, leased lines and backhaul.  To attribute 
+costs, information is required on the transmission capacity for all types of 
+service conveyed, for example, in terms of 2 Mbit/s paths used for voice calls.  
+Transmission equipment costs can then be attributed to calls using routing 
+factors, the number of calls and call durations. 
+5.4.3. Indirectly attributable costs 
+Indirectly attributable costs are costs that can be indirectly related to a service or 
+product based on the relationship these costs have to the direct and directly 
+attributable costs explained above.  For example: 
+(i)
+Records of how telecommunications engineers spend their time can be used to 
+attribute maintenance costs to different types of network plant group and 
+components, which in turn can be directly attributed to different services (see 
+above). 
+(ii)
+Transport costs are partly driven by maintenance and other plant related 
+activities and can thus be attributed in a similar way to these activities.  In 
+addition, transport costs will be incurred as a result of the activities of other 
+functions such as marketing (since marketing managers may have company 
+cars) or by high level staff costs. 
+(iii)
+Computing costs are typically driven by particular projects, which can then be 
+related to certain activities.  Meanwhile desktop computing costs are driven by 
+the number of users. 
+Page 19  
+(iv)
+Accommodation costs are partly driven by plant requirements and partly by the 
+number of people in different activities, which in turn is partly driven by plant 
+requirements. 
+5.4.4.
+Unattributable costs 
+Unattributable costs are those costs for which no direct or indirect method of 
+attribution to services and products using cost drivers can be identified.  Examples 
+include costs relating to the CEO’s office, investor relations, corporate relations and, 
+to some extent at least, the regulatory department.  The way such costs are normally 
+apportioned to different services is to estimate their total value as a percentage of the 
+costs that can be directly or indirectly attributed and then mark up the latter by that 
+percentage. 
+Rigorous application of cost attribution methods explained above can be expected to 
+reduce substantially the proportion of these costs that are unattributable. 
+5.5.
+Developing the Cost Attribution Process and Systems 
+Before costs can be attributed in a reliable manner, a substantial amount of 
+information of both a financial and non-financial nature is required.  This information 
+is necessary to identify the usage of different types of equipment and other resources 
+by different services.  In order for operators to attribute costs reliably, it will be 
+necessary for them to verify their existing surveys or to conduct new ones, and to 
+have, amongst other things: 
+(i)
+A system of time recording (such as used in an ABC type system) or a survey 
+approach. For example, to record time spent by engineers maintaining different 
+types of network equipment;  
+(ii)
+Activity surveys in cases where employees spread their time over a number of 
+different activities or services; 
+(iii)
+Information on pay costs; 
+(iv)
+Details of the deployment and use of different network plant groups and 
+components by different services;  
+(v)
+Surveys for the fixed network, for example that identify where duct is used by 
+the core network, where it is used by the access network and where it is shared 
+by both networks; 
+Page 20  
+(vi)
+Sample surveys of traffic, such as busy hour traffic to identify the volumes and 
+routings of different types of traffic; 
+(vii)
+Comprehensive billing system information; 
+(viii)
+Engineering input on cost drivers for different network components; 
+(ix)
+Surveys of the use of buildings to identify the respective responsibilities of 
+different types of equipment for network building costs and the responsibility 
+of different departments for non-network building costs; and 
+(x)
+Surveys of use of general computing and IT equipment. 
+Any surveys need to be updated regularly (ideally annually).  
+5.6.
+Cost Categories and Cost and Capital Employed Attribution for Fixed 
+Operators 
+Appendices D.1 and D.2 contain tables that relate to fixed operators and which provide 
+examples of cost drivers and methods of attributing operating costs and capital 
+employed for the main types of cost.   
+5.7.
+Cost Categories and Cost and Capital Employed Attribution for Mobile 
+Operators 
+Appendices D.3 and D.4 contain tables that relate to mobile operators and which 
+provide examples of cost drivers and methods of attributing operating costs and capital 
+employed for the main types of cost.   
+As Appendices D.1, D.2, D.3 and D.4 are only provided as examples, and not intended 
+as a comprehensive list, operators are free to include additional categories of cost that 
+are not included in the appendices, identify the appropriate cost drivers and document 
+them accordingly. In addition, if operators deem cost drivers in appendices as 
+inappropriate, they can use other cost drivers that are more appropriate. However, 
+the cost categories, corresponding GL codes and the cost drivers must be clearly 
+identified and documented. 
+Page 21  
+6.
+TRANSFER CHARGES 
+Each operator will need to account for services provided between its own 
+divisions/entities “as if” these transactions were with external parties.  This requires 
+the use of transfer charges. 
+6.1.
+Transfers at Market Prices 
+In instances where a wholesale service is also being provided to an external party, 
+there is a market price and, provided that the latter can be shown to be cost based, 
+this should be used as the transfer charge.   
+The situation is illustrated in Figure 3 below, where external wholesale revenues are 
+the payments made to the operator’s wholesale business by the external party and 
+internal wholesale revenues are the transfer charges received by the operator’s 
+wholesale business from its retail business unit.  These same transfer charges are part 
+of the costs of the retail business. 
+ Figure 3: Transfer Charge at Market Prices 
+Cost
+Revenue
+Wholesale
+Retail
+External wholesale revenues 
+(= quantity x wholesale  
+market price)
+Retail revenues 
+(= quantity x retail price)
+Direct costs 
+Network costs
+Wholesale billing costs etc.
+Retail marketing costs etc.
+Page 22  
+In instances where regulated rates are mandated for external sales (e.g. via MSAP), 
+the transfer charges should be posted at regulated rates. 
+6.2.
+Transfers at Cost plus Cost of Capital 
+In instances where the wholesale service is not being provided to an external party 
+and consequently there is no market price (or external wholesale revenue), or where 
+the market price is not cost justified, the transfer charge should instead be calculated 
+using wholesale costs for the service including the cost of capital (see Figure 4).
+ Figure 4: Transfer Charge at Cost plus Cost of Capital 
+6.3.
+Cost of Capital 
+When implementing AS, it is standard international practice to use the weighted 
+average cost of capital (WACC).  This reflects the opportunity cost of funds invested in 
+a business, and should take into account the different sources of finance.  This requires 
+evaluation of: 
+Cost
+Revenue
+Wholesale
+Retail
+External wholesale revenues  
+(= quantity x wholesale  
+price)
+Retail revenues  
+(= quantity x retail price)
+Direct costs 
+Network costs
+Wholesale billing costs etc.
+Retail marketing costs etc.
+Page 23  
+(i)
+The costs of debt held by the operator, weighted to reflect holdings of different 
+types of debt; 
+(ii)
+The cost of equity of the operator, measured in terms of the returns demanded 
+by shareholders in light of the risks to the business; and 
+(iii)
+The relative holdings of debt and equity. 
+Based on this, (pre-tax nominal) WACC is calculated using the following formula: 
+
+ 
+
+
+ 
+
+
+
+
+
+
+
+V
+E
+Rf
+Tc
+V
+D
+Rd
+WACC
+
+
+
+
+
+
+PR
+1
+1
+
+, where: 
+Rd  = 
+ Weighted Average Cost of Debt 
+Tc  = 
+ Corporate Tax Rate 
+D  = 
+ Total Debt 
+E 
+= 
+ Total Equity 
+V  = 
+ D + E = Total Capitalisation 
+β
+= 
+ Beta 
+Rf  = 
+ Risk Free Rate 
+PR  =   
+( Rm - Rf ) = Equity Risk Premium, where 
+Rm = 
+ Market Rate of Return 
+Given the difficulties and uncertainties that the calculation of divisional WACC would 
+entail, operators should use company-wide pre-tax WACC for the calculation of the 
+cost of capital. However, the position could be revisited in the future if the techniques 
+for determining divisional WACC become more reliable.  
+For operators who do not have company WACC readily available, they may use the 
+WACC value computed by MCMC for the purpose of determining access prices.  In 
+2012, MCMC had computed pre-tax WACC value for mobile and fixed operators at 
+9.86% and 8.86% respectively, fixed core at 8.65%, fixed access at 8.39% and HSBB 
+at 9.70%.  As and when MCMC publishes revised pre-tax WACC value, the revised 
+value should be applied.   
+In the event that a company WACC is not available or there is no pre-tax WACC 
+computed by MCMC for fixed and mobile operators, WACC computed by analysts may 
+be used.  However, it is generally not favoured for the purpose of accounting 
+separation as the basis of computation cannot be ascertained. Under no circumstance 
+Page 24  
+should operators substitute pre-tax company WACC for other figures such as effective 
+rate of return.  
+For RFS purposes, pre-tax company WACC should be applied to all services, although 
+some services may show negative values.  
+6.4.
+Demonstration of Transfer Charges 
+To ensure that the information in the RFS is relevant, reliable and transparent, it is 
+essential that the basis and nature of the transfer charges is clearly set out in the 
+accounting documentation (see Section 10.2).  Further, the format of the RFS (see 
+Section 7 and Appendices A and B) will separately show the internal and external 
+revenues, costs and MCE of the individual products and services. 
+Finally, there should be consistency of treatment of transfer charges from year to year.  
+Where changes occur, they should be transparent and clearly documented.  Material 
+changes in policies adopted and/or calculations may require reclassification of the prior 
+year numbers, including closing MCE balances. 
+6.5.
+Fixed Network 
+Following the principles explained above, the wholesale Income Statement of a fixed 
+network will include: 
+(i)
+External wholesale revenue generated as a result of sales to external wholesale 
+customers (other telecommunications operators); and 
+(ii)
+Internal wholesale revenues in the form of transfer charges made to the parts 
+of the business providing Retail and Other services.   
+The flipside of this is that the retail and other Income Statements will show internal 
+transfer costs alongside other retail costs. 
+If a fixed operator does not have a beneficial ownership in a mobile operator, any 
+transactions with mobile operators for the use of the network (interconnection) will be 
+classified as external.
+Page 25  
+6.6.
+Mobile Networks 
+In a similar manner, the wholesale Income Statement for mobile networks will show 
+internal and external revenues, and correspondingly the mobile network retail Income 
+Statements will show internal and external costs.  For example: 
+(i)
+A mobile network’s wholesale business Income Statement will show external 
+revenue 
+from 
+providing 
+services 
+to 
+external 
+customers 
+(e.g. 
+for 
+interconnection) and internal revenue from providing services to its own retail 
+businesses (voice, SMS and data).   
+(ii)
+The retail business Income Statement will record external revenue relating to 
+the sale of post-paid and prepaid plans as well as other external sales and 
+internal revenue for the recharge of the billing system.   
+Where a mobile operator also has a fixed network business and the scale of such 
+activities is material, an internal transfer charging system between fixed and mobile 
+markets would also need to be established. 
+Page 26  
+7.
+FORMAT OF REGULATORY FINANCIAL STATEMENTS 
+7.1.
+Overview 
+The proposed format and content of the RFS for small operators are described in 
+Appendix A and the RFS for large operators in Appendix B to these Guidelines. 
+7.2.
+Requirements for Large Operators 
+The RFS for large fixed and mobile network operators comprise: 
+(i)
+Income Statements at the level of individual wholesale and retail services and 
+other services; 
+(ii)
+Statements of average unit cost and revenues at the level of individual 
+wholesale and retail services; 
+(iii)
+Income Statements consolidated at the level of wholesale and retail showing 
+aggregate wholesale and retail and other results; 
+(iv)
+A Statement of MCE for individual services at the retail and wholesale levels; 
+(v)
+A consolidated MCE statement; 
+(vi)
+Statements of network unit costs by service; 
+(vii)
+Network Activity Statements;  
+(viii)
+Reconciliation Statements to the audited accounts;  
+(ix)
+A Properly Prepared in Accordance with Audit Opinion; and 
+(x)
+Accounting documentation that clearly specifies the accounting policies and 
+attribution methods adopted; 
+All large operators will produce the RFS on a HCA basis until 2017, followed by CCA 
+thereafter.  
+7.3.
+Requirements for Small Operators 
+MCMC has decided to provide a partial exemption from AS reporting requirements for 
+companies whose revenue arising in Malaysia or total assets (or both) fall below RM3 
+billion.  These “small operators” will, however, be required to produce abbreviated 
+RFS, that is to say RFS showing income and net assets at a less granular level. In 
+particular, these entities will be required to produce: 
+Page 27  
+(i)
+Regulated income statements at the Wholesale, Retail and Total level only, on 
+an HCA basis (seen Appendix A); 
+(ii)
+Net asset statements at the company year-end date at the Wholesale, Retail 
+and Total level only, on an HCA basis (see Appendix A); 
+(iii)
+Reconciliation statement to the audited consolidated group financial statements 
+(with no CCA adjustments required) (see Section 8);  
+(iv)
+A statement signed by a company director (i.e. self certification) confirming 
+that the RFS are properly prepared in accordance with the submitted 
+documentation and comply with regulatory obligations; and 
+(v)
+Accounting documentation that clearly specifies accounting policies and 
+attribution methods adopted;  
+In developing these requirements, MCMC has taken into account the size and simplicity 
+of operations of the small operators. These provisions will apply if at least one of the 
+two threshold criteria is met.  
+Page 28  
+8.
+RECONCILIATION 
+8.1.
+Overview 
+In order to ensure the reliability of the RFS, and their consistency with the operators’ 
+audited accounts, Reconciliation Statements are required.  These Reconciliation 
+Statements will need to be prepared by the operators to consolidate and reconcile all 
+of the RFS for the individual products and services to the operators’ audited accounts. 
+The reconciliation process represents a fundamental step in enabling transparency of 
+how the RFS outputs are aligned to the audited accounts.  Consequently, all the items 
+that are disclosed in the audited accounts, but not in the regulated accounts, require 
+a separate disclosure. For those entities that fall below the “small company” 
+thresholds, the reconciliation statement is simplified as it will exclude current cost 
+adjustments.
+For companies operating in a group structure, the reconciliation statements should be 
+carried out to the companies audited group accounts.  
+Please refer to Appendix E and Appendix F for items that should be excluded in the 
+preparation of regulatory financial statements, and items that should be reconciled.
+8.2.
+Reconciliation Statements for Large Operators 
+Table 3 Reconciliation of Consolidated Income Statement (Large Operators) 
+Revenue 
+(RM) 
+Operating 
+costs 
+(RM) 
+Operating 
+profit 
+(RM) 
+As in the Annual Report 
+x 
+x 
+X 
+Adjustments
+Inter-market revenues and costs 
+x 
+x 
+X 
+Other operating income 
+x 
+x 
+X 
+Profit on disposal of property (if    CCA 
+basis) 
+x 
+x 
+X 
+Other gains 
+x 
+x 
+X 
+Operating Cost not Relevant to RFS 
+(Please Specify) 
+x 
+Total in RFS on HCA basis 
+x 
+x 
+X 
+CCA Holding gains/losses 
+x 
+X 
+CCA Supplementary depreciation 
+x 
+X 
+Page 29  
+Other CCA adjustments 
+x 
+X 
+Total in RFS on CCA basis 
+x 
+x 
+X 
+Table 4 Reconciliation of Consolidated Mean Capital Employed (Large 
+Operators) 
+Current Year 
+(RM) 
+Prior Year 
+(RM) 
+Shareholders’ funds as in the Annual 
+Report 
+xx 
+Xx 
+CCA adjustments (if applicable) 
+xx 
+Xx 
+Adjustments 
+Other long term liabilities 
+xx 
+Xx 
+Short term borrowings 
+xx 
+Xx 
+Taxation 
+xx 
+Xx 
+Assets held for speculative purposes 
+xx 
+Xx 
+Available for sale investments 
+xx 
+Xx 
+Derivative financial instruments 
+xx 
+Xx 
+Deferred tax assets/liability 
+xx 
+Xx 
+Financial assets at fair value 
+xx 
+Xx 
+Others as appropriate (Please specify) 
+xx 
+Xx 
+Closing capital employed at 31 December 
+xx 
+Xx 
+Opening capital employed at 1 January 
+xx 
+Xx 
+Average capital employed 
+xx 
+Xx 
+Total Mean Capital Employed 
+xx 
+Xx 
+8.3.
+Reconciliation Statements Small Operators 
+Table 5 Reconciliation of Consolidated Income Statement (Small Operators) 
+Revenue 
+(RM) 
+Operating 
+costs 
+(RM) 
+Operating 
+profit 
+(RM) 
+As in the Annual Report 
+x 
+x 
+X 
+Adjustments
+Inter-market revenues and costs 
+x 
+x 
+X 
+Other operating income 
+x 
+x 
+X 
+Other finance income 
+x 
+x 
+X 
+Other gains 
+x 
+x 
+X 
+Operating Cost not Relevant to RFS 
+x 
+Page 30  
+(Please Specify)
+Total in RFS on HCA basis 
+x 
+x 
+X 
+Table 6 Reconciliation of Net Asset Statement (Small Operators) 
+Current Year 
+(RM) 
+Prior Year 
+(RM) 
+Net assets as in the Annual Report 
+xx 
+Xx 
+Adjustments 
+Other long term liabilities 
+xx 
+Xx 
+Short term borrowings 
+xx 
+Xx 
+Taxation 
+xx 
+Xx 
+Assets held for speculative purposes 
+xx 
+Xx 
+Available for sale investments 
+xx 
+Xx 
+Derivative financial instruments 
+xx 
+Xx 
+Deferred tax assets/liability 
+xx 
+Xx 
+Financial assets at fair value 
+xx 
+Xx 
+Others as appropriate (Please specify) 
+xx 
+Xx 
+Total Net Assets as per RFS  
+XX 
+XX 
+Page 31  
+9.
+CURRENT COST ACCOUNTING METHODOLOGY 
+9.1.
+Overview of Asset Valuation Methods 
+It is necessary for large operators to establish a system of CCA so that regulatory 
+financial statements on a CCA basis can be submitted to MCMC beginning 2018.  
+The principles of CCA and illustrative examples of how it is implemented are set out in 
+Appendix C to these Guidelines. 
+Page 32  
+10.
+AUDIT AND DOCUMENTATION REQUIREMENTS 
+The responsibility for preparing RFS rests with the operators.  In addition, it will be 
+necessary for the information to be audited and thoroughly documented. 
+The audit requirement, as specified below, does not apply to operators who fall below 
+the large company threshold.  Instead, these entities i.e. “small operators” are 
+required to submit a Statement signed by a company director that confirms to MCMC 
+that the accounts have been produced in accordance with the submitted 
+documentation and comply with the regulatory obligations. 
+10.1. Overview of audit opinion for large operators 
+MCMC will need to be satisfied that the RFS are free from material errors and 
+misrepresentations. In order to to have that comfort level, MCMC requires an audit 
+opinion and this implies a duty of care to the regulator.
+MCMC sets out below the basic principles upon which the two different levels of audit 
+opinion are based.  
+FPIA (Fairly Presents in Accordance with) provides comfort that the overall impression 
+created by the financial statements “fairly presents” the underlying performance and 
+financial position of the entity concerned.  This level of audit opinion is the industry 
+standard and is equivalent to what is required for audited accounts. 
+On the other hand, PPIA (Properly Prepared in Accordance with) only provides 
+assurance that the figures contained in the financial statements have been properly 
+prepared in accordance with an agreed process, without any assurance that the overall 
+impression which they convey represents the underlying performance and financial 
+position in a “fair” manner.  Therefore, it is usually only permitted where it would not 
+be possible to implement FPIA or it would be disproportionate to do so.  Reflecting 
+this, the lower assurance, which a PPIA audit opinion provides, is less costly to obtain 
+than a FPIA. 
+Since there are no standards for providing a FPIA audit opinion under the Malaysian 
+Financial Reporting Standards (MFRS) for current cost accounting, MCMC has decided 
+that an audit opinion based on PPIA should be provided for RFS prepared on both 
+historcal and current cost accounting beginning from year 2015.  
+Page 33  
+The audit opinion should cover whether the RFS: 
+(i)
+Are properly prepared in accordance with the Accounting Separation guidelines 
+and procedures, as defined in the detailed documentation, which state the 
+Principles of Accounting Separation, the attribution method and accounting 
+policies in arriving at Income and MCE of each market and product; 
+(ii)
+Complies with the regulatory obligations in place; 
+(iii)
+Contains all the information and documents specified as to be submitted by the 
+regulatory obligations; and 
+(iv)
+The restated and re-presented prior year Income and MCE Statements are 
+properly presented in accordance with this document. 
+MCMC has decided that: 
+
+With respect to entitites that fall below the “small company” threshold self 
+certification signed by a company director will be required. 
+
+For companies that do not fall below the “small company” threshold, a 
+Readiness Review Statement signed by the company auditors will be sufficient 
+for the first two years of implementation of AS, followed by PPIA thereafter.  
+10.2. Audit scope 
+The audit scope must cover all matters highlighted in this Guidelines which include but 
+not limited to the following:- 
+(i)
+Review of operator’s Accounting Separation (AS) Manual 
+To assess whether: 
+
+The regulatory accounts adhere to the principles of causality , 
+transparency , consistency  and cost effectiveness in attribution of 
+revenue, cost, assets and liabilities to the different services; 
+
+The overall content and structure of the AS manual is consistent in the 
+context of the model structure and reporting requirements; 
+
+The AS manual includes description of all material cost drivers, data 
+sources and allocation methods; and 
+Page 34  
+
+The description of each methodology in the AS manual is sufficient for 
+audit verification in the context of a ‘properly prepared in accordance 
+with’ (“PPIA”) audit. 
+(ii)
+To review the Accounting Separation Policies 
+To assess whether: 
+
+The regulatory accounts are prepared based on the audited financial 
+statements and AS manual. The audited financial statements are 
+prepared in accordance with the Malaysian Financial Reporting 
+standards issued by the Malaysian Accounting Standards Board, 
+International Financial Reporting Standards and provisions of the 
+Malaysian Companies Act. 
+
+To ensure only accounting policies relevant to the preparation of 
+accounting separation are included into the RFS and irrelevant policies 
+to regulatory accounts are either marked as “Not Relevant to RFS” or 
+struck off or included as an Appendix. 
+(iii)
+Review of revenue allocation and attribution methodology 
+
+To assess whether the revenue attribution methodologies being used 
+are not wholly unreasonable including consideration of the relevance of 
+the drivers and any management estimates or assumptions embedded 
+within the methodologies; 
+(iv)
+Review of revenue allocation and attribution processes to: 
+
+assess whether the implemented methodology is consistent with the 
+description in the AS Manual; 
+
+determine whether any additional information is required to be 
+documented in the AS manual;  
+
+to assess the readiness of processes and controls to ensure that the 
+revenue attribution model inputs can be properly compiled with; 
+
+To assess management’s controls and processes in place to ensure 
+completeness and accuracy of data source; 
+Page 35  
+
+to ensure transfer pricing are allocated to the respective identified 
+services where applicable; and 
+
+to ensure the documentation of transfer pricing between business 
+operations and services are transparent , objective  and are in 
+accordance with the principles set out in the Guidelines on 
+Implementation of Accounting Separation in Malaysia. 
+(v)
+Review of cost allocation and attribution methodology 
+
+To assess whether the cost attribution methodologies being used are 
+not wholly unreasonable including consideration of the relevance of the 
+drivers and any management estimates or assumptions embedded 
+within the methodologies. 
+(vi)
+Review of cost allocation and attribution processes to: 
+
+assess whether the implemented methodology is consistent with the 
+description in the AS Manual; 
+
+determine whether any additional information is required to be 
+documented in the AS manual;  
+
+to assess the readiness of processes and controls to ensure that the cost 
+attribution model inputs can be properly compiled with; 
+
+To assess management’s controls and processes in place to ensure 
+completeness and accuracy of data source; 
+
+to ensure transfer charges are allocated to the respective identified 
+services where applicable; and 
+
+to ensure the documentation of transfer charges between business 
+operations and services are transparent , objective  and in accordance 
+to the principles set out in the Guidelines on Implementation of 
+Accounting Separation in Malaysia. 
+(vii)
+Review of AS model 
+To  assess the overall AS model to ascertain the following: 
+Page 36  
+
+the overall AS model structure reflects the revenue and costing 
+processes spelt out in the AS manual; and 
+
+to ensure the AS model is able to reconcile to the audited accounts. 
+
+Operators will be free to determine who audits their RFS, so the use of statutory 
+auditors is not precluded. 
+10.3. Documentation 
+Alongside the RFS themselves, it will be necessary for the operators to provide a full 
+documentary record of the framework and methods used in their preparation.  This 
+documentation should comprise: 
+(i)
+A statement of the Accounting Separation Principles followed; 
+(ii)
+A statement of the Accounting Policies used, in accordance with Section 3 above 
+and Appendix E, and noting, where necessary, any changes in the policies over 
+time; 
+(iii)
+A brief description of the services; 
+(iv)
+An explanation of revenue apportionment, the drivers used and mapping of the 
+services to the product code; 
+(v)
+An explanation of the cost attribution methods used and the principal cost 
+drivers and mapping of GL to the cost category using guidance set out in 
+Section 5 and Appendix D; 
+(vi)
+An explanation of the nature and calculation of the transfer charges, in 
+accordance with what is described in Section 6; 
+(vii)
+A full list of all codes and definitions used for:  
+─ 
+Products and services; 
+─ 
+Account codes; 
+─ 
+Activity codes; 
+─ 
+Cost centres and functions; and 
+─ 
+Data sources. 
+(viii)
+A network diagram;  
+Page 37  
+(ix)
+PPIA Audit Opinion; and 
+(x)
+A copy of the audited accounts or certified true copy of the audited accounts. 
+Documentation supporting the RFS needs to be of good quality and information needs 
+to be disclosed with sufficient detail and clarity of the overall model in preparing the 
+regulatory financial statements which include methodologies and drivers applied in the 
+preparation of regulatory accounting data. 
+The necessary level of documentation is also linked to the audit requirements, with 
+aspects of the costing process having to be reviewed “in accordance with the 
+documentation”.   
+Retention of records should be the same as for current statuory purposes.   
+Operators will need to submit the required documentation to MCMC in accordance with 
+the Implementation Timescale set out in Section 11.  
+An illustrative template of the documentation is attached in Appendix F for reference.  
+10.4. Maintenance of accounting records and responsibilities 
+In addition to the required documentation, it is essential that operators maintain 
+appropriate accounting records.  The accounting and non-financial records have to be 
+sufficient to provide relevant, comparable and reliable information, and key 
+requirements include: 
+(i)
+A sufficient level of detail to allow verification of the RFS; 
+(ii)
+Sources of information, particularly non-financial data used in cost attribution; 
+(iii)
+Definitions of all services and products; 
+(iv)
+The “mapping of services” onto network plant groups and components, 
+demonstrating how the services use the network; 
+(v)
+Network engineering information used for developing cost drivers; 
+(vi)
+The on-going availability of staff and information to support queries from 
+MCMC; and 
+(vii)
+The appropriate retention of information. 
+Page 38  
+Ultimately, the responsibility for keeping proper records, the preparation of the RFS, 
+and the reliability of the information contained in them lies with the directors of the 
+relevant companies. 
+The principal accounting recording system is normally the operator’s general ledger.  
+It will be possible for operators, in due course, to develop additional management 
+accounting features, such as cost allocation and ABC, which would provide many of 
+the tools for AS processing and record keeping.  
+Within the general ledger, the core feature is the accounts code or chart of accounts 
+which typically contains two key dimensions, namely the type of account, or natural 
+expense, such as payroll and the cost centre.  The latter normally relates to a broad 
+functional activity such as marketing.  MCMC envisages that a matrix of cost types and 
+costs by function would form the basic financial building block for cost analysis 
+purposes.   
+The main accounting record for premises and network plant would be the Fixed Asset 
+Register.   
+In a number of cases, operators appear to use Enterprise Resource Planning (ERP) 
+systems which contain modules such as Financial Accounting or Controlling.  The 
+financial modules can typically work in conjunction with other modules such as Human 
+Resources or Customer Relationship Management.   
+Given that these ERP modules or systems bring together financial and non financial 
+information, both for internal and external purposes, in due course, these modules 
+could contain many of the necessary records for non financial information for the 
+costing process and a more integrated approach to data collection which could be used 
+for RFS purposes.  
+In the first year of preparing results, and possibly beyond, it may be practical to 
+develop the cost apportionment process using a series of spreadsheets, with 
+supporting documentation.  This may be helpful in terms of the overall learning 
+process, as new methods are being introduced, and would not be over prescriptive. 
+Page 39  
+11.
+IMPLEMENTATION PLAN 
+11.1. Implementation Timetable 
+Table 7 AS Implementation Timetable 
+Date 
+Actions 
+MCMC 
+Operator 
+Nov 2012 
+Issue decision on AS  
+Dec 2012 
+Prepare AS Guidelines and send out 
+letters to operators to Implement AS 
+Dec 2012
+Begin the on-going task of data 
+gathering.   
+Feb 2013 
+Monitor progress by reviewing the 
+implementation plan, and advising the 
+operators of any shortcomings 
+Submit documentation explaining 
+the operator’s own implementation 
+plan 
+Jun 2013 
+Monitor progress by reviewing the 
+revenue reports and documentation in 
+comparison to the contents of the PI 
+Paper, and advising the operators of 
+any shortcomings 
+Produce first set of 6 monthly 
+separated revenue reports together 
+with documentation explaining the 
+principles and details of methodology 
+used 
+Sep 2013 
+Monitor progress by reviewing the 
+documentation in comparison to the 
+contents of the PI Paper, and advising 
+the operators of any shortcomings 
+Complete 
+collection 
+of 
+data 
+on 
+network cost drivers and submit 
+document summarising the cost 
+drivers 
+used 
+and 
+explaining 
+attribution methodology for network 
+costs. 
+Dec 2013 
+Monitor progress by reviewing the 
+documentation in comparison to the 
+contents of the PI Paper, and advising 
+the operators of any shortcomings 
+Complete collection of data on non-
+network cost drivers and submit 
+document summarising the cost 
+drivers 
+used 
+and 
+explaining 
+attribution methodology for non-
+network costs. 
+Jun 2014 
+Monitor progress by reviewing RFS 
+Submit 2013 draft HCA RFS 
+Sep 2014 
+Monitor progress by reviewing RFS 
+Formally submit 2013 final HCA RFS 
+Jun 2015 
+Monitor progress by reviewing RFS 
+Submit 2014 draft HCA RFS 
+Sep 2015 
+Monitor progress by reviewing RFS 
+Formally submit 2014 final HCA RFS 
+Jun 2016 
+Monitor progress by reviewing RFS 
+Submit 2015 draft HCA RFS 
+Sep 2016 
+Monitor progress by reviewing RFS 
+Formally submit 2015 final HCA RFS 
+June 2017 
+Consultation with industry on CCA 
+Guidelines 
+Jun 2017 
+Monitor progress by reviewing RFS 
+Submit 2016 draft HCA RFS 
+Sep 2017 
+Monitor progress by reviewing RFS 
+Formally submit 2016 final HCA RFS 
+Sep 2017 
+Publish Guidelines on CCA 
+Oct 2017 
+Begin the on-going task of data 
+gathering for CCA asset revaluation 
+Dec 2017 
+Monitor progress by reviewing the 
+CCA documentation  
+Submit documentation explaining 
+the implementation plan for CCA RFS 
+Page 40  
+The above timelines are for companies with financial year ending 31 Dec. For companies with 
+different financial year end, the draft RFS should be submitted 6 months from the FYE and final 
+RFS 3 months thereafter.
+The timetable above summarises what was set out in the PI Report and the changes 
+as approved by the Commission since 2012.  Draft and final CCA RFS will also need to 
+be submitted in June and September respectively of each year beginning 2018. 
+and the principles and the details of 
+the methodologies to be used to 
+revalue 
+assets 
+and 
+calculate 
+depreciation 
+and 
+holding 
+gains/losses 
+Jun 2018 
+Monitor progress by reviewing RFS 
+Submit 2017 draft HCA RFS 
+Sep 2018 
+Monitor progress by reviewing RFS 
+Formally Submit 2017 final HCA RFS 
+Jun 2019 
+Monitor progress by reviewing RFS 
+Submit draft 2018 CCA RFS 
+Sep 2019 
+Monitor progress by reviewing RFS 
+Formally submit 2018 final CCA RFS 
+Page 41  
+APPENDIX A: FORMAT OF ACCOUNTS FOR SMALL OPERATORS 
+A.1 Small Operator Wholesale Income Statement 
+The format for the consolidated wholesale Income Statement that small operators 
+need to produce is shown below. 
+Table 8 Small operator Wholesale Income Statement 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer  charges from retail 
+x 
+x 
+Transfer charges from other 
+business units 
+x 
+x 
+Gain on disposal of wholesale 
+assets 
+x 
+x 
+Other income (Please specify) 
+x 
+x 
+Total  income 
+X 
+X 
+Operating 
+Costs  
+Operating costs 
+x 
+x 
+Depreciation 
+x 
+x 
+Transfer charges to retail 
+x 
+x 
+Transfer charges from other 
+business units 
+x 
+x 
+Loss on disposal of wholesale 
+assets 
+x 
+x 
+Other operating cost (Please 
+specify) 
+x 
+x 
+Total operating  costs 
+X 
+X 
+Operating 
+return 
+X 
+X 
+% return on turnover 
+x% 
+x% 
+Page 42  
+A.2 Small Operator Retail Income Statement 
+Small operators are also required to produce a consolidated retail Income Statement. 
+The format for this is shown in Table 9. 
+Table 9 Small Operator Retail Income Statement 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer  charges from 
+wholesale 
+x 
+x 
+Transfer charges from other 
+business units 
+x 
+x 
+Gain on disposal of retail 
+assets 
+x 
+x 
+Other income (Please specify) 
+x 
+x 
+Total  income 
+X 
+X 
+Operating 
+Costs 
+Operating costs 
+x 
+x 
+Depreciation 
+X 
+x 
+Transfer charges to wholesale 
+x 
+x 
+Transfer charges to other 
+business units 
+x 
+x 
+Loss on disposal of retail assets x 
+x 
+Other operating cost (Please 
+specify) 
+x 
+x 
+Total operating  costs 
+X 
+X 
+Operating 
+return 
+X 
+X 
+% return on turnover 
+x% 
+x% 
+Page 43  
+A.3 Small Operator Other Business Income Statement 
+The format for the consolidated other business Income Statement that small operators 
+need to produce is shown below. 
+Table 10 Small Operator Other Business Income Statement 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer  charges from 
+wholesale 
+x 
+x 
+Transfer charges from retail 
+x 
+x 
+Gain on disposal of residual 
+assets 
+x
+x
+Other income (Please specify) 
+x
+x
+Total  income 
+X 
+X 
+Operating Costs 
+Operating costs 
+x 
+x 
+Depreciation 
+x 
+x 
+Transfer charges to wholesale 
+x 
+x 
+Transfer charges to retail 
+x 
+x 
+Loss on disposal of residual 
+assets 
+x
+x
+Other operating cost (Please 
+specify) 
+x
+x
+Total operating  costs 
+X 
+X 
+Operating 
+return 
+X 
+X 
+% return on turnover
+x%
+x%
+Page 44  
+A.4 Small Operator Net Asset Statement 
+The format for the Net Asset Statement that small operators need to produce is shown 
+below. 
+Table 11 Small Operator Net Asset Statement 
+Year Ended ….201x 
+Total  
+wholesale  
+Total retail 
+Residual/Other 
+business 
+Total 
+Non-current assets 
+Tangible fixed assets 
+Other 
+Investments 
+Others (Pls specify) 
+Total Non-current Assets 
+Current Assets 
+Stocks 
+Cash and cash equivalent 
+Debtors 
+-
+Internal 
+-
+External 
+Accruals (Please specify) 
+Others (Please specify) 
+Total Current Assets 
+Current Liabilities 
+Creditors 
+-
+Internal 
+-
+External 
+Accruals (Please specify) 
+Others (Please specify) 
+Page 45  
+Total Liabilities falling due within 
+one year 
+Working Capital i.e. Total Current 
+Assets - Total Current Liabilities 
+Capital Employed i.e. Total Assets 
+less Current Liabilities 
+Provisions for liabilities and charges 
+Net Assets 
+Operating Returns 
+% return on Net Assets
+x%
+x%
+x%
+x%
+Page 46  
+APPENDIX B: FORMAT OF ACCOUNTS FOR LARGE OPERATORS 
+B.1 Fixed Operators 
+B.1.1 Wholesale Service Income Statements 
+For each of the wholesale services identified in Section 2.2, the Income Statement 
+should have the format shown in Table 12.
+Table 12:  
+Fixed: Wholesale Income Statement Format for Each Service 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer charges from retail 
+x 
+x 
+Transfer charges from other 
+business 
+x 
+x 
+Gain on disposal of wholesale 
+assets 
+x
+x
+Other income (Please specify) 
+x 
+x 
+Total wholesale income 
+X 
+X 
+Operating Costs 
+Operating costs 
+x 
+x 
+Depreciation 
+x 
+x 
+Transfer charges to retail 
+x
+x
+Transfer charges to other 
+business/residual 
+x
+x
+Loss on disposal of wholesale 
+assets 
+x
+x
+Other operating cost (Please 
+specify) 
+x 
+x 
+CCA Adjustment Holding (gain)/loss 3
+x/(x) 
+x/(x) 
+3
+Holding gains/losses can be presented on a gross basis where they are calculated as closing GRC 
+minus opening GRC, or on a net basis where they are calculated as closing GRC minus opening 
+GRC minus backlog depreciation.  We recommend that holding gains or losses are shown on a net 
+basis.  Alternatively holding gains or losses can be shown on a gross basis, and backlog depreciation 
+included in “other adjustments”.  
+Page 47  
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Supplementary depreciation 
+x 
+x 
+Other adjustments 
+x 
+x 
+Total operating costs 
+X 
+X 
+Operating 
+return 
+x 
+x 
+% return on turnover 
+x% 
+x% 
+The corresponding statements of average unit revenue and unit costs for each 
+wholesale service should be formatted as shown in Table 13. The figures in both tables 
+should tally to ensure consistency in reporting.  
+Page 48  
+Table 13 
+Fixed: Wholesale Average Unit Revenue and Cost Statement for Each Service 
+Total revenue 
+xxx 
+    External revenue 
+xxx 
+    External volume 
+xxx 
+    Average external unit revenue 
+xxx 
+    Internal revenue 
+xxx 
+    Internal volume 
+xxx 
+    Average internal unit revenue 
+xxx 
+Total costs 
+xxx 
+    External Cost 
+xxx 
+    Internal Cost 
+xxx 
+Average unit cost 
+xxx 
+    External unit cost 
+xxx 
+    Internal unit cost 
+xxx 
+Margin 
+xxx 
+    External Margin 
+xxx 
+    Internal Margin 
+xxx 
+Margin % 
+xxx 
+    External Margin % 
+xxx 
+    Internal Margin % 
+xxx 
+B.1.2 Consolidated Wholesale Income Statement 
+The wholesale Income Statements for the individual wholesale services in the previous 
+section should also be aggregated into a consolidated wholesale Income Statement, 
+as shown in Table 14 below, summarising wholesale total market results.  
+ Page 49 
+Table 14 
+Fixed: Consolidated Wholesale Income Statement by Service 
+Exchange lines 
+Wholesale local 
+access- copper 
+Wholesale local 
+access- fibre 
+Wholesale 
+Broadband 
+access 
+Wholesale 
+Leased lines 
+Backhaul 
+Services 
+Call origination 
+Call  
+termination 
+Transit services 
+Interconnection 
+circuits 
+Other 
+TOTAL 
+WHOLESAEL 
+Income 
+Income from other operators/external 
+parties 
+Transfer  charges from retail 
+Transfer charges from other business 
+Gain on disposal of wholesale assets 
+Other income (Please specify) 
+Total wholesale income 
+Operating costs 
+Operating costs 
+Depreciation 
+Transfer charges to retail 
+Transfer charges to other 
+business/residual 
+Loss on disposal of wholesale assets  
+Other operating costs (Please specify) 
+Total HC operating costs 
+Holding (gains)/losses 4
+Supplementary depreciation 
+4
+See Footnote 3
+ Page 50 
+Other adjustments 
+Total Net CCA adjustments 
+Total operating costs 
+Operating return 
+% return on turnover 
+Page 51 
+B.1.3. Retail Service Income Statements  
+For each of the retail services identified in Section 2 the Income Statement should have 
+the format shown in Table 15.  The example shown is for when CCA is used.  In the case 
+of HCA there will be no entries for holding gains/losses, supplementary depreciation or 
+other CCA adjustments. 
+Table 15 
+Fixed: Retail Income Statement Format for Each Service 
+Current year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer charges from 
+wholesale 
+x 
+x 
+Transfer charges from other 
+business 
+x
+x
+Gain on disposal of assets 
+x
+x
+Other income (Please 
+specify) 
+x 
+x 
+Total income 
+X 
+X 
+Operating Costs 
+Operating costs 
+x 
+x 
+Depreciation charges 
+x 
+x 
+Transfer charges to 
+wholesale 
+x 
+x 
+Transfer charges to other 
+business 
+x
+x
+Loss on disposal of assets  
+x
+x
+Other operating costs 
+(Please specify) 
+x
+x
+Holding (gain)/loss 5
+x/(x) 
+x/(x) 
+Supplementary depreciation 
+x 
+x 
+Other adjustments 
+x 
+x 
+Total operating costs 
+Operating return 
+X 
+X 
+% return on turnover 
+x% 
+x% 
+5
+See Footnote 3
+Page 52 
+The corresponding statements of average revenue and unit costs for each retail service 
+should be formatted as shown in Table 16. The figures in both tables should tally to ensure 
+consistency in reporting. 
+Table 16 
+Fixed: Retail Average Unit Revenue and Cost Statement 
+Total revenue 
+xxx 
+    External revenue 
+xxx 
+External Volume 
+xxx 
+Average external unit revenue 
+xxx 
+    Internal revenue 
+xxx 
+    Internal volume 
+xxx 
+    Average internal unit revenue 
+xxx 
+Total costs 
+xxx 
+    External Cost 
+xxx 
+    Internal Cost 
+xxx 
+Average unit cost 
+xxx 
+    External unit cost 
+xxx 
+    Internal unit cost 
+xxx 
+Margin 
+xxx 
+    External Margin 
+xxx 
+    Internal Margin 
+xxx 
+Margin % 
+xxx 
+    External Margin % 
+xxx 
+    Internal Margin % 
+xxx 
+B.1.4 Consolidated Retail Income Statement 
+The Retail Income Statements for the individual retail services in the previous section 
+should be aggregated into a consolidated retail Income Statement, as shown in Table 17 
+below, summarising retail total market results. 
+Page 53 
+Table 17 
+Fixed: Consolidated Retail Income Statement by Service 
+Exchange lines 
+residential 
+Exchange  lines 
+business 
+Total exchange 
+liens 
+Local calls 
+National calls 
+International calls 
+Calls to mobiles 
+Leased lines 
+Broadband 
+Other 
+TOTAL RETAIL  
+Income 
+Income from other operators/external 
+parties 
+Transfer  charges from wholesale 
+Transfer charges from other business 
+Gain on disposal of assets 
+Other income (Please specify) 
+Total wholesale income 
+Operating costs 
+Operating costs 
+Depreciation 
+Transfer charges to wholesale 
+Transfer charges to other business 
+Loss on disposal of assets 
+Other operating costs (Please specify) 
+Total HC operating costs 
+Holding (gain)/loss 6
+Supplementary depreciation 
+Other adjustments 
+Total Net CCA adjustments 
+Total operating costs 
+Operating return 
+% return on turnover 
+6
+See Footnote 3
+Page 54 
+B.1.5 Wholesale Mean Capital Employed by Service 
+A statement should be provided showing the breakdown of MCE for each wholesale service.  
+The format is shown in Table 18. 
+B.1.6 Retail Mean Capital Employed by Service 
+Similarly, a statement should be provided of the breakdown of MCE for each retail service.  
+The format is shown in Table 19.  
+Page 55 
+Table 18 
+Fixed: Wholesale Mean Capital Employed by Service 
+Exchange 
+lines 
+Wholesale 
+local 
+access- 
+copper 
+Wholesale 
+local 
+access- 
+fibre 
+Wholesale 
+Broadband 
+access 
+Wholesale 
+Leased 
+lines 
+Backhaul 
+Services  
+Call 
+origination 
+Call  
+termination 
+Transit 
+Services 
+Inter 
+connection 
+circuits 
+Other 
+Non-current assets 
+Tangible fixed assets 
+Land & Buildings 
+Access-Copper 
+Access-Fibre 
+Access-Duct 
+Switch and Transmission  - Switch 
+             - Transmission 
+Investments 
+Others (Please specify) 
+Total Non-current Assets 
+Current Assets 
+Cash and cash equivalent 
+Stocks 
+Debtors 
+-
+Internal 
+-
+External 
+Accruals (Please specify) 
+Others (Please specify) 
+Total Current Assets 
+Current Liabilities 
+Creditors 
+-
+Internal 
+-
+External 
+Accruals (Please specify) 
+Others (Please specify) 
+Total Liabilities falling due within one year 
+Page 56 
+Net Current Assets/(Liabilities) 
+Total Assets less Current Liabilities 
+Provisions for liabilities and charges 
+Rounding 
+Mean capital employed 
+Return on Turnover 
+% of Return on Mean Capital Employed 
+Page 57 
+Table 19 
+Fixed: Retail Mean Capital Employed by Service 
+Exchange 
+lines 
+residential 
+Exchange  
+lines 
+business 
+Total 
+exchange 
+liens 
+Local calls 
+National 
+calls 
+International 
+calls 
+Calls to 
+mobiles 
+Leased lines 
+Broadband 
+Other 
+Non-current assets 
+Tangible fixed assets 
+Land & Buildings 
+Access-Copper 
+Access-Fibre 
+Access-Duct 
+Switch and Transmission - Switch 
+                                     - Transmission   
+Investments 
+Others (Please specify) 
+Total Non-current Assets 
+Current Assets 
+Cash and cash equivalent 
+Stocks 
+Debtors 
+-
+Internal 
+-
+External 
+Accruals (Please specify) 
+Others (Please specify) 
+Total Current Assets 
+Current Liabilities 
+Creditors 
+-
+Internal 
+-
+External 
+Accruals (Please specify) 
+Others (Please specify) 
+Total Liabilities falling due within one year 
+Page 58 
+Net Current Assets/(Liabilities) 
+Total Assets less Current Liabilities 
+Provisions for liabilities and charges 
+Rounding 
+Mean Capital Employed 
+Return on turnover 
+% of return on Mean capital employed 
+Page 59 
+B.1.7 Consolidated Mean Capital Employed 
+Wholesale, retail and other MCE should be consolidated using the format shown in Table 
+20 below. 
+Table 20 
+Fixed: Consolidated Mean Capital Employed 
+Current 
+year 
+(RM) 
+Wholesale 
+Wholesale exchange lines 
+X 
+Wholesale local access - copper 
+X 
+Wholesale local access - fibre 
+X 
+Wholesale broadband access 
+X 
+Wholesale leased lines 
+X 
+Backhaul services 
+X 
+Call origination 
+X 
+Call termination 
+X 
+Transit services 
+X 
+Interconnection circuits 
+X 
+Other 
+X 
+Total wholesale
+X 
+Retail
+Retail exchange lines - residential
+X 
+Retail exchange lines - business 
+X 
+Local calls 
+X 
+National calls 
+X 
+International calls 
+X 
+Calls to mobiles 
+X 
+Leased lines 
+X 
+Broadband 
+X 
+Other 
+X 
+Total retail
+X 
+Other
+Global
+X 
+Value added services 
+X 
+Other residual 
+X 
+Total separated accounts 
+X 
+Adjustments 
+x/(x) 
+Audited accounts 
+X 
+Page 60 
+B.1.8 Other Business Income Statement Format  
+For any other business, the Income Statement should have the format shown in Table 21 
+below.  The example shown is for when CCA is used.  In the case of HCA there will be no 
+entries for holding gains/losses, supplementary depreciation or other CCA adjustments. 
+Table 21 
+Fixed: Residual Income Statement 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer charges from 
+wholesale 
+x 
+x 
+Transfer charges from retail 
+x 
+x 
+Gain on disposal of assets 
+x
+x
+Other income (Please 
+specify) 
+x
+x
+Total income 
+x 
+x 
+Operating Costs 
+Operating costs 
+x 
+x 
+Depreciation charges 
+x 
+x 
+Transfer charges to 
+wholesale 
+x 
+x 
+Transfer charges to retail 
+x
+x
+Loss on disposal of assets 
+x
+x
+Other operating cost (Please 
+specify) 
+x
+x
+Holding (gain)/loss 7
+x/(x) 
+x/(x) 
+Supplementary depreciation 
+x 
+x 
+Other adjustments 
+x 
+x 
+Total operating costs 
+Operating return 
+x 
+x 
+% return on turnover 
+x% 
+x% 
+7
+See Footnote 3 .
+Page 61 
+B.1.9 Network Unit Cost by Service 
+In order to demonstrate that transfer charges are cost-based and non-discriminatory, it is necessary to show how network unit costs are 
+calculated.  The first step is to calculate average unit costs for each network component, as shown in Table 22 below.  Not all network 
+components are shown, but these lists should be completed by the operators.  For each service, network unit costs (Table 24) are then 
+calculated as the sum product of component average unit costs (Table 22 ) and routing factors (Table 23) where the latter are the average 
+number of units of each network element used by a particular service.  
+Table 22 
+Fixed: Network Element Unit Cost Statement 
+Operating 
+costs 
+Mean 
+Capital 
+Employed 
+Rate of 
+return (%) 
+Capital 
+costs 
+Operating 
+and capital 
+costs 
+Volume 
+Average 
+unit cost 
+Components 
+Access 
+Local switching  
+Core switching/routing 
+Transmission 
+etc 
+Totals 
+Page 62 
+Table 23 
+Fixed: Service Routing Factors 
+Access 
+ Local 
+switching  
+ Core 
+switching/ 
+routing  
+Transmission 
+etc 
+Component average unit cost 
+(Table 22) 
+Service routing factors: 
+Wholesale exchange lines 
+Wholesale local access - copper 
+Wholesale local access - fibre 
+Wholesale broadband access 
+Wholesale leased lines 
+Backhaul services 
+Call origination 
+Call termination 
+Transit services 
+Interconnection circuits 
+Other 
+Retail exchange lines - residential 
+Retail exchange lines - business 
+Local calls 
+National calls 
+International calls 
+Calls to mobiles 
+Leased lines 
+Broadband 
+Other 
+Page 63 
+Table 24 
+Fixed: Network Unit Costs by Service 
+Access 
+ Local 
+switching  
+ Core 
+switching/ 
+routing  
+ Transmission 
+etc 
+Total 
+Wholesale exchange lines 
+Wholesale local access - copper 
+Wholesale local access - fibre 
+Wholesale broadband access 
+Wholesale leased lines 
+Backhaul services 
+Call origination 
+Call termination 
+Transit services 
+Interconnection circuits 
+Other 
+Retail exchange lines - residential 
+Retail exchange lines - business 
+Local calls 
+National calls 
+International calls 
+Calls to mobiles 
+Leased lines 
+Broadband 
+Other 
+Page 64 
+B.1.10 Statement of Costs on a Current Cost Basis: Network Activity Statement 
+When costs are stated on a CCA basis, the Network Element Unit Cost Statement (see Table 22) should be augmented to show the CCA 
+adjustments and supplementary depreciation.  This is often referred to as a Network Activity Statement (see Table 25). 
+Table 25 
+Fixed: Network Activity Statement 
+HCA 
+operating 
+cost 
+Supplementary 
+depreciation 
+Holding gains 
+and other CCA 
+adjustments 
+Total CCA 
+operating 
+costs 
+CCA Mean 
+Capital 
+Employed 
+Applicable 
+rate of 
+return on 
+capital % 
+Capital 
+costs 
+Total of 
+operating 
+costs and 
+capital costs 
+relating to 
+current year 
+Volume 
+Average 
+costs per 
+unit on a 
+current cost 
+basis 
+relating to 
+current year 
+Components 
+Access 
+Local switching  
+Core switching 
+sswswitching/routing 
+Transmission 
+Etc 
+Totals 
+Note 1 
+Note 2 
+Note 3 
+Notes: 1. Total as per wholesale market income statement, 2. Total as per wholesale MCE, 3. Applicable rate is usually previous year’s rate of return 
+on MCE for the wholesale business.
+Page 65 
+B.2 Mobile Network 
+B.2.1 Wholesale Service Income Statements 
+For each of the wholesale services identified in Section 2.3, the Income Statement should 
+have the format shown in Table 26.  In the case of HCA, there will be no entries for holding 
+gains/losses, supplementary depreciation or other CCA adjustments. 
+Table 26 
+Mobile: Wholesale Income Statement 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer charges from retail 
+x 
+x 
+Transfer charges from other 
+business 
+x 
+x 
+Gain on disposal of assets 
+x 
+x 
+Other income (Please specify) 
+x 
+x 
+Total wholesale income 
+X 
+X 
+Operating Costs 
+Operating costs 
+x 
+x 
+Depreciation 
+x 
+x 
+Transfer charges to retail  
+x 
+x 
+Transfer charges to other 
+business 
+x 
+x 
+Loss on disposal of assets 
+x 
+x 
+Other operating cost (Please 
+specify) 
+x 
+x 
+Holding (gain)/loss 8
+x/(x) 
+x/(x) 
+Supplementary depreciation 
+x 
+x 
+Other adjustments 
+x 
+x 
+Total operating costs 
+X 
+X 
+Operating return 
+X 
+X 
+% return on turnover 
+% 
+% 
+Page 66 
+The corresponding statements of average unit costs for each wholesale service should be 
+formatted as shown in Table 27 .  The figures in both tables should tally to ensure 
+consistency in reporting. 
+Table 27 
+Mobile: Wholesale Average Unit Revenue and Cost Statement  
+Total revenue 
+xxx 
+    External revenue 
+xxx 
+    External volume 
+xxx 
+    Average external unit revenue 
+xxx 
+    Internal revenue 
+xxx 
+    Internal volume 
+xxx 
+    Average internal unit revenue 
+xxx 
+Total costs 
+xxx 
+    External Cost 
+xxx 
+    Internal Cost 
+xxx 
+Average unit cost 
+xxx 
+    External unit cost 
+xxx 
+    Internal unit cost 
+xxx 
+Margin 
+xxx 
+    External Margin 
+xxx 
+    Internal Margin 
+xxx 
+Margin % 
+xxx 
+    External Margin % 
+xxx 
+    Internal Margin % 
+xxx 
+Page 67 
+B.2.2. Retail Service Income Statements  
+For each of the retail services identified in Section 3.3, the Income Statement should have 
+the format shown in Table 28.  In the case of HCA, there will be no entries for holding 
+gains/losses, supplementary depreciation or other CCA adjustments. 
+Table 28 
+Mobile: Retail Income Statement 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external charges 
+x 
+x 
+Transfer charges from 
+wholesale 
+x 
+x 
+Transfer charges from other 
+business 
+x 
+x 
+Gain on disposal of assets 
+x 
+x 
+Other income (Please 
+specify) 
+x 
+x 
+Total income 
+X 
+X 
+Operating Costs 
+Operating costs 
+x 
+x 
+Depreciation charges 
+x 
+x 
+Transfer charges to 
+wholesale 
+x 
+x 
+Transfer charges to other 
+business 
+x 
+x 
+Loss on disposal of assets 
+x 
+x 
+Other operating cost (Please 
+specify) 
+x 
+x 
+Holding (gain)/loss 9
+x/(x) 
+x/(x) 
+Supplementary depreciation 
+x 
+x 
+Other adjustments 
+x 
+x 
+Total operating CCA costs 
+X 
+X 
+Operating return 
+X 
+X 
+% return on turnover 
+% 
+% 
+9
+See Footnote 3 .
+Page 68 
+The corresponding statements of average unit revenue and costs for each retail service 
+should be formatted as shown in Table 29.  The figures in both tables should tally to ensure 
+consistency in reporting. 
+Table 29 
+Mobile: Retail Average Unit Revenue and Cost Statement 
+Total revenue 
+xxx 
+    External revenue 
+xxx 
+External Volume 
+xxx 
+Average external unit revenue 
+xxx 
+    Internal revenue 
+xxx 
+    Internal volume 
+xxx 
+    Average internal unit revenue 
+xxx 
+Total costs 
+xxx 
+    External Cost 
+xxx 
+    Internal Cost 
+xxx 
+Average unit cost 
+xxx 
+    External unit cost 
+xxx 
+    Internal unit cost 
+xxx 
+Margin 
+xxx 
+    External Margin 
+xxx 
+    Internal Margin 
+xxx 
+Margin % 
+xxx 
+    External Margin % 
+xxx 
+    Internal Margin % 
+xxx 
+Page 69 
+B.2.3 Other Business Income Statement Format  
+For any other business, the Income Statement should have the format shown in Table 21 
+below.  The example shown is for when CCA is used.  In the case of HCA there will be no 
+entries for holding gains/losses, supplementary depreciation or other CCA adjustments. 
+Table 30 
+Mobile: Residual Income Statement 
+Current 
+year 
+(RM) 
+Prior year 
+(RM) 
+Income 
+Income from other 
+operators/external parties 
+x 
+x 
+Transfer charges from 
+wholesale 
+x 
+x 
+Transfer charges from retail 
+x 
+x 
+Transfer charges from other 
+business 
+x
+x
+Gain on disposal of assets 
+x
+x
+Other income (Please specify) 
+x
+x
+Total income 
+x 
+x 
+Operating Costs 
+Operating costs 
+x 
+x 
+Depreciation charges 
+x 
+x 
+Transfer charges to wholesale 
+x 
+x 
+Transfer charges to retail 
+x
+x
+Transfer charges to other 
+business 
+x
+x
+Loss on disposal of assets 
+x
+x
+Other operating cost (Please 
+specify) 
+x
+x
+Holding (gain)/loss 10
+x/(x) 
+x/(x) 
+Supplementary depreciation 
+x 
+x 
+Other adjustments 
+x 
+x 
+Total operating costs 
+Operating return 
+x 
+x 
+% return on turnover 
+x% 
+x% 
+10
+See Footnote 3 .
+Page 70 
+B.2.4 Consolidated Income Statement 
+The retail and wholesale Income Statements for the individual services should be 
+aggregated into a consolidated Income Statement, as shown in Table 31 below.  In the 
+case of HCA, there will be no entries for holding gains/losses, supplementary depreciation 
+or other CCA adjustments.
+Page 71  
+Table 31 
+Mobile: Consolidated Income Statement by Service  
+Call 
+origination 
+Call 
+termination 
+MVNO 
+access 
+National 
+roaming 
+Internationa
+l roaming 
+RAN Sharing 
+Backhaul 
+Services 
+Other 
+Total  
+wholesale  
+Connections 
+and rentals  
+Voice 
+SMS 
+Data 
+Internationa
+l roaming 
+Other 
+Total retail  
+Residual/Ot
+her business 
+TOTAL  
+Income 
+Income from other 
+operators/ external parties 
+Transfer charges to 
+wholesale 
+Transfer charges to retail 
+Internal charges to other 
+business 
+Gain on disposal of assets  
+Other income (Please 
+specify) 
+Total wholesale income 
+Operating costs 
+Operating costs 
+Depreciation 
+Transfer charges to 
+wholesale 
+Transfer charges to retail 
+Transfer charges to other 
+business 
+Loss on disposal of assets 
+Other operating costs 
+(Please specify) 
+Total HC operating costs 
+Page 72  
+Holding (gains)/losses 11
+Supplementary depreciation 
+Other adjustments 
+Total Net CCA adjustments 
+Total operating CCA costs 
+Operating return 
+% return on turnover 
+11
+See Footnote 3 .
+Page 73  
+B.2.5 Mean Capital Employed by Service (Wholesale and Retail) 
+MCE for wholesale and retail services should be broken down by service as shown in     
+Table below. 
+Table 32 
+Mobile: Mean Capital Employed by Service 
+Call origination 
+Call  termination 
+MVNO access 
+National roaming 
+International roaming 
+RAN Sharing 
+Backhaul Services 
+Other 
+Total  wholesale 
+Connections and rentals 
+Voice 
+SMS 
+Data 
+International roaming 
+Other 
+Total retail 
+Residual/Other business 
+Total 
+Non-current 
+assets 
+Tangible fixed 
+assets 
+Land & 
+Buildings 
+Access-Copper 
+Access-Fibre 
+Access-Duct 
+Switch and 
+Transmission          
+- Switch 
+- Transmission   
+Investments 
+Others (Please 
+specify) 
+Total Non-
+current Assets 
+Current Assets 
+Cash and cash 
+equivalent 
+Stocks 
+Debtors 
+- Internal 
+- External 
+Accruals 
+(Please specify) 
+Others (Please 
+specify) 
+Total Current 
+Assets 
+Current 
+Liabilities 
+Creditors 
+- Internal 
+- External 
+Accruals 
+(Please specify) 
+Page 74  
+Others (Please 
+specify) 
+Total Liabilities 
+falling due 
+within one year 
+Net Current 
+Assets/ 
+(Liabilities) 
+Total Assets 
+less Current 
+Liabilities 
+Provisions for 
+liabilities and 
+charges 
+Rounding 
+Mean capital 
+employed 
+Return on 
+turnover
+% of return 
+on Mean 
+capital 
+employed
+B.2.6 Consolidated Mean Capital Employed 
+Consolidated MCE should be broken down as shown in Table below. 
+Table 33 
+Mobile: Consolidated Mean Capital Employed 
+Current 
+year 
+(RM) 
+Wholesale 
+Call origination 
+X 
+Call termination 
+X 
+MVNO access 
+X 
+National roaming 
+X 
+International roaming                  
+X 
+RAN Sharing 
+x 
+Backhaul Services 
+x 
+Other 
+X 
+Retail
+Connections and rentals 
+X 
+Voice 
+X 
+SMS 
+X 
+Data 
+X 
+International roaming 
+X 
+Other 
+X 
+Total retail 
+X 
+Page 75  
+Other 
+Global 
+X 
+Value added services 
+X 
+Other residual 
+X 
+Total separated accounts 
+x 
+Adjustments 
+x/(x) 
+Audited accounts 
+X 
+B.2.7 Network Unit Cost by Service 
+In order to compare internal and external transactions and hence demonstrate that 
+transfer charges are cost-based and non-discriminatory, it is necessary to show how unit 
+costs are calculated.   
+The first step is to calculate average unit costs for each network component, as shown in 
+Table  below.  For the purposes of exposition, not all network components are shown, but 
+these lists should be completed by the operators.   
+Combining network element unit costs with service routing factors (Table ) produces 
+network unit costs by service (Table ).  These statements can be produced in connection 
+with both HCA and CCA RFS. 
+Table 34 
+Mobile: Network Element Unit Cost Statement 
+Operating 
+costs 
+Mean Capital 
+Employed 
+Rate of return 
+(%) 
+Capital costs 
+Operating and 
+capital costs 
+Volume 
+Average unit 
+cost 
+Components 
+BTS/Node B/eNodeB 
+BSC/RNC 
+GGSN/SSGN/PGW/SGW 
+HSS/HLR/FNR/MNP 
+IN/Prepaid 
+INTGW 
+ MGW 
+ MMSC/WAP 
+MNP 
+MSC/MSS/GMSC/MME 
+NGIN 
+NMS 
+POI 
+Page 76  
+RAN 
+Roaming 
+SMSC 
+Transmission 
+Etc (Please specify) 
+Totals 
+Routing factors specify the average number of units of each network component used by 
+a particular type of service and should be provided as in Table .   
+Table 35 
+Mobile: Network Routing Factors 
+BTS/Node 
+B/eNodeB 
+BSC/RNC 
+GGSN/SSGN/
+PGW/SGW 
+HSS/HLR/FN
+R/MNP 
+IN/Prepaid 
+INTGW 
+etc 
+Component average unit 
+cost (Table 30) 
+Service routing factors: 
+Call origination 
+Call termination 
+MVNO access 
+National roaming 
+International roaming 
+RAN Sharing 
+Backhaul Services 
+Other wholesale 
+Connections and rentals 
+Voice 
+SMS 
+Data 
+International roaming 
+Other retail 
+Page 77  
+Using the network element unit costs and the routing factors provided in the two tables 
+above, the operators can then derive the unit network cost of different services, as shown 
+in Table  below.  For each service, this is calculated as the sum product of network 
+component average unit costs (Table ) and routing factors from Table . 
+Table 36 
+Mobile: Network Unit Costs by Service 
+BTS/Node 
+B/eNodeB 
+BSC/RNC 
+GGSN/SSGN/P
+GW/SGW 
+HSS/HLR/FNR
+/MNP 
+IN/Prepaid 
+INTGW 
+etc 
+Call origination 
+Call termination 
+MVNO access 
+National roaming 
+International roaming 
+RAN Sharing 
+Backhaul Services 
+Other wholesale 
+Connections and rentals 
+Voice 
+SMS 
+Data 
+International roaming 
+Other retail 
+Page 78  
+B.2.8 Statement of Costs on a Current Cost Basis: Network Activity Statement 
+As for mobile operators, when costs are stated on a CCA basis, the Network Element Unit 
+Cost Statement (see Table ) should be augmented to show the CCA adjustments and 
+supplementary depreciation.  This result in a Network Activity Statement (see Table ). 
+Table 37 
+Mobile: Network Activity Statement 
+HCA operating cost 
+Supplementary depreciation 
+Holding gain and other CCA 
+adjustments 
+Total CCA operating costs 
+CCA Mean Capital Employed 
+Applicable rate of return on 
+capital % 
+Capital costs 
+Total of operating costs and 
+capital costs relating to 
+current year 
+Volume 
+Average costs per unit on a 
+current cost basis relating to 
+current year 
+Components 
+BTS/Node B/eNodeB 
+BSC/RNC 
+GGSN/SSGN/PGW/
+SGW
+HSS/HLR/FNR/MNP
+IN/Prepaid
+INTGW
+ MGW
+ MMSC/WAP
+MNP
+MSC/MSS/GMSC/M
+ME
+NGIN
+NMS
+POI
+RAN
+Roaming
+SMSC
+Transmission
+Etc (Please specify)
+Totals 
+Note 1 
+Note 2 
+Note 3 
+Notes: 1. Total as per wholesale market income statement, 2. Total as per wholesale MCE, 3. 
+Applicable rate is usually previous year’s rate of return on MCE for the wholesale business.
+Page 79 
+APPENDIX C: CALCULATION OF CURRENT COSTS 
+This section serves as a basic guide on the principles of current cost account. A more 
+comprehensive guideline will be developed after consultation with the related parties for 
+full implementation beginning 2018.  
+C.1 Historical Costs 
+The historic and current cost valuations of an asset will be the same if there has been no 
+change in the price of the asset since its purchase.  This means that the use of historical 
+cost valuation is often appropriate when the asset has a short life and/or a short residual 
+life.  Also, if the asset concerned only accounts for a small percentage of the company’s 
+total asset base, then any difference between historic and current costs will have little 
+impact. 
+In either of these cases there is no need to revalue the asset and the historic costs may 
+be used.  
+C.1.1 Example of historical cost valuation 
+The use of a historical cost valuation can be used to value capital work in progress (CWIP).  
+Since the year-end balance of historical expenditure broadly reflects current price levels, 
+no further current cost adjustment is necessary. 
+C.1.2 Assets to be valued using historical costs 
+The historical cost valuation of assets other than the example of CWIP given above is 
+possible, but will depend on the circumstances of the individual operators and the 
+materiality of the items, as explained above. 
+C.2 Absolute valuation 
+Absolute valuation is used to revalue assets when information on the prices and quantities 
+of network equipment is available.  Two variations on the methodology can be identified 
+and the choice between them depends on whether or not there has been technological 
+progress between the time of the purchase of the original asset and when it is revalued. 
+The two methodologies and examples of their use are explained in the following sub-
+sections and it is important to keep in mind that the aim of both is to reflect as closely as 
+possible the prices available to Malaysian operators.  As a result, the prices used in the 
+calculations should include an allowance for any discounts that operators receive against 
+the list prices of the assets.  In addition, if operators have framework contracts with a 
+Page 80 
+network equipment vendor or any other supplier, then the prices under this agreement 
+should be used, because they will reflect the costs that would be incurred if that operator 
+were to actually replace its assets. 
+If the asset being valued has not been subject to technological change since its purchase 
+date, then if it were to be replaced today it would be replaced by an identical asset.  
+However, the price of this asset may have changed over time (including as a result of the 
+availability and size of any discounts against list prices available to the operator making 
+the valuation). 
+C.2.1. Example of absolute valuation using existing assets 
+Since valuation using the current price of existing assets is appropriate when no 
+technological progress has occurred it should be used for long lived assets that are 
+unaffected by technological change such as ducts and radio masts.  Absolute valuation 
+using existing asset prices may also be appropriate for vehicles with reasonably long asset 
+lives, as shown in the example below. 
+From their Fixed Asset Registers (FAR), the operators should have accurate figures on the 
+numbers of the different types of vehicles they operate but for this example we assume 
+100 vehicles of the same vintage.  For the purposes of this illustrative example, it is 
+assumed that the asset life for vehicles is 5 years and that the age of the vehicles 
+considered in this example is 3 years.  It is further assumed that the price of a vehicle has 
+fallen by RM 10,000 since the existing vintage of vehicles was purchased.  This lower price 
+could, for example, be due to the list price of vehicles falling over time, or because the 
+operator has negotiated a discount of RM 10,000 per vehicle with its supplier. 
+The process used to calculate the net replacement cost (NRC) from the gross book value 
+(GBV) of the existing asset is shown in Table  and the steps are explained below the table. 
+Page 81 
+Table 35 
+Calculation of NRC from GBV 
+Amount 
+(RM) 
+GBV of each existing vehicle
+150,000
+Accumulated depreciation 
+90,000 
+NBV of each existing vehicle 
+60,000 
+Price of a new asset (GRC) 
+140,000 
+CCA depreciation c/f 
+84,000 
+NRC of each existing vehicle ( GRC-
+CCA)
+56,000 
+NBV of all such vehicles 
+6,000,000 
+NRC of all such vehicles 
+5,600,000 
+Source: NERA
+Using straight line depreciation over the 5-year asset life, vehicles of this vintage will each 
+have accumulated depreciation of RM 90,000.  This is calculated as 3/5 of the historic cost 
+because the average vehicle is 3 years old and vehicles are assumed to have an asset life 
+of 5 years.  When the accumulated depreciation is subtracted from the GBV, this leaves 
+an NBV of RM 60,000 for each vehicle. 
+The price of a new vehicle at the time of revaluation is RM 140,000 and this is the gross 
+replacement cost (GRC) of the vehicle.  As before, three years of accumulated depreciation 
+are taken into account to leave an NRC for a vehicle of RM 56,000.  Since this result is for 
+a single vehicle, we multiply by 100 to calculate the NRC of the cohort of 100 vehicles, 
+which is RM 5,600,000. 
+C.2.2 Assets to be valued with absolute valuation using existing assets 
+Examples of the types of assets that may be revalued using absolute valuation are: 
+(i)
+Duct 
+(ii)
+Towers 
+(iii)
+Copper and fibre 
+(iv)
+Vehicles 
+Page 82 
+C.3 Modern Equivalent Asset valuation 
+The use of a “modern equivalent asset” (MEA) valuation may be necessary when: 
+(i)
+The existing asset is no longer available from equipment suppliers; or  
+(ii)
+Technological progress has rendered the existing asset obsolete. 
+In the first of these cases there will be no price data available for the existing asset.  In 
+the second case, a new entrant operator would not deploy a network using obsolete 
+equipment, so this methodology will not provide a true reflection of the costs of replacing 
+the existing network.  In both cases MEA prices should be used when valuing the asset. 
+MEAs should be chosen such that they have similar service potential to the existing asset, 
+because their prices act as a proxy for the replacement cost of the existing asset.  
+However, there may nevertheless be differences in the features, functionality, capacity, 
+quality, operating costs, asset lives or space requirements of the MEA compared to the 
+existing asset. It is important that such differences should be taken into account when 
+valuing the existing asset. 
+In cases where the MEA is superior to the existing asset in terms of features, functionality, 
+capacity or quality, this should be accounted for by estimating the value of the difference 
+and subtracting this value from the estimate of the current value of the MEA.  Differences 
+in operating costs may arise from differences in maintenance, network management or 
+associated indirect costs and should similarly be discounted.  The MEA should be chosen 
+on the basis of the asset with the required capacity and functionality, which, summing 
+over the asset life has the lowest net replacement cost.  In doing this, any differences in 
+asset lives should be considered. 
+Where there is surplus capacity, i.e. capacity that is not currently required and is not 
+expected to be required within the network planning horizon, valuations should be 
+adjusted downwards.  This is not only the case for network traffic capacity but also physical 
+capacity.  For example, it is possible that a modern switch requires less space in the 
+buildings that contain switching equipment than the existing asset does and this should 
+be accounted for in the MEA valuation. 
+C.3.1 Examples of MEA valuation 
+As explained above, MEA valuation is appropriate when technological progress has 
+occurred.  This means that it is likely to be an appropriate methodology for valuing an 
+operator’s switching/routing and transmission equipment, because these assets are 
+Page 83 
+subject to considerable technological change.  MEA valuation is likely to be the most 
+appropriate approach to use for much of an operator’s switching and transmission 
+equipment.     
+Two examples are provided below as illustrations of how the process can be implemented, 
+but it is important to note that an operator itself is in the best position to know what assets 
+it owns, what assets are currently available to replace them and hence, which valuation 
+methodology is appropriate in each case.  The following examples refer to the valuation of 
+a particular asset, but where an operator has more than one asset of each type and the 
+assets were purchased at different points in time and hence, have different gross book 
+values and levels of accumulated depreciation, these should be revalued separately.  In 
+order to simplify this process, assets of the same type and of the same “vintage” can be 
+revalued together. 
+C.3.1.1 Example 1 – Increased capacity 
+This example is based on MEA valuation of an operator’s switch or router and assumes 
+that sufficient technological progress has been made to justify the use of MEA over 
+absolute valuation (which is explained in Appendix C.2 above).  This asset could be a next 
+generation network (NGN) router in a fixed network or a mobile switching centre in a 
+mobile network; the principles are the same regardless of the precise asset in question. 
+To revalue the asset, it is first necessary to identify the MEA.  As explained above it should 
+be the modern asset with the lowest net replacement cost calculated over the expected 
+life of the asset, which has at least the same capacity and functionality as the existing 
+asset. 
+Operators in Malaysia will know from their FARs how many of each type of asset they use 
+and for this example we have assumed the number to be 10.  We also assume an asset 
+life of 10 years for a switch/router.  It is possible that an operator will have purchased its 
+existing assets at different points in time, and as noted above, in this case, each vintage 
+of switch/router should be revalued as a tranche.  In the example below, we assume that 
+an operator has five switches of the same age which are being revalued together. 
+Table  below compares the existing switch against the MEA asset.  In this example, while 
+the price of the MEA is the same as the historical cost of the existing asset, the MEA has 
+greater capacity.  For example, it could be capable of handling a greater number of busy 
+hour call attempts.  We assume for the sake of exposition that the MEA asset can handle 
+1,000,000 busy hour call attempts as opposed to only 750,000 for the existing asset. 
+Page 84 
+Table 39 
+Comparison of Existing Asset and MEA Asset 
+Asset 
+Historic cost 
+(RM) 
+Asset life 
+(years) 
+Age 
+Output 
+Existing 
+asset 
+250,000,000 
+10 
+6 
+750,000 
+MEA 
+250,000,000 
+10 
+N/A 
+1,000,000 
+Source: NERA. 
+The process used to calculate the NRC from the GBV of the existing asset is shown in Table  
+below and the steps explained below the table.  It is similar to the example in Table  above, 
+but has the complication of the increased capacity. 
+Table 40 
+Calculation of NRC given Increased MEA Capacity 
+Amount 
+(RM) 
+GBV of existing asset
+25,000,000
+Accumulated depreciation 
+15,000,000 
+NBV of existing asset 
+10,000,000 
+Price of MEA 
+25,000,000 
+GRC (if same output as existing asset) 
+18,750,000 
+Revised GBV of existing asset 
+18,750,000 
+Revised depreciation on existing asset 
+11,250,000 
+NRC of existing asset 
+7,500,000 
+NBV of all such assets 
+50,000,000 
+NRC of all such assets 
+37,500,000 
+Source: NERA. 
+Given a GBV of RM 25,000,000 and using straight line depreciation over the 10-year asset 
+life, a single switch of this vintage will each have accumulated depreciation of RM 
+15,000,000.  This is calculated as 6/10 of the historic cost because the average asset is 6 
+years old and the asset life is 10 years.  When the accumulated depreciation is subtracted 
+from the GBV, this leaves an NBV of RM 10,000,000 for each switch.   
+Page 85 
+In this example, the MEA has greater capacity than the existing asset (see Table 36).  It 
+is therefore necessary to adjust the MEA price to what it would be if the MEA had the same 
+level of output as the existing asset (measured in this example by busy hour call attempts).   
+This is done by multiplying the MEA price by the ratio of the existing asset output to the 
+MEA output, in other words 750,000/1,000,000 * RM 25,000,000.  The result, RM 
+18,750,000, is the GRC of each the existing asset, using MEA valuation and we adjust the 
+accumulated depreciation in the same manner (750,000/1,000,000 * RM 15,000,000 = 
+RM 11,250,000).  Subtracting one from the other we find that the NRC of each existing 
+switch is RM 7,500,000 and so for all five of the operator’s assumed switches of this vintage 
+the NRC is RM 37,500,000, compared to an NBV of RM 50,000,000.   
+This result can be checked simply by recalling that the existing asset has only three 
+quarters of the capacity of the MEA, so its NBV must be reduced by a quarter to find the 
+NRC. 
+C.3.1.2 Example 2 – Reduced operating costs 
+As explained above, an MEA may have lower operating costs than the existing asset.  This 
+might, for example, come about as a result of improved energy efficiency, as is assumed 
+in the example below in Table .  
+Again, an operator itself is in the best position to judge the merits of its assets relative to 
+their modern equivalents, so for the purposes of this example we assume that the operator 
+needs to perform an MEA valuation on its voicemail equipment.  We assume, for illustrative 
+purposes, that the reason for this is that as a result of technological change, MEA voicemail 
+equipment requires 20% less electricity than the operator’s existing asset.  We assume 
+for simplicity that the operator has only one voicemail system. 
+Table 41  
+Comparison of Existing Asset and MEA Asset 
+Asset 
+Historic cost 
+(RM) 
+Asset life 
+(years) 
+Average 
+age 
+Operating 
+costs 
+Existing asset 
+200,000
+10
+4
+25,000 p.a.
+Modern asset 
+200,000 
+10 
+N/A 
+20,000 p.a. 
+Source: NERA. 
+Assuming that the existing asset has operating costs relating to electricity of RM 25,000 
+per year, then the equivalent figure for the MEA asset will be 20% less than this, or RM 
+Page 86 
+20,000.  The difference in the net present values (NPVs) of these sums over the ten-year 
+lifetime of the assets, discounted at a rate of 10%, is RM 30,723.  The 10% discount rate 
+is an assumption for the purposes of this example, and should be replaced by the relevant 
+operator’s cost of capital when the actual calculations are performed. 
+On the assumption that the existing asset is four years old, it has six years of life remaining 
+during which savings in operating costs could be made were the asset to be replaced by 
+its modern equivalent.  Therefore 6/10 of the difference in NPVs (i.e. RM 18,434) should 
+be deducted from the price of the MEA asset. Table  below shows the reduction in the price 
+of the MEA from RM 200,000 to RM 181,566 in order to take account of the difference in 
+operating costs and then revises the depreciation as in the previous example. 
+Table 42 
+Calculation of NRC given Lower MEA Opex 
+Amount (RM) 
+GBV of existing asset
+200,000
+Accumulated depreciation 
+80,000
+NBV of existing asset 
+120,000
+Price of MEA 
+200,000
+GRC (if lower opex taken into 
+account)
+181,566
+Revised depreciation on existing asset 
+ 72,627
+NRC of existing asset 
+     108,940 
+Source: NERA. 
+C.4 Assets to be valued using MEAs 
+Examples of the types of assets that may be revalued using MEAs are: 
+(i)
+Radio equipment; 
+(ii)
+Exchange equipment; 
+(iii)
+Switches and routers; 
+(iv)
+Transmission equipment; 
+(v)
+IT and computer equipment. 
+Page 87 
+C.5 Price Indices 
+The fourth methodology for revaluing assets at current costs involves the use of price 
+indices.  The latter is commonly found in interconnection cost models the operators will be 
+familiar with it from their LRIC modelling process.  The use of price indices is a second 
+best option to absolute valuation when information on equipment quantities is not known.  
+Consequently, the use of price indices is only appropriate when a lack of detailed 
+information on quantities of assets means that absolute valuation is not possible.   
+Furthermore, the use of price indices is only appropriate when there has been little 
+technological change, the service potential of new assets is similar to that of the existing 
+asset and all direct costs that have been incurred and capitalised would be incurred if the 
+asset were replaced today.  It is also necessary to have information on the age profile of 
+assets and a split of the cost elements used in constructing the asset (pay, raw material, 
+contract and other).  In addition, care must be taken to avoid double counting, for 
+example, if a trench is re-dug to install additional cable, as it is possible that some assets 
+on the FAR may no longer be required. 
+In contrast to the use of prices and quantities in the absolute valuation explained in the 
+preceding section, the use of price indices can be thought of as a “relative valuation” 
+against prices in previous years.  The historic costs of asset acquisition are multiplied by 
+price indices to derive current cost valuations of those assets. An example price trend and 
+price index is shown in Table  below. 
+Table 43 
+Price Index Example 
+Year 
+1 
+2 
+3 
+4 
+5 
+Price change in 
+year 
+2.0% 
+2.5% 
+3.0% 
+2.5% 
+2.5% 
+Price index 
+102.0 
+104.6 
+107.7 
+110.4 
+113.1 
+Source: NERA. 
+In this example, if an asset purchased at the end of Year 0 is to be revalued at the end of 
+Year 4, its price must be multiplied by 1.104.  The indices used to produce the valuation 
+can be drawn from a number of sources: 
+(i)
+Internal asset specific indices; 
+Page 88 
+(ii)
+External asset specific indices; or 
+(iii)
+A general price inflation index. 
+Each operator could construct an internal asset specific index using data on prices that it 
+has paid for equipment over the years.  This approach has the advantage that it reflects 
+any discounts available to that operator against list prices, but also requires that the 
+operator has consistently purchased equipment over a period of years.  An external asset 
+specific index, where available, is an alternative and could be checked by third parties 
+such as equipment manufacturers or suppliers.  However, this approach would not account 
+for factors specific to the operator, such as discounts or any framework contract.  If these 
+price indices are not available, then a more general price inflation index could be used.  
+While this will reflect broader economy-wide trends it will not capture asset specific price 
+trends and hence, should only be used as a last resort. 
+C.5.1 Example of Price Index Valuation 
+As explained above, the use of price indices is appropriate in situations where information 
+on the quantity of assets is not readily available, but the assets involved have not been 
+subject to technological change. This makes it an appropriate methodology for assets such 
+as support and inventory systems and fixtures, fittings and office equipment.  In order to 
+apply the methodology, the operator should first attempt to construct its own internal 
+asset specific index, based on actual prices paid.  If this is not possible, external price 
+indices should be sought from equipment manufacturers and suppliers.  As explained 
+above, only in the absence of these first two possibilities and as a last resort could a 
+general price trend be used. 
+Furthermore, different elements of the costs of the asset will have different cost trends, 
+so it will be necessary to separate pay related costs, raw material costs, contract costs 
+and other costs, and apply appropriate cost trends to each element. 
+C.5.2 Assets to be valued using price indices 
+Examples of the types of assets that may be revalued using price indices are: 
+(i)
+Installation costs 
+(ii)
+Some transmission equipment, such as SDH 
+(iii)
+Planning costs 
+(iv)
+Poles 
+(v)
+Cabinets 
+Page 89 
+C.6 Adjustments to Depreciation 
+The use of CCA requires a number of adjustments to be made to take account of holding 
+gains and losses and the impact of asset price changes on depreciation.  These are 
+explained below. 
+C.7 Holding gains and losses 
+Holding gains and losses are unrealised changes in the value of assets as a result of 
+changes in the current cost of assets held at year end.  For example: 
+(i)
+If an asset was worth RM 1,000,000 at the beginning of the year and the asset 
+price rises by 10% during the year, that asset would provide an unrealised holding 
+gain of RM 100,000 (10%  1,000,000). 12  This is treated as a negative cost (i.e. it 
+increases profits). 
+(ii)
+If, on the other hand, the asset price fell by 10% during the year, an asset worth 
+RM 1,000,000 at the beginning of the year would provide a holding loss of RM 
+100,000 (10%  1,000,000).  This is treated as a cost (i.e. it reduces profits). 
+Holding gains and losses are shown in the Income Statements (see Section 8 and Appendix 
+B). 
+Where there are asset acquisitions, disposals or write offs during the year, these should 
+be treated as occurring at the end of the year for the purposes of calculating holding gains 
+or losses.  Supplementary depreciation (see next section) should also be calculated using 
+year-end values. 
+C.8 Supplementary depreciation 
+Changes in asset prices also require changes to be made to depreciation charges.  There 
+will be an additional charge against revenue if asset prices are increasing (because the 
+part of the asset that is “consumed” has risen in value) but a reduction in charges if asset 
+prices are falling.  These additional charges are referred to as supplementary depreciation. 
+This is illustrated in Table  and Table  below, which show the position for an asset that has 
+a five year life and where asset prices are rising by 10% per annum and falling by 10% 
+per annum respectively.  In Table , the gross replacement cost (GRC) and gross book 
+value (GBV) are used to calculate annual depreciation under CCA and HCA respectively 
+12
+The holding gain is unrealised because the asset has not been sold.
+Page 90 
+over the five year life of the asset.  The supplementary depreciation on the right hand side 
+is simply the difference between the CCA and HCA annual depreciation charge.  This must 
+be added to the HCA depreciation and charged against revenue to reflect the current cost 
+of assets consumed in the year.  
+Table 44 
+Supplementary Depreciation  
+(5 Year Asset Life and 10% p.a. Price Increase) 
+Year 
+Gross 
+Replacement 
+Cost 
+Gross  
+Book  
+Value 
+Annual Depreciation 
+CCA 
+(20% of 
+GRC) 
+HCA 
+(20% of 
+GBV) 
+Supplementary 
+0 
+1,000,000 
+1,000,000 
+1 
+1,100,000 
+1,000,000 
+220,000 
+200,000 
+20,000 
+2 
+1,210,000 
+1,000,000 
+242,000 
+200,000 
+42,000 
+3 
+1,331,000 
+1,000,000 
+266,200 
+200,000 
+66,200 
+4 
+1,464,100 
+1,000,000 
+292,820 
+200,000 
+92,820 
+5 
+1,610,510 
+1,000,000 
+322,102 
+200,000 
+122,102 
+Source: NERA. 
+The calculation in Table  below follows the same format, but in this case the reduction in 
+asset prices means that the GBV exceeds the GRC, and so the supplementary depreciation 
+is negative.   
+Table 45 
+Supplementary Depreciation  
+(5 Year Asset Life and 10% p.a. Price Fall) 
+Year 
+Gross 
+Replacement 
+Cost 
+Gross  
+Book  
+Value 
+Annual Depreciation 
+CCA 
+(20% of 
+GRC) 
+HCA 
+(20% of 
+GBV) 
+Supplementary 
+0 
+1,000,000 
+1,000,000 
+1 
+900,000 
+1,000,000 
+180,000 
+200,000 
+-20,000 
+2 
+810,000 
+1,000,000 
+162,000 
+200,000 
+-38,000 
+3 
+729,000 
+1,000,000 
+145,800 
+200,000 
+-54,200 
+4 
+656,100 
+1,000,000 
+131,220 
+200,000 
+-68,780 
+5 
+590,490 
+1,000,000 
+118,098 
+200,000 
+-81,902 
+Source: NERA. 
+Supplementary depreciation is shown on the Income Statements (see Section 8 and 
+Appendix B). 
+Page 91 
+C.9 Backlog depreciation 
+Just as changes in asset prices lead to changes in depreciation within the relevant year 
+(supplementary depreciation), they also affect accumulated depreciation.  Backlog 
+deprecation adjusts accumulated depreciation to take account of any asset price changes.  
+Continuing from the example shown for supplementary depreciation in Table  above (10% 
+p.a. reduction in asset price),  
+Table  below adds a column showing backlog depreciation. This is calculated as the 
+difference between cumulative depreciation and required depreciation based on the gross 
+replacement cost of the asset. 
+To give an example from Table 46 below, cumulative depreciation in Year 4 is calculated 
+as CCA depreciation in Year 4 (or equivalently the sum of HCA deprecation and 
+supplementary depreciation in Year 4) plus cumulative and backlog depreciation from Year 
+3.  Required depreciation in Year 4 is simply four fifths of the GRC (because the asset has 
+a five-year life), and backlog depreciation in Year 4 is required depreciation minus 
+cumulative depreciation. 
+Page 92 
+Table 46 
+Example of Backlog Depreciation Calculation 
+Year 
+Gross 
+Replacement 
+Cost 
+Annual Depreciation 
+CCA 
+HCA 
+Supplementary Cumulative Required 
+Backlog 
+0 
+1,000,000 
+1 
+900,000 
+180,000 200,000 
+-20,000 
+180,000 
+180,000 
+0 
+2 
+810,000 
+162,000 200,000 
+-38,000 
+342,000 
+324,000 
+-18,000 
+3 
+729,000 
+145,800 200,000 
+-54,200 
+469,800 
+437,400 
+-32,400 
+4 
+656,100 
+131,220 200,000 
+-68,780 
+568,620 
+524,880 
+-43,740 
+5 
+590,490 
+118,098 200,000 
+-81,902 
+642,978 
+590,490 
+-52,488 
+Source: NERA. 
+Any backlog depreciation is recorded in RFS in the Income Statement under “Other 
+adjustments”.
+Page 93 
+APPENDIX D: COST ATTRIBUTION GUIDELINES 
+D.1 
+Fixed Network: Methods of Attributing Operating Costs 
+Category of 
+functional operating 
+cost (cost centre)
+Description of 
+account type 
+Cost driver 
+Method of Attribution  
+Depreciation 
+Depreciation 
+Refer to capital 
+employed below 
+The attribution of depreciation should follow the attribution of the fixed 
+asset plant groups to which it relates (see capital employed below). 
+Provision and 
+installation of 
+equipment 
+Payroll costs 
+Time spent 
+Direct to network components/other plant where possible, otherwise 
+attribute to network components/other plant based on the time spent 
+carrying out provisioning and installation work. 
+Installation, contract 
+and maintenance 
+costs 
+Installation and 
+maintenance 
+activity 
+Direct to network components/other plant on the basis of the plant 
+installed or maintained where possible.   
+Maintenance and 
+repair costs 
+Payroll costs 
+Time spent 
+Direct to network components/other plant where possible, otherwise 
+attribute to network components/other plant based on the time spent 
+carrying out repair work. 
+Other costs 
+Repair data  
+Direct to network components/other plant where possible, otherwise 
+apportion in line with costs that can be attributed. 
+Page 94 
+Category of 
+functional operating 
+cost (cost centre)
+Description of 
+account type 
+Cost driver 
+Method of Attribution  
+Network planning 
+and developments 
+costs 
+Payroll and external 
+costs 
+Planning and 
+development 
+activity 
+Direct to network components/other plant where possible, otherwise 
+apportion in line with costs that can be attributed. 
+Network 
+management costs  
+Payroll costs 
+Time spent 
+Attribute to network components/other plant on the basis of the time 
+spent by staff to manage each type of plant.  
+Other costs 
+Time spent 
+Attribute to network components/other plant on the basis of the plant 
+managed, where possible, otherwise apportion in line with costs that 
+can be attributed.  
+Marketing and sales 
+costs 
+Payroll  
+Customer 
+acquisition 
+Direct to products and services where possible, otherwise attribute 
+between products based on revenues from customer segments. 
+Cost of sales of 
+equipment 
+Volume of 
+equipment 
+Attribute to customer equipment services within “Other activities”. 
+Publicity, Promotions, 
+Market research fees, 
+Other costs 
+Customer 
+segment analysis 
+Direct to products and services where possible.  Otherwise, for those 
+costs where multiple services are being marketed or promoted, cost 
+should be attributed to the related services on a revenue basis for 
+customer segments. 
+Billing and collection 
+costs 
+Payroll costs 
+Number of 
+customers and 
+bills raised 
+Direct to products and services where possible, otherwise attribute 
+between products based on activity surveys or the number of 
+customers/number of bills raised. 
+Page 95 
+Category of 
+functional operating 
+cost (cost centre)
+Description of 
+account type 
+Cost driver 
+Method of Attribution  
+Other billing costs 
+(incl. Bad debts) 
+Number of 
+customers and 
+bills raised 
+Direct to products and services where possible, otherwise attribute 
+between products based on usage (e.g. number of bills produced) 
+and/or revenue.   
+Operator services 
+costs 
+Payroll costs 
+Time spent 
+Direct to services where possible.  The costs of staff that carry out tasks 
+for several operator services should be attributed to the related 
+operator services based on surveys of time spent on different tasks and 
+activities.  
+Payments to other 
+operators 
+Out payments for 
+outgoing traffic  
+Interconnection 
+traffic 
+Direct to products and services.
+Support costs 
+Human resources 
+function costs 
+(residual) 
+Headcount 
+HR function costs should be attributed to the staff that are overseen by 
+the HR function. 
+Finance and other 
+head office support 
+functions 
+Time spent 
+If related specifically to a product, service or business attribute 
+accordingly using time spent, otherwise apportion as common 
+(unattributable).  
+Building costs and 
+rent 
+Occupancy rate 
+Costs should be attributed according to occupancy from survey data. 
+General computing/IT 
+costs 
+Computer use 
+Attribute to operations and system development on the basis of the use 
+of the computers to support each application (jobs and projects).  Costs 
+attributed to applications can then be attributed to those products and 
+services that they support. 
+Page 96 
+D.2 
+Fixed Network: Methods of Attributing Capital Employed 
+ Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Switching/routing 
+equipment 
+Local switching (PSTN) 
+Traffic 
+For PSTN networks the traffic-related network components of local 
+exchanges should be identified using information from manufacturers 
+or engineering studies.  The costs of the traffic-related network 
+components of local exchanges should be attributed based on the use 
+of equipment by different services (i.e. traffic levels).  For the access-
+related network components of local exchanges see below. 
+Core switching/routing 
+equipment 
+Traffic 
+Direct to network components where possible, otherwise attribute 
+based on traffic. 
+International 
+switching/routing 
+equipment 
+Traffic 
+Direct to network components where possible, otherwise attribute 
+based on traffic. 
+Switching equipment 
+for special services 
+Service traffic 
+Direct to core network components where appropriate/required by 
+regulation or to the specific services provided by other networks – e.g. 
+specific data switching equipment should be attributed directly to data 
+transmission services. 
+Other 
+switching/routing 
+equipment 
+Traffic 
+Direct to network services where possible, otherwise attribute to other 
+switching network components on the basis of the use of the equipment. 
+Page 97 
+Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Transmission 
+equipment
+Traffic-sensitive 
+transmission equipment  
+Circuit 
+numbers 
+/traffic volumes 
+Costs include both capital and maintenance and need to be attributed 
+using circuit volumes based on a common unit (e.g. number of 2 
+Mbit/s paths). 
+Transmission fibre 
+Circuit capacity 
+Direct to services where possible, otherwise attribute to services 
+based on use of capacity.  
+International/submarine 
+cable 
+International 
+traffic 
+Direct to network components where possible, otherwise attribute 
+based on usage. 
+Accommodation plant 
+(network), e.g. air 
+conditioning 
+Space occupied 
+Costs should be attributed to plant groups based on space occupied.   
+Other primary 
+network assets 
+Local exchange (access 
+network) 
+Connections 
+Total cost of local exchange (including capital, pay and indirect costs) 
+should be split between access and core network components using 
+data provided by manufacturers or engineering studies.  Access 
+network components (e.g. line cards) should be attributed to services 
+based on the number of connections.   
+DSLAMs 
+Tie cable 
+volumes 
+Costs should be attributed to products and services based on tie cable 
+numbers. 
+MDF 
+Connections 
+Costs of main distribution frames should be attributed based on the 
+number of connections. 
+Local loop copper 
+Connections 
+Costs associated with the provision, installation and recovery of 
+copper cable in the access network (both capital and maintenance) 
+should be attributed based on the number of connections. 
+Page 98 
+Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Other primary 
+network assets
+Local loop fibre 
+Number of 
+circuits 
+Costs associated with the provision, installation and recovery of fibre 
+cable in the access network (both capital and maintenance) should be 
+attributed based on the number of circuits. 
+Special network plant 
+Service traffic 
+Plant and equipment that is used solely to provide one specific service 
+should be allocated directly to the relevant services.  Examples may 
+include: Intelligent network equipment, Data transmission equipment 
+and Multimedia equipment. 
+Customer premises 
+equipment 
+Number of 
+customer 
+Direct to products and services where possible.  Otherwise attribute 
+to products and services using appropriate cost driver (e.g. use 
+connections for network termination equipment). 
+Public payphones and 
+related equipment 
+Number of 
+payphones 
+Direct to service. 
+Support Plant 
+Ducting  
+Engineering 
+data 
+Ducting can be attributed to the cable and fibre that it supports and 
+attributed to products in the same way as cable and fibre.  Engineering 
+studies are used to attribute duct for fibre and duct for copper cable. 
+Power equipment 
+Power usage 
+Attribute to plant groups on the basis of the use of power equipment, 
+e.g. kilowatts per hour.  Assets should then be attributed to products 
+in the same way as the relevant plant groups. 
+Common Intelligence 
+Service Layer 
+Call volumes 
+These costs include CISL that supports Basic and Advanced Number 
+Translation Services and should be attributed using call volumes. 
+Ethernet Infrastructure 
+Service traffic 
+The costs of provision of Ethernet connectivity can be directly 
+attributed. 
+Page 99 
+Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Support Plant
+Network management 
+systems 
+Usage 
+Attribute to plant groups on the basis of their use of the systems, e.g. 
+time spent to control different types of switch/router.  Costs should 
+be attributed to products and services in the same way as the related 
+plant group. 
+Non-network fixed 
+assets 
+Land and buildings 
+Square metre 
+occupancy 
+Attribute to products, services and network components on the basis 
+of the space occupied (i.e. floor space) to support each product, 
+service or network component.  
+General computers 
+Usage 
+Attribute to the applications run by the operator on the basis of the 
+use of the computers to support each application.  Costs attributed 
+to applications can then be attributed to those products and services 
+that they support. 
+Motor vehicles 
+Usage 
+Attribute to products, network components and activities based on 
+usage. 
+Furniture and office 
+equipment 
+Usage 
+Attribute to products and network components based on survey data.  
+Intangible fixed 
+assets 
+Licence fees 
+Revenue basis 
+Direct to products where possible, otherwise on the basis of revenues.  
+Other 
+Revenue basis 
+Attribute to products and services based on revenues achieved. 
+Working capital 
+Fixed asset investments 
+(associates and joint 
+ventures) 
+n/a 
+Direct to “Other activities”. 
+Other investments 
+n/a 
+Direct to “Other activities”. 
+Page 100 
+Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Working capital
+Short-term investments 
+(including cash at bank 
+and in hand) 
+Operating 
+profits 
+Direct to products and services where possible, otherwise attribute 
+based on the operational requirements of each product or service 
+using net operating profit. 
+Stocks 
+Apparatus 
+supply and 
+network 
+equipment 
+Stocks should be attributed directly to products, services or plant 
+groups. 
+Trade 
+debtors/receivables 
+Turnover 
+Trade debtors may be attributed to products and services based on 
+billing system information where possible.  
+Other 
+debtors/receivables 
+Various 
+Other debtors/receivables should be attributed to activities and plant 
+groups using bases appropriate to the particular debtor type (e.g. 
+payroll debtors on the basis of total pay).  
+Trade creditors 
+Operating 
+expenses 
+Trade creditors should be attributed directly to products and services 
+if possible.   
+Long term provisions 
+Various 
+Provisions are either attributed directly to activities and plant groups 
+or using a base appropriate to the particular charge (e.g. provisions 
+relating to the cost of vacating leased buildings are attributed using 
+the accommodation base). 
+Page 101 
+D.3 
+Mobile Network: Methods of Attributing Operating Costs 
+Category of 
+functional operating 
+cost (cost centre)
+Description of 
+account type 
+Cost driver 
+Method of Attribution  
+Depreciation 
+Depreciation 
+Refer to capital 
+employed below 
+The attribution of depreciation should follow the attribution of the fixed 
+asset plant groups to which it relates (see capital employed below). 
+Provision and 
+installation of 
+equipment 
+Payroll costs 
+Time spent 
+Direct to network components/other plant where possible, otherwise 
+attribute to network components/other plant based on the time spent 
+carrying out provisioning and installation work. 
+Installation, contract 
+and maintenance 
+costs 
+Installation and 
+maintenance 
+activity 
+Direct to network components/other plant on the basis of the plant 
+installed or maintained where possible.   
+Maintenance and 
+repair costs 
+Payroll costs 
+Time spent 
+Direct to network components/other plant where possible, otherwise 
+attribute to network components/other plant based on the time spent 
+carrying out repair work. 
+Other costs 
+Repair data  
+Direct to network components/other plant where possible, otherwise 
+apportion in line with costs that can be attributed. 
+Network planning 
+and developments 
+costs 
+Payroll and external 
+costs 
+Planning and 
+development 
+activity 
+Direct to network components/other plant where possible, otherwise 
+apportion in line with costs that can be attributed. 
+Network 
+management costs  
+Payroll costs 
+Time spent 
+Attribute to network components/other plant on the basis of the time 
+spent by staff to manage each type of plant.  
+Page 102 
+Category of 
+functional operating 
+cost (cost centre)
+Description of 
+account type 
+Cost driver 
+Method of Attribution  
+Network 
+management costs 
+Other costs 
+Time spent 
+Attribute to network components/other plant on the basis of the plant 
+managed, where possible, otherwise apportion in line with costs that 
+can be attributed.  
+Marketing and sales 
+costs 
+Payroll  
+Customer 
+acquisition 
+Direct to products and services where possible, otherwise attribute 
+between products based on revenues from customer segments. 
+Cost of sales of 
+equipment 
+Volume of 
+equipment 
+Attribute to customer equipment services within “Other activities”. 
+Publicity, promotions, 
+market research fees, 
+other costs 
+Customer 
+segment analysis 
+Direct to products and services where possible.  Otherwise, for those 
+costs where multiple services are being marketed or promoted, cost 
+should be attributed to the related services on a revenue basis for 
+customer segments. 
+Customer service and 
+support 
+Payroll costs 
+Number of 
+customers and 
+bills raised 
+Direct to products and services where possible, otherwise attribute 
+between products based on activity surveys or the number of 
+customers/number of bills raised. 
+Billing and collection 
+costs 
+Other billing costs 
+(incl. Bad debts) 
+Number of 
+customers and 
+bills raised 
+Direct to products and services where possible, otherwise attribute 
+between products based on usage (e.g. number of bills produced) 
+and/or revenue.   
+Payroll costs 
+Time spent 
+Direct to services where possible.  The costs of staff that carry out 
+tasks for several operator services should be attributed to the related 
+operator services based on surveys of time spent on different tasks 
+and activities.  
+Payments 
+to 
+other 
+operators 
+Out payments for 
+outgoing traffic  
+Interconnection 
+traffic 
+Direct to products and services.
+Page 103 
+Category of 
+functional operating 
+cost (cost centre)
+Description of 
+account type 
+Cost driver 
+Method of Attribution  
+Support costs 
+Human resources 
+function costs 
+(residual) 
+Headcount 
+HR function costs should be attributed to the staff that are overseen 
+by the HR function. 
+Finance and other 
+head office support 
+functions 
+Time spent 
+If related specifically to a product, service or business attribute 
+accordingly using time spent, otherwise apportion as common 
+(unattributable).  
+Building costs and 
+rent 
+Occupancy rate 
+Costs should be attributed according to occupancy from survey data. 
+General computing/IT 
+costs 
+Computer use 
+Attribute to operations and system development on the basis of the 
+use of the computers to support each application (jobs and projects).  
+Costs attributed to applications can then be attributed to those 
+products and services that they support. 
+Page 104 
+D.4 
+Mobile Network: Methods of Attributing Capital Employed 
+Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Radio access network
+Radio equipment: 
+TRXs/carriers 
+Traffic 
+Attribute to services on the basis of resources used by different types 
+of traffic.   
+BTS/Node B, including 
+sites, masts, power 
+Traffic  
+As above. 
+BSC/RNC 
+Traffic 
+As above. 
+Core network 
+MSC/MSC-CS 
+Subscribers, 
+traffic 
+Attribute to services based on subscriber numbers and engineering 
+data on traffic.  
+MGW 
+Subscribers, 
+traffic 
+Attribute to services based on subscriber numbers and engineering 
+data on traffic. 
+SGSN/GGSN 
+Data traffic  
+Attribute directly to plant groups for data traffic. 
+SMSC 
+SMS messages 
+Attribute directly to plant groups for SMS traffic. 
+Transmission 
+equipment 
+Traffic-sensitive 
+transmission 
+equipment  
+Circuit numbers 
+/traffic volumes 
+Costs include both capital and maintenance and need to be attributed 
+using circuit volumes based on a common unit (e.g. number of 2 
+Mbit/s paths). 
+Support plant 
+Power equipment 
+Power usage 
+Attribute to plant groups on the basis of the use of power equipment, 
+e.g. kilowatts per hour.  Assets should then be attributed to products 
+in the same way as the relevant plant groups. 
+Page 105 
+Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Support plant 
+Network management 
+systems 
+Usage 
+Attribute to plant groups on the basis of their use of the systems, 
+e.g. time spent to control different types of switch/router.  Costs 
+should be attributed to products and services in the same way as the 
+related plant group. 
+Non-network fixed 
+assets 
+Land and buildings 
+Square metre 
+occupancy 
+Attribute to products, services and network components on the basis 
+of the space occupied (i.e. floor space) to support each product, 
+service or network component.  
+General computers 
+Usage 
+Attribute to the applications run by the operator on the basis of the 
+use of the computers to support each application.  Costs attributed 
+to applications can then be attributed to those products and 
+services that they support. 
+Motor vehicles 
+Usage 
+Attribute to products, network components and activities based on 
+usage. 
+Furniture and office 
+equipment 
+Usage 
+Attribute to products and network components based on survey data.  
+Intangible fixed 
+assets 
+Licence and spectrum 
+fees 
+Revenue basis 
+Direct to products where possible, otherwise on the basis of 
+revenues.  
+Other 
+Revenue basis 
+Attribute to products and services based on revenues achieved. 
+Working capital 
+Fixed asset 
+investments 
+(associates and joint 
+ventures) 
+n/a 
+Direct to “Other activities”. 
+Page 106 
+Category of assets 
+and liabilities
+Description of 
+account type 
+Cost driver 
+Method of Attribution 
+Working capital 
+Other investments 
+n/a 
+Direct to “Other activities”. 
+Short-term 
+investments (including 
+cash at bank and in 
+hand) 
+Operating profits 
+Direct to products and services where possible, otherwise attribute 
+based on the operational requirements of each product or service 
+using net operating profit. 
+Stocks 
+Apparatus supply 
+and network 
+equipment 
+Stocks should be attributed directly to products, services or plant 
+groups. 
+Trade 
+debtors/receivables 
+Turnover 
+Trade debtors may be attributed to products and services based on 
+billing system information where possible.  
+Other 
+debtors/receivables 
+Various 
+Other debtors/receivables should be attributed to activities and plant 
+groups using bases appropriate to the particular debtor type (e.g. 
+payroll debtors on the basis of total pay).  
+Trade creditors 
+Operating 
+expenses 
+Trade creditors should be attributed directly to products and services 
+if possible.   
+Long term provisions 
+Various 
+Provisions are either attributed directly to activities and plant groups 
+or using a base appropriate to the particular charge (e.g. provisions 
+relating to the cost of vacating leased buildings are attributed using 
+the accommodation base). 
+Page 107 
+APPENDIX E: SIGNIFICANT ACCOUNTING POLICIES 
+Below are the most significant and relevant accounting policies for the purposes of 
+producing the RFS.  They are separately presented for fixed and mobile networks because 
+the nature and structure of their operations differ.  Also identified are accounting policies 
+that should be common to both fixed and mobile networks. Since, the starting point for 
+AS is the same as for audited accounts, operators should use accounting policies that are 
+consistent with their statutory accounting policies.  For example, when RFS is produced 
+for 2013, the accounting policies should match those in the operators’ 2013 audited 
+accounts.   
+E.1  
+Fixed Network 
+The Group Financial Statements are prepared in accordance with the provisions of the 
+Companies Act 1965, the International Financial Reporting Standards (IFRS), and the 
+MASB Approved Accounting Standards in Malaysia.  
+The financial statements are prepared under the historical cost convention except as 
+disclosed in the significant accounting policies. Based on the accounting policies in the 
+Group Financial Statements for 2010, the following policies would need to be followed for 
+the production of the RFS for that year. 
+E.1.1.  Fixed Assets  
+The cost of the telecommunications network should include expenditure up to and 
+including the last distribution point before the customers’ premises and include related 
+material, labour and associated overhead charges.  The cost of other property, plant and 
+equipment should comprise their purchase price and any incidental costs of acquisition.  
+Depreciation should be implemented on a straight line basis to write off the cost of the 
+assets over their estimated useful lives as follows: 
+(i)
+Telecommunication network    3-25 years 
+(ii)
+Movable plant and equipment  5-8 years 
+(iii)
+Computer support systems       3-5 years 
+(iv)
+Buildings 
+5-40 yeas 
+Page 108 
+Depreciation should not be implemented on assets with an infinite life or on land.  
+Leasehold land should be amortised in equal instalments over the period of the respective 
+leases.  Long term leases should have an expiry period of over 50 years.  
+Assets with indefinite useful lives should not be subject to amortisation and should be 
+tested annually for impairment.  Other assets with definite useful lives should also be 
+assessed for impairment whenever events and changes in events indicate that the carrying 
+amount may not be recoverable.  Any losses arising should be written off to the Income 
+Statement. 
+E.1.2  Financial Assets  
+Financial assets held for trading with the purpose of selling within a year should be valued 
+at year end and any surplus or deficit put through the Income Statement.  Financial assets 
+not held for trading should be classified as hedging instruments and not included within 
+the MCE Statement.  The Group Company only applies fair value hedge accounting for 
+hedging fixed interest risk on borrowings, so this policy should also be followed for the 
+RFS.  Changes in the fair value of the hedged fixed rate borrowings attributable to interest 
+rate risk should be recognised in the Income Statement within “finance costs”.  
+Available-for-sale Financial Assets represent non-derivatives that should either be 
+designated in this category or not classified in any of the other categories. They should be 
+included in non-current assets unless the investment matures or management intends to 
+dispose of them within 12 months from the end of the reporting period.  These should 
+initially be capitalised at cost and subsequently recorded at fair value.  Changes in the 
+value of these investments should not be recorded in the Income Statement until the 
+investment is sold.  
+E.1.3  Grants and Universal Service Provision (USP) Funding 
+Government grants should be recognised at their fair value where there is a reasonable 
+assurance that the grant will be received and the Group will comply with all attached 
+conditions.  Government grants relating to income should be deferred and recognised in 
+the Income Statement when the expenditure to which they relate is incurred. Government 
+grants relating to the purchase of assets should be deferred and shown in non-current 
+liabilities and recognised in income over the estimated useful lives of the related assets.  
+The cost of funding the USP should be included as part of the operating cost base in both 
+the audited accounts and the RFS.  Any government grants received in respect of this 
+Page 109 
+expenditure are treated in accordance with the stated policy and recognised in the Income 
+Statement when the expenditure to which they relate is incurred. 
+E.1.4  Revenue
+Revenue should comprise the fair value of the consideration received and receivable for 
+the sale of products and services net of returns, duties and sales discounts.  Operating 
+revenue should be recognised or accrued at the time of the provision of products and 
+services, when the amount of revenue can be reliably measured and it is probable that the 
+future economic benefits will flow to the Group.  Advance billings comprise mainly billings 
+for data services, which should be amortised on a straight line basis according to 
+contractual terms. 
+E.2  
+Mobile Networks 
+The mobile market is served predominantly by several mobile operators, some comprising 
+a number of subsidiary companies operating within Malaysian territory and overseas.  The 
+Group Financial Statements of these operators are prepared in accordance with IFRSs and 
+the Companies Act 1965 in Malaysia.  All financial statements are prepared on the historical 
+cost basis unless otherwise indicated in the accounting policies stated below. 
+Although the individual companies follow the accounting policies as prescribed by the 
+Malaysian Financial Reporting Standards, the companies are allowed a degree of flexibility 
+with which to apply them to their individual results.  The preparation of both statutory and 
+RFS often involves the use of estimates and assumptions that are likely to differ between 
+various organisations and businesses and require management to exercise a level of 
+judgment in the process of applying the Group accounting policies.  
+For instance, the accounting policy for spectrum costs differs between the mobile 
+operators. While some capitalise the spectrum costs and amortise them over the term of 
+the spectrum, others consider expenditure incurred in acquiring telecommunications 
+licences with allocated spectrum rights to have infinite economic useful lives and related 
+costs are therefore capitalised but not amortised.  This is because their Directors are of 
+the opinion that the licence can be renewed in perpetuity at negligible cost. The company 
+carries out annual impairment reviews. 
+E.2.1  Basis of consolidation 
+As noted in Section 4.1.2 some of the mobile operators have complex corporate structures. 
+For the purposes of AS intra-group income and expenses should be eliminated on 
+Page 110 
+consolidation so that the consolidated financial statements reflect only external 
+transactions 
+Subsidiaries should be consolidated using the purchase method of accounting.  Under this 
+method the results of subsidiaries acquired or disposed of during the financial year are 
+included in the Income Statement from the effective date of acquisition or up to the 
+effective date of disposal.  The subsidiaries’ identifiable assets acquired are measured 
+initially at fair value at the date of acquisition.  Adjustments to those fair values relating 
+to previously held interests are treated as a revaluation and recognised in other 
+comprehensive income, in other words the adjustments do not pass through the Income 
+Statement and should be posted directly to reserves.  
+E.2.2  Fixed Assets  
+Property, Plant and Equipment should be stated at cost less accumulated depreciation and 
+impairment losses.  Cost should include expenditure that is directly attributable to the 
+acquisition of an asset. CWIP comprising mainly telecommunication equipment, submarine 
+cables and renovations is not depreciated until the types of equipment concerned are ready 
+for their intended use.  We note that the accounting treatment of fixed assets varies 
+between the mobile networks, as shown in Table 36 below. 
+Table 36 Mobile Network Policies on Asset Lives (years) 
+Company A 
+Company B 
+Company C 
+Leasehold land 
+50-90 
+20-100 
+30-99 
+Buildings 
+42-50 
+5-50 
+50 
+Network equipment 
+4-25 
+3-20 
+3-30 
+Movable plant and 
+equipment 
+3-7 
+5-8 
+3-5 
+Computer support systems 
+3-7 
+3-5 
+3-5 
+Source: Operators’ audited accounts. 
+As explained above, it is essential for the production of the RFS that the operators match 
+their own statutory accounting policies, even where this will lead to differences between 
+the operators in the accounting policies used for their RFS. 
+Page 111 
+E.2.3  Intangibles 
+Intangibles can be acquired through a business combination or through separate 
+acquisitions. Intangible assets acquired in a business combination should be recorded at 
+fair value at the date of acquisition and recognised separately from goodwill.  
+Intangible assets that are considered to have a finite life should be amortised on a straight 
+line basis over the period of expected benefit.  (Spectrum costs should be amortised over 
+the spectrum period). Assets with no finite lives, or not yet available for use, should not 
+be amortised.  Impairment reviews should be carried out annually. 
+Handset subsidies, meaning expenditure incurred in providing customers with free or 
+subsidised handsets, should be capitalised as intangible assets and amortised over the 
+contractual period on a straight line basis, provided the customer signs a non-cancellable 
+contract for a predetermined contractual period. Investments should be excluded from the 
+statement of MCE if they are not related to regulated activities e.g. speculative 
+investments in property.  
+E.2.4  Current Assets 
+Inventories , which comprise telecommunication components, incidentals and devices, 
+should be stated at the lower of cost and net realisable value.  Cost includes the actual 
+cost of materials and incidentals in bringing the inventories to their present location and 
+condition and is determined on a weighted average basis.  
+Financial assets are deemed to be held for trading unless they are designated as effective 
+hedging instruments.  
+E.2.5  Grants and USP Funding 
+As universal service providers, the operators are entitled to obtain certain qualified 
+expenses from the MCMC in relation to USP projects. These are treated as government 
+grants and should be recognised at their fair value where there is reasonable assurance 
+that the grants will be received.  Grants related to assets should be treated as income over 
+the life of the related assets by way of a reduced depreciation charge.  Grants related to 
+income should be recognised in the Income Statement by crediting directly against the 
+related expense.  
+Page 112 
+E.3  
+Common Accounting Policies  
+E.3.1  Borrowing Costs 
+Borrowing costs that are directly attributable to the acquisition, construction or production 
+of a qualifying asset should be capitalised as part of the cost of the assets.  Other borrowing 
+costs should be recognised as an expense in the Income Statement when incurred.  
+Fees paid on the establishment of loan facilities should be recognised as transaction costs 
+of the loan to the extent that it is probable that some or all of the facility will be drawn.  
+To the extent that there is no evidence that the loan facility will be drawn, the fee should 
+be capitalised as a prepayment and amortised over the period of the facility to which it 
+relates. 
+E.3.2  Provisions for Liabilities and Charges. 
+Provisions should be recognised when the Group has an obligation as a result of past 
+events, and it is probable that an outflow of resources will be required to settle the 
+obligation. As such the provision will form part of the operating expenditure and will be 
+treated as any other cost for the Regulatory Accounting purposes. 
+E.3.3  Significant Related Party Transactions 
+A related party transaction is the transfer of resources, services or obligations between 
+related parties regardless of whether a price is charged.  Our review of the Malaysian 
+operators’ audited accounts revealed that there were a considerable number of these 
+transactions.   
+For the purposes of preparing the RFS, as for their audited accounts, the amounts due 
+from/(to) related parties should be disclosed and the nature of the transactions that have 
+taken place. All related party transactions should be entered in the normal course of 
+business and at prices available to third parties or on negotiated terms. 
+E.3.4  Financial Instruments 
+The RFS exclude income, costs, assets and liabilities relating to regulatory entities' long-
+term funding.  Accordingly, substantially all of the accounting for financial instruments is 
+excluded from the RFS, except to form part of the Reconciliation Statement.  
+Page 113 
+APPENDIX F: ACCOUNTING SEPARATION - OPERATOR DOCUMENTATION 
+ILLUSTRATIVE DOCUMENTATION TEMPLATE 
+F.1 
+ILLUSTRATIVE TEMPLATE 
+Documentation should follow as closely as possible the structure and content of this 
+guideline. 
+The Regulatory Accounting Documents set out the framework under which the RFS are 
+prepared and contain detailed descriptions of the policies, methodologies, systems and 
+processes for deriving and/or calculating costs, revenues assets and liabilities underlying 
+the regulatory results by products as specified in the Guidelines.  
+ The documentation should comprise: 
+(i)  
+Organizational and Group Structure, including a list of entities covered by the 
+reporting requirements and relationship between them;  
+(ii)  
+Accounting systems used in the organization to generate accounting and regulatory 
+information; 
+(iii)  
+A statement of the Accounting Separation Principles followed; 
+(iv)  
+A statement of the Accounting Policies used, in accordance with Section 3 above 
+and Appendix E, and noting, where necessary, any changes in the policies over 
+time. These should align with the accounting policies used for statutory purposes. 
+In circumstances when they do not, reasons for variations should be explained in 
+the Regulatory Accounting Documents;  
+(v)  
+An explanation of the cost attribution methods and the principal cost drivers used, 
+following the guidance set out in Section 5 and Appendix D; 
+(vi)  
+An explanation of the nature and calculation of the transfer charges, in accordance 
+with what is described in Section 6; 
+Page 114 
+(vii)  
+Accounting policies used for assets and liabilities included within the Mean Capital 
+Employed Statement and reasons and detail of account categories excluded from 
+the Regulatory Financial Statements; 
+(vii)  
+A full list of all codes and definitions used for: 
+─ Products and services; 
+─ Account codes; 
+─ Activity codes; 
+─ Cost centres and functions; and 
+─ Data sources. 
+Documentation supporting the RFS needs to be of good quality i.e. of high professional 
+standards. 
+The necessary level of documentation is also linked to the audit requirements, with aspects 
+of the costing process having to be reviewed “in accordance with the documentation”. 
+Retention of records should be the same as for current statutory purposes.  
+Operators will need to submit their documentation to MCMC for review, together with 
+Regulatory Financial Statements, in accordance with the Implementation Timescale set 
+out in Section 11 of the Guidelines and agreed at the working group level for individual 
+operators, in line with their statutory and stock exchange disclosure requirements.  
+F.2 
+Documentation should follow the AS Guidelines structure  
+Each section will need to be prepared to cover the particular items such as revenue or cost 
+categories, the rationale for attribution, the methodology used and data sources, such as 
+non-financial information.  
+Examples of content are given below for three AS sections.  
+Page 115 
+F.3 
+Accounting Separation Principles and Policies 
+This section should include the accounting policies adopted in the statutory and regulatory 
+accounts for major revenue, cost, asset and liabilities items and are likely to include 
+policies for: 
+i.
+Revenue recognition 
+ii.
+Fixed Assets recognition and depreciation provisions 
+iii.
+Financial Assets  
+iv.
+Grants and Universal Service Provision (USP) Funding  
+v.
+Intangibles  
+vi.
+Current Assets  
+vii.
+Borrowing Costs  
+viii.
+Provisions for Liabilities and Charges  
+ix.
+Significant Related Party Transactions 
+The above list is not exhaustive and there will be other items (such as impairment reviews) 
+that may need further disclosure.  
+F.4 
+Revenue recognition and attribution 
+This section should include an overview and general principles of revenue recognition and 
+allocation. For example:  
+“The majority of the wholesale and retail revenue will be allocated directly to products and 
+services from the accounting records. Where it is not possible to allocate directly, revenue 
+is attributed to the relevant service or product using information from the billing system.  
+In instances where neither direct allocation of the use of the billing systems is possible, 
+the method used needs to be detailed separately. “ 
+For each General Ledger line used by the operators in the preparation of the regulatory 
+financial statement, the revenue allocation principle used (direct, indirect, unattributable 
+etc) and allocation method should be crossed referenced to the audited accounts for audit 
+purposes.  
+Page 116 
+Revenue in “other” category needs to be analyzed by major products lines e.g. sales of 
+handsets. 
+F.5 
+Cost Attribution  
+i.
+List of cost items that can be directly allocated to products and services 
+ii.
+List of cost items that require apportionment and the methods used to apportion.  
+iii.
+List of cost, assets and liabilities excluded from apportionment and Regulatory 
+Statements and reasons for their exclusion 
+iv.
+Cost Causation and Cost Drivers for network elements and major cost categories 
+v.
+Cost Categories used and mapping to the General Ledger. 
+vi.
+Systems and processes applied including detailed statistical information used in the 
+analysis. 
+F.5.1 
+Example Cost Attribution Documentation  
+CATEGORY OF FUNCTIONAL OPERATING COST (COST CENTRE)   
+……………………….. 
+ACCOUNT TYPE 
+………………………….. 
+DESCRIPTION (of items/activities) 
+…………………………….. 
+Page 117 
+RATIONALE FOR THE COST DRIVER  
+……………………………… 
+ATTRIBUTION/ALLOCATION METHODS (e.g. on the basis of……….) 
+………………………. 
+RATIOS (possibly) 
+…………………………………. 
+NON FINANCIAL INFORMATION (data sources used)  
+……………………………… 
+AN APPENDIX (Containing a list of accounts/cost centers used for this category) 
+…………………………. 
+F.6 
+Transfer Charges 
+This section should describe the products and services that are being transferred charge 
+for within the Regulatory Financial Statements and the methodology used for setting the 
+transfer charge price. 
+Transfers at Market Prices  
+Transfers at Cost plus Cost of Capital  
+Page 118 
+Where transfer charges are made based on the cost plus WACC methodology, the 
+documentation should specify the value used for WACC and assumptions adopted for its 
+calculation. 
+F.7 
+Reconciliation 
+The reconciliation statement will form part of the Regulatory Financial Statements and will 
+need to be audited. Items classed as adjusting entries (i.e. items that exist in the audited 
+accounts but not in the Regulatory Accounts or vice versa) will need to be explained in the 
+documentation submitted. 
+F.8 
+Scope and Development of Documentation 
+The level and scope of the AS documentation will need to be considered by individual 
+operators in terms of their own standards (of documentation) and procedures and the 
+scope will also need to be discussed with the operators own auditors.  
+As the regulatory reviews of RFS reports take place, there will be further developments to 
+the supporting AS documentation to provide the required transparency of the regulatory 
+results. 

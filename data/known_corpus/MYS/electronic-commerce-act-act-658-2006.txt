@@ -1,0 +1,17 @@
+[Home]
+[Databases]
+[WorldLII]
+[Search]
+[Feedback]
+Malaysia Legislation
+LAWS OF MALAYSIA
+ACT 658
+ELECTRONIC COMMERCE ACT 2006
+Date of Royal Assent : 30 August 2006
+Date of publication in the Gazette : 31 August 2006
+Date of coming into operation:19 October 2006 [P.U.(B) 280/2006]
+_____________
+ARRANGEMENT OF SECTIONS
+_____________ Long Title and PreamblePART I - PRELIMINARY Section 1. Short title and commencementSection 2. ApplicationSection 3. Use not mandatorySection 4. Reference to other written lawsSection 5. InterpretationPART II - LEGAL RECOGNITION OF ELECTRONIC MESSAGE Section 6 . Legal recognition of electronic messageSection 7. Formation and validity of contractPART III - FULFILMENT OF LEGAL REQUIREMENTS BY ELECTRONIC MEANS Section 8. WritingSection 9. SignatureSection 10. SealSection 11. WitnessSection 12. OriginalSection 13. Retention of documentSection 14. CopySection 15. Prescribed formSection 16. Service and deliveryPART IV - COMMUNICATION OF ELECTRONIC MESSAGE Section 17. Attribution of electronic messageSection 18. Contents of electronic messageSection 19. Each electronic message to be regarded separatelySection 20. Time of dispatchSection 21. Time of receiptSection 22. Place of dispatchSection 23. Place of receiptSection 24. Acknowledgement of receiptPART V - MISCELLANEOUS Section 25. Regulations
+SCHEDULE
+(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1a8850deebcb959',t:'MTc4Mzk0ODE0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();

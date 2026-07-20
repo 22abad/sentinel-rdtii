@@ -1,0 +1,1118 @@
+Indigenous 
+Procurement 
+Policy
+May 2026
+Australian Government Indigenous Procurement Policy May 2026
+Preamble  
+The Australian Government has announced reforms to the Indigenous Procurement Policy (IPP) to 
+provide more opportunities for First Nations businesses and advance First Nations economic 
+empowerment.  
+The changes to the IPP, will increase the Commonwealth’s Indigenous procurement targets, explore 
+ways to increase transparency of suppliers’ performance against Indigenous participation targets 
+contained in high value contracts and options to tackle ‘black cladding’.  
+The eligibility criteria for the IPP will be strengthened. To access the IPP Indigenous businesses must be 
+either: 
+•
+51 per cent or more First Nations owned and controlled; or 
+•
+ registered with the Office of the Registrar of Indigenous Corporations (ORIC)  
+This will ensure First Nations business owners accessing the IPP are empowered to run their businesses 
+and exercise their rights as majority owners.  
+The strengthened IPP criteria applies from 1 July 2026. 
+The strengthened IPP will help support economic empowerment for First Nations people and directly 
+contribute to Closing the Gap and the Buy Australian Plan by providing more opportunities for First 
+Nations businesses.  
+These changes were informed by feedback received from the First Nations business sector and other 
+stakeholders. They also align with recommendations made by the Joint Standing Committee on 
+Aboriginal and Torres Strait Islander Affairs 2024 inquiry into First Nations economic self-determination 
+and opportunities.  
+For more information visit the NIAA website or you can read the Minister’s media release here . 
+Transition arrangements will apply for the 2026-27 financial year . Under these arrangements, 
+Indigenous businesses will be eligible if they meet either:  
+•
+the strengthened criteria (51 per cent Indigenous ownership and control), or  
+•
+the original eligibility criteria (50 per cent Indigenous ownership). 
+These arrangements seek to ensure Indigenous businesses have sufficient time to obtain verification 
+under the new criteria if they choose to. At the end of the transition period, Indigenous businesses 
+must meet the strengthened IPP criteria to access the IPP. 
+CONTENTS
+Glossary ........................................................................................................................ 4
+1 Introduction .................................................................................................................. 6
+1.1. Introduction ..................................................................................................................................... 7
+1.2. Policy objective .............................................................................................................................. 7
+1.3. Policy elements ............................................................................................................................... 7
+1.4. Key Performance Indicators .......................................................................................................... 8
+1.5. Procurement context ..................................................................................................................... 8
+1.6. Application of the policy ............................................................................................................... 8
+1.7. Accountability and transparency ................................................................................................. 9
+1.8. Indigenous enterprises .................................................................................................................... 9
+1.9. Incorporated Indigenous joint ventures ........................................................................................ 9
+2 Annual targets for purchasing from Indigenous enterprises .......................................10
+2.1. Introduction ....................................................................................................................................11
+2.2. Portfolio targets for the volume of contracts awarded .............................................................11
+2.3. Portfolio targets for the total value of contracts awarded .......................................................12
+2.4. Counting procurement against the targets ................................................................................12
+2.5. Reporting contracts against IPP targets ..................................................................................... 1 3 
+3 Mandatory Set Aside (MSA) of certain Commonwealth contracts ......................... 14
+3.1. Introduction ....................................................................................................................................15
+3.2. Remote procurement....................................................................................................................15
+3.3. Applying the MSA ..........................................................................................................................16
+3.4. Recording and reporting requirements ...................................................................................... 1 7 
+4 Mandatory Minimum Requirements for certain contracts ....................................... 18
+4.1. Introduction ....................................................................................................................................19
+4.2. Application .....................................................................................................................................19
+4.3. Applying MMR to varied contracts ..............................................................................................20
+4.4. MMR targets ...................................................................................................................................20
+4.5. Remote area contracts ............................................................................................................... 2 1 
+4.6. Compliance .................................................................................................................................. 2 1 
+5 IPP reporting requirements ......................................................................................... 2 5
+6 IPP agency roles and responsibilities ........................................................................ 28
+Appendix A: Restricted UNSPSC Code Exemptions ................................................. 30
+Appendix B: Industry categories with Mandatory Minimum
+Requirements (including sub-category exemptions) .............................................. 3 2
+GLOSSARY
+The following defined terms are used in this document:
+AusTender has the same meaning as in the Commonwealth Procurement Rules.
+Approach to market has the same meaning as in the Commonwealth Procurement Rules.
+Commonwealth entity has the same meaning as set out in the Public Governance,
+Performance and Accountability Act 2013 .
+Commonwealth Procurement Rules (CPRs) mean the rules issued by the Minister for Finance
+under section 105B (1) of the Public Governance, Performance and Accountability Act 2013 .
+Cooperative procurement arrangement means procurement where more than one entity
+approaches the market together or where an entity accesses another entity’s established 
+contract or standing offer (panel) arrangement.
+Coordinated procurement arrangement means whole-of-government arrangements for
+procuring goods and services. Non-corporate Commonwealth entities must use coordinated
+procurements. A list of mandatory coordinated procurement arrangements is available at the
+Department of Finance website .
+Corporate Commonwealth entity has the same meaning as set out in the Public Governance,
+Performance and Accountability Act 2013 .
+Eligible procurement means a procurement for which details are published on AusTender and 
+that is not otherwise excluded from the calculation of future Portfolio volume or value-based 
+targets as outlined in this document.
+Exemption 16 of the Commonwealth Procurement Rules (CPR) means a procurement of goods
+and services from an SME that meet the definition of Indigenous Enterprise as set out in this 
+document.  
+Extraordinary Expenditure means unexpected, large scale (commitment) resulting from an
+unexpected or atypical event. This could include whole-of-agency software upgrades, office
+relocations and other one-off purchases that resulted in atypical annual commitments.
+High Value Contracts means contracts delivered in Australia valued at $7.5 million (GST inclusive)
+or more in specified sectors, and subject to Mandatory Minimum Indigenous Participation 
+Requirements (MMR), as defined below.
+Indigenous enterprise means an organisation, operating a business, that is 51 per cent or 
+more Indigenous owned and controlled 1 It may take the form of a company, incorporated 
+association or trust. A social enterprise or registered charity may also be an Indigenous 
+enterprise if it is operating a business. 
+Incorporated Indigenous joint venture means a legally incorporated entity that it is at least 
+51 per cent Indigenous owned and can demonstrate at least 51 per cent Indigenous 
+representation and involvement in the management of the joint venture. 1
+Indigenous Procurement Policy Reporting Solution (IPPRS) means the online reporting system 
+used to record and track data on IPP contracts. The system is managed by the NIAA. 
+4
+1 From 1 July 2026, the eligibility criteria for the IPP will be strengthened to require 51 per cent or more Indigenous ownership and control. Transition 
+arrangements will apply for the 2026-27 financial year. Under these arrangements, Indigenous Joint Ventures will be eligible if they meet either the 
+original eligibility criteria (50 per cent or more Indigenous ownership and control) or the strengthened criteria (51 per cent or more Indigenous 
+ownership and control). 
+Indigenous procurement mailbox is the email indigenousprocurement@niaa.gov.au managed
+by the NIAA for the purpose of providing advice on the Indigenous Procurement Policy.
+Indigenous small or medium enterprise (Indigenous SME) means an Indigenous enterprise
+that meets the definition of SME in the Commonwealth Procurement Rules.
+MMR means Mandatory Minimum Indigenous Participation Requirements as defined in
+section four.
+MSA means Mandatory Set Aside, as defined in section three.
+NIAA means the National Indigenous Australians Agency, the Commonwealth agency with
+responsibility for administering the Indigenous Procurement Policy.
+Non-corporate Commonwealth entity has the same meaning as set out in the Public 
+Governance, Performance and Accountability Act 2013 .
+ORIC means the Office of the Registrar of Indigenous Corporations.
+Panel arrangement means a selected number of suppliers appointed through a contract
+or deed of standing offer that a Commonwealth entity can approach to procure regularly
+required goods or services. Panel arrangements are either coordinated or cooperative
+procurements (see definitions above).
+Portfolio means the portfolios identified in the Australian Government Organisations Register .
+Procuring official means a Commonwealth official that has responsibility for purchasing a good
+or service on behalf of a Commonwealth entity.
+Remote area means the areas identified in the Remote Indigenous Procurement Policy (RIPP)
+map on the NIAA website, as updated from time to time.
+Remote contract means a contract where the majority (by value) of the goods or services will 
+be delivered in a remote area.
+Remote procurement means a procurement exercise for a remote contract, as per section 3.2 
+of this Policy.
+Restricted market means goods or services that fall within a subset of the UNSPSC code set as
+defined in this policy. Refer to Appendix A.
+Small and Medium-sized Enterprise (SME) has the same meaning as in the Commonwealth
+Procurement Rules.
+Supply Nation is the trading name of the Australian Indigenous Minority Supplier Officer Limited
+(ABN 50 134 720 362), which is an organisation dedicated to growing diversity in supply chains.
+United Nations Standard Products and Services Code (UNSPSC) is an open, global, multi-sector
+standard for the classification of products and services. Use of UNSPSC enables analysis of 
+Australian Government procurement activity from approach to outcome by sector and across 
+government. 
+Wholly delivered in Australia refers to where the services or goods under the contract is being 
+delivered rather than the source of the services or goods.
+5
+1
+1 INTRODUCTION
+1.1. INTRODUCTION
+This document outlines the key components of, and the principles underpinning, the
+Australian Government’s Indigenous Procurement Policy (IPP).
+The policy is administered by the National Indigenous Australians Agency (NIAA) . The NIAA
+can be contacted at IndigenousProcurement@niaa.gov.au .
+This document supersedes all previous iterations. 
+Detailed guidance to assist relevant Commonwealth entities and other stakeholders implement 
+the policy is also available on the NIAA website.
+Terms appearing in italics are defined in the Glossary.
+1.2. POLICY OBJECTIVE
+The primary purpose of the IPP is to stimulate Indigenous entrepreneurship, business and 
+economic development, providing Indigenous Australians with more opportunities to 
+participate in the economy. 
+Prior to the implementation of the policy, Indigenous enterprises secured limited business   
+from Commonwealth procurement. The policy is intended to significantly increase the rate of 
+purchasing from Indigenous enterprises .
+1.3. POLICY ELEMENTS
+The policy aims to increase the Commonwealth’s Indigenous procurement in three ways:
+1. Annual targets for the volume and value of contracts to be awarded to Indigenous
+enterprises by the Commonwealth and each Portfolio .
+2. A Mandatory Set Aside (MSA) to provide Indigenous enterprises the opportunity
+to demonstrate value for money before a general approach to market . The MSA
+applies to all procurements to be delivered in remote Australia and for all other
+procurements wholly delivered in Australia with an estimated value from $80,000 
+to $200,000 (GST inclusive).
+3. Indigenous participation targets to be mandated in high value contracts wholly 
+delivered in Australia valued at $7.5 million or more in specified industry categories, 
+known as the ‘ Mandatory Minimum Indigenous Participation Requirements’ (MMR) . This 
+includes a mandate that tender evaluations for procurement subject to the MMR must 
+consider a tenderer’s past performance against MMR targets contained in relevant 
+Commonwealth contracts.
+7 
+1.4. KEY PERFORMANCE INDICATORS
+The success of the IPP is assessed using two key performance indicators:
+1. The extent to which there is an increase in the number of Indigenous enterprises
+contracted to the Commonwealth; and
+2. The extent to which there is an increase in the volume and value of contracts awarded 
+to Indigenous enterprises .
+1.5. PROCUREMENT CONTEXT
+The Department of Finance is responsible for the Commonwealth Procurement Rules (CPRs) ,
+which are the keystone of the Government’s procurement policy framework, reflecting
+officials’ responsibilities for the management of public monies under the Public Governance ,
+Performance and Accountability Act 2013.
+The IPP is a Procurement-Connected Policy (PCP). A PCP seeks to support government policy 
+objectives through the Commonwealth’s use of procurement activities. 1
+Under the devolved procurement framework, individual relevant Commonwealth entities
+are responsible for ensuring their own compliance with a PCP. The NIAA is responsible for
+monitoring and reporting entities’ performances against the requirements of the policy.
+The NIAA is also responsible for administering, reviewing and providing information on the IPP.
+The CPRs include an Appendix A exemption (exemption 16) that enables relevant
+Commonwealth entities to procure goods and services directly from small and medium 
+enterprises (SME) that meet the definition of an Indigenous Enterprise as set out in this 
+document, with out having to apply the additional rules in Division 2 of the CPRs .  
+All procurements must be undertaken in accordance with Division 1 of the CPRs. Division 1 
+includes the requirement to demonstrate value for money and the requirement for non-
+corporate government entities to use coordinated procurement arrangements where they exist.
+1.6. APPLICATION OF THE POLICY
+Non-corporate Commonwealth entities must comply with the IPP. Prescribed Corporate
+Commonwealth entities listed in section 30 of the Public Governance, Performance and 
+Accountability Rule 2014 and Corporate Commonwealth entities are encouraged to use
+best endeavors to apply the IPP.
+The IPP does not apply to Commonwealth grants.
+1 
+Procurement by non-corporate Commonwealth entities must not be inconsistent with the policies of the Commonwealth in 
+accordance with sections 15 and 21 of the Public Governance, Performance and Accountability Act 2013. The Department of
+Finance maintains a list of Procurement Connected Policies .
+8
+1.7. ACCOUNTABILITY AND TRANSPARENCY
+The Australian Government publicly holds itself to account for performance under the IPP.
+Performance against the three components of the IPP is published on the
+Indigenous Procurement Policy page on the NIAA website .
+1.8. INDIGENOUS ENTERPRISES
+From 1 July 2026, an enterprise must be either: 
+o
+51 per cent or more First Nations owned and controlled; or 
+o
+registered with the Office of the Registrar of Indigenous Corporations (ORIC)  
+An Indigenous Business Register will be established in 2026-27 identifying enterprises that meet 
+the strengthened criteria.  
+Supply Nation maintains Indigenous Business Direct which identifies enterprises that meet the 
+original criteria. Enterprises registered on Indigenous Business Direct will be eligible for the IPP 
+during the transition period.  
+The Office of the Registrar for Indigenous Corporations also maintains its own Public Register .  
+If a business is not listed with these registers, the procuring official must document the steps 
+taken to assure themselves the enterprise meets the definition of an Indigenous Enterprise as 
+set out in this document . This could include: 
+a. Requesting that the owners of the business provide evidence of Indigeneity. This could
+take the form of:
+• A statutory declaration, declaring that the enterprise meets the definition 
+of Indigenous Enterprise as set out in this document ; 
+• Certificates or letters of Indigeneity of the Indigenous owners provided by a
+recognised Indigenous organisation such as a land council.
+b. Checking whether the enterprise is listed with an Indigenous Chamber of Commerce or
+another business list and confirming that the business meets the definition of an 
+Indigenous Enterprise as set out in this document as per steps outlined in this section 
+(above).
+The CPRs contain a series of exemptions outlining particular circumstances under which
+procurement processes are exempt from particular aspects of the CPRs (Appendix A
+exemptions). Exemption 16 relates to the procurement of goods and services from small 
+and medium-sized enterprises (SMEs) that meet the definition of an Indigenous Enterprise 
+as set out in this document. If using Exemption 16, the procuring official must also ensure 
+Transition arrangements will apply for the 2026-27 financial year . Under these 
+arrangements, Indigenous businesses will be eligible if they meet either:  
+•
+the strengthened criteria (51 per cent Indigenous ownership and control), or  
+•
+the original criteria (50 per cent Indigenous ownership). 
+These arrangements seek to ensure Indigenous businesses have sufficient time to obtain 
+verification under the new criteria if they choose to. At the end of the transition period, 
+Indigenous businesses must meet the strengthened IPP criteria to access the IPP. 
+the enterprise meets the definition of a SME , as defined in the CPRs.
+1.9. INCORPORATED INDIGENOUS JOINT VENTURES
+For the purpose of the policy, an incorporated Indigenous joint venture is a company formed
+through the incorporation of an Indigenous enterprise and a non- Indigenous enterprise.
+Under the transition arrangements (2026-27), an incorporated Indigenous joint venture must be 
+registered either:  
+•
+On Supply Nation’s Indigenous Business Direct; or  
+•
+The Indigenous Business Register to be established in 2026-27 
+And meet either: 
+•
+the original criteria (50 per cent Indigenous owned and controlled); or 
+•
+the strengthened criteria (51 per cent Indigenous owned and controlled). 
+In addition, the joint venture must demonstrate it has strategies in place to increase their Indigenous 
+workforce and the capability of the Indigenous enterprise partner. 
+2
+2 ANNUAL TARGETS FOR 
+PURCHASING FROM
+INDIGENOUS ENTERPRISES
+2.1. INTRODUCTION
+The Commonwealth has two targets for purchasing from Indigenous enterprises – a volume 
+target and a value target. From 2025-26 financial year, both the volume and value targets will 
+be set at 3 per cent of eligible procurements, increasing by 0.25 percent each financial year 
+until reaching 4 per cent in 2029-30 financial year. 
+2025-26
+3 per cent
+3 per cent 
+2026-27
+3.25 per cent
+3.25 per cent 
+2027-28
+3.5 per cent
+3.5 per cent 
+2028-29 
+3.75 per cent 
+3.75 per cent 
+2029-30 
+4 per cent 
+4 per cent 
+Indigenous procurement volume and value targets are set annually for each Portfolio .
+The targets are calculated by the NIAA in consultation with each portfolio , using AusTender
+contract data. Adjustments are made to ensure the volume and total value of contracts
+reflect the number of eligible procurement opportunities.
+The targets, expressed in terms of the actual volume of contracts and the actual dollar 
+amount to be awarded by Portfolios to Indigenous enterprises each financial year are 
+published on the NIAA website .
+2.2. PORTFOLIO TARGETS FOR THE VOLUME OF
+CONTRACTS AWARDED
+The Portfolio volume-based target for the upcoming financial year is calculated based on
+the expected number of eligible procurements .
+The expected volume of eligible procurements is the average of the number of eligible 
+procurements over the previous three full financial years.
+The number of eligible procurements for a particular financial year is the number of contracts 
+published on AusTender in the relevant financial year, minus the number of contracts 
+associated with an exclusion. 
+For the volume-based targets, excluded contracts are those where paragraph 2.6 of the 
+CPRs has been applied. 
+11
+2.3. PORTFOLIO TARGETS FOR THE TOTAL VALUE OF
+CONTRACTS AWARDED
+The Portfolio value-based target for the upcoming financial year is calculated based on the
+relevant target (refer to table at 2.1) as applied to the expected value of eligible procurements .
+The expected value of eligible procurements is the average of the total value of eligible 
+procurements over the previous three full financial years.
+The value of eligible procurements for a particular financial year is the total value of contracts 
+published on AusTender in the relevant financial year, minus the value of contracts associated 
+with an exclusion.
+The following contracts are excluded from the value-based target:
+a. Procurements exempt from CPRs Division 2 (other than Exemption 16)
+b. Procurements subject to CPRs paragraph 2.6
+c. Procurement through a coordinated procurement arrangement
+d. Procurements within a Restricted Market (see Appendix A)
+e. Procurements agreed between NIAA and individual portfolios as being extraordinary
+expenditure that is unlikely to be repeated. 2
+2.4. COUNTING PROCUREMENT AGAINST THE TARGETS
+To encourage the broadest possible application of the IPP, Portfolios may count a range of
+procurement and purchases with Indigenous enterprise s against their targets including:
+a. Direct contracts and purchases awarded to an Indigenous enterprise by an entity within 
+their Portfolio .
+b. Subcontracts awarded to an Indigenous enterprise that directly relate to the goods and 
+services contracted by an entity within the Portfolio .
+c. Multi-year contracts
+• A multi-year contract awarded to an Indigenous enterprise can count towards a 
+portfolio’s volume-based target for each year the Indigenous enterprise receives 
+revenue under the contract.
+2 
+Prior to agreeing a value-based target for an upcoming financial year, the NIAA will write to the Chief Finance Officer of 
+each portfolio to confirm whether any extraordinary expenditure occurred in the previous financial year. If a portfolio reports
+extraordinary expenditure in the previous financial year, the amount will be deducted from the value target for the upcoming 
+financial year.
+12
+• The total value of the multi-year contract awarded to an Indigenous enterprise will be 
+counted against the portfolio’s value-based target for the year the contract was 
+executed. Any increase in the value of the contract will be counted against the target
+for the financial year in which the variation occurred.
+d. Official orders awarded to an Indigenous enterprise, including subcontracts, that have 
+been entered into under a panel, including coordinated procurement arrangements
+and cooperative procurement arrangements, can be counted toward volume and 
+value-based targets.
+Portfolios will need to report procurement and purchases to the NIAA via the IPP Reporting
+Solution (IPPRS) if they are not required to be reported on AusTender or reported by a Supplier 
+through the IPPRS .
+2.5. REPORTING CONTRACTS AGAINST IPP TARGETS
+Portfolio agencies are required to report against their IPP targets. This data is stored in the
+IPP Reporting Solution (IPPRS) , which is managed by the NIAA .
+The IPPRS automatically collates data on contracts awarded to Indigenous enterprises that
+have been published on AusTender and attributes these contracts to relevant Portfolios . This 
+is achieved by matching AusTender data with Indigenous enterprises registered with Supply 
+Nation or through ORIC .
+The IPPRS also captures and attributes the volume and value of subcontracts to Indigenous
+enterprises awarded under contracts subject to the MMR to the relevant portfolio targets.
+Relevant Commonwealth entities are required to ensure suppliers report their performance
+against the MMR quarterly through the IPPRS.
+Portfolios are encouraged to report all other eligible contracts (not already published on
+AusTender or associated with MMRs ) to the NIAA via the IPPRS throughout the year. Each year
+Portfolios are notified of the deadline by which reporting is to be entered into IPPRS . This will 
+typically be around 42 days from the end of the financial year. Portfolios can use the 
+reporting function of the IPPRS at any time to monitor progress against their target.
+Contracts that need to be manually reported include:
+a. Subcontracts with Indigenous enterprises not related to a MMR or reported by suppliers 
+through the IPPRS ;
+b. Contracts and purchases valued at less than $10,000 (including credit card purchases);
+c. For prescribed Corporate Commonwealth entities , contracts and purchases valued 
+at less than $7.5 million for procurement of construction services or $400,000 for
+procurements other than construction services.
+d. Contracts with Indigenous enterprises not registered with Supply Nation or ORIC ; and
+e. Contracts and purchases awarded by Corporate Commonwealth entities
+(other than prescribed Corporate Commonwealth entities ).
+13
+3
+3 MANDATORY SET ASIDE 
+(MSA) OF CERTAIN
+COMMONWEALTH 
+CONTRACTS
+3.1. INTRODUCTION
+The Mandatory Set Aside (MSA) arrangements provide Indigenous SMEs with the opportunity
+to demonstrate value for money before the procuring official makes a general approach to
+the market.
+The MSA applies to:
+a. all remote procurements ; 3
+b. all other procurement wholly delivered in Australia where the estimated value of the
+procurement is between $80,000 and $200,000 4 (GST inclusive).
+The MSA does not apply to:
+a. procurements to which paragraphs 2.6 or 10.3 of the CPRs apply;
+b. procurement made through a mandated coordinated procurement arrangement and
+c. procurement where the purchase is made using an exemption contained in Appendix 
+A of the CPRs (other than exemption 16).
+3.2. REMOTE PROCUREMENT
+A remote procurement is a procurement exercise for a remote contract , which is a contract
+where the majority of the value of the goods and services will be delivered in a remote area .
+Figure 1 illustrates regions considered as remote
+areas under the IPP, noting this includes Darwin 
+and several regional centres such as Broome and 
+Alice Springs. A detailed map is available on the
+NIAA website.
+To determine whether a procurement is a remote
+procurement , the procuring official will need
+to identify whether the delivery point(s) for the
+majority of the goods and services (by value) is 
+in a remote area .
+Figure 1: Remote areas under the Indigenous Procurement Policy
+3
+This does not apply to transactions paid for by credit card.
+4
+Rules for estimating the value of a procurement are set out in the Commonwealth Procurement Rules.
+15
+3.3. APPLYING THE MSA
+In situations where the MSA applies, the procuring official must first determine whether an 
+Indigenous SME could deliver the required good or service on a value for money basis. Only 
+after applying that rule can procuring officials apply exemption 17 in Appendix A of the 
+CPRs or other ordinary procurement processes.
+With the exception of coordinated procurement arrangements, procuring officials 
+must apply the MSA before undertaking a procurement from an existing panel 
+arrangement. 
+To satisfy the MSA requirement:
+a. The procuring official must conduct a search for suitable Indigenous SMEs on
+Supply Nation’s directory of Indigenous enterprises ;
+b. Depending upon the outcome of the search:
+• If a suitable Indigenous SME is identified.
+i. The procuring official must take steps to determine whether the Indigenous
+SME could deliver the required good or service on a value for money basis, 
+consistent with the CPRs.
+ii. If value for money is determined the entity must purchase the required good
+or service from the Indigenous SME. For procurements valued at or above the
+relevant procurement threshold, the procurement can be undertaken using 
+Exemption 16 of Appendix A of the CPR.
+iii. If based on the initial search, a number of suitable Indigenous SMEs are 
+identified the procuring official must assess these in a manner 
+commensurate to the scale, scope and risk of the procurement, and award 
+the contract to the Indigenous SME that represents best value for money.
+iv. If the Indigenous SME that represents best value for money declines the contract,
+the entity should offer the contract to each subsequent SME that met value for
+money requirements.
+• If no suitable Indigenous SME is identified,
+i. document the outcomes of that search.
+ii. consider applying Exemption 17 in Appendix A of the CPRs  
+iii. follow the entity’s ordinary procurement practices to award the contract.
+16
+3.4. RECORDING AND REPORTING REQUIREMENTS
+Contracts valued between $80,000 and $200,000
+The NIAA publishes the percentage of MSA eligible contracts as published on AusTender that
+have been awarded to Indigenous enterprises .
+Remote procurements
+Every six months, portfolios must manually report to the NIAA via the IPPRS :
+a. remote procurements conducted by the Portfolio ; and
+b. remote contracts that were awarded to Indigenous SMEs .
+17
+4
+4 MANDATORY MINIMUM 
+INDIGENOUS 
+PARTICIPATION
+REQUIREMENTS FOR
+CERTAIN CONTRACTS
+4.1. INTRODUCTION
+For certain Commonwealth contracts (see section 4.2), relevant Commonwealth entities are
+required to include targets for minimum Indigenous employment or supply use. These targets
+are referred to as the ‘mandatory minimum requirements for Indigenous participation’ or MMR .
+The MMR requires suppliers to achieve a minimum percentage of Indigenous employment or 
+supplier use (or a combination of both) on average over the term of the contract. The supplier, in 
+consultation with the relevant purchasing Commonwealth entity, can elect to apply a target of 4 
+per cent Indigenous employment or supplier use at the contract level, or a target of 3 per cent at 
+the organisational level (see Table 1 at section 4.6.6). The supplier may elect to meet the MMR 
+directly or through subcontracts. 
+When tendering for procurements to which MMR targets apply tenderers must:
+a. outline how the MMR targets will be achieved within an Indigenous Participation Plan;
+b. indicate if they have been subject to MMR targets previously; and
+c. declare their organisations current levels of Indigenous employment and supply use.
+When evaluating tenders, in which the MMR apply, relevant Commonwealth entities must:
+a. consider each tenderer’s Indigenous Participation Plan;
+b. consider the tenderer’s past performance against MMR targets; and
+c. document these considerations as part of the tender assessment.
+Past performance information is held in the IPPRS and can be accessed via the central
+procurement team within each Government entity or via IPPRS@niaa.gov.au .
+4.2. APPLICATION
+From 1 July 2016, relevant Commonwealth entities are required to include MMRs in the
+Approach to Market documentation for all procurement:
+a. wholly delivered in Australia ; and
+b. valued at $7.5 million (GST inclusive) or more; and
+c. where more than half of the value of the contract is being spent in one or more of eight
+specified industry sectors (Appendix B – Table 1) or
+d. From 1 July 2020, where more than half of the value of the contract is being spent in
+one or more of nineteen specified industry sectors (Appendix B – Table 2).
+Procurements from a standing offer or panel arrangement, including coordinated or
+cooperative procurement arrangements , are subject to the MMR.
+The MMR does not apply to:
+a. contracts that are subject to paragraph 2.6 of the CPRs. Paragraph 2.6 deals with
+activities relating to international peace and security, human health, essential security
+interests and national treasures;
+19
+b. several sub-category exclusions listed in Appendix B; and
+c. contracts delivered overseas in whole or in part.
+Entities can consider voluntarily applying the MMR to contracts that include an overseas 
+delivery component. This could include applying the MMR to the component of the
+procurement delivered in Australia or to the procurement in full. Reporting should occur
+via the IPPRS (as a voluntary MMR) to ensure subcontracts are counted towards the
+Portfolio’s target.
+Model clauses are available on the NIAA website and the Department of Finance’s Clause Bank.
+4.3. APPLYING MMR TO VARIED CONTRACTS
+Portfolios may negotiate with suppliers to apply the MMR requirements to varied
+contracts, where:
+a. the variation(s) brings the total value of the contract to $7.5 million (GST inclusive) 
+or more; and
+b. more than half of the value of the contract is being delivered in one or more of the
+specified industry sectors; and
+c. the variation presents an opportunity for increased Indigenous participation in the
+delivery of the remainder of the contract ( MMR requirements should apply from the
+date of the relevant variation).
+It would not be appropriate for the MMR to be applied where almost all of the contract
+has been completed, and where the requirement would introduce inefficiencies into 
+the procurement activity and where changing the requirement of the work package
+would represent a burden on entities and suppliers that is greater than the corresponding
+Indigenous employment or supplier use outcome.
+Voluntary introduction of MMR targets to a varied contract should only be pursued if mutually 
+agreed with the supplier. Suppliers should not be compelled to agree to contract variations that
+introduce MMR targets and there should be no penalty for the supplier if they do not agree.
+Reporting should occur via the IPPRS (as a voluntary MMR ) to ensure subcontracts are counted
+towards the Portfolio’s target.
+4.4. MMR TARGETS
+The MMR is designed to increase the level of Indigenous participation in the delivery of
+government contracts. This can be achieved via Indigenous employment, the use of
+Indigenous enterprises or a combination of both.
+While the targets are typically applied to work directly associated with delivering the contract, the supplier 
+may apply to the purchasing Commonwealth entity to have the target applied to their organisation – refer 
+to Table 1. 
+20
+4.5. REMOTE AREA CONTRACTS
+Where a component of a contract subject to the MMR is delivered in remote Australia, the
+purchasing Commonwealth entity must ensure there is a contractual requirement that the
+contract delivers significant Indigenous employment, or supplier use outcomes in that area, 
+which are in excess of the minimum target levels – refer to Table 1.
+This could include:
+a. subcontracting an Indigenous enterprise(s) to assist with delivering the contracted
+goods and services in the remote area ; and/or
+b. specifying minimum Indigenous employment requirements for the proportion of
+the contracted goods and services to be delivered in the remote area (for example 
+20 per cent).
+In determining what requirement would deliver a ‘significant’ Indigenous employment or 
+supplier use outcome, the purchasing Commonwealth entity and the supplier should have 
+regard to:
+a. the local employment market, including consideration of the number of Indigenous
+businesses, workers and job seekers, and their relevant skills, capabilities, qualifications
+and training; and
+b. the scale, value and location of the contract, and skills and capabilities required to
+deliver the goods and services; and
+c. the availability of supply-side services to support the meeting of any targets and 
+assist in building the capacity of Indigenous businesses and job-seekers to take up 
+opportunities; and
+d. existing Commonwealth and state and territory policies and/or targets.
+4.6. COMPLIANCE
+As a devolved policy, relevant Commonwealth entities are required to manage MMR within 
+each stage of the procurement process and make an assessment and report as to whether
+or not the supplier was compliant against the MMR at the end of the contract .
+The contract may be varied during the term of the contract to change the combination of
+employment and supply use targets and the application of the MMR to the contract or the
+organisation. Any variation to the target setting must comply with MMR policy. Specifically,
+varied employment and supply use targets must still add up to a minimum of 4 per cent
+for contract-based targets or a minimum of 3 per cent for organisation based targets and 
+represent a significant Indigenous participation outcome for any component of the contract 
+delivered in remote Australia following the variation. 
+21
+4.6.1. Approach to market
+When inviting potential suppliers to participate in a procurement to which the MMR applies, 
+relevant Commonwealth entities must specify whether a component is to be delivered in
+a remote area. Approach to market clauses will require tenderers to declare their level of
+compliance with any past contracts that included MMRs, and also require them to develop 
+an Indigenous Participation Plan that addresses:
+a. how the tenderer intends to meet the mandatory minimum requirements for the
+Indigenous Procurement Policy; and
+b. the tenderer’s current rate of Indigenous employment and Indigenous supplier use; and
+c. the tenderer’s commitment to Indigenous participation; and
+d. whether any part of the contract will be delivered in a Remote Area, and if so, how
+the tenderer will ensure that its provision of goods and or services will deliver significant
+Indigenous employment or Indigenous supplier use outcomes in that remote area.
+4.6.2. Tender evaluation
+The Commonwealth entit y must consider the tenderers’:
+a. past compliance with the MMR requirements (this information is available in the IPPRS);
+b. plans to increase Indigenous participation (as outlined in the tenderer’s proposed
+Indigenous Participation Plan); and
+c. ability to achieve significant Indigenous participation outcomes in remote Australia
+(as appropriate, for contracts with a remote component).
+To gain access to the IPPRS , contact your central procurement area or email IPPRS@niaa.gov.au .
+4.6.3. Establishing, and procuring from a panel arrangement
+Procurements for the establishment of new panels will need to include clauses in the
+approach to market documentation and in the Deed of Standing Offer indicating that the
+MMR will apply to procurements from that standing offer. The assessment and reporting of
+MMR will occur when a procurement is undertaken from the panel that meets the MMR.
+Procuring officials undertaking a procurement from a standing offer or panel arrangement 
+(where MMR have been identified in the Deed of Standing Offer) must ask the supplier/panel 
+member to provide an Indigenous Participation Plan and details of their organisation’s past 
+compliance with the MMR when the value of the contract (or official order) meets the MMR 
+criteria (see 4.2 and 4.6.1).
+Procuring officials must consider these as part of the procurement evaluation. 
+Potential suppliers responding to an approach to market from a panel arrangement that is subject to 
+the MMR must have the capacity to meet the MMR to be awarded a contract/ work order/official 
+order. 
+22
+4.6.4. Contract Management
+The contract manager within the purchasing Commonwealth entity is responsible for ensuring
+compliance with the Indigenous Participation Plan and MMR targets during the contract term,
+including establishing, monitoring and assessing progress reports submitted by the supplier
+via the IPPRS and undertaking appropriate assurance activities to ensure that the information
+provided by contract managers is accurate.
+The relevant Commonwealth entity and the supplier may vary MMR targets during the term
+of the contract, provided revised targets are consistent with the policy and are included
+in a contract variation and the IPPRS as outlined in 4.3. The contract variation is to include 
+a revised Indigenous Participation Plan that must be agreed between the supplier and 
+contract manager.
+4.6.5. Reporting
+Suppliers are required to report on progress against the Indigenous Participation Plan on
+a quarterly basis via the IPPRS . This includes providing details of subcontracts or purchases 
+made with Indigenous enterprises , total workforce working hours for the quarter and total 
+indigenous workforce working hours for the quarter. The system will then calculate the 
+fulltime equivalent (FTE) which represents total weeks of work during the reporting period. 
+NIAA publishes the names of suppliers and contract details (as published in AusTender ) 
+that have been awarded contracts containing MMR , on the NIAA website.
+It is incumbent on the Commonwealth entity to ensure suppliers provide the required reporting
+in a timely manner and assurance activities include review of all information provided.
+4.6.6. Assess final performance against targets
+At the end of the contract, the contract manager will provide an assessment of the supplier’s 
+final performance in the IPPRS. This assessment will be accessible to any future evaluation panel 
+across Commonwealth agencies when considering the past performance of the supplier.
+23
+Table 1: Mandatory minimum requirement targets –
+Non – remote
+contract-level
+target
+4 per cent Indigenous
+employment (on
+average) of the full 
+time equivalent 
+Australian-based 
+workforce deployed on
+the contracted project
+(by the end of the
+contract term).
+4 per cent of the value 
+of the goods and 
+services provided under
+the contract must be 
+awarded to Indigenous
+enterprises (by the end
+of the contract term)
+The Employment and 
+Supplier target total
+4 per cent (by the end
+of the contract term).
+For example: a 1 per 
+cent Indigenous 
+employment outcome 
+and a
+3 per cent Indigenous
+supplier-use outcome
+delivers a combined
+outcome of 4 per cent.
+Remote 
+contract-level
+target
+Greater than 4 per cent 
+Indigenous employment
+(on average) of the
+full time equivalent 
+Australian-based 
+workforce deployed on
+the contracted project
+(by the end of the
+contract term).
+Setting the target should
+have regard to the local 
+Indigenous employment
+market, the nature of the
+goods and services to
+be delivered, availability 
+of support services
+and any other relevant
+government targets.
+Greater than 4 per cent 
+of the value of the goods
+and services provided 
+under the contract
+must be awarded to
+Indigenous enterprises
+(by the end of the
+contract term).
+Setting the target should
+have regard to the local 
+Indigenous business 
+sector, the nature of
+goods and services to
+be delivered, availability 
+of support services
+and any other relevant
+government targets.
+Greater than 4 per cent 
+The Employment and 
+Supplier target in total
+is greater than 4 per cent 
+(by the end of the
+contract term).
+Setting the target should
+have regard to the local 
+Indigenous business 
+sector and employment
+market, the nature of
+goods and services to
+be delivered, availability 
+of support services
+and any other relevant
+government targets.
+Organisation-
+level target
+3 per cent Indigenous
+employment (on
+average) of the full time
+equivalent Australian-
+based workforce of the
+supplier (by the end of
+the contract term).
+3 per cent of the value 
+of the supplier’s 
+Australian supply chain 
+must be awarded to
+Indigenous enterprises
+(by the end of the
+contract term).
+Employment and 
+Supplier total in value to
+3 per cent (by the end
+of the contract term).
+For example: a 2 per cent 
+Indigenous employment
+outcome and a 1 per
+cent Indigenous supplier- 
+use outcome delivers
+a combined outcome
+of 3 per cent .
+24
+5
+5 IPP REPORTING
+REQUIREMENTS
+Commonwealth
+targets
+Annual publication 
+of portfolio results 
+against their IPP
+targets.
+This will include:
+- volume of
+contracts
+- value of
+contracts
+Portfolios are responsible for
+uploading onto the IPPRS:
+- AusTender contracts awarded 
+to enterprises not registered on 
+Supply Nation or ORIC; and
+- All other procurement
+contracts or purchases
+not reportable on AusTender .
+- All subcontracts not reported
+by suppliers via the IPPRS.
+Reports must be uploaded at
+least bi-annually, however reports
+can be uploaded at any time.
+The IPPRS extracts AusTender
+contract data and counts
+contracts awarded to enterprises
+registered on Supply Nation
+and/or ORIC against portfolios
+targets daily.
+Reports to support portfolios
+reporting are available on IPPRS.
+Portfolios may require
+suppliers to report on
+non-MMR Indigenous
+supplier use.
+Mandatory
+Set Aside (MSA)
+Six monthly
+publication on
+NIAA website of
+total number of
+contracts:
+• reported on
+AusTender in 
+the previous 
+period valued 
+from $80,000 to
+$200,000
+• awarded to
+Indigenous
+enterprises.
+Numbers of
+Commonwealth
+remote
+procurements
+conducted and 
+awarded to
+Indigenous SMEs.
+Portfolios are to report to NIAA
+procurements that have occurred
+in remote Australia at least every
+six months via the IPPRS. Reports
+can be uploaded at any time.
+NIAA extracts contract data from
+AusTender , Supply Nation and 
+ORIC for MSA reporting against 
+the value based MSA.
+Nil
+26
+Mandatory 
+Minimum
+Indigenous 
+Participation 
+Requirements 
+(MMR)
+Six monthly
+publication on
+NIAA website of
+MMR contract
+details:
+• suppliers’ 
+names
+• contract
+value/term
+• types of goods/
+services being
+purchased.
+(data sourced
+from AusTender
+and IPPRS )
+Portfolios are responsible for
+entering into the IPPRS:
+• targets
+• days to submit QPRs: enter the 
+number of days (0 to a maximum 
+of 60 days) that the contractor 
+has to submit their QPR.
+• days to submit IPRs (organisation 
+based): fixed to 14 days and not 
+adjustable.
+• reporting start date
+• suppliers’ contact details
+• acknowledgement that
+the contract manager has 
+reviewed the quarterly
+performance report
+• comments against the final
+performance report. 
+Suppliers report
+quarterly via the IPPRS: 
+(for employment
+targets)
+• FTE total workforce
+• FTE Indigenous
+workforce
+(for supply chain 
+target)
+• Australian Business 
+Number and name
+of enterprise
+• value of contract/
+purchase
+• date of contract/
+purchase
+• description of
+good/service
+purchased
+• Whether the
+contract/purchase
+was awarded by 
+the Supplier or by 
+a subcontractor
+within their supply 
+chain (direct or
+indirect contract/
+purchase).
+27
+6
+6 IPP AGENCY ROLES 
+AND RESPONSIBILITIES
+National Indigenous Australians Agency (NIAA)
+The NIAA is responsible for administering the policy. This includes:
+• Developing and publishing policy and periodically reissuing these documents
+as necessary.
+• Promoting the IPP.
+• In consultation with Department of Finance and portfolios, setting the next
+financial year portfolio targets.
+• Monitoring portfolio performance.
+• Publishing portfolio and Government-wide performance information including 
+the list of contracts subject the MMR .
+• Ensuring there is a central list of Indigenous enterprises .
+• Monitoring and reviewing the effectiveness of the IPP against its key
+performance indicators.
+• Managing the IPPRS database.
+• Support relevant Commonwealth entity and supplier compliance with
+performance reporting in relation to contracts with MMR.
+Department of Finance
+The Department of Finance is responsible for the Commonwealth Procurement Framework
+including the CPRs and AusTender. The Department of Finance provides advice to relevant
+entities on the Commonwealth Procurement Framework.
+Commonwealth portfolios
+Portfolios are responsible for their compliance with the IPP. This includes:
+• reporting contracts and purchases to Indigenous enterprises to the NIAA via the
+IPPRS database at least bi-annually;
+• ensuring procuring officials and contract managers understand their obligations 
+under the IPP, including ensuring tenderers are aware of requirements under the
+IPP and negotiating MMR targets into contracts, in line with the policy intent;
+• monitoring IPPRS to ensure contracts identified through contract data matching with 
+AusTender are appropriately classified within the IPPRS , including the application of
+any exemption to the MMR in accordance with the policy;
+• ensuring that contract managers monitor and manage performance of suppliers 
+against MMR for Indigenous participation via the IPPRS; and 
+• ensuring suppliers report performance against MMR targets via the IPPRS and that this 
+data is accurate and complete. 
+Suppliers
+Supplies are responsible for providing accurate and complete quarterly reporting against 
+MMR targets via the IPPRS, in accordance with the requirements detailed in the relevant 
+contract(s). 
+APPENDIX A:
+RESTRICTED UNSPSC CODE EXEMPTIONS
+Procurement contracts published using one of the restricted UNSPSC codes listed in  
+Table 1 will be deducted from the procurement base of all portfolios each financial year. 
+Procurements within these categories may also be subject to another exemption.
+Table 1: Restricted Market Exemptions by UNSPC code
+83100000 – 83101800
+Utilities
+12130000
+Explosive materials
+15100000
+Fuels
+25100000
+Motor vehicles
+25101500
+Passenger motor vehicles
+25101801
+Motorcycles
+25102000
+War vehicles
+25102100
+Truck tractors
+25111700
+Military watercraft
+25111900
+Marine craft systems and subassemblies
+25130000
+Aircraft
+25131500
+Powered fixed wing aircraft
+25131700
+Military fixed wing aircraft
+25131707
+Reconnaissance or surveillance aircraft
+25131800
+Specialty aircraft
+25131900
+Military rotary wing aircraft
+25150000
+Spacecraft
+25151700
+Satellites
+25170000
+Transportation components and systems
+25180000
+Vehicle bodies and trailers
+25191500
+Air transportation support systems and equipment
+25191700
+Vehicle servicing equipment
+30
+25200000
+Aerospace systems and components and equipment
+25202500
+Aircraft equipment
+26110000
+Batteries and generators and kinetic power transmission
+26120000
+Electrical wire and cable and harness
+31170000
+Bearings and bushings and wheels and gears
+32130000
+Electronic hardware and component parts and accessories
+32140000
+Electron tube devices and accessories
+41100000
+Laboratory and scientific equipment
+41110000
+Measuring and observing and testing instruments
+41120000
+Laboratory supplies and fixtures
+43190000
+Communications Devices and Accessories
+46100000
+Light weapons and ammunition
+46101800
+Arms and ammunition accessories
+46110000
+Conventional war weapons
+46120000
+Missiles
+46130000
+Rockets and subsystems
+46140000
+Launchers
+46171600
+Surveillance and detection equipment
+78181505
+Vehicle inspection Services
+78181800
+Aircraft maintenance and repair services
+92110000
+Military services and national defence
+93160000
+Taxation
+31
+APPENDIX B: INDUSTRY CATEGORIES 
+WITH MANDATORY MINIMUM
+REQUIREMENTS (INCLUDING
+SUB-CATEGORY EXEMPTIONS)
+TABLE 1
+Effective from 1 July 2016
+70
+Farming and fishing and forestry
+and wildlife contracting services
+72
+Building construction and 
+maintenance services
+76
+Industrial cleaning services
+78
+Transportation, storage and 
+mail services
+82
+Editorial and design and graphic
+and fine art services
+86
+Education and training services
+90
+Travel and food and lodging
+and entertainment services
+93
+Politics and civic affairs services
+32
+33
+TABLE 2
+Effective from 1 July 2020
+64
+Financial Instruments, Products,
+Contracts and Agreements
+71
+Mining and oil and gas services
+73
+Industrial Production and 
+Manufacturing Services
+77
+Environmental Services
+80
+Management and 
+Business Professionals and 
+Administrative Services
+80131500
+Lease and rental of property
+or building
+80131501
+Land leases
+80131503
+Residential rental
+81
+Engineering and Research and 
+Technology Based Services
+84
+Financial and Insurance Services
+84130000
+Insurance and retirement services
+84131800
+Retirement funds
+85
+Healthcare Services
+91
+Personal and Domestic Services
+92
+National Defence and 
+Public Order and Security
+and Safety Services
+92110000
+Military services and 
+national defence
+92111700
+Military science and research
+94
+Organisations and Clubs

@@ -1,0 +1,422 @@
+1 of 11 
+Suruhanjaya Komunikasi dan Multimedia Malaysia
+Malaysian Communications and Multimedia Commission 
+INFORMATION PAPER  
+Regulatory Framework for  
+Internet Messaging Service and Social Media Service Providers 
+1 August 2024 
+2 of 11 
+TABLE OF CONTENTS 
+1.0
+DEFINITIONS ................................................................................... 3
+2.0
+BACKGROUND ................................................................................. 4
+3.0
+GLOBAL REGULATORY DEVELOPMENTS ................................................ 5
+4.0
+REGULATORY FRAMEWORK ................................................................ 6
+5.0
+IMPLEMENTATION OF THE REGULATORY FRAMEWORK ............................ 9
+6.0
+BENEFIT FOR MALAYSIANS ............................................................... 10
+7.0
+MCMC’S ACCOUNTABILITY ................................................................ 10
+3 of 11 
+1.0
+DEFINITIONS 
+AI 
+Artificial Intelligence 
+ASP 
+Applications Service Provider 
+CCID 
+Commercial Crime Investigation Department  
+CMA 1998
+Communications and Multimedia Act 1998 [Act 588]   
+CSO 
+Civil Societies Organisations 
+EO 2000 
+Communications and Multimedia (Licensing) (Exemption) 
+Order 2000 
+EU 
+European Union 
+Government
+The government of Malaysia 
+IMDA 
+Infocomm Media Development Authority (Singapore) 
+LEA 
+Law Enforcement Agencies 
+LR 2000 
+Communications and Multimedia (Licensing) Regulations 2000 
+MCMC
+Malaysian Communications and Multimedia Commission  
+MCMCA 1998 
+Malaysian Communications and Multimedia Commission Act 
+1998 [Act 589] 
+NGO 
+Non-Governmental Organisations 
+OFCOM 
+Office of Communications (UK) 
+PDPA 2010
+Personal Data Protection Act 2010 [Act 709]   
+Service Providers Internet messaging service and social media service providers 
+STRs 
+Suspicious Transactions Reports 
+UK 
+United Kingdom 
+UNODC
+United Nations Office on Drugs and Crime  
+USP 
+Universal Service Provision 
+VLOP 
+Very Large Online Platforms 
+VLOSE 
+Very Large Online Search Engines 
+VOD 
+Video-on-Demand 
+4 of 11 
+2.0
+BACKGROUND 
+2.1
+Under the Malaysian Communications and Multimedia Commission Act 1998 
+(“ MCMCA 1998 ”) and the Communications Multimedia Act 1998 (“ CMA 
+1998 ”), the Malaysian Communications and Multimedia Commission 
+(“ MCMC ”) is responsible for overseeing and regulating activities and 
+services related to telecommunications, traditional broadcasting services, 
+and online services among others.  
+2.2
+The proliferation of online harm, encompassing graphic violence, child 
+exploitation, online scams and gambling, bullying and harassment has 
+transformed online platforms into potential breeding grounds for such 
+material. This harm, disseminated in various forms can have severe 
+repercussions for individuals and society at large. MCMC remains steadfast 
+in its commitment to address these challenges and foster a safer online 
+environment for all Malaysians.  
+2.3
+Recent trends have shown a surge in online harm especially those affecting 
+children. Based on the ECPAT 1 report in 2022, as many as 100,000 children 
+in Malaysia are at risk of online sexual exploitation and manipulation. 
+2.4
+Further, a UNODC report titled Casinos, Money Laundering, Underground 
+Banking, and Transnational Organized Crime in East and Southeast Asia: A 
+Hidden and Accelerating Threat issued in 2024 stated that in Malaysia, 
+online gambling related suspicious transactions reports (“ STRs ”) have 
+nearly doubled between 2019 and 2022, totalling more than 42,000 
+reports. The value of related STRs also increased dramatically to more than 
+RM26 billion or USD5.5 billion in transaction volume during the same period, 
+representing a 273% increase. 
+2.5
+Cyberbullying is also an issue as 28% of Malaysian children have been a 
+victim of online violence or cyberbullying based on a 2019 report by 
+UNICEF. Moreover, MCMC has received 9,483 reports of cyberbullying from 
+January 2022 until July 2024. In extreme cases, cyberbullying has also led 
+to deaths as in the cases of A. Rajeswary Appahu (after online threats 
+through TikTok) in 2024, an unnamed mother of three (believed to have 
+committed suicide after being cyber-bullied in TikTok) in 2022, and a 16-
+year-old teenager (after she conducted an online poll to decide whether she 
+should kill herself or not) in 2019. 
+1 ECPAT is an international organisation with 124 partner members in over 100 countries 
+collectively working to end the prostitution and trafficking of children 
+5 of 11 
+2.6
+Online fraud cases in Malaysia have also doubled from 17,668 cases in 2019 
+to 34,495 cases in 2023 according to Bukit Aman’s CCID. The department 
+also reported a staggering RM1.4 billion in losses due to scams. 
+2.7
+These issues are not exclusive to Malaysia. The rise of online harm globally 
+has led various other countries to implement approaches to regulate online 
+services, enhance user safety, particularly for children and curb unlawful 
+content. This has prompted many jurisdictions to impose legislation and 
+regulations to address these concerns. 
+3.0
+GLOBAL REGULATORY DEVELOPMENTS
+3.1
+In the United Kingdom (“ UK ”), online safety laws have been enacted in the 
+form of the Online Safety Act 2023. This act empowers the Office of 
+Communications (“ OFCOM ”) to regulate specified online services, 
+particularly social media, online messaging, and search engines, to ensure 
+the safe use of online services for users in the UK. Additionally, OFCOM is 
+also preparing related industry codes, which will include protections for 
+children and other users. 
+3.2
+The European Union (“ EU ”) regulates online services and imposes a higher 
+regulatory standard on online service providers with over 45 million 
+monthly users under the Digital Services Act 2023. It designates online 
+service providers as Very Large Online Platforms (“ VLOP ”) and Very Large 
+Online Search Engines (“ VLOSE ”). 
+3.3
+In Singapore, laws on online safety are enforceable through several laws 
+including the Broadcasting Act 1994 (which was amended through the 
+Online Safety (Miscellaneous Amendments) Act 2022), Protection from 
+Online Falsehoods and Manipulation Act 2019 and the Online Criminal 
+Harms Act 2023. 
+3.4
+India regulates social media services through the Information Technology 
+(Intermediary Guidelines and Digital Media Ethics Code) Rules 2021. The 
+objectives of the rules are to ensure an open, safe, trusted, and accountable 
+Internet for all Indian Internet users.  
+3.5
+Based on the above approaches in regulating online services across 
+jurisdictions, there are key similarities in their implementation. Among 
+others, there is a consensus that online service providers have a duty to 
+prohibit illegal and harmful content online, to ensure that they have robust 
+content moderation policies in place, to enhance transparency in 
+advertising, and to safeguard minors from harmful content and misleading 
+advertisements. 
+6 of 11 
+4.0
+REGULATORY FRAMEWORK 
+4.1
+Under this regulatory framework, all Internet messaging service and social 
+media service providers (“ Service Providers ”) with eight (8) million or 
+more users in Malaysia must apply for Applications Service Provider Class 
+Licence (“ ASP (C) ”) under the CMA 1998.  
+4.2
+In finalising this regulatory framework, MCMC has conducted a series of 
+engagements with Service Providers, Civil Societies Organisations (“ CSO ”), 
+Non-Governmental Organisations (“ NGO ”), Law Enforcement Agencies 
+(“ LEA ”), and other relevant stakeholders from January to July 2024. MCMC 
+will continue this collaborative and cooperative approach with all the 
+relevant stakeholders. 
+4.3
+MCMC will primarily use the data from its official surveys including MCMC’s 
+Internet User Survey to quantify the number of Malaysian users. MCMC will 
+also factor in other publicly available and reliable data points. 
+4.4
+This is in line with the Malaysian Cabinet's decision that online service 
+providers must comply with Malaysian laws to combat the rise in cybercrime 
+offences including online scams and gambling, cyberbullying, and sexual 
+crimes against children. 
+4.5
+The implementation of this regulatory framework is effected by way of 
+amendments 
+to 
+the 
+Communications 
+and 
+Multimedia 
+(Licensing) 
+(Exemption) Order 2000 (" EO 2000 ") and the Communications and 
+Multimedia (Licensing) Regulations 2000 (" LR 2000 ").   
+4.6
+The recent amendments to the EO 2000 and LR 2000 list the categories of 
+online services that are required to be licensed under the CMA 1998, which 
+are the Service Providers.  
+4.7
+The amended EO 2000 and LR 2000 define Internet messaging service and 
+social media service as follows: 
+a. “ Internet messaging service ” means an applications service which 
+utilises Internet access service that enables a user to communicate 
+any form of messages with another user. 
+b. “ social media service ” means an applications service which utilises 
+Internet access service that enables two or more users to create, 
+upload, share, disseminate or modify content.  
+7 of 11 
+4.8
+The rationale for this focused regulatory approach on licensing Internet 
+messaging service and social media service is to ensure that the 
+Government is taking proportionate steps based on the risk assessments in 
+addressing online harm issues especially online scams and gambling, sexual 
+grooming involving minors and cyberbullying.  
+4.9
+This is in contrast with enforcing regulation across all categories of online 
+services such as video on demand (“ VOD ”), search engines, application 
+stores, and e-commerce platforms which have been adopted in some 
+jurisdictions such as the EU and Indonesia. 
+4.10
+This regulatory approach does not make Malaysia an outlier as the other 
+jurisdictions highlighted above have implemented domestic regulatory 
+oversight over these online service providers. This new regulatory 
+framework only applies to Service Providers that meet the licensing 
+eligibility criteria and does not involve end users. 
+Type of Licence 
+4.11
+There are two (2) key types of licences under the CMA 1998 which are 
+Individual Licence and Class Licence. 
+i.
+Individual Licence requires a high degree of regulatory control 
+for a specified person to conduct a specified activity and may 
+include special licence conditions. 
+ii.
+Class Licence is a ‘light-handed’ form of regulation which is 
+designed to promote industry growth and development with easy 
+market access with yearly registration. 
+4.12
+Both types of licence are further categorised below in Table 1. 
+Table 1: Licences under the CMA 1998 
+Licence 
+Type of licence 
+Individual 
+•
+Network Facilities Provider (NFP) 
+•
+Network Service Provider (NSP) 
+•
+Content Applications Service Provider (CASP) 
+Class 
+•
+Network Facilities Provider (NFP) 
+•
+Network Service Provider (NSP) 
+•
+Content Applications Service Provider (CASP) 
+•
+Applications Service Provider (ASP) 
+8 of 11 
+4.13
+Licensing the Service Providers as an ASP under a class licence allows for a 
+light-touch regulatory approach to these services. By regulating through a 
+class licence, MCMC can implement an effective regulatory tool without 
+stifling innovation. The same approach was taken by MCMC for the licensing 
+of cloud service providers in 2021. 
+4.14
+The requirements to apply for an ASP (C) licence include registration fees, 
+application by a locally incorporated company, and submission of the 
+documents required as per class licence application checklist (i.e. 
+application form, company profile, information of the service and others). 
+More detailed information on the licensing process can be referred to in the 
+MCMC Licensing Guidebook .  
+4.15
+As licensees, the Service Providers are obligated to comply with the CMA 
+1998 and its subsidiary legislations.  
+4.16
+Among others, Service Providers must comply with MCMC directions issued 
+pursuant to section 51 in relation to compliance with the CMA 1998, 
+subsidiary legislation, or any licence condition. 
+4.17
+Service Providers are also required to adhere to the general duties of 
+licensees pursuant to section 263 i.e. to use their best endeavour to prevent 
+the applications services it provides from being used in, or in relation to, 
+the commission of an offence under any law of Malaysia and to provide 
+assistance to MCMC or any other authority in preventing the commission or 
+attempted commission of an offence under any written laws of Malaysia. 
+4.18
+Licensees must also adhere to the standard licence conditions for 
+Applications Service Provider Class Licence . Further, licensees are required 
+to comply with the Personal Data Protection Act 2010 (“ PDPA 2010 ”). 
+4.19
+The establishment of a locally incorporated entity is a prequalifying criterion 
+for licensing. However, under sub-regulation 23(2) of the LR 2000, the 
+Minister has the discretion to allow a foreign company to be registered as a 
+class licensee on a case-to-case basis.  
+4.20
+There will be no restriction on foreign shareholding under the class licence. 
+The ASP (C) licence was fully liberalised in 2012, providing locally 
+incorporated foreign-owned companies with the ability to enter the 
+Malaysian market to provide services to end users in Malaysia. 
+9 of 11 
+4.21
+The validity period for the class licence is one (1) year from the registration 
+date and the Service Providers need to re-apply every year provided they 
+meet the threshold of having eight (8) million or more users in Malaysia.  
+4.22
+Service Providers operating without a licence from 1 st January 2025 onwards 
+will be subject to actions under section 126 of the CMA 1998. If convicted, 
+the Service Providers shall be liable to a fine not exceeding RM500,000 or 
+five (5) years imprisonment, or both, and shall also be liable to a further fine 
+of RM1,000 for every day or a part of a day during which the offence is 
+continued after conviction. 
+5.0
+IMPLEMENTATION OF THE REGULATORY FRAMEWORK 
+5.1
+Service Providers have a grace period of five (5) months from the date of 
+Gazettement (1 st August 2024) to apply for the ASP (C) licence and comply 
+with the licensing requirements.  
+5.2
+The effective date of the licensing requirement is 1 st January 2025. The 
+requirement for licensing under ASP (C) will therefore be in force beginning 
+1 st January 2025. 
+5.3
+However, during this grace period, the Service Providers are required to use 
+their best efforts to combat online harm on their platforms such as 
+cyberbullying, online scams and  gambling, and child sexual abuse material. 
+5.4
+Comprehensive 
+outcome-based 
+guidelines 
+detailing 
+the 
+conduct 
+requirements and key obligations for the Service Providers will be developed 
+by MCMC through a public consultation within the grace period.  
+5.5
+In line with best practices in jurisdictions such as Australia, the EU, 
+Singapore and the UK, the proposed key requirements will include Service 
+Providers having robust: 
+•
+policies and measures for the protection of user data 
+•
+child safety measures including age assurances to restrict users under 
+the age of 13 from accessing the platforms operated by the Service 
+Providers 
+•
+policies and measures to address online harm including cyberbullying, 
+online scams, and sexual grooming activities 
+•
+content moderation policies and measures in place 
+•
+transparency in advertising and restriction of advertisement promoting 
+scams 
+•
+measures to safeguard minors from harmful content and misleading 
+advertisements 
+10 of 11 
+•
+measures to simplify complaint procedures for users and response time 
+•
+measures to manage deepfakes and harmful Artificial Intelligence 
+(“ AI ”) generated content 
+•
+regular reporting measures on Service Providers’ compliance with 
+Malaysian laws and the conduct requirements 
+5.6
+All members of the public including Service Providers, CSO, NGO, LEA, 
+academicians, and experts, as well as interested individuals, will be invited 
+to provide feedback on the guidelines once the process commences. 
+6.0
+BENEFIT FOR MALAYSIANS 
+6.1
+Malaysian end users will not be affected by the regulatory framework, as 
+only the Service Providers are required to obtain the ASP (C) licence from 
+MCMC. 
+6.2
+Instead, Malaysian end users will benefit from the enhanced safety and 
+better user experience, as the Service Providers will be held accountable 
+for their operations in Malaysia, in particular: 
+i.
+The provision of safer and better online services as the Service 
+Providers are expressly required to observe the conduct requirements 
+when operating in Malaysia. 
+ii.
+Reducing the risk of Malaysians being exposed to cybercrime and 
+online harm when Service Providers are mandated to have robust 
+moderation mechanisms. 
+iii.
+Clear channels of complaint and legal action against the Service 
+Providers as they are required to have a local presence in Malaysia. 
+iv.
+The existence of a safer online environment for all Malaysians, 
+especially children and those vulnerable to online harm. 
+7.0
+MCMC’S ACCOUNTABILITY 
+7.1
+As a regulator, MCMC is accountable under the CMA 1998 for ensuring a 
+safe online environment. The licensing framework is aimed at creating a 
+safer online ecosystem for Malaysian end users, especially for children and 
+families. Under the CMA 1998, there are strong safeguards to balance the 
+need for regulation, due process, and the protection of freedom of speech 
+and expression.  
+11 of 11 
+7.2
+For instance, section 51 of the CMA 1998 allows MCMC to issue direction to 
+any person to ensure compliance with licence conditions, provision of the 
+CMA 1998 and any of its subsidiary legislation. However, the issuance of 
+such direction cannot be done arbitrarily and must adhere to due process.  
+The person will be granted the opportunity to be heard before a direction is 
+made.  
+7.3
+If any Service Providers are aggrieved or whose interest is adversely 
+affected by the decision or direction of MCMC, they can avail themselves to 
+the Appeal Tribunal established under the CMA 1998. If the Service 
+Providers are not satisfied with the Appeal Tribunal’s decision, they can 
+further seek a judicial review as part of the redress mechanism. 
+1 st August 2024 

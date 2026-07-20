@@ -1,0 +1,391 @@
+REPUBLIC OF SINGAPORE
+GOVERNMENT GAZETTE
+ACTS SUPPLEMENT
+Published by Authority
+NO. 21]
+THURSDAY, APRIL 13
+[2017
+First published in the Government Gazette , Electronic Edition, on 11 April 2017 at 5 pm.
+The following Act was passed by Parliament on 28 February 2017 and assented to by
+the President on 5 April 2017: —
+REPUBLIC OF SINGAPORE
+No. 18 of 2017.
+I assent.
+TONY TAN KENG YAM,
+President.
+5 April 2017.
+An Act to amend the Patents Act (Chapter 221 of the 2005 Revised
+Edition).
+Be it enacted by the President with the advice and consent of the
+Parliament of Singapore, as follows:
+Short title and commencement
+1. This Act is the Patents (Amendment) Act 2017 and comes into
+operation on a date that the Minister appoints by notification in the
+Gazette .
+Amendment of section 14
+2. Section 14 of the Patents Act is amended —
+( a ) by deleting paragraph ( c ) of subsection (4) and substituting
+the following paragraph:
+“ ( c ) the disclosure was due to, or made in
+consequence of, the inventor displaying
+invention
+at
+an
+international
+exhibition; ” ;
+( b ) by deleting the full ‑ stop at the end of paragraph ( d ) of
+subsection (4) and substituting the word “ ; or ” , and by
+inserting immediately thereafter the following paragraph:
+“ ( e ) subject to subsections (5A) and (5B), the
+disclosure was made to the public by the
+inventor, or by a person who obtained the
+matter directly or indirectly from the
+inventor,
+in
+any
+circumstances
+not
+described in paragraphs ( a ) to ( d ). ” ;
+( c ) by
+inserting,
+immediately
+after
+subsection
+(5),
+following subsections:
+“ (5A) Subsection (4)( e ) applies to the disclosure of
+matter constituting an invention due to, or in
+consequence of, the publication by an intellectual
+property administrator (being a person who obtained
+the matter directly or indirectly from the inventor) of
+an application for an intellectual property right (being
+an application containing the matter, but not being the
+application for a patent mentioned in subsection (4)),
+or a registration of an intellectual property right
+pursuant to such an application, only if —
+NO. 18 OF 2017
+2
+( a ) the application was filed, without the
+consent of the inventor, by a person who
+obtained the matter directly or indirectly
+from the inventor; or
+( b ) the publication was erroneous by reason
+that —
+(i) the application had been withdrawn,
+refused or abandoned before the date
+of the publication; and
+(ii) consequently, the publication was not
+required under the law (whether of
+Singapore or elsewhere) or treaty
+governing the application.
+(5B) For the purposes of subsection (4)( e ), where —
+( a ) the disclosure of matter constituting an
+invention is due to, or in consequence of,
+the publication by an intellectual property
+administrator (being a person who obtained
+the matter directly or indirectly from the
+inventor)
+of
+an
+application
+for
+an
+intellectual
+property
+right
+(being
+an
+application containing the matter, but not
+being the application for a patent mentioned
+in subsection (4)), or a registration of an
+intellectual property right pursuant to such
+an application; and
+( b ) the publication was erroneous by reason
+that the publication occurred earlier than
+provided
+under
+law
+(whether
+of
+Singapore
+or
+elsewhere)
+or
+treaty
+governing the application,
+the matter is to be treated as disclosed to the public on
+the date when the publication should have occurred
+under that law or treaty. ” ;
+PATENTS (AMENDMENT)
+3
+( d ) by inserting, immediately before subsection (6), the
+following subsection:
+“ (5C) If the applicant relies on any circumstances
+described in any paragraph of subsection (4) when —
+( a ) complying with section 29(1)( b ) or ( c ), (3)
+or (9); or
+( b ) making a request under section 29B(1) for a
+review of an examination report issued
+under section 29(4) or a search and
+examination
+report
+issued
+under
+section 29(5),
+the applicant must file written evidence complying
+with the prescribed requirements in support of the
+applicant ’ s reliance on those circumstances. ” ; and
+( e ) by
+inserting,
+immediately
+after
+subsection
+(7),
+following subsection:
+“ (8) In this section —
+“ foreign intellectual property office ” means —
+( a ) any national or regional office outside
+Singapore that performs functions
+similar to those that are performed
+by —
+(i) the Registry;
+(ii) the Registry of Plant Varieties
+established under section 7 of
+the Plant Varieties Protection
+Act (Cap. 232A);
+(iii) the
+Registry
+of
+Designs
+established under section 51 of
+Registered
+Designs
+Act
+(Cap. 266); or
+NO. 18 OF 2017
+4
+(iv) the Registry of Trade Marks
+established under section 64 of
+Trade
+Marks
+Act
+(Cap. 332);
+( b ) the International Bureau; or
+( c ) the International Bureau as defined in
+section 2(1) of the Registered Designs
+Act or section 2(1) of the Trade Marks
+Act;
+“ intellectual property administrator ” means —
+( a ) the Registrar;
+( b ) the Registrar of Designs;
+( c ) the Registrar of Plant Varieties;
+( d ) the Registrar of Trade Marks; or
+( e ) a foreign intellectual property office;
+“ Registrar of Designs ” means the Registrar of
+Designs appointed under section 49 of the
+Registered Designs Act, and includes a
+Deputy
+Registrar
+of
+Designs
+and
+an
+Assistant Registrar of Designs appointed
+under that section;
+“ Registrar of Plant Varieties ” means the Registrar
+of Plant Varieties appointed under section 5 of
+Plant
+Varieties
+Protection
+Act,
+and
+includes
+a
+Deputy
+Registrar
+of
+Plant
+Varieties and an Assistant Registrar of Plant
+Varieties appointed under that section;
+“ Registrar of Trade Marks ” means the Registrar
+of Trade Marks appointed under section 62 of
+the Trade Marks Act, and includes a Deputy
+Registrar of Trade Marks and an Assistant
+Registrar of Trade Marks appointed under that
+section. ” .
+PATENTS (AMENDMENT)
+5
+Amendment of section 29
+3. Section 29 of the Patents Act is amended —
+( a ) by inserting, immediately before the word “ file ” in
+subsection (1)( d ), the words “ subject to subsection (11A), ” ;
+( b ) by deleting the word “ The ” in subsection (9) and
+substituting
+words
+“ Unless
+request
+under
+subsection (1)( b ), ( c ) or ( d ) or (3) for the examination
+report, search and examination report or supplementary
+examination report is withdrawn under subsection (10) or
+(11), the ” ;
+( c ) by deleting subsections (10) and (11) and substituting the
+following subsections:
+“ (10) Despite subsection (1), where an applicant has
+filed a request for an examination report under
+subsection (1)( c ) or (3), or a request for a search and
+examination report under subsection (1)( b ), the
+applicant may —
+( a ) withdraw that request —
+(i) in any case where an Examiner has
+given
+a
+written
+opinion
+under
+subsection (7), and the applicant has
+not
+responded
+to
+written
+opinion — at any time before the
+expiry
+of
+prescribed
+period
+mentioned in subsection (9)( a ); or
+(ii) in any other case — at any time
+before the examination report or
+search and examination report is
+issued under subsection (4) or (5);
+and
+( b ) subject to subsection (11A), file a request
+for a supplementary examination report
+under
+subsection
+(1)( d )
+within
+prescribed period for that request.
+NO. 18 OF 2017
+6
+(11) Despite subsection (1), where an applicant has
+filed a request for a supplementary examination report
+under subsection (1)( d ), the applicant may —
+( a ) withdraw that request —
+(i) in any case where an Examiner has
+given
+a
+written
+opinion
+under
+subsection (8), and the applicant has
+not
+responded
+to
+written
+opinion — at any time before the
+expiry
+of
+prescribed
+period
+mentioned in subsection (9)( a ); or
+(ii) in any other case — at any time
+before
+supplementary
+examination report is issued under
+subsection (6); and
+( b ) file a request for a search and examination
+report under subsection (1)( b ) or a request
+for
+an
+examination
+report
+under
+subsection
+(1)( c )
+or
+(3)
+within
+prescribed period for that request.
+(11A) Subsections (1)( d ) and (10)( b ) do not apply
+unless —
+( a ) in any case where the application in suit is a
+new application mentioned in section 20(3),
+26(11) or 47(4) — the actual date of filing
+of the application in suit is before the
+prescribed date; or
+( b ) in any other case — the date of filing of the
+application in suit is before the prescribed
+date. ” ;
+( d ) by
+deleting
+paragraph
+( a )
+of
+subsection
+(12)
+and
+substituting the following paragraph:
+“ ( a ) subject to subsection (13), if the applicant
+fails to do one of the following:
+PATENTS (AMENDMENT)
+7
+(i) comply with paragraph ( b ), ( c ) or ( d )
+of subsection (1) within the period
+prescribed under that subsection for
+that paragraph;
+(ii) where subsection (3) applies, comply
+with that subsection; ” ;
+( e ) by
+inserting,
+immediately
+after
+words
+“ subsection (1)( c ) ” in subsection (12)( c ), the words
+“ or (3) ” ; and
+( f ) by inserting, immediately after subsection (12), the
+following subsections:
+“ (13) Where —
+( a ) after receiving the search report under
+subsection (2)( b ) from the Registrar, the
+applicant does not file a request for an
+examination report under subsection (3)
+within the prescribed period mentioned in
+that subsection; and
+( b ) the time prescribed for filing a request for
+an extension of the prescribed period
+mentioned
+in
+subsection
+(3)
+expires
+before, or within 3 months after, the date
+of commencement of section 3( f ) of the
+Patents (Amendment) Act 2017,
+the application is treated as abandoned if the applicant
+fails to file the request for an examination report under
+subsection (3) within 6 months after that date.
+(14) In this section, “ actual date of filing ” , in
+relation to an application in suit that is a new
+application mentioned in section 20(3), 26(11) or
+47(4), means the actual date of filing of the new
+application, and not the date of filing of the earlier
+application mentioned in section 20(3) or 26(11) or of
+the application for the patent to which the reference
+NO. 18 OF 2017
+8
+relates mentioned in section 47(4), as the case may
+be. ” .
+Saving and transitional provisions
+4. — (1) Despite section 2( a ), section 14(4)( c ) of the Patents Act as in
+force immediately before the date of commencement of section 2( a )
+continues to apply to or in relation to any application for a patent the
+date of filing of which is before that date.
+(2) Section 2( b ), ( c ) and ( e ) does not apply to any disclosure of
+matter constituting an invention, made to the public before the date of
+commencement of section 2( b ), ( c ) and ( e ).
+(3) Section 2( d ) does not apply to or in relation to any application
+for a patent the date of filing of which is before the date of
+commencement of section 2( d ).
+PATENTS (AMENDMENT)
+9

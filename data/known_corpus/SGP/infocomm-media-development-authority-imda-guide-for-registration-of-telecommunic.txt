@@ -1,0 +1,1981 @@
+Guide for Registration 
+of 
+Telecommunication Equipment 
+IMDA GUIDE EQR 
+Issue 1, Rev 13 Mar 2026  
+Info-communications Media Development Authority 
+10 Pasir Panjang Road 
+#03-01 Mapletree Business City 
+Singapore 117438 
+© Copyright of IMDA, 2024 
+This document may be downloaded from the IMDA website at:  and shall not be distributed without 
+written permission from IMDA 
+2 
+Contents 
+Page 
+1 
+Introduction 
+3 
+2 
+Equipment Registration 
+3 
+2.1 
+Equipment Registration Procedure 
+3 
+2.2 
+Equipment Registration Schemes 
+3 
+2.2.1 
+Enhanced Simplified Equipment Registration (ESER) Scheme 
+4 
+2.2.2 
+Simplified Equipment Registration (SER) Scheme 
+4 
+2.2.3 
+General Equipment Registration (GER) Scheme 
+5 
+2.3 
+Acceptance of Online Application for Equipment Registration  
+6 
+2.4 
+Approval 
+6 
+2.5 
+Validity of Equipment Registration 
+7 
+2.6 
+Fees Payable 
+7 
+2.7 
+Registration Enquiries 
+8 
+3 
+Responsibilities of Suppliers 
+8 
+3.1 
+General Obligations 
+8 
+3.2 
+Equipment Approval by way of Registration 
+9 
+3.2.1 
+Telecommunication Equipment requiring Equipment Registration 
+9 
+3.2.2 
+Telecommunication 
+Equipment 
+not 
+requiring 
+Equipment 
+Registration 
+9 
+3.3 
+Technical Compliance 
+9 
+3.4 
+Renewal of Equipment Registration 
+10 
+3.5 
+Modification 
+10 
+3.6 
+Transfer of Equipment Registration 
+11 
+3.7 
+Usage, Installation and Maintenance 
+12 
+4 
+Radio-communication Equipment which requires IMDA Licensing 
+12 
+5 
+Equipment Registration of Machine-to-Machine Communication Device 
+with embedded SIM card 
+13 
+6 
+Equipment Registration of Coaxial Cable Home Networking Equipment 
+13 
+Annex A-1 
+Equipment Registration Schematic Diagram 
+14 
+Annex A-2 
+Application For Confirmation Of Conformity Schematic Diagram 
+15 
+Annex B 
+Equipment Registration Fees 
+16 
+Annex C 
+Supplier’s Declaration of Conformity Form 
+18 
+Annex D 
+List of Technical Regulations 
+19 
+Table D.1 
+Technical Specifications for Line Terminal Equipment 
+19 
+Table D.2 
+Technical Specifications for Radio-communication Equipment 
+19 
+Annex E 
+Addendum/Corrigendum 
+20 
+This Guide is subject to review and revision. 
+IMDA makes no warranty of any kind with regard to the information provided in 
+this Guide and shall not be liable for errors contained herein or incidental or 
+consequential damages in connection with the use of this Guide.
+3 
+1. 
+Introduction 
+1.1
+The Guide for Registration of Telecommunication Equipment is provided for suppliers 
+to register their equipment with IMDA. It describes the procedure to be followed and 
+requirements to be fulfilled by suppliers seeking to register their equipment under the 
+Equipment Registration framework. Equipment registered with IMDA will be available 
+for viewing from the equipment search 1 list, and has the approval of IMDA for sale and 
+use. 
+1.2 
+Equipment registration shall be based on the submission of the Supplier’s Declaration 
+of Conformity (SDoC). The SDoC signifies that the supplier has carried out conformity 
+assessment on the equipment to IMDA’s Technical Specifications. The supplier declares 
+equipment conformity based on results of conformity assessment, supported by test 
+reports and technical documents. 
+1.3 
+The term telecommunication equipment or equipment refers to both the line terminal 
+and radio-communication equipment, and supplier is the generic term for local dealer. 
+The supplier shall be the declaring party responsible for ensuring that the equipment 
+meets and, if applicable, continues to meet, the requirements on which the declaration 
+is based. 
+2. 
+Equipment Registration 
+2.1 
+Equipment Registration Procedure 
+2.1.1 
+The supplier makes a registration request on-line via the GoBusiness Licensing portal at 
+, using one of the following equipment 
+registration online selections:  
+▪
+Enhanced Simplified Equipment Registration (ESER)  
+For suppliers who wish to register complex multi-line equipment or the Short 
+Range/Low Power Devices (SRD/LPD). 
+•
+Simplified Equipment Registration (SER) 
+For suppliers who wish to register Mobile Terminals (5G/LTE/GMPCS) or 
+Broadband Access Equipment (ADSL, Cable Modems and CCHN)  
+•
+General Equipment Registration (GER) 
+For suppliers who wish to register any telecommunication equipment listed in 
+Table B.1 of Annex B. 
+•
+Confirmation of Conformity (COFC)
+For suppliers who opts to apply for COFC for exempted equipment listed in Table 
+B.2 of Annex B 
+2.1.2 
+Information on Equipment Registration framework is available on IMDA website at 
+. 
+2.1.3 
+Overview of the Equipment Registration framework is given in the Equipment 
+Registration Schematic Diagram in Annex A-1.  
+1  Equipment search is available at 
+4 
+2.2 
+Equipment Registration Schemes 
+All telecommunication equipment may be registered under one of the following three 
+schemes: 
+(a)
+Enhanced Simplified Equipment Registration, ESER (Self-declaration) 
+(b)
+Simplified Equipment Registration, SER (Self-declaration) 
+(c)
+General Equipment Registration, GER (Declaration certified by an IMDA 
+recognised body or evaluated by IMDA) 
+2.2.1 
+Enhanced Simplified Equipment Registration (ESER) Scheme 
+2.2.1.1 
+ESER applies only to complex multi-line equipment or Short Range Devices/Low Power 
+Devices (see Table B.1 in Annex B). 
+2.2.1.2 
+Supplier using the ESER (following Route 1a in the Equipment Registration Schematic 
+Diagram in Annex A-1), is making an online declaration of conformity to the applicable 
+IMDA Technical Specifications (see Annex D). The supplier has carried out their own 
+conformity assessment for the model of equipment based on test results or evidence of 
+equipment certification given by the manufacturer or an accredited body. The supplier 
+is able to attest that the equipment is capable of meeting the relevant requirements set 
+by IMDA in the technical specifications.  
+2.2.1.3 
+The ESER shall be accompanied by a sales brochure with technical data (file attachment 
+to the online application which includes a picture of the equipment and technical data 
+such as operating frequency band and output power of the SRD/LPD or the regulatory 
+compliance information of the complex multi-line equipment). 
+2.2.1.4 
+No registration fee is payable in respect of an application submitted via the ESER.  
+2.2.1.5 
+For post market surveillance, IMDA may require the supplier to submit the test results 
+or evidence of equipment certification as proof of conformity with the applicable IMDA 
+Technical Specifications (see Annex D)  
+2.2.2 
+Simplified Equipment Registration (SER) Scheme 
+2.2.2.1 
+SER scheme applies only to cellular mobile terminals (5G/LTE/GMPCS) and broadband 
+access equipment (ADSL, Cable modem and CCHN) (see Table B.1 in Annex B). 
+2.2.2.2 
+Supplier using SER (Route 1b in the Equipment Registration Schematic Diagram in Annex 
+A-1) has carried out their own conformity assessment for the model of equipment based 
+on test results or evidence of equipment certification given by the manufacturer or an 
+accredited body. The supplier is able to attest that the equipment is capable of meeting 
+the applicable IMDA Technical Specifications (see Annex D).  
+2.2.2.3 
+The SER request shall be accompanied by the following registration package (file 
+attachments to the online application and e-Payment):   
+(i)
+SDoC (Annex C); 
+(ii)
+Photos of equipment (front, rear, side view and product label which shows trade 
+and product name); 
+5 
+(iii)
+Sales brochure with technical data; and 
+(iv)
+Registration fee (Annex B). 
+2.2.2.4 
+For post market surveillance, IMDA may require the supplier to submit the test results 
+or evidence of equipment certification as proof of conformity with the applicable IMDA 
+Technical Specifications. 
+2.2.3 
+General Equipment Registration (GER) Scheme 
+2.2.3.1 
+GER scheme applies to all categories of telecommunication equipment shown in Table 
+B.1 of Annex B. However, for equipment categories such as analogue land mobile, 
+cellular base station, UWB and wireless broadband access equipment, it is mandatory 
+to register under the GER scheme.  
+2.2.3.2 
+IMDA mandates GER under the following circumstances: 
+(a)
+Equipment having high potential for causing interference; 
+(b)
+Equipment of new technologies which are yet to be stabilised. 
+2.2.3.3 
+Supplier using GER is required to submit evidence of equipment certification (i.e. 
+declaration certified by an IMDA recognised body); or the relevant test reports and 
+supporting documents for the model of equipment (i.e. declaration evaluated by IMDA). 
+2.2.3.4 
+Declaration certified by an IMDA recognised body 
+(a)
+For such declaration (see Route 2a in the Equipment Registration Schematic 
+Diagram in Annex A-1), conformity assessment for the model of equipment has 
+been carried out by a certification body recognised by IMDA. The GER request 
+shall be accompanied by the following registration package (file attachments to 
+the online application and e-Payment):   
+(i)
+SDoC (Annex C); 
+(ii)
+Certificate issued by IMDA recognised Certification Body; 
+(iii)
+Photos of equipment (front, rear, side view and product label which 
+shows trade and product name); 
+(iv)
+General information or sales brochure; and 
+(v)
+Registration fee (Annex B). 
+(b)
+In addition, IMDA accepts equipment certification by local or foreign certification 
+bodies recognised by IMDA under a Mutual Recognition Arrangement (MRA). 
+Certification is a procedure by which the recognised certification body gives 
+written assurance that the equipment conforms to IMDA’s Technical 
+Specifications.  
+2.2.3.5 
+Declaration evaluated by IMDA 
+(a)
+For such declaration (see Route 2b in the Equipment Registration Schematic 
+Diagram in Annex A-1), IMDA will carry out the technical evaluation for the model 
+6 
+of equipment based on test reports and a set of technical documents submitted 
+by the supplier. The GER request shall be accompanied by the following 
+registration package (file attachments to the online application and e-Payment): 
+(i)
+SDoC (Annex C); 
+(ii)
+Photos of equipment (front, rear, side view and product label which 
+shows trade and product name); 
+(iii)
+General description; 
+(iv)
+Sales brochure with technical data; 
+(v)
+Test reports; and 
+(vi)
+User guide; 
+(vii)
+Registration fee (Annex B). 
+(b)
+In addition, IMDA accepts test reports, which present test results of equipment 
+testing done according to IMDA’s Technical Specifications by (i) testing labs 
+recognised by IMDA under MRA ; (ii) testing labs accredited by accreditation 
+bodies recognised by IMDA; or (iii) equipment manufacturers. 
+2.3 
+Acceptance of Online Application for Equipment Registration 
+2.3.1 
+Any registration request must be accompanied by the required registration package as 
+file attachments to the online application. All documents (file attachments or electronic 
+media) submitted to IMDA shall be in English Language. Where applicable, applicant 
+shall proceed to make ePayment when prompted by the system and via email. 
+Registration request that is not supported by complete, adequate and proper 
+documentation and information and payment of applicable fees will not be accepted.  
+2.4
+Approval 
+2.4.1 
+Approval of complex multi-line equipment or SRD/LPD under the ESER
+ IMDA will not carry out any evaluation of the equipment before registering the device 
+under the ESER. Once the system has accepted the online declaration of conformity for 
+the model of the equipment, an email notification with a registration number in the 
+format ESER/YY/XXXX will be sent to the supplier. The device has been successfully 
+registered with IMDA for sale for local use, and its information is available to the public 
+upon selecting an equipment search (see footnote 1).
+2.4.2 
+Approval of Telecommunication Equipment under the SER/GER 
+2.4.2.1 
+On receiving the registration request (SER or GER), IMDA will carry out verification or 
+technical evaluation by way of document examination. Verification or technical 
+evaluation will be completed within three (3) or ten (10) working days after accepting 
+the registration request depending on the route available to or selected by the supplier 
+(see the Equipment Registration Schematic Diagram, Annex A-1). If technical details or 
+clarifications are requested by IMDA, the supplier must provide them promptly. IMDA 
+will reject the registration request if the supplier fails to respond within thirty (30) days 
+7 
+from the date of IMDA’s request for information or if the registration request does not 
+meet the stipulated requirements. The fees paid is non-refundable. 
+2.4.2.2 
+When IMDA completes the verification or technical evaluation, and is satisfied that the 
+said equipment (object of supplier’s declaration) has complied with the stipulated 
+requirements, IMDA will authorise the equipment registration and a registration 
+number will be assigned to the equipment model in the format: SER/YY/XXXX for 
+equipment registered under SER and GER/YY/XXXX for equipment registered under 
+GER.  
+2.4.2.3 
+The system will inform the applicant via an email to proceed to print a copy of the 
+registration letter as proof that the equipment has been successfully registered with 
+IMDA for sale for local use.  Information of the registered equipment is also available to 
+the public upon selecting an equipment search (see footnote 1) . 
+2.5 
+Validity of Equipment Registration 
+2.5.1 
+A record of telecommunication equipment registered with IMDA is valid for five (5) 
+years from the date of assignment of registration number. Registration may be renewed 
+for periods of 5 years at a time. 
+2.5.2 
+Validity of the equipment registered with IMDA may be affected if changes are made to 
+the equipment. The supplier must inform IMDA of any proposed changes to be made 
+to the registered equipment (see § 3.5 on Modification). 
+2.5.3 
+The equipment to be sold must be the same as the model that has been registered with 
+IMDA. The registered equipment shall not be modified in any way without re-registering 
+with IMDA. 
+2.5.4 
+Successful registration with IMDA shall not be taken as an IMDA guarantee for the 
+proper functioning, performance or quality of the equipment. Suppliers must ensure 
+that the registered equipment inter-works properly with the public telecommunication 
+network.   
+2.5.5 
+IMDA shall not be liable for any interference caused to any other equipment, injury, loss 
+of life and/or damages to property whatsoever, as the direct or indirect result of the 
+use of any registered equipment. 
+2.5.6 
+In cases of doubt relating to interpretation of the IMDA Technical Specifications, 
+method of carrying out tests or validity of statements made by the equipment 
+manufacturers, IMDA’s decision shall be final. 
+2.6 
+Fees Payable 
+2.6.1 
+Regulation 20(3) of the Telecommunications (Dealers) Regulations (Cap 323, Rg) 
+specifies that any application for equipment registration shall be accompanied by the 
+appropriate fee. The applicable equipment registration fees are set out in the Fourth 
+Schedule of the Dealers’ Regulations and reproduced in Table B.1, Annex B. The fees 
+are charged on per model basis. 
+2.6.2 
+Where fees are payable, applicant will be prompted by the system and via email to make 
+online ePayment. IMDA will process the application upon confirmation on payment 
+received. The fee is non-refundable. 
+8 
+2.6.3 
+If the applicant fails to make the payment within 30 days from the email notification, 
+the application will be cancelled.  
+2.6.4 
+IMDA may classify a piece of equipment as one (1) or more of the types of equipment 
+set out in Annex B for the purpose of determining the applicable fees. For equipment 
+with multi-interfaces or intended to be used for multi-purpose, separate fees may be 
+charged for each interface or type of use. In the event of incorrect payment made, the 
+application will be returned for applicant to top-up the deficit. 
+2.6.5 
+Where a declaration is for a family series of the same type of equipment, it shall cover 
+each individual model of equipment in the family series. 
+2.6.6 
+Registration request may be rejected if it is found to be incomplete or does not meet 
+the stipulated requirements. A re-submission will be subject to new registration fee. 
+2.7 
+Registration Enquiries  
+Registration enquires shall be addressed to the following: 
+Manager (Equipment Registration) 
+Licensing 
+Info-communications Media Development Authority 
+10 Pasir Panjang Road 
+#03-01 Mapletree Business City 
+Singapore 117438 
+Tel No: 6377 3800 
+Email: Equipment_Reg_Dealers@imda.gov.sg
+3. 
+Responsibilities of Suppliers 
+3.1 
+General Obligations 
+3.1.1 
+Under the Telecommunications (Dealers) Regulations, a supplier (local dealer) who 
+wishes to manufacture, import, let hire, sell or offer or possess for sale any 
+telecommunication equipment must first obtain a licence. Thereafter, the supplier is 
+required to comply with the relevant licence conditions. 
+3.1.2 
+The supplier who holds a Dealer’s Licence can sell telecommunication equipment that 
+is registered for sale with IMDA under regulation 20(6) of the Telecommunications 
+(Dealers) Regulations (Cap 323, Rg). In addition, the supplier can also sell 
+telecommunication equipment set out in the First Schedule of the Regulations, and 
+reproduced in Table B.2, Annex B, without the requirement of registering such 
+equipment with IMDA. 
+3.1.3 
+The supplier must ensure that the telecommunication equipment is marked with the 
+supplier/manufacturer’s brand or identification mark, and the supplier/manufacturer’s 
+model or type reference.  The markings shall be legible, indelible and readily visible. 
+3.1.4 
+The supplier must, before selling any telecommunication equipment, ensure that: 
+(a)
+equipment meets the applicable standards and specifications (see the list of IMDA 
+Technical Regulations/Technical Specifications in Annex D);  
+9 
+(b)
+equipment works correctly with the relevant telecommunication system or 
+equipment of the telecommunication system licensee to which it is connected; 
+and 
+(c)
+the supplier will cease to sell the equipment if so directed by IMDA and dispose 
+of the equipment at the supplier’s own expense in the manner directed by IMDA. 
+3.1.5 
+The supplier must ensure that any telecommunication equipment, whether mains or 
+battery powered, must be of a design that conforms with international safety standards 
+(including radiation safety), specified in the appropriate IMDA Technical Specifications 
+(e.g. IEC 62368-1 for electrical safety and ICNIRP recommendations for limiting 
+exposures to time-varying EMFs in the frequency range up to 300 GHz).  
+3.1.6 
+Where applicable, the supplier must ensure that the telecommunication equipment 
+intended for sale in Singapore complies with the electromagnetic compatibility (EMC) 
+requirements specified in the IEC CISPR 32. 
+3.1.7 
+The supplier must ensure that supporting documents are available when requested by 
+IMDA to show that the equipment conforms to IMDA’s standards and specifications. 
+The required supporting documents are as follows: 
+(i)
+Description of equipment; 
+(ii)
+Sales brochure with technical data; 
+(iii)
+Test reports; and 
+(iv)
+User Guide 
+3.1.8 
+The supplier shall retain the supporting documents for at least 5 years (validity period 
+of the registration) or may be longer at their discretion, considering the specific needs 
+of their customers. 
+3.1.9 
+The supplier shall not manufacture, import, let hire, sell or offer or possess for sale any 
+prohibited equipment set out in the Third Schedule of the Regulations. 
+3.2 
+Equipment Approval  
+3.2.1
+Telecommunication Equipment requiring Equipment Registration
+3.2.1.1 
+The supplier shall not sell any telecommunication equipment set out in Table B.1, Annex 
+B until the supplier has made an online Supplier’s Declaration of Conformity and 
+registered the equipment with IMDA. 
+3.2.1.2 
+IMDA may invalidate the registration at any time for failure to comply with the terms 
+and conditions for equipment registration established in this Guide, or if IMDA is 
+satisfied that the equipment no longer complies with the stipulated requirements. 
+3.2.2
+Telecommunication Equipment not requiring Equipment Registration
+3.2.2.1 
+Suppliers of telecommunication equipment set out in the First Schedule of the 
+Regulations, and reproduced in Table B.2, Annex B, are exempted from the requirement 
+of registration with IMDA. However, under regulation 20(A) of the Regulations, 
+10 
+suppliers of such equipment may opt to apply for Confirmation of Conformity (COFC). 
+The COFC is not subject to renewal. 
+3.2.2.2 
+Supplier who opts to apply for COFC may submit an online application for Confirmation 
+of Conformity and is subject to an application fee (Table B.2, Annex B). 
+The submission requirement and process of COFC is indicated in Annex A-2. Upon 
+authorisation of the application, a confirmation number in the format: COFC/YY/XXXX 
+will be assigned to the equipment model for the issuance of COFC. 
+3.3 
+Technical Compliance
+3.3.1 
+Whenever compatibility or other technical problem arises in connection with the use of 
+registered equipment, the supplier shall solve all these problems within one (1) month 
+after being notified by IMDA. If required, the supplier shall make all the necessary 
+modifications, alterations or substitutions to the equipment already installed or being 
+installed. In cases where the nature of the problem is not easily identified, the supplier 
+shall provide assistance to IMDA to identify the source of the problem. 
+3.3.2 
+When a network operator, with the approval of IMDA, upgrades its network and/or 
+changes the network interface specification such that the registered equipment is no 
+longer compatible with the network, IMDA may invalidate the registration giving six (6) 
+months notice in writing. 
+3.3.3 
+IMDA may carry out further evaluation on the equipment without stating any reasons, 
+as and when required, after the registration. 
+3.4 
+Renewal of Equipment Registration
+3.4.1 
+The supplier will be prompted by a system generated email for equipment due for 
+renewal two (2) months before the expiry date of the current validity period. Where 
+applicable, the supplier may renew an equipment registration online at 
+. 
+3.4.2 
+If the supplier does not wish to renew or fails to renew the registration, it will be 
+cancelled out and the supplier will not be allowed to import or sell the equipment in 
+Singapore. 
+3.4.3 
+If the request for renewal of registration is accepted by IMDA, its validity will be 
+extended for another five (5) years. Where applicable, a fee of SGD 50 is charged for the 
+renewal request. 
+3.5 
+Modification
+3.5.1 
+Where applicable, the supplier shall inform IMDA of any proposed modification that is 
+to be made to the registered equipment or equipment that has been issued with 
+Confirmation of Conformity. 
+3.5.2 
+Modifications are categorised as follows: 
+(a)
+Class 1 Modifications  
+These are modifications performed on the registered equipment that do not 
+affect compliance with the IMDA Technical Specifications. Suppliers may 
+continue to sell Class 1 modified equipment without the need to notify IMDA of 
+11 
+the changes. Re-assessment by IMDA is not required. Class 1 Modifications 
+refer to: 
+(i)
+Change in size, shape, colour and material of enclosure; 
+(ii)
+Change in driver or software; or 
+(iii)
+Change in printed circuit board layout without component or schematic 
+changes; or 
+(iv)
+Change in Specific Absorption Rate (SAR), provided the change does not 
+affect compliance to IMDA technical standards, and the changed SAR 
+value is within the safety limit of 2 Watts/Kilogram at 10 gram of tissue 
+set by International Commission on Non-Ionising Radiation Protection.  
+(b)
+Class 2 Modifications  
+These are modifications performed on the registered equipment that will affect 
+compliance with the IMDA Technical Specifications. Class 2 Modifications 
+require re-registration with IMDA. Suppliers should submit a fresh registration 
+request to IMDA together with the relevant registration package. Such modified 
+equipment shall only be sold for use locally after re-registration with IMDA. 
+Class 2 Modifications refer to: 
+(i)
+Change in transmitting antenna; 
+(ii)
+Change in output power or radiated field strength; 
+(iii)
+Addition of new network interface card; 
+(iv)
+Change in the existing network interface card; or 
+(v)
+Change not considered a Class 1 modification 
+3.5.3 
+When IMDA is satisfied that the modified equipment has complied with the stipulated 
+requirements, IMDA will update the record and List of Registered Equipment. 
+3.5.4 
+The supplier shall make a fresh registration request to IMDA for any changes falling 
+outside the scope of Class 1 and 2 Modifications. Such request will be subject to the 
+registration requirements and fees set out in Annex B.  
+3.6 
+Transfer of Equipment Registration 
+3.6.1 
+A licensee may seek IMDA’s approval for the transfer of his registration of 
+telecommunication equipment to another licensee due to business restructuring, 
+merger or acquisition.  The transfer is subject to the following conditions: 
+(i)
+The transferee shall be responsible for ensuring that all registered equipment 
+to be transferred are designed and constructed in accordance with the 
+standards and specifications published by IMDA.  The transferee shall be 
+required to submit a fresh declaration of conformity in accordance with IMDA’s 
+technical standards in respect of the registered equipment to be transferred; 
+and 
+12 
+(ii)
+The validity period of the equipment registration to be transferred shall 
+continue to be valid only for the remaining period of the existing equipment 
+registration but may be renewed where applicable. 
+3.7 
+Usage, Installation and Maintenance 
+3.7.1 
+Suppliers shall inform their customers of their responsibility for the use, installation and 
+after-sales maintenance of the equipment. Suppliers shall in addition, inform their 
+customers on the non-liability of IMDA for the use, installation and after-sales 
+maintenance of the equipment. 
+3.7.2 
+Suppliers shall ensure that there is proper installation and after-sales maintenance 
+services of their equipment to meet customers’ needs. 
+3.7.3 
+Where required by IMDA, suppliers shall undertake to notify IMDA of the name and 
+address of every customer to whom such equipment has been sold or hired. 
+3.7.4 
+Suppliers shall advise their customers that the use of registered equipment to access 
+any network operator’s services shall be subject to the prevailing tariffs and terms of 
+the various service schemes. 
+3.7.5 
+Where a licence is required for the use of the telecommunication equipment under the 
+Regulations, suppliers shall inform every customer of the need to obtain such a licence 
+from IMDA. 
+4 
+Radio-communication Equipment which requires IMDA Licensing 2
+4.1 
+A successful registration of any radio-communication equipment should not be 
+construed as any form of representation by IMDA that the specific operating frequency 
+of the equipment will be granted or made available by IMDA for the use or operation of 
+the equipment in Singapore.  
+4.2 
+In no circumstance does IMDA represent to any equipment supplier or telecom dealer 
+who sells any registered radio-communication equipment for use in Singapore or any 
+person who buys such equipment that IMDA will grant or make available any specific 
+operating frequency to the supplier, dealer or person for use with the equipment.  
+4.3 
+Separate written approvals should be sought and obtained from IMDA for the 
+assignment of the operating frequency and the output power for the use with any 
+registered radio-communication equipment. The grant and assignment of any specific 
+operating frequency and the allocation of the output power for any radio-
+communication equipment shall be at the sole discretion of IMDA. 
+4.4 
+Equipment suppliers or telecom dealers shall ensure that the buyers of the equipment 
+obtain the necessary approvals from IMDA to operate in any assigned frequency band 
+and the allocated power output before the sale of the radio-communication equipment. 
+2 Please refer to the relevant Technical Specifications for Radio-communication Equipment which requires IMDA Licensing 
+13 
+5 
+Equipment Registration of Machine-to-Machine (“M2M”) Equipment 
+with embedded SIM card 
+5.1 
+IMDA will only allow equipment registration of M2M Equipment embedded with local 
+SIM 
+card. 
+5.2 
+Where M2M Equipment is embedded with overseas SIM (permanent roaming), it shall 
+not be registered under the equipment registration framework. Please contact IMDA 
+(contact details given in Section 2.7) for more information or clarification on M2M 
+equipment. 
+6 
+Equipment Registration of Coaxial Cable Home Networking (“CCHN”) 3
+Equipment 
+6.1 
+IMDA introduces CCHN Regulatory Framework governing the sale and use of CCHN 
+Equipment.  IMDA publishes the Code of Practice for the Provisioning of Coaxial Cable 
+Home Networking Solutions (the “Code”) in conjunction with the Technical Specification 
+for CCHN (IMDA TS CCHN) which sets out the technical requirements for equipment 
+recommended for the coaxial cable home networking solution. 
+6.2 
+Equipment suppliers/dealers dealing in CCHN Equipment are required to ensure that 
+the equipment complies with the technical requirements set out in the IMDA Technical 
+Specification for Coaxial Cable Home Networking (IMDA TS CCHN), and register the 
+equipment under the SER scheme before such equipment is sold for use in Singapore. 
+6.2 
+In addition, equipment suppliers/dealers shall comply with the applicable provisions set 
+out in the “Code of Practice for the Provisioning of Coaxial Cable Home Networking 
+Solutions” which include: 
+(i)
+Dealers that are dealing in CCHN Equipment shall not sell or let for hire CCHN 
+Equipment to any person who is not a recognised telecommunication licensee 
+4 in Singapore, except where approved by IMDA. 
+3  CCHN is one option for home networking solution that would tap on existing coaxial cables in homes to transmit data 
+within the homes by installing coaxial adaptors and isolation filters (collectively known as the “CCHN Equipment”)  
+4  Recognised telecommunication licensee refers to Facilities-based Licensee or a Service-based Licensee to which IMDA has 
+granted a Facilities-Based Operations licence or Services-Based Operations licence under section 5 of the 
+Telecommunications Act
+14 
+Annex A-1 
+EQUIPMENT REGISTRATION SCHEMATIC DIAGRAM 
+Certified and submitted by 
+ Certification Body 
+Supplier applies for Equipment Registration Online via 
+SER 
+Applies to cellular mobile terminals 
+(5G/LTE/GMPCS) and broadband access 
+equipment (ADSL / cable modem / CCHN) 
+Route 1b 
+GER 
+Applies to categories of equipment 
+shown in Table B.1 Annex B . 
+Selects Simplified Equipment 
+Registration (SER) 
+Online Application Form 
+Selects Enhanced Simplified 
+Equipment Registration (ESER) 
+Online Application Form 
+Enhanced SER (ESER) 
+Applies to complex multi-line 
+equipment and  SRD/LPD . 
+Route 1a 
+▪ File Attachments to Online Application Form according to the Route 
+Supplier completes the 
+online registration 
+IMDA verifies information 
+IMDA evaluates submission 
+IMDA approves the Equipment Registration 
+System issues Registration Number & makes available approved equipment information to Supplier 
+and for the equipment search list 
+Supplier offers telecom equipment for sale for local use 
+1 - 3 days 
+< 10 days 
+Immediate 
+Selects General Equipment 
+Registration (GER) 
+Online Application Form 
+Supplier completes 
+ e-Payment transaction 
+▪ Sales brochure with 
+technical data 
+(§ 2.2.1.3) 
+▪ SDoC (Annex C-online)
+▪ Sales brochure with 
+technical data 
+▪ Photos 
+(§ 2.2.2.3) 
+▪ SDoC (Annex C - online)
+▪ Certificate issued by 
+recognised CB 
+▪ General Information
+▪ Photos
+(§ 2.2.3.4) 
+▪ SDoC (Annex C – online)
+▪ Testing results/reports 
+▪ Technical Documents 
+▪ Photos 
+(§ 2.3.3.5 )
+▪ SDoC (Annex C-online)
+Supplier completes 
+ e-Payment transaction 
+Self-declaration 
+Declaration certified by 
+an IMDA recognised body 
+Declaration evaluated 
+by IMDA 
+Route 2a 
+Route 2b 
+Self-declaration 
+15 
+Annex A-2 
+APPLICATION FOR CONFIRMATION OF CONFORMITY SCHEMATIC DIAGRAM 
+(OPTIONAL FOR EXEMPTED EQUIPMENT)
+Certified and submitted by 
+Certification Body 
+Supplier applies for Equipment Registration Online at 
+Supplier completes 
+ e-Payment transaction 
+Supplier completes 
+ e-Payment transaction 
+COFC 
+COFC is an optional application for Confirmation of 
+Conformity, applicable only to exempted equipment 
+listed in Table B.2 Annex B (e.g. single line telephone, 
+facsimile transceiver, voiceband modem, etc) 
+Selects Confirmation of Conformity (COFC) 
+Online Application Form 
+▪ File Attachments to Online Application Form according to the Route 
+IMDA verifies information 
+IMDA evaluates submission 
+IMDA acknowledges/confirms the Confirmation of Conformity  
+System issues Confirmation of Conformity & makes available approved equipment information to 
+Supplier and for the equipment search list 
+Supplier offers telecom equipment for sale for local use 
+1 - 3 days 
+< 10 days 
+Supplier completes 
+ e-Payment transaction 
+COFC  
+Self-declaration 
+COFC 
+Declaration certified by an 
+IMDA recognised body 
+COFC  
+ Declaration evaluated by 
+IMDA 
+▪ SDoC (Annex C-online)
+▪ Sales brochure with 
+technical data 
+▪ Photos 
+▪ SDoC (Annex C - online)
+▪ Certificate issued by 
+recognised CB 
+▪ General Information
+▪ Photos
+▪ SDoC (Annex C – online)
+▪ Testing results/reports 
+▪ Technical Documents 
+▪ Photos 
+16 
+Annex B
+EQUIPMENT REGISTRATION FEES 
+Table B.1: Telecommunication Equipment requiring Equipment Registration
+Equipment Category/Type - Mandatory under GER Scheme 
+Category 
+Type 
+Registration Fee (SGD)  
+Technical Specification 
+Land Mobile Radio 
+UHF/VHF Land Mobile Transceiver; Radio 
+Data Transceiver; IDEN and TETRA trunk 
+radio 
+350 
+IMDA TS LMR 
+Mobile/IoT Base Stations 
+LTE/5G Cellular Base Station and 
+Repeater System  
+IMDA TS CBS and/or 
+IMDA TS IOT 
+Wireless Broadband Access 
+(WBA) 
+2.3 GHz and 2.5 GHz WBA or WiMAX 
+IMDA TS WBA 
+Internet of Things (IoT) 
+IoT User Equipment 
+IMDA TS IOT and 
+IMDA TS CD-SEC 
+TV White Space Devices 
+TV White Space Devices 
+IMDA TS WSD 
+Dedicated Short-Range 
+Communications in ITS 
+Dedicated Short-Range Communications 
+in Intelligent Transport Systems 
+IMDA TS DSRC 
+Ultra-Wideband (UWB)  
+UWB devices 
+IMDA TS UWB 
+Short Range Devices, where 
+the operation requires IMDA 
+approval 
+Remote Control for Cranes and other 
+high power SRD listed in Table 2 of IMDA 
+TS SRD 
+Table 2 of IMDA TS SRD 
+Equipment Category/Type - Mandatory under SER Scheme 
+Category 
+Type 
+Registration Fee (SGD) 
+Technical Specification 
+SER 
+GER (optional) 
+Mobile Terminals 
+LTE/5G Cellular Mobile Terminal 5
+100 
+350 
+IMDA TS CMT and 
+IMDA TS CD-SEC 
+GMPCS Equipment 
+IMDA TS GMPCS 
+Broadband Access Equipment 
+ADSL Modem 
+500 
+IMDA TS ADSL 
+Cable Modem 
+IMDA TS CM 
+Coaxial Cable Home Networking (CCHN) 
+Equipment 6
+IMDA TS CCHN 
+Equipment Category/Type which can be registered under ESER Scheme
+Category 
+Type 
+Registration Fee (SGD) 
+Technical Specification 
+ESER 
+GER (optional) 
+Complex/Multi-Line  
+Equipment 
+PABX, KTS, Multi-Line System, Voice 
+Messaging System  
+None 
+500 
+IMDA TS PSTN 
+ISDN Basic Access, Primary Rate Access 
+and NT1 Equipment 
+IMDA TS ISDN 
+Powerline Communications (PLC) Home 
+Networking equipment 
+IMDA TS PLC 
+Coinphone/Payphone 
+350 
+IMDA TS PSTN 
+Short Range/Low Power 
+Devices (SRD/LPD) 
+CT0 & DECT Cordless Phone 
+None 
+350 
+IMDA TS CT-CTS 
+446 MHz Portable radio (PMR446) and 
+446 MHz Multi-channel portable radio 
+(MCR446) at less than 500mW 
+IMDA TS LMR 
+Alarm, RFID, radio-detection, on-site 
+paging and vehicle radar systems, remote 
+controls, telecommand, telemetry, 
+wireless microphone and video 
+transmitter, wireless LAN and Bluetooth 
+Table 1 of IMDA TS SRD 
+Integrated Receiver Decoders 
+for use with 2 nd - generation 
+Digital Terrestrial Television 
+broadcasting system 
+(DVB-T2 IRD) 
+DVB-T2 IRD includes receiver set-top box, 
+Integrated Digital TV (IDTV), In-vehicle 
+receiver, etc.  
+None 
+350 
+IMDA TS DVB-T2 IRD  
+Residential Gateway 
+Residential Gateway 
+None 
+350 
+IMDA TS RG-SEC 
+PABX 
+Private Automatic Branch Exchanges 
+None 
+500 
+IMDA TS PABX-SEC 
+5
+For mobile terminals with embedded overseas SIM card, please refer Section 5 of the Guide on additional information on Equipment 
+Registration of Machine-to-Machine ("M2M”) Communication Device with embedded SIM card.  
+6
+Please refer to Section 6 of the Guide for additional information on the CCHN Regulatory Framework.
+17 
+Notes: 
+1.
+Notwithstanding the fees stated above, registration fee is SGD 100 for equipment certified and submitted by IMDA’s 
+recognised Certification Bodies. 
+2.
+Suppliers may opt to register equipment using the GER scheme for equipment under the SER or ESER scheme. 
+3.
+Standalone radio modules if sold separately will be subject to equipment registration. 
+4.
+For telecom network interface card which is Independent of Host (IOH), supplier may register the card and host/chassis 
+separately to allow for flexible equipment configuration. 
+5.
+Registration fee for second or subsequent model of equipment of a family series is SGD 50 per model. Models of family 
+series refer to models of equipment that shares the same technical specifications, design and electrical characteristics in 
+respect of network interface, electromagnetic compatibility and electrical safety; and share the same test 
+results/certification with the already registered equipment. 
+6.
+Registration is valid for 5 years and may be renewed for periods of 5 years at a time. 
+7.
+Except for ESER, fee for renewal of an equipment registration is SGD 50. 
+8.
+Request for re-registration due to class 2 modifications is subject to a fee of SGD 100 on a per model basis. 
+9.
+Latest issues of the IMDA Technical Specifications are available on IMDA website at . 
+Annex B 
+Table B.2: Telecommunication Equipment not requiring Equipment Registration 
+Category of Telecom Equipment &  
+Examples of Applications 
+Optional  
+ Confirmation of Conformity (COFC) 
+Technical Specification 
+COFC -  
+ Self-Declaration  
+COFC-  
+Declaration- 
+Evaluated by IMDA  
+Application Fee (SGD) 
+Exempted Single Line Equipment 
+Telephone (standard / multi-feature / image 
+/ data / switching) 
+(100) 
+(350)  
+IMDA TS PSTN 
+Line interface – cordless phone 
+Telephone ancillary 
+Auto-dialler 
+Auto answering / recording set 
+Caller identification equipment 
+Security alarm system 
+Facsimile transceiver / fax modem 
+Voice band modem 
+EFTPOS / CCAT 
+Digital leased circuit equipment 
+(100) 
+(350)  
+IMDA TS DLCN 
+Notes: 
+1.
+Notwithstanding the fees stated above, application fee is SGD 100 for equipment certified and submitted by IMDA’s 
+recognised Certification Bodies. 
+2.
+Under COFC-Self-Declaration, equipment suppliers shall conduct self-assessment of the exempted equipment conformity 
+to IMDA Standards based on relevant test reports and submit the documents indicated in Annex A-2. 
+3.
+Under COFC – Declaration Evaluated by IMDA, equipment suppliers shall submit the documents indicated in Annex A-2, 
+including relevant test reports for IMDA’s evaluation. 
+18 
+Annex C 
+SUPPLIER’S DECLARATION OF CONFORMITY FORM 
+(To be incorporated as online declaration of conformity) 
+Instructions: 
+This Declaration is to be completed by the local supplier of the 
+telecommunication equipment who holds a Telecommunication Dealer’s 
+Licence issued by Info-communications Media Development Authority 
+(“ IMDA ”). Original copy of the Declaration is to be submitted to IMDA. 
+Where there is an operational group or department responsible for registering 
+the equipment, please specify the details under the name of local supplier. 
+Supplier’s Declaration of Conformity 
+I/We  
+(Name of Local Supplier)
+of 
+(Address of Local Supplier)
+hereby declare that the following telecommunication equipment, 
+(Trade name and Model name)
+complies with the following IMDA Technical Specifications: 
+IMDA Reference 
+Issue Date 
+Title of IMDA Technical Specification 
+I/We declare that this Declaration of Conformity is based on test data or certification produced by: 
+(Name & Address of Test Laboratory or Certification Body)
+I/We declare that all information submitted to IMDA is true for the purpose of this Declaration of Conformity, and 
+am/are aware that there are penalties for furnishing false information. 
+Signature of Authorised Officer 
+Date of Declaration 
+Name of Authorised Officer
+Position held in Organisation
+Telecom Dealer’s Licence No. 
+Additional Information: 
+Name & Address of Manufacturer
+IMDA SDOC FORM (Mar 2026) 
+19 
+Annex D 
+LIST OF TECHNICAL REGULATIONS 
+Table D.1: Technical Specifications for Line Terminal Equipment 
+No. 
+Reference 
+Eqpt Category Group 
+(for online entry)
+Issue Date 
+Title of Specification 
+1 
+IMDA TS ADSL 
+Broadband Access 
+Equipment 
+Oct 16 
+Technical Specification for Asymmetric Digital Subscriber Line 
+Modems 
+2 
+IMDA TS CM 
+Broadband Access 
+Equipment 
+Oct 16 
+Technical Specification for Cable Modems connected to High-Speed 
+Data-Over-Cable Systems 
+3 
+IMDA TS CCHN 7
+Broadband Access 
+Equipment 
+Oct 16 
+Technical Specification for  Coaxial Cable Home Networking 
+4 
+IMDA TS ISDN 
+Complex/Muti-Line 
+Equipment 
+Jun 24 
+Technical Specification for Terminal Equipment connected to 
+Integrated Services Digital Network 
+5 
+IMDA TS PLC 
+Complex/Multi-Line 
+Equipment 
+Oct 16 
+Technical Specification for Powerline Communications (PLC) Home 
+Networking 
+6 
+IMDA TS PSTN 
+Complex/Muti-Line 
+Equipment 
+Oct 16 
+Technical Specification for Terminal Equipment connected to 
+Network Terminating Equipment or the Public Switched Telephone 
+Network for access to voice band services 
+7 
+IMDA TS DLCN  
+Exempted Equipment 
+Oct 16 
+Technical Specification for Terminal Equipment connected to 2 
+Mbit/s, 34 Mbit/s and 140 Mbit/s Digital Leased Lines 
+8 
+IMDA TS PABX-SEC 
+PABX 
+Aug 24 
+Technical Specification for Security Requirements for Private 
+Automatic Branch Exchanges 
+Table D.2: Technical Specifications for Radio-Communication Equipment 
+No. 
+Reference 
+Eqpt Category Group 
+(for online entry)
+Issue Date 
+Title of Specification 
+1 
+IMDA TS IOT 
+IoT Base Station/  IoT 
+User Equipment 
+Nov 17 
+Technical Specification for Internet of Things 
+2 
+IMDA TS DSRC 
+DSRC in ITS 
+Oct 17 
+Technical Specification for Dedicated Short Range Communications in 
+Intelligent Transport Systems 
+3 
+IMDA TS DVB-T2 
+IRD 
+Radio (Others) 
+(DVB-T2 IRD) 
+Nov 17 
+Technical Specification for Integrated Receiver Decoder (IRD) for use 
+with 2 nd -generation Digital Terrestrial Television broadcasting system 
+(DVB-T2) 
+4 
+IMDA TS WSD 
+TV White Space 
+Device 
+Oct 16 
+Technical Specification for Television White Space Devices 
+5 
+IMDA TS CT-CTS 
+Radio (Others) 
+(PMREQ/LPREQ) 
+Oct 16 
+Technical Specification for Cordless Telephone and Cordless 
+Telecommunication Systems 
+6 
+IMDA TS SRD 
+Radio (Others) 
+(PMREQ/LPREQ)  
+Sep 23 
+Technical Specification for Short Range Devices 
+7 
+IMDA TS LMR 
+Land Mobile Radio 
+Oct 16 
+Technical Specification for Land Mobile Radio Equipment 
+8 
+IMDA TS CMT 
+Mobile Terminal 
+Mar 26 
+Technical Specification for Cellular Mobile Terminal 
+9 
+IMDA TS CBS 
+Mobile Base Station 
+Dec 24 
+Technical Specification for Cellular Base Station and Repeater System 
+10 
+IMDA TS GMPCS 
+Mobile Terminal 
+Oct 16 
+Technical Specification for Global Mobile Personal Communication by 
+Satellite (GMPCS) Terminals 
+11 
+IMDA TS WBA 
+Wireless Broadband  
+Access (WBA) 
+Oct 16 
+Technical Specification for Wireless Broadband Access (WBA) 
+Equipment 
+12 
+IMDA TS UWB 
+Ultra-Wideband 
+(UWB) device 
+Oct 16 
+Technical Specification for Ultra Wideband (UWB) Devices 
+13 
+IMDA TS RG-SEC 
+Residential Gateway 
+Oct 20 
+Technical Specification for Security Requirements for Residential 
+Gateways 
+14 
+IMDA TS CD-SEC  
+Mobile Terminal / IoT 
+User Equipment 
+Jul 22 
+Technical Specification for Security Requirements to guard against 
+Network Storms for Cellular Devices 
+Note:
+Where applicable, the requirements to comply with IEC 62368-1 for electrical safety and IEC CISPR 32 for electromagnetic compatibility 
+(IMDA EMC framework) have been included in the Technical Specifications as part of the conformity assessment requirements together 
+with the telecommunications part.
+7
+Reference shall also be made to the Code of Practice for the Provisioning of Coaxial Cable Home Networking Solutions for 
+compliance with the CCHN Regulatory Framework .
+20 
+Annex E 
+ADDENDUM/CORRIGENDUM 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 12) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+10 
+3.4.1 
+Editorial change. With the migration to IRIS system in Dec 2024, 
+Renewal is now two (2) months before expiry date 
+6 Mar 2026 
+19 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS CMT, Issue 1 Rev 4, March 2026 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 11) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+19 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS CMT, Issue 1 Rev 3, December 2024 
+- 
+IMDA TS CBS, Issue 1 Rev 4, December 2024 
+11 Dec 2024 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 10) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+16 
+Annex B 
+Table B.1 
+The Equipment Type and applicable Technical Specification have been 
+updated as follows: 
+New addition of PABX and IMDA TS PABX-SEC 
+28 August 2024 
+19 
+Annex D 
+Table D.1 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS PABX, Issue 1, August 2024 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 9) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+8 
+§ 2.7 
+Revisions are mainly editorial, and the email address for queries has 
+been updated to:  Equipment_Reg_Dealers@imda.gov.sg
+20 June 2024 
+19 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS ISDN, Issue 1 Rev 1, June 2024 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 8) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+19 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS CBS, Issue 1 Rev 3, November 2023 
+9 Nov 2023 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 7) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+19 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS SRD, Issue 1 Rev 3, September 2023 
+1 Sep 2023 
+21 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 6) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+15 
+Annex B 
+Table B.1
+The Technical Specification column has been updated with the 
+addition of IMDA TS CD-SEC for Mobile Terminals and Internet of 
+Things 
+1 July 2022 
+18 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS CD-SEC, Issue 1, July 2022 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 5) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+18 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS SRD, Issue 1 Rev 2, August 2021 
+10 Aug 2021 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 4) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+15 
+Annex B 
+Table B.1
+The Equipment Type and applicable Technical Specification have been 
+updated as follows: 
+- 
+New addition of Residential Gateway and IMDA TS RG-SEC 
+12 Oct 2020 
+18 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS CMT, Issue 1 Rev 2, September 2020 
+- 
+IMDA TS CBS, Issue 1 Rev 2, September 2020 
+- 
+IMDA TS RG-SEC, Issue 1, October 2020 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 3) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+3, 10, 
+13, 14 
+§ 2.1.1 
+§ 3.4.1 
+Annex A-1 
+Annex A-2
+Change in URL due to re-branding of LicenceOne to GoBusiness 
+Licensing: 
+31 Oct 2019 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 2) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+Cover 
+Page
+-
+The ISO 9001: 2015 logo has been updated
+21 Jan 2019 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1 Rev 1) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+Cover 
+Page
+-
+The ISO logo has been updated
+6 Sep 2018 
+22 
+Revisions are mainly editorial to reflect changes to the online 
+applications which are now through LicenceOne portal i.e.: 
+(a)
+Equipment registration shall be made online via the 
+LicenceOne Portal at .  
+(b)
+Equipment Search is still available at 
+15 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS SRD, Issue 1 Rev 1, April 2018 
+Appendix to IMDA 
+GUIDE EQR 
+Removed as screenshots from TLS are no longer applicable. 
+23 
+Changes to the Guide for Registration of Telecommunication Equipment (IMDA Guide EQR Issue 1) 
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+15
+Annex B 
+Table B.1
+The Equipment Type and applicable Technical Specification have been 
+updated as follows: 
+- 
+New addition of Internet of Things (IoT) User Equipment and IoT 
+Base Station and IMDA TS IOT, respectively 
+- 
+TV White Space Devices and IMDA TS WSD 
+- 
+Dedicated Short-Range Communications in Intelligent Transport 
+Systems and IMDA TS DSRC
+11 Dec 2017 
+18 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IMDA TS IOT, Issue 1, November 2017 
+- 
+IMDA TS DSRC, Issue 1 Rev 1, October 2017 
+- 
+IMDA TS DVB-T2 IRD, Issue 1 Rev 1, November 2017 
+- 
+iMDA TS CMT, Issue 1 Rev 1, July 2017 
+- 
+IMDA TS CBS, Issue 1 Rev 1, July 2017 
+- 
+IMDA TS WSD, Issue 1, October 2016 
+Appendix to IMDA 
+GUIDE EQR 
+Screenshots of the online equipment registration process for has been 
+updated. 
+Changes to the Guide for Registration of Telecommunication Equipment  
+Page 
+New provision in 
+IMDA Guide EQR  
+Item Changed 
+Effective Date 
+The Guide has been revised and published as IMDA Guide EQR Issue 1 
+to reflect changes made due the formation of Info-Communications 
+Media Development Authority (“IMDA”). 
+Revisions are mainly editorial i.e. replacing all references made from 
+IDA to IMDA, with the following highlights: 
+(a) Changes in the following urls: 
+- 
+- 
+- 
+- 
+TLSAPPN@imda.gov.sg (for email enquiries) 
+(b) All IDA’s Technical Specifications (IDA TS XXXX) in Annex D have 
+been renamed as IMDA’s Technical Specifications (IMDA TS XXXX) 
+(c) Requirement for identification of equipment has been included in 
+Clause 3.1.3 
+1 Oct 2016 
+24 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 8) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+Cover 
+Page 
+- 
+The ISO logo has been updated 
+15 March 
+2016 
+3,10, 
+13, 14 
+§ 1.1 
+§ 2.1.1 
+§ 3.4.1 
+Annex A-1 
+Annex A-2 
+Appendix to IDA 
+GUIDE EQR 
+TLS portal link has been updated to 
+8 
+§ 2.7 
+Email address for queries is now :  IDA_TLSAPPN@ida.gov.sg 
+12 
+§ 5 
+A new section on Equipment Registration of Machine-to-Machine 
+(“M2M”) Equipment with embedded SIM card has been added 
+12 
+§ 6 
+Equipment Registration of Coaxial Cable Home Networking (“CCHN”) 
+Equipment 
+- 
+A new section has been added on CCHN Regulatory Framework 
+governing the sale and use of CCHN equipment  
+15 
+Annex B 
+Table B.1 
+The Equipment Type and applicable Technical Specification have been 
+updated as follows: 
+- 
+New addition of Coaxial Cable Home Networking (CCHN) 
+Equipment’ and IDA TS CHHN, respectively 
+- 
+Deletion of ATM UNI Equipment and IDA TS BISDN 
+- 
+Merging of ISDN Basic Access, Primary Rate Access and NT1 
+Equipment and IDA TS ISDN, respectively 
+- 
+New Footnote to refer to Section 5 for additional information on 
+M2M communication device. 
+18 
+Annex D 
+Table D.1 
+The List of Technical Regulations has been updated as follows: 
+- 
+IDA TS ADSL, Issue 2, October 2013 
+- 
+IDA TS CM, Issue 2, October 2013 
+- 
+IDA TS CCHN, Issue 1, July 2014 
+- 
+IDA TS ISDN, Issue 2, October 2013 
+- 
+IDA TS PSTN, Issue 2, October 2013 
+- 
+IDA TS DLCN. Issue 2, October 2013 
+18 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IDA/MDA TS DVB-T2 IRD, Issue 1 Rev 2, May 2014 
+- 
+IDA TS LMR, Issue 1 Rev 5, June 2014 
+- 
+Appendix to IDA 
+GUIDE EQR 
+Screenshots of the online equipment registration process has been 
+updated 
+25 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 7) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+11 
+§ 3.6 
+Transfer of Equipment Registration  
+ -  A new section has been added to provide for the transfer of 
+equipment registration between telecommunication dealer’s licensees 
+25 April 2013 
+15 
+Annex B 
+Table B.1 
+The Equipment Category, Type and applicable Technical Specification 
+have been updated as follows: 
+- 
+‘Integrated Receiver Decoders for use with 2 nd -generation 
+Digital Terrestrial Television broadcasting system (DVB-T2 
+IRD)’; 
+- 
+‘Basic DVB-T2 IRD’ and ‘Basic DVB-T2 IRD + Multi-channel 
+Audio’; 
+- 
+‘Part A of IDA/MDA TS DVB-T2 IRD’ and ‘Part A and Part B of 
+IDA/MDA TS DVB-T2 IRD’, respectively
+15 
+Annex B 
+Table B.1 
+Note 5 
+The registration fee for subsequent model in the same family series has 
+been revised to SGD 50.  For clarity, the definition of family series models 
+has also been revised 
+19 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IDA/MDA TS DVB-T2 IRD, Issue 1 Rev 1, March 2013 
+- 
+IDA TS SRD, Issue 1 Rev 7, April 2013 
+- 
+Appendix to IDA 
+GUIDE EQR 
+Updated screenshots on online equipment registration process 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 6) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+Cover 
+Page 
+- 
+The ISO logo has been updated 
+28 January 
+2013 
+3 
+§ 2.1.2 
+The URL link to Equipment Registration Framework has been updated 
+( ) 
+5 
+§ 2.2.3.4 (b) 
+Direct URL link to ‘local or foreign certification bodies recognised by IDA’ 
+has been provided. 
+6 
+§ 2.2.3.5 (b) 
+Direct URL link to ‘testing labs recognised by IDA’ has been provided 
+14 
+Annex B 
+Table B.1 
+Note 9 
+The URL link to IDA Technical Specifications has been updated 
+( ) 
+17 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IDA TS WBA, Issue 1 Rev 2, November 2012 
+26 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 5) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+14 
+Annex B 
+Table B.1 
+The Equipment Type and applicable Technical Specification have been 
+updated as follows: 
+- 
+‘Powerline Communications (PLC) Home Networking’ and IDA 
+TS PLC, respectively 
+27 August 
+2012 
+17 
+Annex D 
+Table D.1 
+The List of Technical Regulations has been updated as follows: 
+- 
+IDA TS PLC, Issue 1, August 2012 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 4) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+10 
+§ 3.5.1 and 
+§ 3.5.2 (a) 
+Requirements for Modifications of registered telecommunication 
+equipment: 
+- 
+Removing the requirement to notify IDA for Class 1 
+Modifications 
+- 
+Classifying change in Specific Absorption Rate (SAR) value of 
+mobile phone as Class 1 Modification 
+4 April 2012 
+14 
+Annex B  
+Table B.1 
+A new note “Standalone radio modules if sold separately will be subject 
+to equipment registration” has been inserted 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 3) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+17 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IDA TS GMPCS, Issue 1 Rev 4, August 2011 
+Sep 2011 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 2) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+14 
+Annex B 
+Table B.1 
+The Equipment Type and applicable Technical Specification have been 
+updated as follows: 
+- 
+‘2G/3G/LTE Cellular Base Station and Repeater System’ and ‘IDA 
+TS CBS’, respectively 
+- 
+‘2G/3G/LTE Cellular Mobile Terminal’ and ‘IDA TS CMT’, 
+respectively 
+Jun 2011 
+17 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- 
+IDA TS LMR, Issue 1 Rev 4, June 2011 
+- 
+IDA TS CMT, Issue 1, June 2011 which has superseded the 
+former IDA TS GSM-MT and IDA TS 3G-MT 
+- 
+IDA TS CBS, Issue 1, June 2011 which has superseded the former 
+IDA TS GSM-BS and IDA TS 3G-BS 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2 Rev 1) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+Cover 
+Page 
+- 
+Change of IDA’s address to Mapletree Business City  
+1 May 2011 
+8 
+§ 2.7 
+Change of IDA’s address and Fax No.  
+17 
+Annex D 
+Issue Dates of Technical Specifications have been updated 
+27 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR Issue 2) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+9 
+§ 3.2.2.1  
+§ 3.2.2.2 
+Updated the procedures for the optional Application for Confirmation of 
+Conformity for exempted equipment  
+1 Apr 2011 
+10 
+§ 3.4.1 
+Updated the online renewal process 
+12 
+Annex A-1 
+Updated Equipment Registration Schematic Diagram 
+13 
+Annex A-2 
+Included a separate Application for Confirmation of Conformity Schematic 
+Diagram  
+15 
+Annex B 
+Table B.2 
+Included in Table B.2, the additional option for COFC – Self-Declaration  
+16 
+Annex D 
+Updated Issue Dates of IDA TS SRD and IDA TS LMR 
+- 
+Appendix to IDA 
+GUIDE EQR 
+Updated screenshots on online equipment registration process 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR  Issue 1 Rev 3) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+- 
+- 
+The Guide has been revised and published as IDA GUIDE EQR Issue 2 to 
+reflect changes in the IDA Equipment Registration Framework:  
+- 
+Extending coverage of Enhanced Simplified Equipment Registration 
+(ESER) and Administration of Simplified Equipment Registration (SER) 
+for mobile phones and broadband access equipment 
+- 
+Introducing Application for Confirmation of Conformity for exempted 
+equipment 
+- 
+Introducing upfront payment for equipment registration 
+- 
+Revising the online equipment registration workflow 
+15 Apr 2010 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR  Issue 1 Rev 2) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+11 
+§ 4 
+Radio-communication Equipment which requires IDA Licensing 
+8 Jan 2010 
+16 
+Annex D 
+Issue Dates of Technical Specifications have been updated 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR  Issue 1 Rev 1) 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+- 
+- 
+The approval framework described in this Guide is now extended to allow 
+registrations of Ultra-Wideband (UWB) devices for sale and use:  
+3 Jan 2008 
+13 
+Annex B 
+Table B.1 
+UWB has been added as a new equipment category. 
+14 
+Annex B 
+Table B.3 
+Frequency band 433.79 – 434.79 MHz has been revised to 
+433.05 – 434.79 MHz, in line with ITU-designated ISM band. 
+16 
+Annex D 
+Table D.2 
+The List of Technical Regulations has been updated as follows: 
+- IDA TS UWB, Issue 1, Dec 07 
+- IDA TS SRD, Issue 1 Rev 3, Jan 08 
+28 
+Changes to the Guide for Registration of Telecommunication Equipment (IDA Guide EQR  Issue 1) 
+New 
+Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+3 
+§ 2.1 
+The Guide has been revised and published as IDA Guide EQR Issue 1 Rev 1 
+to reflect changes made to the Equipment Registration Online. 
+Revisions are mainly intended for introducing the enhanced version of the 
+SER scheme (ESER) for short-range/low power devices (SRD/LPD) 
+operating in ISM frequency bands and transmitting not exceeding100 mW. 
+23 Jul 2007 
+3 
+§ 2.2 
+This section describes the Equipment Registration for ISM-band SRD/LPD, 
+an enhanced version of the SER scheme. 
+6 
+§ 2.5.1 
+This section describes the approval of ISM-band SRD/LPD under the 
+enhanced SER. 
+6 
+§ 2.5.2.3 
+This section highlights the e-Services available for e-Payment and printing 
+of registration notifications. 
+7 
+§ 2.7.2 
+This section highlights the equipment registration fee payable via e-
+Payment. 
+8 
+§ 3.1.5 
+This section highlights the need to comply with the EMC requirements 
+specified in the IEC CISPR 22, where applicable.  
+9 
+§ 3.2.1.1 (b) 
+This section highlights the availability of online declaration of conformity 
+under the enhanced SER scheme. 
+12 
+Annex A 
+The Equipment Registration Schematic Diagram has included the route for 
+the enhanced SER for SRD/LPD operating in ISM bands and transmitting 
+not exceeding 100 mW (Route 1a).  
+14 
+Annex B 
+This annex has included a table defining the types of equipment not 
+requiring registration fees (Table B.3). 
+16 
+Annex D 
+This annex now provides the Equipment Category Codes against the 
+corresponding Technical Specifications for the purpose of guiding users in 
+their online data entry (see Screenshot 3.5 in the Appendix to the Guide). 
+It also highlights the EMC framework and requirements that have been 
+included in the Technical Specifications as part of the conformity 
+assessment requirements together with the telecommunications part. 
+Appendix to 
+ IDA GUIDE EQR 
+This appendix  provides screenshots demonstrating the following: 
+- 
+access to the Equipment Registration Online. 
+- 
+Equipment Registration for ISM-band SRD/LPD 
+- 
+Telecommunication Equipment Registration. 
+- 
+e-Payment 
+Changes to the Guide for Approval of Telecommunication Equipment (IDA Approval Guide) 
+New Page 
+New provision in 
+IDA Guide EQR  
+Item Changed 
+Effective 
+Date 
+─ 
+─ 
+The “Guide for Approval of Telecommunication Equipment” (IDA 
+Approval Guide, 15 Mar 04) has been superseded by the “Guide for 
+Registration of Telecommunication Equipment” (IDA Guide EQR 
+Issue 1). 
+21 Jul 2005 
+13 
+Annex A.4 
+General Approval (GAP) scheme for single-line analogue equipment 
+is discontinued. Suppliers may sell such equipment without the 
+requirement of equipment registration or opt to register such 
+equipment using the SER or GER scheme. 
+6 
+§ 2.2 
+Simplified Equipment Registration (SER) scheme is maintained and 
+extended to cover (a) GSM phones, (b) DECT and PHS digital 
+cordless phones and systems, (c) GMPCS terminals, and (d) ADSL 
+and cable modems. Registration fee remains at SGD 100. 
+29 
+6 
+§ 2.3 
+Type Approval (TAP) scheme is re-designated as General Equipment 
+Registration (GER) with “Declaration evaluated by IDA”. Fees are 
+restructured to SGD 350/500. 
+6 
+§ 2.3 
+MRA Equipment Registration (MER) scheme is maintained and 
+renamed as GER with “Declaration certified by an IDA recognised 
+body”. Registration fee remains at SGD 100. 
+─ 
+─ 
+Individual approval is discontinued for single items of equipment 
+brought in by individuals from overseas for personal use. These 
+individuals shall carry the personal responsibility for ensuring that 
+the equipment conforms to the applicable IDA Technical 
+Specifications. 

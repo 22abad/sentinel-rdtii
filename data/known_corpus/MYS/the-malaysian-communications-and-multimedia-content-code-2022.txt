@@ -1,0 +1,2828 @@
+CONTENT ™FORUM REGISTRATION DATE: 30 MAY 2022 THE MALAYSIAN COMMUNICATIONS AND MULTIMEDIA CONTENT CODE THIRD EDITION
+THE COMMUNICATIONS AND MULTIMEDIA CONTENT FORUM OF MALAYSIA
+THE MALAYSIAN COMMUNICATIONS AND MULTIMEDIA 
+CONTENT CODE 2022 
+Registered on 30 May 2022 
+
+Published by Communications and Multimedia Content Forum of Malaysia (Content Forum) 
+May 2022 
+Copyright © 2022 Communications and Multimedia Content Forum of Malaysia (Content 
+Forum).
+All rights reserved. No part of this work may be reproduced or transmitted in any form or by 
+any means electronic or mechanical, including photocopying or web distribution, without the 
+written permission of the publisher. 
+EDITOR 
+Communications and Multimedia Content Forum of Malaysia (Content Forum) 
+While every effort is made to ensure that accurate information is disseminated through this 
+publication, Content Forum makes no representation about the content and suitability of this 
+information for any purpose. Content Forum is not responsible for any errors or omissions, or 
+for the results obtained from the use of the information in this publication. In no event will 
+Content Forum be liable for any consequential, indirect, special or any damages whatsoever 
+arising in connection with the use or reliance on this information. 
+PUBLISHER 
+Communications and Multimedia Content Forum of Malaysia (Content Forum) 
+Forum Kandungan Komunikasi dan Multimedia Malaysia 
+MCMC Tower 2, Jalan Impact, 
+Cyber 6, 63000 Cyberjaya 
+Selangor Darul Ehsan, 
+MALAYSIA  
+Website: 
+
+Page 1 of 73
+PREFACE 
+The Communications and Multimedia Act 1998 empowers the Malaysian Communications and 
+Multimedia Commission (MCMC) to designate an industry forum responsible for the 
+preparation of a Code, containing governing standards and practices in the communications 
+and multimedia industry.
+Aimed at facilitating industry self-regulation, with the contribution of everyone in the content 
+community and industry players, the Content Code was first introduced in 2004. The Content 
+Code is a set of guidelines outlining best practices and ethical standards of content 
+disseminated to audiences by service providers in the communications and multimedia industry 
+in Malaysia.
+Since the coming into effect of the Content Code in 2004, it has been reviewed once in 2020 
+with minor amendments. However, with the significant changes in the communications and 
+multimedia industry, there is a need for a more substantial review to address policy gaps on 
+content related issues that are new within the industry as well as those that were not fully 
+addressed in the revised Content Code 2020.
+In 2021, the Content Forum embarked on a mission to review and revamp the entire Content 
+Code to ensure it remains aligned with global best practices for the benefit of both the local 
+content industry and all Malaysians. The Content Code 2022 was officially registered by MCMC 
+and came into effect on 30 May 2022. 
+With the growing number of content creators, the new updated Content Code could not have 
+come at a better time. The updated Content Code provides guidance on self-regulation that 
+provides the platform for creativity, innovation, and healthy growth of a fast-evolving industry 
+whilst aligning it with Malaysian culture, harmony, and values. 
+At the Content Forum, we believe that while the role of content continues to expand, the need 
+for self-regulation, transparency, and accountability in content creation by all parties is highly 
+crucial to ensure that the content landscape in Malaysia is a truly dynamic, progressive and a 
+safe one for all. It is hoped that this Content Code continues to be the key point of reference 
+for self-regulation. 
+Thank you! 
+Kenny Ong
+Chairman 
+Communications and Multimedia Content Forum of Malaysia (Content Forum)
+Page 2 of 73
+Table of Contents 
+PREFACE ........................................................................................................................................ 1
+PART 1: INTRODUCTION ............................................................................................................. 5
+1.0 Preamble ........................................................................................................................................................ 5 
+2.0 General Principles ...................................................................................................................................... 5 
+3.0 Objectives of the Code ............................................................................................................................. 6 
+4.0 Scope and Coverage ................................................................................................................................. 7 
+5.0 Definitions and Interpretation ............................................................................................................... 7 
+6.0 Legal status of the Code........................................................................................................................ 13 
+7.0 Interpretation ............................................................................................................................................. 13 
+8.0 Complaints .................................................................................................................................................. 13 
+PART 2: GUIDELINES ON CONTENT ........................................................................................ 14
+1.0 General Requirements ............................................................................................................................ 14 
+2.0 Indecent Content ..................................................................................................................................... 14 
+3.0 Obscene Content ..................................................................................................................................... 14 
+4.0 Violence........................................................................................................................................................ 15 
+5.0 Menacing Content ................................................................................................................................... 16 
+6.0 Offensive Content .................................................................................................................................... 17 
+7.0 False Content ............................................................................................................................................. 17 
+8.0 Children's Content ................................................................................................................................... 18 
+9.0 Family Values ............................................................................................................................................. 18 
+10.0 Persons with Disabilities ........................................................................................................................ 19 
+11.0 Privacy ........................................................................................................................................................... 19 
+PART 3: ADVERTISEMENT (MARKETING COMMUNICATIONS) .......................................... 20
+1.0 Scope and Coverage ............................................................................................................................... 20 
+2.0 Objectives .................................................................................................................................................... 20 
+3.0 General Principles Governing Advertisements ............................................................................. 20 
+4.0 Specific Guidelines ................................................................................................................................... 21 
+5.0 Indirect Advertising and Product Placements .............................................................................. 29 
+Page 3 of 73
+6.0 Identifying Advertisers and Recognising Advertisements ....................................................... 29 
+7.0 Children and Advertising....................................................................................................................... 30 
+8.0 Other Specific Advertisements............................................................................................................ 33 
+9.0 Financial Products and Services ......................................................................................................... 36 
+10.0 Advertisement by a Licensed Gambling or Betting Company ............................................... 36 
+PART 4: SPECIFIC BROADCASTING ......................................................................................... 41
+1.0 Scope and Coverage ............................................................................................................................... 41 
+2.0 Objectives .................................................................................................................................................... 41 
+3.0 Specific Broadcasting .............................................................................................................................. 41 
+4.0 Advertisements.......................................................................................................................................... 45 
+5.0 Information, Advice and Warnings ................................................................................................... 46 
+PART 5: SPECIFIC ONLINE GUIDELINES .................................................................................. 47
+1.0 Scope and Coverage ............................................................................................................................... 47 
+2.0 Concept of Innocent Carrier ................................................................................................................ 47 
+3.0 Objectives .................................................................................................................................................... 47 
+4.0 Principles ...................................................................................................................................................... 48 
+5.0 Online Guidelines ..................................................................................................................................... 49 
+6.0 Measures – General ................................................................................................................................. 49 
+7.0 Measures –Specific .................................................................................................................................. 50 
+8.0 Measures not required ........................................................................................................................... 53 
+PART 6: SPECIFIC AUDIOTEXT HOSTING SERVICE GUIDELINES .......................................... 55
+1.0 Scope and Coverage ............................................................................................................................... 55 
+2.0 Specific Guidelines ................................................................................................................................... 56 
+3.0 Copyright ..................................................................................................................................................... 57 
+PART 7: SPECIFIC LIMITED CONTENT GUIDELINES .............................................................. 58
+1.0 Scope and Coverage ............................................................................................................................... 58 
+PART 8: CODE ADMINISTRATION ........................................................................................... 59
+1.0 Introduction ................................................................................................................................................ 59 
+2.0 Communications and Multimedia Content Forum of Malaysia ............................................ 59 
+Page 4 of 73
+3.0 The Complaints Bureau .......................................................................................................................... 59 
+4.0 Procedure for General Public Complaints ...................................................................................... 60 
+5.0 Procedure for Industry Complaints ................................................................................................... 61 
+6.0 Procedure for Complaints on Matters relating to Comparative, Superlative and 
+Misleading Claims ................................................................................................................................... 62 
+7.0 Inquiry Proceedings ................................................................................................................................ 62 
+8.0 Decisions of the Complaints Bureau ................................................................................................ 63 
+9.0 Sanctions ..................................................................................................................................................... 63 
+10.0 Publication of Decision .......................................................................................................................... 63 
+11.0 Composition of the Complaints Bureau .......................................................................................... 64 
+12.0 Development, Amendment and Review of Code ........................................................................ 65 
+PART 9: PUBLIC EDUCATION ................................................................................................... 66
+1.0 Public Awareness ...................................................................................................................................... 66 
+2.0 Industry Awareness ................................................................................................................................. 66 
+PART 10: CONSUMER PROTECTION ....................................................................................... 67
+1.0 Introduction ................................................................................................................................................ 67 
+2.0 Principles ...................................................................................................................................................... 67 
+3.0 General Guidelines.................................................................................................................................... 67 
+4.0 Child Protection ......................................................................................................................................... 67 
+5.0 Quality and Standards ............................................................................................................................. 68 
+6.0 Cultural Diversity ....................................................................................................................................... 68 
+7.0 Corrective Measures ................................................................................................................................. 68 
+APPENDIX I: ............................................................................................................................... 69
+APPENDIX II: .............................................................................................................................. 72
+Page 5 of 73
+PART 1: INTRODUCTION 
+1.0
+Preamble 
+1.1
+BEARING IN MIND the national policy objectives of and for the communications and 
+multimedia industry and the need to establish agreed standards of behaviour in respect of 
+industry members and to: 
+(a)
+Promote a civil society where information-based services will provide the 
+basis of continuing enhancements to quality of work and life. 
+(b)
+Regulate the long-term benefit of the end user. 
+(c)
+Promote a high level of consumer confidence in service delivery. 
+(d)
+Grow and nurture local information resources and cultural representations 
+that facilitate the national identity and global diversity. 
+(e)
+Establish Malaysia as a major global centre and hub for communications and 
+multimedia information and Content services. 
+1.2
+BEING AWARE of the need to avoid Content, which is indecent, obscene, false, 
+menacing, or offensive in character with intent to annoy, abuse, threaten or harass any person. 
+1.3
+ACKNOWLEDGING THE NEED of the viewers and listeners to be provided with news 
+and reporting to create an informed public bearing in mind the need to ensure and preserve 
+the country's harmony and growth. 
+1.4
+RECOGNISING THE NEED to disseminate and to provide information and 
+entertainment to meet the diverse needs of the Malaysian viewers and listeners in all Content 
+relating to business, politics, recreation, information, culture and education. 
+1.5
+REALISING THAT VIEWERS as consumers should have the freedom to view contents of 
+their choice. That choice must be balanced against public interest for which as a compromise, 
+guidelines may be formulated to classify contents and suitability. 
+1.6
+AND WHILST RECOGNISING the right of the consumer to choose it is AGREED that 
+choice should be exercised with care and that the responsibility could be shared by the 
+individuals, parents, teachers, and guardians. 
+2.0
+General Principles 
+2.1
+IT IS DECLARED AND ACCEPTED that the following general principles shall apply to all 
+that which is displayed on or communicated, and which is subject to the Act. 
+Page 6 of 73
+2.2
+In creating and offering news, reports, entertainment and advertisements, content 
+providers shall bear in mind the need for a balance between the desire of viewers, listeners and 
+users to have a wide range of Content options and access to information on the one hand and 
+the necessity to preserve law, order and morality on the other. The Content Forum is not 
+intended to act as a clearing house for the approval of any Content including and not limited 
+to Advertisements. 
+2.3
+The principle of ensuring that Content shall not be indecent, obscene, false, menacing 
+or offensive shall be observed. 
+2.4
+Women and men shall be portrayed with fair and equitable demographic diversity 
+taking into account age, civil status, race, ethno-cultural origin, physical appearance, 
+background, religion, occupation, socio-economic condition and leisure activities, while actively 
+pursuing a wide range of interests. 
+2.5
+Particular attention shall be given to Content that is created for children and to Content 
+in which children are portrayed. 
+2.6
+Attention will be given to include and respect diversity such as may be expressed 
+through differences due to, but are not limited to, cognitive or physical ability, culture, ethnicity, 
+religion, socio-economic status, gender, age, national origin, political persuasion, marital status, 
+educational background, or geographic location. 
+2.7
+Code Subjects shall endeavour to provide Content that, as far as possible, caters to the 
+various tastes and expectations of Malaysian viewers and listeners recognising the varied tastes 
+of the Malaysian public. 
+2.8
+Code Subjects shall ensure, to the best of their ability, that their Content contains no 
+abusive or discriminatory material or comment on matters of, but not limited to, race, religion, 
+culture, ethnicity, national origin, gender, age, marital status, socio economic status, political 
+persuasion, educational background, geographic location, sexual orientation or physical or 
+mental ability, acknowledging that every person has a right to full and equal recognition and 
+to enjoy certain fundamental rights and freedoms as contained in the Federal Constitution and 
+other relevant statutes. 
+3.0
+Objectives of the Code 
+3.1
+The overriding purpose of this Code is to recommend guidelines relating to the 
+provision of Content through self-regulation by the industry in a practical and commercially 
+feasible manner and at the same time foster, promote and encourage the growth and 
+development of the industry. 
+3.2
+In doing so, it is noted and acknowledged that the following specific objectives shall 
+guide the parties affected, governed by, administering and subject to the Code: 
+Page 7 of 73
+(a)
+Meeting and supporting the national policy objectives set out in the Act. 
+(b)
+Ensuring effective self-regulation of the development, production, and 
+dissemination of Content. 
+(c)
+Empowering users of Content to make an informed selection of the Content 
+they consume. 
+(d)
+Recognise and keeping updated with international as well as national 
+standards, trends, and sensitivities in applying and reviewing this Code. 
+(e)
+Ensuring compliance through a regular process of monitoring. 
+4.0
+Scope and Coverage 
+4.1
+This Code shall apply to all Content made available in the Content industry in the 
+networked medium and as defined in this Code and under the Act. 
+4.2
+This Code shall apply to all Content Application Service Providers in particular but is 
+not limited to:
+(a)
+Each member of the Content Forum; 
+(b)
+Each person who has submitted their agreement to the Content Forum that 
+they shall be bound by this Code; and 
+(c)
+Each person whom the Commission has directed in accordance with Section 
+99 of the Act. 
+4.3
+This Code may be reproduced in various vernacular versions but in the event of any 
+doubt, discrepancy and inconsistency, the English version shall prevail. 
+5.0
+Definitions and Interpretation 
+5.1
+For the purposes of this Content Code, the following words, and phrases, unless 
+otherwise specified hereunder, bear and have the same meaning as in the Communications 
+and Multimedia Act 1998 . 
+Act means the Communications and Multimedia Act 1998 . Any references to the Act 
+will include any subsequent amendments made to the said Act. 
+Advertiser means any person who utilises the Network and Digital Media to display 
+Advertisements or Marketing Communications including but not limited to advertising 
+agencies, brand  owners,  manufacturers,  content  providers,  sales  promoters, 
+Page 8 of 73
+broadcasters, and direct marketers, who or on whose behalf Advertisements or 
+Marketing Communications are transmitted or disseminated for the purposes of 
+promoting their brand or products, or influencing Consumer behaviour. 
+Advertisement or Advertising Content means any Content of a public nature whether 
+for the sale or purchase or provision of products or services or constituting of an 
+invitation to participate in an activity and conveyed by or through any signage, image 
+or sound disseminated through a Network or Digital Media. 
+Access means its ordinary meaning i.e., a means of entering; a means or a right of 
+using, reaching, or entering. It is not the definition in Section 6 of the Act. 
+Applications Service Provider means a person who provides applications service; 
+these are persons who provide particular functions such as voice services, data services, 
+content-based services, electronic commerce, and other transmission services. In 
+particular, the Communications and Multimedia (Licensing) Regulations 2000 lists 
+as Application Service Providers, persons who provide the functions or capabilities 
+delivered to end users which include any or all of the following application services: 
+i)
+Public Switched Telephone Network telephony for the delivery of voice and 
+data communications; 
+ii)
+Public Cellular telephony services; 
+iii)
+Public Internet protocol telephony; 
+iv)
+Public payphone service; 
+v)
+Public switched data service for non-services that involve circuit switching of 
+data emanating from one specific network facility to another; 
+vi)
+Audiotext Hosting Service enables a caller to receive pre-recorded message 
+or interact with a programme to receive information; 
+vii)
+Directory services; 
+viii)
+Internet access services; 
+ix)
+Messaging services; or 
+x)
+Such other applications services which are not exempt under the Act. 
+Chairman means the Chairman of the Complaints Bureau. 
+Child or Children refers to a person or persons below the age of eighteen (18) years. 
+Page 9 of 73
+Child Pornography means any representation in whole or in part, whether visual, 
+audio or written, by any means including but not limited to electronic, mechanical, 
+digital, optical, or magnetic means, or manually crafted, or the combinations of any 
+means that falls under the definition provided by the Sexual Offences Against 
+Children Act 2017 . Any references to the Sexual Offences Against Children Act 2017 
+will include any subsequent amendments made to the said Act. 
+Code means this Content Code as may be revised from time to time. 
+Code Subjects means persons who are subject to the Code. 
+Commission means the Malaysian Communications and Multimedia Commission 
+established under the Malaysian Communications and Multimedia Commission 
+Act 1998 . Any references to the Malaysian Communications and Multimedia 
+Commission Act 1998 will include any subsequent amendments made to the said Act. 
+Complaints Bureau means a division under the Content Forum that receives, 
+considers, mediates, adjudicates and makes rulings on matters, such as complaints and 
+grievances, relating to alleged breaches of the Code, as described in Part 8 of the Code. 
+Consumer is a person who receives, acquires, uses, or subscribes to content relating 
+to communications and multimedia within the meaning of the Act. 
+Content means any sound, text, still picture, moving picture or other audio-visual 
+representation, tactile representation, or any combination of the preceding, which is 
+capable of being created, manipulated, stored, retrieved, or communicated 
+electronically. For the purpose of Part 5, Content does not include: 
+a.
+Ordinary private and/or personal electronic mail other than bulk or spammed 
+electronic mail; 
+b.
+Content transmitted solely by facsimile, voice telephony, VOIP and which is 
+intended for private consumption; or 
+c.
+Content which is not accessible to the public whether freely, by payment of a fee 
+or by registration, including (but not limited to) Content made available by way 
+of a closed Content Application Service or a limited Content Applications Service 
+under Sections 207 and 209 of the Act respectively. 
+Content Application Service Provider means a person who provides a content 
+applications service. Examples of content applications services include: 
+Page 10 of 73
+i)
+Direct To Home (DTH) subscription broadcasting, whether via satellite or cable; 
+ii)
+Terrestrial Free-to-Air TV and Radio; and 
+iii)
+Internet Web casting and Streaming Videos. 
+Content Forum means the Communications and Multimedia Content Forum of 
+Malaysia ( Forum Kandungan Komunikasi dan Multimedia Malaysia ) designated by the 
+Commission under Section 212 of the Act. 
+Corporate Social Responsibility (CSR) means corporate initiatives concerning 
+community development, the environment, and human rights. 
+Council means the Council set up for the management of the affairs of the Content 
+Forum. 
+Digital Media refers to any Content, whether legal or illegal, that can be transmitted 
+over the internet or computer networks. This can include text, audio, video and 
+graphics as well as communications over the networked electronic media via 
+telecommunication networks, broadcasting networks, and online services including 
+but not limited to mobile phones, digital pads, wearable devices, and interactive game 
+consoles that allows the receiving party to interact with the platform, service or 
+application. 
+Direct Sale means the sale of products or services which a person conducts either by 
+himself or through any person authorised by him by receiving an offer for a sale 
+electronically. 
+Influencer is defined as person(s) or group(s) who either on a personal capacity share 
+their own independent opinions or are engaged and paid by Advertisers (either in cash 
+or other consideration) to advertise products or services on their own social media 
+channels because of their social media influence on Consumers. 
+Internet Access Service Provider means a service provider who provides Users with 
+Access to the Internet including (but not limited to) the World Wide Web. 
+Link Provider means a person who provides links to other sites. 
+Marketing Communications includes Advertisements as well as other techniques, 
+such as promotions, sponsorships, direct marketing interactive marketing, public 
+relations and publicity, personal selling, word-of-mouth marketing, and live phone-in 
+shows , and should be interpreted broadly to mean any communications produced 
+directly by or on behalf of Advertisers intended primarily to promote a brand, 
+products or services or to influence Consumer behavior, carried or delivered by a 
+Network or Digital Media. 
+Page 11 of 73
+Network means any communications network, internet, and online network. 
+Network Facility means any element or combination of elements of physical 
+infrastructure used principally for or in connection with, the provision of network 
+services, but does not include customer equipment. 
+Online means a networked environment wired and wireless, which is available through 
+a connection to a network service where Content is available to the public for access 
+for a fee or otherwise. 
+Online Content Aggregator means a person who aggregates and/or purchases 
+Content. 
+Online Content Developer means a Code Subject who develops files of Content for 
+the Code Subject or on behalf of others to be made accessible Online. 
+Online Content Hosting Provider means a provider in its capacity of merely providing 
+Access to Content which is neither created nor aggregated by itself, but which is hosted 
+on its facilities. 
+Online Marketplace means a platform including but not limited to a website or a 
+mobile application where products or services are marketed by third parties for the 
+purpose of trade. 
+Online Marketplace Operator means a person who provides an online marketplace 
+or an authorised individual, group or company who market their products or services 
+at the online marketplace. 
+Online Service Provider means a provider of online services or network access, or the 
+operator of facilities thereof, and includes but is not limited to an Internet service 
+provider, news provider, entertainment provider, and e-government service providers. 
+Persons with Disabilities include those who have long term physical, mental, 
+intellectual, or sensory impairments which in interaction with various barriers may 
+hinder their full and effective participation in society, as defined under the Persons 
+with Disabilities Act 2008 . Any references to the Persons with Disabilities Act 2008 
+will include any subsequent amendments made to the said Act. 
+Prohibited Content means such content as is expressed to be prohibited under this 
+Code. 
+Provide in relation to Content in Part 5 means for a Code Subject to make available 
+Online Content where the Code Subject has: 
+a.
+full knowledge of the substance of the Content; and 
+Page 12 of 73
+b.
+control over the substance of such Content. 
+To the extent it does not conflict with the above definition, the following activities are 
+excluded from the ambit of the above definition: 
+a.
+the enabling of Access including (but not limited to) by way of providing 
+connectivity or links to such Content; 
+b.
+the aggregation of such Content; and 
+c.
+the hosting of Content Online. 
+Public Service Announcement (PSA) means a message to raise awareness amongst 
+the masses or changing the attitude of the public towards a key social issue that is 
+broadcasted or disseminated to the public by mass media (television, radio, Digital 
+Media and Social Media). For all intents and purposes, this definition will be confined 
+within the context of this Code only. 
+Reasonable Accommodation means necessary and appropriate modifications 
+and adjustments not imposing a disproportionate or undue burden, where needed in 
+a particular case, to ensure to persons with disabilities the enjoyment or exercise of the 
+quality of life and wellbeing on an equal basis with persons without disabilities, as 
+defined under the Persons with Disabilities Act 2008 . 
+Social Media includes mobile, digital, online platforms and applications that allow the 
+creation and exchange of user-generated content (either organic or paid) by 
+individuals, communities, and corporations. 
+User means a person accessing Online Content. 
+Video-on-Demand (“ VOD ”) refers to a system where a User, subscriber or viewer is 
+enabled to access, at a time chosen by such User, any Content in electronic form, which 
+is transmitted over a computer resource and is selected by the User. 
+Virtual Influencer refers to computer generated characters or avatars who have 
+realistic characteristics, features, and personalities of humans, and behave in a similar 
+manner as influencers. 
+Webpage / Website means the network of websites accessible on the Internet using 
+including, but not limited to, the Hypertext Transfer Protocol (‘http’) files of Content 
+accessible on the World Wide Web by a requested URL. 
+Young Children refers to a person or persons below the age of twelve (12) years. 
+Page 13 of 73
+6.0
+Legal status of the Code 
+6.1
+In accordance with Section 95(2) of the Act, this Code shall only be effective upon 
+registration by the Commission; ( see appendix 1 ). 
+6.2
+Compliance with this Code is voluntary, subject to Section 99 of the Act and the 
+provision of this Code. 
+6.3
+Compliance with this Code shall be a defence against any prosecution, action or 
+proceeding of any nature, whether in court or otherwise as stated under Section 98 (2) of the 
+Act. 
+6.4
+Notwithstanding this Code and apart from the relevant legislation under the Act, all 
+applicable Malaysian Laws including but not limited to sedition, pornography, defamation, data 
+protection, protection of intellectual property and other related legislation are to be complied 
+with. 
+7.0
+Interpretation 
+7.1
+Where the intent or scope of this Code is in doubt, it must be interpreted in the light 
+of the General Principles stated earlier and within the spirit of the Code as well as the strict 
+letter of it. 
+7.2
+No Code of this nature can be all-inclusive in view of changing circumstances. It should 
+take into consideration the intention of the Act, which is for the industry to operate in an 
+environment of self-regulation, liberalisation, and transparency. 
+8.0
+Complaints 
+8.1
+Any complaint received by a content provider or service provider should be resolved 
+bearing in mind the spirit of this Code. However, if the complaint cannot be resolved it may be 
+referred to the Complaints Bureau; ( see Part 8: Code Administration).
+Page 14 of 73
+PART 2: GUIDELINES ON CONTENT 
+1.0
+General Requirements 
+1.1
+Section 211 of the Act prohibits Content that is indecent, obscene, false, menacing, or 
+offensive in character with intent to annoy, abuse, threaten or harass any person. 
+1.2
+This requires Code Subjects to ensure that material disseminated does not include 
+anything which offends good taste or decency; is offensive to public feeling, is likely to 
+encourage crime or lead to disorder, or is abusive or threatening in nature. 
+1.3
+The standards by which Content is measured, given the requirements, will be viewed 
+in the context of the country's social, religious, political, and educational attitudes and 
+observances, as well as the need to accommodate global diversity in a borderless world. 
+1.4
+In order to assist Code Subjects as to the rules to be observed with respect to Content 
+provided and to ensure compliance with the Act through self-regulation, the following 
+guidelines and procedures are set out in this. 
+2.0
+Indecent Content 
+2.1
+Indecent Content is material which is offensive, morally improper and against current 
+standards of accepted behaviour. The depiction of nudity is not allowed other than exceptions 
+for non-sexual content nudity based on art, information and/or sciences. Such depictions shall 
+not be excessive or explicit in nature (not too prolonged, close up or gratuitous). 
+Illustrations: 
+a) In the context of art, Content such as travelogues with visuals of paintings and 
+sculptures such as Greek statues, Renaissance paintings. 
+b) In the context of information, Content such as programs on sex education. 
+c) In the context of sciences, Content such as programs on human biology. 
+3.0
+Obscene Content 
+3.1
+Obscene Content is material which gives rise to a feeling of disgust by reason of its 
+lewd portrayal and is essentially offensive to one's prevailing notion of decency and modesty. 
+There is every possibility of such Content having a negative influence and corrupting the mind 
+of those easily influenced. The test of obscenity is whether the Content has the tendency to 
+Page 15 of 73
+deprave and corrupt those whose minds are open to such communication. Specific regards to be 
+had to: 
+(i)
+Explicit Sex Acts/ Pornography 
+Any portrayal of sexual activity that a reasonable adult considers explicit and 
+pornographic is prohibited. The portrayal of sex crimes, including rape, attempted rape 
+or statutory rape, as well as bestiality is not permitted including the portrayal of such 
+sexual acts, through animation and whether consensual or otherwise. 
+(ii)
+Child Pornography 
+Child pornography shall have the meaning as defined under Part 1 of this Code with 
+specific reference to Section 4 of the Sexual Offences Against Children Act 2017 . 
+(iii)
+Sexual Degradation 
+The portrayal of any individual as a mere sexual object, or to demean, exploit or 
+discriminate them in such manner is prohibited. 
+4.0
+Violence 
+4.1
+Violence, whether psychological, physical, or incitement to violence shall be portrayed 
+responsibly and not exploitatively. Code Subjects may portray and report violence which occurs 
+through natural disasters, acts of terrorism, war, human conflict, whether factual or fictional, the 
+antics of cartoon characters, (body) contact sports and more, subject to specific considerations 
+as set out in Para 4.2 below. 
+4.2
+Portrayal or reporting of violence shall avoid being excessive, meaningless, gratuitous, 
+humiliating, and/or instructional. Programs involving violence shall venture to present the 
+consequences to its victims and perpetrators. Specific considerations are as follows: 
+(i)
+Offensive violence 
+a.
+Violence which, whether physical, verbal, or psychological, may upset, alarm 
+and offend viewers and may lead to undue fear among the audience and 
+encourage imitation. 
+b.
+Meaningless, gratuitous, and blatant presentation of excessive sadistic 
+practices and torture, imageries of injury and aggression, and of blood shall 
+be avoided. 
+c.
+The portrayal of violence is reasonably permitted for the purpose of news 
+reporting, discussion, or analysis and in the context of recognised sports 
+events in the following instances: 
+Page 16 of 73
+i.
+Use of appropriate editorial judgment in the reporting of audio and 
+visual representation of violence, aggression, or destruction within 
+their Content. 
+ii.
+Exercise of caution and discretion in the selection of, and repetition 
+of Content, which depicts violence. 
+iii.
+Viewers shall be cautioned in advance of showing scenes of 
+extraordinary violence, or graphic reporting on delicate subject 
+matter with appropriate warnings to viewers in the case of gore or 
+actual scenes of torture, killing or execution. 
+(ii)
+Imitable violence 
+Portrayal or reporting of dangerous behaviour, which is easily imitated, shall be 
+justified and viewers shall be cautioned. 
+(iii)
+Sexual violence 
+Graphic representations of sexual violence, such as rape or attempted rape or other 
+non- consensual sex, or violent sexual behaviour are not allowed. 
+(iv)
+Violence and young, vulnerable audiences 
+The susceptibility of younger audiences, particularly those impressionable minds shall 
+be considered. Particular care shall be exercised where Children may be exposed to, 
+or be involved in, the depiction of violent behaviour. 
+(v)
+Content that incites online abuse and gender-based violence. 
+Content that incites or provokes any act of abuse and gender-based violence that 
+results in, or is likely to result in, physical, sexual, or psychological harm or suffering is 
+not allowed. 
+5.0
+Menacing Content 
+5.1
+Menacing Content may include that which causes annoyance, threatens harm or evil, 
+encourages or incites crime, or leads to public disorder and is prohibited. 
+5.2
+Hate propaganda, which advocates or promotes genocide or hatred against an 
+identifiable group, shall not be portrayed. Such material is considered menacing in nature and is 
+not permitted. 
+5.3
+Information which may be a threat to national security or public health and safety shall 
+not be presented. 
+Illustrations 
+i)
+Making available instructions and guidance on bomb-making, illegal drug 
+production or counterfeit products; 
+Page 17 of 73
+ii)
+Disseminating false information with regards to outbreak of racial 
+disturbances and religious tension; 
+iii)
+Circulating false information and statements with regards to possible 
+terrorist attacks; 
+iv)
+Circulating or making available false information with regards to the 
+outbreak of a deadly or contagious disease. 
+5.4
+All suicide-related content must be reported and shared ethically and responsibly 
+based on available best practices and media guidelines, including the Guidelines for Media 
+Reporting on Suicide 2011 published by the Ministry of Health Malaysia. 
+6.0
+Offensive Content 
+6.1
+Offensive Content is material that includes expletives and profanity that is offensive to 
+many people. Offensive Content includes the following: 
+(i)
+Crude References 
+Words which are considered obscene, lacking refinement of taste, foul, offensive, 
+coarse or profane are prohibited including crude references to sexual intercourse and 
+sexual organs. It is, however, permissible to use such words in the context of their 
+ordinary meaning and not when intended as crude language. 
+(ii)
+Hate Speech 
+Hate speech refers to any portrayal (words, speech, or pictures, etc.), which denigrates, 
+defames, or otherwise devalues a person or group on the basis of race, ethnicity, 
+religion, nationality, gender, sexual orientation, or disability and is prohibited. In 
+particular: descriptions of any of these groups or their members involving the use of 
+strong language, crude language, explicit sexual references, or obscene gestures, are 
+considered hate speech. 
+(iii)
+Violence 
+Where the portrayal of violence is permitted with appropriate editorial discretion as in 
+news reporting, discussion or analysis and in the context of recognised sports events, 
+care shall be taken to consider the use of explicit or graphic language related to stories 
+of destruction, accidents or sexual violence, which could be disturbing for general 
+viewing. 
+7.0
+False Content 
+7.1
+Content, which contains false material or incomplete information and is likely to 
+mislead, must be avoided. Code Subjects shall observe measures outlined in specific parts of 
+this Code to limit the likelihood of perpetuating untruths that may cause public fear and / or 
+panic or is prejudicial to public order or national security. 
+Page 18 of 73
+7.2
+Reasonable measures to verify the truth of the content shall be taken prior to 
+communication. 
+7.3
+Content which is false is expressly prohibited, except in any of the following 
+circumstances: 
+(a) satire and parody; or 
+(b) where it is clear to an ordinary user that the Content is fiction. 
+8.0
+Children's Content 
+8.1
+Content designed specifically for Children reaches impressionable minds and 
+influences social attitudes and aptitudes. Code Subjects shall closely supervise and monitor the 
+selection, control of material, characteristics, and plot. Content targeted to a specific age group 
+of Children shall be appropriate to the respective age group. Specific attention shall be paid to 
+the aspects stated below. 
+i)
+Violence 
+a)
+Children's Content portrayed by real-life characters, shall only include violence 
+which is essential to the development of character and plot. 
+b)
+Animated Content for Children may contain non-realistic violence but shall not 
+depict violence as its central theme and shall not invite dangerous imitation. 
+c)
+Any depiction of violence in Children’s Content shall portray in human terms, 
+the consequences of such violence to its victims and its perpetrators. 
+ii)
+Safety, Security and Imitable Acts 
+a)
+Content for Children shall deal carefully with themes which can threaten their 
+sense of security, when portraying, for example, domestic conflict, the death 
+of parents or close relatives, or the death or injury of their pets, street crime or 
+the use of drugs. 
+b)
+Content for Children shall deal carefully with themes which could invite 
+Children to imitate acts which they see on screen, such as the use of plastic 
+bags as toys, use of matches, the use of dangerous household products as 
+play things, or dangerous physical acts such as climbing apartment balconies 
+or rooftops. 
+9.0
+Family Values 
+9.1
+The principles of intellectual and emotional equality of both sexes and the dignity of 
+all individuals are to be respected. Despite societal discrimination, Code Subjects shall be
+Page 19 of 73
+aware of the need to avoid and overcome biased portrayals. Women and men shall be 
+portrayed as equals in all respects. 
+9.2
+Content shall portray all persons as supporting participants in the family unit, home 
+management and household tasks. They shall be portrayed as equal beneficiaries of family or 
+single-person life, in both work and leisure activities and, as far as possible, under all types of 
+thematic circumstances. 
+9.3
+In the acquisition of or involvement in non-Malaysian Content, Code Subjects shall 
+make every effort to evaluate Content having regard to family values in relation to this Code. 
+10.0
+Persons with Disabilities 
+10.1
+Humour and ridicule based on physical, mental, or sensory disability may be offensive, 
+even where no malice is intended and subject to relevance to context. Any reference to 
+disability shall be expressed by neutral terms. Persons with Disabilities may have every 
+opportunity to be included in any programme. 
+10.2
+Code Subjects shall ensure that Persons with Disabilities has the right to equal access 
+to information. Code Subjects shall endeavour to make reasonable accommodations to deliver 
+any Content and information intended for the general public in accessible formats and 
+technologies appropriate for Persons with Disabilities. This shall include providing accessible 
+broadcast services in news programmes, for example, captions or signer “in screen” offering a 
+sign language version of the audio. 
+10.3
+Code Subjects shall endeavour to take reasonable efforts to improve the accessibility 
+of Content disseminated for Persons with Disabilities vis-à-vis the implementation of the 
+appropriate access service. 
+11.0
+Privacy 
+11.1
+Code Subjects shall respect the privacy of individuals with due regard to the 
+requirements under the Personal Data Protection Act 2010 . There shall be no intrusion into 
+an individual’s privacy except where required by law and/or necessary in the interest of the 
+public. Any references to the Personal Data Protection Act 2010 will include any subsequent 
+amendments made to the said Act. 
+Page 20 of 73
+PART 3: ADVERTISEMENT (MARKETING COMMUNICATIONS) 
+1.0
+Scope and Coverage 
+1.1
+This part of the Code applies to Advertisements communicated over a networked 
+medium and displayed on devices that can process Content electronically and includes 
+television, radio, and Digital Media. The Code shall not apply for Advertisements content that 
+do not utilise the networked medium. 
+1.2
+Notwithstanding the requirements of this Code, Advertisers shall also be guided by 
+relevant Acts, guidelines and/or regulations that may be enforced by other regulatory bodies 
+in Malaysia where it is relevant to Advertisements. 
+1.3
+Responsibility for observing this Part 3 primarily falls on the Advertisers and Online 
+Marketplace Operators. Others involved in producing and transmitting advertisements such as 
+Influencers, agencies, online publishers, broadcasters, and other advertising service suppliers 
+such as production houses, music composers and designers shall also accept an obligation to 
+abide by this part and the specific guidelines that apply to them. 
+2.0
+Objectives 
+2.1
+The main objective of this part is to ensure that continued high standards of 
+Advertisements are delivered through self-regulation in accordance with expectations of 
+Consumers and internationally recognised good practice governing Advertisements by the 
+Advertisers. 
+2.2
+The Malaysian advertising fraternity should recognise that creative freedom carries 
+with it the responsibility of ensuring that the rights of its Consumers are protected. 
+2.3
+This Part of the Code, is aimed at upholding the high standards expected of the 
+Advertisers in a practical and commercially feasible manner and at the same time foster, 
+promote and encourage its development. 
+3.0
+General Principles Governing Advertisements 
+3.1
+The following general principles shall guide Advertisers and Content providers who are 
+affected by and/or are subject to this Part of the Code dealing with Advertisements. 
+All Advertisements: 
+(a) shall conform with this part and to the general guidelines on Content. They shall 
+also conform to all specific legislation governing the advertised products and 
+services. 
+(b) shall be legal, decent, honest, and truthful. 
+Page 21 of 73
+(c) shall be produced with a sense of responsibility to Consumers and to society 
+generally, especially taking note of the different demographics being addressed by 
+the Advertisements. 
+(d) shall respect the principles of fair competition generally accepted in business, 
+however, the Code is not intended to suppress free and vigorous competition. 
+(e) shall not, directly, or indirectly, do anything to infringe the rights of Consumers. 
+(f) shall not mislead the Consumers or otherwise conduct themselves in a manner that 
+contravenes the provisions under Part 3 of the Code. 
+4.0
+Specific Guidelines 
+4.1
+Without prejudice and in addition to the general principles stated above and General 
+Principles under Part 1 of this Code, the following specific guidelines shall apply to 
+Advertisements. 
+4.2
+Legality 
+Advertisers and Advertising Content providers have primary responsibility to ensure that their 
+Advertisements comply with this Code and the various laws of Malaysia that have a direct 
+impact on the different products and services. 
+4.3
+Decency and Sensitivity 
+(a) Advertisements shall contain nothing that is likely to cause serious or widespread 
+offence. Particular care shall be taken to avoid causing offence on the grounds of, 
+but not limited to, race, religion, sex, sexual orientation and physical or mental 
+disability. 
+(b) Advertisements shall not contain statements, audio or visual presentations that are 
+offensive to the standards of decency prevailing among those who are likely to 
+be exposed to them. Subject to sensitivities relating to religion and ethnicity, the 
+fact that a particular product is offensive to some people is not sufficient grounds 
+for objecting to an Advertisement for it. 
+4.4
+Honesty and Truthfulness 
+(a) Advertising Content shall not be constructed in a manner that would abuse the 
+trust of the Consumer or exploit his lack of experience or knowledge. 
+(b) Advertising Content shall not cause the Consumer to be misled by any inaccuracy, 
+ambiguity, exaggeration, falsehood, omission or otherwise. 
+Page 22 of 73
+(c) More specifically, Advertisements shall not: 
+i.
+Misrepresent any matter likely to influence Consumers on, among others:- 
+a.
+source of the product, quality of the product, capability of the 
+product, obligation (or non-obligation) in using a trial product, and 
+others; 
+b.
+actual price of products and/or services without hidden costs; 
+c.
+conditions on the terms of payment such as hire-purchase, 
+leasing, instalment sales and credit sales; 
+d.
+after sales services including terms of guarantee, delivery, 
+exchange, return, repair and maintenance; 
+e.
+benefits for charitable causes. 
+ii.
+Omit “material information” and mislead by hiding material information 
+or presenting it in an unclear, unintelligible, ambiguous, or untimely 
+manner. “ Material information ” is information that Consumers need in 
+context to make informed decisions about whether or how to buy a 
+product or service. Whether the omission or presentation of material 
+information is likely to mislead Consumers depends on the context, the 
+medium and, if the medium of the Advertisement is constrained by time 
+or space, the measures that the Advertiser takes to make that 
+information available to Consumers by other means. 
+iii.
+Obvious Hyperbole, which is intended to attract attention or to amuse, 
+is permissible provided that it is not likely to be taken as a positive claim 
+to superior or superlative status. 
+4.5
+Fear and Distress 
+Advertisements shall not, without justifiable reason, play on fear. They may, however, issue an 
+appeal “to be fearful” to encourage prudent behaviour or to discourage dangerous or ill-
+advised actions, taking into consideration that the fear likely to be aroused shall not be 
+disproportionate to the risk intended to be avoided. 
+4.6
+Safety 
+(a)
+Advertisements shall not show or encourage unsafe practices except in the 
+context of promoting safety. Particular care shall be taken with 
+Advertisements addressed to or depicting Children. 
+Page 23 of 73
+(b)
+Advertisements shall not mislead about the nature or extent of the risk to 
+Consumers' personal security, or that of their families, if they do not purchase 
+or subscribe to the advertised product or service. 
+4.7
+Violence / Anti-social behaviour 
+Advertisements shall not condone or provoke violence, unlawful or anti-social behaviour nor 
+shall they appear to condone, glorify or lighten the gravity of such acts. 
+4.8
+Truthful Presentation 
+All descriptions, claims and comparisons which relate to matters of objectively ascertainable 
+fact should be capable of substantiation, and Advertisers are required to hold such 
+substantiation ready for scrutiny without delay if and when requested. 
+Claims 
+(a) Advertisements should not contain any statements or visual presentation which 
+directly or by implication, omission, ambiguity, or exaggerated claim, that is likely 
+to mislead the consumer about the product advertised, the advertiser, or about any 
+other product or advertiser, in particular with regard to: 
+i.
+Characteristics such as nature, composition, method and date of 
+manufacture, fitness for purpose, range of use, quantity, and 
+commercial or geographical origin. 
+ii.
+Copyright and industrial property rights such as patents, 
+trademarks, designs and models, and trade names. 
+iii.
+Official or other recognition of approval, awards or medals, prizes 
+or diplomas. 
+iv.
+Scientific, 
+statistical, 
+or 
+other 
+research 
+data 
+quoted 
+in 
+Advertisements shall be neither misleading nor irrelevant. 
+(b) It is seldom possible to substantiate general claims by an Advertiser that his 
+product is of superlative quality (best, finest) in a manner which is universally 
+acceptable. Such claims, however, are permissible under this Code, provided that 
+their inclusion in an Advertisement does not create a false impression concerning 
+any quality possessed by the product which is capable of assessment in the light 
+of generally accepted standards of judgment. 
+(c) Where a substantial division of informed opinion exists or may reasonably be 
+expected to exist, as to the acceptability of any evidence which is required 
+to 
+Page 24 of 73
+substantiate a claim in an Advertisement, it should neither state nor imply that the 
+claim is universally true or that it enjoys universal support, nor that it represents 
+anything other than the Advertiser’s opinion or of such other authorities as may be 
+named. 
+(d) Advertisements should not misuse research results or quotations from technical 
+and scientific literature. Statistics should not be presented so as to imply that they 
+have greater validity than is the case. Scientific terms should not be misused, and 
+scientific jargon and irrelevances should not be used to make claims appear to have 
+scientific basis they do not possess. 
+(e) Where Advertisement claims are expressly stated to be based on, or supported by, 
+independent research or assessment, the source and the date of this should be 
+indicated. Where this is not possible, for whatever reason, such claims to 
+independent support should not be made. Where a claim relating to research or 
+testing is based on the Advertiser’s own work or work done at his request, it should 
+be clear from the text of the Advertisement that such is the basis of the claim. 
+Comparisons 
+(a) Advertisements containing comparisons with other advertisers, or other products 
+are permissible in the interest of vigorous competition and public information, 
+provided they comply with the terms of the Code. 
+(b) The subject matter of a comparison should not be chosen in such a way as to confer 
+an artificial advantage upon the Advertiser or so as to suggest that a better bargain 
+is offered than is truly the case. 
+(c) Points of comparison shall be based on facts that can be substantiated and shall 
+not be unfairly selected. In particular: 
+i. The basis of comparative claims shall be the same for all the products 
+being compared and shall be clearly stated in the Advertisements so that 
+it can be seen that like is being compared with like. 
+ii. Where items are listed and compared with those competitors’ products, 
+the list shall be complete or else the Advertisement shall make clear that 
+the items are only a selection. 
+iii. Where a comparison is made between the respective cash values or prices 
+of products or services that are not identical, the Advertiser shall clearly 
+indicate that this is the case. 
+Page 25 of 73
+4.9
+Testimonials and Endorsements 
+(a) Advertisements shall not contain or refer to any testimonial or endorsement unless 
+it is genuine and related to the personal experience over a reasonable period of 
+time of the person giving it. 
+(b) Testimonials or endorsements that are obsolete or otherwise no longer applicable 
+shall not be used. For example, where there has been a significant change in the 
+product or service concerned. 
+(c) Testimonials per se should not contain any statement or implication contravening 
+the provisions of this Code and should not be used in a manner likely to mislead. 
+(d) Where a testimonial is given by a person with professional qualifications, care 
+should be taken that in indicating those qualifications the Advertiser does not 
+cause the person giving the testimonial to transgress any regulations of the 
+professional institution(s) to which the person belongs. 
+(e) Testimonials shall not make any claim to efficacy which cannot justifiably be 
+attributed to the use of the product and any specific or measurable results claimed 
+shall be fairly presented. Where ‘before’ and ‘after’ claims are made, they shall be 
+expressed and illustrated in such a way as to permit a fair comparison to be made. 
+(f)
+Advertisers shall ensure that Advertisements based upon fictitious characters are 
+not so framed as to give the impression that real people are involved. In particular, 
+they shall not contain ‘testimonials’ or ‘endorsements’ which may give such an 
+impression. Where an illustration of a person is used in conjunction with a 
+testimonial implying personal endorsement of the product, that person shall be the 
+person giving the testimonial. 
+(g) Where any testimonial contains an expression which conflicts with this Code, the 
+Advertiser may amend the testimonial so as to remove the source of conflict, 
+provided that, in so doing, he does not distort the sense of original views expressed 
+by the person giving the testimonial. 
+(h) Testimonials from persons resident outside Malaysia are not acceptable unless an 
+indication of their address and country of residence is given in the Advertisement. 
+(i)
+Advertisers and their agencies should hold ready copies of any testimonials used 
+in advertising for inspection, when required. Such copies should be signed and 
+dated by the persons providing the testimonials, and should confirm what is said 
+in any Advertisement. When an Advertisement containing a testimonial is 
+Page 26 of 73
+submitted for the first time, a copy of the testimonial statement should accompany 
+the Advertisement, for the recipient’s retention. 
+4.10
+Prices 
+(a) Any stated price shall be clear and shall relate to the product advertised. Advertisers 
+shall ensure that prices match the products illustrated. 
+(b) If the price of one product is dependent on the purchase of another, the Consumers 
+shall be clearly informed. 
+(c) Price claims such as ‘up to’ and ‘from’ shall not exaggerate the availability of 
+benefits likely to be obtained by Consumers. 
+(d) Prices shall be shown as all-in or final prices so as not to leave the Consumer 
+guessing as to the final price payable for the product or service (for example, the 
+price of a flight shall include all compulsory charges (such as sales and service tax, 
+airport tax, airport fee, destination airport taxes etc.). Customers shall have a right 
+to select optional items at their discretion (for example, travel insurance). 
+(e) If a product is illustrated, and a price quoted in conjunction with the illustration, 
+Advertisers shall ensure that what is illustrated can be purchased for the price 
+shown. 
+(f)
+If the price quoted does not include the product or service in its entirety, this fact 
+and the additional price for the full product or service shall be clearly stated. 
+(g) If a product cannot be purchased without purchasing other product(s) from the 
+Advertiser or promoter, this fact shall be stated with no less prominence than the 
+product itself. 
+(h) When a product is being advertised, or promoted as to be sold at a discount (or 
+similar description such as a bargain), it shall be an actual discount i.e. price is lower 
+than normal for a specific time period and shall comply with any relevant guidelines 
+issued by the Ministry of Domestic Trade and Consumer Affairs. 
+(i)
+All quoted prices in Advertisements shall include non-optional taxes, duties, fees 
+and charges that apply to all or most buyers including taxes in accordance with 
+published laws. If a tax, duty, fee or charge cannot be calculated in advance, for 
+example, because it depends on the Consumer's circumstances, the Advertisement 
+shall make clear that it is excluded from the advertised price and state how it is 
+calculated. 
+Page 27 of 73
+(j)
+Advertisements that quote instalment costs shall state the total price of the 
+advertised product or service and the instalment frequency as clearly as the cost 
+of individual instalments. 
+(k) Advertisers shall clearly direct Consumers to a specific reference for the full terms 
+and conditions of the sale. 
+4.11
+Free Offers 
+(a) In making a free offer conditional on the purchase of other items, Consumers’ 
+liability for any costs shall be made clear in all material featuring the offer. 
+(b) An offer shall be described as free only if Consumers pay no more than the: 
+i.
+Current public rates of postage. 
+ii.
+Actual cost of freight or delivery. 
+iii.
+Costs, including incidental expenses, or any travel involved if 
+Consumers collect the offer. 
+iv.
+Other ancillary fees which shall be clearly communicated. 
+(c) Exaggerating the availability of the number of free products or services as part of 
+the free offer to induce Consumers to purchase ancillary items shall not be 
+permitted (for example, airlines offering ‘one million tickets’ free where there is 
+no mechanism for the Consumer to know actual availability of free seats at the 
+time a purchase is done, or when the product no longer is “free”). 
+4.12
+Availability of Products 
+(a) Advertisements shall not be electronically disseminated unless the Advertiser has 
+reasonable grounds for believing that the Advertiser can supply the demand likely 
+to be created by his advertising. 
+(b) In particular, no attempt shall be made to use the advertising of unavailable or non-
+existent products as a means of assessing likely public demand, should such a 
+product be offered in the future. 
+(c) Where it becomes clear that an advertised product is not available, (in 
+circumstances where the public are not likely to assume from advertising its ready 
+availability) immediate action shall be taken to ensure that further Advertisements 
+for the products are promptly amended or withdrawn. 
+Page 28 of 73
+(d) Advertisers shall not use the technique of switch selling. They shall not market a 
+product at specific prices, which their sales staff refuse to show the advertised 
+product, refuse to take orders for it or refuse to deliver the advertised product 
+within a reasonable time or demonstrate a defective sample of it to promote a 
+different product. 
+(e) Advertisements shall not falsely claim that the Advertiser is about to stop trading 
+or move premises. They shall not falsely state that a product or service, or the terms 
+on which it is offered, shall be available only for a very limited time to deprive 
+Consumers of the time or opportunity to make an informed choice. 
+(f)
+Advertisements shall not mislead Consumers about market conditions or the 
+possibility of finding the product or service elsewhere to induce Consumers to buy 
+the product or service at conditions less favourable than normal market conditions. 
+4.13
+Guarantees 
+(a) The word ‘guarantee’ shall not be used in any way that could diminish Consumers’ 
+legal rights. Substantial limitations shall be spelt out in the Advertisement. 
+(b) The full terms of the guarantee as well as the remedial action open to the Consumer 
+shall be clearly stated in the Advertisement or shall be made available for review 
+by the Consumer before committing to purchase. Any substantial limitations shall 
+also be stated in the Advertisement. 
+(c) The period of any guarantee shall be clearly stated in the Advertisement. 
+(d) The word ‘guarantee’ shall refer to the mandatory requirement that goods and 
+services supplied must be guaranteed in respect of consumer satisfaction and 
+quality. 
+4.14
+Denigration 
+Advertising Content shall not attack, discredit, or denigrate any person, product or service, 
+Advertiser or Advertisement or a trademark, trade name or other distinguishing mark, or seek 
+to bring them into public contempt or ridicule. 
+4.15
+Imitation 
+Advertisements shall not be similar in general layout, copy, slogans, visual presentation, music 
+or sound effects to other Advertisements or promotions as to be likely to mislead or confuse 
+the Consumer pursuant to the Copyright Act 1987 . 
+Page 29 of 73
+4.16
+Unacceptable Products and Services 
+Advertisements for products or services that are prohibited under any laws or regulations 
+currently existing in Malaysia are unacceptable. This shall include but is not limited to the items in 
+Appendix II. 
+(a) Advertisements shall not contain anything that is illegal or might incite anyone to 
+break the law nor should they appear to condone or lighten the gravity of illegal 
+activities. 
+(b) Advertisements shall not contain anything that contravenes the ethical code of 
+recognized professional bodies in Malaysia. 
+(c) Advertisements shall consider the suitability of its products and services, Content, 
+context, and audience especially with regards to the protection of Young Children. 
+5.0
+Indirect Advertising and Product Placements 
+5.1
+An Advertisement for an acceptable product or service shall be unacceptable in the 
+event a significant effect would be to publicise indirectly an unacceptable product or service. 
+5.2
+" Product Placements " are allowed but products and services that are specifically 
+banned are not allowed except where it is incidentally shown. 
+6.0
+Identifying Advertisers and Recognising Advertisements 
+6.1
+Advertisers, online publishers, broadcasters, and owners of other electronic media shall 
+ensure that Advertisements including lead-in ads are designed and presented in such a way 
+that it is clear that they are Advertisements. The use of Virtual Influencers in Advertisements 
+must be disclosed to consumers to ensure that they are not misled into believing that they are 
+interacting with a real human being. 
+6.2
+Advertisements or Marketing Communications by way of features, announcements or 
+promotions that are disseminated in exchange for a payment or other reciprocal arrangement 
+should comply with this Code if their Content is controlled by the Advertisers. Such 
+Advertisements or Marketing Communications should also be clearly identified as such so as 
+not to mislead Consumers. 
+6.3
+Advertisements or Marketing Communications include the involvement of third 
+parties under a commercial arrangement to do product or service reviews, endorse or provide 
+testimonials about Advertisers’ products or services. Such Advertisements or Marketing 
+Communications, which may include those on their social media platforms, shall be clearly 
+disclosed as being done in exchange for payment in cash or some other reciprocal 
+Page 30 of 73
+arrangement in lieu of cash. In particular, such Advertisements or Marketing Communications 
+should adhere to the following:- 
+(a) Disclosures should be placed with the endorsement content itself and use an 
+upfront label that must first be noticed and then understood, for example 
+‘Advertisement’, ‘Advertisement Feature’, ‘Ad’, ‘Sponsored’ and the like; 
+(b) Avoid using vague or confusing terms like “sp,” “spon,” or “collab,” or stand-alone 
+terms like “thanks” or “ambassador,” as well as other abbreviations and shorthand, 
+which may confuse the public or consumers; 
+(c) Disclosures should be in the same language as the endorsement itself; 
+(d) If an endorsement is made in a video, the disclosure should be in the video itself 
+and not just in the description uploaded with the video; 
+(e) If an endorsement is in a live stream, the disclosure should be repeated periodically 
+so viewers who only see part of the stream will get the disclosure. 
+6.4
+Where paid-for space, material or programming is in the style of the normal editorial, 
+material or programming, whether paid for by the same or different advertisers, particular care is 
+needed to ensure that no part can be mistaken for the normal editorial, material or 
+programming matter. Any paid-for space used during news programmes shall be required to 
+include disclaimers or notifications, whether in the form of a pop-up or push notifications and 
+crawlers or other clear ways to indicate that the segment is paid. 
+7.0
+Children and Advertising 
+7.1
+Special care and attention is to be administered to Children featured in Advertisements 
+as well as advertisements targeted at Children. Advertisements addressed to or targeting 
+Children shall not exploit their credulity, loyalty, vulnerability or lack of experience. It shall be 
+made easy for Children to exercise appropriate judgement towards the size, characteristics and 
+performance of advertised products and to distinguish between real-life situations and fantasy 
+provided it is not likely to mislead or to be taken as a positive claim to superior or superlative 
+status. 
+7.2
+Children are not a homogeneous group but have varying levels of maturity and 
+understanding. Care needs to be taken that the product advertised, and style of Advertisement 
+are appropriate for the audience to whom it is primarily directed. Advertisers are required to 
+comply with the following principles: 
+(a) The use of Children is not encouraged unless the products advertised are relevant 
+to them or except in the context of promoting safety for the Children. 
+Page 31 of 73
+(b) Advertisements addressed to Children or likely to be seen by them, shall not 
+contain anything whether an illustration or otherwise, which result in harming them 
+physically, mentally, or morally: 
+i) Children shall not be encouraged to enter strange places or talk to strangers. 
+ii) Children shall not be shown in hazardous situations or behaving 
+dangerously except to promote safety. Children shall not be shown 
+unattended in street scenes unless they are old enough to take responsibility 
+for their own safety. 
+iii) Children shall not be shown using or being in close proximity to 
+dangerous substances or equipment without direct adult supervision. 
+(c) Children shall not be encouraged to copy practices that might be unsafe for a child. 
+(d) Advertisements shall not include a direct exhortation to Children to buy or hire a 
+product or service or to persuade their parents, guardians, or other persons to buy 
+or hire a product or service for them. 
+(e) If it includes a price, an Advertisement for a Children's product or service shall not 
+use qualifiers such as "only" or "just" to make the price seem less expensive. 
+(f)
+For products sold which contain special gifts or toys, the presence of such gifts 
+or toys associated with such products shall not overshadow the products sold as 
+to not be deceptive on the product being sold. 
+(g) Advertisements pertaining to activities of a society or club for Children shall be that 
+of a club or society that is properly supervised, and its activities are structured for 
+Children. 
+(h) In any situation where Children are projected, careful consideration shall be given 
+for their safety. They shall not be shown in hazardous situations or behaving 
+dangerously in the home or outside except to promote safety. 
+(i)
+Advertisements targeted at Children shall not promote a lifestyle that is 
+promiscuous or that denigrates or is detrimental to family values. 
+(j)
+ Advertisements shall not condone or encourage practices that are detrimental 
+to Children's health. 
+(k)
+Advertisements shall not condone or encourage bullying. 
+(l)
+Advertisements shall not portray or represent Children in a sexual way either 
+directly or indirectly. 
+(m) Advertisements shall not imply that Children are likely to be ridiculed, inferior to 
+others, less popular, disloyal or have let someone down if they or their family do 
+not use a product or service. 
+Page 32 of 73
+(n) Child actors may feature in Advertisements, but care shall be taken to ensure that 
+those Advertisements neither mislead nor exploit Children's inexperience, 
+credulity or sense of loyalty. 
+(o) Advertisements shall not exaggerate what is attainable by an ordinary child using 
+the product being advertised. 
+(p) Advertisements shall not exploit Children's susceptibility to charitable appeals 
+and shall explain the extent to which their participation will help in any charity-
+linked promotions. 
+(q) Advertisements shall not actively encourage Children to make a nuisance of 
+themselves to parents or others and shall not undermine parental authority. 
+(r)
+ Advertisements shall not include a direct exhortation to Children to buy an 
+advertised product or persuade their parents or other adults to buy an advertised 
+product for them. 
+(s) Advertisements that contain a direct exhortation to buy a product via a direct-
+response mechanism shall not be directly targeted at Children. Direct-response 
+mechanisms are those that allow consumers to place orders without face-to-face 
+contact with the Advertiser. 
+(t)
+ Advertisements shall make clear that adult permission is required if a prize or an 
+incentive might cause conflict between a Child's desire and a parent's, or other 
+adult's, authority. 
+(u)
+Advertisements shall contain a prominent closing date if applicable. 
+(v) Advertisements shall not exaggerate the value of a prize or the chances of winning 
+it. 
+(w) Marketing promotions that require a purchase to participate and include a direct 
+exhortation to make a purchase shall not be addressed to Children. 
+(x) Any marketing promotions which lead to a use of an additional product, service 
+application (whether via digital or not) that may require additional payment shall 
+be stated upfront during the promotion. 
+(y) Adult permission shall be obtained before Children are committed to buying 
+complex or costly products (such as electronic based items, branded products etc.). 
+Page 33 of 73
+8.0
+Other Specific Advertisements 
+8.1
+Advertisements on Medical Products, Treatments & Facilities 
+(a)
+Advertisements on medicines, remedies, appliances, skill and services relating 
+to diagnosis, prevention and treatment of diseases or conditions affecting the 
+human body including but not limited to slimming products and services, are 
+under the authority of the Medicine Advertisements Board (L.I.U), Ministry of 
+Health Malaysia. All Advertisements shall comply with the requirements under 
+the Medicines (Advertisement & Sale) Act 1956 , Medicine Advertisements 
+Board Regulations 1976, Medical Device (Advertising) Regulations 2019 
+and any other relevant legislation, rules, guidelines and regulations governing 
+the advertisement of medical products, treatments and facilities, including any 
+amendments made to the same. 
+(b)
+ Advertisements relating to medical matters and sale of substances 
+recommended as a medicine are prohibited without the approval of the L.I.U, 
+Ministry of Health Malaysia. 
+8.2
+Pesticide Advertisements 
+Advertisements on pesticides are under the authority of the Pesticide Board and Ministry of 
+Agriculture and Food Industries. All Advertisements shall comply with the requirements under 
+the Pesticides Act 1974 , Pesticides (Advertisement) Regulations 1996 , and any other 
+relevant legislation, rules, guidelines and regulations governing the advertisement of 
+pesticides, including any amendments made to the same. 
+8.3
+Food and Beverage 
+Advertisements relating to food and beverage products that claim therapeutic or having 
+prophylactic qualities shall be subject to prior screening. All Advertisements shall comply with 
+the requirement in the Food Act 1983. Food Regulations 1985 , Food Advertisement 
+Regulations 2014 and any other relevant legislation, rules, guidelines, and regulations 
+governing the advertisement of food and beverages, including any amendments made to the 
+same. 
+8.4
+Direct Sales & Prohibition of Pyramid Schemes 
+All Advertisements relating to Direct Sales and Pyramid Schemes shall comply with the Direct 
+Sales and Anti-Pyramid Scheme Act 1993 which governs direct sales and the prohibition of 
+pyramid schemes and any other relevant legislation, rules, guidelines, and regulations 
+governing the advertisement of Direct Sales and Pyramid Schemes, including any amendments 
+made to the same. 
+Page 34 of 73
+8.5
+Intoxicating Liquor 
+For the purposes of this part, ‘intoxicating liquor’ is defined under subsection 2(1) of the 
+Customs Act 1967 . This paragraph shall apply to Advertisements of intoxicating liquor 
+communicated over electronic medium based in Malaysia. However, Advertisements of 
+intoxicating liquor are not allowed to be communicated over television, radio and out-of-home 
+advertising. Any references to the Customs Act 1967 will include any subsequent amendments 
+made to the said Act. 
+Advertisements of intoxicating liquor shall comply with the requirements under the Food Act 
+1983, Food Regulations 1985 and any other relevant legislation rules, guidelines and 
+regulations governing the advertisement of intoxicating liquor, including any amendments 
+made to the same. Advertisements of intoxicating liquor shall abide by the following :- 
+(a)
+Advertisements of intoxicating liquor shall not: 
+(i)
+feature any person below 21 years of age; 
+(ii)
+promote excessive consumption; 
+(iii)
+emphasize the stimulant, sedative, or tranquillizing effects of any 
+intoxicating liquor; 
+(iv)
+be presented as preferable because of their high alcohol content or 
+intoxicating effect. However, such Advertisement may include 
+factual information about the alcoholic strength of the intoxicating 
+liquor but this shall not be the dominant theme of the 
+Advertisement; 
+(v)
+give the general impression that a drink is being recommended 
+mainly for its intoxicating effect; 
+(vi)
+challenge or dare people to consume intoxicating liquor; 
+(vii)
+be based on a dare or impute any failing to those who do not 
+accept the challenge of a particular drink; 
+(viii)
+encourage irresponsible or excessive or rapid consumption of 
+intoxicating liquor; 
+(ix)
+portray consumption of intoxicating liquor as the main reason for 
+the success of any personal relationship or social event; 
+(x)
+portray consumption of intoxicating liquor is necessary for social 
+success or acceptance; 
+(xi)
+suggest that consumption of intoxicating liquor can overcome 
+boredom, loneliness or other problems; 
+Page 35 of 73
+(xii)
+suggest that intoxicating liquor has therapeutic qualities or can 
+enhance mental, physical or sexual capabilities, popularity, 
+attractiveness, masculinity, femininity or sporting achievements; 
+(xiii)
+exploit those who are especially vulnerable because of age, 
+inexperience or any physical, mental or social incapacity; 
+(xiv)
+promote driving while intoxicated; and 
+(xv)
+depict activities or locations where consumption of intoxicating 
+liquor would be unsafe or unwise. In particular, such Advertisements 
+shall not associate the consumption of intoxicating liquor with 
+operating machinery, driving, any activity relating to water or 
+heights, or any other occupation that requires concentration in 
+order to be done safely. 
+(b)
+Advertisements of intoxicating liquor shall: 
+(i)
+include a clearly visible disclaimer stating that the Advertisement 
+is intended “strictly for non-Muslims aged 21 and above only”; 
+(ii)
+include clearly visible responsible drinking messages; and 
+(iii)
+only feature people who are non-Muslims aged 25 and above 
+and reasonably appear to be and are being portrayed as over 25 
+years of age. 
+(c)
+Reasonable efforts shall be made to ensure Advertisements of intoxicating 
+liquor are not targeted at Muslims and any person below 21 years of age. 
+This paragraph, in addition to the advertising service industry self-regulation system, serves as 
+a guide towards upholding the standards expected of the advertising service industry in a 
+practical and commercially feasible manner and at the same time keep updated with the trends 
+while respecting, protecting, and promoting those interests of minority and/or marginalised 
+groups. Whilst this paragraph is relating to Advertisement of intoxicating liquor, there is no 
+issue with corporate advertising and/or commercials relating to other products/services by 
+intoxicating liquor companies. 
+8.6
+Cosmetic Products 
+All Advertisements relating to cosmetic products shall comply with the Guidelines for Control 
+of Cosmetic Products in Malaysia and Guideline for Cosmetic Advertisement as published 
+by the National Pharmaceutical Regulatory Agency (NPRA), Ministry of Health Malaysia and 
+any other relevant legislation, rules, guidelines and regulations governing the advertisement 
+of cosmetic products, including any amendments made to the same. 
+Page 36 of 73
+8.7
+Abuse of Religion 
+As a general rule, the use of religion in any form of Advertisements shall be prohibited. This is 
+to preserve the sanctity and sensitivities of religion which shall not be exploited for commercial 
+gain or have a tendency to create fear or disharmony among Consumers. By way of example, 
+this will include: 
+(a)
+use of religious authorities, religious departments, clerics or preachers to 
+convey an impression that a certain product is sanctioned by a religious 
+authority; 
+(b)
+use of religious personalities to provide religious testimonials promoting or 
+endorsing products or services; 
+(c)
+use of holy books and/or any religious sources from any religion to associate 
+them to products or services; 
+(d)
+making claims or giving false interpretations of the teachings of any religion that 
+may mislead, create fear or give false promises to Consumers; and 
+(e)
+use of religious descriptions to promote products or services except where the 
+products or services are directly related to religion or where the use of religious 
+descriptions is in compliance with the relevant legislation. 
+9.0
+Financial Products and Services 
+9.1
+All Advertisers who are advertising or promoting financial products and services shall 
+comply with the Financial Services Act 2013, Islamic Financial Services Act 2013, Money 
+Services Business Act 2011 and all other legislation, rules, guidelines and regulations 
+governing the advertisement or promotion of financial products and services, including any 
+amendments made to the same. 
+9.2
+Advertisers who are marketing and dealing in Securities shall comply with the Capital 
+Markets and Services Act 2012 , Division 3 (Advertising Guidelines) of the Prospectus 
+Guidelines. 
+10.0
+Advertisement by a Licensed Gambling or Betting Company 
+10.1
+For the purpose of compliance, companies which are in the business of gambling and 
+betting, shall adhere to the Common Gaming Houses Act 1953, Betting Act 1953 , and other 
+relevant legislation, rules, guidelines, and regulations governing the advertisement of gambling 
+and betting including any amendments made to the same. 
+10.2
+Corporate Social Responsibility (CSR) and Public Service Announcements (PSA) 
+(a)
+Within the gambling and betting industry, there exists messages with the 
+elements of CSR and public interest messages in the form of PSA. These 
+messages are allowed to reach out to Consumers and society at large provided 
+Page 37 of 73
+that such messages contain either specific information for the benefit of 
+communities or well wishes in relation to festivities or holidays. 
+(b)
+Companies that are in the business of gambling and betting are not excluded 
+from its ability to provide messages with the elements of CSR and to produce 
+PSA. 
+However, such companies are to observe the following guidelines: 
+(i)
+Companies that are in the business of gambling and betting are 
+permitted (with restrictions) to produce CSR and/or PSA 
+messages over the Network or via Digital Media provided always 
+that the messages are brought by an associated charitable or its 
+equivalent entity (hereinafter referred to as “charitable arm”) 
+which is clearly different from its parent company. 
+(ii)
+The charitable arm entity shall have its own identity which does 
+not in any way allude to promote and/or portray any relation to 
+the business of gambling and betting other than what it was set 
+up for. The entity shall be clearly identifiable to only promote its 
+charitable activities. 
+(iii)
+The Content produced by the charitable arm shall be clearly done 
+for the sole purpose of providing CSR and/or PSA type messages 
+and therefore any related elements which may lead the messages 
+to the business of its parent company (including but not limited 
+to name, taglines, sound jingles, logos, font, colour and other 
+relatable indicators) on its gambling and betting activities are 
+strictly prohibited. 
+(iv)
+Due care is to be taken for any specific festive greetings via CSR 
+and/or PSA messages whereby the level of appropriateness shall 
+be considered for messages towards communities of different 
+cultures, races and religions among Malaysians. A high level of 
+sensitivity shall be accorded in such cases to avoid 
+misunderstandings and noncompliance to the Code as a whole. 
+(v)
+The charitable arm is also expected to form its own identity in 
+communicating to the public and any related content derived 
+from its parent company shall be neutralized in order to avoid 
+any form of misleading messages and/or identity of the purveyor 
+of such messages. 
+Page 38 of 73
+10.3
+Sponsorship 
+Should a company in the business of gambling and betting were to become a title sponsor of 
+an event held in Malaysia, it is only allowed to promote the event and not directly advertise 
+any elements of its products and/or services related to gambling and betting. In addition to 
+this, said companies shall only use the events’ logo and/or charitable arm logo (which is clearly 
+different from its parent company) in any promotional material. 
+10.4
+Examples/Illustrations on Advertisement Cases Related to Gambling Products and 
+Services 
+(a) CSR and/or PSA 
+i.
+A PSA and/or CSR which is allowed to be broadcasted by a gambling/betting 
+company by using its charitable arm entity. 
+Example: “Kids learn a lot from their parents including domestic violence. Domestic 
+violence is child abuse. You can make a difference. This community message is brought 
+to you by ZZZ Foundation. Together we care”. 
+*ZZZ Foundation is the gambling/betting company’s charitable arm. 
+ii.
+A PSA and/or CSR online content which is allowed to appear by a gambling/betting 
+company by using its charitable arm entity’s logo. 
+Example: 1 in 10 persons are exposed to cybercrime. Stop being a victim. Think before 
+you click. This message is brought to you by 
+*the logo used is the logo of a gambling/betting company’s charitable arm and NOT 
+of the product”. 
+iii.
+A PSA and/or CSR broadcasted which is forbidden by a gambling / betting 
+company by using its own name. 
+Example: “Help stop cyber bullying. You can save a life. This reminder is from XZX.” 
+*XZX is a gambling/betting company. 
+Page 39 of 73
+iv.
+A PSA and/or CSR broadcasted for specific festive greetings which is forbidden by a 
+gambling/betting company where due care should be accorded. 
+Example: “Wishing Happy Eid Mubarak to all Muslims around the world. This message 
+is brought to you by ZZZ Foundation”. 
+*ZZZ Foundation is gambling / betting company’s charitable arm. 
+v.
+A PSA broadcasted on air or online content which is forbidden by gambling/betting 
+company by using its charitable arm name, gambling/betting company official’s jingle 
+and gambling/betting company official’s taglines. 
+Example: 
+Message: All that I am, or hope to be, I owe to my angel mother. (Intro 
+with 
+gambling/betting company official’s jingle) 
+Tagline: Go for It 
+Charitable arm name: ZZZ Foundation 
+*ZZZ Foundation is a gambling/betting charitable arm, however since the PSA’s 
+message uses the corporate tagline and jingle, it is not allowed. 
+(b) Sponsorship 
+i.
+A sponsorship broadcasted on air which is allowed by a gambling/betting company 
+by using its charitable arm entity. 
+Example: “Everyone is invited to a charity international concert which will be held in 
+[location] in support of the National Kidney Foundation, brought to you by ZZZ 
+Foundation”. 
+*ZZZ Foundation is gambling/betting company’s charitable arm. 
+ii.
+A sponsorship online content which is allowed by a gambling/betting company by 
+using its charitable arm entity’s logo. 
+Example: This Happy Laughter Contest is brought to you by 
+Page 40 of 73
+*the logo used is the logo of a gambling/betting company’s charitable arm and NOT 
+of the product”. 
+iii.
+A sponsorship broadcasted on air which is forbidden by a gambling/betting company 
+by using its own name. 
+Example: “The winner of this lip sync contest will receive RM3000 cash brought to you 
+XZX”. 
+*XZX is a gambling/betting company. 
+iv.
+A sponsorship broadcasted on air or online content which is forbidden by a gambling/ 
+betting company by using its own name, in which the content is related to its parent 
+company’s products and/or services. 
+Example: “This ‘Numbers Contest’ is brought to you by XZX”. ‘Click the Number’ 
+Contest is sponsored by XZX. 
+*XZX is a gambling/betting company. 
+v.
+A sponsorship broadcasted on air or online content which is forbidden by a 
+gambling/betting company by using its own name, jingle, and their taglines, in which 
+its content is related to its parent company’s products and/or services. 
+Example: 
+Message: Be happy, change your life and be 
+richer Tagline: Go For It 
+Company name: this message was brought to you by XZX Company. 
+*XZX is a gambling company and the message includes the company’s name, jingle and 
+tagline. 
+Page 41 of 73
+PART 4: SPECIFIC BROADCASTING 
+1.0
+Scope and Coverage 
+1.1
+This part serves as a guideline for content that is transmitted via: 
+(i)
+Subscription broadcasting; and 
+(ii)
+Terrestrial Free-to-Air TV and Radio. 
+Otherwise collectively known as "Broadcasters”. 
+2.0
+Objectives 
+2.1
+The objective of these specific broadcast guidelines is to ensure continued reliable 
+standards of Content disseminated by Broadcasters in accordance with expectations of 
+audiences and internationally recognised good practice of electronic media and journalism. 
+2.2
+This Code is a manifestation of a paradigm change brought about by technological 
+advancements in the broadcasting industry. It is acknowledged that compliance with the 
+Content Code is what sets the standards for Content and not the other way around whereby 
+Content takes precedence over standards. 
+2.3
+Malaysian Broadcasters recognise that creative freedom carries with it the 
+responsibility of ensuring that not only are the rights of Children protected, but also that of 
+viewers and listeners in general. This necessitates the upholding of ethical and professional 
+practices in the conduct of their business operations toward fulfilling social responsibility. 
+3.0 Specific Broadcasting 
+3.1
+In amplification to the general principles and the general guidelines laid out in Part 1 
+and Part 2 of this Code encompasses the following considerations with regards to the 
+dissemination of Content: - 
+(i)
+broadcasting channel; 
+(ii)
+the likely audience; and 
+(iii)
+in certain instances (as in free visual and audio broadcast). 
+Classification 
+3.2
+Viewers need adequate information about content to make informed viewing choices 
+based on their personal tastes and standards. As such, Broadcasters (excluding radio operators) 
+will provide an indication as to the type of Content shown by adopting the following 
+classifications as issued by the Film Censorship Board (LPF) and any amendments thereof from 
+time to time. The Broadcasters shall display the relevant classifications at regular intervals of the 
+programme: 
+Page 42 of 73
+U 
+This category is for viewers of all ages. 
+P12 
+This category is for viewers of all ages and parental guidance is required for viewers who is 
+under the age of twelve years. 
+13 
+This category is for viewers aged thirteen years or above. 
+16 
+This category is for viewers aged sixteen years or above. 
+18 
+This category is for viewers aged eighteen years or above.
+Scheduling 
+3.3
+Content which contains scenes of excessive violence, or adult material intended for 
+adult audiences shall not be transmitted before 10.00 p.m. Where applicable, Broadcasters are 
+required to endeavour to have their own Unit tasked with the responsibility of the 
+classifications and scheduling of Content. 
+The scheduling of programmes that have been classified is applicable to free-to-air 
+Broadcasters (excluding radio operators) as follows: 
+U, P12, 13 and 16 - Can be shown at any time of day 
+18 - Can only be shown after 10 p.m. 
+Exception to this scheduling principle is applied to subscription-based Broadcasters that 
+provide information on programme classifications prior to the broadcast of a particular 
+programme and employs technological safeguards including but not limited to parental locks 
+and electronic programme guides. 
+Content Offerings 
+3.4
+Broadcasters shall endeavour to provide Content that, as far as possible, caters to the 
+various tastes and expectations of Malaysian viewers and listeners. This is in view of the varied 
+tastes of the Malaysian public. 
+Page 43 of 73
+Non-Discrimination 
+3.5
+Broadcasters shall ensure, to the best of their ability, that their Content contains no 
+abusive or discriminatory material or comment on matters of, but not limited to, race, religion, 
+culture, ethnicity, national origin, gender, age, marital status, socio economic status, political 
+persuasion, educational background, geographic location, sexual orientation or physical or 
+mental ability. 
+News and Current Affairs 
+3.6
+Broadcasters recognise that the fundamental purpose of news dissemination and 
+current affairs Content in a democracy is to enable people to know what is happening, and to 
+understand affairs that may affect them as members of the community so that they may form 
+their own conclusions. 
+3.7
+"Current Affairs Content" means Content focusing on social, economic or political 
+issues of current relevance to the Malaysian community. 
+3.8
+Broadcasters shall ensure that Content of news programmes and Current Affairs 
+Content programmes are presented: 
+a)
+Accurately, fairly and objectively at all times and not manipulated resulting in 
+a distortion of its original context with due regard being given to the 
+circumstances at the time of preparing and the broadcast of the Content (e.g. 
+live coverage). 
+b)
+With due care, taking into consideration the likely composition of the 
+Consumers at the time of broadcast. 
+c)
+With sensitivity in the case of material likely to cause some distress to a 
+substantial number of viewers such as images or interviews with victims of 
+traumatic incidents. Such material shall only be used when deemed 
+editorially essential, and if so, sparingly. 
+d)
+With due respect to the cultural differences in Malaysian community. 
+Page 44 of 73
+e)
+With due respect to the rights of any individual group of persons who should 
+not be portrayed in a negative light by placing gratuitous emphasis on 
+matters pertaining, but not limited to, race, religion, culture, ethnicity, 
+national origin, gender, age, marital status, socio economic status, political 
+persuasion, educational background, geographic location, sexual orientation 
+or physical or mental disability. Where in the opinion of a broadcaster it is in 
+the public interest, it may report events and broadcast comments in which 
+such matters are raised. 
+f)
+With due respect to privacy of an individual. However, in the public interest, 
+an intrusion into an individual's privacy may be justified such as in detecting 
+or exposing crime or a serious misdemeanour, protecting public health or 
+safety and preventing the public from being misled by some statement or 
+action of an individual or organisation. 
+3.9
+Reasonable efforts shall be made to correct significant errors of fact at the earliest 
+opportunity. 
+3.10
+Where paid-for space, material or programming is in the style of the normal editorial, 
+material or programming, whether paid for by the same or different advertisers, particular care is 
+needed to ensure that no part can be mistaken for the normal editorial, material or 
+programming matter, as per Part 3, para 6.0 of this Code. 
+Violence and Offensive Language 
+3.11
+In strictly adhering to the general guidelines on violence and offensive language set 
+out in Part 2 of this Code, all Broadcasters will: 
+a)
+Exercise appropriate editorial judgment in the reporting of audio and visual 
+representation of violence, aggression, or destruction within their Content. 
+b)
+Exercise caution and appropriate discretion in the selection of, and repetition 
+of, Content, which depicts violence. 
+c)
+Exercise appropriate discretion in the use of explicit or graphic language 
+related to stories of destruction, accidents or sexual violence, which could be 
+disturbing for family viewing. 
+d)
+Caution viewers in advance of scenes of extraordinary violence, or graphic 
+reporting on delicate subject matters. 
+Page 45 of 73
+Religious Content 
+3.12
+In dealing with religious Content, Broadcasters shall have regards to Islam as the 
+official religion of the country and the constitutional rights to freedom of religion of all other 
+communities. 
+3.13
+Religious broadcasts are aimed at respecting and promoting spiritual harmony and to 
+cater to the varied religious needs of the community. Broadcasters shall ensure that its religious 
+Content is not used to convey attacks upon any race or religion or is likely to create any 
+disharmony. 
+3.14
+All religious Content shall be in congruence with the relevant national religious 
+authorities and/or accredited scholars prior to transmission. 
+3.15
+Content that includes the propagation of any religion other than Islam whether directly 
+or indirectly is not permitted. 
+3.16
+Content that is wrongful, fanatical, critical, and insulting against any religion shall not 
+be permitted. 
+3.17
+Broadcasters shall ensure that any Islamic religious preachers or speakers being 
+featured in religious Content on Islam shall have accreditation from nationally recognized 
+religious authorities, for example, JAKIM, state mufti departments. 
+Exploitation. 
+3.18
+No Content shall condone the exploitation of women, men and Children. Negative or 
+degrading Content on the role and nature of women, men or Children in society shall be 
+avoided. 
+3.19
+Content that degrades either sex by negative portrayal such as implied lewd conduct 
+through modes of dress or camera focus on areas of the body is not allowed. Similarly, the 
+degradation of Children through improper portrayal or behaviour is not acceptable. 
+4.0
+Advertisements 
+4.1
+Broadcasters are equally responsible for the acceptability of advertising material 
+transmitted and shall ensure that: 
+a)
+All Advertisements comply with Part 3 of the Code. 
+b)
+There is no influence by Advertisers, or the perception of such influence, on 
+the reporting of news or public affairs, which shall be accurate, balanced and 
+objective, with fairness and integrity being the paramount considerations 
+governing such Content. 
+Page 46 of 73
+4.2
+Broadcasters shall ensure that any Advertisement being shown in news dissemination 
+and current affairs Content shall clearly be labelled as an Advertisement. Broadcasters shall 
+ensure that Marketing Communications being shown in news dissemination and current affairs 
+Content is recognisable as a Marketing Communication by the viewers and listeners and not 
+part of the news dissemination and current affairs Content. 
+5.0
+Information, Advice and Warnings 
+5.1
+Broadcasters shall ensure that classification details and other information 
+announcements facilitate viewers to make appropriate choices at all times. 
+5.2
+Broadcasters shall consider whether any elements or programming might disturb 
+viewers, in particular, Children. Appropriate information, advice and or warnings shall be 
+provided at the start of any programme, or news report, which might disturb Children. 
+5.3
+Broadcasters are to ensure that clear and specific warnings shall be employed 
+especially after 10.00 p.m. where there is the likelihood that some viewers may find the 
+programme disturbing or offensive. This does not diminish the Broadcasters' responsibility for 
+sensitive scheduling of programmes to reduce the risk of offence to the minimum. 
+Page 47 of 73
+PART 5: SPECIFIC ONLINE GUIDELINES 
+1.0
+Scope and Coverage 
+1.1
+The Online environment is not a legal vacuum. In general, if something is illegal "off-
+line", it shall also be illegal "on-line". In this matter, the relevant existing laws apply. 
+1.2
+In adhering to this and the relevant parts of this Code, no action by Code Subjects 
+shall, in any way, contravene Section 3[3] of the Act, which states that "Nothing in this Act shall 
+be construed as permitting the censorship of the Internet". 
+1.3
+Code Subjects in this Part are providers of Online Content or those who provide Access 
+to Online Content through present and future technology either fixed or mobile. These include, 
+but are not limited to: 
+(a)
+Internet Access Service Providers; 
+(b)
+Online Content Hosting Providers; 
+(c)
+Online Content Developers; 
+(d)
+Online Content Aggregators; 
+(e)
+Link Providers; and 
+(f)
+Online Service Providers. 
+2.0
+Concept of Innocent Carrier 
+2.1
+Code Subjects providing Access to any Content but have neither control over the 
+composition of such Content nor any knowledge of such Content is deemed an innocent carrier 
+for the purposes of this Code. An innocent carrier is not responsible for the Content provided. 
+Nonetheless, this does not exempt such Access providers from adhering to the General 
+measures as outlined in Part 6.0 of this Part where it expressly applies to them. 
+3.0
+Objectives 
+3.1
+Code Subjects are committed towards taking a responsible approach to the provision 
+of Content by implementing reasonable, practicable and proportionate measures and to 
+provide a proactive and reactive mechanism in cases where prohibited material or activity is 
+identified. 
+3.2
+Responsible Code Subjects and Content providers shall, therefore, be guided by the 
+commitment to reassure Consumers and businesses that Online Content to inform, educate, 
+entertain, and facilitate commerce is safe and secure. Hence, the purpose of this Part is to: 
+Page 48 of 73
+a)
+Recommend guidelines and procedures relating to the provision of Online 
+Content through self-regulation by the industry in a practical and 
+commercially feasible manner and at the same time foster, promote and 
+encourage the growth and development of the Online services industry; 
+b)
+Promote the education of Users in making an informed selection of the 
+Content they consume; and 
+c)
+Keep updated with international as well as national standards, trends and 
+cultural sensitivities of the general Malaysian public in applying and 
+reviewing this Part. 
+4.0
+Principles 
+4.1
+The following principles shall guide the parties who review, administer, apply, are 
+affected by and/or are subject to this Part of the Code: 
+a)
+There shall be no censorship of the Internet as provided in Section 3(3) of 
+the Act. 
+b)
+Responsibility for Content provided Online by Code Subjects primarily rests 
+with the creator of the Content. 
+c)
+In acknowledging that in the fast-changing Online environment, it is very 
+often impractical, costly, difficult and ineffective to monitor Content, Code 
+Subjects shall nonetheless fulfil, to the best of their ability the requirements of 
+the Code. 
+d)
+Users are responsible for their choice and utilisation of Online Content. 
+e)
+Users are able to consume and create various Online materials in various 
+formats at any time. Thus, Users shall retain responsibility for the Content 
+they place Online, whether legal or illegal. 
+f)
+Any measures relating to Content which are recommended by this Part from 
+time to time shall be: 
+i)
+Technologically neutral; 
+ii)
+Fair; and 
+iii)
+Widely 
+affordable 
+and 
+not 
+adversely 
+affect 
+the 
+economic viability of the communications and multimedia 
+industry. 
+Page 49 of 73
+g)
+Any guidelines that apply to the provision of Online Content should not 
+unduly restrict the growth of the industry but serve to enhance a conducive 
+environment to encourage and stimulate the Malaysian communications 
+and multimedia industry. 
+5.0
+Online Guidelines 
+5.1
+Code Subjects shall apply the guidelines set out in Part 2 of this Code in determining 
+whether Content is indecent, obscene, menacing, or offensive, save where expressly provided 
+in this Part. 
+6.0
+Measures – General 
+6.1
+It is recognised that it is impractical, difficult, and ineffective to monitor or control a 
+User’s Access to Content available Online. It is left to the User to decide on the nature of Online 
+Content to be consumed and the tools to be utilised by the User in controlling such Content. 
+6.2
+The Content Forum shall assist Users in providing information on the type of tools that 
+are available for Users to control Access to Online Content. Such information can be provided 
+on the Content Forum's website which may be updated from time to time to reflect evolving 
+technology. The Content Forum's website shall contain information on: 
+a)
+The types of tools available to assist Users in filtering or controlling Online 
+Content; 
+b)
+User ethics in accessing and providing Content over the Internet; 
+c)
+Responsibilities of adult Users over Children under their care in relation to 
+Internet use; 
+d)
+Measures which can be taken by parents, guardians and teachers to control 
+Children's Access to Online Content; 
+e)
+Content provider ethics; 
+f)
+This Code; and 
+g)
+The appropriate channel to which a complaint regarding Online Content 
+may be made, and the procedures by which such a complaint is to be made. 
+6.3
+The information provided on the website is intended to assist Online Users and the 
+Content Forum is not responsible for any tools recommended or advice rendered. 
+Page 50 of 73
+6.4
+Apart from the aforegoing general measures the following specific measures shall be 
+complied with depending on the degree of control that a Code Subject may have over the 
+Online Content. 
+7.0
+Measures –Specific 
+7.1
+Internet Access Service Providers (IASP) 
+7.1.1
+An IASP shall comply with and incorporate terms and conditions in the contracts and 
+legal notices as to terms of use with subscribers of their services. This shall include the following 
+terms: 
+a)
+Subscribers shall comply with the requirements of Malaysian law including, 
+but not limited to, the Code and shall not provide prohibited Content nor 
+any Content in contravention of Malaysian law; 
+b)
+The IASP shall have the right to withdraw Access where a subscriber 
+contravenes the above; and 
+c)
+The IASP shall have the right to block Access to or remove such prohibited 
+Content provided such blocking or removal is carried out in accordance with 
+the complaints procedure contained in the Code. 
+7.1.2
+The existence of terms and conditions shall be displayed on the IASP's website in a 
+manner and form easily accessible by its subscribers by way of a link or other similar methods 
+7.1.3
+Once an IASP is notified by the Complaints Bureau that its User or subscriber is 
+providing prohibited Content and the IASP is able to identify such User or subscriber, the IASP 
+shall take the following steps: 
+a)
+Within a period of 2 working days from the time of notification, inform its 
+subscriber to take down the prohibited Content. 
+b)
+Prescribe a period within which its User or subscriber is to remove the 
+prohibited Content, ranging from 1 to 24 hours from the time of notification. 
+c)
+If the User or subscriber does not remove such prohibited Content within the 
+prescribed period, the IASP shall be entitled to suspend or terminate the User 
+or subscribers' Access account. 
+Page 51 of 73
+7.1.4
+An IASP shall place on its website a hyperlink to the Content Forum’s website to enable 
+subscribers to obtain the information specified above. If an IASP does not have a website, it 
+shall provide its subscribers with the Content Forum’s website address. 
+7.2
+Online Content Aggregator (OCA) 
+7.2.1
+An OCA shall comply with and incorporate terms and conditions in the contracts and 
+legal notices as to terms of use with Users, subscribers, and content providers of their services. 
+This shall include the following terms: 
+a)
+Users, subscribers and Content providers shall comply with the requirements 
+of Malaysian law including, but not limited to, the Code and shall not provide 
+prohibited Content nor any Content in contravention of Malaysian law; and 
+b)
+The OCA shall have the right to remove such prohibited Content where a 
+User, subscriber or Content provider contravenes the preceding (a) above 
+provided the removal of such prohibited Content is in accordance with the 
+complaints procedure contained in the Code. 
+7.2.2
+Upon an OCA being notified by the Complaints Bureau that its User, subscriber or 
+Content provider is providing prohibited Content and the OCA is able to identify such 
+subscriber, User or Content provider, the OCA shall take the following steps: 
+a)
+Within a period of 2 working days from the time of notification, inform the 
+User, subscriber or Content provider to take down the prohibited Content. 
+b)
+Prescribe a period within which the User, subscriber or Content provider is 
+to remove the prohibited Content, ranging from 1 to 24 hours from the time 
+of notification. 
+c)
+If the User, subscriber or Content provider does not remove such prohibited 
+Content within the prescribed period, the OCA shall have the right to remove 
+such Content. 
+7.2.3
+An OCA shall place on its website a hyperlink to the Content Forum’s website to enable 
+Users and subscribers to obtain the information specified above. 
+7.2.4
+Where an OCA has editorial rights over the substance of Content, it shall comply with 
+Part 2 (Guidelines on Content) of the Code. 
+Page 52 of 73
+7.3
+Link Provider 
+7.3.1
+A person who provides links to other sites containing prohibited Content shall remove 
+the link to such sites within 24 hours of being notified by the Complaints Bureau of the 
+continuing existence of prohibited Content on such site. 
+7.4
+Online Content Hosting Providers (OCH) 
+7.4.1
+An OCH shall comply with and incorporate terms and conditions in the contracts and 
+legal notices as to terms of use with Users and subscribers of their services. This shall include 
+the following terms: 
+a)
+Users and subscribers shall comply with the requirements of Malaysian law 
+including (but not limited to) the Code and shall not provide prohibited 
+Content nor any Content in contravention of Malaysian law; 
+b)
+The OCH shall have the right to withdraw its hosting services where a User 
+or subscriber contravenes (a) above; and 
+c)
+The OCH shall have the right to remove such prohibited Content provided 
+such removal is in accordance with the complaints procedure contained in the 
+Code. 
+7.4.2
+Once an OCH is notified by the Complaints Bureau that its User or subscriber is 
+providing prohibited Content and the OCH is able to identify such subscriber or User, the OCH 
+shall take the following steps: 
+a)
+Within a period of 2 working days from the time of notification, inform the 
+User or subscriber to take down the prohibited Content. 
+b)
+Prescribe a period within which the User or subscriber is to remove the 
+prohibited Content, ranging from 1 to 24 hours from the time of notification. 
+c)
+If the User or subscriber does not remove such prohibited Content, the OCH 
+shall have the right to remove such Content. 
+7.4.3
+An OCH will place on its website a hyperlink to the Content Forum’s website to enable 
+Users and subscribers to obtain the information specified in paragraphs 7.1 – 7.4.2 above. 
+Examples in Applying Specific Measures 
+X, who is based in Kuala Lumpur, provides an Online lifestyle magazine which can be accessed 
+by anyone from any part of the world. X's portal is hosted on Y's servers. Y's servers are located 
+in Penang. 
+X provides his own Content and third party Content. In his arrangement with the third party 
+Content providers, he does not have the rights to edit the Content. Most third party Content is 
+Page 53 of 73
+pushed onto his site automatically without X having the opportunity to view the Content 
+beforehand. 
+X is a subscriber of Z's Internet Access 
+services. In this instance: 
+●
+X is both a Content provider and an OCA 
+●
+Y is an OCH 
+●
+Z is an IASP 
+The Complaints Bureau receives a complaint that one of the web pages of X's Online magazine 
+contains Content which is obscene as defined in the General Guidelines on Content contained in 
+Part 2 of the Code. 
+Scenario 1: 
+If X receives a notification from the Complaints Bureau it shall : 
+a)
+where X has provided the Content, remove the prohibited Content. 
+b)
+where the Content is provided by a third party W, inform W to remove the Content within 
+a period ranging from 1 to 24 hours. The period prescribed is at X's discretion. If W fails 
+to remove the prohibited Content, it shall be removed by X. 
+Scenario 2: 
+If Y receives a notification from the Complaints Bureau, it shall notify X to remove the Content 
+within a period ranging from 1 to 24 hours. The period prescribed is at Y's discretion. In this 
+instance, Y gives X 4 hours to take the necessary action. X may either remove the prohibited 
+Content itself or direct W to remove the Content. If the prohibited Content is not removed within 4 
+hours, it shall be removed by Y. 
+Scenario 3: 
+If Z receives a notification from the Complaints Bureau, it shall notify X to remove the Content 
+within a period ranging from 1 to 24 hours. The period prescribed is at Z's discretion. In this 
+instance, Z gives X 12 hours to remove the Content. X may either remove the prohibited Content 
+itself or direct W to remove the Content. 
+If the prohibited Content is not removed within 12 hours, Z can suspend or terminate X's Access 
+to the Internet. 
+If X is not Z's subscriber, Z shall not be required to take any measures. 
+8.0
+Measures not required 
+8.1
+IASPs, OCAs, Link Providers and OCHs shall not be required to undertake any 
+of following: 
+a)
+Provide rating systems for Online Content; 
+Page 54 of 73
+b)
+Block access by their Users or subscribers to any material unless directed to 
+do so by the Complaints Bureau acting in accordance with the complaints 
+procedure set out in the Code; 
+c)
+Monitor the activities of Users and subscribers; or 
+d)
+Retain data for investigation unless such retention of data is rightfully 
+requested by the relevant authorities in accordance with Malaysian law. 
+Page 55 of 73
+PART 6: SPECIFIC AUDIOTEXT HOSTING SERVICE GUIDELINES 
+1.0
+Scope and Coverage 
+1.1
+An Audiotext Hosting Service is defined as a service provided pursuant to a licence 
+issued by the Commission, such service being accessed by utilising a telephone or any other 
+future communication tool and having access via numbers beginning with the prefix 600 or 
+any other number/mode determined by the Commission. 
+Objectives 
+1.2
+The major purpose of these specific guidelines is to allow Audiotext Hosting Service 
+providers to self-regulate themselves in the best interest of users generally and in accordance 
+with internationally recognised practice and national policy. 
+Principles 
+1.3
+The following principles shall guide Audiotext Hosting Service Content providers who 
+are affected by and/or are subject to this Part of the Code: 
+(a)
+Audiotext Hosting Service Content providers shall apply the guidelines set 
+out in Part 2 of this Code in determining whether Content is indecent, 
+obscene, menacing or offensive unless otherwise defined in this Part. 
+(b)
+No Audiotext Hosting Service provider shall knowingly provide prohibited 
+Content. 
+(c)
+Any Content provided shall not be misleading, likely to mislead or contain 
+inaccurate information. 
+(d)
+Guidelines shall be adhered to on a self-regulatory basis in a manner that 
+would encourage the development of Content and the positive growth of the 
+industry. 
+(e)
+While recognising the importance of the positive growth and commercial 
+viability of the industry, Audiotext Hosting Service providers shall at all times 
+abide by all relevant laws and consider the views and interest of the general 
+public; 
+(f)
+Where live Audiotext Hosting Services are offered, at least one adequately 
+trained employee shall be assigned and present at all times to moderate, 
+facilitate and monitor the service to ensure that all activities within the service 
+remain healthy. The service shall provide facilities for the trained employee 
+to immediately remove callers who misuse and abuse the service. 
+Page 56 of 73
+2.0
+Specific Guidelines 
+Rating Classification 
+2.1
+All Audiotext Hosting Services must be classified according to the following rating 
+classification below and displayed clearly in all advertising materials. 
+(a)
+"U" - Information or Entertainment services suitable for all ages. However, 
+callers below 18 years of age shall obtain permission from the person making 
+payment for the use of the Audiotext Hosting Services. 
+(b)
+"18+" - Services for the general public 18 years and above. 
+Specialist Information 
+2.2
+"Specialist Information" is defined as information or advice provided by professionals, 
+corporations, the government, government agencies or any other persons who is appropriately 
+qualified or an expert or specialist in relation to the area of expertise. 
+2.3
+Audiotext Host Service Content containing professional advice or opinion (such as 
+Medical/Dental/Legal/Financial Services) shall ensure that: 
+a)
+The person is appropriately qualified in his area of expertise; 
+b)
+The advice is prefaced with a disclaimer that such advice shall not be acted 
+upon without first consulting a suitably qualified practitioner, and be 
+conveyed in a manner that accurately reflects the seriousness of the subject 
+matter; and 
+c)
+Any advice involving scientific, statistical or other research data shall indicate 
+clearly the source of such data. 
+2.4
+An Advertisement relating to an Audiotext Hosting Services containing Specialist 
+Information or endorsement shall clearly indicate: 
+a)
+The identity, current status and relevant professional qualification and 
+experience of the person(s) involved; or 
+b)
+The identity of the professional association, statutory authority or 
+government department involved. 
+Content Designed for Children or Dependent Persons 
+2.5
+Audiotext Hosting Services designed for, either wholly or mainly, and aimed at an 
+audience of Children or dependent persons shall not: 
+Page 57 of 73
+a)
+Include references to sexual practices, language or materials that are 
+offensive to the standards of decency prevailing among those likely to be 
+exposed to them; 
+b)
+Involve any information or noise or sound effect likely to alarm any Child, or 
+of other dependent person, having regard to special protection for such 
+dependent persons; and 
+c)
+Force or unfairly cause any of the above persons, mentioned in this 
+paragraph to dial additional telephone numbers. 
+2.6
+Advertisement of services aimed at Children shall carry the following warning 
+messages: "This call costs RMX.XX per minute/per call. Callers under 18 must seek parent's or 
+guardian’s approval before calling". 
+3.0
+Copyright 
+3.1
+Audiotext Hosting Services shall respect copyright ownership of recorded 
+announcements or interactive Content and shall not utilise part or all of the Content from 
+another medium without the permission of the copyright owner. 
+Page 58 of 73
+PART 7: SPECIFIC LIMITED CONTENT GUIDELINES 
+1.0
+Scope and Coverage 
+1.1
+Limited Content refers to programmes, Advertisements and other related material 
+conveyed through television, any networked medium or other means of transmission, which are 
+displayed or communicated to a limited, specified, or specific group of people or individuals. 
+Providers of Content for this Part include: 
+a)
+In-house TV and radio broadcasting; 
+b)
+Electronic Boards (indoor/outdoor); and 
+c)
+Any related networked medium. 
+1.2
+Limited Content include, but are not be limited to, Bus TV, Rail TV, Hotel TV and radio, 
+Airport TV, Complex TV and radio broadcasting and Pay Per View TV. 
+1.3
+Providers of all Limited Content Communications must abide by the provisions set out in 
+this Code especially those of Parts 2, 3 and 4 referring to the Guidelines on Content, Advertisement 
+and Broadcasting respectively. 
+Page 59 of 73
+PART 8: CODE ADMINISTRATION 
+1.0
+Introduction 
+1.1
+The keyword in this Code is self-regulation. By virtue of this being a voluntary industry 
+Code, all those subscribing to it have expressly undertaken the commitment and responsibility 
+to uphold its objectives and principles. Good governance through self-discipline and self-
+monitoring is the best form of administration as it ultimately serves the interests of all parties 
+concerned. 
+1.2
+Content providers and Code Subjects are responsible for ensuring that Content and 
+promotion of their services, whether produced by themselves or others on their behalf comply 
+with the provisions of the Code. 
+2.0
+Communications and Multimedia Content Forum of Malaysia 
+2.1
+The Communications and Multimedia Content Forum of Malaysia, designated on 29 
+March 2001, comprises a balanced representation of the relevant sectors of the industry to 
+ensure the Code it has prepared reflects the views of the community at large. 
+2.2
+Any addition, amendment or review of the Code shall be deliberated upon by the 
+relevant representative industry working group and referred to the Council. Its adoption shall 
+be subjected to input by members and due consideration of public comment. 
+2.3
+The Content Forum, under its registered Constitution, is responsible for the 
+administration of this Code and for sanctions in the case of any breach. 
+2.4
+The Content Forum through its Complaints Bureau shall receive, consider, mediate and 
+if necessary, adjudicate and make a ruling on matters, such as complaints and grievances, 
+relating to alleged breaches. 
+2.5
+Any complaint on matters covered by this Code received by a Code Subject should be 
+resolved by the parties concerned. However, if the complaint cannot be resolved, it may be 
+referred to the Complaints Bureau. 
+3.0
+The Complaints Bureau 
+3.1
+The Complaints Bureau shall:
+a)
+Consider and deal with complaints relating to content as provided for in the 
+Code; 
+b)
+Investigate any Content which is considered to be in breach of the 
+Code without there necessarily having been a complaint; 
+Page 60 of 73
+c)
+Rule on any dispute arising between members of the Content Forum 
+or between a member and a non-member; and 
+d)
+Interpret provisions of the Code when the need arises or a request is made. 
+3.2
+The basis of the action of the Complaints Bureau is the Code and provision of the Act. 
+3.3
+The Complaints Bureau shall deal with all complaints of a general or specific nature 
+that relate to this Code provided the complaint is made within two (2) months after its 
+occurring, and if deemed valid, with reasonable basis and not frivolous. 
+3.4
+The Complaints Bureau is not permitted to consider complaints if they concern matters 
+that are the subject of legal proceedings, or if the Complaints Bureau decides it would be 
+inappropriate. The Complaints Bureau may hold an inquiry into a complaint: 
+a)
+In response to a written request from a person or persons; or 
+b)
+On its own initiative. 
+3.5
+On receiving a complaint and prior to adjudication, the Complaints Bureau shall 
+provide the necessary assistance and guidance to the parties involved with the intention of 
+mediating an amicable resolution by mutual consultation. 
+3.6
+In the event mediation attempts fail, the Complaints Bureau shall proceed with dealing 
+with the complaint. The Complaints Bureau shall convene an inquiry as and when the need 
+arises and may combine the hearing of two or more complaints into a single inquiry. 
+4.0
+Procedure for General Public Complaints 
+4.1
+Any complaint received from the public shall be made in writing specifying, if possible, 
+the part of the Code that has been breached together with supporting documents or details 
+of the alleged misconduct. 
+4.2
+The complaint shall be referred to the Chairman for his consideration. If the Chairman 
+is of the view that the complaint is frivolous or prima facie lacking in merit or outside the scope 
+of the Code, he shall notify the complainant that no further action is being taken and the 
+reasons therefore. 
+4.3
+If the Chairman is of the opinion that the complaint warrants further investigation to 
+determine its validity, the complaint shall be forwarded immediately to the party complained 
+against for a response within five (5) working days. 
+4.4
+Upon receipt of the response, the Chairman shall review the complaint and the 
+response, if any. If the Chairman feels there are insufficient grounds for upholding the 
+Page 61 of 73
+complaint, the Chairman shall circulate to the Complaints Bureau members his views together 
+with the complaint and the response, if any, within five (5) working days where practicable. 
+4.5
+Within five (5) working days, if the majority of the members agree with the view of the 
+Chairman, the Complaints Bureau shall write to the complainant stating that there are 
+insufficient grounds to uphold the complaint. 
+4.6
+If the Chairman is of the view that the complaint has merits, copies of the complaint 
+together with the response of the party complained against shall be circulated to members for 
+their views within five (5) working days where practicable and: 
+a)
+If the views of the members are unanimous, the Complaints Bureau will inform the 
+parties involved of the decision immediately. 
+b)
+If there is a difference of opinion, the Complaints Bureau will convene a meeting 
+soonest possible within the period of 14 days. 
+5.0
+Procedure for Industry Complaints 
+5.1
+Any complaint that any member or person from the industry has should first be raised 
+with the alleged offending party in writing, specifying the Part of the Code which it is claimed 
+has been breached with a copy extended to the Complaints Bureau. 
+5.2
+If within five (5) working days, the complaint is not resolved, then either party shall in 
+writing inform the Complaints Bureau which shall then circulate copies of the complaint to its 
+members for their views within five (5) working days and; 
+a)
+If views are unanimous, the Chairman shall instruct the Secretaries on the 
+action to be taken immediately. 
+b)
+If there is a difference of opinion, the Complaints Bureau will convene 
+a meeting soonest possible within the period of 14 days. 
+Notwithstanding paragraphs 3.5 and 3.6 above, the Complaints Bureau encourages industry 
+practitioners to discuss and deliberate any matters of complaints via mediation. To this end, the 
+Complaints Bureau shall provide an avenue for mediation and/or arbitration for parties involved 
+in a particular complaint. The Complaints Bureau reserves the right to impose an administrative 
+fee to facilitate the convening of a mediation process. Both parties shall agree on the terms of 
+the mediation (including costs) before it commences.
+Page 62 of 73
+6.0
+Procedure for Complaints on Matters relating to Comparative, Superlative and 
+Misleading Claims 
+6.1
+For any complaint on matters relating to comparative, superlative, misleading claims, 
+upon the request of the Complaints Bureau, the party complained against shall submit 
+documentary evidence to prove the claims to the Complaints Bureau within five (5) working 
+days. 
+6.2
+Upon receiving the documentary evidence, the Complaints Bureau shall make a ruling 
+within ten (10) working days. 
+6.3
+If the party complained against fails to submit to the Complaints Bureau their 
+documentary evidence to prove the claims within five (5) working days, the Complaints Bureau 
+may rule that there has been a breach of the Code. 
+7.0
+Inquiry Proceedings 
+7.1
+In adjudication of all cases, the Complaints Bureau may require the parties concerned 
+to provide evidence in support of or against the complaint and for this purpose, the Complaints 
+Bureau may request: 
+a)
+A written submission with documents, recordings or transcripts of the 
+relevant Content from the complainant and respondent; 
+b)
+The presence of the complainant and respondent and their respective 
+witnesses at the inquiry; 
+c)
+The presence of any party to provide clarification on a document submitted 
+as evidence; and 
+d)
+The presence of any outside independent party for further information 
+or further evidence. 
+7.2
+If the Complaints Bureau is of the opinion that the evidence presented in paragraph 
+7.1 are sufficient for the Complaints Bureau to make a ruling without having to call for presence 
+of the Complainant and respondent; and their respective witnesses or any party to provide 
+clarification; or the presence of any outside independent party on the complaint, the 
+Complaints Bureau may proceed with its ruling. 
+7.3
+The Complaints Bureau shall specify the time at which or within which the complainant, 
+respondent, their witnesses, and any other affected parties are required to be present at the 
+inquiry. 
+7.4
+The provision as to the time within which any party is required to act or respond shall 
+be strictly observed. However, all time limits set out may, in the Complaints Bureau's discretion, 
+be extended if it is considered that its strict application may cause injustice. 
+Page 63 of 73
+8.0
+Decisions of the Complaints Bureau 
+8.1
+The ruling of the Complaints Bureau, on any matter and at any given time, shall be 
+decided upon by a majority of votes of its members and rendered in writing. 
+8.2
+The parties concerned shall be notified in writing of the decision and of the subsequent 
+action that is recommended or to be taken. 
+8.3
+In the event that after the decision, any of the parties concerned comes into possession 
+of evidence not earlier available, it may request the Complaints Bureau for reconsideration of 
+its earlier decision. Such a request shall be accompanied by a fee to be determined by the 
+Complaints Bureau and any decision upon such reconsideration shall be final. 
+9.0
+Sanctions 
+9.1
+The Complaints Bureau after adjudicating on a complaint and upon finding that there 
+has been a breach of the Code may impose fines and other penalties permitted by virtue of 
+this Code. The Complaints Bureau may upon finding that there has been a breach of the Code: 
+a)
+Issue a written reprimand; 
+b)
+Impose a fine not exceeding Ringgit Malaysia fifty thousand (RM50,000.00); 
+and/or 
+c)
+Require removal of the Content or cessation of the offending act. 
+9.2
+The Complaints Bureau may also refer the Offending Party to the Commission for 
+further appropriate action as may be required. 
+9.3
+The decision of the Complaints Bureau on the interpretation of the Code shall be final. 
+The Complaints Bureau shall not be responsible or be held liable in any way for any loss of 
+profits/income or any other consequential loss or damage whatsoever and howsoever suffered 
+by the parties including any indirect, incidental or consequential losses or that which may arise 
+directly or indirectly by reason of the Complaints Bureau exercising its power under this Code. 
+10.0
+Publication of Decision 
+10.1
+The Complaints Bureau shall report to the Council the outcome of its mediation efforts 
+or the ruling made, and whether or not the party complained against has complied with or the 
+party in breach has agreed to comply with the ruling. 
+10.2
+The Complaints Bureau shall publish its findings within thirty (30) days of the 
+conclusion of the inquiry and in doing so shall not include in the report: 
+Page 64 of 73
+a)
+Any material of a confidential nature; or 
+b)
+Any disclosure or personal information about any individual deemed not 
+relevant to the complaint. 
+11.0
+Composition of the Complaints Bureau 
+11.1
+The Complaints Bureau comprises an appointed Chairman and six members of the 
+Forum, one each representing Advertisers, Audiotext Service providers, Broadcasters, Civic 
+Groups, Content Creators/Distributors and Internet Access Service Providers. 
+11.2
+The appointed Chairman shall be a retired judge or judicial officer or anyone the 
+Council deems fit. The Chairman may be appointed and reappointed for any duration as 
+deemed fit by the Council. The members of the Complaints Bureau shall be appointed for a 
+two-year term at the Annual General Meeting of the Content Forum. A member is eligible for 
+reappointment but cannot hold office for more than two consecutive terms. 
+11.3
+A Complaints Bureau member is entitled to appoint another member of the Content 
+Forum from the same category he/she represents, as an alternate and shall notify the Content 
+Forum Secretary in writing. 
+11.4
+A formal inquiry convened by the Complaints Bureau shall be made up of the Chairman 
+and at least three members. In the event of the Chairman not being able to attend such a 
+scheduled inquiry, it shall nonetheless be convened by at least three Complaints Bureau 
+members, one of whom shall be elected to be the Chairman of the inquiry. 
+11.5
+In ensuring the fair hearing of a complaint, a Complaints Bureau member shall disclose 
+to the Chairman, as soon as practicable, any interest, direct or otherwise, in any particular 
+matter related to the complaint. If the Chairman deems it necessary, all parties involved in the 
+inquiry shall be informed of such disclosure to determine whether the member may continue 
+to execute his duties as a member of the Complaints Bureau in relation to that matter. If none 
+of the parties’ objects, the member may then continue. If there is an objection, the member 
+cannot proceed in his capacity as a member of the Complaints Bureau in relation to that matter. 
+11.6
+Should any vacancy in the Complaints Bureau occur between the Annual General 
+Meeting of the Content Forum, the position may be filled by a member of the Council until the 
+next Annual General Meeting. The exercise of the powers, or the performance of the functions 
+of the Complaints Bureau shall not be affected only by reason of there being a vacancy in its 
+membership. 
+Page 65 of 73
+11.7
+The Chairman or any member of the Complaints Bureau may, at any time, resign his 
+office by giving a written notice to the Council. 
+11.8
+The Council may, at its discretion, suspend any member of the Complaints Bureau on 
+the ground of inappropriate behaviour or incapacity or any other reasons which makes him 
+unfit to be a member of the Complaints Bureau. 
+12.0
+Development, Amendment and Review of Code 
+12.1
+Any proposal for development, addition to, amendment of, or review of the Code 
+required or necessary shall be referred to a working group comprising the six categories, 
+namely Advertisers, Broadcasters, Audiotext Service Providers, Content Creators/Distributors, 
+Internet Access Service Providers and Civic Groups (“Working Group”). 
+12.2
+Any such proposal for development, addition to, amendment of, or review of the Code 
+shall be considered and formulated by the members of the Working Group and shall if 
+approved by a resolution of a simple majority of the members of the Working Group 
+(whereupon it shall be referred to as the “Recommendation”) be made available to members 
+of society for their input. 
+12.3
+The Working Group shall consider and deliberate on the input received from members 
+and decide the extent to which the Recommendation is to be revised. If two thirds of the 
+members agree on the Recommendation whether in its original form or as revised, the 
+Recommendation shall be submitted to the Council. 
+12.4
+So long as the Council by simple majority of its members present and voting approves 
+the Recommendation the Council shall make available such Recommendations for Public 
+Comment (public consultation) for a reasonable period. 
+12.5
+The Working Group shall thereafter consider the input in the form of Public Comment 
+that has been received and shall upon approval in its original or amended form by a simple 
+majority forward its Recommendation to the Council. 
+12.6
+Upon receipt of such Recommendation in relation to the Code as so approved, the 
+Council shall forward the same to the Commission for registration. 
+12.7
+The Commission shall be notified of any amendment or modification to the Code as it 
+would be considered as a new code and would therefore need to be registered to take effect. 
+Page 66 of 73
+PART 9: PUBLIC EDUCATION 
+1.0
+Public Awareness 
+1.1
+The Content Forum will actively inform and educate the public about the importance 
+and relevance of this Code. 
+1.2
+The potential use of the wide array of Content choices created by the technological 
+revolution of multimedia convergence is endless. But where there is use, there is also potential 
+for abuse. In this regard, it is necessary for self-regulation and self-censorship. 
+1.3
+Of particular concern is the exploitation of individuals, particularly of Children. It is 
+therefore the responsibility of all Code Subjects and Content and service providers to work in 
+conjunction with non-governmental organisations or civic groups and individuals such as 
+parents and teachers to educate society on how best to eliminate such exploitation. 
+2.0
+Industry Awareness 
+2.1
+In the professional arena of the industry, all Code Subjects, and Content and service 
+providers should consider it incumbent upon themselves to ensure that the provisions of this 
+Code are brought to the attention of their employees entrusted with Content development 
+and production, Content acquisition decisions and commercial message and news production. 
+2.2
+Conscious efforts to adhere to stipulated standards of excellence and continuous 
+measures to promote the responsible use and dissemination of Content can only lead to 
+healthy growth of the industry and maximise the gains such technological development can 
+bring to society at large. 
+Page 67 of 73
+PART 10: CONSUMER PROTECTION 
+1.0
+Introduction 
+1.1
+In accepting, creating and disseminating Content, the need for protection of Consumers 
+is of paramount importance and a relevant consideration. 
+2.0
+Principles 
+2.1
+Consumers have rights as users of services provided by service providers and that such 
+rights must be upheld and observed. 
+2.2
+In creating and providing Content in the context of this Content Code, it must always be 
+in the basis, belief and philosophy and rationale that: 
+a)
+Consumers shall be given sufficient, up to date and accurate information in relation 
+to the provision of and use of any communications and multimedia service; 
+b)
+Consumers are entitled to a level of service that is of an acceptable standard 
+and quality; 
+c)
+The meeting of Consumer requirements needs to be always be balanced with 
+the service providers' business needs and practices; and 
+d)
+Consumers and service providers must always deal reasonably with each other. 
+3.0
+General Guidelines 
+3.1
+The need for and the manner of protecting Consumers are already reflected throughout 
+this Content Code. Code Subjects shall follow the guidelines and procedures relevant to the service 
+they provide, keeping in mind the national policy objective of promoting a high level of Consumer 
+confidence in service delivery from the industry. 
+4.0
+Child Protection 
+4.1
+In reiterating the importance of protecting Young Children; 
+a)
+All Content must have due regard to the welfare of Young Children at all 
+times; and 
+Page 68 of 73
+b)
+All efforts must be made to ensure that any Content provided will not result 
+in causing, encouraging or promoting physical and emotional injury, abuse or 
+expose a Young Children to moral danger. 
+5.0
+Quality and Standards 
+5.1
+Consumers have their expectations of Content and related services: 
+Example : 
+i)
+Consumers should be able to watch shows and view materials without being 
+subject to lengthy commercials that affect the enjoyment of the viewing. 
+ii)
+Viewing or listening pleasure should not be marred by the dissemination of 
+objectionable or prohibited material. As set out in the General Guidelines 
+under Part 2. 
+iii)
+Content and materials should not glorify events and occurrence relating to 
+horror, sex and violence unless it is in the context of an actual and real 
+situation. 
+6.0
+Cultural Diversity 
+6.1
+Content should respect, protect and promote cultural diversity. Interests of minority and 
+marginalised groups such as the disabled or indigenous peoples should be protected and 
+promoted. 
+6.2
+Diverse cultural Content (in terms of variety, mix, timing , etc) must be actively promoted 
+to avoid over-commercialisation of information. 
+7.0
+Corrective Measures 
+7.1
+Corrective and Counter Advertising should be provided for and detailed rules and 
+regulation drawn up to ensure adequate and effective compliance. 
+Page 69 of 73
+APPENDIX I: 
+Extracts from the Communications and Multimedia Act 1998 
+Part I – PRELIMINARY 
+S. 3 Objects 
+(1)
+The objects of this Act are - 
+(a)
+To promote national policy objectives for the communications and 
+multimedia industry; 
+(b)
+To establish a licensing and regulatory framework in support of national 
+policy objectives for the communications and multimedia industry; 
+(c)
+To establish the powers and functions for the Malaysian Communications 
+and Multimedia Commission; and 
+(d)
+To establish powers and procedures for the administration of this Act. 
+(2)
+The national policy objectives for the communications and multimedia industry are - 
+(a)
+To establish Malaysia as a major global centre and hub for communications 
+and multimedia information and content services; 
+(b)
+To promote a civil society where information-based services will provide the 
+basis of continuing enhancements to quality of work and life; 
+(c)
+To grow and nurture local information resources and cultural representation 
+that facilitates the national identity and global diversity; 
+(d)
+To regulate for the long-term benefit of the end user; 
+(e)
+To promote a high level of consumer confidence in service delivery from the 
+industry; 
+(f)
+To ensure an equitable provision of affordable services over ubiquitous 
+national infrastructure; 
+(g)
+To create a robust applications environment for end users; 
+(h)
+To facilitate the efficient allocation of resources such as skilled labour, 
+capital, knowledge and national assets; 
+(i)
+To promote the development of capabilities and skills within Malaysia's 
+convergence industries; and 
+(j)
+To ensure information security and network reliability and integrity. 
+Page 70 of 73
+(3)
+Nothing in this Act shall be construed as permitting the censorship of the Internet 
+Part V - POWERS AND PROCEDURES OF THE MALAYSIAN COMMUNICATIONS AND 
+MULTIMEDIA COMMISSION 
+Chapter 9 - Voluntary Industry Code 
+S. 95 Code by the Industry Forum 
+(1)
+An industry forum may prepare a voluntary industry code dealing with any matter 
+provided for in this Act – 
+(a)
+on its own initiative; or 
+(b)
+The voluntary industry code shall not be effective until it is registered by the 
+Commission. 
+(2)
+The voluntary industry code shall not be effective until it is registered by 
+the Commission. 
+S. 98 Compliance with a Registered Voluntary Industry Code a Legal Defence 
+(1)
+Subject to section 99, compliance with a registered voluntary industry code shall not 
+be mandatory. 
+(2)
+Compliance with a registered voluntary industry code shall be a defence against any 
+prosecution, action or proceeding of any nature, whether in a court or otherwise, taken 
+against a person (who is subject to the voluntary industry code) regarding a matter 
+dealt with in that code. 
+S. 99 Directions to Comply with a Registered Voluntary Industry Code. 
+The Commission may direct a person or a class of persons, in accordance with section 51, to 
+comply with a registered voluntary industry code. 
+PART IX - SOCIAL REGULATION 
+Chapter 2 - Content Requirements 
+S. 211 Prohibition on Provision of Offensive Content 
+(1)
+No content applications service provider, or other person using a content applications 
+service, shall provide content which is indecent, obscene, false, menacing, or offensive 
+in character with intent to annoy, abuse, threaten or harass any person. 
+Page 71 of 73
+(2)
+A person who contravenes subsection (1) commits an offence and shall, on conviction, 
+be liable to a fine not exceeding fifty thousand ringgit or to imprisonment for a term 
+not exceeding one year or to both and shall also be liable to a further fine of one 
+thousand ringgit for every day or part of a day during which the offence is continued 
+after conviction. 
+S. 212 Content Forum 
+The Commission may designate an industry body to be the content forum for the purposes 
+of this Part. 
+Page 72 of 73
+APPENDIX II: 
+Relevant Legislation 
+Apart from the Communications and Multimedia Act 1998 (Act 588), Code Subject and users 
+may need to be aware of the following Acts of Parliament, Rules, Regulations and other 
+Guidelines and are advised to have sufficient resources and expertise to ensure compliance 
+where necessary. 
+List of Laws, Rules, Regulations and Guidelines Affecting or Relevant to Content 
+Accountants Act 1967 (Revised 1972) 
+Betting Act 1953 (Revised 1992) 
+Capital Markets and Services Act 2007 
+Child Act 2001 
+Children & Young Persons (Employment) Act 1966 (Revised 1988) 
+CMCF’s Guidelines on Advertisements of Slimming Products & Services 
+CMCF’s Guidelines for any Marketing Communications by a Gambling Company 
+Common Gaming Houses Act 1953 (Revised 1983) 
+Communications and Multimedia (Licensing) Regulations 2000 
+Competition Act 2010 
+Consumer Protection Act 1999 
+Consumer Protection (Electronic Trade Transactions) Regulations 2012 
+Kompilasi Pandangan Hukum, Muzakarah Jawatankuasa Fatwa Majlis Kebangsaan Bagi Hal Ehwal 
+Ugama Islam Malaysia in 2015 
+Copyright Act 1987 
+Customs Act 1967 (Revised 1980) 
+Defamation Act 1957(Revised 1983) 
+Dental Act 1971 
+Direct Sales and Anti-Pyramid Scheme Act 1993 
+Electronic Commerce Act 2006 
+Explosives Act 1957 (Revised 1978) 
+Financial Services Act 2013  
+Film Censorship Act 2002 
+Food Act 1983 
+Food Regulations 1985 
+Food Advertisement Regulations 2014 
+Garis Panduan Bahan Penerbitan Bercetak Dan Audio Visual Berhubung Dengan Unsur-Unsur 
+Yang Bercanggah Dengan Akidah Dan Amalan Ahli Sunnah Wal-Jamaah 
+Garis Panduan Bahan Penerbitan Berunsur Islam 
+Garis Panduan Mengelakkan Iklan Palsu atau Mengelirukan 
+Garis Panduan Penapisan Kandungan Bahan-Bahan Penyiaran Berunsur Islam 
+Garis Panduan Pengiklanan Ubat Dan Produk Perubatan Kepada Orang Awam 
+Page 73 of 73
+Garis Panduan Pengiklanan untuk Pengamal Perubatan Traditional dan Komplementari Geneva 
+Conventions Act 1962 (Revised 1993) 
+Guidelines for Control of Cosmetic Products in Malaysia 
+Guideline for Cosmetic Advertisement 
+Guidelines for Media Reporting on Suicide 2011 
+Indecent Advertisements Act 1953 (Revised 1981) 
+Islamic Financial Services Act 2013  
+  Medicine (Advertisement and Sale) Act 1956 (Revised 1983) 
+  Medicine Advertisements Board Regulations 1976 
+  Medical Device (Advertising) Regulations 2019 
+  Minor Offences Act 1955 (Revised 1987) 
+Money Services Business Act 2011  
+National Anthem Act 1968 
+Penal Code (Revised 1997) 
+Perintah Perihal Dagangan (Perakuan dan Penandaan Halal) 2011 
+Personal Data Protection Act 2010 
+Persons with Disabilities Act 2008 
+Pesticides Act 1974 
+  Pesticides (Advertisement) Regulations 1996 
+Poisons Ordinance 1952 
+  Printing Presses and Publications Act 1984 
+  Private Higher Educational Institutions Act 1996 
+  Private Healthcare Facilities and Services Act 1998 
+Rujukan Industri Kandungan: Iklan Tuntutan Kesihatan Bagi Tahun 2019 (Semakan Pertama)  
+Sale of Drugs Act 1952 (Revised 1989) 
+  Security Offences (Special Measures) Act 2012 
+Sedition Act 1948 (Revised 1969) 
+  Sexual Offences Against Children Act 2017 
+Trade Descriptions Act 2011 
+Trademarks Act 2019 
+Traditional and Complementary Medicine Act 2016 
+Communications and Multimedia Content Forum of Malaysia www.contentforum.my

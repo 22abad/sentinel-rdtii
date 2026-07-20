@@ -1,0 +1,332 @@
+IN THE SUPREME COURT OF THE REPUBLIC OF SINGAPORE REGISTRAR’S CIRCULAR NO. 2 OF 2013 ISSUANCE OF THE INTELLECTUAL PROPERTY COURT GUIDE Since its establishment in 2002 as a specialist commercial court, the Intellectual Property (“IP”) Court has been presided over by Judges and Judicial Commissioners with experience and expertise in IP law. The IP Court Guide encapsulates the IP Court’s case management features and specialist practices that have developed over the years and is issued as part of the Supreme Court’s larger initiative to implement a docket system in the management of its caseload. 2 The IP Court Guide, which supplements the Rules of Court (Cap 322, R 5, 2006 Rev Ed) and the Supreme Court Practice Directions, applies to all cases coming under the IP Court with immediate effect. Dated this 6" day of September 2013. / YEONG ZEE KIN SENIOR ASSISTANT REGISTRAR FOR REGISTRAR SUPREME COURT
+A.
+Introduction 
+1.
+This guide applies to all cases under the Intellectual Property (“IP”) 
+docket of the Supreme Court. This guide supplements Orders 87 and 87A 
+of the Rules of Court (Cap 322, R 5, 2006 Rev Ed) and any Practice 
+Directions that may be issued thereunder. 
+B.
+Allocation of hearings 
+2.
+Subject to the directions of the assigned IP Judge, the following allocation 
+of hearings will apply to cases in the IP docket.  
+3.
+Pre-Trial Conferences (“PTCs”) will be heard by the senior assistant 
+registrar managing the IP docket. 
+4.
+An assistant registrar will be assigned to hear all interlocutory 
+applications arising in each IP case, subject to the following exceptions: 
+(a) 
+Parties may by consent request that the IP Judge assigned to the 
+case hears specific interlocutory matters.  
+(b) 
+Where parties indicate that they are very likely to appeal any 
+order made by the assistant registrar, the interlocutory application 
+may be fixed before the IP Judge. 
+(c) 
+Interlocutory applications which concern issues relating to the 
+conduct of the trial, including an application for the bifurcation of 
+the trial on liability from the assessment of damages or accounting 
+of profits inquiry, will be determined by the IP Judge. 
+5.
+An IP Judge will be assigned to hear all interlocutory appeals, milestone 
+PTCs and the trial on liability. 
+6.
+The assessment of damages or accounting of profits inquiry may be heard 
+by the assigned assistant registrar if the claim is below $500,000. The 
+assessment of damages or accounting of profits inquiry in all other cases 
+will be heard by the IP Judge unless he directs that it be heard by an 
+assistant registrar. 
+C.
+Pleadings 
+7.
+The first PTC will usually be conducted within 6 weeks of the filing of the 
+writ of summons.  
+2 
+8.
+Where the plaintiff claims reliefs for assessment of damages (including 
+statutory damages and additional damages in copyright actions) or 
+accounting of profits in the alternative, parties should obtain instructions 
+as to whether an order for the bifurcation of the trial on liability from the 
+assessment of damages or accounting of profits inquiry may be recorded 
+by consent. Bifurcation orders will generally be granted in the usual 
+course unless one party objects, in which case the party seeking 
+bifurcation shall make a formal application before the first PTC. 
+Bifurcation applications will be heard by the assigned IP judge.  
+9.
+Patent cases. The contents of the particulars of infringement should 
+comply with the requirements of Order 87A, Rule 2(2) and the contents of 
+the particulars of objections to validity of patent should comply with the 
+requirements of Order 87A, Rules 3(2)–(5). The defendant should be 
+ready to address the Court if an extension of time is required for filing the 
+particulars of objections if the validity of the patent is put in issue. 
+10.
+If the holder of the patent in issue intends to amend it, counsel is to 
+indicate this to the Court during PTC before close of pleadings. Directions 
+may be given for the issue of patent amendment to be tried before 
+discovery. 
+11.
+Supplemental pleadings. Parties may be directed to file pleadings for 
+the assessment of damages or accounting of profits inquiry after an 
+election has been made subsequent to a finding of liability at trial. 
+D.
+Admissions and trial of preliminary issue in patent cases 
+12.
+Attention is drawn to Order 87A, Rule 4. Notices to admit facts are to be 
+served within 21 days after service of a defence or a reply or after the 
+expiration of the period fixed for the service thereof. Notices to admit 
+facts may be served together with notices of experiment (see paragraphs 
+23 and 24 below). 
+13.
+In cases where the validity of a patent is challenged and the defendant 
+intends to have the issue of validity tried as a preliminary issue, an 
+application for directions and trial of preliminary issue under Order 33, 
+Rule 3 should be made after the close of pleadings. These applications will 
+be heard by the assigned IP Judge. 
+E.
+Discovery 
+14.
+Attention is drawn to Part V of the Supreme Court Practice Directions: 
+Discovery and Inspection of Electronically Stored Documents. At the first 
+PTC after the close of pleadings, parties should be ready to update the 
+Court on the progress and outcome of any good faith discussions that 
+3 
+were conducted (see paragraph 45 of the Supreme Court Practice 
+Directions). 
+15.
+Where possible, parties should conduct discovery by the supply of soft 
+copies in lieu of inspection within the framework set out in paragraph 53 
+of the Supreme Court Practice Directions. Soft copies of all discoverable 
+documents are to be exchanged together with an abbreviated list of 
+documents. Inspection of the original soft copy documents is to be 
+deferred and given only on request. 
+16.
+Confidentiality undertakings. Where information to be disclosed is 
+confidential, parties are to be prepared to address the Court as to whether 
+confidentiality 
+undertakings 
+are 
+necessary 
+before 
+confidential 
+information is disclosed. The necessity of confidentiality undertakings is 
+to be considered within the context of the principle in Riddick v Thames 
+Board Mills Ltd [1977] QB 881, viz documents disclosed during discovery 
+may not be used for a purpose other than pursuing the action in respect 
+of which discovery was obtained (“the Riddick principle”). 
+17.
+Confidentiality undertakings over and above the Riddick principle may 
+take the following forms: 
+(a) 
+Reinforcement of the Riddick principle as an explicit term of an 
+order of court . Suitable terms may be extracted as part of an order 
+for discovery or summons for directions, or of the PTC. 
+(b) 
+Disclosure subject to execution of a Non-Disclosure Agreement 
+(“NDA”). Terms of the NDA are to be worked out between parties. 
+Any disagreement over terms of the NDA may be referred to the 
+Court for settlement. The NDA may be executed before exchange of 
+lists of documents for general discovery; terms of the NDA may be 
+included as part of an order for discovery or summons for 
+directions, or of the PTC. 
+(c) 
+Confidentiality club s. Disclosure of confidential information to 
+named individuals (usually the solicitors, third party experts and 
+representatives of the litigants) who have executed NDAs. Where 
+litigants are commercial competitors, selection of a representative 
+ought to balance the ability to give instructions against the risk 
+that commercially sensitive information, particularly information 
+of a technical nature, is disclosed to the research and development 
+department of the competitor. 
+F.
+Nature and extent of expert evidence 
+18.
+Parties should be prepared to discuss issues pertaining to the nature and 
+extent of scientific, technical and other forms of expert evidence 
+concurrently with discovery. 
+4 
+19.
+Time for appointment of experts. At the first PTC after the close of 
+pleadings, parties are to be ready to update the Court on the progress of 
+the appointment of experts. Parties are to exercise best efforts to confirm 
+the appointment of experts by the time the list of documents for general 
+discovery is exchanged. 
+20.
+List of areas for expert evidence.  Parties are to exchange a list of areas 
+for which they intend to adduce expert evidence within 2 weeks of 
+confirming the appointment of experts. The purpose of the list of areas for 
+expert evidence is to ensure that experts are properly instructed in the 
+preparation of their reports by putting all parties on notice of the nature 
+and extent of expert evidence that will be led at trial. The list should be 
+updated periodically as experiments are conducted and experts’ caucuses 
+are held. 
+21.
+The list of areas for expert evidence should also indicate the number of 
+expert witnesses who will be called and the areas that each of these 
+expert witnesses will be expressing an opinion on. 
+22.
+Patent cases. Parties should confirm whether separate infringement and 
+prior art experts will be called. 
+23.
+Notice of experiment. At the first PTC after the close of pleadings, 
+parties are to indicate to the Court whether experiments are to be 
+conducted. If so, the party intending to conduct experiments will be 
+directed to file a notice of experiment.  
+24.
+The party intending to conduct experiments should also be prepared to 
+address the Court on the issue of destructive experimentation, viz , 
+whether experiments conducted will affect the integrity of the samples 
+and hence, whether samples ought to be provided for the purpose of 
+conducting experiments.  
+25.
+Provision of samples. Parties are to consider whether samples of 
+allegedly infringing items have to be provided to assist experts in the 
+preparation of their reports. 
+26.
+Patent cases. Provision of samples is relevant especially when 
+experiments are to be conducted. Experiments should be conducted on 
+samples provided for this purpose and not on items that are to be 
+tendered as evidence of the alleged infringement, eg trap purchase. 
+27.
+Site visits.  Where process patents are in issue, parties should address 
+the Court on the necessity for experts to observe the allegedly infringing 
+process and whether a site visit is necessary to enable the experts to 
+prepare their reports. 
+5 
+28.
+Experts’ caucus.  Parties should be prepared to address the Court on the 
+necessity for experts to meet and discuss scientific, technical or other 
+specialized issues for the purpose of identifying areas of agreement and 
+disagreement. If an experts’ caucus is contemplated, parties are to 
+consider the appropriate juncture for this to be held: eg after all 
+experiments, site visits, but before preparation of experts’ reports, or 
+after initial exchange of experts’ reports, etc .  
+29.
+Time for exchange of experts’ reports and replies. The exchange of 
+initial experts’ reports will usually take place concurrently with the 
+exchange of affidavits of evidence-in-chief (“AEICs”) of factual witnesses. 
+Experts will usually be permitted to exchange a further report in reply to 
+the opposing party’s expert report (“experts’ replies”) 1 month thereafter.  
+G.
+Appointment of assessors and/or amici curiae
+30.
+Parties should address the Court on the necessity for the appointment of 
+an assessor to assist the IP Judge on areas of scientific, technical or other 
+forms of expert evidence or on the appointment of an amicus curiae to 
+assist the IP Judge on technical legal areas.  
+31.
+If an assessor and/or amicus curiae is to be appointed, parties are 
+encouraged to propose a single candidate by agreement. Otherwise, 
+parties are to agree on and propose a shortlist of candidates, enclosing a 
+copy of the curriculum vitae of each candidate together with the 
+candidate’s schedule of professional fees for the appointment. The 
+shortlist of candidates (if necessary) is to be finalised and filed before the 
+First Milestone PTC. 
+32.
+Parties are to agree on the sharing of the professional fees of the assessor 
+and/or amicus curiae initially, while reserving the right for the successful 
+party to claim contributions to the professional fees of the assessor 
+and/or amicus curiae as disbursements. 
+H.
+Milestone Pre-Trial Conferences 
+33.
+Milestone PTCs are conducted by the IP Judge assigned to the case. Lead 
+counsel must personally attend all milestone PTCs. Milestone PTCs are 
+also referred to as “JPTCs”. 
+34.
+The First Milestone PTC will be scheduled after the completion of 
+discovery, before the exchange of AEICs.  
+35.
+Patent cases. Where experiments are to be conducted, the First Milestone 
+PTC will be scheduled after the completion of experiments, before the 
+exchange of AEICs. 
+6 
+36.
+The Second Milestone PTC will be scheduled after exchange of AEICs, and 
+before set down.  
+37.
+First Milestone PTC. Lead counsel are to be ready to address the IP Judge 
+on the following issues: 
+(a) 
+Preparation of agreed bundle before AEICs . To facilitate the 
+management of voluminous documentary exhibits during the trial, 
+lead counsel are to address the IP Judge on the preparation of an 
+agreed bundle first , and for AEICs to be prepared subsequently with 
+references made to documents in the agreed bundle. Where 
+feasible, the agreed bundle should be finalised 4 weeks before the 
+exchange of AEICs. Parties may supplement the agreed bundle or 
+prepare their own bundles for exchange together with the AEICs. 
+Parties are to consider adopting paragraph 89 of the Supreme 
+Court Practice Directions on preparation of appeal records in civil 
+appeals to the court of appeal for the preparation of the agreed 
+bundle in soft copy.  
+(b) 
+Timelines for the exchange of AEICs of factual witnesses, experts’ 
+reports and replies . Lead counsel are to file a draft schedule, 
+preferably by agreement, 2 days before the First Milestone PTC. 
+P ATENT CASES . If experiments are to be conducted before the 
+preparation of expert reports, lead counsel are to be ready with an 
+estimation of the time required.  
+(c) 
+Confidential documents . Where confidential documents are to be 
+adduced at trial and parties do not wish to file them as part of any 
+bundle or affidavit, directions may be sought from the IP Judge for 
+the preparation of a separate confidential bundle of documents 
+accessible only by members of the confidentiality club and the 
+Court. The IP Judge has ultimate discretion on whether 
+confidential documents ought to be filed and how they are to be 
+treated. 
+(d) 
+Taking of trial dates . Lead counsel are to be ready to take trial 
+dates, having in mind the availability of factual and expert 
+witnesses and time required for cross-examination. Trial dates will 
+usually be given in a single tranche to avoid part-heard trials.  
+(e) 
+Appointment assessors and/or amici curiae . Lead counsel are to be 
+ready to address the IP Judge on all matters relating to the 
+necessity of and the appointment of assessors and/or amici curiae . 
+The IP Judge will give directions on the procedure for interviewing 
+the candidates before confirming the appointment of assessors 
+and/or amici curiae . 
+7 
+38.
+Second Milestone PTC. Lead counsel are to be ready to address the IP 
+Judge on the following issues: 
+(a) 
+List of issues for trial . To facilitate discussions with the IP Judge on 
+the issues for trial, lead counsel’s statements are to be filed 2 
+weeks before the Second Milestone PTC. The list of issues must be 
+succinct. 
+(b) 
+Taking of concurrent evidence of expert witnesses . Lead counsel are 
+to be ready to address the IP Judge on whether the taking of 
+concurrent evidence of expert witnesses is appropriate. Where the 
+taking of concurrent evidence is contemplated, experts may be 
+directed to agree on a list of issues for expert evidence that will be 
+used to manage the sequence of cross-examination of expert 
+witnesses. An experts’ caucus may be directed for experts to 
+discuss, with or without the presence of counsel, and agree on the 
+list of issues for expert evidence and the sequence for cross-
+examination of expert issues in dispute. 
+To facilitate discussions with the IP Judge, the lead counsel’s 
+statement should list expert issues separately. 
+Parties’ consent to the taking of expert evidence concurrently and 
+the defendant’s waiver of the defendant’s right to submit no case 
+to answer at the close of the plaintiff’s case will be recorded as part 
+of the order for summons for directions or of the PTC, to be filed 
+during set down. 
+(c) 
+Courtroom facilities . Where concurrent evidence of expert 
+witnesses is to be taken, a courtroom of a suitable size that can 
+accommodate the requisite number of experts concurrently may 
+have to be identified. Depending on the number of experts, 
+concurrent evidence of expert witnesses may have to be taken in 
+chambers or in a meeting room, suitably re-configured to 
+accommodate the number of experts to be concurrently cross-
+examined.  
+Parties are to consider whether the use of the Technology Court is 
+necessary, eg for projection of soft copy agreed bundle and AEICs 
+during trial, video conferencing with overseas expert witnesses, 
+etc . 
+Date issued: 6 September 2013 
