@@ -2776,16 +2776,6 @@ textarea {
   color: #f3f1ea;
 }
 
-/* Last update: the "percentage" look (Inter light, oversized), right-aligned.
-   Specificity beats `.reasoning-report .rr-provenance-value` (which is mono). */
-.swiss-form .reasoning-report .rr-provenance-value.doc-info-lastdate {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 2rem;
-  font-weight: 200;
-  letter-spacing: 0;
-  line-height: 1;
-}
-
 .swiss-form a.doc-info-link {
   display: block;
   overflow: hidden;

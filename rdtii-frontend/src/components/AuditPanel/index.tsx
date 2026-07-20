@@ -336,9 +336,7 @@ function DocumentInfoGroup({
         <section className="rr-section rr-provenance">
           <h4>Last update</h4>
           <div className="rr-provenance-line">
-            <span className="rr-provenance-value doc-info-lastdate">
-              {timestamp.best_date}
-            </span>
+            <span className="rr-provenance-value">{timestamp.best_date}</span>
           </div>
         </section>
       )}
