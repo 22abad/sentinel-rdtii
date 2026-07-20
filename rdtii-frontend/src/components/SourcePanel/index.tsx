@@ -20,7 +20,6 @@ const PROVIDER_LABELS: Record<string, string> = {
   together: "Together AI",
   openrouter: "OpenRouter",
   ollama: "Ollama (local · no key)",
-  "llama-3-local": "Llama 3 (Local)",
 };
 
 // Swiss/flat dropdown popup: square cream sheet, black frame, mono items,
@@ -52,6 +51,11 @@ type SourcePanelProps = {
   availableProviders: string[];
   selectedProvider: string;
   setSelectedProvider: (v: string) => void;
+  // Ollama (local, no key): the local models the tool auto-discovers, and the
+  // one the user picks. Only rendered when the Ollama provider is selected.
+  ollamaModels?: string[];
+  selectedOllamaModel?: string;
+  setSelectedOllamaModel?: (v: string) => void;
   stopExtraction: () => void;
   isStopping?: boolean;
   usage?: RunUsageSummary | null;
@@ -83,6 +87,9 @@ export function SourcePanel({
   availableProviders,
   selectedProvider,
   setSelectedProvider,
+  ollamaModels = [],
+  selectedOllamaModel,
+  setSelectedOllamaModel,
   stopExtraction,
   isStopping = false,
   usage,
@@ -257,6 +264,27 @@ export function SourcePanel({
               {availableProviders.map((p) => (
                 <SelectItem key={p} value={p}>
                   {PROVIDER_LABELS[p] ?? p}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </label>
+      )}
+
+      {/* Ollama model picker — auto-populated from the models found on the
+          local machine (GET /providers/ollama-models). Only shown for the
+          key-free Ollama provider. */}
+      {selectedProvider === "ollama" && setSelectedOllamaModel && (
+        <label className="stacked" style={{ display: "block" }}>
+          AI MODEL (LOCAL)
+          <Select value={selectedOllamaModel} onValueChange={setSelectedOllamaModel}>
+            <SelectTrigger>
+              <SelectValue placeholder="qwen2.5:14b" />
+            </SelectTrigger>
+            <SelectContent className={SQUARE_DROPDOWN}>
+              {(ollamaModels.length ? ollamaModels : ["qwen2.5:14b"]).map((m) => (
+                <SelectItem key={m} value={m}>
+                  {m}
                 </SelectItem>
               ))}
             </SelectContent>
