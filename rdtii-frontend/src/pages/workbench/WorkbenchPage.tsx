@@ -35,6 +35,7 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
     extractionProgress,
     availableProviders,
     selectedProvider, setSelectedProvider,
+    ollamaModels, selectedOllamaModel, setSelectedOllamaModel,
     stopExtraction, isStopping, usage,
     extract,
   } = useExtractionThread(threadId);
@@ -100,6 +101,23 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
               return new File([blob], l.fileName ?? "upload", { type: blob.type });
             }),
         );
+
+        // Detect the country from the FILENAME first, before parsing — a
+        // scanned PDF's OCR can take a minute or more, and the country
+        // shouldn't wait behind it. This makes the jurisdiction show up the
+        // instant a file like "MYS_….pdf" is dropped; the text-based pass
+        // below then refines/confirms it once parsing finishes.
+        try {
+          const fnRes = await fetch("/api/detect/country", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ filename: fileObjs.map((f) => f.name).join(" ") }),
+          });
+          if (fnRes.ok) {
+            const d = await fnRes.json();
+            if (d.detected && d.code) setCountry(d.code);
+          }
+        } catch { /* filename detection is best-effort */ }
         // One file failing to parse (oversized upload, image-only scan, …)
         // must not kill the whole prepare — detection can still work from
         // the filename, and extraction can OCR server-side.
@@ -178,6 +196,9 @@ function SourceThreadPanel({ threadId, linkedFiles, autoRunToken }: { threadId: 
       availableProviders={availableProviders}
       selectedProvider={selectedProvider}
       setSelectedProvider={setSelectedProvider}
+      ollamaModels={ollamaModels}
+      selectedOllamaModel={selectedOllamaModel}
+      setSelectedOllamaModel={setSelectedOllamaModel}
       stopExtraction={stopExtraction}
       isStopping={isStopping}
       usage={usage}
