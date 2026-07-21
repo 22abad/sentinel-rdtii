@@ -302,7 +302,10 @@ class TestIndicator7_1:
             == 0.5
         )
 
-    def test_no_framework_scores_1(self):
+    def test_no_framework_evidence_scores_0_not_1(self):
+        # A single document can prove a framework EXISTS, never that the
+        # economy LACKS one — the old fall-through 1.0 was a false-positive
+        # machine on the Round-2 benchmark (every such row was official 0/0.5).
         assert (
             score_7_1(
                 {
@@ -310,7 +313,7 @@ class TestIndicator7_1:
                     "has_sectoral_framework_only": False,
                 }
             )
-            == 1.0
+            == 0.0
         )
 
     def test_comprehensive_takes_precedence_over_sectoral(self):
@@ -343,7 +346,9 @@ class TestIndicator7_2:
             == 0.5
         )
 
-    def test_no_law_scores_1(self):
+    def test_no_law_evidence_scores_0_not_1(self):
+        # Same doc-level semantics as 7.1 — absence of evidence in one
+        # document is not evidence of economy-wide absence.
         assert (
             score_7_2(
                 {
@@ -351,7 +356,7 @@ class TestIndicator7_2:
                     "has_sectoral_cybersecurity_only": False,
                 }
             )
-            == 1.0
+            == 0.0
         )
 
 

@@ -85,7 +85,17 @@ def score_7_1(features: dict) -> tuple[Score, str]:
         return 0.0, "Score 0: A comprehensive data protection legal framework exists."
     if bool(features.get("has_sectoral_framework_only")):
         return 0.5, "Score 0.5: Only a sectoral data protection framework exists."
-    return 1.0, "Score 1: Lack of a comprehensive data protection legal framework."
+    # A single document can evidence that a framework EXISTS (-> 0 or 0.5),
+    # but never that the economy LACKS one — score 1 is an economy-wide
+    # absence claim no one provision can establish. On the Round-2 benchmark
+    # every fall-through 1.0 here was a false positive (official 0/0.5); a
+    # genuinely framework-less economy has no document to run in the first
+    # place. Economy-level absence stays a human-review judgement.
+    return 0.0, (
+        "Score 0: This provision does not itself evidence a data protection "
+        "framework; a single document cannot establish economy-wide absence "
+        "(score 1 requires economy-level review, not one provision)."
+    )
 
 
 # ── 7.2 Lack of dedicated legal framework for cybersecurity ────────────────
@@ -94,7 +104,13 @@ def score_7_2(features: dict) -> tuple[Score, str]:
         return 0.0, "Score 0: A dedicated cybersecurity legal framework applies across all sectors."
     if bool(features.get("has_sectoral_cybersecurity_only")):
         return 0.5, "Score 0.5: A non-dedicated or sector-specific cybersecurity legal framework exists."
-    return 1.0, "Score 1: Lack of a dedicated cybersecurity legal framework."
+    # Same doc-level semantics as 7.1: one provision can prove a framework
+    # exists, never that the economy lacks one.
+    return 0.0, (
+        "Score 0: This provision does not itself evidence a cybersecurity "
+        "framework; a single document cannot establish economy-wide absence "
+        "(score 1 requires economy-level review, not one provision)."
+    )
 
 
 # ── 7.3 Minimum period of data retention requirements ──────────────────────

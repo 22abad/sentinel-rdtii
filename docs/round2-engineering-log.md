@@ -1137,3 +1137,21 @@ the novelty triage works; the seed was added manually with origin=known.
 Library: 35 → 36 entries; count test and a targeted
 `lookup("MYS", indicators=["7.5"])` regression test updated in the same
 commit. Offline MYS 7.5 coverage is now genuinely 16/16 by construction.
+
+## 2026-07-21 — 7.1/7.2 fall-through scored "absence" from one document
+
+Error taxonomy over the 500-row benchmark (251 exact / 173 mismatch-with-
+evidence / 78 no-evidence) showed the single largest mismatch family was
+over-scoring official-0 cells, and 7.1/7.2 led it. Root cause: both bespoke
+scorers fell through to 1.0 ("no framework") whenever the LLM answered false
+to the existence features. But score 1 on these inverted indicators is an
+economy-wide ABSENCE claim — something no single provision can establish; a
+document can only ever prove a framework exists (0 or 0.5). The benchmark
+confirmed the asymmetry empirically: there is not one official 7.1/7.2 = 1
+row in the 500, so the fall-through 1.0 had zero true positives and 12 false
+ones (11 straight 0->1, one 0.5->1).
+
+Fix: fall-through now returns 0 with a justification that economy-level
+absence stays a human-review judgement. Expected effect ≈ +11 exact rows
+(~+2.2pp) before any re-run; the remaining 7.2 misses (0->0.5, sectoral
+over-match) are an extraction-calibration problem, tracked separately.
