@@ -1,0 +1,10 @@
+Access to computerized data
+
+46. (1) Any authorized officer conducting a search under this
+Act shall be given access to computerized data whether stored
+in computer or otherwise.
+
+ (2) For the purposes of this section, an authorized officer
+shall be provided with the necessary password, encryption code,
+decryption code, software or hardware and any other means
+required to enable comprehension of the computerized data.
