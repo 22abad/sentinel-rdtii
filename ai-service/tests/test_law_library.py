@@ -18,7 +18,7 @@ from submission.pipeline import run_library
 
 def test_checked_in_library_loads_and_integrity_checks():
     entries = load_library()
-    assert len(entries) == 35
+    assert len(entries) == 36
     assert {e.economy for e in entries} == {"AUS", "MYS", "SGP"}
     # Every cached text passed SHA-256 verification on load and is non-empty,
     # and every entry records a version + currency-check date.
@@ -104,6 +104,15 @@ def test_pillar7_dpo_indicator_74_is_covered():
     # fills the previously-empty 7.4 slot with a NEW discovery.
     names = {e.law_name for e in lookup("MYS", indicators=["7.4"])}
     assert any("Personal Data Protection (Amendment) Act 2024" in n for n in names)
+
+
+def test_pillar7_government_access_75_is_covered_for_mys():
+    # Official Round-1 key: MYS 7.5 = 1 (Horizontal) via Cyber Security Act 2024
+    # (Act 854) s46 — government access to computerized data with no court-order
+    # requirement. Was the one official non-zero cell with no curated seed, so a
+    # pure --offline run produced no MYS 7.5 row (found 2026-07-20).
+    names = {e.law_name for e in lookup("MYS", indicators=["7.5"])}
+    assert any("Cyber Security Act 2024" in n for n in names)
 
 
 def test_missing_manifest_returns_empty(tmp_path):

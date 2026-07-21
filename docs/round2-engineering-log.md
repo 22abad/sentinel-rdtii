@@ -1114,3 +1114,26 @@ explicit negatives, and reports 1.0 accepted precision/recall with no indicator
 confusion. A fixed-model full-mode run remains an environment follow-up: all
 provider key entries in the local `.env` are empty, so no external model result
 was claimed or substituted with the offline score.
+
+## 2026-07-21 — MYS 7.5 was the one official cell no seed covered
+
+The Round-1 submission-eve `--offline` run (three economies, pillars 6-7)
+covered 15 of the 16 official non-zero economy×indicator cells. The missing
+one was Malaysia 7.5 (government access): every MYS library seed hinted at
+6.2/6.4/7.1/7.3/7.4, so the deterministic backbone had nothing to serve and
+the cell silently produced zero rows. Live discovery had previously found the
+Cyber Security Act — which is why the older live outputs covered the cell and
+the offline run did not.
+
+Fix: bank the exact law the official answer key cites — Cyber Security Act
+2024 (Act 854) s46, MYS 7.5 = 1, Horizontal — as a KNOWN seed
+(`mys-cyber-security-act-2024-act-854-s46`). s46(1)-(2) were verified verbatim
+against the official AGC Laws of Malaysia PDF (lom.agc.gov.my; the answer
+key's own reference URL is a law-firm mirror, so the seed records the official
+portal instead). `promote_new_law.py --verify` correctly refused to bank it as
+NEW (`REJECT_KNOWN` — the Act is in the official Legal Inventory), confirming
+the novelty triage works; the seed was added manually with origin=known.
+
+Library: 35 → 36 entries; count test and a targeted
+`lookup("MYS", indicators=["7.5"])` regression test updated in the same
+commit. Offline MYS 7.5 coverage is now genuinely 16/16 by construction.
