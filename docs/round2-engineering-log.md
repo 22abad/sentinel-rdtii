@@ -1177,3 +1177,40 @@ demotes chunks that are short and carry no operative verb, and a schedule row
 is both. Tables were being reconstructed on ingest and then buried behind
 prose at query time. `looks_like_table` now exempts them, after the ToC check
 so a ruled table of contents stays demoted.
+
+## 2026-07-22 — retrieval could not find "section 46"
+
+The RAG query path was pure dense cosine, which is weakest exactly where legal
+retrieval is most demanding. A statutory identifier ("s46", "Act 854",
+"section 125") is a near-arbitrary token, and MiniLM maps every such reference
+into the same fuzzy neighbourhood. Measured on the live corpus: the query
+"section 46" returned three chunks about exemptions and consent managers, and
+never returned the actual s46 text at all.
+
+Fix: a lexical arm (`chunk_tsv`, a STORED generated tsvector + GIN index on
+document_chunks) fused with the dense arm by Reciprocal Rank Fusion in
+`rag/hybrid.py`. RRF consumes only ranks, so cosine (~0-1, tightly bunched) and
+ts_rank_cd (unbounded) combine without a normalisation constant that would need
+retuning per corpus. After: "section 46" returns the real provision at rank 1,
+while a pure-paraphrase query ("can personal data be transferred outside the
+country?") returns byte-identical results — the lexical arm adds signal without
+displacing the dense arm where dense is right.
+
+Text-search config is 'simple', not 'english': the corpus spans 8 languages, and
+stemming/stopword removal would damage the others while mangling the statutory
+tokens the arm exists to catch. Known limit — 'simple' splits on whitespace, so
+unsegmented scripts (ZH/TH/JA) contribute little lexically and those queries
+keep their previous dense-only behaviour.
+
+Both filters (country, document scope) are applied to BOTH arms; a filter that
+reached only the dense arm would let the lexical arm leak out-of-scope rows, so
+that has its own test. `score` stays cosine for every row — lexical-only hits
+are joined back to their embedding — so min_score and the UI keep their meaning.
+Databases predating the migration are probed once per process and degrade to
+dense-only rather than erroring.
+
+Writing the fusion tests corrected an assumption worth recording: at k=60 RRF
+barely separates adjacent top ranks ("1st + 3rd" edges out "2nd + 2nd" by
+~0.03%). RRF is a tie-breaker that stops one arm dominating, not a fine-grained
+ranker — finer separation at the head is a reranker's job, which the query path
+still lacks.
