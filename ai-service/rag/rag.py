@@ -13,6 +13,8 @@ from dataclasses import dataclass
 
 from auth import _db_connect
 
+from rag.tables import looks_like_table
+
 # Multilingual: the corpus spans 10 economies in 8 languages; the English
 # MiniLM embedded RU/TH/ZH text as near-noise (Russian query -> junk hits).
 # Same 384 dims, so the pgvector column is untouched.
@@ -158,6 +160,11 @@ def retrieve(
     def _low_substance(text: str) -> bool:
         if _looks_like_toc(text):
             return True
+        # A reconstructed schedule (see rag/tables.py) is pure substance — the
+        # cell value IS the provision (7.3's "7 years") — but it is short and
+        # has no operative verb, so the plain heuristic would bury it as filler.
+        if looks_like_table(text):
+            return False
         return len(text.strip()) < 200 and not _TOC_OPERATIVE.search(text)
 
     substantive = [h for h in deduped if not _low_substance(h.text)]

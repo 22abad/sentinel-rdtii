@@ -108,7 +108,12 @@ def _extract_text(file_path: str, filename: str) -> str:
     suffix = Path(filename).suffix.lower()
     if suffix == ".pdf":
         from pdf_reader import read_pdf
-        return "\n".join(read_pdf(file_path).pages)
+        from rag.tables import append_tables
+
+        text = "\n".join(read_pdf(file_path).pages)
+        # Append reconstructed tables so schedules become clean, retrievable
+        # chunks instead of the cell-by-cell jumble in the flat text layer.
+        return append_tables(text, file_path)
     return Path(file_path).read_bytes().decode("utf-8", errors="replace")
 
 
