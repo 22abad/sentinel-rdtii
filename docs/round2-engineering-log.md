@@ -1155,3 +1155,25 @@ Fix: fall-through now returns 0 with a justification that economy-level
 absence stays a human-review judgement. Expected effect ≈ +11 exact rows
 (~+2.2pp) before any re-run; the remaining 7.2 misses (0->0.5, sectoral
 over-match) are an extraction-calibration problem, tracked separately.
+
+## 2026-07-22 — a ruled schedule reached the index as a number jumble
+
+PyMuPDF's flat text layer reads a table cell-by-cell, so a retention /
+penalty / tariff schedule arrived at the chunker as an unlabelled run of
+numbers with the header->cell link gone — exactly the provisions where the
+cell value carries the score (7.3 needs a SPECIFIC minimum retention period,
+and "7 years" only means anything while it is still attached to its row).
+
+Fix: `rag/tables.py` reconstructs each page's grid via `find_tables()` and
+serialises it to Markdown under a `=== Table (page N) ===` marker; ingest
+appends the blocks after the prose, so the chunker/embedder sees a real
+table. Extraction is fail-open — an old PyMuPDF without `find_tables`, an
+encrypted file, or one bad table yields fewer or zero tables, never a broken
+ingest.
+
+Lifting the helper out of `services/canvas_file_ingest.py` into `./rag`
+exposed the other half of the bug: retrieval's `_low_substance` heuristic
+demotes chunks that are short and carry no operative verb, and a schedule row
+is both. Tables were being reconstructed on ingest and then buried behind
+prose at query time. `looks_like_table` now exempts them, after the ToC check
+so a ruled table of contents stays demoted.
