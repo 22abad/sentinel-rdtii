@@ -33,17 +33,24 @@ _BASE_PHRASES = {
         "xử lý tại chỗ", "pemrosesan", "proses", "ห้ามโอนย้ายไปต่างประเทศ",
         "出境", "境外", "境内处理", "禁止传输", "本地处理",
         "transfer personal data", "transfer of personal data", "restrict transfer",
-        "prohibition of transfer", "no transfer", "shall not transfer"
+        "prohibition of transfer", "no transfer", "shall not transfer",
+        # Hindi (India DPDP Act 2023 / gazette Hindi): स्थानांतरण = transfer,
+        # भारत के बाहर = outside India, स्थानीय प्रसंस्करण = local processing.
+        "स्थानांतरण", "भारत के बाहर", "स्थानीय प्रसंस्करण", "बाहर स्थानांतरित"
     ],
     "6.2": [
         "store data within", "local storage", "stored locally",
         "lưu trữ dữ liệu", "disimpan", "penyimpanan", "เก็บรักษาไว้",
-        "境内存储", "本地存储"
+        "境内存储", "本地存储",
+        # Hindi: भंडारण = storage, संग्रहीत = stored, स्थानीय भंडारण = local storage.
+        "स्थानीय भंडारण", "भंडारण", "संग्रहीत", "देश के भीतर"
     ],
     "6.3": [
         "local data centre", "local data center", "data center within", "data centre within",
         "local server", "physical infrastructure", "establish a server",
-        "服务器", "数据中心"
+        "服务器", "数据中心",
+        # Hindi: सर्वर = server, डेटा केंद्र = data centre.
+        "सर्वर", "डेटा केंद्र"
     ],
     "6.4": [
         "consent", "adequacy", "standard contract", "prior authorization", "security assessment",
@@ -55,7 +62,9 @@ _BASE_PHRASES = {
         # AUS Privacy Act APP 8.1 ("overseas recipient", "cross-border disclosure").
         "comparable protection", "comparable standard", "standard of protection",
         "adequate protection", "overseas recipient", "cross-border disclosure",
-        "cross-border transfer", "跨境提供", "对外提供"
+        "cross-border transfer", "跨境提供", "对外提供",
+        # Hindi: सहमति = consent, सीमापार = cross-border, पर्याप्त सुरक्षा = adequate protection.
+        "सहमति", "सीमापार", "पर्याप्त सुरक्षा"
     ],
     "6.5": [
         "trade agreement", "depa", "cptpp", "rcep", "free flow of data",
@@ -64,19 +73,26 @@ _BASE_PHRASES = {
     "7.1": [
         "personal data protection", "privacy law", "privacy act", "data protection act",
         "luật bảo vệ dữ liệu", "undang-undang perlindungan data",
-        "个人信息保护法", "隐私", "数据主体"
+        "个人信息保护法", "隐私", "数据主体",
+        # Hindi: डेटा संरक्षण = data protection, व्यक्तिगत डेटा = personal data,
+        # निजता = privacy (Puttaswamy right-to-privacy term).
+        "डेटा संरक्षण", "व्यक्तिगत डेटा", "निजता"
     ],
     "7.2": [
         # AU/UK/SG drafting writes the open compound ("cyber security");
         # the closed form alone missed the AUS Cyber Security Act 2024.
         "cybersecurity", "cyber security", "cybercrime", "cyber crime",
         "an ninh mạng", "keamanan siber",
-        "网络安全", "网络犯罪"
+        "网络安全", "网络犯罪",
+        # Hindi: साइबर सुरक्षा = cybersecurity, साइबर अपराध = cybercrime.
+        "साइबर सुरक्षा", "साइबर अपराध"
     ],
     "7.3": [
         "retain", "retention period", "minimum period",
         "thời gian lưu trữ", "periode retensi",
-        "保留", "至少保存", "保留期"
+        "保留", "至少保存", "保留期",
+        # Hindi: प्रतिधारण/अवधारण = retention, अवधि = period.
+        "प्रतिधारण", "अवधारण अवधि", "प्रतिधारण अवधि", "न्यूनतम अवधि"
     ],
     "7.4": [
         "data protection officer", "dpo", "dpia", "impact assessment",
@@ -86,14 +102,20 @@ _BASE_PHRASES = {
         "数据保护官", "影响评估",
         "compliance officer", "privacy officer", "registration with",
         "data controller", "data processor", "register of processing",
-        "annual audit", "data audit", "compliance audit"
+        "annual audit", "data audit", "compliance audit",
+        # Hindi (DPDP accountability): डेटा संरक्षण अधिकारी = DPO,
+        # डेटा प्रत्ययी = Data Fiduciary, डेटा संरक्षण बोर्ड = Data Protection Board.
+        "डेटा संरक्षण अधिकारी", "डेटा प्रत्ययी", "डेटा संरक्षण बोर्ड"
     ],
     "7.5": [
         "law enforcement access", "without warrant", "surveillance",
         "执法", "国家安全", "监视",
         "public interest", "public authority access", "government access",
         "national security", "public order", "disclosure to law enforcement",
-        "obligation to notify", "competent authority", "regulatory authority"
+        "obligation to notify", "competent authority", "regulatory authority",
+        # Hindi: निगरानी = surveillance, राष्ट्रीय सुरक्षा = national security,
+        # विधि प्रवर्तन = law enforcement, सरकारी पहुंच = government access.
+        "निगरानी", "राष्ट्रीय सुरक्षा", "विधि प्रवर्तन", "सरकारी पहुंच"
     ],
     "8.1": ["intermediary liability", "safe harbor", "互联网平台责任", "责任承担"],
     "9.1": ["online content", "illegal content", "在线内容", "违法内容"],
