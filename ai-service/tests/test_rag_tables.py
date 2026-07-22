@@ -9,6 +9,8 @@ result from being demoted as low-substance at retrieval time.
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import fitz  # pymupdf
 
 from rag.tables import append_tables, extract_pdf_tables, looks_like_table
@@ -62,12 +64,25 @@ def test_append_tables_marks_the_block_and_keeps_the_prose(tmp_path):
     assert "7 years" in out
 
 
-def test_ingest_extract_text_appends_the_table(tmp_path):
+def test_ingest_extract_text_appends_the_table(tmp_path, monkeypatch):
     pdf = tmp_path / "retention.pdf"
     _make_retention_table_pdf(str(pdf))
 
+    # Stub the prose extractor: this asserts the ingest WIRING (a .pdf gets its
+    # tables appended), not PDF text extraction, which has its own tests. A
+    # ruled table page carries ~66 chars of text — under PDF_PAGE_TEXT_MIN (80)
+    # — so the real read_pdf routes it to the OCR fallback and the test would
+    # then need a tesseract binary on PATH (CI has none).
+    import pdf_reader
+
+    monkeypatch.setattr(
+        pdf_reader, "read_pdf",
+        lambda path, *a, **k: SimpleNamespace(pages=["prose from the text layer"]),
+    )
+
     text = _extract_text(str(pdf), "retention.pdf")
 
+    assert "prose from the text layer" in text
     assert "=== Table (page 1) ===" in text
     assert "7 years" in text
 
