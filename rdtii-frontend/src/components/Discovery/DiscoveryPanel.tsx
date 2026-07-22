@@ -3,9 +3,7 @@ import {
   CheckSquare,
   Download,
   ExternalLink,
-  FileInput,
   Loader2,
-  Search,
   Settings2,
   Square,
 } from "lucide-react";
@@ -644,35 +642,166 @@ function CandidateCard({
   onUse: () => void;
   onExtract: () => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const grade = candidate.source_grade;
+  const reasons = candidate.reasons ?? [];
+  const warnings = candidate.warnings ?? [];
+  const hasReport = reasons.length > 0 || warnings.length > 0;
+  const rank = candidate.rank_score;
+
   return (
-    <article className={selected ? "candidate-row selected" : "candidate-row"}>
-      <button
-        type="button"
-        className="candidate-select"
-        onClick={onToggleSelected}
-        disabled={extracting}
-        aria-label={selected ? "Remove from shortlist" : "Add to shortlist"}
-      >
-        {selected ? <CheckSquare size={18} /> : <Square size={18} />}
-      </button>
-      <h3 className="candidate-title" title={candidate.title}>
-        {candidate.title}
-      </h3>
-      <span className="candidate-pillars">
-        {candidate.matched_pillars.length
-          ? candidate.matched_pillars.map((p) => `P${p}`).join(" · ")
-          : "—"}
-      </span>
-      <button
-        type="button"
-        className="candidate-extract"
-        onClick={onExtract}
-        disabled={extracting}
-      >
-        Extract
-      </button>
+    <article
+      className={`candidate-file${selected ? " selected" : ""}${open ? " open" : ""}`}
+    >
+      <div className="candidate-file-head">
+        <button
+          type="button"
+          className="candidate-select"
+          onClick={onToggleSelected}
+          disabled={extracting}
+          aria-label={selected ? "Remove from shortlist" : "Add to shortlist"}
+        >
+          {selected ? <CheckSquare size={16} /> : <Square size={16} />}
+        </button>
+        {/* The row itself is the disclosure toggle (file-list behaviour). */}
+        <button
+          type="button"
+          className="candidate-file-main"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+        >
+          <span className="candidate-chevron" aria-hidden="true">
+            {open ? "▾" : "▸"}
+          </span>
+          <span className="candidate-name" title={candidate.title}>
+            {candidate.title}
+          </span>
+          <span className="candidate-head-meta">
+            <span className={`candidate-grade ${grade}`}>{grade}</span>
+            {candidate.matched_pillars.length > 0 && (
+              <span className="candidate-meta-pillars">
+                {candidate.matched_pillars.map((p) => `P${p}`).join("·")}
+              </span>
+            )}
+            {Number.isFinite(rank) && rank > 0 && (
+              <span className="candidate-meta-rank">{rank.toFixed(2)}</span>
+            )}
+          </span>
+        </button>
+      </div>
+
+      {open && (
+        <div className="candidate-report reasoning-report">
+          <section className="rr-section">
+            <h4>Source</h4>
+            <div className="candidate-report-value">
+              {candidate.source_name || candidate.source_domain || "—"}
+              {candidate.url && (
+                <a
+                  className="candidate-link"
+                  href={candidate.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={12} />
+                  Open
+                </a>
+              )}
+            </div>
+          </section>
+
+          <section className="rr-section rr-sec-provenance">
+            <h4>Provenance</h4>
+            <div className="candidate-report-badges">
+              <span className={`candidate-badge grade-${grade}`}>
+                {gradeLabel(grade)}
+              </span>
+              <span
+                className={`candidate-badge val-${candidate.validation_status}`}
+              >
+                {validationStatusLabel(candidate.validation_status)}
+              </span>
+              <span className={`candidate-badge retr-${candidate.retrieval_mode}`}>
+                {retrievalModeLabel(candidate.retrieval_mode)}
+              </span>
+              {candidate.document_type && (
+                <span className="candidate-badge">{candidate.document_type}</span>
+              )}
+              {candidate.language && (
+                <span className="candidate-badge">
+                  {candidate.language.toUpperCase()}
+                </span>
+              )}
+              {candidate.last_update && (
+                <span className="candidate-badge">{candidate.last_update}</span>
+              )}
+            </div>
+          </section>
+
+          {candidate.matched_indicators.length > 0 && (
+            <section className="rr-section">
+              <h4>Indicators</h4>
+              <div className="candidate-report-value">
+                {candidate.matched_indicators.join(" · ")}
+              </div>
+            </section>
+          )}
+
+          {candidate.snippet && (
+            <section className="rr-section">
+              <h4>Excerpt</h4>
+              <p className="candidate-snippet">“{candidate.snippet}”</p>
+            </section>
+          )}
+
+          {/* Match report as a band (audit result-list report style): WHY this
+              candidate surfaced (numbered reasons) and any caveats (warnings). */}
+          <section className="rr-section">
+            <h4>Match report</h4>
+            {reasons.length > 0 && (
+              <ol className="candidate-reasons">
+                {reasons.map((reason, i) => (
+                  <li key={i}>{reason}</li>
+                ))}
+              </ol>
+            )}
+            {warnings.length > 0 && (
+              <ul className="candidate-warnings">
+                {warnings.map((warning, i) => (
+                  <li key={i}>⚠ {warning}</li>
+                ))}
+              </ul>
+            )}
+            {!hasReport && (
+              <p className="candidate-report-empty">
+                No match reasons or warnings reported for this source.
+              </p>
+            )}
+          </section>
+
+          <div className="candidate-actions">
+            <button
+              type="button"
+              className="secondary"
+              onClick={onUse}
+              disabled={extracting}
+            >
+              Use as source
+            </button>
+            <button type="button" onClick={onExtract} disabled={extracting}>
+              Extract
+            </button>
+          </div>
+        </div>
+      )}
     </article>
   );
+}
+
+function gradeLabel(grade: LegalCandidate["source_grade"]) {
+  if (grade === "primary") return "Primary source";
+  if (grade === "secondary") return "Secondary source";
+  return "Unverified source";
 }
 
 function retrievalModeLabel(mode: LegalCandidate["retrieval_mode"]) {
