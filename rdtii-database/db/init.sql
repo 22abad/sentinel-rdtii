@@ -118,8 +118,14 @@ CREATE TABLE document_chunks (
     chunk_index INTEGER NOT NULL,
     chunk_text TEXT NOT NULL,
     chunk_metadata JSONB DEFAULT '{}',
+    -- Lexical arm of hybrid retrieval. 'simple' (no stemming, no stopwords)
+    -- because the corpus spans 8 languages and because statutory tokens
+    -- ("s46", "854") must survive verbatim — see ai-service/rag/hybrid.py.
+    chunk_tsv TSVECTOR GENERATED ALWAYS AS (to_tsvector('simple', chunk_text)) STORED,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_document_chunks_tsv ON document_chunks USING GIN (chunk_tsv);
 
 CREATE TABLE chunk_embeddings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

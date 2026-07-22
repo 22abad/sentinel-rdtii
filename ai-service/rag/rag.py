@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 from auth import _db_connect
 
+from rag.hybrid import RRF_K, build_sql, lexical_available
 from rag.tables import looks_like_table
 
 # Multilingual: the corpus spans 10 economies in 8 languages; the English
@@ -85,7 +86,12 @@ def retrieve(
     document_ids: list[str] | None = None,
     min_score: float = 0.0,
 ) -> list[RetrievedChunk]:
-    """Embed *query* and return the top_k most similar chunks.
+    """Retrieve the top_k chunks most relevant to *query*.
+
+    Hybrid: a dense (embedding cosine) arm and a lexical (full-text) arm are
+    fused by RRF — see rag/hybrid.py for why, and for the dense-only fallback
+    on databases predating the migration. `score` remains cosine similarity in
+    both cases.
 
     Optionally filter by country_code (display name or ISO-3, normalised)
     and/or restrict to specific documents (session-scoped retrieval);
@@ -101,31 +107,33 @@ def retrieve(
     qvec = _to_pgvector(vec)
 
     conditions: list[str] = []
-    params: list = [qvec]                      # SELECT score
+    params: dict = {"qvec": qvec, "qtext": query, "rrf_k": RRF_K}
     if country_code:
-        conditions.append("ce.country_code = %s")
-        params.append(country_code)
+        conditions.append("ce.country_code = %(country_code)s")
+        params["country_code"] = country_code
     if document_ids:
-        conditions.append("ce.document_id = ANY(%s::uuid[])")
-        params.append(document_ids)
-    where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
-    params.append(qvec)                        # ORDER BY
+        conditions.append("ce.document_id = ANY(%(document_ids)s::uuid[])")
+        params["document_ids"] = document_ids
+    where = " AND ".join(conditions)
     # Over-fetch so the ToC penalty below still has substantive chunks to
     # promote into the final top_k.
-    params.append(max(top_k, min(top_k * 4, 40)))  # LIMIT
+    params["candidates"] = max(top_k, min(top_k * 4, 40))
 
-    sql = f"""
+    dense_only_sql = f"""
         SELECT dc.id, dc.chunk_text, ce.document_id, ce.country_code,
-               1 - (ce.embedding <=> %s::vector) AS score
+               1 - (ce.embedding <=> %(qvec)s::vector) AS score
         FROM   chunk_embeddings ce
         JOIN   document_chunks  dc ON dc.id = ce.chunk_id
-        {where}
-        ORDER  BY ce.embedding <=> %s::vector
-        LIMIT  %s
+        {f"WHERE {where}" if where else ""}
+        ORDER  BY ce.embedding <=> %(qvec)s::vector
+        LIMIT  %(candidates)s
     """
 
     with _db_connect() as conn:
         with conn.cursor() as cur:
+            # Hybrid when the full-text column exists, dense-only otherwise —
+            # a database predating the migration must still answer queries.
+            sql = build_sql(where) if lexical_available(cur) else dense_only_sql
             cur.execute(sql, params)
             rows = cur.fetchall()
 
