@@ -88,11 +88,13 @@ _SECTION_MARKER_RE = re.compile(
 _NUMBERED_START_RE = re.compile(
     r"^\s*(?:(?i:section|article|art\.?|clause|part|regulation)\s+)?[\dIVXLC]+[.)]",
 )
-# CJK / Japanese / Korean / Thai. The short-label heading heuristic below is
-# English-designed (word counting via \w+ and English obligation verbs), so it
-# must NOT run on these scripts — a CJK provision has no spaces (one giant
-# "word") and no "shall/must", and would be wrongly flagged as a heading.
-_NON_LATIN_RE = re.compile(r"[぀-ヿ㐀-鿿가-힯฀-๿]")
+# CJK / Japanese / Korean / Thai / Devanagari (Hindi). The short-label heading
+# heuristic below is English-designed (word counting via \w+ and English
+# obligation verbs), so it must NOT run on these scripts — a CJK provision has
+# no spaces (one giant "word") and no "shall/must", and a Hindi provision has no
+# English obligation verb, so a short one would be wrongly flagged (and hard-
+# rejected) as a heading. Devanagari block is U+0900–U+097F.
+_NON_LATIN_RE = re.compile(r"[぀-ヿ㐀-鿿가-힯฀-๿ऀ-ॿ]")
 # A statute *name* ("Personal Data Protection Act 2012", "Privacy Act 1988",
 # "… (Act 709)") is a proper-noun citation, not a section heading — and is
 # legitimate evidence for framework-existence indicators. Statute word + a year
@@ -219,6 +221,23 @@ _SUBSTANTIVE_SIGNALS: list[re.Pattern] = [
     re.compile(r"\btidak boleh\b"),
     re.compile(r"\bdilarang\b"),
     re.compile(r"\bwajib\b"),
+    # Hindi (India DPDP Act 2023) operative markers. Devanagari words are not
+    # ASCII, so \b behaves inconsistently around them — match as substrings,
+    # exactly as the Chinese markers do in rag.py. करेगा/करेंगे = shall (and
+    # नहीं करेगा = shall not, which contains करेगा), अनिवार्य = mandatory,
+    # प्रतिबंधित/निषिद्ध = prohibited, बाध्य = obliged, दंडनीय = punishable,
+    # कारावास = imprisonment, जुर्माना = fine, सहमति = consent, अधिकार = right.
+    re.compile(r"करेगा"),
+    re.compile(r"करेंगे"),
+    re.compile(r"अनिवार्य"),
+    re.compile(r"प्रतिबंधित"),
+    re.compile(r"निषिद्ध"),
+    re.compile(r"बाध्य"),
+    re.compile(r"दंडनीय"),
+    re.compile(r"कारावास"),
+    re.compile(r"जुर्माना"),
+    re.compile(r"सहमति"),
+    re.compile(r"अधिकार"),
 ]
 
 _PROCEDURAL_ONLY_SIGNALS: list[re.Pattern] = [
