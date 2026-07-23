@@ -29,11 +29,16 @@ def test_leader_sequence_runs_action(monkeypatch):
             app.set_focus(None)
             await pilot.press("space")
             assert app._leader_pending is True
-            assert app.query("#leader-hint")  # which-key bar visible
+            assert app.query("#leader-popup")  # which-key popup visible
+            # flash.nvim-style jump label on the mapped sidebar pane
+            nav = app.query_one("#nav-extract Label")
+            assert " e " in str(nav.render())
             await pilot.press("e")
             await pilot.pause()
             assert app._leader_pending is False
-            assert not app.query("#leader-hint")
+            assert not app.query("#leader-popup")
+            # jump label restored after dispatch
+            assert " e " not in str(nav.render())
             assert app.query_one("#switcher").current == "extract"
 
     asyncio.run(scenario())

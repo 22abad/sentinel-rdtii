@@ -726,30 +726,36 @@ class SentinelTUI(App):
     #home-banner {
         width: auto;
     }
-    #leader-hint {
+    Screen {
+        layers: base leader;
+    }
+    #leader-popup {
+        layer: leader;
         dock: bottom;
-        height: 1;
-        padding: 0 1;
+        width: 100%;
+        height: auto;
+        max-height: 12;
+        padding: 0 2;
         background: $panel;
-        color: $text-muted;
+        border-top: solid $primary;
     }
     """
 
-    BINDINGS = rebind_bindings(
-        [
-            ("q", "quit", "Quit"),
-            ("r", "refresh", "Refresh"),
-            ("1", "pane('docs')", "Documents"),
-            ("2", "pane('discovery')", "Discovery"),
-            ("3", "pane('extract')", "Extract"),
-            ("4", "pane('rag')", "Chat"),
-            ("ctrl+r", "run_extract", "Run extract"),
-            ("c", "copy_result", "Copy row"),
-            ("s", "sort_extract", "Sort"),
-            ("u", "sync_doc", "Save to DB"),
-        ],
-        THEME_CONFIG.key_direct,
-    )
+    DEFAULT_BINDINGS = [
+        ("q", "quit", "Quit"),
+        ("r", "refresh", "Refresh"),
+        ("1", "pane('docs')", "Documents"),
+        ("2", "pane('discovery')", "Discovery"),
+        ("3", "pane('extract')", "Extract"),
+        ("4", "pane('rag')", "Chat"),
+        ("ctrl+r", "run_extract", "Run extract"),
+        ("c", "copy_result", "Copy row"),
+        ("s", "sort_extract", "Sort"),
+        ("u", "sync_doc", "Save to DB"),
+    ]
+    BINDINGS = rebind_bindings(DEFAULT_BINDINGS, THEME_CONFIG.key_direct)
+    # action -> human label, for the which-key popup rows.
+    ACTION_LABELS = {action: label for _, action, label in DEFAULT_BINDINGS}
 
     def __init__(self, api: str, token: str) -> None:
         super().__init__()
@@ -898,33 +904,57 @@ class SentinelTUI(App):
     # ── actions ──────────────────────────────────────────────────────────
 
     # ── leader key (LazyVim-style) ───────────────────────────────────────
-    # <leader> then a mapped key runs an action; a which-key hint bar shows
-    # the choices. Never fires while an Input/TextArea is focused ("insert
-    # mode"), so a space leader still types spaces in the chat box.
+    # <leader> then a mapped key runs an action. While pending: a floating
+    # which-key popup lists the choices vertically, and flash.nvim-style
+    # jump labels light up the sidebar panes that have a mapped key. Never
+    # fires while an Input/TextArea is focused ("insert mode"), so a space
+    # leader still types spaces in the chat box.
 
-    def _leader_hint_markup(self) -> str:
-        pairs = "  ".join(
-            f"[bold {_P}]{key}[/] {escape(action)}"
-            for key, action in sorted(THEME_CONFIG.key_map.items())
-        )
-        return f"[bold]{THEME_CONFIG.leader.upper()}[/] ›  {pairs}"
+    _PANE_ACTION = re.compile(r"^pane\('(\w+)'\)$")
+
+    def _leader_popup_markup(self) -> str:
+        rows = [f"[bold]{THEME_CONFIG.leader.upper()}[/] ›"]
+        for key, action in sorted(THEME_CONFIG.key_map.items()):
+            label = self.ACTION_LABELS.get(action, action)
+            rows.append(f" [bold {_P}]{key}[/]  {escape(label)}")
+        return "\n".join(rows)
+
+    def _flash_pane_labels(self, on: bool) -> None:
+        """flash.nvim-style jump labels on the sidebar while leader pends."""
+        keys_by_pane = {
+            m.group(1): key
+            for key, action in THEME_CONFIG.key_map.items()
+            if (m := self._PANE_ACTION.match(action))
+        }
+        for pane_id, label in PANES:
+            key = keys_by_pane.get(pane_id)
+            if not key:
+                continue
+            try:
+                widget = self.query_one(f"#nav-{pane_id} Label", Label)
+            except Exception:  # noqa: BLE001 — sidebar not mounted yet
+                continue
+            widget.update(
+                f"[reverse bold {_P}] {key} [/] {label}" if on else label
+            )
 
     async def _enter_leader(self) -> None:
         self._leader_pending = True
         self._leader_timer = self.set_timer(
             THEME_CONFIG.leader_timeout, self._clear_leader
         )
-        hint = Static(self._leader_hint_markup(), id="leader-hint")
-        await self.mount(hint)
+        await self.mount(Static(self._leader_popup_markup(), id="leader-popup"))
+        self._flash_pane_labels(True)
 
     def _clear_leader(self) -> None:
         self._leader_pending = False
         if self._leader_timer is not None:
             self._leader_timer.stop()
             self._leader_timer = None
+        self._flash_pane_labels(False)
         try:
-            self.query_one("#leader-hint", Static).remove()
-        except Exception:  # noqa: BLE001 — hint already gone
+            self.query_one("#leader-popup", Static).remove()
+        except Exception:  # noqa: BLE001 — popup already gone
             pass
 
     async def on_key(self, event: events.Key) -> None:

@@ -25,6 +25,14 @@ from pathlib import Path
 from textual.theme import Theme
 
 _HEX_ALPHA = re.compile(r"^#([0-9a-fA-F]{6})[0-9a-fA-F]{2}$")
+_LEADER_PREFIX = re.compile(r"^<leader>", re.IGNORECASE)
+
+
+def normalize_key(key: str) -> str:
+    """LazyVim-style ``"<leader>e"`` → ``"e"`` — the leader prefix is implicit
+    in [keys.map] (every entry there is a leader sequence), so both spellings
+    configure the same thing."""
+    return _LEADER_PREFIX.sub("", key.strip())
 
 
 def rich_color(value: str) -> str:
@@ -153,14 +161,18 @@ def load_config(path: Path | None = None) -> ThemeConfig:
         cfg.leader = keys["leader"].strip().lower()
     if isinstance(keys.get("timeout_ms"), (int, float)) and keys["timeout_ms"] > 0:
         cfg.leader_timeout = float(keys["timeout_ms"]) / 1000.0
-    for attr, table in (("key_map", "map"), ("key_direct", "direct")):
-        entries = keys.get(table, {})
-        if isinstance(entries, dict):
-            setattr(
-                cfg,
-                attr,
-                {str(k): v for k, v in entries.items() if isinstance(v, str) and v},
-            )
+    kmap = keys.get("map", {})
+    if isinstance(kmap, dict):
+        cfg.key_map = {
+            normalize_key(str(k)): v
+            for k, v in kmap.items()
+            if isinstance(v, str) and v and normalize_key(str(k))
+        }
+    kdirect = keys.get("direct", {})
+    if isinstance(kdirect, dict):
+        cfg.key_direct = {
+            str(k): v for k, v in kdirect.items() if isinstance(v, str) and v
+        }
 
     _apply_env_overrides(cfg)
     return cfg

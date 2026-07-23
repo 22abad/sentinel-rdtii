@@ -146,6 +146,19 @@ def test_keys_section(tmp_path):
     assert cfg.leader == "space"
     assert cfg.leader_timeout == 0.5
     assert cfg.key_map == {"d": "pane('docs')", "q": "quit"}
+    # LazyVim spelling: "<leader>e" ≡ "e" (prefix implicit, case-insensitive).
+    path_lv = _write(
+        tmp_path,
+        """
+        [keys]
+        leader = "space"
+        [keys.map]
+        "<leader>e" = "pane('extract')"
+        "<Leader>d" = "pane('docs')"
+        """,
+    )
+    cfg_lv = load_config(path_lv)
+    assert cfg_lv.key_map == {"e": "pane('extract')", "d": "pane('docs')"}
     assert cfg.key_direct == {"refresh": "f5", "pane('docs')": "f1"}
     # No [keys] at all → leader disabled.
     assert load_config(tmp_path / "nope.toml").leader == ""
