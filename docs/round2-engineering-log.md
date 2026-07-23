@@ -1904,3 +1904,41 @@ barely separates adjacent top ranks ("1st + 3rd" edges out "2nd + 2nd" by
 ~0.03%). RRF is a tie-breaker that stops one arm dominating, not a fine-grained
 ranker — finer separation at the head is a reranker's job, which the query path
 still lacks.
+
+## 2026-07-23 — TUI polish pair: thinking animation (#372) + theme.toml (#373)
+
+Two stn-cli features driven from Discord/Telegram (first day of the channel
+workflow — requests arrived from the phone, progress streamed back as edits).
+
+**Thinking effects (#372).** The RAG chat's pending state was a frozen
+`[dim]thinking…[/]`. Now: braille spinner at 10fps + phase verbs that follow
+the actual pipeline (thinking → retrieving → reranking → drafting, advancing
+every 3s, holding on the last) + an elapsed tail after 3s. The formatter
+(`thinking_meta`) is pure and unit-tested; the widget timer is a thin shell.
+The subtle bug pre-empted: both chat workers are `exclusive=True`, so a new
+question cancels the in-flight one mid-await — without a `finally` guard the
+orphaned message's timer would animate forever, claiming work that isn't
+happening. Cancellation now freezes the spinner.
+
+**User theming (#373).** `~/.config/stn/theme.toml` (same home as
+credentials.json, so the compose `stn-config` volume already carries it):
+10 palette slots + `dark` + `transparent`, `[thinking]` spinner/phases,
+`[chat]` markers, `[widgets]` opacity. Layering: code defaults < file <
+`STN_THEME_*` env — Docker configures via environment, no bind mount.
+`transparent = true` = `ansi_default` background + `App.ansi_color`, the
+mechanism of Textual's builtin ansi themes; the terminal emulator's own
+opacity/blur then shows through. All 8 hardcoded `#10B981` in tui.py were
+deduped into theme references while at it.
+
+**The catch worth remembering:** all 25 unit tests were green while the app
+crashed on import against the real user file. Textual's `Color` parses
+8-digit alpha hex (`#13201bCC`); Rich's `Color.parse` — used by inline markup
+and `Style(bgcolor=…)` — rejects it, so `BlockBar` died the moment `surface`
+carried alpha. Only smoke-loading the user's actual `theme.toml` surfaced it.
+Fix: `.rich(key)` accessor strips the alpha byte for Rich contexts (Textual
+keeps it); regression test pins the split. Second lesson from the same PR:
+tui.py loads the theme at import time, which silently made the whole suite
+environment-dependent (a developer's `~/.config/stn/theme.toml` would leak
+into test runs) — `tests/conftest.py` now pins `STN_CONFIG` to a nonexistent
+path before anything imports tui. Test with the artifact users actually
+produce, and keep import-time config out of test reach.
