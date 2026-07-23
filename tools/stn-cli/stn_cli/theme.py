@@ -25,6 +25,14 @@ from pathlib import Path
 from textual.theme import Theme
 
 _HEX_ALPHA = re.compile(r"^#([0-9a-fA-F]{6})[0-9a-fA-F]{2}$")
+_LEADER_PREFIX = re.compile(r"^<leader>", re.IGNORECASE)
+
+
+def normalize_key(key: str) -> str:
+    """LazyVim-style ``"<leader>e"`` → ``"e"`` — the leader prefix is implicit
+    in [keys.map] (every entry there is a leader sequence), so both spellings
+    configure the same thing."""
+    return _LEADER_PREFIX.sub("", key.strip())
 
 
 def rich_color(value: str) -> str:
@@ -69,6 +77,11 @@ class ThemeConfig:
     stn_marker: str = "cyan"
     # [widgets]
     chat_message_opacity: float = 1.0
+    # [keys] — LazyVim-style leader sequences + plain rebinds
+    leader: str = ""  # empty = leader disabled
+    leader_timeout: float = 0.8  # seconds to wait for the follow-up key
+    key_map: dict[str, str] = field(default_factory=dict)  # key -> action
+    key_direct: dict[str, str] = field(default_factory=dict)  # action -> key
 
     @property
     def primary(self) -> str:
@@ -143,8 +156,41 @@ def load_config(path: Path | None = None) -> ThemeConfig:
     if isinstance(widgets.get("chat_message_opacity"), (int, float)):
         cfg.chat_message_opacity = min(1.0, max(0.0, float(widgets["chat_message_opacity"])))
 
+    keys = raw.get("keys", {})
+    if isinstance(keys.get("leader"), str):
+        cfg.leader = keys["leader"].strip().lower()
+    if isinstance(keys.get("timeout_ms"), (int, float)) and keys["timeout_ms"] > 0:
+        cfg.leader_timeout = float(keys["timeout_ms"]) / 1000.0
+    kmap = keys.get("map", {})
+    if isinstance(kmap, dict):
+        cfg.key_map = {
+            normalize_key(str(k)): v
+            for k, v in kmap.items()
+            if isinstance(v, str) and v and normalize_key(str(k))
+        }
+    kdirect = keys.get("direct", {})
+    if isinstance(kdirect, dict):
+        cfg.key_direct = {
+            str(k): v for k, v in kdirect.items() if isinstance(v, str) and v
+        }
+
     _apply_env_overrides(cfg)
     return cfg
+
+
+def rebind_bindings(
+    bindings: list[tuple[str, str, str]], direct: dict[str, str]
+) -> list[tuple[str, str, str]]:
+    """Apply [keys.direct] rebinds: action -> replacement key.
+
+    Match on the exact action string first (`"pane('docs')" = "f1"`), then the
+    bare action name (`refresh = "f5"`). Unmatched bindings keep their key.
+    """
+    out = []
+    for key, action, label in bindings:
+        new = direct.get(action) or direct.get(action.split("(")[0])
+        out.append((new or key, action, label))
+    return out
 
 
 def _apply_env_overrides(cfg: ThemeConfig) -> None:

@@ -44,7 +44,7 @@ from textual.widgets import (
 
 from .main import BANNER
 from .rag_render import render_answer
-from .theme import load_config
+from .theme import load_config, rebind_bindings
 
 # Processors the extract pane can request; blank = backend default
 # (RDTII_LLM_PROVIDER). Model per provider follows its env config.
@@ -726,9 +726,22 @@ class SentinelTUI(App):
     #home-banner {
         width: auto;
     }
+    Screen {
+        layers: base leader;
+    }
+    #leader-popup {
+        layer: leader;
+        dock: bottom;
+        width: 100%;
+        height: auto;
+        max-height: 12;
+        padding: 0 2;
+        background: $panel;
+        border-top: solid $primary;
+    }
     """
 
-    BINDINGS = [
+    DEFAULT_BINDINGS = [
         ("q", "quit", "Quit"),
         ("r", "refresh", "Refresh"),
         ("1", "pane('docs')", "Documents"),
@@ -740,11 +753,16 @@ class SentinelTUI(App):
         ("s", "sort_extract", "Sort"),
         ("u", "sync_doc", "Save to DB"),
     ]
+    BINDINGS = rebind_bindings(DEFAULT_BINDINGS, THEME_CONFIG.key_direct)
+    # action -> human label, for the which-key popup rows.
+    ACTION_LABELS = {action: label for _, action, label in DEFAULT_BINDINGS}
 
     def __init__(self, api: str, token: str) -> None:
         super().__init__()
         self._api = api
         self._token = token
+        self._leader_pending = False
+        self._leader_timer = None
         self._extract_rows: list[tuple[str, dict]] = []
         self._extract_col_keys: list = []
         self._sort_col: str | None = None
@@ -884,6 +902,78 @@ class SentinelTUI(App):
             table.add_row(f"(error: {exc})", "", "", "")
 
     # ── actions ──────────────────────────────────────────────────────────
+
+    # ── leader key (LazyVim-style) ───────────────────────────────────────
+    # <leader> then a mapped key runs an action. While pending: a floating
+    # which-key popup lists the choices vertically, and flash.nvim-style
+    # jump labels light up the sidebar panes that have a mapped key. Never
+    # fires while an Input/TextArea is focused ("insert mode"), so a space
+    # leader still types spaces in the chat box.
+
+    _PANE_ACTION = re.compile(r"^pane\('(\w+)'\)$")
+
+    def _leader_popup_markup(self) -> str:
+        rows = [f"[bold]{THEME_CONFIG.leader.upper()}[/] ›"]
+        for key, action in sorted(THEME_CONFIG.key_map.items()):
+            label = self.ACTION_LABELS.get(action, action)
+            rows.append(f" [bold {_P}]{key}[/]  {escape(label)}")
+        return "\n".join(rows)
+
+    def _flash_pane_labels(self, on: bool) -> None:
+        """flash.nvim-style jump labels on the sidebar while leader pends."""
+        keys_by_pane = {
+            m.group(1): key
+            for key, action in THEME_CONFIG.key_map.items()
+            if (m := self._PANE_ACTION.match(action))
+        }
+        for pane_id, label in PANES:
+            key = keys_by_pane.get(pane_id)
+            if not key:
+                continue
+            try:
+                widget = self.query_one(f"#nav-{pane_id} Label", Label)
+            except Exception:  # noqa: BLE001 — sidebar not mounted yet
+                continue
+            widget.update(
+                f"[reverse bold {_P}] {key} [/] {label}" if on else label
+            )
+
+    async def _enter_leader(self) -> None:
+        self._leader_pending = True
+        self._leader_timer = self.set_timer(
+            THEME_CONFIG.leader_timeout, self._clear_leader
+        )
+        await self.mount(Static(self._leader_popup_markup(), id="leader-popup"))
+        self._flash_pane_labels(True)
+
+    def _clear_leader(self) -> None:
+        self._leader_pending = False
+        if self._leader_timer is not None:
+            self._leader_timer.stop()
+            self._leader_timer = None
+        self._flash_pane_labels(False)
+        try:
+            self.query_one("#leader-popup", Static).remove()
+        except Exception:  # noqa: BLE001 — popup already gone
+            pass
+
+    async def on_key(self, event: events.Key) -> None:
+        if not THEME_CONFIG.leader:
+            return
+        if isinstance(self.focused, (Input, TextArea)):
+            return  # insert mode — leader never fires, keys type normally
+        if self._leader_pending:
+            event.stop()
+            event.prevent_default()
+            action = THEME_CONFIG.key_map.get(event.key)
+            self._clear_leader()
+            if action:
+                await self.run_action(action)
+            return
+        if event.key == THEME_CONFIG.leader:
+            event.stop()
+            event.prevent_default()
+            await self._enter_leader()
 
     def action_pane(self, pane_id: str) -> None:
         self.query_one("#switcher", ContentSwitcher).current = pane_id
