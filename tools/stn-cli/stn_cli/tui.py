@@ -26,7 +26,6 @@ from textual.message import Message
 from textual.reactive import reactive
 from textual.screen import ModalScreen
 from textual.strip import Strip
-from textual.theme import Theme
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widget import Widget
 from textual.widgets import (
@@ -45,6 +44,7 @@ from textual.widgets import (
 
 from .main import BANNER
 from .rag_render import render_answer
+from .theme import load_config
 
 # Processors the extract pane can request; blank = backend default
 # (RDTII_LLM_PROVIDER). Model per provider follows its env config.
@@ -58,21 +58,14 @@ PANES = [
     ("rag", "Chat"),
 ]
 
-# SENTINEL palette — the app's emerald/teal, not Textual's default accent.
-SENTINEL_THEME = Theme(
-    name="sentinel",
-    primary="#10B981",
-    secondary="#0f766e",
-    accent="#10B981",
-    success="#10B981",
-    warning="#f59e0b",
-    error="#dc2626",
-    foreground="#e7efec",
-    background="#0c1210",
-    surface="#13201b",
-    panel="#182721",
-    dark=True,
-)
+# SENTINEL palette — the app's emerald/teal by default, user-overridable via
+# ~/.config/stn/theme.toml (see stn_cli.theme for resolution + precedence).
+THEME_CONFIG = load_config()
+SENTINEL_THEME = THEME_CONFIG.to_theme()
+# Inline-markup shorthands for the spots Textual CSS variables can't reach.
+# .rich() strips any alpha byte — Rich markup/Style can't parse 8-digit hex.
+_P = THEME_CONFIG.rich("primary")
+_WARN = THEME_CONFIG.rich("warning")
 
 
 # Same key groupings as the browser's ReasoningReport.tsx — doc/OCR quality
@@ -100,12 +93,12 @@ PROVENANCE_KEYS = {
 
 def _h(title: str, color: str = "#e7efec") -> str:
     """Section subtitle: accent side-bar + bright title, set off from body."""
-    return f"[bold #10B981]\u258d[/][bold {color}] {title}[/]"
+    return f"[bold {_P}]\u258d[/][bold {color}] {title}[/]"
 
 
 def _chip(value: object) -> str:
     if value is True or value == "true":
-        return "[#10B981]yes[/]"
+        return f"[{_P}]yes[/]"
     if value is False or value == "false":
         return "[red]no[/]"
     return escape(str(value))
@@ -133,7 +126,7 @@ def _reasoning_markup(kind: str, m: dict) -> str:
                 f"  · verifier supported {escape(supported)}"
             )
         for reason in m.get("exclusion_reasons") or []:
-            out.append(f"  [#f59e0b]-[/] {escape(str(reason))}")
+            out.append(f"  [{_WARN}]-[/] {escape(str(reason))}")
         preview = str(m.get("chunk_preview") or "")
         if preview:
             out.append("")
@@ -144,7 +137,7 @@ def _reasoning_markup(kind: str, m: dict) -> str:
     features = m.get("features") or {}
     score = m.get("score", "—")
     out.append(
-        f"[bold #10B981]P{m.get('pillar')} · {m.get('indicator')}[/]"
+        f"[bold {_P}]P{m.get('pillar')} · {m.get('indicator')}[/]"
         f"  score [bold]{score}[/]  · scope {escape(str(m.get('scope', '—')))}"
         f" · via {escape(str(m.get('extraction_provider', '—')))}"
     )
@@ -157,9 +150,9 @@ def _reasoning_markup(kind: str, m: dict) -> str:
     flags = m.get("flag_reasons") or []
     if m.get("requires_human_review"):
         out.append("")
-        out.append(_h("Flagged for human review", "#f59e0b"))
+        out.append(_h("Flagged for human review", _WARN))
         for reason in flags or ["(no reason recorded)"]:
-            out.append(f"  [#f59e0b]-[/] {escape(str(reason))}")
+            out.append(f"  [{_WARN}]-[/] {escape(str(reason))}")
 
     quote = str(m.get("verbatim_quote") or "")
     context = str(m.get("quote_context") or "")
@@ -264,7 +257,7 @@ def _verification_markup(data: dict) -> str:
     """Forensic timestamp-verification block (crawler.verify_law_timeline)."""
     out = [_h("Timestamp verification (forensic)")]
     verified = data.get("verified")
-    badge = "[#10B981]✓ corroborated[/]" if verified else "[#f59e0b]unconfirmed[/]"
+    badge = f"[{_P}]✓ corroborated[/]" if verified else f"[{_WARN}]unconfirmed[/]"
     best = data.get("best_date") or "—"
     out.append(
         f"  {badge}  best date [bold]{escape(str(best))}[/]"
@@ -294,7 +287,7 @@ def _release_year_markup(data: dict) -> str:
         return "\n".join(out)
     conf = data.get("confidence") or 0.0
     out.append(
-        f"  [bold #10B981]{year}[/]  · {round(conf * 100)}% weighted support"
+        f"  [bold {_P}]{year}[/]  · {round(conf * 100)}% weighted support"
         f"  · decided by {escape(str(data.get('decided_by', '')))}"
     )
     cands = data.get("candidates") or {}
@@ -320,7 +313,7 @@ class ReportScreen(ModalScreen):
     #report-window {
         width: 84%;
         height: 80%;
-        border: solid #10B981;
+        border: solid $primary;
         background: $panel;
         padding: 1 2;
     }
@@ -434,8 +427,8 @@ class BlockBar(Widget):
 
     percentage: reactive[float | None] = reactive(None)
 
-    _FILLED = Style(bgcolor="#10B981")
-    _EMPTY = Style(bgcolor="#13201b")
+    _FILLED = Style(bgcolor=THEME_CONFIG.rich("primary"))
+    _EMPTY = Style(bgcolor=THEME_CONFIG.rich("surface"))
 
     def on_mount(self) -> None:
         self._march = 0
@@ -518,9 +511,9 @@ class ExtractInput(TextArea):
 # Thinking animation: braille spinner + RAG-pipeline phase verbs. The phase
 # advances every ~3s and holds on the last — long waits read as "drafting",
 # not a stuck spinner.
-_SPINNER_FRAMES = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-_THINK_PHASES = ("thinking", "retrieving", "reranking", "drafting")
-_THINK_PHASE_SECS = 3.0
+_SPINNER_FRAMES = THEME_CONFIG.spinner
+_THINK_PHASES = THEME_CONFIG.phases
+_THINK_PHASE_SECS = THEME_CONFIG.phase_secs
 
 
 def thinking_meta(frame: int, elapsed: float, verb: str | None = None) -> str:
@@ -552,6 +545,8 @@ class ChatMessage(Static):
         self._think_start = 0.0
 
     def on_mount(self) -> None:
+        if THEME_CONFIG.chat_message_opacity < 1.0:
+            self.styles.opacity = THEME_CONFIG.chat_message_opacity
         self.refresh_body()
 
     def start_thinking(self, verb: str | None = None) -> None:
@@ -580,7 +575,9 @@ class ChatMessage(Static):
 
     def refresh_body(self) -> None:
         marker = (
-            "[bold #10B981]you ›[/]" if self.role == "you" else "[bold cyan]stn ›[/]"
+            f"[bold {THEME_CONFIG.you_marker or _P}]you ›[/]"
+            if self.role == "you"
+            else f"[bold {THEME_CONFIG.stn_marker}]stn ›[/]"
         )
         head = f"{marker} {self._meta}".rstrip()
         if not self.raw:
@@ -672,6 +669,10 @@ def _extract_sort_key(col: str):
 class SentinelTUI(App):
     TITLE = "SENTINEL"
     SUB_TITLE = "RDTII AI Mapper"
+    # transparent=true keeps the terminal's own (possibly translucent)
+    # background: ansi_color stops Textual converting ANSI-default to a
+    # concrete color, and the theme's background is ansi_default.
+    ansi_color = THEME_CONFIG.transparent
 
     CSS = """
     #sidebar {
@@ -775,7 +776,7 @@ class SentinelTUI(App):
             with ContentSwitcher(initial="home", id="switcher"):
                 with Vertical(id="home"):
                     yield Static(
-                        f"[bold #10B981]{BANNER}[/]\n"
+                        f"[bold {_P}]{BANNER}[/]\n"
                         "  SENTINEL — Aimed for RDTII 2.1.\n\n"
                         "[#bec7c3] 1 Documents \n 2 Discovery \n 3 Extract \n 4 Chat\n"
                         " \n r refresh \n q quit[/]",
