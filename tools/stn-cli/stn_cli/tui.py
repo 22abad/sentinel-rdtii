@@ -669,6 +669,10 @@ def _extract_sort_key(col: str):
 class SentinelTUI(App):
     TITLE = "SENTINEL"
     SUB_TITLE = "RDTII AI Mapper"
+
+    # Single source of truth for the chat prompt — compose and _set_scope both
+    # use this so the placeholder never says two different things.
+    RAG_PLACEHOLDER = "Ask the KB · or paste a file path to ingest · + Enter"
     # transparent=true keeps the terminal's own (possibly translucent)
     # background: ansi_color stops Textual converting ANSI-default to a
     # concrete color, and the theme's background is ansi_default.
@@ -853,8 +857,7 @@ class SentinelTUI(App):
             with ContentSwitcher(initial="home", id="switcher"):
                 with Vertical(id="home"):
                     yield Static(
-                        f"[bold {_P}]{BANNER}[/]\n"
-                        "  SENTINEL — Aimed for RDTII 2.1.",
+                        f"[bold {_P}]{BANNER}[/]\n  Aimed for RDTII 2.1.",
                         id="home-banner",
                     )
                     with Horizontal(id="home-stats"):
@@ -887,9 +890,7 @@ class SentinelTUI(App):
                     yield ExtractInput(id="extract-input")
                 with Vertical(id="rag"):
                     yield VerticalScroll(id="rag-log")
-                    yield Input(
-                        placeholder="Ask the knowledge base + Enter", id="rag-input"
-                    )
+                    yield Input(placeholder=self.RAG_PLACEHOLDER, id="rag-input")
         yield Footer()
 
     async def on_mount(self) -> None:
@@ -904,9 +905,7 @@ class SentinelTUI(App):
         ext.cursor_type = "row"  # row select opens the reasoning report
         await self.query_one("#rag-log", VerticalScroll).mount(
             Static(
-                "[dim]Ask something — answers are grounded in the knowledge base."
-                "  ·  paste a file path to ingest it (and scope chat to it)."
-                "  ·  select a document to scope · /all clears scope"
+                "[dim]Select a document to scope the chat · /all clears scope"
                 "  ·  select text with the mouse to copy.[/]",
                 id="rag-hint",
             )
@@ -1301,7 +1300,7 @@ class SentinelTUI(App):
             self.query_one("#rag-input", Input).placeholder = (
                 f"[scope: {self._scope_label}] ask + Enter · /all clears"
                 if self._scope_doc_id
-                else "Ask the KB · or paste a file path to ingest · + Enter"
+                else self.RAG_PLACEHOLDER
             )
         except Exception:  # noqa: BLE001 — placeholder is cosmetic
             pass
