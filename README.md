@@ -55,11 +55,12 @@ official scorable cells** (138/229 economy×indicator cells the RDTII database
 scores non-zero). **96.2% of quotes are located verbatim** in their source text
 (the extractor hard-rejects non-verbatim quotes), and an independent blind
 cross-model checker **overturns 29% of positive generic scores** before anything
-ships. On the self-evaluation against the official raw scores, **675 rows
-evaluated → 53.5% exact score match**. Whole-submission deployment cost:
-**$12.96 on a hosted model, $0 on the open-weight (Ollama) path**. Every number
-is reproducible from the eval JSONs — see the
-[per-economy report](docs/round2-meeting-report.md).
+ships. On the self-evaluation against the official raw scores, **500
+official-baseline rows** were evaluated with evidence found for **70.2%** and an
+exact score match on **50.2%** (correct zero-abstentions included, so not a
+standalone accuracy rate). Whole-submission deployment cost: **$12.96 on a hosted
+model, $0 on the open-weight (Ollama) path**. Every number is reproducible from
+the eval JSONs — see the [per-economy report](docs/round2-meeting-report.md).
 
 ---
 
