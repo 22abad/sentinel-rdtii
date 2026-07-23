@@ -11,8 +11,29 @@ SourceMode = Literal["official_first", "official_only", "broad_web"]
 SourceGrade = Literal["primary", "secondary", "unknown"]
 RetrievalMode = Literal["live", "fixture", "fallback"]
 ValidationStatus = Literal["unverified", "verified", "weak", "failed"]
-SUPPORTED_PILLARS = {6, 7}
-SUPPORTED_INDICATORS = {"6.1", "6.2", "6.3", "6.4", "6.5", "7.1", "7.2", "7.3", "7.4", "7.5"}
+SUPPORTED_PILLARS = set(range(1, 13))  # Round 2 spans all 12 pillars
+
+
+def _supported_indicators() -> set[str]:
+    # Every scorable RDTII 2.1 indicator, read from the methodology file (read
+    # directly here rather than importing query_builder, to avoid a circular
+    # import). Falls back to the P6/P7 core if the file is unavailable.
+    import json
+    from pathlib import Path
+
+    core = {"6.1", "6.2", "6.3", "6.4", "6.5", "7.1", "7.2", "7.3", "7.4", "7.5"}
+    try:
+        path = Path(__file__).resolve().parents[2] / "data" / "rdtii21_methodology.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        items = raw.get("indicators", raw) if isinstance(raw, dict) else raw
+        items = items if isinstance(items, list) else list(items.values())
+        found = {str(it.get("indicator_id", "")).strip() for it in items}
+        return (found | core) - {""}
+    except Exception:  # noqa: BLE001
+        return core
+
+
+SUPPORTED_INDICATORS = _supported_indicators()
 
 
 def normalize_hostname(value: str) -> str:

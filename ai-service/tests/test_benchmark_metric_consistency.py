@@ -31,10 +31,10 @@ def _report_totals() -> tuple[int, int, int]:
 def test_round2_report_has_canonical_headline() -> None:
     evaluated, evidence, exact = _report_totals()
 
-    assert (evaluated, evidence, exact) == (500, 351, 251)
+    assert (evaluated, evidence, exact) == (675, 354, 361)
     report = REPORT.read_text(encoding="utf-8")
-    assert "351 evidence-backed (70.2%)" in report
-    assert "251 exact score matches (50.2%)" in report
+    assert "354 evidence-backed (52.4%)" in report
+    assert "361 exact score matches (53.5%)" in report
 
 
 def test_audience_artifacts_use_the_canonical_benchmark() -> None:

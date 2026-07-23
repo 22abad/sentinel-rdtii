@@ -25,6 +25,9 @@ openai==2.41.0
 # HTTP + crawling
 httpx==0.28.1
 requests==2.34.2
+# curl_cffi = real Chrome TLS fingerprint; clears CDN-WAF fingerprint filters
+# (e.g. sso.agc.gov.sg CloudFront) that 403 plain httpx and Playwright.
+curl_cffi==0.15.0
 playwright==1.60.0
 playwright-stealth==2.0.3
 

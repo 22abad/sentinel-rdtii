@@ -44,39 +44,17 @@ WINDOW = 4_000           # relevance-selection window size
 DOC_CONCURRENCY = 2      # documents extracted in parallel (deepseek TPM headroom)
 
 
-def _select_relevant_text(text: str, indicators: list[str]) -> str:
-    """Pick the document segments most relevant to the target indicators.
+def _select_relevant_text(text: str, indicators: list[str], country_code: str | None = None) -> str:
+    """Indicator-targeted retrieval — shared with the CLI submission pipeline.
 
     Long statutes bury the operative clause hundreds of kB in; a blind prefix
     cap never shows it to the model (the India P7 rows all missed this way).
-    Windows are scored by indicator phrase hits (same table the classifier
-    routes on); the best windows are concatenated up to TEXT_CAP, keeping
-    document order. Falls back to the prefix when nothing matches.
+    Delegates to the BM25 retriever (rag/retriever.py), passing the economy so a
+    non-English statute is ranked with its local-language query terms.
     """
-    if len(text) <= TEXT_CAP:
-        return text
-    from classifier import _INDICATOR_PHRASES  # routing phrase table
+    from rag.retriever import select_relevant_text
 
-    phrases: set[str] = set()
-    for iid in indicators:
-        phrases.update(p.lower() for p in _INDICATOR_PHRASES.get(iid, []))
-    windows = [(i, text[i:i + WINDOW]) for i in range(0, len(text), WINDOW)]
-    scored = []
-    for start, chunk in windows:
-        low = chunk.lower()
-        hits = sum(low.count(p) for p in phrases if p)
-        scored.append((hits, start, chunk))
-    ranked = sorted(scored, key=lambda t: (-t[0], t[1]))
-    if not ranked or ranked[0][0] == 0:
-        return text[:TEXT_CAP]
-    picked, budget = [], TEXT_CAP
-    for hits, start, chunk in ranked:
-        if budget <= 0 or hits == 0:
-            break
-        picked.append((start, chunk))
-        budget -= len(chunk)
-    picked.sort()  # restore document order for offset sanity
-    return "\n".join(chunk for _start, chunk in picked)
+    return select_relevant_text(text, indicators, TEXT_CAP, country_code=country_code)
 
 
 def _slug(name: str) -> str:
@@ -154,7 +132,8 @@ async def _evaluate(args: argparse.Namespace) -> dict:
         text_path = REPO_ROOT / corpus[slug]
         indicators = sorted({r["indicator_id"] for r in doc_rows})
         text = _select_relevant_text(
-            text_path.read_text(encoding="utf-8"), indicators
+            text_path.read_text(encoding="utf-8"), indicators,
+            country_code=args.economy.upper(),
         )
         async with semaphore:
             try:
@@ -190,6 +169,13 @@ async def _evaluate(args: argparse.Namespace) -> dict:
               f"{len(indicators)} indicator(s), {len(mappings)} mapping(s) {error[:40]}")
 
     await asyncio.gather(*(_one(slug, doc_rows) for slug, doc_rows in docs))
+    # NOTE: economy-level "more than one category-2 measure -> full score"
+    # escalation (scoring/aggregation.py) was measured here and REVERTED:
+    # counting half-score provisions over-escalates when ONE measure spans
+    # several provisions/laws (e.g. China's data-localization 6.1/6.2 is one
+    # 0.5 measure repeated, wrongly escalated to 1.0). Deterministic net was
+    # only +2 across 7 economies with a -6 CHN regression. Safe escalation needs
+    # distinct-measure-type detection, which the extractor does not yet provide.
 
     evaluated = results  # every evaluated row scores (no-evidence = 0.0)
     exact = [r for r in evaluated if r["exact_match"]]

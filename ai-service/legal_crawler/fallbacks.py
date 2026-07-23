@@ -56,6 +56,96 @@ async def _precheck_url(url: str) -> str | None:
         return None
 
 
+def _html_to_legal_text(html: str) -> str:
+    """Strip an HTML page to plain legal text (SSO .legis container first, then
+    generic <body>). Shared by the impersonated and plain-HTTP fetch rungs."""
+    raw = None
+    body_match = re.search(
+        r'<div\s+class="legis[^"]*"[^>]*>(.*?)</div>\s*</div>\s*</div>',
+        html, re.DOTALL | re.IGNORECASE,
+    )
+    if body_match:
+        raw = body_match.group(1)
+    if not raw:
+        body_match = re.search(r"<body[^>]*>(.*?)</body>", html, re.DOTALL | re.IGNORECASE)
+        raw = body_match.group(1) if body_match else html
+    text = re.sub(r"<script[^>]*>.*?</script>", "", raw, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<style[^>]*>.*?</style>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html_module.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _sso_print_url(url: str) -> str:
+    """Rewrite an SG SSO Act/SL page to its print endpoint, which server-renders
+    the FULL statute body. The plain /Act/X page lazy-loads provisions via
+    Knockout JS and yields only a ~1/8 shell (verified live 2026-07-21:
+    /Act/PDPA2012 → 25K visible chars; print endpoint → 198K). ?WholeDoc=1 did
+    NOT expand it; the print endpoint does."""
+    parts = urlsplit(url)
+    if (parts.hostname or "").lower() != "sso.agc.gov.sg":
+        return url
+    if not re.match(r"^/(Act|SL|AN)", parts.path, re.IGNORECASE):
+        return url
+    if "viewtype" in parts.query.lower():  # already a Print/Pdf view
+        return url
+    return (
+        f"{parts.scheme}://{parts.netloc}{parts.path}"
+        "?ViewType=Print&PrintType=html&ProvIds=all-."
+    )
+
+
+async def _try_impersonated_fetch(url: str, timeout: int = 30000) -> dict | None:
+    """Primary HTTP rung: fetch with a real Chrome TLS fingerprint via curl_cffi.
+
+    Government CDN WAFs (e.g. sso.agc.gov.sg on CloudFront) intermittently 403
+    plain httpx / Playwright on TLS fingerprint but pass a browser-impersonated
+    client — a real Chrome TLS fingerprint via curl_cffi clears them without a
+    browser or proxy. Also applies the SSO print-endpoint rewrite so we get the
+    full statute body, not the lazy-load shell. Returns the standard fetch dict,
+    or None to fall through to the httpx / Playwright rungs.
+    """
+    try:
+        from curl_cffi import requests as _creq
+    except ImportError:
+        return None
+
+    fetch_url = _sso_print_url(url)
+    try:
+        async with _creq.AsyncSession(
+            impersonate="chrome",
+            timeout=timeout / 1000,
+            allow_redirects=True,
+        ) as session:
+            resp = await session.get(fetch_url)
+            if resp.status_code != 200:
+                print(f"[curl_cffi] HTTP {resp.status_code} — falling through")
+                return None
+            html = resp.text
+            if len(html) < 1000 or _looks_like_error_or_challenge(html):
+                print(f"[curl_cffi] shell/challenge ({len(html)} chars) — falling through")
+                return None
+            text = _html_to_legal_text(html)
+            if len(text) > 500 and _has_legal_signal(text) and not _looks_like_error_or_challenge(text):
+                print(f"[curl_cffi] OK — {len(text)} chars via {fetch_url}")
+                return {
+                    "type": "text",
+                    "url": str(resp.url),
+                    "text": text,
+                    "metadata": {
+                        "source": "curl_cffi_impersonate",
+                        "http_status": resp.status_code,
+                        "fetch_method": "curl_cffi_chrome",
+                        "impersonated": True,
+                        "print_endpoint": fetch_url != url,
+                    },
+                }
+            print(f"[curl_cffi] text too short/weak ({len(text)} chars) — falling through")
+    except Exception as e:  # noqa: BLE001 — any failure just falls through
+        print(f"[curl_cffi] failed: {type(e).__name__}: {str(e)[:80]}")
+    return None
+
+
 # ── HTTP(S) direct fetch fallback ───────────────────────────────────────────
 # Some government sites (e.g. sso.agc.gov.sg) use CDN WAFs (CloudFront)
 # that block Playwright while allowing simple HTTP clients like httpx.
@@ -535,6 +625,26 @@ def _looks_like_error_or_challenge(text: str) -> bool:
         "just a moment",
     )
     return any(signal in lower for signal in signals)
+
+
+def _is_real_legal_content(text: str | None, min_chars: int = 400) -> bool:
+    """Universal body-integrity gate for the fetch ladder.
+
+    A rung's output counts as real legal content only if it is long enough,
+    carries a legal signal, and is not an error / challenge / WAF-banner page.
+    Applied uniformly across every rung (curl_cffi, httpx, Playwright, archive)
+    so no rung ever ships a shell or banner as success — a shell escalates to
+    the next rung instead of being silently mapped. This is what makes the
+    sequential fallback ladder work the same for every country's portal.
+    """
+    if not text:
+        return False
+    stripped = text.strip()
+    if len(stripped) < min_chars:
+        return False
+    if _looks_like_error_or_challenge(stripped):
+        return False
+    return _has_legal_signal(stripped)
 
 
 async def _try_wayback_fallback(url: str, context: str = "dead link") -> dict | None:

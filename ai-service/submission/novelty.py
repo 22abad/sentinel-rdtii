@@ -23,6 +23,7 @@ import json
 import re
 import unicodedata
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 
 from law_library import LawEntry, load_library
@@ -67,6 +68,24 @@ _GEO_ALT = (
     r"japanese|new\s+zealand|united\s+kingdom|united\s+states"
 )
 _LEADING_GEO = re.compile(rf"^(?:the\s+)?(?:{_GEO_ALT})\s+", re.IGNORECASE)
+# A leading AUTHORITY prefix the ESCAP inventory prepends ("Government of India,
+# Information Technology Act", "Ministry of Communications, ...") that a
+# live-discovery title never carries — strip it (up to the first comma for the
+# ministry form) plus a bare leading article, so a discovered statute reconciles
+# to its KNOWN baseline entry instead of over-tagging NEW.
+_LEADING_AUTHORITY = re.compile(
+    # geo form ("Government of India," / "Government of India ...") — comma
+    # optional because the geo word is bounded; OR a generic authority form
+    # ("Ministry of Communications and IT, ...") — comma REQUIRED, so the greedy
+    # match can't swallow the act title when there is no authority delimiter.
+    rf"^(?:the\s+)?(?:"
+    rf"(?:government|republic|state)\s+of\s+(?:{_GEO_ALT}),?\s*"
+    rf"|(?:government|republic|state|ministry|department)\s+of\s+[^,]+,\s*"
+    rf")",
+    re.IGNORECASE,
+)
+_LEADING_ARTICLE = re.compile(r"^the\s+", re.IGNORECASE)
+_LEADING_SERIAL = re.compile(r"^\d{1,3}\s+(?=[a-z(])", re.IGNORECASE)
 # The ESCAP inventory tags multilateral instruments with a " - <Economy>"
 # jurisdiction suffix (e.g. "...Trans-Pacific Partnership - Malaysia") that a
 # live-discovery title never carries, so CPTPP/RCEP would mis-classify as NEW.
@@ -208,14 +227,42 @@ def normalize_law_name(name: str) -> str:
     """
 
     lowered = (name or "").lower()
+    # A leading bare serial ("1 The Information Technology Act") is a
+    # bitstream/result-row artifact from live discovery, never part of a statute
+    # title — strip it so it doesn't defeat KNOWN reconciliation.
+    lowered = _LEADING_SERIAL.sub("", lowered.strip())
     lowered = _PAREN.sub(" ", lowered)
     lowered = _YEAR.sub(" ", lowered)
     lowered = _ERA_MARKER.sub(" ", lowered)
     lowered = _ACT_NUMBER.sub(" ", lowered)
     lowered = _STATE_SUFFIX.sub("", lowered.strip())
     lowered = _TRAILING_JURISDICTION.sub("", lowered.strip())
+    lowered = _LEADING_AUTHORITY.sub("", lowered.strip())
     lowered = _LEADING_GEO.sub("", lowered.strip())
+    lowered = _LEADING_ARTICLE.sub("", lowered.strip())
     return _normalize_words(lowered)
+
+
+_LAW_NO_RE = re.compile(r"\bno\.?\s*(\d+)", re.IGNORECASE)
+_YEAR_TOKEN_RE = re.compile(r"\b(?:19|20)\d{2}\b")
+
+
+def law_number_key(name: str) -> str | None:
+    """A language-neutral ``"<number>/<year>"`` identity for a numbered statute.
+
+    Indonesian discovery returns native titles ("UU No. 27 Tahun 2022") while
+    the baseline lists English ones ("Law No. 27 ... 2022"); their normalized
+    words never match, so every rediscovered baseline law was mis-tagged NEW.
+    The statute number + year is language-neutral and reconciles them. Returns
+    None when either piece is missing (then name matching is used as before).
+    """
+    if not name:
+        return None
+    m = _LAW_NO_RE.search(name)
+    years = _YEAR_TOKEN_RE.findall(name)
+    if not m or not years:
+        return None
+    return f"{int(m.group(1))}/{years[-1]}"
 
 
 def _normalize_words(value: str) -> str:
@@ -458,6 +505,37 @@ def known_law_index(entries: list[LawEntry] | None = None) -> set[tuple[str, str
         library_keys
         | load_known_inventory(KNOWN_INVENTORY_PATH)
         | load_known_inventory(ROUND2_INVENTORY_PATH)
+        | _unambiguous_number_keys()
+    )
+
+
+@lru_cache(maxsize=1)
+def _unambiguous_number_keys() -> frozenset[tuple[str, str]]:
+    """``(economy, "#<number>/<year>")`` keys for cross-language reconciliation —
+    but ONLY where the statute number+year maps to exactly one distinct law in
+    that economy's baseline. Ambiguous numbers (e.g. Indonesia has 13 different
+    laws numbered "71/2019" across ministries) are dropped, so a native-title
+    discovery is tagged KNOWN only on an unambiguous number match; everything
+    else falls back to name matching (i.e. stays NEW)."""
+    per_key: dict[tuple[str, str], set[str]] = {}
+    for path in (KNOWN_INVENTORY_PATH, ROUND2_INVENTORY_PATH):
+        p = Path(path)
+        if not p.exists():
+            continue
+        for line in p.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            law_name = (record.get("law_name") or "").strip()
+            econ = str(record.get("economy", "")).upper()
+            for part in _INVENTORY_SEP.split(law_name):
+                num_key = law_number_key(part)
+                if num_key:
+                    per_key.setdefault((econ, num_key), set()).add(normalize_law_name(part))
+    return frozenset(
+        (econ, f"#{num_key}")
+        for (econ, num_key), names in per_key.items()
+        if len(names) == 1
     )
 
 
@@ -468,7 +546,20 @@ def is_known_law(economy: str, law_name: str, index: set[tuple[str, str]]) -> bo
         code = economy_code(economy)
     except ValueError:
         code = (economy or "").strip().upper()
-    return (code, normalize_law_name(law_name)) in index
+    if (code, normalize_law_name(law_name)) in index:
+        return True
+    # A single row's law_name can itself be a multi-act inventory cell (acts
+    # joined by ";") or carry a bilingual/prefixed title. Derive the SAME
+    # per-act identity keys the index was built from and match if ANY overlap —
+    # otherwise a baseline multi-act law reconciles as NEW purely because its
+    # whole-string normalization matches no single split key (the --from-corpus
+    # over-NEW-tagging: 221 baseline laws mislabelled as independent finds).
+    if _inventory_identity_keys(code, law_name) & index:
+        return True
+    # Cross-language fallback: match a native statute title to the English
+    # baseline by its language-neutral number + year.
+    num_key = law_number_key(law_name)
+    return bool(num_key) and (code, f"#{num_key}") in index
 
 
 def _economy_key(economy: str) -> str:

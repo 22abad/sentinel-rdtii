@@ -16,7 +16,7 @@ from legal_crawler.browser import (
     _wait_for_page_load,
 )
 from legal_crawler.constants import INVALID_URL_PATTERNS, KNOWN_ALTERNATIVES
-from legal_crawler.fallbacks import _precheck_url, _try_http_fallback, _try_opencli_fetch, _try_wayback_fallback
+from legal_crawler.fallbacks import _is_real_legal_content, _precheck_url, _try_http_fallback, _try_impersonated_fetch, _try_opencli_fetch, _try_wayback_fallback
 from legal_crawler.ocs import fetch_thai_law_by_keyword
 from legal_crawler.wayback import fetch_google_cache, fetch_wayback_content
 
@@ -55,11 +55,26 @@ async def fetch_legal_content(
             return wb
         return {"type": "error", "message": f"Dead link ({dead_reason}), no Wayback snapshot"}
 
+    # ── Impersonated HTTP rung (curl_cffi, real Chrome TLS fingerprint) —
+    # clears CDN-WAF TLS-fingerprint filters (e.g. sso.agc.gov.sg) that 403 both
+    # plain httpx and Playwright, and rewrites SSO pages to the full-body print
+    # endpoint. Cheapest rung that beats the block, so try it first.
+    if not direct_file_url:
+        imp_result = await _try_impersonated_fetch(url, timeout)
+        if imp_result:
+            return imp_result
+
     # ── Direct HTTP probe (SSR sites like SSO block Playwright but serve
     # full content via plain HTTP — try it first to avoid Playwright overhead).
     http_result = await _try_http_fallback(url, timeout)
     if http_result:
         return http_result
+
+    # HTTP-only callers (batch corpus tools) stop here — never launch the
+    # browser. The Playwright rung segfaults the driver under load, and on the
+    # blocked portals it wouldn't beat curl_cffi anyway; fail fast, don't crash.
+    if mode == "http":
+        return {"type": "error", "message": f"HTTP-only fetch failed for {url}"}
 
     for attempt in range(1, max_retries + 1):
         async with async_playwright() as p:
@@ -164,6 +179,16 @@ async def fetch_legal_content(
                             if opencli_result:
                                 return opencli_result
                         raise Exception(f"Blocked by anti-bot protection")
+                    # Universal body-integrity gate: a navigation shell or thin
+                    # non-legal page (200 OK but no statute body) must NOT be
+                    # shipped as success — escalate down the ladder (archive /
+                    # alternates) like every other rung.
+                    if not _is_real_legal_content(content):
+                        print(
+                            f"[integrity] Playwright content failed body-integrity "
+                            f"gate ({len(content)} chars) — escalating to archive fallback"
+                        )
+                        raise Exception("content failed body-integrity gate")
                     return {
                         "type": "text",
                         "url": page.url,

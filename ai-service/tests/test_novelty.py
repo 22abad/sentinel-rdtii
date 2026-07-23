@@ -120,6 +120,21 @@ def test_false_new_suppressed_but_genuine_new_preserved():
     assert not is_known_law("Australia", "Identity Verification Services Act 2023", index)
 
 
+def test_multi_act_inventory_cell_reconciles_to_known():
+    # A Round-2 inventory cell often concatenates several acts with ";". A
+    # --from-corpus row carries that whole cell as its law_name; matching it as
+    # one normalized string finds no single split key and mislabels a baseline
+    # law as NEW (the 221-row over-tagging). is_known_law must split the query
+    # the same way the index was built and match on any component act.
+    index = known_law_index()
+    multi = "Constitution of Mongolia;\n\nLaw of Mongolia on Customs Tariffs and Customs Duties"
+    assert is_known_law("MNG", multi, index)
+    # each component act on its own is also KNOWN
+    assert is_known_law("MNG", "Constitution of Mongolia", index)
+    # a genuine non-baseline law is still NEW even with the split matching
+    assert not is_known_law("MNG", "Totally Fictional Widget Act 2099", index)
+
+
 def test_normalize_strips_constitutional_state_suffix():
     # The inventory keeps the long-form "... of the People's Republic of China";
     # discovery drops it. Both must reconcile.
@@ -359,3 +374,20 @@ def test_summary_groups_indicators_per_law():
             "indicators": ["P6-I1", "P6-I2"],
         }
     ]
+
+
+def test_authority_prefix_and_article_reconcile_to_known():
+    # The ESCAP inventory prepends "Government of India," to India's acts; a
+    # live-discovery title is bare ("The Information Technology Act, 2000").
+    # Both must normalize to the same identity so a discovered baseline law is
+    # KNOWN, not paraded as a NEW discovery.
+    assert normalize_law_name("Government of India, Information Technology Act No.21 2000") == (
+        "information technology act"
+    )
+    assert normalize_law_name("The Information Technology ACT, 2000") == "information technology act"
+    index = known_law_index()
+    assert is_known_law("IND", "The Information Technology ACT, 2000", index)
+    # A generic authority prefix only strips when a comma delimits it, so a
+    # normal title without an authority prefix is untouched.
+    assert normalize_law_name("Personal Data Protection Act 2012") == "personal data protection act"
+    assert normalize_law_name("Companies Act 2016 (Act 777)") == "companies act"

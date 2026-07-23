@@ -19,6 +19,8 @@ if str(_AI_SERVICE) not in sys.path:
     sys.path.insert(0, str(_AI_SERVICE))
 
 os.environ["DISCOVERY_REGISTRY_BACKEND"] = "file"
+# Don't let the search-engine per-host politeness delay slow the test suite.
+os.environ.setdefault("DISCOVERY_SEARCH_MIN_INTERVAL", "0")
 
 
 @pytest.fixture(autouse=True)

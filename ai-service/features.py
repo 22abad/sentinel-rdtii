@@ -147,7 +147,15 @@ INDICATOR_FEATURES: dict[str, dict[str, dict[str, str]]] = {
     "7.3": {
         "has_minimum_retention_period": {
             "type": "bool",
-            "description": "Imposes a minimum data retention period (days/months/years explicitly stated)?",
+            "description": (
+                "Does the text require records/data/documents to be RETAINED, "
+                "PRESERVED, MAINTAINED or KEPT for a stated MINIMUM period — an "
+                "explicit duration such as 'not less than 5 years', 'at least 3 "
+                "years', 'for a period of N months/years', 'preserve for N "
+                "years'? True only if a concrete minimum duration is stated. "
+                "False for 'retain no longer than necessary' / data minimisation "
+                "(that is not a minimum-retention rule)."
+            ),
         },
         "applies_to_government_data_only": {"type": "bool", "description": "Only government data?"},
     },

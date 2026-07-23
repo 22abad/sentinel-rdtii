@@ -70,26 +70,33 @@ LOCAL_TERMS: dict[str, dict[str, list[str]]] = {
         "6.4": ["数据出境安全评估", "个人信息出境 标准合同", "个人信息保护认证"],
         "7.1": ["个人信息保护法", "个人信息保护"],
         "7.2": ["网络安全法", "数据安全法"],
-        "7.3": ["数据 保留期限", "至少保存"],
+        "7.3": ["留存网络日志", "留存 不少于", "数据 保留期限", "至少保存"],
         "7.4": ["个人信息保护负责人", "个人信息保护影响评估"],
         "7.5": ["国家安全 个人信息", "执法 数据 提供"],
     },
     # Tier-2 economies (added 2026-07-16): a few high-value local-language
     # terms per indicator; English PILLAR_QUERY_TERMS still apply everywhere.
     "IDN": {
+        # Terms below verified to appear in the fetched IDN baseline corpus.
+        "6.1": ["pemrosesan di dalam negeri", "penyelenggara sistem elektronik"],
+        "6.2": ["penyimpanan data di wilayah", "pusat data dalam negeri"],
+        "6.3": ["wajib menempatkan pusat data", "pusat data dan pusat pemulihan bencana"],
         "6.4": ["transfer data pribadi ke luar wilayah", "pemindahan data pribadi"],
         "7.1": ["undang-undang pelindungan data pribadi", "UU PDP 27 2022"],
         "7.2": ["keamanan siber undang-undang"],
         "7.3": ["retensi data", "penyimpanan data jangka waktu"],
+        "7.4": ["pejabat pelindungan data pribadi", "penyelenggara sistem elektronik penanggung jawab"],
         "7.5": ["akses pemerintah data pribadi"],
     },
     "RUS": {
         "6.1": ["локализация персональных данных", "хранение персональных данных на территории"],
         "6.2": ["базы данных на территории Российской Федерации 152-ФЗ"],
+        "6.3": ["серверы на территории Российской Федерации", "базы данных на территории"],
         "6.4": ["трансграничная передача персональных данных"],
         "7.1": ["федеральный закон о персональных данных 152-ФЗ"],
         "7.2": ["закон о безопасности критической информационной инфраструктуры"],
         "7.3": ["срок хранения данных закон"],
+        "7.4": ["ответственный за организацию обработки персональных данных"],
         "7.5": ["СОРМ доступ к данным", "оперативно-розыскная деятельность данные"],
     },
     "MNG": {
@@ -110,11 +117,59 @@ LOCAL_TERMS: dict[str, dict[str, list[str]]] = {
 }
 
 
+_STOP_PREFIX = re.compile(r"^(lack of|absence of|no |lack of a )", re.IGNORECASE)
+
+
+def _methodology_query_terms() -> dict[str, list[str]]:
+    """Derive an English query phrase for every RDTII 2.1 indicator from the
+    official methodology's `category` field, so discovery covers all 12 pillars
+    (not just the hand-curated P6/P7). Methodology-grounded — no external source.
+
+    The category names the topic to search for; we strip the "Exception:" tail
+    and the inverted "Lack of / Absence of" framing (a scored measure is the
+    presence of the thing, e.g. "Lack of passive infrastructure sharing" ->
+    search "passive infrastructure sharing")."""
+    try:
+        from methodology import _load_methodology  # type: ignore
+    except Exception:  # noqa: BLE001
+        _load_methodology = None
+
+    import json
+    from pathlib import Path
+
+    derived: dict[str, list[str]] = {}
+    try:
+        path = Path(__file__).resolve().parents[2] / "data" / "rdtii21_methodology.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        items = raw.get("indicators", raw) if isinstance(raw, dict) else raw
+        items = items if isinstance(items, list) else list(items.values())
+    except Exception:  # noqa: BLE001 — no methodology file -> P6/P7 only
+        return {}
+
+    for item in items:
+        code = str(item.get("indicator_id", "")).strip()
+        category = " ".join(str(item.get("category", "")).split())
+        if not code or not category:
+            continue
+        phrase = re.split(r"\bException\b", category, maxsplit=1)[0].strip(" .;:")
+        phrase = _STOP_PREFIX.sub("", phrase).strip()
+        # Keep it a searchable phrase, not a whole sentence.
+        phrase = " ".join(phrase.split()[:8])
+        if phrase:
+            derived[code] = [phrase]
+    return derived
+
+
+# All 61 indicators get a query term: methodology-derived by default, with the
+# hand-curated P6/P7 terms taking precedence where present.
+ALL_QUERY_TERMS: dict[str, list[str]] = {**_methodology_query_terms(), **PILLAR_QUERY_TERMS}
+
+
 def indicators_for_pillars(pillars: list[int]) -> list[str]:
     prefixes = tuple(f"{pillar}." for pillar in pillars)
     return [
         indicator
-        for indicator in PILLAR_QUERY_TERMS
+        for indicator in ALL_QUERY_TERMS
         if indicator.startswith(prefixes)
     ]
 
@@ -124,7 +179,7 @@ def selected_indicators(request: DiscoverySearchRequest) -> list[str]:
         return [
             indicator
             for indicator in request.indicators
-            if indicator in PILLAR_QUERY_TERMS
+            if indicator in ALL_QUERY_TERMS
         ]
     return indicators_for_pillars(request.pillars)
 
@@ -139,7 +194,7 @@ def terms_for_request(request: DiscoverySearchRequest) -> list[str]:
     for indicator in selected_indicators(request):
         indicator_terms: list[str] = []
         if include_english_terms:
-            english_terms = list(PILLAR_QUERY_TERMS.get(indicator, []))
+            english_terms = list(ALL_QUERY_TERMS.get(indicator, []))
             if per_indicator_limit is not None:
                 english_terms = english_terms[:per_indicator_limit]
             indicator_terms.extend(english_terms)
@@ -232,7 +287,7 @@ def _terms_by_indicator(request: DiscoverySearchRequest) -> dict[str, list[str]]
     for indicator in selected_indicators(request):
         indicator_terms: list[str] = []
         if include_english_terms:
-            english_terms = list(PILLAR_QUERY_TERMS.get(indicator, []))
+            english_terms = list(ALL_QUERY_TERMS.get(indicator, []))
             if per_indicator_limit is not None:
                 english_terms = english_terms[:per_indicator_limit]
             indicator_terms.extend(english_terms)

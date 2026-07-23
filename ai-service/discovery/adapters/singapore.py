@@ -59,22 +59,11 @@ class SingaporeSsoAdapter(DiscoveryAdapter):
         ]
 
     async def _search_queries(self, queries: list[str], limit: int) -> list[RawSearchHit]:
-        import httpx
-
         hits: list[RawSearchHit] = []
         priority_hits: list[RawSearchHit] = []
         seen_keys: set[str] = set()
         relevant_known: dict[str, tuple[tuple[str, ...], str, str, str]] = {}
-        timeout = httpx.Timeout(8.0, connect=4.0)
-        headers = {
-            "Accept": "text/html,application/xhtml+xml",
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/126.0 Safari/537.36"
-            ),
-        }
-        async with httpx.AsyncClient(headers=headers, follow_redirects=True, timeout=timeout) as client:
+        async with _open_sso_client() as client:
             for query in queries:
                 search_term = strip_site_filter(query)
                 if not search_term:
@@ -140,6 +129,33 @@ class SingaporeSsoAdapter(DiscoveryAdapter):
                         discovery_method="known_mapping",
                     ))
         return (priority_hits + hits)[:limit]
+
+
+def _open_sso_client():
+    """Open an HTTP client for SSO's own search endpoint. Prefer curl_cffi with a
+    real Chrome TLS fingerprint — the SSO CloudFront WAF intermittently 403s /
+    serves a shell to plain httpx on TLS fingerprint (this is why live search
+    used to fall back to fixtures), but passes an impersonated client. Falls back
+    to httpx if curl_cffi is unavailable. Note this is SSO's OWN search — no
+    third-party search engine involved."""
+    try:
+        from curl_cffi import requests as _creq
+
+        return _creq.AsyncSession(impersonate="chrome", timeout=15, allow_redirects=True)
+    except ImportError:
+        import httpx
+
+        return httpx.AsyncClient(
+            follow_redirects=True,
+            timeout=httpx.Timeout(8.0, connect=4.0),
+            headers={
+                "Accept": "text/html,application/xhtml+xml",
+                "User-Agent": (
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+                ),
+            },
+        )
 
 
 def _search_url(query: str) -> str:

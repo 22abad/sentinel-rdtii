@@ -78,6 +78,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
              "recommended for reproducible / air-gapped runs",
     )
     parser.add_argument(
+        "--from-corpus",
+        action="store_true",
+        help="Round-2 reproducible path: map the fetched official baseline corpus "
+             "(data/round2_corpus) across all 12 pillars into evidence rows — the "
+             "full Round-2 submission, no network. Covers the 7 Round-2 economies.",
+    )
+    parser.add_argument(
         "--no-seed",
         action="store_true",
         help="Skip the known-good seed pass and go straight to live discovery. "
@@ -142,6 +149,7 @@ async def _run(args: argparse.Namespace) -> int:
     )
     from submission.pipeline import (
         discover_and_extract,
+        run_corpus,
         run_library,
         run_pdf,
         run_seed_first,
@@ -151,6 +159,29 @@ async def _run(args: argparse.Namespace) -> int:
         filter_formal_submission_rows,
         validate_submission_rows,
     )
+
+    # Provider preflight: the key-free default is Ollama at localhost:11434. If
+    # it is not actually running, every extraction silently fails over and the
+    # run crawls on connection errors (looked like a throughput wall for an
+    # hour once). Warn loudly and up front so a judge running the default knows
+    # to start Ollama or pass --provider deepseek, instead of watching it hang.
+    _effective_provider = (args.provider or os.getenv("RDTII_LLM_PROVIDER") or "ollama").lower()
+    if _effective_provider == "ollama":
+        import socket
+
+        _host = os.getenv("OLLAMA_HOST", "localhost")
+        _port = int(os.getenv("OLLAMA_PORT", "11434"))
+        try:
+            with socket.create_connection((_host, _port), timeout=1.5):
+                pass
+        except OSError:
+            print(
+                f"⚠️  Provider 'ollama' is not reachable at {_host}:{_port}. "
+                "Extractions will fail over on every call and the run will crawl.\n"
+                "    Start Ollama, or re-run with a hosted provider, e.g. "
+                "--provider deepseek (needs DEEPSEEK_API_KEY in .env).",
+                file=sys.stderr, flush=True,
+            )
 
     display = economy_display_name(args.economy)
     all_rows: list[SubmissionRow] = []
@@ -196,6 +227,12 @@ async def _run(args: argparse.Namespace) -> int:
             rows, meta = await run_pdf(
                 args.economy, pillar, args.pdf,
                 provider_name=args.provider, indicators=args.indicators,
+            )
+        elif getattr(args, "from_corpus", False):
+            rows, meta = await run_corpus(
+                args.economy, pillar,
+                provider_name=args.provider, indicators=args.indicators,
+                progress=narrate,
             )
         elif args.offline:
             rows, meta = await run_library(
@@ -250,6 +287,35 @@ async def _run(args: argparse.Namespace) -> int:
     print(f"\nSeed evidence: {counts['seed']}")
     print(f"Live-discovered evidence: {counts['live_discovered']}")
     print(f"Fixture evidence: {counts['fixture']}")
+    # Blind-verifier override rate: an independent checker model re-reads every
+    # positive generic score from the quote alone (blind to the extractor's
+    # score) and we keep the conservative minimum — so nothing ships unverified.
+    try:
+        from agents.score_checker import checker_stats
+
+        bv = checker_stats()
+        if bv.get("blind_checks"):
+            print(
+                f"Blind verifier: reviewed {bv['blind_checks']} positive scores, "
+                f"overturned {bv['overturned']} ({bv['override_rate']:.0%}) → conservative min kept"
+            )
+    except Exception:  # noqa: BLE001
+        pass
+    # Cumulative cost ledger across every pillar this run — deployment cost is a
+    # scored dimension (UN-readiness), so we report ours transparently.
+    _calls = _in = _out = 0
+    _cost = 0.0
+    for _m in combined_meta.get("runs", []):
+        _u = _m.get("usage") or {}
+        _calls += int(_u.get("llm_calls", 0) or 0)
+        _in += int(_u.get("input_tokens", 0) or 0)
+        _out += int(_u.get("output_tokens", 0) or 0)
+        _cost += float(_u.get("cost_usd", 0.0) or 0.0)
+    if _calls:
+        print(
+            f"Total measured cost: {_calls} LLM calls, {_in:,} in / {_out:,} out tokens, "
+            f"${_cost:.4f} ({display})"
+        )
     # Discovery methods describe how a candidate was surfaced, not whether its
     # law is novel. Make the ESCAP inventory/library baseline authoritative at
     # the final submission boundary, after rows from every pillar/path have

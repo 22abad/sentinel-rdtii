@@ -39,6 +39,8 @@ from providers.base import LLMProvider, ExtractionError
 SUPPORTED_MAPPING_INDICATORS = frozenset(get_args(IndicatorId))
 
 from agents.extractor import ExtractorAgent
+from agents.score_checker import check_generic_score, is_generic_scored
+from scoring.scope_overrides import apply_scope_override
 from agents.analyst import AnalystAgent
 from agents.critic import CriticAgent
 from agents.eligibility import EligibilityVerifier, rejected_from_eligibility
@@ -68,6 +70,9 @@ class MASOrchestrator:
         self.critic = CriticAgent()
         self.eligibility = EligibilityVerifier(provider)
         self.repair_max_attempts = repair_max_attempts_from_env()
+        # Per-run cache for the cross-model generic-score check (keyed by
+        # indicator + normalised quote) so a repeated provision costs one call.
+        self._score_check_cache: dict = {}
 
     async def run_pipeline(
         self,
@@ -209,6 +214,38 @@ class MASOrchestrator:
                         pre_flag_reasons.append(
                             f"Deterministic scoring for indicator {ind_id} is not implemented."
                         )
+
+                    # 3a. Deterministic scope guard — methodology-grounded
+                    # cross-domain traps (a product-control law keyword-matching a
+                    # digital-trade indicator; 9.1's illegal-content exception).
+                    # Only ever lowers to 0; runs before the LLM checker so a
+                    # scope mismatch costs no extra call.
+                    if raw_score and not score_not_implemented:
+                        _law_name = (
+                            data.get("source_legislation")
+                            or (pdf_metadata or {}).get("source_legislation")
+                            or ""
+                        )
+                        scoped, score_justification = apply_scope_override(
+                            ind_id, quote, _law_name, float(raw_score), score_justification
+                        )
+                        if scoped != raw_score:
+                            pre_flag_reasons.append(score_justification)
+                            raw_score = scoped
+
+                    # 3b. Cross-model check (Maker/Checker) — only for generic-
+                    # scored indicators with a still-positive score, the P9-P12
+                    # cluster where a single model over-reads principle/relevance
+                    # as a measure. Keeps the conservative minimum; never drops a row.
+                    if raw_score and not score_not_implemented and is_generic_scored(ind_id):
+                        check = await check_generic_score(
+                            self.provider, ind_id, quote, float(raw_score),
+                            cache=self._score_check_cache,
+                        )
+                        if not check.agreed:
+                            raw_score = check.score
+                            score_justification = check.reason
+                            pre_flag_reasons.append(check.reason)
 
                     # Until all validation passes, use the deterministic
                     # justification. The free-form Analyst runs last.

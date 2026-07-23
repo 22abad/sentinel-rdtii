@@ -103,7 +103,7 @@ def test_workflow_discovery_node_validation_error_returns_422():
         json={
             "config": {
                 "country_code": "SGP",
-                "pillars": [1],
+                "pillars": [13],
             },
         },
     )

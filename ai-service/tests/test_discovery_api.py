@@ -392,7 +392,7 @@ def test_discovery_rejects_unsupported_pillar():
 
     response = client.post(
         "/api/discovery/search",
-        json={"country_code": "SGP", "pillars": [1]},
+        json={"country_code": "SGP", "pillars": [13]},
     )
 
     assert response.status_code == 422

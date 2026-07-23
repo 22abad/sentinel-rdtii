@@ -171,6 +171,20 @@ THA:
   label: Thailand
   languages: [th, en]
   sources:
+    - name: Open Development Mekong (Thai Royal Gazette mirror)
+      base_url: https://data.opendevelopmentmekong.net
+      domains: [data.opendevelopmentmekong.net, data.thailand.opendevelopmentmekong.net]
+      adapter: mekong_ckan
+      source_grade: primary
+      source_type: statute_portal
+      languages: [th, en]
+      pillars: [6, 7]
+      priority: 110
+      notes: >-
+        CKAN mirror of the official Thai Royal Gazette (ratchakitcha.soc.go.th,
+        which is Cloudflare-blocked). Serves the same gazette PDFs with the
+        official source URL preserved per law; reachable and API-queryable.
+
     - name: Office of the Council of State
       base_url: https://www.ocs.go.th
       domains: [ocs.go.th, www.ocs.go.th, searchlaw.ocs.go.th]
@@ -328,7 +342,7 @@ IND:
     - name: India Code
       base_url: https://www.indiacode.nic.in
       domains: [indiacode.nic.in, www.indiacode.nic.in]
-      adapter: search_engine
+      adapter: india_code
       source_grade: primary
       source_type: statute_portal
       languages: [en, hi]
@@ -359,6 +373,20 @@ IDN:
   label: Indonesia
   languages: [id, en]
   sources:
+    - name: BPK Peraturan (official legal database)
+      base_url: https://peraturan.bpk.go.id
+      domains: [peraturan.bpk.go.id]
+      adapter: indonesia_bpk
+      source_grade: primary
+      source_type: statute_portal
+      languages: [id]
+      pillars: [6, 7]
+      priority: 110
+      notes: >-
+        Indonesia's most complete official law database (BPK). Cloudflare-
+        protected but reachable with a Chrome TLS fingerprint; the site's own
+        search yields in-force instruments with direct official PDF downloads.
+
     - name: JDIH Nasional (Database Peraturan)
       base_url: https://peraturan.go.id
       domains: [peraturan.go.id, www.peraturan.go.id]
@@ -393,6 +421,20 @@ LAO:
   label: Lao PDR
   languages: [lo, en]
   sources:
+    - name: Open Development Mekong (Lao law mirror)
+      base_url: https://data.opendevelopmentmekong.net
+      domains: [data.opendevelopmentmekong.net, data.laos.opendevelopmentmekong.net]
+      adapter: mekong_ckan
+      source_grade: primary
+      source_type: statute_portal
+      languages: [lo, en]
+      pillars: [6, 7]
+      priority: 110
+      notes: >-
+        CKAN catalogue of Lao laws with downloadable PDFs and official source
+        URLs — reachable and API-queryable where the Lao Official Gazette store
+        is thin/unreliable.
+
     - name: Lao Official Gazette
       base_url: https://laoofficialgazette.gov.la
       domains: [laoofficialgazette.gov.la, www.laoofficialgazette.gov.la]
