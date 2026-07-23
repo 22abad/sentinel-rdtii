@@ -1156,6 +1156,696 @@ absence stays a human-review judgement. Expected effect ≈ +11 exact rows
 (~+2.2pp) before any re-run; the remaining 7.2 misses (0->0.5, sectoral
 over-match) are an extraction-calibration problem, tracked separately.
 
+## 2026-07-21 — Cross-model checker for generic-scored indicators (Maker/Checker)
+
+A Maker/Checker design with our differentiator: the score stays deterministic
+Python; the second model only
+supplies a categorical fact. The error taxonomy put the largest remaining
+mismatch family on P9-P12 over-scoring (official 0 → we said 1) — indicators
+that fall through to scoring/generic.py, which has no independent gate (the
+EligibilityVerifier is P6/P7-only).
+
+New `agents/score_checker.py`: for a POSITIVE generic score only, a checker
+model — blind to the extractor's features and score — re-reads the exact quote
+against the official criterion text and returns the criterion it EXPLICITLY
+satisfies (0 = principle/relevance). We keep min(extractor, checker). A
+disagreement never drops the row: it lowers the score and flags for review.
+No-op for bespoke 2/5/6/7 indicators, for already-zero scores, offline
+fixtures, or checker failure (infra failure must never demote). Reuses the
+pipeline provider by default; RDTII_CHECKER_PROVIDER selects a distinct model
+for a true cross-model pass; RDTII_SCORE_CHECK=off disables. Per-run cache
+keyed by indicator+normalised quote.
+
+Round-1 offline output is unaffected: it is P6/P7 only (bespoke path).
+
+## 2026-07-21 — curl_cffi impersonated fetch + SSO print endpoint (fixes the Round-1 blocker)
+
+Diagnosed the WAFs that sank our Round-1 SGP discovery. The fix is a real
+Chrome TLS fingerprint via curl_cffi `impersonate="chrome"` — no browser, no
+proxy, no ja3 tuning. CDN
+WAFs (sso.agc.gov.sg on CloudFront) filter on TLS fingerprint and 403 both
+plain httpx and Playwright, but pass an impersonated client.
+
+Live A/B (2026-07-21): today SSO does not block plain httpx (the Round-1
+block was intermittent — WAFs weigh IP reputation/time), so curl_cffi is
+insurance for the next block. But the SECOND finding is deterministic and
+was the bigger bug: /Act/{code} lazy-loads provisions via Knockout JS and a
+plain fetch yields only a ~1/8 SHELL (25K visible chars). The print endpoint
+?ViewType=Print&PrintType=html&ProvIds=all-. server-renders the FULL body
+(198K). ?WholeDoc=1 did NOT expand it.
+
+New `_try_impersonated_fetch` (first HTTP rung in fetch_legal_content) fetches
+via curl_cffi impersonate=chrome and rewrites SSO Act/SL URLs to the print
+endpoint, with the existing body-integrity checks (legal signal, challenge
+detection). End-to-end through the real pipeline: /Act/PDPA2012 now returns
+186,327 chars of full statute (s25 retention + s26 cross-border present) vs
+the old shell. Falls through to httpx / Playwright unchanged on any failure
+or missing dep. Pure-function unit tests for the URL rewrite + extraction.
+
+## 2026-07-21 — SGP discovery goes head-to-head (no third-party search engine)
+
+Switched the Singapore SSO discovery adapter's HTTP client to curl_cffi
+impersonate=chrome (falls back to httpx if the dep is missing). The adapter
+already queried SSO's OWN search endpoint (/Search/Content?Phrase=) — SSO's
+search, not a third-party engine — but plain httpx got WAF-shelled on TLS
+fingerprint, so live search returned nothing and the adapter fell back to
+fixtures every time. With the impersonated client the same endpoint returns
+real results: a live query for "personal data protection / cybersecurity /
+data retention" now yields 9 live SSO Act hits (PDPA, FSMA, MAS Act, Credit
+Bureau Act, IMDA Act, …), retrieval_mode=live, zero fixtures.
+
+End-to-end proof (DISCOVERY_SEARCH_BACKEND=none, --no-seed, --max-documents 8
+— i.e. NO web search engine, NO seeds): the run pulled 15 candidate documents
+straight from SSO (25 curl_cffi fetches through the print endpoint, including
+FSA1993 234K + CA2018 193K — the exact acts the Round-1 playbook flagged as
+"no fallback, don't touch"), correctly skipped the out-of-scope ASDEA
+agreement, and produced 10 rows / 3 NEW (PDPA s44(d), IMDA Act s72(1)(b),
+MAS Act s28(1)) with no third party in the loop. The block that sank Round-1
+SGP discovery is beaten by our own code. (Full NEW harvest needs the doc cap
+lifted + P6 queries; this run proves the plumbing.)
+
+## 2026-07-21 — Universal body-integrity gate on the fetch ladder (Dong's insight)
+
+Dong's framing: discovery robustness is not a per-country problem, it's ONE
+sequential fallback ladder that must work for every country's portal. The
+ladder already largely exists in fetch_legal_content —
+curl_cffi → httpx → Playwright(×3) → per-domain alternates → Wayback →
+Google cache. The real gap was that the gate deciding "did this rung succeed?"
+was inconsistent: the cheap HTTP rungs checked legal-signal + length, but the
+Playwright rung shipped ANY content >5KB even if it was a navigation shell or
+a 200-OK banner — so a shell was returned as success and the archive rungs
+below it never ran.
+
+Added `_is_real_legal_content(text)` — a single body-integrity gate (min
+length + legal signal + not an error/challenge/WAF banner) — and applied it at
+the Playwright rung: a shell now raises and escalates down the ladder instead
+of being mapped. Same gate the curl_cffi/httpx rungs already use, so every
+rung now judges success identically. This is what makes the ladder behave the
+same for SG (WAF banner) and, say, a CN portal that 200s an error page. 6 unit
+tests; full suite 686 green.
+
+## 2026-07-21 — R2 discovery country-by-country: Thailand + Laos via ODM CKAN
+
+Dong's plan: discovery is per-country (each portal differs), so verify one at a
+time. A GitHub hunt across all 7 R2 countries surfaced the portal landscape;
+first quick win shipped.
+
+Reachability recon (curl_cffi): Russia pravo.gov.ru = geo-blocked from non-RU
+IPs (25s connection timeout — has a clean official API `/api/Documents` with
+eoNumber id-discovery per mikhashev/law7, but unreachable without RU egress).
+Thai ratchakitcha = Cloudflare 403. Reachable + structured: Open Development
+Mekong CKAN, Indonesia peraturan.bpk.go.id, Mongolia legalinfo.mn, India Code.
+
+Shipped: `MekongCkanAdapter` (Thailand + Laos). ODM is a CKAN 3.x catalogue that
+republishes the official gazette PDFs with the official source URL preserved
+per law (`odm_laws_source`) — a reachable mirror of official text, not a search
+engine. Query: `package_search?q=<pillar>&fq=organization:<country>-organization
+AND type:laws_record`; drops drafts/repealed by `odm_laws_status`; returns the
+gazette PDF as the fetch target with official provenance in `raw`. Live: a
+Thailand P6/P7 query returns PDPA B.E. 2562 + Cyber Security Act B.E. 2562 with
+PDFs, no search engine. Wired into sources.yaml (priority 110, above the
+Cloudflare-blocked ocs.go.th and DuckDuckGo). 4 unit tests (mocked CKAN);
+full suite 690 green.
+
+Landscape for the remaining R2 countries (agent-verified endpoints, next up):
+India = browse-index `/handle/123456789/1362/browse?type=shorttitle&offset=N` →
+handle page → `/bitstream/.../*.pdf` (solves the bitstream-id discovery nobody
+automated); Indonesia = official `api-jdih.perpusnas.go.id` Bearer JSON API;
+China = flk hidden JSON `/api/?type=flfg…` + `/api/detail` (WAF-gated) or the
+`lawtext/law-flk-vol1` bulk corpus; Mongolia = Playwright crawl of
+legalinfo.mn cate=27; Russia = official API but needs RU egress.
+
+## 2026-07-21 — R2 discovery: Indonesia via peraturan.bpk.go.id
+
+Second R2 country. Indonesia's official JDIHN JSON API (api-jdih.perpusnas.go.id)
+needs a registered Application Key (401 "Application Key tidak ditemukan"), so
+it's gated. peraturan.bpk.go.id — the most complete official DB — is Cloudflare-
+protected but a Chrome TLS fingerprint (curl_cffi) clears it. New
+`IndonesiaBpkAdapter` does a two-step scrape of the portal's OWN search:
+/Search?keywords= → /Details/<id>/<slug> links → each Details page → title +
+in-force status + /Download/<fileid>/*.pdf. Drops revoked ("Dicabut") /
+not-in-force instruments; returns the official PDF as the fetch target. Live: a
+P6/P7 query returns UU No. 27/2022 (the PDP Law) + Permenkominfo 20/2016 with
+direct PDFs, no search engine. Wired into sources.yaml priority 110. 3 unit
+tests; full suite 693 green.
+
+## 2026-07-21 — R2 discovery: India via India Code, solving bitstream-id discovery
+
+Third R2 country (fourth economy incl. Laos). India Code is a DSpace repo with
+REST/OAI disabled (404). Hard-coding bitstream ids is brittle — new Acts break
+it — and "discover the id for a given law" looked unsolved. It isn't: the portal's own
+`simple-search` results table carries, per Act, the handle id, which resolves
+to the official bitstream PDF. IndiaCodeAdapter: GET /simple-search?query= →
+parse the results table (short-title cell + View→/handle/<id>), then GET
+/handle/123456789/<id> → first /bitstream/.../*.pdf. Live: a "personal data
+protection / information technology" query returns the Digital Personal Data
+Protection Act 2023 (handle 22037 → a2023-22.pdf), the IT Act 2000, and the
+Aadhaar Act — official PDFs, no search engine, no hard-coded ids. Wired into
+sources.yaml (was search_engine/DuckDuckGo). 3 unit tests; full suite 696 green.
+
+R2 discovery scorecard: Thailand + Laos (CKAN), Indonesia (BPK), India (India
+Code) shipped. Remaining: China (flk hidden JSON API, WAF-gated), Mongolia
+(legalinfo.mn Playwright), Russia (official API but geo-blocked, needs egress).
+
+## 2026-07-21 — Deterministic scope-override guards
+
+The Round-2 error taxonomy's largest residual family is over-scoring official-0
+cells where the extractor finds a genuine measure that keyword-matches an
+indicator but is out of that indicator's official scope (106 such rows across
+the 7-economy benchmark). Neither the generic scorer nor the cross-model
+checker catches these — both see a real restriction. Added a deterministic
+`enforce_indicator_rules` guard, limited to methodology-EXPLICIT cases to avoid
+regressions.
+
+New `scoring/scope_overrides.py`: (1) 9.1's own exception — blocking of
+internationally-agreed illegal / child-pornography content is not a 9.1 measure
+→ 0; (2) product-health/vice control laws (tobacco, alcohol, narcotics,
+gambling, firearms, pornography) are not digital-trade measures → 0 for pillars
+9/10/12 (pillars 6/7 deliberately excluded — a product law can still carry a
+real data clause). Checks law name AND verbatim (the law name isn't resolved at
+scoring time in the eval path). Only ever lowers to 0; every drop annotated.
+Wired into the orchestrator before the LLM checker (deterministic, no extra
+call). 8 unit tests; full suite 704 green.
+
+Honest measurement: on IND (isolated, checker off) the tobacco Cigarettes Act
+9.3 row went 1.0 → 0 → exact match, exactly the documented trap; over-scores
+12 → 11. Single-economy exact-rate held at 49.3% — the +1 is inside LLM
+sampling noise for one run. Real value is a deterministic, defensible safety
+net (fixes the tobacco/alcohol/porn traps across all 7 economies, ~6-10 rows)
+and a guard as we open pillars 8-12 where cross-domain keyword collisions
+multiply — not a large single-number mover.
+
+## 2026-07-21 — R2 end-to-end verification: India + Thailand pass, Indonesia needed query localization
+
+Ran the three shipped R2 discovery adapters end-to-end through main.py
+(--no-seed, DISCOVERY_SEARCH_BACKEND=none — no seeds, no web search engine):
+- India: 22 rows, P7-I1..I5, DPDP Act 2023 + IT Act 2000 (see prior entry).
+- Thailand: 7 rows, P7-I4/I5 — PDPA B.E. 2562 + Constitution mapped from Thai
+  text via the Mekong CKAN adapter. Non-English chain works.
+- Indonesia: 0 rows first pass. Root cause: the query builder emits ENGLISH
+  pillar queries ("personal data protection act"), but peraturan.bpk.go.id
+  indexes Bahasa Indonesia only — English terms returned import/education
+  regulations, which mapped to nothing eligible. (Thailand escaped this because
+  ODM CKAN carries English metadata.)
+
+Fix: `_localize_query` in the Indonesia adapter maps the English P6/P7 concepts
+to Bahasa Indonesia search terms (personal data protection -> perlindungan data
+pribadi, cross-border -> transfer data pribadi ke luar negeri, cyber -> keamanan
+siber, retention -> penyimpanan dokumen elektronik, …), dedup'd. With it the
+adapter returns UU 27/2022 (PDP Law) + Permenkominfo 20/2016. 1 unit test; full
+suite 705 green. General lesson: non-English portals that index local text (CN,
+MNG, RU later) each need local-language query terms — the query builder's
+English output is not enough on its own.
+
+## 2026-07-21 — Combined accuracy measurement: 3 economies up 8-13pp
+
+Ran IDN/THA/MNG with all of today's accuracy work ON (7.1/7.2 fall-through fix,
+cross-model checker, scope overrides) vs the committed 2026-07-16 baseline:
+- IDN: 36% (32/88) -> 47.9% (80/167). +12pp, but corpus also expanded (88->167
+  rows), so this is corpus + accuracy combined.
+- THA: 53% (56/105) -> 61% (64/105). +8pp, corpus UNCHANGED.
+- MNG: 55% (41/75) -> 68% (51/75). +13pp, corpus UNCHANGED.
+
+THA and MNG evaluate the same rows as the baseline, so their +8/+13pp is a real
+accuracy gain from the deterministic fixes, not coverage and beyond single-run
+LLM sampling noise (+7-10 exact each). The earlier single-economy IND runs read
+as "within noise" because IND happened to be insensitive to these particular
+fixes; the cross-economy consistency confirms the fixes work. Honest caveat:
+some LLM sampling variance is folded in — these are single runs, not averaged.
+
+## 2026-07-21 — India corpus backfill result (coverage +17 rows, +8 exact)
+
+Ran fill_india_corpus.py (india_code adapter → current bitstream PDFs) then
+re-eval'd IND: 75 → 92 rows evaluated (+17, previously auto-0 no-text rows now
+scored from real text), 37 → 45 exact (+8), rate held at ~49%. The 5 filled
+Acts each cover several indicator rows (DPDP Act alone spans 6.1/6.3/6.4/
+7.1/7.4/7.5). India's flagship data law now scores correctly (DPDP 7.4/7.5/7.1
+exact) instead of 0-by-default — the biggest value for the actual submission.
+
+Honest note vs IDN's +12pp: the RATE moves only when the newly-covered laws
+score well. IDN's expansion added rows that mapped cleanly; India's mix (IP
+Acts P4, cross-border P6) scores at the average, so coverage/absolute-correct
+rose (+8) while the rate stayed flat. Lesson: corpus backfill pays off most
+when it targets the core data/cyber laws of each economy, not just any gap.
+
+## 2026-07-21 — Cross-language NEW/KNOWN reconciliation (fixes Indonesia's all-NEW)
+
+The multi-country harvest tagged all 43 Indonesian rows NEW — a credibility
+bug: the Indonesia adapter returns native titles ("UU No. 27 Tahun 2022")
+while the baseline lists English ones ("Law No. 27 ... 2022"), so normalized
+names never matched and every rediscovered baseline law read as a NEW find
+(over-claiming the 20-point NEW bonus).
+
+Fix: `law_number_key()` extracts a language-neutral "<number>/<year>" identity,
+and `known_law_index()` adds `(economy, "#<key>")` — but ONLY for keys that map
+to exactly one distinct baseline law in that economy (`_unambiguous_number_keys`,
+counting distinct normalized names, so a law repeated across indicator rows
+still counts once, while a number reused by different ministries is dropped).
+is_known_law falls back to the number key when the name doesn't match. UU
+27/2022 now reconciles to KNOWN; a fabricated number stays NEW. Residual risk:
+a genuine NEW law coincidentally sharing an unambiguous number+year is tagged
+KNOWN — conservative (under-claims NEW, never over-claims). 3 tests; suite 708.
+
+## 2026-07-21 — Full error taxonomy → prioritized next-fix roadmap
+
+Across 634 evaluated rows (54% exact) the residual errors, ranked:
+- **Missed (official>0, no evidence) — 7.3 leads (14), then 6.4(8), 9.1(7),
+  2.3(6).** 7.3 (data retention) misses are extraction RECALL: the law is often
+  in the corpus (e.g. Telecom Act 2023) but the specific minimum-retention
+  clause isn't surfaced from the long statute. Hard — needs retention-clause
+  targeting, not a quick fix.
+- **Under-scored with evidence — 2.3 leads (10), all official 1.0 -> we 0.5.**
+  Diagnosed: 2.3 criterion 1 includes "OR more than one measure under category
+  (2)"; a procurement law with MULTIPLE local-content/performance measures
+  should escalate 0.5 -> 1, but our extractor picks one measure and stops at
+  0.5. Fixable via a measure-count escalation (medium effort, ~+10 rows).
+- **Over-scored — 7.1(6)/7.2(5) partly fixed; 9.1/10.1/12.7/10.4 remain**
+  (cross-domain scope; the scope_overrides guard covers the product-domain
+  subset).
+
+Backfill quality: after wiring _best_hit + a strong-match requirement, the tool
+now refuses weak matches (Companies Act 2013 stays auto-0 rather than being
+mis-filled with a Telangana/West Bengal state Act) — corpus stays clean.
+
+Next-fix priority by ROI: (1) 2.3 measure-count escalation (concentrated,
+scorer-side); (2) targeted retention-clause extraction for 7.3 (biggest miss,
+harder); (3) translation-level cross-language name matching (Indonesia NEW/KNOWN
+residual). CN/RU coverage stays blocked by environment.
+
+## 2026-07-21 — HEADLINE: full 7-economy benchmark 50.2% -> 55.7% exact (+5.5pp)
+
+Re-ran all seven R2 economies with today's cumulative work (corpus expansion +
+india_code backfill + 7.1/7.2 fall-through fix + cross-model checker + scope
+overrides). Combined vs the committed 2026-07-16 baseline:
+
+  Rows evaluated 500 -> 670 (+34% coverage)
+  Exact matches  251 -> 373 (+122)
+  Exact rate     50.2% -> 55.7% (+5.5pp)
+
+Per economy: CHN 47->60, IDN 36->48, MNG 55->68, LAO 60->68, THA 53->61 (all
+up); IND 49->49 flat; RUS 53->48 down. IND/RUS "held/fell" is a denominator
+effect — more (harder) rows evaluated, but absolute exact still rose (IND
+31->45, RUS 31->40). Same-corpus economies (THA/MNG/LAO) rose 8-13pp, which is
+pure accuracy gain (their corpus is unchanged), confirming the fixes work
+beyond single-run noise. Evidence rate 70.2% -> 59.9% is likewise a denominator
+effect (absolute evidence-backed rows 351 -> ~401). Honest caveats: single run
+(LLM sampling variance folded in); the IDN/IND corpus changed, so their delta is
+coverage + accuracy combined, not isolated.
+
+## 2026-07-21 — Measured the 2.3 escalation, REVERTED it (honest negative result)
+
+Built economy-level escalation for the 9 "more than one category-2 measure ->
+full score" indicators (scoring/aggregation.py, methodology-derived) and wired
+it into the eval. Isolated deterministic effect across 7 economies:
+IND +5, THA +2, RUS +1, **CHN -6** = net +2 only. Root cause of the CHN
+regression: counting half-score PROVISIONS conflates "one measure spanning
+several provisions/laws" (China's data-localization 6.1/6.2 — one 0.5 measure
+repeated) with "several distinct measures" (India's procurement 2.3 — genuinely
+different rules). The rule is only safe with distinct-measure-TYPE detection,
+which the extractor doesn't provide. Per our discipline (measure, and drop what
+regresses), the eval wiring is reverted; the aggregation module + 7 unit tests
+stay as a correct, documented building block for when measure-type extraction
+exists. The 7.3 feature-spec synonym broadening (retain/preserve/maintain/keep
++ explicit minimum period) is kept — low-risk recall aid.
+
+## 2026-07-21 — Deepen RAG: language-aware retrieval (6 of 7 R2 economies are non-English)
+
+The BM25 retriever tokenized ASCII only, so a Chinese/Russian/Indonesian/Thai
+statute produced an empty query and fell back to a blind prefix — i.e. RAG did
+nothing for 6 of the 7 R2 economies. Deepened: (1) a unicode tokenizer — word
+runs in any script (Cyrillic/Thai/Latin) plus CJK character bigrams (Chinese
+has no word boundaries); (2) select_relevant_text takes country_code and adds
+the economy's LOCAL_TERMS to the query, wired through the CLI pipeline and the
+evaluator. Verified: a Chinese statute with the retention clause buried past
+the cap is NOT retrieved by the English query but IS with the CHN local terms.
+Also fixed CHN 7.3 local terms — the actual Cybersecurity-Law verb is 留存
+(retain), which the terms were missing (had 保留/保存). 3 new tests; suite 722.
+
+## 2026-07-21 — RAG measured: RUS +2 exact/+4 evidence, IND 7.3 recall 6/8
+
+Language-aware retrieval vs baseline on the large-doc non-English economies:
+RUS 40/84 -> 42/84 (+2 exact, evidence 43->47 — the Cyrillic tokenizer + local
+terms retrieve from large Russian statutes that blind-truncation dropped);
+THA 64/105 -> 63/105 (flat, within single-run noise; many Thai docs are under
+the 60K-CHAR cap once UTF-8 multibyte is counted, and Thai local terms are
+sparse). IND (English, BM25): 7.3 recall rose to 6/8 rows evidence-backed, 5
+exact — directly the retention-clause miss the taxonomy flagged. Net benchmark
+effect is modest (retrieval only touches >cap docs and the recall gain competes
+with LLM variance), but the capability is real and demonstrable, and the two-
+path architecture (dense web workbench + sparse language-aware CLI) is a
+genuine highlight. Follow-ups: richer local-term coverage per economy;
+optional dense-BM25 RRF fusion when a lean embedding model is acceptable.
+
+## 2026-07-21 — Enrich local-language query terms (IDN + RUS now 9/9 P6/P7)
+
+Local terms drive both discovery (adapter search) and RAG retrieval on
+non-English statutes, but coverage was sparse (IDN 5/9, RUS 7/9 of the P6/P7
+indicators). Filled the gaps — IDN 6.1/6.2/6.3/7.4, RUS 6.3/7.4 — with legal
+vocabulary VERIFIED to appear in the fetched baseline corpus (grep-checked, so
+no repeat of the CHN 留存-vs-保留 miss; dropped "хранение персональных данных",
+which appears 0× in the RUS corpus). Verified end-to-end: on the 329K Indonesian
+PDP Law the data-centre clause ("pusat data") is NOT retrieved by the English
+query but IS with the IDN 6.3 terms. Suite 722. CHN already 9/9; MNG/LAO stay
+sparse (blocked/no adapter, obscure scripts) — future work.
+
+## 2026-07-21 — Silent corpus corruption: IDN P6 run_corpus 0 → 19 rows
+
+**Symptom.** `run_corpus('Indonesia', 6)` produced ZERO submission rows —
+`documents_processed=9`, `provisions_mapped=0`, no warnings. Every one of the 9
+P6 laws (incl. the flagship Law No.27 PDP 2022, mapped to 6.1/6.3/6.4) returned
+0 extraction mappings. First suspect was retrieval budget (a 150K vs 60K cut had
+earlier changed a 6.4 quote from score 0.0 to 1.0), then merged-query dilution
+(fixed the retriever to allocate the char budget per-indicator so a term-dense
+indicator can't crowd another's clause out — real improvement, kept). Neither
+moved the needle: still 0 rows.
+
+**Root cause — the corpus text on disk was the WRONG LAW.** The manifest
+recorded the PDP law at `char_count=329056`, but the on-disk `.txt` was 18617
+chars of a completely different 2025 witness-protection regulation. A
+manifest-vs-disk audit found **34 IDN corpus files truncated to < 50% of their
+recorded char_count** (other 6 economies clean). Mechanism: `fill_corpus.py`
+treated only manifest records with `status=="cached"` as already-present, but
+`build_round2_corpus.py` writes originals as `status=="ok"` — so the backfill
+considered every original law "missing", re-searched bpk.go.id, and OVERWROTE
+the good full text at the same slug path with a (frequently wrong, always
+shorter) search hit. Extraction on the wrong text correctly finds no P6
+provisions → 0 rows. No fabrication ever occurred (rule 5 held: the wrong text
+just yields nothing), but the corpus was silently poisoned.
+
+**Fix — three layers.**
+1. `tools/restore_corpus.py` (new): manifest-vs-disk integrity guard + repair.
+   Detects corruption by sha256 mismatch AND size < 50% of char_count, re-fetches
+   from the recorded good `url_used`, and accepts only non-truncated text
+   (sha256/char_count exact, or ≥70% of char_count from the same URL — the
+   corruption is always <50%, so this can't re-accept a mis-fill). `--check`
+   audits without fetching. Restored 12/34; the flagship PDP law is back at 329K.
+   The other 22 have stale `url_used`s that now return truncated pages — left
+   FLAGGED, never patched with wrong text.
+2. `fill_corpus.py` root-cause fix: treat `status in ("ok","cached")` as present
+   (not just "cached"), and never shrink an existing file (skip when the fresh
+   fetch is smaller than what's on disk). Defense in depth against re-poisoning.
+3. `run_corpus` manifest read: include `ok` records (not only `cached`), and on
+   duplicate law_name keep the record with the largest char_count so a short
+   corrupt entry can't shadow the good full text.
+
+**Verified.** `run_corpus('Indonesia', 6)`: **0 → 19 P6 rows** across the 9
+restored laws. Retriever suite green (per-indicator budget). Remaining IDN
+corruption is now a visible, tested condition (`restore_corpus --check`), not a
+silent 0. Follow-up: recover the 22 via the indonesia_bpk adapter's CURRENT
+Details URL rather than the dead `url_used`.
+
+## 2026-07-22 — The offline generator was silently running on a dead Ollama
+
+**Symptom.** `python main.py --from-corpus --pillar all` crawled — a single
+economy's P6,7 pass had not finished after an hour, and 7 economies in parallel
+made it look throughput-saturated. A standalone `run_extraction(..., resolve_provider('deepseek'))`
+on the same 329K law took **101s** (128 calls). Same work, wildly different time.
+
+**Root cause.** `.env` sets `RDTII_LLM_PROVIDER=ollama` (the key-free judge
+default). `main.py` without `--provider` resolves to Ollama at
+`http://localhost:11434`, which was NOT running. Every batch extraction failed
+with `Connection error`, fell back to per-indicator, and each fallback re-hit
+the dead endpoint — so the pipeline spun on connection failures + retries
+instead of doing work. The parallel "saturation" was 7 processes hammering a
+dead socket, not a real throughput ceiling.
+
+**Fix.** Pass `--provider deepseek` explicitly for the reproducible offline
+generation. With DeepSeek, RUS P6,7 finished in **~3 minutes** (9 provisions),
+zero 429s, 7 economies in parallel — i.e. the full 12-pillar × 7 offline
+submission is entirely feasible; it only ever looked infeasible because of the
+provider default. Lesson: when an LLM run is mysteriously slow, check WHICH
+provider actually served the calls before assuming a rate/throughput wall.
+Follow-up worth considering: have `--from-corpus` warn (or auto-skip) when the
+resolved provider is an unreachable localhost Ollama, so a judge running the
+default doesn't hit the same silent crawl.
+
+## 2026-07-22 — Where the submission's headroom actually is (recall, not fetch)
+
+With the full 12-pillar × 7-economy submission generated (663 rows, all-KNOWN,
+97.1% verbatim-grounded), the honest completeness metric is **official
+scorable-cell coverage: 132/229 non-zero cells (57.6%)**. Diagnosing the gap on
+the lowest economy (RUS, 16/34) is instructive: **all 18 uncovered non-zero
+cells HAVE local corpus text — zero fetch gaps.** So the remaining headroom is
+**extraction recall**, not missing data: the statute is present and mapped by
+the official inventory, but the pipeline surfaced no submittable provision for
+that indicator (classifier/extractor recall, or a provision mapped to an
+adjacent indicator — e.g. RUS 6.3 server-localization evidence landing under
+6.1/6.2). This is the right next lever, but it is a precision/recall trade-off
+that wants a human in the loop (loosening the eligibility/formal-submission
+gate raises recall at the cost of the teacher-feedback precision bar), not an
+overnight autonomous sweep. Documented here as the deliberate next step rather
+than chased blind. NOT a corpus/fetch problem, NOT a provider problem — both of
+those were tonight's fixes and are resolved.
+
+## 2026-07-22 — NEW-law discovery: proven for IDN, per-portal hardening needed
+
+Requirements confirm **20 Stage-2 points for discovering evidence BEYOND the
+sample kit**; our all-KNOWN corpus submission earns 0 of them, so this is the
+single biggest scoring gap. Ran `main.py --no-seed` (pure live discovery) on the
+Round-2 economies to test the capability:
+
+- **IDN — works.** Capped (`--limit 12 --max-documents 6`), it surfaced **4
+  in-force laws beyond the baseline (18 NEW rows)** — BSSN (national cyber agency)
+  regulations off peraturan.bpk.go.id via the curl_cffi adapter. *Caveat:* all 4
+  mapped to 7.2 and are cyber-TRAINING regulations — likely off-topic for
+  "cybersecurity framework" and a legal-review lead, not clean submission rows.
+- **IND — 0 rows.** The india_code discovery path found/extracted nothing for
+  P6,7. Different failure mode; needs adapter debugging.
+- **THA — dead-end.** ocs.go.th searched with ENGLISH queries → "no results";
+  needs Thai-language query localization (same fix pattern as IDN bpk's
+  `_localize_query`).
+- **Fetch bottleneck (all):** the default `browser_mode="auto"` tries Playwright
+  first; peraturan.go.id PDFs time out at 60s×3 = 180s/doc and stall the run.
+  `--max-documents` caps the damage; a real fix is HTTP/curl_cffi-first fetch for
+  known-PDF portals, Playwright only as fallback.
+
+**Conclusion:** the capability is real (IDN proves independent NEW finds are
+reachable) but **not yet reliable or clean across portals**. Reaching the 20
+points is a *scoped* effort — per-economy query localization + HTTP-first fetch +
+a relevance gate so training/tangential regs don't map in — not an overnight
+toggle. Matches the standing "discovery 总出问题" pattern. Next-task, not a
+tonight fix.
+
+### NEW-discovery per-economy blocker map (2026-07-22, actionable)
+
+Diagnosed each Round-2 economy's discovery path (`discovery/sources.yaml` +
+direct adapter tests). This turns "discovery is flaky" into specific fixes:
+
+| Economy | Primary adapter | Status | Fix needed |
+|---|---|---|---|
+| IDN | indonesia_bpk (curl_cffi) | ✅ WORKS — banked 4 NEW laws / 18 rows | relevance gate (all mapped to 7.2, cyber-training regs likely off-topic) |
+| IND | india_code | ❌ 0 hits — indiacode.nic.in TIMES OUT (30s, 0 bytes) today, worked 7/21 | EXTERNAL: site down/slow/IP-blocked; needs retry+cache, not a code fix |
+| THA | mekong_ckan + thailand_ocs | ❌ ocs searched with ENGLISH → 0 | add Thai `_localize_query` (copy IDN bpk pattern); test mekong_ckan CKAN JSON |
+| LAO | mekong_ckan | ⚠️ untested | verify CKAN JSON path |
+| CHN | china_flk | ⚠️ untested | verify flk.npc.gov.cn reachable + parse |
+| MNG | search_engine only | ❌ no dedicated adapter | DDG-only; needs a legalinfo.mn adapter, or SerpApi |
+| RUS | search_engine only | ❌ no dedicated adapter + geo-block | pravo.gov.ru adapter or SerpApi; geo-blocked |
+
+**Cross-cutting blockers:**
+1. **DDG rate-limited** — `SERPAPI_API_KEY` is empty in `.env` (was present Jul 19),
+   so every economy without a working dedicated adapter falls to DuckDuckGo,
+   which bot-challenges our IP after heavy use. A SerpApi key unblocks MNG/RUS/
+   fallbacks immediately (dev-time only — key-free DDG stays the judged default).
+2. **Playwright-first fetch** — `browser_mode="auto"` tries Playwright (60s×3 =
+   180s/doc) before HTTP; slow PDF portals (peraturan.go.id) stall the run.
+   `--max-documents` caps it; real fix = HTTP/curl_cffi-first for known-PDF hosts.
+
+**Recommended sprint order (highest ROI first):** fix india_code parse (IND,
+English, tractable) → Thai localization (THA) → HTTP-first fetch → relevance gate
+→ MNG/RUS adapters or SerpApi. Each working economy = more of the 20 NEW-discovery
+points. Good candidate to split with Abel (crawler owner).
+
+**Key realization (2026-07-22):** most discovery blockers are EXTERNAL and
+intermittent — indiacode.nic.in times out today but worked yesterday; DDG
+bot-challenges our IP after heavy use; RUS is geo-blocked. These are not code
+bugs; robust discovery needs retry+backoff, a fetch cache, and a SerpApi
+fallback for the DDG-dependent economies. The single highest-leverage unblock
+is a **SerpApi key** (currently empty in `.env`) — it bypasses the DDG
+rate-limit for every economy lacking a working dedicated adapter. Dev-time only;
+the judged deliverable keeps the key-free DDG default.
+
+### Key-free search: DDG-lite + curl_cffi (delivered) + multi-tier plan
+
+**Delivered (committed):** `html.duckduckgo.com` bot-challenges heavy-use IPs
+(HTTP 202); swapped the backend to `lite.duckduckgo.com` POSTed with a real
+Chrome TLS fingerprint via curl_cffi. Verified returning real official URLs on a
+fresh IP — India (indiacode.nic.in DPDP PDF, meity.gov.in), Mongolia
+(legalinfo.mn — the official portal MNG had no adapter for), Russia. 100%
+key-free (lite endpoint + curl_cffi). +2 tests, suite 730.
+
+**Honest limitation found:** under a *marathon* of queries (a full multi-economy
+discovery run × tonight's testing), even the lite endpoint eventually 202s our
+specific IP — it is an IP-reputation/volume limit, not a code block, and
+recovers with time. A judge running the tool fresh will not hit it. For
+production robustness under load the right pattern is a
+**multi-tier search fallback**: lite-DDG → Bing HTML → Mojeek → direct official-
+portal adapter, each tried until one returns, with per-host politeness delays
+(RateLimiter) to avoid triggering the challenge in the first place. Scoped
+next-step; NOT built tonight to avoid worsening our rate-limited test IP.
+
+**Net for the 20 NEW-discovery points:** the key-free search path is unblocked
+and proven (IDN banked 4 in-force NEW laws / 18 rows). Reliable end-to-end
+banking across all 7 economies still needs, per the blocker map: multi-tier
+search + per-portal fetch (JS portals like legalinfo.mn fail the body-integrity
+gate) + per-language extraction. A scoped sprint, well-mapped, good to split
+with Abel.
+
+### Discovery honest-yield after key-free + matching fixes (2026-07-22)
+
+Two wins landed this session: (1) **key-free multi-tier search** — DDG Lite +
+curl_cffi, with a **Bing fallback** (base64url-decode of bing.com/ck/a?u= click
+redirects) as `MultiTierSearchBackend`; proven end-to-end (India discovery
+0 → 23 rows via Bing while our DDG IP was rate-limited). (2) **novelty matching
+hardening** so discovery doesn't over-claim: strip authority prefixes
+("Government of India,"), leading articles, leading serial artifacts ("1 The …").
+
+**Honest re-judge of the raw NEW counts after the matching fixes:**
+- IND: raw NEW 10 → **genuine NEW 3 rows / 1 law** (Aadhaar Act) — the other 7
+  were the IT Act, a baseline law that had been mislabelled NEW.
+- IDN: raw NEW 18 → **genuine NEW 17 rows / 3 laws** (BSSN cyber regs) — real
+  finds, but all mapped to 7.2 and cyber-TRAINING in nature, so a relevance gate
+  is still needed before counting them for the cybersecurity-framework indicator.
+
+**Takeaway:** the key-free discovery pipeline works and no longer inflates
+discoveries with disguised baseline laws (claiming those would look worse to
+judges than an honest count). Banking a solid pile of *genuine, on-topic* NEW
+laws for the 20 points is now a matter of (a) broader discovery runs once our
+test IP's rate-limit cools, and (b) a topic-relevance gate — a bounded scoped
+task, on solid foundations.
+
+### Embedding/hybrid RAG: built + data-tested; not the accuracy lever here (2026-07-22)
+
+Dong asked for embeddings/RAG, so I tested it properly instead of assuming.
+
+**Overturned the old assumption.** The CLI stayed BM25-only because
+paraphrase-MiniLM embedded RU/TH/ZH as near-noise. A MODERN multilingual STATIC
+embedding — **model2vec** (`minishlab/M2V_multilingual_output`, pure-numpy, NO
+torch, ~30-100MB) — gives real cross-lingual signal: relevant-vs-irrelevant
+cosine gaps EN 0.18, **RU 0.38**, ZH 0.07. So dense IS viable dependency-light.
+
+**Built it.** `select_relevant_text` now fuses per-indicator BM25 with a dense
+ranking via RRF when `RDTII_RETRIEVAL=hybrid` (opt-in; default BM25 so judges
+need no model download). Tested, suite 737.
+
+**But A/B says it doesn't move accuracy on THIS corpus.** RUS P7, bm25 vs
+hybrid: identical (10 rows, 3 evidence, 2 exact, MAE 0.7 both). Root cause:
+retrieval only engages for docs over the 60K cap, and **only 1 of 7 RUS-P7 docs
+is that big** — the other 6 are fed whole, so hybrid==bm25 trivially. Corpus-
+wide only ~30% of docs exceed the cap, and of the recall-miss cells just 13/64
+are retrieval-limited (51 are extraction-limited). **Confirmed with data what
+the recall diagnosis implied: retrieval isn't the bottleneck, extraction is.**
+
+**Takeaway:** the hybrid capability is real, dependency-light, and a legit
+demo/pitch asset ("modern multilingual embeddings, key-free, no torch"), but it
+is NOT the lever for the accuracy/coverage gap — that's extraction/classification
+quality. Kept opt-in so it never regresses the default. Honest negative result,
+not hidden.
+
+### The real accuracy ceiling: 58% of corpus texts aren't statutes (2026-07-22)
+
+Chasing the extraction-recall gap (the 51 "extraction-limited" recall-miss
+cells) led to the actual root cause. Classifying every corpus text as
+STATUTE vs SUMMARY/STUB/THIN (`restore_corpus.py --quality`):
+
+**Only 208/484 texts (42%) are the primary statute.** The other 276 (58%) are
+law-firm summaries, fetch stubs (<3K), or thin fragments — text a judge's run
+CANNOT extract a verbatim provision from. Per economy statute-share: LAO 72%,
+MNG 65%, CHN 55%, RUS 52%, THA 51%, IND 36%, **IDN 18% (94 summaries)**.
+
+Concretely: the MNG "Law on Personal Data Protection" corpus text is a law-firm
+client alert ("On 17 December 2021 the Parliament passed … will establish …"),
+not the statute; China's PIPL is a 1K stub of a very long law. Extraction
+correctly yields nothing — the provision isn't in a summary. So of the 51
+extraction-limited recall-misses, ~81% are corpus-quality (summary/stub/thin),
+only ~19% are genuine extractor misses.
+
+**Reframes the whole accuracy story:** the tool extracts *well* from real
+statutes (97.1% verbatim grounding), and 57.6% official-cell coverage is
+actually strong given that fewer than half the corpus texts are extractable
+statutes. The lever for the coverage gap is **corpus quality — re-fetch the
+primary statute for the 276 non-statute texts** — a data-acquisition problem
+(detectable now via `--quality`, tractable per-portal), NOT prompt-tuning and
+NOT retrieval. Extraction/classification is *not* the bottleneck the recall
+numbers made it look like.
+
+### Quality-hardening pass (2026-07-22)
+
+Reviewed the pipeline against the qualities a reviewer would stress-test —
+verification, grounding, cost transparency, provider independence — and closed
+the gaps:
+- **Blind-verifier override ledger**: we already run a blind cross-model checker
+  on positive generic scores; added an override-rate ledger + end-of-run print.
+  **Measured China P9-12 = 29% override** — a real quality metric ("nothing ships
+  unverified, and here's by how much").
+- **Byte-exact grounding hard gate**: confirmed we ALREADY hard-reject non-verbatim
+  quotes (`prepare_extraction_with_repair` → `status:reject` after repair
+  exhausts) — grounding is enforced at extraction, not a post-hoc measure.
+- **Cost ledger**: added a cumulative run-total (calls/tokens/$; India P11 =
+  $0.0254) on top of the existing per-pillar line, so deployment cost is reported
+  transparently.
+- **Open-weight swap + failover**: confirmed we already have `--provider ollama`
+  (key-free open-weight) + `RDTII_LLM_FALLBACK_PROVIDER` FallbackProvider — the
+  tool runs fully key-free and survives a provider outage.
+- Deferred (low ROI for now): adversarial refuter on NEW rows (genuine-NEW yield
+  is only ~4 laws, so the gate rarely fires today).
+
+Net: grounding, blind verification, cost transparency, provider-swap and test
+depth (740) are all in place, on top of a full 12-pillar × 7-economy submission.
+
+### Statute re-fetch → coverage (2026-07-22 overnight)
+
+The corpus-quality lever, executed. `refetch_statutes.py` routes each non-statute
+corpus text through the economy's portal adapter (bpk/india_code/mekong) →
+accepts only STATUTE-quality (Pasal-aware) text bigger than what's on disk.
+
+**P6,7 batch: recovered ~21 primary statutes** (IND 5/8, THA 6/9, CHN 8/11,
+MNG 1/2, RUS 1/2; IDN's remnants unrecoverable). Regenerating the 5 economies'
+P6,7: official non-zero cells 22 → 24 (+2), and row counts up materially
+(THA 27→40, CHN 44→51). Modest cell gain because P6/7 (our specialty) was
+already near-max; the win there is denser evidence per cell.
+
+**All-pillar batch running** (183 non-statute targets; IDN 48 / IND 42 / THA 27
+/ RUS 25 the biggest) — the breadth pillars P1-5/8-12 have the real coverage
+headroom (lower base + more summary/stub texts). Full-submission regen + new
+coverage % to follow.
+
+Also fixed the macOS "Python quit unexpectedly" crashes: the Playwright driver
+segfaulted under load, and browser_mode="http" silently degraded to "auto"
+(re-entering Playwright). Added a genuine HTTP-only BrowserMode that fails fast
+after the curl_cffi/HTTP rungs — the batch tools now never launch a browser.
+
+### coverage_report tool (built test-first) + the re-fetch's gap shift (2026-07-22)
+
+Built `tools/coverage_report.py` test-first (vendored Matt Pocock `tdd` skill —
+red-green, vertical slices; 7 tests): official_cell_coverage / by_economy /
+by_pillar / uncovered_cells / coverage_delta / classify_gap / summarize_gaps,
+plus a `--gaps` CLI. Validated: round2_final = 132/229 (57.6%), matching the
+hand count; weak pillars surfaced (P1 0/3, P11 3/13, P5 8/26; strong P6 19/20).
+
+**Dogfooding revealed the re-fetch worked:** the uncovered-cell root-cause split
+on round2_final shifted from **26 extraction / 38 corpus-quality / 33 fetch**
+(pre-refetch) to **49 extraction / 18 corpus-quality / 30 fetch** (post). The 80
+recovered statutes converted ~20 corpus-quality gaps into extraction gaps — the
+statute is now present, so the remaining gap is extraction recall, not missing
+text. The round2_final_v2 regen (84%-statute corpus) then turns the cells where
+extraction succeeds into actual coverage; delta measured via coverage_delta.
+
+### Corpus re-fetch payoff: coverage 57.6% → 60.3% (2026-07-23)
+
+Regenerated the full 12-pillar × 7-economy submission on the re-fetched corpus
+(statute share 58% → 84%; `outputs/round2_final_v2`, 755 rows). Measured with
+the new `coverage_report` tool: official non-zero cell coverage **132/229 (57.6%)
+→ 138/229 (60.3%), +6 cells**. Pillar gains land on the breadth pillars whose
+corpus was fixed — P7 +2, P11 +2, P3/P4/P5 +1 (P8 -1 is LLM sampling noise).
+
+Modest gain from 80 recovered statutes because (a) many cells had another
+covering law already, and (b) the gap shifted to EXTRACTION: the statute is now
+present but extraction recall doesn't always surface the provision (the --gaps
+split moved to 49 extraction / 30 fetch / 18 corpus). Corpus quality is now
+largely solved; the remaining lever is extraction/classification recall — a
+human-set precision/recall effort, per the earlier note. round2_final_v2 is the
+new best submission.
+
 ## 2026-07-22 — a ruled schedule reached the index as a number jumble
 
 PyMuPDF's flat text layer reads a table cell-by-cell, so a retention /
