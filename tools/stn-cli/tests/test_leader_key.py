@@ -86,3 +86,41 @@ def test_leader_disabled_by_default(monkeypatch):
             assert app._leader_pending is False
 
     asyncio.run(scenario())
+
+
+def test_home_keys_reflect_leader_map(monkeypatch):
+    async def scenario():
+        app = _leader_app(monkeypatch)  # leader=space, map has d/e
+        async with app.run_test() as pilot:
+            markup = app._home_keys_markup()
+            # Leader sequences shown (not the stale "1 Documents" hardcode);
+            # a multi-char leader renders uppercased ("SPACE d").
+            assert "SPACE d" in markup and "SPACE e" in markup
+            assert "Documents" in markup and "Extract" in markup
+
+    asyncio.run(scenario())
+
+
+def test_home_keys_fall_back_to_direct_bindings(monkeypatch):
+    async def scenario():
+        monkeypatch.setattr(tui_mod.THEME_CONFIG, "leader", "")
+        app = tui_mod.SentinelTUI(api="http://127.0.0.1:9", token="")
+        async with app.run_test():
+            markup = app._home_keys_markup()
+            # No leader → the actual default keys, with labels.
+            assert "Quit" in markup and "Refresh" in markup
+            assert "space" not in markup
+
+    asyncio.run(scenario())
+
+
+def test_stat_tiles_populate_offline(monkeypatch):
+    async def scenario():
+        app = _leader_app(monkeypatch)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            # Backend is unreachable (dead port) → tile says "down", not "…".
+            backend = str(app.query_one("#stat-backend").render())
+            assert "down" in backend
+
+    asyncio.run(scenario())

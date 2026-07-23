@@ -725,6 +725,25 @@ class SentinelTUI(App):
     }
     #home-banner {
         width: auto;
+        content-align: center top;
+    }
+    #home-stats {
+        width: auto;
+        height: auto;
+        margin: 1 0;
+    }
+    #home-stats Static {
+        width: 18;
+        height: 4;
+        margin: 0 1;
+        padding: 0 1;
+        border: round $primary 40%;
+        content-align: left top;
+    }
+    #home-keys {
+        width: auto;
+        color: $text-muted;
+        content-align: center top;
     }
     Screen {
         layers: base leader;
@@ -778,6 +797,46 @@ class SentinelTUI(App):
         self._scope_doc_id: str | None = None
         self._scope_label: str = ""
 
+    # ── welcome dashboard ────────────────────────────────────────────────
+
+    @staticmethod
+    def _stat_tile(label: str, value: str) -> str:
+        return f"[dim]{escape(label)}[/]\n[bold {_P}]{escape(value)}[/]"
+
+    def _set_stat(self, tile_id: str, value: str) -> None:
+        try:
+            self.query_one(f"#{tile_id}", Static).update(
+                self._stat_tile(self._STAT_LABELS[tile_id], value)
+            )
+        except Exception:  # noqa: BLE001 — home not mounted / pane switched
+            pass
+
+    _STAT_LABELS = {
+        "stat-backend": "Backend",
+        "stat-provider": "Provider",
+        "stat-docs": "Documents",
+        "stat-emb": "Embeddings",
+    }
+
+    def _home_keys_markup(self) -> str:
+        """Live keybinding hints — reflects rebinds AND the leader map, so the
+        welcome screen never lies about which key does what."""
+        lead = THEME_CONFIG.leader
+        if lead and THEME_CONFIG.key_map:
+            pretty = lead.upper() if len(lead) > 1 else lead
+            pairs = [
+                f"[bold {_P}]{pretty} {key}[/] {escape(self.ACTION_LABELS.get(act, act))}"
+                for key, act in sorted(THEME_CONFIG.key_map.items())
+            ]
+        else:
+            # No leader configured → show the direct bindings actually in force.
+            pairs = [
+                f"[bold {_P}]{escape(key)}[/] {escape(label)}"
+                for key, _act, label in self.BINDINGS
+                if not key.startswith("ctrl")
+            ]
+        return "   ".join(pairs)
+
     # ── layout ───────────────────────────────────────────────────────────
 
     def compose(self) -> ComposeResult:
@@ -795,11 +854,15 @@ class SentinelTUI(App):
                 with Vertical(id="home"):
                     yield Static(
                         f"[bold {_P}]{BANNER}[/]\n"
-                        "  SENTINEL — Aimed for RDTII 2.1.\n\n"
-                        "[#bec7c3] 1 Documents \n 2 Discovery \n 3 Extract \n 4 Chat\n"
-                        " \n r refresh \n q quit[/]",
+                        "  SENTINEL — Aimed for RDTII 2.1.",
                         id="home-banner",
                     )
+                    with Horizontal(id="home-stats"):
+                        yield Static(self._stat_tile("Backend", "…"), id="stat-backend")
+                        yield Static(self._stat_tile("Provider", "…"), id="stat-provider")
+                        yield Static(self._stat_tile("Documents", "…"), id="stat-docs")
+                        yield Static(self._stat_tile("Embeddings", "…"), id="stat-emb")
+                    yield Static(self._home_keys_markup(), id="home-keys")
                 yield DataTable(id="docs")
                 with Vertical(id="discovery"):
                     yield DataTable(id="discovery-table")
@@ -864,11 +927,13 @@ class SentinelTUI(App):
         try:
             async with self._client(timeout=5.0) as client:
                 data = (await client.get("/health")).json()
-            status.update(
-                f"[green]up[/] {data.get('active_provider', '?')} · {self._api}"
-            )
+            provider = data.get("active_provider", "?")
+            status.update(f"[green]up[/] {provider} · {self._api}")
+            self._set_stat("stat-backend", "up")
+            self._set_stat("stat-provider", provider)
         except httpx.HTTPError:
             status.update(f"[red]down[/] · {self._api}")
+            self._set_stat("stat-backend", "down")
 
     @work(exclusive=True, group="load-docs")
     async def _load_docs(self) -> None:
@@ -882,10 +947,12 @@ class SentinelTUI(App):
             if res.status_code == 401:
                 table.add_row("(run `stn login` first)", "", "", "", "")
                 return
+            total_emb = 0
             for d in res.json():
                 self._docs_rows.append(d.get("filename") or "—")
                 self._docs.append(d)
                 emb = d.get("embeddings")
+                total_emb += emb if isinstance(emb, int) else 0
                 status = d.get("status", "—")
                 # A 'processed' row with 0 embeddings is a phantom — say so
                 # rather than let it read as a healthy document.
@@ -898,6 +965,8 @@ class SentinelTUI(App):
                     d.get("country_code") or "—",
                     (d.get("created_at") or "")[:10],
                 )
+            self._set_stat("stat-docs", str(len(self._docs)))
+            self._set_stat("stat-emb", f"{total_emb:,}")
         except httpx.HTTPError as exc:
             table.add_row(f"(error: {exc})", "", "", "")
 
