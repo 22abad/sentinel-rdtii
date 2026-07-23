@@ -7,6 +7,7 @@ Distance operator is `<=>` (cosine); score = 1 - distance (1.0 == identical).
 
 from __future__ import annotations
 
+import os
 import re
 
 from dataclasses import dataclass
@@ -21,6 +22,13 @@ from rag.tables import looks_like_table
 # Same 384 dims, so the pgvector column is untouched.
 EMBED_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 DEFAULT_TOP_K = 5
+
+# IVFFlat defaults to probes=1, which under-returns badly on a small corpus
+# (lists=100 over a few hundred rows ≈ 5 rows/list) and collapses under a
+# document/country filter — a query scoped to one 255-chunk document returned
+# only 4 chunks. Probing enough lists restores full recall; at this scale it is
+# effectively an exact scan and costs nothing. (Proper long-term fix: HNSW.)
+IVFFLAT_PROBES = int(os.getenv("RAG_IVFFLAT_PROBES", "100"))
 
 _TOC_HEADING_LINE = re.compile(r"^\s*(?:\d{1,3}[A-Z]{0,2}\.?\s+\S|Part\b|Division\b|Subdivision\b|Schedule\b|ARRANGEMENT OF)", re.IGNORECASE)
 _TOC_OPERATIVE = re.compile(r"\b(shall|must|may not|is liable|commits an offence|应当|不得|必须)\b", re.IGNORECASE)
@@ -131,6 +139,9 @@ def retrieve(
 
     with _db_connect() as conn:
         with conn.cursor() as cur:
+            # Raise IVFFlat probes before searching — otherwise a scoped/filtered
+            # query silently returns a fraction of the matching chunks.
+            cur.execute("SET ivfflat.probes = %s", (IVFFLAT_PROBES,))
             # Hybrid when the full-text column exists, dense-only otherwise —
             # a database predating the migration must still answer queries.
             sql = build_sql(where) if lexical_available(cur) else dense_only_sql

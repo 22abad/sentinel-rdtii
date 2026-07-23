@@ -246,9 +246,11 @@ def list_documents(limit: int = 100) -> list[dict]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, filename, status, country_code, created_at
-                FROM   documents
-                ORDER  BY created_at DESC
+                SELECT d.id, d.filename, d.status, d.country_code, d.created_at,
+                       (SELECT count(*) FROM chunk_embeddings ce
+                        WHERE ce.document_id = d.id) AS embeddings
+                FROM   documents d
+                ORDER  BY d.created_at DESC
                 LIMIT  %s
                 """,
                 (limit,),
@@ -261,6 +263,9 @@ def list_documents(limit: int = 100) -> list[dict]:
             "status": r[2],
             "country_code": r[3],
             "created_at": r[4].isoformat() if r[4] else None,
+            # Ground truth for the UI: a 'processed' row with 0 embeddings is a
+            # phantom (title-only seed), not a usable document.
+            "embeddings": int(r[5]),
         }
         for r in rows
     ]

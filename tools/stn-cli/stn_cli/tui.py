@@ -43,6 +43,7 @@ from textual.widgets import (
 )
 
 from .main import BANNER
+from .rag_render import render_answer
 
 # Processors the extract pane can request; blank = backend default
 # (RDTII_LLM_PROVIDER). Model per provider follows its env config.
@@ -534,7 +535,13 @@ class ChatMessage(Static):
             "[bold #10B981]you ›[/]" if self.role == "you" else "[bold cyan]stn ›[/]"
         )
         head = f"{marker} {self._meta}".rstrip()
-        self.update(f"{head}\n{escape(self.raw)}" if self.raw else head)
+        if not self.raw:
+            self.update(head)
+            return
+        # The user's own question is shown verbatim; the assistant's answer is
+        # web-oriented Markdown, so render it to themed terminal markup.
+        body = render_answer(self.raw) if self.role == "stn" else escape(self.raw)
+        self.update(f"{head}\n{body}")
 
     def set_answer(self, text: str, meta: str = "") -> None:
         self.role = "stn"
@@ -681,6 +688,7 @@ class SentinelTUI(App):
         ("ctrl+r", "run_extract", "Run extract"),
         ("c", "copy_result", "Copy row"),
         ("s", "sort_extract", "Sort"),
+        ("u", "sync_doc", "Save to DB"),
     ]
 
     def __init__(self, api: str, token: str) -> None:
@@ -693,8 +701,14 @@ class SentinelTUI(App):
         self._sort_reverse: bool = False
         self._discovery_rows: list[dict] = []
         self._docs_rows: list[str] = []
+        self._docs: list[dict] = []  # full doc dicts, parallel to _docs_rows
         self._last_rag_answer: str = ""
         self._rag_msgs: list[tuple[str, str]] = []  # (role, text) for transcript
+        # Chat scope: when set, retrieval is restricted to this one document
+        # (fixes cross-country contamination — an unscoped query dredges the
+        # whole store and unrelated economies out-rank the answer).
+        self._scope_doc_id: str | None = None
+        self._scope_label: str = ""
 
     # ── layout ───────────────────────────────────────────────────────────
 
@@ -751,7 +765,7 @@ class SentinelTUI(App):
         self.register_theme(SENTINEL_THEME)
         self.theme = "sentinel"
         docs = self.query_one("#docs", DataTable)
-        docs.add_columns("Filename", "Status", "Country", "Ingested")
+        docs.add_columns("Filename", "Status", "Emb", "Country", "Ingested")
         disc = self.query_one("#discovery-table", DataTable)
         disc.add_columns("Title", "Indicators", "URL")
         ext = self.query_one("#extract-table", DataTable)
@@ -760,6 +774,8 @@ class SentinelTUI(App):
         await self.query_one("#rag-log", VerticalScroll).mount(
             Static(
                 "[dim]Ask something — answers are grounded in the knowledge base."
+                "  ·  paste a file path to ingest it (and scope chat to it)."
+                "  ·  select a document to scope · /all clears scope"
                 "  ·  select text with the mouse to copy.[/]",
                 id="rag-hint",
             )
@@ -791,17 +807,26 @@ class SentinelTUI(App):
         table = self.query_one("#docs", DataTable)
         table.clear()
         self._docs_rows.clear()
+        self._docs.clear()
         try:
             async with self._client(timeout=15.0) as client:
                 res = await client.get("/api/canvas-files")
             if res.status_code == 401:
-                table.add_row("(run `stn login` first)", "", "", "")
+                table.add_row("(run `stn login` first)", "", "", "", "")
                 return
             for d in res.json():
                 self._docs_rows.append(d.get("filename") or "—")
+                self._docs.append(d)
+                emb = d.get("embeddings")
+                status = d.get("status", "—")
+                # A 'processed' row with 0 embeddings is a phantom — say so
+                # rather than let it read as a healthy document.
+                if emb == 0 and status == "processed":
+                    status = "empty"
                 table.add_row(
                     (d.get("filename") or "—")[:60],
-                    d.get("status", "—"),
+                    status,
+                    "—" if emb is None else str(emb),
                     d.get("country_code") or "—",
                     (d.get("created_at") or "")[:10],
                 )
@@ -818,6 +843,61 @@ class SentinelTUI(App):
         source = self.query_one("#extract-input", TextArea).text.strip()
         if source:
             self._run_extract(source)
+
+    def action_sync_doc(self) -> None:
+        """Push the selected document through _save_to_db and update its status.
+
+        The 'button' for the Documents pane: completes a document stuck in
+        'processing' (or re-embeds one) via the sync ingest endpoint.
+        """
+        if self.query_one("#switcher", ContentSwitcher).current != "docs":
+            return
+        idx = self.query_one("#docs", DataTable).cursor_row
+        if not (0 <= idx < len(self._docs)):
+            self.notify("Select a document row first", severity="warning", timeout=2)
+            return
+        doc = self._docs[idx]
+        doc_id = doc.get("document_id")
+        if not doc_id:
+            self.notify("Row has no document id", severity="warning", timeout=2)
+            return
+        self._sync_doc(idx, str(doc_id), doc.get("filename") or "?")
+
+    @work(exclusive=False, group="sync-doc")
+    async def _sync_doc(self, row: int, doc_id: str, filename: str) -> None:
+        table = self.query_one("#docs", DataTable)
+
+        def set_status(text: str) -> None:
+            # Column 1 is Status (Filename, Status, Country, Ingested).
+            try:
+                table.update_cell_at((row, 1), text)
+            except Exception:  # noqa: BLE001 — table may have refreshed
+                pass
+
+        set_status("saving…")
+        try:
+            async with self._client(timeout=600.0) as client:
+                res = await client.post(f"/api/canvas-files/{doc_id}/process")
+            if res.status_code != 200:
+                try:
+                    detail = res.json().get("detail", res.text[:80])
+                except ValueError:
+                    detail = res.text[:80]
+                set_status("failed")
+                self.notify(f"{filename}: {detail}", severity="error", timeout=4)
+                return
+            data = res.json()
+            chunks = data.get("chunks")
+            set_status(data.get("status", "processed"))
+            self.notify(
+                f"{filename} → {data.get('status', 'processed')}"
+                + (f" · {chunks} chunk(s)" if chunks is not None else ""),
+                timeout=3,
+            )
+            self._load_docs()  # re-pull so counts/status are authoritative
+        except httpx.HTTPError as exc:
+            set_status("failed")
+            self.notify(f"{filename}: {exc}", severity="error", timeout=4)
 
     async def action_refresh(self) -> None:
         self._load_status()
@@ -894,12 +974,17 @@ class SentinelTUI(App):
         await self.action_run_extract()
 
     async def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
-        if event.data_table.id != "extract-table":
+        if event.data_table.id == "extract-table":
+            idx = event.cursor_row
+            if 0 <= idx < len(self._extract_rows):
+                kind, payload = self._extract_rows[idx]
+                self.push_screen(ReportScreen(kind, payload))
             return
-        idx = event.cursor_row
-        if 0 <= idx < len(self._extract_rows):
-            kind, payload = self._extract_rows[idx]
-            self.push_screen(ReportScreen(kind, payload))
+        if event.data_table.id == "docs":
+            # Selecting a document scopes the chat to it.
+            idx = event.cursor_row
+            if 0 <= idx < len(self._docs):
+                self._set_scope(self._docs[idx])
 
     # ── extract sorting (click a column title, or press `s` to cycle) ────
 
@@ -968,7 +1053,15 @@ class SentinelTUI(App):
             return
         event.input.value = ""
         if event.input.id == "rag-input":
-            self._ask_rag(text)
+            if text == "/all":
+                self._set_scope(None)
+            elif (local := _resolve_local_file(text)) is not None:
+                # A dragged-in / pasted file path → ingest it (fire straight to
+                # _save_to_db) and scope the chat to it, rather than treat the
+                # path as a question.
+                self._ingest_local_file(local)
+            else:
+                self._ask_rag(text)
         elif event.input.id == "discovery-input":
             self._run_discovery(text)
 
@@ -983,6 +1076,64 @@ class SentinelTUI(App):
         await log.mount(message)
         log.scroll_end(animate=False)
 
+    def _set_scope(self, doc: dict | None) -> None:
+        """Restrict (or clear) the document the chat retrieves from."""
+        if doc and doc.get("document_id"):
+            self._scope_doc_id = str(doc["document_id"])
+            fn = (doc.get("filename") or "?")[:40]
+            cc = doc.get("country_code") or "—"
+            self._scope_label = f"{fn} · {cc}"
+            self.notify(f"Chat scoped to {self._scope_label}", timeout=3)
+        else:
+            self._scope_doc_id = None
+            self._scope_label = ""
+            self.notify("Chat scope cleared — searching the whole store", timeout=3)
+        try:
+            self.query_one("#rag-input", Input).placeholder = (
+                f"[scope: {self._scope_label}] ask + Enter · /all clears"
+                if self._scope_doc_id
+                else "Ask the KB · or paste a file path to ingest · + Enter"
+            )
+        except Exception:  # noqa: BLE001 — placeholder is cosmetic
+            pass
+
+    @work(exclusive=True, group="rag")
+    async def _ingest_local_file(self, local: Path) -> None:
+        """Upload a local file and fire it straight through _save_to_db, then
+        scope the chat to the freshly ingested document."""
+        note = ChatMessage("stn", "", f"[dim]ingesting {escape(local.name)}…[/]")
+        await self._mount_msg(note)
+        mime = "application/pdf" if local.suffix.lower() == ".pdf" else "text/plain"
+        try:
+            async with self._client(timeout=600.0) as client:
+                res = await client.post(
+                    "/api/canvas-files",
+                    params={"sync": "true"},  # fire directly to _save_to_db
+                    files={"file": (local.name, local.read_bytes(), mime)},
+                )
+            if res.status_code != 200:
+                try:
+                    detail = res.json().get("detail", res.text[:120])
+                except ValueError:
+                    detail = res.text[:120]
+                note.set_answer("", f"[red]ingest failed: {escape(str(detail))}[/]")
+                return
+            data = res.json()
+            chunks = data.get("chunks")
+            summary = f"{local.name} → {data.get('status', '?')}"
+            if chunks is not None:
+                summary += f", {chunks} chunk(s)"
+            if data.get("deduplicated"):
+                summary += " (already ingested)"
+            note.set_answer(summary, "[green]ingested[/]")
+            self._load_docs()  # refresh the Documents table
+            self._set_scope(
+                {"document_id": data.get("document_id"), "filename": local.name}
+            )
+        except (OSError, httpx.HTTPError) as exc:
+            note.set_answer("", f"[red]ingest failed: {escape(str(exc))}[/]")
+        self.query_one("#rag-log", VerticalScroll).scroll_end(animate=False)
+
     @work(exclusive=True, group="rag")
     async def _ask_rag(self, question: str) -> None:
         log = self.query_one("#rag-log", VerticalScroll)
@@ -990,16 +1141,21 @@ class SentinelTUI(App):
         await self._mount_msg(ChatMessage("you", question))
         pending = ChatMessage("stn", "", "[dim]thinking…[/]")
         await self._mount_msg(pending)
+        inputs: dict = {"question": question}
+        if self._scope_doc_id:
+            # Session-scoped retrieval — the whole point of this path.
+            inputs["document_ids"] = [self._scope_doc_id]
         try:
             async with self._client(timeout=300.0) as client:
                 res = await client.post(
                     "/api/workflows/nodes/rag.query/run",
-                    json={"node_id": "stn-tui", "inputs": {"question": question}},
+                    json={"node_id": "stn-tui", "inputs": inputs},
                 )
             outputs = res.json().get("outputs", {})
             retrieved = outputs.get("retrieval_count", 0)
+            scope = " · scoped" if self._scope_doc_id else ""
             grounding = (
-                f"[dim]({retrieved} chunk(s) retrieved)[/]"
+                f"[dim]({retrieved} chunk(s){scope})[/]"
                 if retrieved
                 else "[yellow]ungrounded[/]"
             )
