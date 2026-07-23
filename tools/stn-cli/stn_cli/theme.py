@@ -69,6 +69,11 @@ class ThemeConfig:
     stn_marker: str = "cyan"
     # [widgets]
     chat_message_opacity: float = 1.0
+    # [keys] — LazyVim-style leader sequences + plain rebinds
+    leader: str = ""  # empty = leader disabled
+    leader_timeout: float = 0.8  # seconds to wait for the follow-up key
+    key_map: dict[str, str] = field(default_factory=dict)  # key -> action
+    key_direct: dict[str, str] = field(default_factory=dict)  # action -> key
 
     @property
     def primary(self) -> str:
@@ -143,8 +148,37 @@ def load_config(path: Path | None = None) -> ThemeConfig:
     if isinstance(widgets.get("chat_message_opacity"), (int, float)):
         cfg.chat_message_opacity = min(1.0, max(0.0, float(widgets["chat_message_opacity"])))
 
+    keys = raw.get("keys", {})
+    if isinstance(keys.get("leader"), str):
+        cfg.leader = keys["leader"].strip().lower()
+    if isinstance(keys.get("timeout_ms"), (int, float)) and keys["timeout_ms"] > 0:
+        cfg.leader_timeout = float(keys["timeout_ms"]) / 1000.0
+    for attr, table in (("key_map", "map"), ("key_direct", "direct")):
+        entries = keys.get(table, {})
+        if isinstance(entries, dict):
+            setattr(
+                cfg,
+                attr,
+                {str(k): v for k, v in entries.items() if isinstance(v, str) and v},
+            )
+
     _apply_env_overrides(cfg)
     return cfg
+
+
+def rebind_bindings(
+    bindings: list[tuple[str, str, str]], direct: dict[str, str]
+) -> list[tuple[str, str, str]]:
+    """Apply [keys.direct] rebinds: action -> replacement key.
+
+    Match on the exact action string first (`"pane('docs')" = "f1"`), then the
+    bare action name (`refresh = "f5"`). Unmatched bindings keep their key.
+    """
+    out = []
+    for key, action, label in bindings:
+        new = direct.get(action) or direct.get(action.split("(")[0])
+        out.append((new or key, action, label))
+    return out
 
 
 def _apply_env_overrides(cfg: ThemeConfig) -> None:

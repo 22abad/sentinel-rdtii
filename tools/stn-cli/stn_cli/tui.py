@@ -44,7 +44,7 @@ from textual.widgets import (
 
 from .main import BANNER
 from .rag_render import render_answer
-from .theme import load_config
+from .theme import load_config, rebind_bindings
 
 # Processors the extract pane can request; blank = backend default
 # (RDTII_LLM_PROVIDER). Model per provider follows its env config.
@@ -726,25 +726,37 @@ class SentinelTUI(App):
     #home-banner {
         width: auto;
     }
+    #leader-hint {
+        dock: bottom;
+        height: 1;
+        padding: 0 1;
+        background: $panel;
+        color: $text-muted;
+    }
     """
 
-    BINDINGS = [
-        ("q", "quit", "Quit"),
-        ("r", "refresh", "Refresh"),
-        ("1", "pane('docs')", "Documents"),
-        ("2", "pane('discovery')", "Discovery"),
-        ("3", "pane('extract')", "Extract"),
-        ("4", "pane('rag')", "Chat"),
-        ("ctrl+r", "run_extract", "Run extract"),
-        ("c", "copy_result", "Copy row"),
-        ("s", "sort_extract", "Sort"),
-        ("u", "sync_doc", "Save to DB"),
-    ]
+    BINDINGS = rebind_bindings(
+        [
+            ("q", "quit", "Quit"),
+            ("r", "refresh", "Refresh"),
+            ("1", "pane('docs')", "Documents"),
+            ("2", "pane('discovery')", "Discovery"),
+            ("3", "pane('extract')", "Extract"),
+            ("4", "pane('rag')", "Chat"),
+            ("ctrl+r", "run_extract", "Run extract"),
+            ("c", "copy_result", "Copy row"),
+            ("s", "sort_extract", "Sort"),
+            ("u", "sync_doc", "Save to DB"),
+        ],
+        THEME_CONFIG.key_direct,
+    )
 
     def __init__(self, api: str, token: str) -> None:
         super().__init__()
         self._api = api
         self._token = token
+        self._leader_pending = False
+        self._leader_timer = None
         self._extract_rows: list[tuple[str, dict]] = []
         self._extract_col_keys: list = []
         self._sort_col: str | None = None
@@ -884,6 +896,54 @@ class SentinelTUI(App):
             table.add_row(f"(error: {exc})", "", "", "")
 
     # ── actions ──────────────────────────────────────────────────────────
+
+    # ── leader key (LazyVim-style) ───────────────────────────────────────
+    # <leader> then a mapped key runs an action; a which-key hint bar shows
+    # the choices. Never fires while an Input/TextArea is focused ("insert
+    # mode"), so a space leader still types spaces in the chat box.
+
+    def _leader_hint_markup(self) -> str:
+        pairs = "  ".join(
+            f"[bold {_P}]{key}[/] {escape(action)}"
+            for key, action in sorted(THEME_CONFIG.key_map.items())
+        )
+        return f"[bold]{THEME_CONFIG.leader.upper()}[/] ›  {pairs}"
+
+    async def _enter_leader(self) -> None:
+        self._leader_pending = True
+        self._leader_timer = self.set_timer(
+            THEME_CONFIG.leader_timeout, self._clear_leader
+        )
+        hint = Static(self._leader_hint_markup(), id="leader-hint")
+        await self.mount(hint)
+
+    def _clear_leader(self) -> None:
+        self._leader_pending = False
+        if self._leader_timer is not None:
+            self._leader_timer.stop()
+            self._leader_timer = None
+        try:
+            self.query_one("#leader-hint", Static).remove()
+        except Exception:  # noqa: BLE001 — hint already gone
+            pass
+
+    async def on_key(self, event: events.Key) -> None:
+        if not THEME_CONFIG.leader:
+            return
+        if isinstance(self.focused, (Input, TextArea)):
+            return  # insert mode — leader never fires, keys type normally
+        if self._leader_pending:
+            event.stop()
+            event.prevent_default()
+            action = THEME_CONFIG.key_map.get(event.key)
+            self._clear_leader()
+            if action:
+                await self.run_action(action)
+            return
+        if event.key == THEME_CONFIG.leader:
+            event.stop()
+            event.prevent_default()
+            await self._enter_leader()
 
     def action_pane(self, pane_id: str) -> None:
         self.query_one("#switcher", ContentSwitcher).current = pane_id

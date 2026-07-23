@@ -5,7 +5,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from stn_cli.theme import PALETTE_DEFAULTS, ThemeConfig, config_path, load_config
+from stn_cli.theme import (
+    PALETTE_DEFAULTS,
+    ThemeConfig,
+    config_path,
+    load_config,
+    rebind_bindings,
+)
 
 
 def _write(tmp_path: Path, body: str) -> Path:
@@ -117,6 +123,50 @@ def test_config_path_resolution(monkeypatch, tmp_path):
     assert config_path() == tmp_path / "xdg" / "stn" / "theme.toml"
     monkeypatch.delenv("XDG_CONFIG_HOME")
     assert config_path() == Path.home() / ".config" / "stn" / "theme.toml"
+
+
+def test_keys_section(tmp_path):
+    path = _write(
+        tmp_path,
+        """
+        [keys]
+        leader = "space"
+        timeout_ms = 500
+
+        [keys.map]
+        d = "pane('docs')"
+        q = "quit"
+
+        [keys.direct]
+        refresh = "f5"
+        "pane('docs')" = "f1"
+        """,
+    )
+    cfg = load_config(path)
+    assert cfg.leader == "space"
+    assert cfg.leader_timeout == 0.5
+    assert cfg.key_map == {"d": "pane('docs')", "q": "quit"}
+    assert cfg.key_direct == {"refresh": "f5", "pane('docs')": "f1"}
+    # No [keys] at all → leader disabled.
+    assert load_config(tmp_path / "nope.toml").leader == ""
+
+
+def test_rebind_bindings_exact_beats_bare():
+    bindings = [
+        ("r", "refresh", "Refresh"),
+        ("1", "pane('docs')", "Documents"),
+        ("2", "pane('discovery')", "Discovery"),
+    ]
+    out = rebind_bindings(
+        bindings, {"refresh": "f5", "pane('docs')": "f1", "pane": "f9"}
+    )
+    assert out[0] == ("f5", "refresh", "Refresh")
+    # Exact action string wins over the bare "pane" fallback…
+    assert out[1] == ("f1", "pane('docs')", "Documents")
+    # …which still applies where no exact match exists.
+    assert out[2] == ("f9", "pane('discovery')", "Discovery")
+    # No direct table → bindings unchanged.
+    assert rebind_bindings(bindings, {}) == bindings
 
 
 def test_bad_value_types_ignored(tmp_path):
