@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
@@ -514,6 +515,25 @@ class ExtractInput(TextArea):
         await super()._on_key(event)
 
 
+# Thinking animation: braille spinner + RAG-pipeline phase verbs. The phase
+# advances every ~3s and holds on the last — long waits read as "drafting",
+# not a stuck spinner.
+_SPINNER_FRAMES = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+_THINK_PHASES = ("thinking", "retrieving", "reranking", "drafting")
+_THINK_PHASE_SECS = 3.0
+
+
+def thinking_meta(frame: int, elapsed: float, verb: str | None = None) -> str:
+    """Markup for one animation tick (pure — the timer just feeds it)."""
+    spin = _SPINNER_FRAMES[frame % len(_SPINNER_FRAMES)]
+    if verb is None:
+        verb = _THINK_PHASES[
+            min(int(elapsed // _THINK_PHASE_SECS), len(_THINK_PHASES) - 1)
+        ]
+    tail = f" · {elapsed:.0f}s" if elapsed >= _THINK_PHASE_SECS else ""
+    return f"[dim]{spin} {verb}…{tail}[/]"
+
+
 class ChatMessage(Static):
     """One chat turn, as its own selectable block.
 
@@ -526,8 +546,36 @@ class ChatMessage(Static):
         self.role = role
         self.raw = text
         self._meta = meta
+        self._think_timer = None
+        self._think_verb: str | None = None
+        self._think_frame = 0
+        self._think_start = 0.0
 
     def on_mount(self) -> None:
+        self.refresh_body()
+
+    def start_thinking(self, verb: str | None = None) -> None:
+        """Animate the pending state until set_answer() lands.
+
+        verb pins the label (e.g. "ingesting foo.pdf"); None cycles the
+        RAG-pipeline phases.
+        """
+        self.stop_thinking()
+        self._think_verb = verb
+        self._think_frame = 0
+        self._think_start = time.monotonic()
+        self._think_timer = self.set_interval(0.1, self._tick_thinking)
+        self._tick_thinking()
+
+    def stop_thinking(self) -> None:
+        if self._think_timer is not None:
+            self._think_timer.stop()
+            self._think_timer = None
+
+    def _tick_thinking(self) -> None:
+        self._think_frame += 1
+        elapsed = time.monotonic() - self._think_start
+        self._meta = thinking_meta(self._think_frame, elapsed, self._think_verb)
         self.refresh_body()
 
     def refresh_body(self) -> None:
@@ -544,6 +592,7 @@ class ChatMessage(Static):
         self.update(f"{head}\n{body}")
 
     def set_answer(self, text: str, meta: str = "") -> None:
+        self.stop_thinking()
         self.role = "stn"
         self.raw = text
         self._meta = meta
@@ -1103,6 +1152,7 @@ class SentinelTUI(App):
         scope the chat to the freshly ingested document."""
         note = ChatMessage("stn", "", f"[dim]ingesting {escape(local.name)}…[/]")
         await self._mount_msg(note)
+        note.start_thinking(f"ingesting {escape(local.name)}")
         mime = "application/pdf" if local.suffix.lower() == ".pdf" else "text/plain"
         try:
             async with self._client(timeout=600.0) as client:
@@ -1132,6 +1182,8 @@ class SentinelTUI(App):
             )
         except (OSError, httpx.HTTPError) as exc:
             note.set_answer("", f"[red]ingest failed: {escape(str(exc))}[/]")
+        finally:
+            note.stop_thinking()  # same orphaned-spinner guard as _ask_rag
         self.query_one("#rag-log", VerticalScroll).scroll_end(animate=False)
 
     @work(exclusive=True, group="rag")
@@ -1141,6 +1193,7 @@ class SentinelTUI(App):
         await self._mount_msg(ChatMessage("you", question))
         pending = ChatMessage("stn", "", "[dim]thinking…[/]")
         await self._mount_msg(pending)
+        pending.start_thinking()
         inputs: dict = {"question": question}
         if self._scope_doc_id:
             # Session-scoped retrieval — the whole point of this path.
@@ -1165,6 +1218,10 @@ class SentinelTUI(App):
             pending.set_answer(answer, grounding)
         except httpx.HTTPError as exc:
             pending.set_answer(f"request failed: {exc}", "[red]error[/]")
+        finally:
+            # Exclusive worker: a newer question cancels this one — freeze the
+            # orphaned spinner so it can't claim to still be working.
+            pending.stop_thinking()
         log.scroll_end(animate=False)
 
     async def _parse_local_file(self, local: Path, status: Label) -> str | None:
