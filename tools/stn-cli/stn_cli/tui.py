@@ -758,7 +758,7 @@ class SentinelTUI(App):
         self.register_theme(SENTINEL_THEME)
         self.theme = "sentinel"
         docs = self.query_one("#docs", DataTable)
-        docs.add_columns("Filename", "Status", "Country", "Ingested")
+        docs.add_columns("Filename", "Status", "Emb", "Country", "Ingested")
         disc = self.query_one("#discovery-table", DataTable)
         disc.add_columns("Title", "Indicators", "URL")
         ext = self.query_one("#extract-table", DataTable)
@@ -805,14 +805,21 @@ class SentinelTUI(App):
             async with self._client(timeout=15.0) as client:
                 res = await client.get("/api/canvas-files")
             if res.status_code == 401:
-                table.add_row("(run `stn login` first)", "", "", "")
+                table.add_row("(run `stn login` first)", "", "", "", "")
                 return
             for d in res.json():
                 self._docs_rows.append(d.get("filename") or "—")
                 self._docs.append(d)
+                emb = d.get("embeddings")
+                status = d.get("status", "—")
+                # A 'processed' row with 0 embeddings is a phantom — say so
+                # rather than let it read as a healthy document.
+                if emb == 0 and status == "processed":
+                    status = "empty"
                 table.add_row(
                     (d.get("filename") or "—")[:60],
-                    d.get("status", "—"),
+                    status,
+                    "—" if emb is None else str(emb),
                     d.get("country_code") or "—",
                     (d.get("created_at") or "")[:10],
                 )
