@@ -43,6 +43,7 @@ from textual.widgets import (
 )
 
 from .main import BANNER
+from .rag_render import render_answer
 
 # Processors the extract pane can request; blank = backend default
 # (RDTII_LLM_PROVIDER). Model per provider follows its env config.
@@ -534,7 +535,13 @@ class ChatMessage(Static):
             "[bold #10B981]you ›[/]" if self.role == "you" else "[bold cyan]stn ›[/]"
         )
         head = f"{marker} {self._meta}".rstrip()
-        self.update(f"{head}\n{escape(self.raw)}" if self.raw else head)
+        if not self.raw:
+            self.update(head)
+            return
+        # The user's own question is shown verbatim; the assistant's answer is
+        # web-oriented Markdown, so render it to themed terminal markup.
+        body = render_answer(self.raw) if self.role == "stn" else escape(self.raw)
+        self.update(f"{head}\n{body}")
 
     def set_answer(self, text: str, meta: str = "") -> None:
         self.role = "stn"
