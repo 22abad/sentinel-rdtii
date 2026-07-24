@@ -733,6 +733,19 @@ class SentinelTUI(App):
         background: $primary 12%;
         border-bottom: solid $primary;
     }
+    /* Column headers (Indicator/Score/Review, Filename/Status…) washed out
+       against the transparent background — give them a solid accent row so
+       they read as headers on every table. */
+    DataTable > .datatable--header {
+        background: $primary 20%;
+        color: $primary;
+        text-style: bold;
+    }
+    DataTable > .datatable--header-hover {
+        background: $primary 30%;
+        color: $primary;
+        text-style: bold;
+    }
     #home {
         align: center middle;
     }
