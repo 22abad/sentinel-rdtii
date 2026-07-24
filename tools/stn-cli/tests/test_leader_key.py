@@ -124,3 +124,19 @@ def test_stat_tiles_populate_offline(monkeypatch):
             assert "down" in backend
 
     asyncio.run(scenario())
+
+
+def test_every_function_pane_has_a_page_title(monkeypatch):
+    async def scenario():
+        app = _leader_app(monkeypatch)
+        async with app.run_test() as pilot:
+            titles = app.query(".page-title")
+            # Documents, Discovery, Extract, Chat — one header each.
+            assert len(titles) == 4
+            rendered = " ".join(str(t.render()) for t in titles)
+            for name in ("Documents", "Discovery", "Extract", "Chat"):
+                assert name in rendered
+            # Docs table survived the wrap+rename and still loads.
+            assert app.query_one("#docs-table") is not None
+
+    asyncio.run(scenario())
