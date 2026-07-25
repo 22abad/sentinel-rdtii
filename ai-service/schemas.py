@@ -264,6 +264,9 @@ class RAGQueryRequest(BaseModel):
     provider: str = ""
     # Session-scoped retrieval: restrict to these ingested documents.
     document_ids: list[str] = []
+    # "Deep Thinking": ask a reasoning-capable Ollama model to expose its
+    # chain-of-thought, surfaced separately from the answer.
+    deep_thinking: bool = False
 
 
 class RAGQueryResponse(BaseModel):
@@ -273,3 +276,6 @@ class RAGQueryResponse(BaseModel):
     provider: str
     retrieved_chunks: list[str] = []
     retrieval_count: int = 0
+    # Populated only when deep_thinking was requested and the model produced a
+    # separate reasoning trace; empty for non-reasoning models.
+    reasoning: str = ""

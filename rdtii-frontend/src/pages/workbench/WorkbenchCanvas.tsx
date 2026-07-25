@@ -732,10 +732,10 @@ export function WorkbenchCanvas({
   );
 
   const handleChatResponse = useCallback(
-    (chatId: string, answer: string) => {
+    (chatId: string, answer: string, reasoning?: string) => {
       const sessionId = latestSessionFor(chatId);
       if (!sessionId) return;
-      appendToSession(sessionId, { role: "assistant", text: answer });
+      appendToSession(sessionId, { role: "assistant", text: answer, reasoning });
       setPendingSessions((prev) => ({ ...prev, [sessionId]: false }));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1194,7 +1194,7 @@ export function WorkbenchCanvas({
                 <AIChatInput
                   enableNewSession
                   onSend={(question, opts) => handleChatSend(id, question, opts)}
-                  onResponse={(answer) => handleChatResponse(id, answer)}
+                  onResponse={(answer, reasoning) => handleChatResponse(id, answer, reasoning)}
                   onError={() => handleChatError(id)}
                   onFileSelect={(file, opts) => handleChatFileUpload(id, file, opts)}
                   isIngesting={!!chatIngesting[id]}

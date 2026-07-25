@@ -249,7 +249,37 @@ export function SessionNode({ id, data, selected }: { id: string; data: SessionN
               }}
             >
               {m.role === "assistant" ? (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+                <>
+                  {m.reasoning ? (
+                    <details className="chat-reasoning" style={{ marginBottom: 8 }}>
+                      <summary
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "0.7rem",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.06em",
+                          color: "#6b7280",
+                          userSelect: "none",
+                        }}
+                      >
+                        Thinking
+                      </summary>
+                      <div
+                        style={{
+                          marginTop: 6,
+                          paddingLeft: 8,
+                          borderLeft: "2px solid #d1d5db",
+                          color: "#6b7280",
+                          fontStyle: "italic",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {m.reasoning}
+                      </div>
+                    </details>
+                  ) : null}
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.text}</ReactMarkdown>
+                </>
               ) : (
                 m.text
               )}

@@ -107,11 +107,16 @@ export type RagQueryRequest = {
   provider?: string;
   /** Session-scoped retrieval: restrict to these ingested documents. */
   document_ids?: string[];
+  /** Deep Thinking: ask a reasoning model to expose its chain-of-thought. */
+  deep_thinking?: boolean;
 };
 
 export type RagQueryResponse = {
   answer: string;
   provider: string;
+  /** Reasoning trace — present only when deep_thinking ran on a model that
+   *  produced one; empty for plain models. */
+  reasoning?: string;
 };
 
 export type ExtractMappingsNodeRequest = {

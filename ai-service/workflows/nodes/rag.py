@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from collections.abc import AsyncIterator
 
 from openai import OpenAI
@@ -22,12 +23,13 @@ class RagQueryExecutor(NodeExecutor):
     ) -> NodeResult:
         req = _request_from(node.config, inputs, context.runtime)
         hits, retrieved_context = await _retrieve(req)
-        answer = await _complete(req, retrieved_context)
+        answer, reasoning = await _complete(req, retrieved_context)
         return NodeResult(
             node_id=node.id,
             status="success",
             outputs={
                 "answer": answer,
+                "reasoning": reasoning,
                 "provider": _provider_name(),
                 "retrieved_chunks": [h.text for h in hits],
                 "retrieval_count": len(hits),
@@ -146,9 +148,32 @@ def _provider_name() -> str:
     return f"ollama/{_OLLAMA_MODEL}"
 
 
-async def _complete(req: RAGQueryRequest, retrieved_context: str = "") -> str:
+_THINK_RE = re.compile(r"<think>(.*?)</think>", re.DOTALL)
+
+
+def _split_reasoning(message) -> tuple[str, str]:
+    """Separate the answer from any reasoning trace.
+
+    Reasoning-capable Ollama models expose the chain-of-thought in a distinct
+    ``reasoning_content`` field; some instead inline it in ``<think>…</think>``
+    tags. Return ``(answer, reasoning)`` with reasoning empty for plain models.
+    """
+    content = message.content or ""
+    reasoning = getattr(message, "reasoning_content", None)
+    if reasoning is None and getattr(message, "model_extra", None):
+        reasoning = message.model_extra.get("reasoning_content")
+    if not reasoning and (m := _THINK_RE.search(content)):
+        reasoning = m.group(1)
+        content = _THINK_RE.sub("", content)
+    return content.strip(), (reasoning or "").strip()
+
+
+async def _complete(req: RAGQueryRequest, retrieved_context: str = "") -> tuple[str, str]:
     from api.system import _OLLAMA_MODEL, _RDTII_SYSTEM_PROMPT
 
+    # think=true asks a reasoning model to emit its trace; harmless kwarg only
+    # sent when requested so plain models aren't handed an option they reject.
+    extra_body = {"think": True} if req.deep_thinking else {}
     response = await asyncio.to_thread(
         _client().chat.completions.create,
         model=_OLLAMA_MODEL,
@@ -158,8 +183,9 @@ async def _complete(req: RAGQueryRequest, retrieved_context: str = "") -> str:
         ],
         stream=False,
         temperature=0.3,
+        extra_body=extra_body,
     )
-    return response.choices[0].message.content or ""
+    return _split_reasoning(response.choices[0].message)
 
 
 async def _stream_complete(
