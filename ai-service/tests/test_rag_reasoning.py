@@ -98,3 +98,68 @@ def test_unknown_format_is_ignored():
 def test_format_instruction_is_last_for_recency():
     p = _prompt(RAGQueryRequest(question="q", output_format="table"))
     assert p.rstrip().endswith("only if context is essential.")
+
+
+# ── deep_thinking graceful fallback (plain model rejects think=true) ──────
+import asyncio as _asyncio
+import types as _types
+
+from workflows.nodes import rag as _rag
+
+
+class _FakeCompletions:
+    def __init__(self, fail_on_think):
+        self.fail_on_think = fail_on_think
+        self.calls = []
+
+    def create(self, *, model, messages, stream, temperature, extra_body):
+        self.calls.append(extra_body)
+        if self.fail_on_think and extra_body.get("think"):
+            raise RuntimeError('"qwen2.5:3b" does not support thinking')
+        msg = SimpleNamespace(content="Localization is required.")
+        return SimpleNamespace(choices=[SimpleNamespace(message=msg)])
+
+
+def _patch_ollama(monkeypatch, fail_on_think):
+    fake = _types.SimpleNamespace(chat=_types.SimpleNamespace(completions=_FakeCompletions(fail_on_think)))
+    monkeypatch.setattr(_rag, "_client", lambda: fake)
+    import api.system as sysmod
+    monkeypatch.setattr(sysmod, "_OLLAMA_MODEL", "qwen2.5:3b", raising=False)
+    monkeypatch.setattr(sysmod, "_RDTII_SYSTEM_PROMPT", "sys", raising=False)
+    return fake.chat.completions
+
+
+def test_deep_thinking_falls_back_when_model_rejects_thinking(monkeypatch):
+    comp = _patch_ollama(monkeypatch, fail_on_think=True)
+    req = RAGQueryRequest(question="Does SGP localize data?", deep_thinking=True)
+    answer, reasoning = _asyncio.run(_rag._complete(req))
+    assert answer == "Localization is required."
+    assert reasoning == ""  # plain model → no trace, but NO crash
+    # It tried think first, then retried without it.
+    assert comp.calls == [{"think": True}, {}]
+
+
+def test_no_deep_thinking_never_sends_think(monkeypatch):
+    comp = _patch_ollama(monkeypatch, fail_on_think=True)
+    req = RAGQueryRequest(question="q", deep_thinking=False)
+    _asyncio.run(_rag._complete(req))
+    assert comp.calls == [{}]
+
+
+def test_unrelated_error_is_not_swallowed(monkeypatch):
+    class _Boom:
+        calls = []
+        def create(self, **kw):
+            self.calls.append(kw.get("extra_body"))
+            raise RuntimeError("connection refused")
+    fake = _types.SimpleNamespace(chat=_types.SimpleNamespace(completions=_Boom()))
+    monkeypatch.setattr(_rag, "_client", lambda: fake)
+    import api.system as sysmod
+    monkeypatch.setattr(sysmod, "_OLLAMA_MODEL", "m", raising=False)
+    monkeypatch.setattr(sysmod, "_RDTII_SYSTEM_PROMPT", "s", raising=False)
+    req = RAGQueryRequest(question="q", deep_thinking=True)
+    try:
+        _asyncio.run(_rag._complete(req))
+        assert False, "should have raised"
+    except RuntimeError as e:
+        assert "connection refused" in str(e)  # only thinking errors fall back
