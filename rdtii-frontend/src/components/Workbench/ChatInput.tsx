@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageSquarePlus, Mic, Globe, Paperclip, Send, X } from "lucide-react";
+import { MessageSquarePlus, Mic, Globe, Brain, Paperclip, Send, X } from "lucide-react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { runRagQueryNode } from "../../services/workflowNodes";
 import { FileCardStack, CARD_H, CARD_GAP } from "./FileCardStack";
@@ -25,7 +25,7 @@ interface AIChatInputProps {
   isIngesting?: boolean;
   expandUp?: boolean;
   countryCode?: string;
-  onResponse?: (answer: string) => void;
+  onResponse?: (answer: string, reasoning?: string) => void;
   /** Fired when the chat bar activates/deactivates (click / focus / click-away). */
   onActiveChange?: (active: boolean) => void;
   /** Fired the moment the user submits a question, before the answer arrives.
@@ -46,6 +46,8 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
   const [isActive, setIsActive] = useState(false);
   const [newSessionActive, setNewSessionActive] = useState(false);
   const [deepSearchActive, setDeepSearchActive] = useState(false);
+  const [deepThinkingActive, setDeepThinkingActive] = useState(false);
+  const [outputFormat, setOutputFormat] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [subValues, setSubValues] = useState<Record<string, string>>({ role: "", context: "" });
   const [isLoading, setIsLoading] = useState(false);
@@ -82,9 +84,11 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
         context: subValues.context,
         country_code: countryCode ?? "",
         provider: provider ?? "",
+        deep_thinking: deepThinkingActive,
+        output_format: outputFormat,
       });
       if (data.answer) {
-        onResponse?.(data.answer);
+        onResponse?.(data.answer, data.reasoning);
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : "RAG query failed.";
@@ -309,6 +313,34 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
                   Deep Search
                 </motion.span>
               </motion.button>
+
+              <motion.button
+                className={`flex items-center px-4 gap-1 py-2 rounded-none transition font-medium whitespace-nowrap overflow-hidden justify-start ${deepThinkingActive ? "bg-[#111827] text-[#f3f1ea]" : "bg-[#111827]/5 text-[#111827] hover:bg-[#111827]/10"}`}
+                title="Deep Thinking — show the model's reasoning (reasoning model required)" type="button"
+                onClick={(e) => { e.stopPropagation(); setDeepThinkingActive((a) => !a); }}
+                initial={false}
+                animate={{ width: deepThinkingActive ? 135 : 36, paddingLeft: deepThinkingActive ? 8 : 9 }}
+              >
+                <div className="flex-1"><Brain size={18} /></div>
+                <motion.span className="pb-[2px]" initial={false} animate={{ opacity: deepThinkingActive ? 1 : 0 }}>
+                  Deep Thinking
+                </motion.span>
+              </motion.button>
+
+              <select
+                className={`px-3 py-2 rounded-none font-medium text-sm transition cursor-pointer border-0 outline-none ${outputFormat ? "bg-[#111827] text-[#f3f1ea]" : "bg-[#111827]/5 text-[#111827] hover:bg-[#111827]/10"}`}
+                title="Response format"
+                value={outputFormat}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => { e.stopPropagation(); setOutputFormat(e.target.value); }}
+              >
+                <option value="">Format: Auto</option>
+                <option value="markdown">Markdown</option>
+                <option value="plain">Plain text</option>
+                <option value="table">Table</option>
+                <option value="bullets">Bullet points</option>
+                <option value="json">JSON</option>
+              </select>
             </div>
           </motion.div>
         </div>

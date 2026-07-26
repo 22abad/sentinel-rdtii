@@ -724,6 +724,28 @@ class SentinelTUI(App):
         padding: 0 1;
         margin: 0 0 1 0;
     }
+    .page-title {
+        height: 1;
+        width: 100%;
+        padding: 0 1;
+        margin: 0 0 1 0;
+        text-style: bold;
+        background: $primary 12%;
+        border-bottom: solid $primary;
+    }
+    /* Column headers (Indicator/Score/Review, Filename/Status…) washed out
+       against the transparent background — give them a solid accent row so
+       they read as headers on every table. */
+    DataTable > .datatable--header {
+        background: $primary 20%;
+        color: $primary;
+        text-style: bold;
+    }
+    DataTable > .datatable--header-hover {
+        background: $primary 30%;
+        color: $primary;
+        text-style: bold;
+    }
     #home {
         align: center middle;
     }
@@ -801,6 +823,14 @@ class SentinelTUI(App):
         self._scope_doc_id: str | None = None
         self._scope_label: str = ""
 
+    # ── page headers ─────────────────────────────────────────────────────
+
+    @staticmethod
+    def _page_title(title: str, subtitle: str) -> str:
+        """A bold, high-contrast pane header — reads clearly even over a
+        transparent terminal background (bright accent + solid rule)."""
+        return f"[b {_P}]▍[/] [b]{escape(title)}[/]   [dim]{escape(subtitle)}[/]"
+
     # ── welcome dashboard ────────────────────────────────────────────────
 
     @staticmethod
@@ -866,14 +896,31 @@ class SentinelTUI(App):
                         yield Static(self._stat_tile("Documents", "…"), id="stat-docs")
                         yield Static(self._stat_tile("Embeddings", "…"), id="stat-emb")
                     yield Static(self._home_keys_markup(), id="home-keys")
-                yield DataTable(id="docs")
+                with Vertical(id="docs"):
+                    yield Static(
+                        self._page_title("Documents", "knowledge base · r to refresh"),
+                        classes="page-title",
+                    )
+                    yield DataTable(id="docs-table")
                 with Vertical(id="discovery"):
+                    yield Static(
+                        self._page_title(
+                            "Discovery", "find source laws for a country + keywords"
+                        ),
+                        classes="page-title",
+                    )
                     yield DataTable(id="discovery-table")
                     yield Input(
                         placeholder="ISO3-or-name [keywords] + Enter, e.g. SGP data localisation",
                         id="discovery-input",
                     )
                 with Vertical(id="extract"):
+                    yield Static(
+                        self._page_title(
+                            "Extract", "law text or URL → indicator mappings"
+                        ),
+                        classes="page-title",
+                    )
                     yield Label(
                         "Paste a URL, legal text, or drag a file below · Enter extracts · Shift+Enter newline",
                         id="extract-status",
@@ -889,6 +936,10 @@ class SentinelTUI(App):
                     yield DataTable(id="extract-table")
                     yield ExtractInput(id="extract-input")
                 with Vertical(id="rag"):
+                    yield Static(
+                        self._page_title("Chat", "ask the knowledge base"),
+                        classes="page-title",
+                    )
                     yield VerticalScroll(id="rag-log")
                     yield Input(placeholder=self.RAG_PLACEHOLDER, id="rag-input")
         yield Footer()
@@ -896,7 +947,7 @@ class SentinelTUI(App):
     async def on_mount(self) -> None:
         self.register_theme(SENTINEL_THEME)
         self.theme = "sentinel"
-        docs = self.query_one("#docs", DataTable)
+        docs = self.query_one("#docs-table", DataTable)
         docs.add_columns("Filename", "Status", "Emb", "Country", "Ingested")
         disc = self.query_one("#discovery-table", DataTable)
         disc.add_columns("Title", "Indicators", "URL")
@@ -936,7 +987,7 @@ class SentinelTUI(App):
 
     @work(exclusive=True, group="load-docs")
     async def _load_docs(self) -> None:
-        table = self.query_one("#docs", DataTable)
+        table = self.query_one("#docs-table", DataTable)
         table.clear()
         self._docs_rows.clear()
         self._docs.clear()
@@ -1060,7 +1111,7 @@ class SentinelTUI(App):
         """
         if self.query_one("#switcher", ContentSwitcher).current != "docs":
             return
-        idx = self.query_one("#docs", DataTable).cursor_row
+        idx = self.query_one("#docs-table", DataTable).cursor_row
         if not (0 <= idx < len(self._docs)):
             self.notify("Select a document row first", severity="warning", timeout=2)
             return
@@ -1073,7 +1124,7 @@ class SentinelTUI(App):
 
     @work(exclusive=False, group="sync-doc")
     async def _sync_doc(self, row: int, doc_id: str, filename: str) -> None:
-        table = self.query_one("#docs", DataTable)
+        table = self.query_one("#docs-table", DataTable)
 
         def set_status(text: str) -> None:
             # Column 1 is Status (Filename, Status, Country, Ingested).
@@ -1159,7 +1210,7 @@ class SentinelTUI(App):
                 text = (self._discovery_rows[idx].get("url") or "").strip()
                 label = "source URL"
         elif pane == "docs":
-            idx = self.query_one("#docs", DataTable).cursor_row
+            idx = self.query_one("#docs-table", DataTable).cursor_row
             if 0 <= idx < len(self._docs_rows):
                 text, label = self._docs_rows[idx], "filename"
         elif pane == "rag":
