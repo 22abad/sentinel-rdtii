@@ -187,23 +187,41 @@ def _split_reasoning(message) -> tuple[str, str]:
     return content.strip(), (reasoning or "").strip()
 
 
+def _looks_like_no_thinking_support(exc: Exception) -> bool:
+    """Ollama rejects think=true on a plain model with e.g.
+    '"qwen2.5:3b" does not support thinking'."""
+    return "thinking" in str(exc).lower()
+
+
 async def _complete(req: RAGQueryRequest, retrieved_context: str = "") -> tuple[str, str]:
     from api.system import _OLLAMA_MODEL, _RDTII_SYSTEM_PROMPT
 
-    # think=true asks a reasoning model to emit its trace; harmless kwarg only
-    # sent when requested so plain models aren't handed an option they reject.
-    extra_body = {"think": True} if req.deep_thinking else {}
-    response = await asyncio.to_thread(
-        _client().chat.completions.create,
-        model=_OLLAMA_MODEL,
-        messages=[
-            {"role": "system", "content": _RDTII_SYSTEM_PROMPT},
-            {"role": "user", "content": _prompt(req, retrieved_context)},
-        ],
-        stream=False,
-        temperature=0.3,
-        extra_body=extra_body,
-    )
+    messages = [
+        {"role": "system", "content": _RDTII_SYSTEM_PROMPT},
+        {"role": "user", "content": _prompt(req, retrieved_context)},
+    ]
+
+    def _create(extra_body: dict):
+        return _client().chat.completions.create(
+            model=_OLLAMA_MODEL,
+            messages=messages,
+            stream=False,
+            temperature=0.3,
+            extra_body=extra_body,
+        )
+
+    # think=true asks a reasoning model to emit its trace. A PLAIN model
+    # rejects the option outright ("does not support thinking") — so degrade
+    # gracefully to a normal answer (no reasoning) instead of 500ing the chat.
+    if req.deep_thinking:
+        try:
+            response = await asyncio.to_thread(_create, {"think": True})
+        except Exception as exc:  # noqa: BLE001
+            if not _looks_like_no_thinking_support(exc):
+                raise
+            response = await asyncio.to_thread(_create, {})
+    else:
+        response = await asyncio.to_thread(_create, {})
     return _split_reasoning(response.choices[0].message)
 
 
