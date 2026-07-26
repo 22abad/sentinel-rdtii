@@ -47,6 +47,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
   const [newSessionActive, setNewSessionActive] = useState(false);
   const [deepSearchActive, setDeepSearchActive] = useState(false);
   const [deepThinkingActive, setDeepThinkingActive] = useState(false);
+  const [outputFormat, setOutputFormat] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [subValues, setSubValues] = useState<Record<string, string>>({ role: "", context: "" });
   const [isLoading, setIsLoading] = useState(false);
@@ -84,6 +85,7 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
         country_code: countryCode ?? "",
         provider: provider ?? "",
         deep_thinking: deepThinkingActive,
+        output_format: outputFormat,
       });
       if (data.answer) {
         onResponse?.(data.answer, data.reasoning);
@@ -324,6 +326,21 @@ const AIChatInput = ({ onFileSelect, isIngesting = false, expandUp = false, coun
                   Deep Thinking
                 </motion.span>
               </motion.button>
+
+              <select
+                className={`px-3 py-2 rounded-none font-medium text-sm transition cursor-pointer border-0 outline-none ${outputFormat ? "bg-[#111827] text-[#f3f1ea]" : "bg-[#111827]/5 text-[#111827] hover:bg-[#111827]/10"}`}
+                title="Response format"
+                value={outputFormat}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => { e.stopPropagation(); setOutputFormat(e.target.value); }}
+              >
+                <option value="">Format: Auto</option>
+                <option value="markdown">Markdown</option>
+                <option value="plain">Plain text</option>
+                <option value="table">Table</option>
+                <option value="bullets">Bullet points</option>
+                <option value="json">JSON</option>
+              </select>
             </div>
           </motion.div>
         </div>

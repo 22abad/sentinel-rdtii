@@ -116,6 +116,22 @@ async def _retrieve(req: RAGQueryRequest):
     return hits, build_context(hits)
 
 
+# User-selectable response formats → the instruction handed to the model.
+# Text formats only (the model emits them directly); binary/download formats
+# (xlsx/pdf) are a separate writer-registry job, deliberately out of scope here.
+_FORMAT_INSTRUCTIONS = {
+    "markdown": "Format your response using clear Markdown — headings, bold, and lists where they aid readability.",
+    "plain": "Respond in plain prose only. Do not use Markdown, tables, bullet points, or code fences.",
+    "json": "Respond with a SINGLE valid JSON object and nothing else — no prose, no Markdown, no code fences.",
+    "table": "Present your response as a Markdown table with a clear header row. Add a short sentence before it only if context is essential.",
+    "bullets": "Present your response as a concise Markdown bulleted list — one point per line, no long paragraphs.",
+}
+
+
+def _format_instruction(output_format: str) -> str:
+    return _FORMAT_INSTRUCTIONS.get((output_format or "").strip().lower(), "")
+
+
 def _prompt(req: RAGQueryRequest, retrieved_context: str = "") -> str:
     parts = [f"Question: {req.question}"]
     if req.role:
@@ -133,6 +149,9 @@ def _prompt(req: RAGQueryRequest, retrieved_context: str = "") -> str:
         )
     if req.source_text:
         parts.append(f"Legal text being analyzed:\n\"\"\"\n{req.source_text}\n\"\"\"")
+    # Format instruction goes LAST so recency keeps it salient at generation.
+    if instruction := _format_instruction(req.output_format):
+        parts.append(f"Response format: {instruction}")
     return "\n\n".join(parts)
 
 

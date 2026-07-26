@@ -59,3 +59,42 @@ def test_reasoning_content_wins_over_inline_tags():
     assert reasoning == "field wins"
     # The inline tag is left untouched when the field already carried reasoning.
     assert "Answer." in answer
+
+
+# ── output_format wiring ────────────────────────────────────────────────
+from schemas import RAGQueryRequest
+from workflows.nodes.rag import _prompt, _format_instruction
+
+
+def test_no_format_selected_adds_no_instruction():
+    p = _prompt(RAGQueryRequest(question="Does SGP localize data?"))
+    assert "Response format:" not in p
+
+
+def test_each_known_format_injects_its_instruction():
+    for fmt, needle in [
+        ("json", "valid JSON object"),
+        ("table", "Markdown table"),
+        ("bullets", "bulleted list"),
+        ("plain", "plain prose"),
+        ("markdown", "clear Markdown"),
+    ]:
+        p = _prompt(RAGQueryRequest(question="q", output_format=fmt))
+        assert "Response format:" in p
+        assert needle in p
+
+
+def test_format_is_case_insensitive_and_trimmed():
+    assert _format_instruction("  JSON ") == _format_instruction("json")
+    assert _format_instruction("json")
+
+
+def test_unknown_format_is_ignored():
+    assert _format_instruction("xml") == ""
+    p = _prompt(RAGQueryRequest(question="q", output_format="xml"))
+    assert "Response format:" not in p
+
+
+def test_format_instruction_is_last_for_recency():
+    p = _prompt(RAGQueryRequest(question="q", output_format="table"))
+    assert p.rstrip().endswith("only if context is essential.")
