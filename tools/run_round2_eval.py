@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import re
 import sys
 import time
@@ -214,7 +215,19 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--limit", type=int, default=None, help="cap documents evaluated")
     p.add_argument("--provider", default="deepseek")
     p.add_argument("--timeout", type=int, default=600, help="per-document timeout (s)")
+    p.add_argument(
+        "--with-analyst",
+        action="store_true",
+        help="also generate the prose rationale (one extra LLM call per accepted "
+             "mapping). Off by default: this evaluator compares deterministic "
+             "scores and never reads the rationale.",
+    )
     args = p.parse_args(argv)
+
+    # Assigned, not setdefault: .env is already loaded at import, so a value
+    # sitting there would win and --with-analyst would silently do nothing. On
+    # this tool the flag is the single source of truth for the switch.
+    os.environ["RDTII_ANALYST"] = "on" if args.with_analyst else "off"
 
     t0 = time.time()
     report = asyncio.run(_evaluate(args))

@@ -41,7 +41,7 @@ SUPPORTED_MAPPING_INDICATORS = frozenset(get_args(IndicatorId))
 from agents.extractor import ExtractorAgent
 from agents.score_checker import check_generic_score, is_generic_scored
 from scoring.scope_overrides import apply_scope_override
-from agents.analyst import AnalystAgent
+from agents.analyst import AnalystAgent, analyst_enabled
 from agents.critic import CriticAgent
 from agents.eligibility import EligibilityVerifier, rejected_from_eligibility
 
@@ -441,13 +441,26 @@ class MASOrchestrator:
 
                     # 4. Analyst runs only for an accepted mapping and receives
                     # neither the numeric score nor a conclusion to rationalise.
-                    impact_comments_val = await self.analyst.run(
-                        chunk_text=chunk.text,
-                        indicator_id=ind_id,
-                        extracted_data=data,
-                        evidence_spans=eligibility.evidence_spans,
-                    )
-                    mapping_obj.impact = impact_comments_val
+                    # It is one extra LLM call per ACCEPTED mapping and produces
+                    # the prose rationale column only — nothing downstream scores
+                    # off it. Self-evaluation runs compare deterministic scores,
+                    # so they set RDTII_ANALYST=off and skip the call; the
+                    # submission pipeline must leave it on (the rationale is a
+                    # submitted column).
+                    # Reassigning impact_comments_val (not just mapping_obj.impact)
+                    # is load-bearing: the three legacy alias fields written below
+                    # read this variable, so writing only .impact would leave the
+                    # aliases carrying the deterministic justification while the
+                    # main field carries the Analyst's — one response contradicting
+                    # itself.
+                    if analyst_enabled():
+                        impact_comments_val = await self.analyst.run(
+                            chunk_text=chunk.text,
+                            indicator_id=ind_id,
+                            extracted_data=data,
+                            evidence_spans=eligibility.evidence_spans,
+                        )
+                        mapping_obj.impact = impact_comments_val
                     _runtime_hook(
                         "format_and_clean_mapping", format_and_clean_mapping
                     )(mapping_obj, data, chunk.text)

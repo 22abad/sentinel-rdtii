@@ -32,15 +32,26 @@ logger = logging.getLogger(__name__)
 # once served a heading-quote 7.1 row scored 1, instantly, into the audit
 # panel). Bump whenever extraction/gate behaviour changes materially — old
 # rows simply stop matching; no migration needed.
-CACHE_SCHEMA_VERSION = "2026-07-19-gates-v2"
+CACHE_SCHEMA_VERSION = "2026-07-31-analyst-dimension"
 
 
 def source_hash(text: str) -> str:
     """Stable content fingerprint. Whitespace-normalised so trivially-different
-    copies of the same document (extra blank lines, trailing spaces) still hit."""
+    copies of the same document (extra blank lines, trailing spaces) still hit.
+
+    RDTII_ANALYST is part of the fingerprint because it changes what is stored:
+    with the analyst off, a mapping's ``impact`` (and its three legacy aliases)
+    carries the terse deterministic scorer sentence instead of the analyst's
+    reasoning. This table is shared across sessions and users, so without the
+    dimension a cheap analyst-off run would silently hand its rationale to
+    everyone else's analyst-on session.
+    """
+    from agents.analyst import analyst_enabled
+
     normalized = "\n".join(line.rstrip() for line in (text or "").strip().splitlines())
+    analyst = "analyst=on" if analyst_enabled() else "analyst=off"
     return hashlib.sha256(
-        f"{CACHE_SCHEMA_VERSION}\n{normalized}".encode("utf-8")
+        f"{CACHE_SCHEMA_VERSION}\n{analyst}\n{normalized}".encode("utf-8")
     ).hexdigest()
 
 

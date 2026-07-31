@@ -211,6 +211,19 @@ class RunUsageSummary(BaseModel):
     output_tokens: int | None = None
     known_input_tokens: int = 0
     known_output_tokens: int = 0
+    calls_with_cache_accounting: int = 0
+    known_cache_hit_tokens: int = 0
+    known_cache_miss_tokens: int = 0
+    cache_hit_rate: float | None = Field(
+        default=None,
+        description=(
+            "Share of billed input tokens served from the vendor's prefix cache. "
+            "None unless EVERY call in the run reported its cache split — a run "
+            "mixing a reporting provider with a silent one has no single honest "
+            "rate; use known_cache_hit_tokens / known_cache_miss_tokens with "
+            "calls_with_cache_accounting for the partial picture."
+        ),
+    )
     cost_usd: float | None = None
     known_cost_usd: float = 0.0
     latency_sum_ms: int = 0

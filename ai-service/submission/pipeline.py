@@ -580,6 +580,14 @@ def _merge_usage(total: dict, usage) -> dict:
     total["llm_calls"] = total.get("llm_calls", 0) + (usage.llm_calls or 0)
     total["input_tokens"] = total.get("input_tokens", 0) + (usage.known_input_tokens or 0)
     total["output_tokens"] = total.get("output_tokens", 0) + (usage.known_output_tokens or 0)
+    # Cache accounting: without it a cost figure silently prices every input
+    # token at the miss rate, which is not what the vendor billed.
+    total["cache_hit_tokens"] = (
+        total.get("cache_hit_tokens", 0) + (usage.known_cache_hit_tokens or 0)
+    )
+    total["cache_miss_tokens"] = (
+        total.get("cache_miss_tokens", 0) + (usage.known_cache_miss_tokens or 0)
+    )
     total["cost_usd"] = round(total.get("cost_usd", 0.0) + (usage.known_cost_usd or 0.0), 6)
     return total
 
@@ -1254,7 +1262,8 @@ async def run_seed_first(
         "usage": {
             k: round(seed_meta.get("usage", {}).get(k, 0)
                      + disc_meta.get("usage", {}).get(k, 0), 6)
-            for k in ("llm_calls", "input_tokens", "output_tokens", "cost_usd")
+            for k in ("llm_calls", "input_tokens", "output_tokens",
+                      "cache_hit_tokens", "cache_miss_tokens", "cost_usd")
         },
         "provisions_mapped": len(rows),
         "evidence_counts": {

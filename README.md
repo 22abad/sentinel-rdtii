@@ -58,9 +58,15 @@ cross-model checker **overturns 29% of positive generic scores** before anything
 ships. On the self-evaluation against the official raw scores, **500
 official-baseline rows** were evaluated with evidence found for **70.2%** and an
 exact score match on **50.2%** (correct zero-abstentions included, so not a
-standalone accuracy rate). Whole-submission deployment cost: **$12.96 on a hosted
-model, $0 on the open-weight (Ollama) path**. Every number is reproducible from
-the eval JSONs — see the [per-economy report](docs/round2-meeting-report.md).
+standalone accuracy rate). Whole-submission deployment cost: **$12.96 on a hosted model** (27.7K
+calls), **$0 on the open-weight (Ollama) path**. Calls and tokens are measured
+from the provider's usage accounting; the dollar figure prices them at the token
+rates in `.env`, and the compiled-in defaults bill every input token at the
+cache-MISS rate, while our telemetry measures **73–96%** of them as cache
+hits — so $12.96 is a cache-miss upper bound *under that snapshot*, not a claim
+about the current bill (the snapshot predates this model, and output tokens are
+~85% of the figure). Set the rates from your billing dashboard for a real one. Every number is reproducible from the eval JSONs —
+see the [per-economy report](docs/round2-meeting-report.md).
 
 ---
 
@@ -414,8 +420,8 @@ reproducible from any run and keep the remaining gap honest:
 python tools/coverage_report.py outputs/<your-run-dir> --gaps
 
 # Whole-submission deployment cost (LLM calls, tokens, $) parsed from the run's
-# stdout — $12.96 for the full 7-economy × 12-pillar submission on a hosted
-# model, $0 on the open-weight (Ollama) path
+# stdout — $12.96 for the full 7-economy × 12-pillar submission at the
+# compiled-in rates (an upper bound), $0 on the open-weight (Ollama) path
 python main.py --economy Indonesia --pillar all --from-corpus | tee run.log
 python tools/cost_report.py run.log
 ```
@@ -708,7 +714,7 @@ the **same measured token counts** — reproducible from `cost_report_50pages.js
 |---|---|---|
 | OCR | Tesseract (local; only pages without a text layer) | $0.000 |
 | Embedding | not on the CLI mapping path (local MiniLM in the web app) | $0.000 |
-| LLM mapping | DeepSeek (measured tokens × published rate) | ≈ $0.017 |
+| LLM mapping | DeepSeek (measured tokens × the configured rate) | ≈ $0.017 |
 | Crawling | self-hosted (httpx + Playwright) | $0.000 |
 | **Total (current stack)** | | **≈ $0.017 per 50-page document** |
 | **Total (open-weight swap)** | Ollama `qwen2.5:14b` + Tesseract | **$0.000 per document** |

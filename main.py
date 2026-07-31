@@ -154,11 +154,28 @@ async def _run(args: argparse.Namespace) -> int:
         run_pdf,
         run_seed_first,
     )
+    from providers import pricing_basis
+    from telemetry import cache_note
     from submission.schema import (
         economy_display_name,
         filter_formal_submission_rows,
         validate_submission_rows,
     )
+
+    # RDTII_ANALYST=off is a legitimate cost switch for evaluation runs, but it
+    # changes the content of an OFFICIAL submitted column ("Mapping Rationale"
+    # falls back to the terse scorer sentence). A submission must never acquire
+    # that quietly from a stale .env, so say it out loud at the top of the run.
+    from agents.analyst import analyst_enabled
+
+    if not analyst_enabled():
+        print(
+            "⚠ RDTII_ANALYST=off — the submitted 'Mapping Rationale' column will "
+            "carry the terse deterministic scorer sentence, not the analyst's "
+            "reasoning. Unset it (or pass --with-analyst on the evaluator) for a "
+            "submission run.",
+            file=sys.stderr,
+        )
 
     # Provider preflight: the key-free default is Ollama at localhost:11434. If
     # it is not actually running, every extraction silently fails over and the
@@ -268,7 +285,7 @@ async def _run(args: argparse.Namespace) -> int:
         if usage.get("llm_calls"):
             emit(f"    Measured cost: {usage.get('llm_calls', 0)} LLM calls, "
                  f"{usage.get('input_tokens', 0):,} in / {usage.get('output_tokens', 0):,} out tokens, "
-                 f"${usage.get('cost_usd', 0.0):.4f}")
+                 f"${usage.get('cost_usd', 0.0):.4f}{cache_note(usage)}")
         emit(f"    Retrieval mode: {meta.get('retrieval_mode', 'unknown')}")
         for warning in meta.get("warnings", []):
             emit(f"    ⚠ {warning}")
@@ -306,17 +323,33 @@ async def _run(args: argparse.Namespace) -> int:
     # scored dimension (UN-readiness), so we report ours transparently.
     _calls = _in = _out = 0
     _cost = 0.0
+    _totals: dict[str, int] = {"cache_hit_tokens": 0, "cache_miss_tokens": 0}
     for _m in combined_meta.get("runs", []):
         _u = _m.get("usage") or {}
         _calls += int(_u.get("llm_calls", 0) or 0)
         _in += int(_u.get("input_tokens", 0) or 0)
         _out += int(_u.get("output_tokens", 0) or 0)
         _cost += float(_u.get("cost_usd", 0.0) or 0.0)
+        for _k in _totals:
+            _totals[_k] += int(_u.get(_k, 0) or 0)
     if _calls:
+        _totals["input_tokens"] = _in
+        # "tokens measured" is a fact (the provider reported them); the dollar
+        # figure is only as good as the configured rates, so the line says which
+        # is which rather than calling the whole thing "measured cost".
+        # FORMAT IS A CONTRACT: tools/cost_report.py parses this exact line
+        # ("Total measured cost: N LLM calls, X in / Y out tokens, $Z (Economy)")
+        # and README documents `main.py | tee run.log | cost_report.py`. Changing
+        # the wording silently makes that workflow report 0 economies / $0 —
+        # append after the economy paren, never rewrite what precedes it.
         print(
             f"Total measured cost: {_calls} LLM calls, {_in:,} in / {_out:,} out tokens, "
-            f"${_cost:.4f} ({display})"
+            f"${_cost:.4f} ({display}){cache_note(_totals)}"
         )
+        # Own line, on stdout: cost_report.py's regex matches only the line
+        # above, and README pipes stdout through `tee run.log` — a basis on
+        # stderr would be missing from the artifact that gets quoted.
+        print(pricing_basis(_effective_provider))
     # Discovery methods describe how a candidate was surfaced, not whether its
     # law is novel. Make the ESCAP inventory/library baseline authoritative at
     # the final submission boundary, after rows from every pillar/path have

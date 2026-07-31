@@ -30,10 +30,20 @@ _USAGE_COLLECTOR: ContextVar[UsageCollector | None] = ContextVar(
 
 @dataclass
 class ExtractionUsage:
-    """Token / cost telemetry for one extract_features call."""
+    """Token / cost telemetry for one extract_features call.
+
+    ``cache_hit_tokens`` / ``cache_miss_tokens`` split ``input_tokens`` the way
+    the vendor billed them. Providers with automatic prefix caching (DeepSeek,
+    OpenAI) charge a hit at a fraction of a miss, so a run's real bill is
+    invisible without the split — we were pricing every input token at the miss
+    rate and calling the result "measured cost". ``None`` means the provider
+    reported no cache accounting (unknown, not zero).
+    """
 
     input_tokens: int | None = None
     output_tokens: int | None = None
+    cache_hit_tokens: int | None = None
+    cache_miss_tokens: int | None = None
     cost_usd: float | None = None
     latency_ms: int = 0
     raw_response: str = field(default="", repr=False)
@@ -108,6 +118,7 @@ class LLMProvider(ABC):
         pricing_date: str | None = None,
         input_usd_per_million: float | None = None,
         output_usd_per_million: float | None = None,
+        cache_hit_usd_per_million: float | None = None,
     ) -> None:
         """Finalize backward-compatible usage and append a run audit event."""
         self.last_usage = usage
@@ -121,11 +132,14 @@ class LLMProvider(ABC):
             latency_ms=usage.latency_ms,
             input_tokens=usage.input_tokens,
             output_tokens=usage.output_tokens,
+            cache_hit_tokens=usage.cache_hit_tokens,
+            cache_miss_tokens=usage.cache_miss_tokens,
             cost_usd=usage.cost_usd,
             cost_basis=cost_basis,
             pricing_date=pricing_date,
             input_usd_per_million=input_usd_per_million,
             output_usd_per_million=output_usd_per_million,
+            cache_hit_usd_per_million=cache_hit_usd_per_million,
             indicator_ids=indicator_ids,
             status=status,
             error_type=type(error).__name__ if error is not None else None,
