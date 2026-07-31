@@ -1999,3 +1999,24 @@ final score from live pitch; results Aug 5.
 - [ ] Build pitch deck (8 slides, 1 min each)
 - [ ] Dry-run "hero command" live demo
 - [x] Telegram Dong with TL;DR — DONE
+
+## 2026-07-31 — gap-classification fix: aggregate manifest per (economy, indicator), not law_name
+
+The gap worklist misclassified cells because `_gap_cell_status` joined the
+corpus manifest by EXACT law_name, but the inventory law_name is often a
+';'-joined bundle or worded differently. A statute that IS present under a
+different name (e.g. THA 12.7's Telecommunications Business Act, 66k chars,
+160 article markers) was never seen → the cell was mislabeled CORPUS_QUALITY,
+and 6 cells with present-but-unmatched text were mislabeled FETCH_GAP.
+
+Fix (test-first): `aggregate_cell_status` + `_gap_cell_status` now aggregate
+all manifest entries per (economy, indicator) via the manifest's own
+indicator_id. +2 tests, full suite 810 green.
+
+Resulting reclassification (66 cells, same total, accurate causes):
+- FETCH_GAP 14 → 8 (6 were false "no text" — text existed, name mismatch)
+- CORPUS_QUALITY 15 → 17 (incl. cells now correctly seen as having text)
+- EXTRACTION 37 → 41 (THA 12.7 and others correctly re-tagged as statute-present)
+
+So the real attack surface is even more extraction-leaning than the worklist
+suggested, and 6 of the "blocked-portal" fetch gaps were never blocked.
