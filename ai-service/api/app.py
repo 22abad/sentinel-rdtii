@@ -14,6 +14,7 @@ from api import (
     excel,
     extraction,
     review,
+    rlvr,
     system,
     validation,
     workbench_canvas,
@@ -50,4 +51,5 @@ def create_app() -> FastAPI:
     app.include_router(workbench_canvas.router)
     app.include_router(workflows.router)
     app.include_router(canvas_files.router)
+    app.include_router(rlvr.router)
     return app
