@@ -559,6 +559,18 @@ def _aggregate_usage(summaries: list[dict]) -> dict | None:
         ),
         "known_input_tokens": sum(summary["known_input_tokens"] for summary in summaries),
         "known_output_tokens": sum(summary["known_output_tokens"] for summary in summaries),
+        # Cache accounting, or the golden report keeps pricing every input
+        # token at the miss rate. .get(): a summary produced before these
+        # fields existed must still aggregate.
+        "calls_with_cache_accounting": sum(
+            summary.get("calls_with_cache_accounting", 0) for summary in summaries
+        ),
+        "known_cache_hit_tokens": sum(
+            summary.get("known_cache_hit_tokens", 0) for summary in summaries
+        ),
+        "known_cache_miss_tokens": sum(
+            summary.get("known_cache_miss_tokens", 0) for summary in summaries
+        ),
         "cost_usd": (
             round(sum(summary["cost_usd"] for summary in summaries), 10)
             if all_costs_known else None

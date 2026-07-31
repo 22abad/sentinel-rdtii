@@ -33,6 +33,32 @@ def _timestamp() -> str:
     return datetime.now().astimezone().isoformat(timespec="milliseconds")
 
 
+def cache_note(usage: dict[str, Any]) -> str:
+    """" (N% input from provider cache)" when a split was reported, else "".
+
+    Silent when none was: a provider that reports nothing is unknown, not 0%,
+    and a cost line implying otherwise is why our own figures ran high. Set
+    ``<PROVIDER>_CACHE_HIT_USD_PER_MTOK`` to have the discount priced in too.
+
+    The percentage is shown over its OWN denominator, not the run's
+    ``input_tokens`` total, and names that denominator whenever the two differ.
+    A run can mix a reporting provider with a silent one (failover, or a
+    cross-model checker on Ollama) through the same collector, and dividing
+    cached tokens by every provider's tokens would advertise a discount the run
+    did not get.
+    """
+    hit = int(usage.get("cache_hit_tokens", 0) or 0)
+    miss = int(usage.get("cache_miss_tokens", 0) or 0)
+    accounted = hit + miss
+    if accounted <= 0:
+        return ""
+    note = f" ({hit / accounted:.0%} input from provider cache"
+    total_input = int(usage.get("input_tokens", 0) or 0)
+    if total_input > accounted:
+        note += f", of {accounted:,} accounted of {total_input:,} input tokens"
+    return note + ")"
+
+
 @dataclass(frozen=True)
 class CallUsageRecord:
     """Immutable audit record for one provider request."""
@@ -47,12 +73,16 @@ class CallUsageRecord:
     latency_ms: int
     input_tokens: int | None = None
     output_tokens: int | None = None
+    #: Vendor prefix-cache split of ``input_tokens``; None = not reported.
+    cache_hit_tokens: int | None = None
+    cache_miss_tokens: int | None = None
     usage_source: UsageSource = "unavailable"
     cost_usd: float | None = None
     cost_basis: CostBasis = "unavailable"
     pricing_date: str | None = None
     input_usd_per_million: float | None = None
     output_usd_per_million: float | None = None
+    cache_hit_usd_per_million: float | None = None
     indicator_ids: tuple[str, ...] = ()
     error_type: str | None = None
 
@@ -81,6 +111,9 @@ class UsageCollector:
     _known_cost_count: int = field(default=0, repr=False)
     _known_input_tokens: int = field(default=0, repr=False)
     _known_output_tokens: int = field(default=0, repr=False)
+    _known_cache_hit_tokens: int = field(default=0, repr=False)
+    _known_cache_miss_tokens: int = field(default=0, repr=False)
+    _calls_with_cache_accounting: int = field(default=0, repr=False)
     _known_cost_usd: float = field(default=0.0, repr=False)
     _latency_sum_ms: int = field(default=0, repr=False)
     _operations: dict[str, int] = field(default_factory=dict, repr=False)
@@ -100,11 +133,14 @@ class UsageCollector:
         latency_ms: int,
         input_tokens: int | None = None,
         output_tokens: int | None = None,
+        cache_hit_tokens: int | None = None,
+        cache_miss_tokens: int | None = None,
         cost_usd: float | None = None,
         cost_basis: CostBasis = "unavailable",
         pricing_date: str | None = None,
         input_usd_per_million: float | None = None,
         output_usd_per_million: float | None = None,
+        cache_hit_usd_per_million: float | None = None,
         indicator_ids: tuple[str, ...] = (),
         status: Literal["success", "failed"] = "success",
         error_type: str | None = None,
@@ -121,12 +157,15 @@ class UsageCollector:
             latency_ms=max(0, int(latency_ms)),
             input_tokens=input_tokens,
             output_tokens=output_tokens,
+            cache_hit_tokens=cache_hit_tokens,
+            cache_miss_tokens=cache_miss_tokens,
             usage_source="provider_response" if usage_available else "unavailable",
             cost_usd=cost_usd,
             cost_basis=cost_basis,
             pricing_date=pricing_date,
             input_usd_per_million=input_usd_per_million,
             output_usd_per_million=output_usd_per_million,
+            cache_hit_usd_per_million=cache_hit_usd_per_million,
             indicator_ids=indicator_ids,
             error_type=error_type,
         )
@@ -144,6 +183,10 @@ class UsageCollector:
             if record.output_tokens is not None:
                 self._known_output_count += 1
                 self._known_output_tokens += record.output_tokens
+            if record.cache_hit_tokens is not None or record.cache_miss_tokens is not None:
+                self._calls_with_cache_accounting += 1
+                self._known_cache_hit_tokens += record.cache_hit_tokens or 0
+                self._known_cache_miss_tokens += record.cache_miss_tokens or 0
             if record.cost_usd is not None:
                 self._known_cost_count += 1
                 self._known_cost_usd += record.cost_usd
@@ -179,6 +222,29 @@ class UsageCollector:
                 ),
                 "known_input_tokens": self._known_input_tokens,
                 "known_output_tokens": self._known_output_tokens,
+                "calls_with_cache_accounting": self._calls_with_cache_accounting,
+                "known_cache_hit_tokens": self._known_cache_hit_tokens,
+                "known_cache_miss_tokens": self._known_cache_miss_tokens,
+                # Share of billed input tokens the vendor served from its prefix
+                # cache — reported ONLY when every call in the run accounted for
+                # its cache split. None otherwise, which covers both "nobody
+                # reported" and the trap: a run mixing a reporting provider with
+                # a silent one (failover, or the cross-model checker on Ollama,
+                # which share this collector). There the ratio over accounted
+                # tokens reads ~96% while the true share of the run's input is
+                # ~13%, and a single number cannot say so. Consumers that want
+                # the partial picture have known_cache_* and
+                # calls_with_cache_accounting to compute it explicitly.
+                "cache_hit_rate": (
+                    round(
+                        self._known_cache_hit_tokens
+                        / max(1, self._known_cache_hit_tokens + self._known_cache_miss_tokens),
+                        4,
+                    )
+                    if self._calls_with_cache_accounting
+                    and self._calls_with_cache_accounting == call_count
+                    else None
+                ),
                 "cost_usd": (
                     round(self._known_cost_usd, 10)
                     if self._known_cost_count == call_count

@@ -16,7 +16,7 @@ official scorable-cell coverage **57.6% → 60.3% (+6 cells)** and rows 663 → 
 | Official non-zero cell coverage | **138/229 (60.3%)** — was 57.6% |
 | Verbatim grounding | **96.2%** (extractor hard-rejects non-verbatim quotes) |
 | Blind-verifier override | **29%** (independent checker overturns over-scores — nothing ships unverified) |
-| Cost | **$12.96 for the whole 7-economy × 12-pillar submission** (27.7K calls) on deepseek-v4-flash — **$0 on open-weight Ollama** (`tools/cost_report.py`) |
+| Cost | **$12.96 for the whole 7-economy × 12-pillar submission** (27.7K calls) on deepseek-v4-flash — **$0 on open-weight Ollama** (`tools/cost_report.py`). Calls and tokens are measured from the provider's usage accounting; the dollar figure prices them at the rates in `.env`, whose compiled-in defaults are an old snapshot that bills every input token at the cache-MISS rate, while telemetry measures **73–96%** of them as hits. So $12.96 is a cache-miss upper bound *under that snapshot* — not a claim about the current bill, since the snapshot predates this model and output tokens are ~85% of the figure. Set the rates from the billing dashboard for a real one. |
 | Tests | 755 green |
 
 Remaining coverage gap (91 cells, `docs/round2_gap_worklist.csv`): 30 fetch-gap

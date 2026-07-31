@@ -7,9 +7,22 @@ trade implications and justifying the score for a given mapping.
 from __future__ import annotations
 
 import asyncio
+import os
 from typing import Any
 from agents.base import Agent
 from providers.base import LLMProvider
+
+
+def analyst_enabled() -> bool:
+    """False only when RDTII_ANALYST explicitly disables the rationale pass.
+
+    Default ON: this pass writes the official "Mapping Rationale" column, so a
+    run must never lose it by accident. Read per call (not cached at import) so
+    a test or an evaluator can toggle it in-process. Lives here rather than in
+    the orchestrator because the batch path, the streaming path and the CLI
+    banner all need the same answer.
+    """
+    return os.getenv("RDTII_ANALYST", "on").strip().lower() not in {"0", "off", "false", "no"}
 
 
 class AnalystAgent(Agent):

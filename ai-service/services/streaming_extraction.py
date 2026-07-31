@@ -377,14 +377,18 @@ async def process_single(chunk, ind_id, spec, data, full_text, llm_provider, pdf
         mapping.requires_human_review = True
         mapping.flag_reasons = pre_flag_reasons
 
-    from agents.analyst import AnalystAgent
+    from agents.analyst import AnalystAgent, analyst_enabled
 
-    mapping.impact = await AnalystAgent(llm_provider).run(
-        chunk_text=chunk.text,
-        indicator_id=ind_id,
-        extracted_data=data,
-        evidence_spans=eligibility.evidence_spans,
-    )
+    # One extra LLM call per accepted mapping, for the prose rationale column
+    # only. Same RDTII_ANALYST switch as the batch orchestrator so the two
+    # paths cannot disagree about what a run costs. Default on.
+    if analyst_enabled():
+        mapping.impact = await AnalystAgent(llm_provider).run(
+            chunk_text=chunk.text,
+            indicator_id=ind_id,
+            extracted_data=data,
+            evidence_spans=eligibility.evidence_spans,
+        )
     main_module.format_and_clean_mapping(mapping, data, chunk.text)
 
     yield _sse("mapping", mapping.model_dump())

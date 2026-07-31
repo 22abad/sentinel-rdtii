@@ -75,7 +75,7 @@ python main.py --economy China --pillar 6 --from-corpus --provider ollama
 | **Official cell coverage** | **163/229 (71.2%)** |
 | **Verbatim grounding** | **96.2%** (quote in source, char-for-char) |
 | **Blind-verifier override** | **29%** (independent checker catches over-scores) |
-| **Deployment cost** | **$12.96 full submission / $0 open-weight** |
+| **Deployment cost** | **$12.96 full submission (27.7K calls) / $0 open-weight** |
 | **Test suite** | **808 passed** |
 | **Economies** | 7 (CHN/IND/IDN/LAO/MNG/RUS/THA) |
 | **Pillars** | All 12 (61 indicators) |
@@ -85,7 +85,7 @@ python main.py --economy China --pillar 6 --from-corpus --provider ollama
 > Spoken: "71.2% of the official scorable cells have evidence. 96.2% of our
 > quotes are verified character-for-character in the source text. An independent
 > blind checker overturns 29% of over-scores before anything ships. And the
-> entire 7-economy submission costs $12.96 on a cloud model — or zero dollars
+> entire 7-economy submission costs under thirteen dollars on a cloud model — or zero dollars
 > on the open-weight path. Most importantly: no paid API key is needed."
 
 ---

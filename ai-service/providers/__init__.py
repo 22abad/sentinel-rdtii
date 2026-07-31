@@ -180,5 +180,92 @@ __all__ = [
     "get_default_provider",
     "is_recognised",
     "list_providers",
+    "pricing_basis",
     "resolve_provider",
 ]
+
+
+def _provider_pricing_basis(
+    provider_name: str,
+    *,
+    role: str,
+) -> tuple[str, list[str]]:
+    """Describe one possible billed provider without instantiating it."""
+    canonical = _canonicalise(provider_name)
+    try:
+        cls = _load_class(provider_name)
+    except Exception:  # noqa: BLE001 — a note must never break a run
+        return f"  ({role} provider '{provider_name}': token rates unknown)", []
+
+    items = [
+        ("input", getattr(cls, "input_price_env", ""), getattr(cls, "fallback_input_price", None)),
+        ("output", getattr(cls, "output_price_env", ""), getattr(cls, "fallback_output_price", None)),
+        ("cache-hit", getattr(cls, "cache_hit_price_env", ""), getattr(cls, "fallback_cache_hit_price", None)),
+    ]
+    if not any(env for _label, env, _fb in items):
+        return (
+            f"  ({role} {canonical}: no token-rate settings — the dollar figure "
+            f"is whatever that provider reports, $0 for a local model)",
+            [],
+        )
+
+    parts: list[str] = []
+    unset: list[str] = []
+    for label, env, fallback in items:
+        if not env:
+            continue
+        if os.getenv(env, "").strip():
+            parts.append(f"{label}: env {env}")
+        elif label == "cache-hit":
+            # Unset means "no cache rate", i.e. hits are billed at the miss
+            # rate — an overstatement, not a stale number. Say which.
+            parts.append(f"{label}: unset, hits billed at the miss rate")
+            unset.append(env)
+        else:
+            parts.append(f"{label}: compiled-in snapshot (${fallback}/Mtok)")
+            unset.append(env)
+    return f"  ({role} {canonical} rates — " + "; ".join(parts) + ")", unset
+
+
+def pricing_basis(provider_name: str | None = None) -> str:
+    """Where this run's possible billed token rates came from, item by item.
+
+    A cost line that says "measured" is only half true: the token counts are
+    measured, the dollars are those tokens multiplied by whatever rates are in
+    effect. When no ``<PROVIDER>_*_USD_PER_MTOK`` env is set those rates are a
+    snapshot compiled into ``providers/openai_compatible.py`` — the reason our
+    own published figures overstated the bill.
+
+    Deliberately per-provider and per-item: scanning os.environ for any
+    ``*_USD_PER_MTOK`` would let a stray ``OPENAI_INPUT_...`` vouch for an
+    Ollama run, and a single configured/unconfigured verdict would hide that
+    DeepSeek's output price is still the compiled-in one when only its input
+    price was set. The configured fallback and cross-model checker are included
+    because either can contribute calls to the same run total. Resolves classes
+    only (never instantiates), so it needs no API key and cannot fail a run.
+    """
+    name = provider_name or os.getenv("RDTII_LLM_PROVIDER", "deepseek")
+    candidates: list[tuple[str, str]] = [("primary", name)]
+    for role, env_key in (
+        ("fallback", "RDTII_LLM_FALLBACK_PROVIDER"),
+        ("checker", "RDTII_CHECKER_PROVIDER"),
+    ):
+        candidate = os.getenv(env_key, "").strip()
+        if candidate and all(
+            _canonicalise(candidate) != _canonicalise(existing)
+            for _existing_role, existing in candidates
+        ):
+            candidates.append((role, candidate))
+
+    lines = ["  (token counts measured; rate sources by possible billed provider)"]
+    unset: list[str] = []
+    for role, candidate in candidates:
+        line, missing = _provider_pricing_basis(candidate, role=role)
+        lines.append(line)
+        unset.extend(missing)
+    if unset:
+        lines.append(
+            f"  (set {', '.join(dict.fromkeys(unset))} from your billing dashboard "
+            f"before quoting the dollar figure)"
+        )
+    return "\n".join(lines)

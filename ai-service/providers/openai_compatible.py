@@ -54,8 +54,13 @@ class OpenAICompatibleProvider(LLMProvider):
     api_key_env: ClassVar[str] = "OPENAI_API_KEY"
     input_price_env: ClassVar[str] = ""  # USD per 1M input tokens
     output_price_env: ClassVar[str] = ""  # USD per 1M output tokens
+    #: USD per 1M input tokens the vendor served from its prefix cache. Left at
+    #: 0.0 ("not configured") every input token is priced at the miss rate —
+    #: today's behaviour, preserved by default. Set the env to bill honestly.
+    cache_hit_price_env: ClassVar[str] = ""
     fallback_input_price: ClassVar[float] = 0.0
     fallback_output_price: ClassVar[float] = 0.0
+    fallback_cache_hit_price: ClassVar[float] = 0.0
 
     def __init__(
         self,
@@ -103,6 +108,9 @@ class OpenAICompatibleProvider(LLMProvider):
 
         self._input_price = _price_from_env(self.input_price_env, self.fallback_input_price)
         self._output_price = _price_from_env(self.output_price_env, self.fallback_output_price)
+        self._cache_hit_price = _price_from_env(
+            self.cache_hit_price_env, self.fallback_cache_hit_price
+        )
 
     def query(self, prompt: str, system: str = "") -> str:
         operation, indicator_ids = self._usage_context("query")
@@ -244,21 +252,52 @@ class OpenAICompatibleProvider(LLMProvider):
         self._record_priced_usage(operation, usage, indicator_ids=indicator_ids)
         return self.parse_json_response(usage.raw_response)
 
+    @staticmethod
+    def _cache_split(meta: Any, input_tokens: int | None) -> tuple[int | None, int | None]:
+        """Vendor prefix-cache split of the billed input tokens, or (None, None).
+
+        DeepSeek reports ``prompt_cache_hit_tokens`` / ``prompt_cache_miss_tokens``
+        directly; OpenAI reports ``prompt_tokens_details.cached_tokens`` and
+        leaves the miss side implied. None means "not reported" — never assume a
+        silent provider had a 0% hit rate, that is exactly the reading that made
+        our own cost numbers overstate the bill.
+        """
+        hit = getattr(meta, "prompt_cache_hit_tokens", None)
+        miss = getattr(meta, "prompt_cache_miss_tokens", None)
+        if hit is None and miss is None:
+            details = getattr(meta, "prompt_tokens_details", None)
+            cached = getattr(details, "cached_tokens", None) if details is not None else None
+            if cached is None and isinstance(details, dict):
+                cached = details.get("cached_tokens")
+            if cached is not None:
+                hit = int(cached)
+        if hit is None and miss is None:
+            return None, None
+        if miss is None and input_tokens is not None:
+            miss = max(0, input_tokens - int(hit or 0))
+        if hit is None and input_tokens is not None and miss is not None:
+            hit = max(0, input_tokens - int(miss))
+        if hit is None or miss is None:
+            # Half a split is worse than none: a (hit, None) pair reads as a
+            # 100% cache rate downstream. Only report a split we can complete.
+            return None, None
+        return int(hit), int(miss)
+
     def _populate_usage(self, usage: ExtractionUsage, meta: Any) -> None:
         if meta is None:
             return
         usage.input_tokens = getattr(meta, "prompt_tokens", None)
         usage.output_tokens = getattr(meta, "completion_tokens", None)
+        usage.cache_hit_tokens, usage.cache_miss_tokens = self._cache_split(
+            meta, usage.input_tokens
+        )
         pricing_known = self._input_price > 0 or self._output_price > 0
         if (
             pricing_known
             and usage.input_tokens is not None
             and usage.output_tokens is not None
         ):
-            usage.cost_usd = self.estimate_cost_usd(
-                usage.input_tokens,
-                usage.output_tokens,
-            )
+            usage.cost_usd = self._priced_cost(usage)
 
     def _record_priced_usage(
         self,
@@ -269,6 +308,7 @@ class OpenAICompatibleProvider(LLMProvider):
     ) -> None:
         usage_known = usage.input_tokens is not None and usage.output_tokens is not None
         pricing_known = self._input_price > 0 or self._output_price > 0
+        cache_hit_price = getattr(self, "_cache_hit_price", 0.0)
         self._record_usage(
             operation,
             usage,
@@ -281,6 +321,41 @@ class OpenAICompatibleProvider(LLMProvider):
             pricing_date=date.today().isoformat() if pricing_known else None,
             input_usd_per_million=self._input_price if pricing_known else None,
             output_usd_per_million=self._output_price if pricing_known else None,
+            # Only when the rate was actually APPLIED. Recording it because it
+            # is configured, on a call whose provider reported no split (so
+            # _priced_cost billed everything at the miss rate), would put a rate
+            # in the audit trail that this call's cost was not computed from.
+            cache_hit_usd_per_million=(
+                cache_hit_price
+                if pricing_known and cache_hit_price > 0 and usage.cache_hit_tokens is not None
+                else None
+            ),
+        )
+
+    def _priced_cost(self, usage: ExtractionUsage) -> float:
+        """Cost of one call, billing cache hits at the cache rate when known.
+
+        Falls back to :meth:`estimate_cost_usd` (every input token at the miss
+        rate) whenever the cache rate is unconfigured or the provider reported
+        no split — so an unconfigured deployment produces exactly the number it
+        produced before.
+        """
+        input_tokens = usage.input_tokens or 0
+        output_tokens = usage.output_tokens or 0
+        # getattr: a provider built without __init__ (subclasses under test,
+        # pickled instances) predates this attribute and must keep billing the
+        # way it did before.
+        cache_hit_price = getattr(self, "_cache_hit_price", 0.0)
+        if cache_hit_price <= 0 or usage.cache_hit_tokens is None:
+            return self.estimate_cost_usd(input_tokens, output_tokens)
+        hit = usage.cache_hit_tokens
+        miss = usage.cache_miss_tokens
+        if miss is None:
+            miss = max(0, input_tokens - hit)
+        return (
+            hit * cache_hit_price / 1_000_000
+            + miss * self._input_price / 1_000_000
+            + output_tokens * self._output_price / 1_000_000
         )
 
     def estimate_cost_usd(self, input_tokens: int, output_tokens: int) -> float:
@@ -300,8 +375,10 @@ class OpenAIProvider(OpenAICompatibleProvider):
     api_key_env = "OPENAI_API_KEY"
     input_price_env = "OPENAI_INPUT_USD_PER_MTOK"
     output_price_env = "OPENAI_OUTPUT_USD_PER_MTOK"
+    cache_hit_price_env = "OPENAI_CACHE_HIT_USD_PER_MTOK"
     fallback_input_price = 0.15
     fallback_output_price = 0.60
+    fallback_cache_hit_price = 0.0
 
 
 class DeepSeekProvider(OpenAICompatibleProvider):
@@ -328,9 +405,14 @@ class DeepSeekProvider(OpenAICompatibleProvider):
     api_key_env = "DEEPSEEK_API_KEY"
     input_price_env = "DEEPSEEK_INPUT_USD_PER_MTOK"
     output_price_env = "DEEPSEEK_OUTPUT_USD_PER_MTOK"
-    # Public pricing (May 2025): cache miss
+    cache_hit_price_env = "DEEPSEEK_CACHE_HIT_USD_PER_MTOK"
+    # ⚠ Fallbacks are a May-2025 list-price snapshot for an older model and are
+    # NOT the current deepseek-v4-flash rate — a run reporting "measured cost"
+    # off these numbers is reporting an estimate. Set the three envs from the
+    # billing dashboard; they are what a cost claim should ever be based on.
     fallback_input_price = 0.27
     fallback_output_price = 1.10
+    fallback_cache_hit_price = 0.0  # 0 = unconfigured; hits billed at the miss rate
 
 
 class GroqProvider(OpenAICompatibleProvider):
