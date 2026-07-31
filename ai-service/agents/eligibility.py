@@ -50,31 +50,51 @@ _PROVISION_INDICATORS = {"6.1", "6.2", "6.4", "7.3", "7.4", "7.5"}
 _DURATION = re.compile(
     r"\b(?:at least|not less than|minimum(?: period)? of|for (?:a period of )?)\s*"
     r"(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s*"
-    r"(?:days?|months?|years?)\b|至少\s*[一二三四五六七八九十百千万\d]+\s*(?:日|天|个月|月|年)",
+    r"(?:days?|months?|years?)\b|"
+    r"至少\s*[一二三四五六七八九十百千万\d]+\s*(?:日|天|个月|月|年)|"
+    r"не менее\s*\d+\s*(?:дня|дней|месяца|месяцев|год|года|лет)|"
+    r"jangka waktu(?: minimal)?\s*(?:\d+|satu|dua|tiga)\s*(?:hari|bulan|tahun)|"
+    r"อย่างน้อย\s*\d+\s*(?:วัน|เดือน|ปี)",
     re.IGNORECASE,
 )
-_RETENTION = re.compile(r"\b(?:retain|retention|keep|kept|preserve|store)\b|保留|保存", re.IGNORECASE)
+_RETENTION = re.compile(r"\b(?:retain|retention|keep|kept|preserve|store)\b|保留|保存|хранить|хранит|хранят|хранение|хранения|menyimpan|retensi|penyimpanan|เก็บรักษา|การเก็บรักษา", re.IGNORECASE)
 _MINIMISATION = re.compile(
     r"no longer than necessary|not retain(?:ed)? longer|cease to retain|"
-    r"as soon as (?:it is )?reasonable|不得超过|最小化",
+    r"as soon as (?:it is )?reasonable|不得超过|最小化|"
+    r"не дольше необходимого|прекратить хранение|"
+    r"tidak lebih lama dari yang diperlukan|berhenti menyimpan|"
+    r"ไม่เกินระยะเวลาที่จำเป็น|ลบเมื่อไม่จำเป็น",
     re.IGNORECASE,
 )
 _DPO = re.compile(
     r"data protection officer|\bDPO\b|designat(?:e|es|ed|ing) one or more individuals|"
-    r"privacy officer|数据保护官|pegawai perlindungan data",
+    r"privacy officer|数据保护官|pegawai perlindungan data|"
+    r"pejabat perlindungan data|"
+    r"сотрудник по защите данных|специалист по защите данных|"
+    r"ответственный за защиту данных|"
+    r"เจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล|เจ้าหน้าที่คุ้มครองข้อมูล",
     re.IGNORECASE,
 )
 _GOV_ACTOR = re.compile(
     r"\b(?:government|police|constable|law enforcement|public authority|minister|"
-    r"commissioner|competent authority|officer)\b|政府|公安|执法|主管机关",
+    r"commissioner|competent authority|officer)\b|"
+    r"政府|公安|执法|主管机关|"
+    r"государство|государственный орган|полиция|правоохранительные органы|"
+    r"компетентный орган|министр|уполномоченный|"
+    r"pemerintah|polisi|penegak hukum|otoritas publik|"
+    r"รัฐบาล|ตำรวจ|เจ้าหน้าที่รัฐ|หน่วยงานของรัฐ",
     re.IGNORECASE,
 )
-_ACCESS = re.compile(r"\b(?:access|obtain|require|seize|inspect|disclose|production)\b|访问|调取|披露", re.IGNORECASE)
-_DATA_OBJECT = re.compile(r"\b(?:personal data|personal information|records?|documents?|computer data|subscriber)\b|个人信息|数据|记录", re.IGNORECASE)
+_ACCESS = re.compile(r"\b(?:access|obtain|require|seize|inspect|disclose|production)\b|访问|调取|披露|доступ|получение|изъятие|осмотр|раскрытие|akses|memperoleh|mendapatkan|menginspeksi|การเข้าถึง|เข้าถึง|ได้รับ|ขอให้ส่ง", re.IGNORECASE)
+_DATA_OBJECT = re.compile(r"\b(?:personal data|personal information|records?|documents?|computer data|subscriber)\b|个人信息|数据|记录|персональные данные|персональных данных|личные данные|личная информация|data pribadi|informasi pribadi|catatan|dokumen|ข้อมูลส่วนบุคคล|ข้อมูลส่วนตัว|บันทึก|เอกสาร", re.IGNORECASE)
 _ACCESS_GATE = re.compile(
     r"\b(?:with (?:the )?(?:prior )?consent|pursuant to (?:a )?(?:court order|warrant)|"
     r"under (?:a )?(?:court order|warrant)|judicial authori[sz]ation|"
-    r"authori[sz]ed by (?:a )?court)\b|经(?:本人同意|法院批准)|法院令|搜查令",
+    r"authori[sz]ed by (?:a )?court)\b|"
+    r"经(?:本人同意|法院批准)|法院令|搜查令|"
+    r"согласие|согласия|судебное решение|судебный приказ|ордер|санкция суда|"
+    r"persetujuan|dengan persetujuan|perintah pengadilan|surat perintah|izin pengadilan|"
+    r"ความยินยอม|คำสั่งศาล|หมายค้น|การอนุญาตของศาล",
     re.IGNORECASE,
 )
 _OBJECTIVE_OR_PRINCIPLE = re.compile(

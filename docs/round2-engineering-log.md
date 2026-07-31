@@ -1942,3 +1942,52 @@ environment-dependent (a developer's `~/.config/stn/theme.toml` would leak
 into test runs) — `tests/conftest.py` now pins `STN_CONFIG` to a nonexistent
 path before anything imports tui. Test with the artifact users actually
 produce, and keep import-time config out of test reach.
+
+## 2026-07-23 — FETCH_GAP attack: 9 cells resolved (manifest + direct fetches)
+
+6 false-positive FETCH_GAP cells had text already on disk but filed under a
+different law_name. Added manifest entries pointing to existing text. 3 genuinely
+new laws fetched via HTTP (LAO Procurement + Standardization, IND Companies Act).
+Remaining 21 FETCH_GAP: JS portals, dead links, 403s — infrastructure-blocked.
+
+## 2026-07-31 — TOP 20! Live pitch prep begins
+
+**We made the top 20.** Pitch slot: **Aug 3, 14:00–14:15 Bangkok (GMT+7)**, team
+[63] Sentinel. Pitch rules: 8 min presentation + 7 min judge Q&A. Judges may ask
+to **run the prototype live on a specific case**. No retry if it crashes. 50% of
+final score from live pitch; results Aug 5.
+
+### Current repo state (before pitch hardening)
+
+- **Local:** 6 uncommitted changes (multi-language eligibility/classifier — 169
+  lines of keyword expansion across all 7 languages + pipeline name-resolution
+  fix + batch_run --from-corpus + updated gap_worklist + engineering-log).
+- **origin/main:** 8 new teammate commits since last push (#372–#381: RAG format
+  selector, TUI dashboard, thinking animation, theme fixes).
+- **Remaining gaps:** 68 cells (36 extraction / 17 fetch / 15 corpus-quality),
+  down from 91 after the FETCH_GAP attack (9 cells resolved: 6 false-positives
+  where text existed but under a different law_name, + 3 genuine fetches).
+
+### Pitch-prep workstreams (ordered by impact on live-pitch score)
+
+1. **Merge + push to judge repo** — pull teammate work, commit multi-language
+   changes, green suite, push. Judges see a current, active repo.
+2. **Live-demo hardening** — `--from-corpus` must run fast (<2 min) and
+   survive edge cases (corrupt file, missing pillar, bad economy name).
+   Prep a single "hero command" that produces visible output every time.
+3. **Pitch deck + demo script** — 8 slides max, 1 min each. Hero numbers
+   (60.3% coverage, 96.2% grounding, 29% blind-verify, $12.96/$0 cost,
+   795 tests). A 2-minute live-demo walkthrough (run China P6, show CSV
+   output, show the audit trail).
+4. **Q&A dry-run** — anticipate judge questions (worst-case: "run India P3
+   live"), pre-run those, note the output.
+5. **Fallback plan** — if screen-share or live run fails, have the output
+   CSV/JSON ready to post in Zoom chat (per pitch rule #10).
+
+### Immediate next actions
+
+- [ ] Pull teammate work (origin/main, 8 commits ahead)
+- [ ] Commit multi-language changes + push
+- [ ] Verify `--from-corpus` works end-to-end for all 7 economies
+- [ ] Build pitch deck outline
+- [ ] Telegram Dong with TL;DR and ask for deck/role decisions

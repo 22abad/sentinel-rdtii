@@ -1032,6 +1032,33 @@ async def run_corpus(
             _cc_seen[name] = cc
             corpus_text[name] = repo / d.get("text_path", "")
 
+    # Normalized-name fallback: the inventory law_name often bundles several
+    # statutes (";\n\n"-joined) or differs in wording from the manifest record
+    # even though the corpus text is present. Build a per-economy index of
+    # normalized manifest names so those cells map instead of surfacing as fake
+    # FETCH_GAP (text present, name mismatch).
+    from submission.novelty import normalize_law_name as _norm_law
+
+    _norm_index: dict[str, _Path] = {}
+    for _n, _p in corpus_text.items():
+        _k = _norm_law(_n)
+        if _k and _k not in _norm_index:
+            _norm_index[_k] = _p
+
+    def _resolve_law_path(name: str) -> _Path | None:
+        pth = corpus_text.get(name)
+        if pth is not None:
+            return pth
+        # try each ;/newline-joined sub-name against the normalized index
+        for _part in re.split(r"[;\n]", name):
+            _part = _part.strip()
+            if not _part:
+                continue
+            pth = _norm_index.get(_norm_law(_part))
+            if pth is not None:
+                return pth
+        return None
+
     laws: dict[str, dict] = {}
     inventory = repo / "data" / "round2_inventory.jsonl"
     if inventory.exists():
@@ -1042,7 +1069,7 @@ async def run_corpus(
             if d.get("economy") != code or int(d.get("pillar", 0) or 0) != pillar:
                 continue
             law_name = d.get("law_name", "")
-            if law_name not in corpus_text:
+            if _resolve_law_path(law_name) is None:
                 continue  # no local text -> can't map (counted as a coverage gap)
             ind = str(d.get("indicator_id", ""))
             try:
@@ -1073,7 +1100,7 @@ async def run_corpus(
     for position, (law_name, info) in enumerate(laws.items(), start=1):
         say(f"extracting: {law_name[:50]}", position, len(laws))
         try:
-            text = corpus_text[law_name].read_text(encoding="utf-8")
+            text = _resolve_law_path(law_name).read_text(encoding="utf-8")
         except Exception as exc:  # noqa: BLE001
             warnings.append(f"read failed for {law_name[:40]}: {exc}")
             continue

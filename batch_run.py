@@ -28,6 +28,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", default="outputs")
     parser.add_argument("--provider", default=None)
     parser.add_argument("--offline", action="store_true")
+    parser.add_argument("--from-corpus", action="store_true",
+                        help="Round-2 reproducible path: map fetched official baseline corpus")
     parser.add_argument("--max-documents", type=int, default=None)
     args = parser.parse_args(argv)
 
@@ -41,6 +43,8 @@ def main(argv: list[str] | None = None) -> int:
             cmd += ["--provider", args.provider]
         if args.offline:
             cmd += ["--offline"]
+        if args.from_corpus:
+            cmd += ["--from-corpus"]
         if args.max_documents is not None:
             cmd += ["--max-documents", str(args.max_documents)]
         print(f"\n=== {economy} (pillar {pillar_arg}) ===")
