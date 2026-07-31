@@ -74,3 +74,4 @@ outputs/judge_matrix/
 .DS_Store
 
 *.egg-info/
+Opponents/
