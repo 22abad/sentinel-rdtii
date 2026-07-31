@@ -1,4 +1,4 @@
-.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar stn test smoke-discovery discovery-coverage golden-coverage db db-reset image
+.PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar stn test smoke-discovery discovery-coverage golden-coverage rlvr-measure db db-reset image
 .PHONY: setup doctor dev dev-backend dev-frontend dev-sidecar install install-frontend install-cli install-opencli-bridge install-sidecar stn test eval-setup eval-golden smoke-discovery discovery-coverage db db-reset image
 
 PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3 2>/dev/null || command -v python 2>/dev/null)
@@ -70,6 +70,14 @@ discovery-coverage:
 
 golden-coverage:
 	$(PYTHON) scripts/check_golden_coverage.py
+
+# Measure whether the RLVR proxy reward can pick the right candidate.
+# Fully offline against the reviewed golden set — no API calls, no network, no
+# DB. Writes evaluation/reports/rlvr-measurement.{json,md} and appends a run
+# summary to rlvr-measurement-history.jsonl. Gate on this before wiring
+# best-of-N into the pipeline.
+rlvr-measure:
+	$(PYTHON) scripts/rlvr_measure.py
 
 db:
 	docker compose up -d postgres redis
