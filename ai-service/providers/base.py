@@ -7,6 +7,7 @@ Every provider exposes the same interface; main.py never imports a concrete prov
 from __future__ import annotations
 
 import json
+import logging
 import re
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
@@ -16,6 +17,8 @@ from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from telemetry import CostBasis, UsageCollector
+
+logger = logging.getLogger(__name__)
 
 
 _USAGE_CONTEXT: ContextVar[tuple[str, tuple[str, ...]] | None] = ContextVar(
@@ -240,13 +243,23 @@ class LLMProvider(ABC):
 
     @staticmethod
     def _get_recent_corrections() -> str:
-        """Fetch the latest 5 rejected extractions with reviewer notes to use as negative few-shot examples.
+        """Fetch the latest 5 rejected mappings to use as negative few-shot examples.
 
         Optional prompt enhancement backed by Postgres. The judge CLI is DB-free
         and its lean install ships no psycopg2, so BOTH the driver import and the
         connection must degrade to "no corrections" instead of breaking
         extraction. The import lives inside the try for that reason — a
         ModuleNotFoundError here previously zeroed every batch on a fresh install.
+
+        A REJECTION IS THE SIGNAL; the note is only colour. An earlier version
+        required ``reviewer_notes`` to be non-empty, which made this dead code:
+        the review endpoint never wrote that column, and no UI collects it. Every
+        rejected mapping now qualifies, and the note is appended when present.
+
+        Degrading to "" is correct here (a missing DB must not break a run), but
+        it must be AUDIBLE — a silent "" is indistinguishable from "the loop is
+        working and there is nothing to report", which is how three separate
+        breaks in this path went unnoticed.
         """
         import os
 
@@ -254,21 +267,29 @@ class LLMProvider(ABC):
         try:
             import psycopg2
 
-            db_config = {
-                "dbname": os.getenv("POSTGRES_DB", "rdtii"),
-                "user": os.getenv("POSTGRES_USER", "rdtii_user"),
-                "password": os.getenv("POSTGRES_PASSWORD", "rdtii_password"),
-                "host": os.getenv("POSTGRES_HOST", "postgres"),
-                "port": os.getenv("POSTGRES_PORT", "5432"),
-            }
-            conn = psycopg2.connect(**db_config)
+            # Match auth._db_connect: DATABASE_URL wins, POSTGRES_* is the
+            # fallback. Hardcoding host=postgres/port=5432 pointed this reader at
+            # the Docker-internal name, so from the host it could not resolve at
+            # all — while the writer used DATABASE_URL and went elsewhere.
+            url = os.getenv("DATABASE_URL")
+            if url:
+                conn = psycopg2.connect(url, connect_timeout=5)
+            else:
+                conn = psycopg2.connect(
+                    dbname=os.getenv("POSTGRES_DB", "rdtii"),
+                    user=os.getenv("POSTGRES_USER", "rdtii_user"),
+                    password=os.getenv("POSTGRES_PASSWORD", "rdtii_password"),
+                    host=os.getenv("POSTGRES_HOST", "localhost"),
+                    port=os.getenv("POSTGRES_PORT", "5433"),
+                    connect_timeout=5,
+                )
             cur = conn.cursor()
             cur.execute(
-                "SELECT ds.raw_text, rm.compliance_status, at.reviewer_notes "
+                "SELECT ds.raw_text, at.reviewer_notes "
                 "FROM audit_trail at "
                 "JOIN regulation_mappings rm ON at.mapping_id = rm.id "
                 "JOIN document_sections ds ON at.source_section_id = ds.id "
-                "WHERE at.reviewer_notes IS NOT NULL AND at.reviewer_notes != '' AND rm.compliance_status = 'non-compliant' "
+                "WHERE rm.compliance_status = 'non-compliant' "
                 "ORDER BY at.created_at DESC LIMIT 5"
             )
             rows = cur.fetchall()
@@ -276,23 +297,35 @@ class LLMProvider(ABC):
             conn.close()
             if not rows:
                 return ""
-                
+
             parts = ["\n=== IMPORTANT: RECENT HUMAN AUDITOR CORRECTIONS (DO NOT MAKE THESE ERRORS) ==="]
-            for i, (text, status, notes) in enumerate(rows, 1):
-                text_preview = text.strip().replace("\n", " ")[:200]
-                parts.append(
-                    f"Correction {i}:\n"
-                    f"  - Extracted Text: \"{text_preview}...\"\n"
-                    f"  - Human Feedback: \"{notes}\"\n"
-                    f"  - Action required: Do NOT extract or map this type of content as valid policy."
+            for i, (text, notes) in enumerate(rows, 1):
+                text_preview = (text or "").strip().replace("\n", " ")[:200]
+                block = [
+                    f"Correction {i}:",
+                    f"  - Extracted Text: \"{text_preview}...\"",
+                ]
+                if (notes or "").strip():
+                    block.append(f"  - Human Feedback: \"{notes.strip()}\"")
+                block.append(
+                    "  - Action required: Do NOT extract or map this type of content as valid policy."
                 )
+                parts.append("\n".join(block))
+            logger.info("prompt enrichment: %d human correction(s) injected", len(rows))
             return "\n".join(parts) + "\n=================================================================\n"
-        except Exception:
+        except Exception as exc:  # noqa: BLE001 — must not break extraction
             if conn:
                 try:
                     conn.close()
-                except Exception:
+                except Exception:  # noqa: BLE001
                     pass
+            logger.warning(
+                "human-correction lookup failed (%s: %s) — continuing with no "
+                "corrections; the reject-feedback loop is NOT contributing to "
+                "this run",
+                type(exc).__name__,
+                exc,
+            )
             return ""
 
     @staticmethod

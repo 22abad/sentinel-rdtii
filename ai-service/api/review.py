@@ -70,10 +70,22 @@ def review_mapping(req: ReviewRequest):
         )
         mapping_id = cur.fetchone()[0]
 
+        # reviewer_notes closes the human-feedback loop: providers.base
+        # ._get_recent_corrections() reads these rows back as negative few-shot
+        # examples. Omitting the column (as this INSERT used to) left the
+        # reader with nothing to find, so expert rejections never reached the
+        # model.
         cur.execute(
-            "INSERT INTO audit_trail (mapping_id, source_section_id, highlight_start, highlight_end) "
-            "VALUES (%s, %s, %s, %s)",
-            (mapping_id, section_id, req.mapping.quote_start, req.mapping.quote_end),
+            "INSERT INTO audit_trail "
+            "(mapping_id, source_section_id, highlight_start, highlight_end, reviewer_notes) "
+            "VALUES (%s, %s, %s, %s, %s)",
+            (
+                mapping_id,
+                section_id,
+                req.mapping.quote_start,
+                req.mapping.quote_end,
+                (req.reviewer_notes or "").strip() or None,
+            ),
         )
 
         conn.commit()
