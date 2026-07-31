@@ -2020,3 +2020,14 @@ Resulting reclassification (66 cells, same total, accurate causes):
 
 So the real attack surface is even more extraction-leaning than the worklist
 suggested, and 6 of the "blocked-portal" fetch gaps were never blocked.
+
+## 2026-07-31 — FETCH_GAP honest-verdict: all 8 are hard blockers
+
+Wayback Machine: no snapshot for any of the 8 FETCH_GAP URLs (checked via
+archive.org/wayback/available). garant.ru 152-FZ/149-FZ: the stored text is a
+title-only TOC page (Статья 18 = heading list, no body) — the real body is
+JS-loaded and defeats the full fallback chain (curl_cffi → HTTP/PDF →
+Playwright → OpenCLI → Wayback → Google Cache, all tried). nbtc.go.th
+timeouts, chinafilm.gov.cn 404. So the 8 fetch gaps stay honest FETCH_GAP —
+the reclassification earlier proved 6 of the original 14 were never blocked,
+but these 8 genuinely are.
