@@ -232,6 +232,7 @@ async def _run(args: argparse.Namespace) -> int:
             rows, meta = await run_corpus(
                 args.economy, pillar,
                 provider_name=args.provider, indicators=args.indicators,
+                max_documents=args.max_documents,
                 progress=narrate,
             )
         elif args.offline:

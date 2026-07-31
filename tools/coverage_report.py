@@ -114,6 +114,18 @@ def submission_stats(rows: list[dict]) -> dict:
     }
 
 
+def aggregate_cell_status(kinds_by_cell: dict[tuple, list[str]]) -> dict[tuple, tuple[bool, bool]]:
+    """Per (economy, indicator) cell: (has_text, is_statute), aggregated over ALL
+    manifest entries for the cell — not just the one whose law_name matches the
+    inventory string exactly. A cell that holds both a summary and a real statute
+    (e.g. THA 12.7) is a statute-bearing cell; the old law_name-exact join would
+    tag it from the summary alone and misclassify it as CORPUS_QUALITY."""
+    return {
+        cell: (bool(kinds), "STATUTE" in kinds)
+        for cell, kinds in kinds_by_cell.items()
+    }
+
+
 _CAUSE_ORDER = {"FETCH_GAP": 0, "CORPUS_QUALITY": 1, "EXTRACTION": 2}
 
 
@@ -192,37 +204,34 @@ def _load_submission(directory):
 
 def _gap_cell_status(uncovered, inventory, repo):
     """Tag each uncovered (economy, dotted-indicator) cell with has_text /
-    is_statute from the corpus manifest — the input to summarize_gaps."""
+    is_statute from the corpus manifest — the input to summarize_gaps.
+
+    Aggregates manifest entries per (economy, indicator), NOT per exact
+    law_name: the inventory law_name is often a ';\\n\\n'-joined bundle or
+    worded differently from the manifest record, so a law_name-exact join
+    misses statutes that ARE present (e.g. THA 12.7's Telecommunications
+    Business Act) and mislabels the cell as CORPUS_QUALITY."""
     import sys as _sys
     _sys.path.insert(0, str(repo / "tools"))
     from restore_corpus import _load_manifest, _is_corrupt, classify_text_quality
     from pathlib import Path
 
-    # (economy, indicator) -> mapped law names
-    cell_laws: dict[tuple, list] = {}
-    for d in inventory:
-        cell_laws.setdefault((_code(d.get("economy", "")), str(d.get("indicator_id", ""))), []).append(
-            d.get("law_name", ""))
-    # (economy, law) -> (has_text, is_statute)
-    law_status: dict[tuple, tuple] = {}
+    # (economy, indicator) -> classify_text_quality kinds of every readable entry
+    kinds_by_cell: dict[tuple, list[str]] = {}
     for m in _load_manifest():
         if m.get("status") not in ("ok", "cached") or _is_corrupt(m)[0]:
             continue
         pth = repo / m.get("text_path", "")
         if not pth.exists():
             continue
-        kind = classify_text_quality(pth.read_text(encoding="utf-8"))[0]
-        key = (m.get("economy", ""), m.get("law_name", ""))
-        prev = law_status.get(key)
-        is_stat = kind == "STATUTE"
-        # keep the best (a statute beats a summary) for the law
-        law_status[key] = (True, is_stat or (prev[1] if prev else False))
+        key = (m.get("economy", ""), str(m.get("indicator_id", "")))
+        kinds_by_cell.setdefault(key, []).append(
+            classify_text_quality(pth.read_text(encoding="utf-8", errors="ignore"))[0])
 
+    status = aggregate_cell_status(kinds_by_cell)
     out = []
     for econ, ind in uncovered:
-        laws = cell_laws.get((econ, ind), [])
-        has_text = any((econ, ln) in law_status for ln in laws)
-        is_stat = any(law_status.get((econ, ln), (False, False))[1] for ln in laws)
+        has_text, is_stat = status.get((econ, ind), (False, False))
         out.append({"economy": econ, "indicator": ind, "has_text": has_text, "is_statute": is_stat})
     return out
 

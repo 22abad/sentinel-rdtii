@@ -981,6 +981,7 @@ async def run_corpus(
     *,
     provider_name: str | None = None,
     indicators: list[str] | None = None,
+    max_documents: int | None = None,
     progress=None,
 ) -> tuple[list[SubmissionRow], dict]:
     """Round-2 corpus path: map the fetched official baseline corpus across all
@@ -1096,6 +1097,11 @@ async def run_corpus(
     # (score 1.0). 60K matches the offline evaluator (TEXT_CAP), which is why the
     # eval scored IDN P6 but the 150K corpus run produced nothing.
     _cap = int(os.getenv("RDTII_CORPUS_RETRIEVAL_CHARS", "60000") or 60000)
+
+    # --max-documents also caps the corpus path (it was live-discovery-only):
+    # a judge asking for a quick demo of ONE law gets one law, not all of them.
+    if max_documents is not None and len(laws) > max_documents:
+        laws = dict(list(laws.items())[:max_documents])
 
     for position, (law_name, info) in enumerate(laws.items(), start=1):
         say(f"extracting: {law_name[:50]}", position, len(laws))

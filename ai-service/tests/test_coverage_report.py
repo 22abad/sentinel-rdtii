@@ -154,3 +154,28 @@ def test_submission_stats_shape():
     assert s["distinct_indicators"] == 3
     assert s["by_tag"] == {"KNOWN": 2, "NEW": 1}
     assert s["by_pillar"] == {"6": 2, "7": 1}
+
+
+def test_aggregate_cell_status_uses_any_statute_across_entries():
+    """A cell whose manifest has BOTH a summary and a real statute (e.g. THA
+    12.7: .TH policy SUMMARY + Telecommunications Act STATUTE) must be tagged
+    has_statute — the old law_name-exact join wrongly picked the summary."""
+    from coverage_report import aggregate_cell_status
+
+    kinds_by_cell = {
+        ("THA", "12.7"): ["SUMMARY", "STATUTE"],
+        ("THA", "5.3"): ["SUMMARY"],
+        ("IDN", "7.1"): ["SUMMARY", "SUMMARY"],
+    }
+    status = aggregate_cell_status(kinds_by_cell)
+
+    assert status[("THA", "12.7")] == (True, True)   # statute present → not a corpus-quality gap
+    assert status[("THA", "5.3")] == (True, False)   # summary only
+    assert status[("IDN", "7.1")] == (True, False)   # summaries only
+    assert status.get(("CHN", "1.4"), (False, False)) == (False, False)  # no entries
+
+
+def test_aggregate_cell_status_empty_input():
+    from coverage_report import aggregate_cell_status
+
+    assert aggregate_cell_status({}) == {}
