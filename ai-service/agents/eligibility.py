@@ -27,6 +27,13 @@ class EligibilityResult:
     evidence_spans: dict[str, list[str]] = field(default_factory=dict)
     exclusion_reasons: list[str] = field(default_factory=list)
     verifier_mode: str = "deterministic"
+    #: True when the LLM arm raised (network/parse) rather than returning a
+    #: judgement. For the PIPELINE this stays precision-first — an unverified
+    #: mapping is still dropped. For the REWARD the distinction is essential:
+    #: "the verifier says no" is evidence about the candidate, "the verifier
+    #: broke" is evidence about nothing, and scoring the second as 0.0 penalises
+    #: whichever candidate happened to hit the error.
+    verifier_failed: bool = False
 
     @property
     def supported(self) -> bool:
@@ -370,6 +377,10 @@ Quote:
                     "supported_indicators": [],
                     "evidence_spans": {},
                     "exclusion_reasons": [f"Independent eligibility verifier failed: {type(exc).__name__}"],
+                    # Marked so callers can tell "judged ineligible" from "never
+                    # got a judgement". Kept inside the cached payload so a
+                    # repeat lookup for the same quote stays consistent.
+                    "_verifier_failed": True,
                 }
             self._cache[cache_key] = parsed
 
@@ -405,6 +416,7 @@ Quote:
             evidence_spans=verified_spans,
             exclusion_reasons=reasons,
             verifier_mode="independent_llm",
+            verifier_failed=bool(parsed.get("_verifier_failed")),
         )
 
 

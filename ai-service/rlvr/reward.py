@@ -300,7 +300,7 @@ def score_candidate(
     chunk_text: str,
     indicator_id: str,
     raw_score: float | None = None,
-    eligibility_override: tuple[float, str] | None = None,
+    eligibility_override: tuple[float | None, str] | None = None,
 ) -> ProxyReward:
     """Score one raw extraction candidate.
 
@@ -377,10 +377,17 @@ def score_candidate(
     # preserves the reward's two most useful properties: it stays synchronous
     # and free by default, so the offline measurement remains a reproducible
     # regression gate that costs nothing to run.
+    # A ``None`` value means the verifier never returned a judgement (it raised).
+    # That is not a verdict about this candidate, so the term is dropped from the
+    # objective below rather than scored 0.0 — scoring it 0.0 penalises whichever
+    # candidate happened to hit the error, which is exactly how a transient API
+    # failure handed a page-dump the win over the correct provision in
+    # sgp-cpc-7-5-section-20.
     if eligibility_override is not None:
         eligible_value, eligible_detail = eligibility_override
     else:
         eligible_value, eligible_detail = _eligibility(quote, indicator_id, data)
+    eligibility_unavailable = eligible_value is None
 
     present = [
         bool((data.get("source_legislation") or "").strip()),
@@ -413,7 +420,7 @@ def score_candidate(
         ),
         RewardComponent(
             "eligibility_supported",
-            eligible_value,
+            0.0 if eligibility_unavailable else float(eligible_value or 0.0),
             WEIGHTS["eligibility_supported"],
             eligible_detail,
         ),
@@ -447,22 +454,43 @@ def score_candidate(
         ),
     )
 
+    dropped: set[str] = set()
+
     if is_existence:
-        # Only the coverage term comes off. The evidence is an instrument's
-        # TITLE, which frequently IS its whole chunk, so coverage would punish
-        # the correct answer. The eligibility term stays: its 7.1/7.2 branches
-        # are feature-driven and apply neither the objectives-clause check nor
-        # the operative-language backstop, so a bare title is not penalised.
-        components = tuple(
-            c
-            for c in components
-            if c.name
-            not in {"single_provision"}
-        )
+        # The evidence is an instrument's TITLE, which frequently IS its whole
+        # chunk, so coverage would punish the correct answer.
+        dropped.add("single_provision")
+        # Eligibility comes off too, but ONLY when an external verdict was
+        # supplied. The original exemption kept it on the grounds that the
+        # deterministic 7.1/7.2 branches are feature-driven and apply neither
+        # the objectives-clause check nor the operative-language backstop — true
+        # of that arm, and false of the LLM arm, which substitutes its own
+        # judgement and rejects exactly this shape of evidence
+        # ("a statement of legislative purpose, not a provision-level measure",
+        # sgp-cybersecurity-7-2-framework). Under the LLM arm the term therefore
+        # penalises the correct title-style answer and rewards the page-dump
+        # that surrounds it — the fifth instance of a provision-shape prior
+        # inverting on an existence indicator.
+        if eligibility_override is not None:
+            dropped.add("eligibility_supported")
         notes.append(
             f"{indicator_id} is an existence-type indicator — the instrument's "
             "title is valid evidence, so the provision-shape terms are not scored"
         )
+
+    if eligibility_unavailable:
+        # Abstain, do not penalise. See the eligibility_override comment above.
+        dropped.add("eligibility_supported")
+        notes.append(
+            "eligibility verifier returned no judgement — the term is dropped "
+            "from the objective rather than scored 0.0"
+        )
+
+    if dropped:
+        # Removed from the DENOMINATOR, not softened to a neutral 1.0: a neutral
+        # value would still shift the weighted mean and make totals across
+        # indicators incomparable.
+        components = tuple(c for c in components if c.name not in dropped)
 
     total_weight = sum(c.weight for c in components)
     graded = sum(c.contribution for c in components) / total_weight if total_weight else 0.0

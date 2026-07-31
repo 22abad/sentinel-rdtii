@@ -4,15 +4,23 @@ This is step 1 of the RLVR plan and the gate on everything after it: if the
 label-free proxy reward cannot rank a real extraction above manufactured bad
 ones, best-of-N is 4x extractor spend for noise and should not be wired in.
 
-Runs fully offline against the reviewed golden set — no API calls, no network,
-no database. Emits a tracking report to evaluation/reports/ on every run:
+Runs against the reviewed golden set. The DEFAULT mode is fully offline — no
+API calls, no network, no database — and emits:
 
     rlvr-measurement.json   machine-readable, one object per run
     rlvr-measurement.md     the human view
     rlvr-measurement-history.jsonl   append-only, one summary line per run
 
+``--with-llm`` swaps the deterministic eligibility arm for the real verifier.
+That mode DOES make billed API calls, one per distinct (indicator, quote), and
+writes to the parallel ``rlvr-measurement-llm.*`` stem so the two never
+overwrite each other. Read them as two different measurements of two different
+systems: the offline number reflects a stub, the --with-llm number reflects
+what production would actually do, and only the latter gates wiring best-of-N.
+
 Usage:
     python3 scripts/rlvr_measure.py
+    python3 scripts/rlvr_measure.py --with-llm deepseek     # costs money
     python3 scripts/rlvr_measure.py --out-dir /tmp/report
 """
 
@@ -80,7 +88,14 @@ def reward_config() -> dict:
             "existence_indicators": sorted(reward_mod.EXISTENCE_INDICATORS),
             "existence_exempt_components": [
                 "single_provision",
+                "eligibility_supported (only when an external verdict is supplied — "
+                "the deterministic branches are safe for a bare title, the LLM arm "
+                "is not)",
             ],
+            "eligibility_abstain_policy": (
+                "a verifier that raises yields no verdict; the term is dropped "
+                "from the objective rather than scored 0.0"
+            ),
         },
         "oracle": {
             "evidence_threshold": oracle_mod.EVIDENCE_THRESHOLD,
@@ -183,7 +198,7 @@ def _load_fixtures() -> dict[tuple[str, str], dict]:
 
 def _llm_eligibility_map(
     provider_name: str, work: list[tuple[str, str, dict]]
-) -> dict[tuple[str, str], tuple[float, str]]:
+) -> dict[tuple[str, str], tuple[float | None, str]]:
     """Run EligibilityVerifier's FULL cascade (deterministic + blind LLM).
 
     Answers one question the free study structurally cannot: six of the ten
@@ -213,7 +228,7 @@ def _llm_eligibility_map(
         unique.setdefault((indicator_id, " ".join(quote.split())),
                           (quote, indicator_id, features))
 
-    async def _run() -> dict[tuple[str, str], tuple[float, str]]:
+    async def _run() -> dict[tuple[str, str], tuple[float | None, str]]:
         semaphore = asyncio.Semaphore(8)
         failures: list[str] = []
 
@@ -224,12 +239,22 @@ def _llm_eligibility_map(
                     result = await verifier.verify(quote, indicator_id, features)
                 except Exception as exc:  # noqa: BLE001
                     failures.append(f"{indicator_id}: {type(exc).__name__}: {exc}")
-                    return key, (0.0, f"VERIFIER ERROR: {type(exc).__name__}: {exc}")
+                    # None, not 0.0 — an error is not a verdict of "ineligible".
+                    return key, (None, f"VERIFIER ERROR: {type(exc).__name__}: {exc}")
             detail = (
                 f"[{result.verifier_mode}] "
                 + ("eligible for this indicator" if result.supported
                    else "; ".join(result.exclusion_reasons) or "not supported")
             )
+            if result.verifier_failed:
+                # EligibilityVerifier swallows its own LLM/parse errors and
+                # abstains (correct for the pipeline, which must stay
+                # precision-first). That made these invisible here: the loud
+                # report below counted zero failures while a broken call was
+                # being scored as a real "ineligible" verdict against whichever
+                # candidate hit it.
+                failures.append(f"{indicator_id}: abstained — {'; '.join(result.exclusion_reasons)}")
+                return key, (None, detail[:200])
             return key, (1.0 if result.supported else 0.0, detail[:200])
 
         pairs = await asyncio.gather(*(_one(k, v) for k, v in unique.items()))
@@ -261,7 +286,7 @@ def _evaluate_case(
     case: GoldenCase,
     reference: dict,
     document_text: str,
-    llm_elig: dict[tuple[str, str], tuple[float, str]] | None = None,
+    llm_elig: dict[tuple[str, str], tuple[float | None, str]] | None = None,
 ) -> dict | None:
     """Score one synthetic best-of-N set. Returns None when unbuildable."""
     host = _host_chunk(document_text, reference.get("verbatim_quote") or "")
@@ -481,12 +506,24 @@ def _pct(value: float | None) -> str:
 
 def render_markdown(report: dict) -> str:
     s = report["summary"]
+    # The provenance line must describe the run that actually happened. This
+    # string used to be hardcoded to "(no API calls, no network)" regardless of
+    # mode, so every --with-llm report asserted it had stayed offline while it
+    # was billing one eligibility call per candidate. A report that misstates
+    # whether it touched the network cannot be used to justify spending on the
+    # next one.
+    provider = report.get("llm_provider")
+    provenance = (
+        f"live LLM eligibility via `{provider}` — REAL API calls, billed"
+        if provider
+        else "no API calls, no network"
+    )
     lines = [
         "# RLVR proxy-reward measurement",
         "",
         f"- Generated: `{report['generated_at']}`",
         f"- Commit: `{report['commit']}`",
-        f"- Mode: `{report['mode']}` (no API calls, no network)",
+        f"- Mode: `{report['mode']}` ({provenance})",
         f"- Case-set SHA-256: `{report['case_set_sha256']}`",
         f"- Candidate sets: {s['candidate_sets']} "
         f"(skipped {s['cases_skipped']}), pairs compared: {s['total_pairs']}",
