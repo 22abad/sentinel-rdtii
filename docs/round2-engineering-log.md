@@ -1957,18 +1957,23 @@ Remaining 21 FETCH_GAP: JS portals, dead links, 403s — infrastructure-blocked.
 to **run the prototype live on a specific case**. No retry if it crashes. 50% of
 final score from live pitch; results Aug 5.
 
-### Current repo state (before pitch hardening)
+### Current repo state (post-OpenCode sprint + merge)
 
-- **Local:** 6 uncommitted changes (multi-language eligibility/classifier — 169
-  lines of keyword expansion across all 7 languages + pipeline name-resolution
-  fix + batch_run --from-corpus + updated gap_worklist + engineering-log).
-- **origin/main:** 8 new teammate commits since last push (#372–#381: RAG format
-  selector, TUI dashboard, thinking animation, theme fixes).
-- **Remaining gaps:** 68 cells (36 extraction / 17 fetch / 15 corpus-quality),
-  down from 91 after the FETCH_GAP attack (9 cells resolved: 6 false-positives
-  where text existed but under a different law_name, + 3 genuine fetches).
+- **Coverage: 163/229 (71.2%)** — union of all per-pillar re-runs in `outputs/`.
+  This is verified (`coverage_report.py outputs/`) and the committed worklist
+  has 66 remaining gaps (37 extraction + 15 corpus-quality + 14 fetch-gap).
+  Per-economy: CHN 26/36, IND 24/36, IDN 36/47, LAO 18/27, MNG 17/21, RUS 20/34,
+  THA 22/28.
+- **Key improvements from the OpenCode sprint:** pipeline name-resolution fix
+  (53 false-positive FETCH_GAP cells unlocked), incremental pillar re-runs via
+  qwen2.5:14b with 32K context. Coverage climbed from ~96 cells (early July) →
+  161 → 163.
+- **Bottleneck:** qwen2.5:14b extraction quality is below DeepSeek. DeepSeek
+  budget exhausted (300 RMB). Extraction recall is the largest remaining gap (37).
+- **Suite:** 808 passed, green.
+- **Judge repo:** origin/main @ 4f72cc4, synced with all teammate work (#366–#381).
 
-### Pitch-prep workstreams (ordered by impact on live-pitch score)
+### Pitch-prep workstreams (revised for 71.2%)
 
 1. **Merge + push to judge repo** — pull teammate work, commit multi-language
    changes, green suite, push. Judges see a current, active repo.
@@ -1976,8 +1981,8 @@ final score from live pitch; results Aug 5.
    survive edge cases (corrupt file, missing pillar, bad economy name).
    Prep a single "hero command" that produces visible output every time.
 3. **Pitch deck + demo script** — 8 slides max, 1 min each. Hero numbers
-   (60.3% coverage, 96.2% grounding, 29% blind-verify, $12.96/$0 cost,
-   795 tests). A 2-minute live-demo walkthrough (run China P6, show CSV
+   (71.2% coverage, 96.2% grounding, 29% blind-verify, $12.96/$0 cost,
+   808 tests). A 2-minute live-demo walkthrough (run China P6, show CSV
    output, show the audit trail).
 4. **Q&A dry-run** — anticipate judge questions (worst-case: "run India P3
    live"), pre-run those, note the output.
@@ -1986,8 +1991,11 @@ final score from live pitch; results Aug 5.
 
 ### Immediate next actions
 
-- [ ] Pull teammate work (origin/main, 8 commits ahead)
-- [ ] Commit multi-language changes + push
-- [ ] Verify `--from-corpus` works end-to-end for all 7 economies
-- [ ] Build pitch deck outline
-- [ ] Telegram Dong with TL;DR and ask for deck/role decisions
+- [x] Pull teammate work (origin/main) + push — DONE (4f72cc4)
+- [x] Commit multi-language changes + push — DONE
+- [ ] Update README pitch numbers (71.2% / 808 tests)
+- [ ] Verify `--from-corpus` smoke-tests for at least 3 economies
+- [ ] Merge all per-pillar CSVs into ONE clean submission artifact for judges
+- [ ] Build pitch deck (8 slides, 1 min each)
+- [ ] Dry-run "hero command" live demo
+- [x] Telegram Dong with TL;DR — DONE
