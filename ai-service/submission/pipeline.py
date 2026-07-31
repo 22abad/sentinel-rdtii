@@ -1043,8 +1043,17 @@ async def run_corpus(
     _norm_index: dict[str, _Path] = {}
     for _n, _p in corpus_text.items():
         _k = _norm_law(_n)
-        if _k and _k not in _norm_index:
+        if not _k:
+            continue
+        # Same normalized name can hit several files (a corrupt short fetch and
+        # a later clean full one). Keep the LARGEST — a corrupt/truncated file
+        # must never shadow the good full text (see restore_corpus history).
+        if _k not in _norm_index:
             _norm_index[_k] = _p
+        else:
+            _old = _norm_index[_k]
+            if _old.stat().st_size < _p.stat().st_size:
+                _norm_index[_k] = _p
 
     def _resolve_law_path(name: str) -> _Path | None:
         pth = corpus_text.get(name)

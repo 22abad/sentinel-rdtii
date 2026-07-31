@@ -1076,3 +1076,31 @@ def test_caller_source_url_reaches_source_audit(monkeypatch):
     assert len(result.mappings) == 1
     mapping = result.mappings[0]
     assert mapping.source_url == "https://lom.agc.gov.my/act-detail.php?act=709&lang=BI"
+
+
+def test_build_prompt_includes_official_criteria_for_framework_indicators():
+    """The extractor prompt must tell the LLM WHAT the indicator is looking for —
+    the official criteria — so abstract framework indicators (7.1, 7.2) are not
+    skipped. (Borrowed idea, our words: 'research question' → criteria block.)"""
+    from providers.base import LLMProvider
+
+    prompt = LLMProvider.build_prompt(
+        article_text="Article 1. The purpose of this Act is to protect personal data.",
+        indicator_id="7.1",
+        feature_spec={
+            "has_comprehensive_framework": {"type": "bool", "description": "comprehensive cross-sectoral law?"},
+        },
+    )
+    assert "Comprehensive data protection framework" in prompt  # official criteria injected
+    assert "No data protection legal framework" in prompt
+    assert "sectoral" in prompt.lower()
+
+
+def test_build_prompt_criteria_unknown_indicator_still_works():
+    from providers.base import LLMProvider
+
+    prompt = LLMProvider.build_prompt(
+        article_text="x", indicator_id="99.9",
+        feature_spec={"f": {"type": "bool", "description": "d"}},
+    )
+    assert "You are evaluating ONE specific indicator: 99.9" in prompt
