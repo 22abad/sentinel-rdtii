@@ -50,8 +50,8 @@ cannot be verified is rejected, not shown.
   and are still being hardened for the finale.
 
 **Round 2 snapshot (current best submission):** the reproducible full run emits
-a **755-row, 12-pillar × 7-economy evidence submission** covering **60.3% of the
-official scorable cells** (138/229 economy×indicator cells the RDTII database
+a **1,246-row, 12-pillar × 7-economy evidence submission** covering **71.2% of
+the official scorable cells** (163/229 economy×indicator cells the RDTII database
 scores non-zero). **96.2% of quotes are located verbatim** in their source text
 (the extractor hard-rejects non-verbatim quotes), and an independent blind
 cross-model checker **overturns 29% of positive generic scores** before anything
@@ -402,8 +402,8 @@ reports **coverage, evidence yield, exact-score-match rate and MAE against the
 official database** — rows without local text, failed extractions and
 mismatches are counted, never hidden.
 
-**Latest full run:** 755 evidence rows over all 12 pillars and 7 economies,
-**60.3% official scorable-cell coverage**, 96.2% verbatim grounding (the run
+**Latest full run:** 1,246 evidence rows over all 12 pillars and 7 economies,
+**71.2% official scorable-cell coverage**, 96.2% verbatim grounding (the run
 writes to `outputs/`, which is git-ignored — a reviewer regenerates it from the
 corpus, it is never a hand-curated artifact). Two tools make the headline numbers
 reproducible from any run and keep the remaining gap honest:
