@@ -131,10 +131,10 @@ def test_every_function_pane_has_a_page_title(monkeypatch):
         app = _leader_app(monkeypatch)
         async with app.run_test() as pilot:
             titles = app.query(".page-title")
-            # Documents, Discovery, Extract, Chat — one header each.
-            assert len(titles) == 4
+            # Documents, Discovery, Extract, Chat, RLVR lab — one header each.
+            assert len(titles) == 5
             rendered = " ".join(str(t.render()) for t in titles)
-            for name in ("Documents", "Discovery", "Extract", "Chat"):
+            for name in ("Documents", "Discovery", "Extract", "Chat", "RLVR lab"):
                 assert name in rendered
             # Docs table survived the wrap+rename and still loads.
             assert app.query_one("#docs-table") is not None
