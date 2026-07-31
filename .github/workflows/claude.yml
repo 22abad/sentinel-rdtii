@@ -1,0 +1,112 @@
+name: Claude Code
+
+# Triggered by mentioning @claude in a PR comment, a PR review, a review comment,
+# or an issue. Distinct from tests.yml, which runs the suite on every PR — this
+# one only wakes up when a human asks for it by name.
+#
+# Access control: claude-code-action only honours a trigger from a user with
+# WRITE access to the repo, and refuses bots by default. That check is the
+# action's, not this file's — do not add a `pull_request_target` trigger or
+# relax the permissions below without re-reading
+# https://github.com/anthropics/claude-code-action/blob/main/docs/security.md
+#
+# Prerequisites (both need a repo ADMIN, see docs/claude-code-ci.md):
+#   1. Install the Claude GitHub App: https://github.com/apps/claude
+#   2. Add the ANTHROPIC_API_KEY repository secret
+# Without these the job starts and then fails on authentication.
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  issues:
+    types: [opened, assigned]
+
+# One Claude run per issue/PR thread. A second @claude while the first is still
+# working queues rather than racing it — two agents pushing to the same branch
+# is the failure mode this prevents. Not cancel-in-progress: unlike a test run,
+# a cancelled agent can leave a half-finished commit behind.
+concurrency:
+  group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  claude:
+    # Cheap pre-filter so the runner does not start for every comment in the
+    # repo. The action re-checks the trigger phrase and the author's permissions
+    # itself; this only avoids spending runner minutes to reach that check.
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    # A runaway agent is billed in both API tokens and runner minutes. --max-turns
+    # bounds the first, this bounds the second.
+    timeout-minutes: 30
+    permissions:
+      contents: write        # commit fixes to the PR branch
+      pull-requests: write   # post review comments
+      issues: write          # reply in issue threads
+      id-token: write        # OIDC, required by the action
+      actions: read          # read tests.yml results on the PR
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          # Full history: CLAUDE.md rule 7 asks for problem->fix stories, and the
+          # engineering log is easier to extend correctly with real history in
+          # the tree. Cheap enough on a repo this size.
+          fetch-depth: 0
+
+      # Claude reads the repo, but running the suite needs the deps. Installing
+      # the CI set (not the full requirements.txt) matches what tests.yml proves
+      # green and skips torch/playwright, which this job has no use for.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ai-service/requirements-ci.txt
+
+      - name: Install Python dependencies
+        working-directory: ai-service
+        run: python -m pip install -r requirements-ci.txt
+
+      - name: Run Claude Code
+        id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --model claude-sonnet-5
+            --max-turns 20
+            --allowedTools "Bash(python -m pytest*),Bash(cd ai-service && python -m pytest*),Bash(git diff*),Bash(git log*),Bash(git status*),Bash(rg*),Bash(ls*)"
+          # CLAUDE.md is picked up automatically from the repo root, so the
+          # standing rules (answer key is ground truth, no invented score tiers,
+          # pytest green before merge) apply without restating them here. This
+          # only adds what is specific to running inside CI.
+          prompt: |
+            You are running in GitHub Actions on the SENTINEL repo, invoked by an
+            @claude mention. Follow CLAUDE.md in the repo root — it is the
+            project's standing ruleset and it overrides your defaults.
+
+            CI-specific constraints:
+            - DISCOVERY_REGISTRY_BACKEND=file is set; there is no database and no
+              live LLM provider in this environment. Tests that need either are
+              expected to skip, not to be "fixed" into passing.
+            - Do not run the extraction pipeline or any command that makes billed
+              provider calls (main.py, scripts/rlvr_measure.py --with-llm). The
+              offline measurement is free and may be run.
+            - Never fabricate a law, a verbatim quote, a URL, or a score tier. If
+              you cannot verify something from requirements/ or the repo, say so
+              plainly instead of guessing (CLAUDE.md rules 4 and 5).
+            - If you change code, update the exact-set/count tests in the same
+              commit and confirm `cd ai-service && python -m pytest -q` is green
+              before you report done. If it is not green, say which tests fail
+              and paste the output.
+        env:
+          DISCOVERY_REGISTRY_BACKEND: file
