@@ -75,3 +75,7 @@ outputs/judge_matrix/
 
 *.egg-info/
 reference_material/
+Opponents/
+
+# RLVR trajectory logs — run artifacts, not source. Regenerated on every run.
+evaluation/trajectories/

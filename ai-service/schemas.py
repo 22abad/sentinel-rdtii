@@ -88,6 +88,15 @@ class IndicatorMapping(BaseModel):
     )
 
     # Legal-text metadata (the 6 mandatory fields from Witada PPT)
+    # ── provenance, for joining a later human verdict back to the extraction ──
+    # The trajectory log is keyed on (document_id, chunk_index, indicator) and
+    # the verdict comes back through /api/mappings/review, which otherwise has
+    # no idea which chunk produced the quote. Carrying them on the mapping is
+    # what lets an approve/reject hours later find the candidate it judged.
+    document_id: str = Field(default="", description="Source document this mapping came from")
+    chunk_index: int | None = Field(
+        default=None, description="Index of the chunk within the document"
+    )
     article_clause: str = Field(default="", description="Specific article, section, or clause number")
     source_legislation: str = Field(default="", description="Law / regulation title")
     last_update: str = Field(default="", description="Last amended / promulgation date")
