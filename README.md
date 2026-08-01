@@ -35,6 +35,16 @@ quote → the quote is verified character-for-character against the source → a
 deterministic Python scorer assigns the RDTII score. Any mapping whose quote
 cannot be verified is rejected, not shown.
 
+**One law flows through six stages — the AI only extracts, everything else is deterministic:**
+
+```
+FETCH ──► CHUNK ──► CLASSIFY ──► EXTRACT ──► VERIFY ──► SCORE
+official    article-    8-language   LLM pulls    quote must   plain Python
+portals     sized       keyword      facts +      exist in     rules, model
+(no key)    pieces      filter       verbatim     source       never touches
+                                    quote        (else drop)  the number
+```
+
 **Economies covered** — two honest tiers:
 
 - **Tier 1 — live crawl + offline (reviewers can run directly):** Singapore,
@@ -72,13 +82,12 @@ see the [per-economy report](docs/round2-meeting-report.md).
 
 ## Quick Start
 
-⚠ **Required for Round 1.** A reviewer with basic Python knowledge can run this
-in a few minutes. The default provider below is a local open-weight model
-(Ollama) so **no API key is required**; see [Swapping the LLM](#swapping-the-llm)
-for cloud providers.
+⚠ A reviewer with basic Python knowledge can run this in a few minutes. The
+default provider below is a local open-weight model (Ollama) so **no API key is
+required**; see [Swapping the LLM](#swapping-the-llm) for cloud providers.
 
 > **Two independent ways to run this — don't mix them up:**
-> 1. **The `main.py` CLI (this Quick Start) — the Round-1 structured-output
+> 1. **The `main.py` CLI (this Quick Start) — the structured-output
 >    deliverable.** It runs in a plain Python **virtualenv on your machine**.
 >    It does **not** use Docker and does **not** need PostgreSQL — so
 >    `python main.py --economy Australia --pillar 6,7` only works after you do

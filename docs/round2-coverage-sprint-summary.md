@@ -1,17 +1,42 @@
 # Round 2 覆盖攻坚 — 工作进展总结
 
-日期:2026-07-31
+日期:2026-07-31(08-01 过夜批注更新)
 目标:7 经济体 × 12 支柱 (229 个可计分单元格) 覆盖率最大化
 
 ---
 
-## 一、当前覆盖率
+## 〇、08-01 过夜 DeepSeek flash 批跑(最新)
 
 | 指标 | 数值 |
 |---|---|
-| **当前覆盖率** | **163/229 (71.2%)** |
+| **当前覆盖率** | **166/229 (72.5%)** — 163→166,+3 格 (CHN +2, LAO +1) |
+| 新 provisions | **242** (DeepSeek flash: CHN 57, IDN 77, IND 33, LAO 31, MNG 4, RUS 18, THA 22) + LAO qwen 补跑 4 |
+| merged 总行数 | 1,456 (官方 13 列格式,`outputs/round2_submission_merged/`) |
+| 剩余缺口 | 63 格 = EXTRACTION 38 + CORPUS_QUALITY 14 + FETCH_GAP 11 |
+| 成本 | deepseek-v4-flash 批跑,预算内 (~90 RMB 目标) |
+
+**关键结论(诚实):** 242 个新 provisions 只带来 +3 格 —— 大部分落在已覆盖格上。
+DeepSeek 在同一 corpus 上重跑的边际收益已尽;**剩余缺口的瓶颈在 corpus 内容
+(缺文本/文本质量),不在提取模型。** 后续提升必须先补文本。
+
+**过夜事故:** auto_fix_corpus 把 Wayback UI 壳当法律文本存了 11 格(43 次抓取
+同一 2,770 字符页面)。已闭环:manifest 手术清理、垃圾文件删除、疫苗
+(`is_garbage_page` 双重拦截)、CHN 输出审计 0 行污染。详见工程日志同日条目。
+
+**LAO "Decision" 门问题(待办):** no-statutory-word 门丢弃了 "Decision on
+Electronic Signatures No. 1101/MPT 2021" ×3 行 —— 但 Decision 是老挝官方
+inventory 内的正式文书类型,门误杀官方清单法。需给 LAO 加 "Decision" 白名单
+(改动需配 golden set 回归测试)。
+
+---
+
+## 一、07-31 白天覆盖率(存档)
+
+| 指标 | 数值 |
+|---|---|
+| 覆盖率 | 163/229 (71.2%) |
 | 本轮启动前 | 161/229 (70.3%) |
-| 本轮净增 | **+2** |
+| 本轮净增 | +2 |
 | 累计(与最初 96/229 比) | +67 |
 
 ### 按经济体

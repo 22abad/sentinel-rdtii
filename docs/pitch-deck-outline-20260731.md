@@ -60,7 +60,7 @@ python main.py --economy China --pillar 6 --from-corpus --provider ollama
 - The verbatim quote WITH source URL and character offset
 
 **Show the merged submission:**
-- `outputs/round2_submission_merged/all_economies_merged.csv` — 1,235 rows
+- `outputs/round2_submission_merged/all_economies_merged.csv` — 1,456 rows
 
 > Spoken: "I've pre-loaded the engine. When I press Enter, it reads Chinese
 > data protection laws from our verified corpus, extracts the relevant
@@ -72,17 +72,17 @@ python main.py --economy China --pillar 6 --from-corpus --provider ollama
 ## Slide 5: Results — By the Numbers (60s)
 | Metric | Value |
 |---|---|
-| **Official cell coverage** | **163/229 (71.2%)** |
+| **Official cell coverage** | **166/229 (72.5%)** |
 | **Verbatim grounding** | **96.2%** (quote in source, char-for-char) |
 | **Blind-verifier override** | **29%** (independent checker catches over-scores) |
 | **Deployment cost** | **$12.96 full submission (27.7K calls) / $0 open-weight** |
-| **Test suite** | **808 passed** |
+| **Test suite** | **818 passed** |
 | **Economies** | 7 (CHN/IND/IDN/LAO/MNG/RUS/THA) |
 | **Pillars** | All 12 (61 indicators) |
 | **Languages** | EN/ZH/HI/ID/LO/MN/RU/TH |
 | **Key-free** | Yes (DuckDuckGo Lite → Bing cascade) |
 
-> Spoken: "71.2% of the official scorable cells have evidence. 96.2% of our
+> Spoken: "72.5% of the official scorable cells have evidence. 96.2% of our
 > quotes are verified character-for-character in the source text. An independent
 > blind checker overturns 29% of over-scores before anything ships. And the
 > entire 7-economy submission costs under thirteen dollars on a cloud model — or zero dollars
@@ -107,12 +107,12 @@ python main.py --economy China --pillar 6 --from-corpus --provider ollama
 ---
 
 ## Slide 7: Engineering Rigor (30s)
-- **808 automated tests** (pipeline, scoring, verification, discovery, OCR)
+- **818 automated tests** (pipeline, scoring, verification, discovery, OCR)
 - **SHA-256 corpus integrity** — truncated/wrong-law text detected before it poisons output
 - **Coverage/cost tooling** — `coverage_report.py` and `cost_report.py` make every headline number reproducible
 - **Round-1 offline path still works** — `--offline` mode for fast demos
 
-> Spoken: "We've built testing and verification into the tool itself. 808 tests
+> Spoken: "We've built testing and verification into the tool itself. 818 tests
 > cover every stage. Our corpus has SHA-256 integrity checks — a corrupted law
 > text can't silently poison the submission. And every headline number I've
 > shown you can be reproduced by running `coverage_report.py` and `cost_report.py`."

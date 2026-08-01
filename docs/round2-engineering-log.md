@@ -7,6 +7,35 @@ link every claim to code._
 
 ---
 
+## 2026-07-31 (night) — auto_fix_corpus Wayback-garbage incident (caught by verify-before-presenting)
+
+- **What happened:** the overnight corpus auto-fixer reported "50 fixed, 11
+  failed". Spot-check of the byte counts showed 43/50 "fixes" were an IDENTICAL
+  2,770-char page — the Wayback Machine's own UI shell ("Keep the news in the
+  Wayback Machine", "Internet Archive logo"…), saved as "law text". wb_fetch's
+  banner heuristic only rejected the shell in `mode=''`; the `if_`/`id_` modes
+  returned the shell straight through with >200 chars, passing the length gate.
+- **Real damage (precisely characterized):** only 11 cells got polluted manifest
+  entries + garbage files (CHN 7.4/10.1/10.2/12.1/12.2, IND 8.4/10.1,
+  RUS 4.9/5.7, LAO 5.4, THA 5.4 — all sha256 0518cc74…). The other 32
+  garbage fetches hit "existing file larger, keeping" and were no-ops (file
+  kept, manifest untouched — verified per-cell in the log). IDN fully clean.
+  **Honest verdict: the run fixed ZERO cells and polluted 11.**
+- **Fix:** `scripts/clean_wayback_garbage.py` — surgical: delete files matching
+  the garbage sha256, drop their manifest entries, restore pre-incident entries
+  from the Jul-28 backup where the old text still exists, otherwise return the
+  cell to honest FETCH_GAP. Vaccine in `auto_fix_corpus.py`: `is_garbage_page`
+  rejects the Archive.org UI shell at fetch AND at save.
+- **DeepSeek exposure:** the gap-run batch read the polluted manifest for
+  CHN 7.4/12.1/12.2 only; extraction gates reject non-statute UI text, CHN
+  outputs to be audited post-run.
+- **Lesson:** a fetcher's "success" count is meaningless without a content
+  check; identical byte-counts across "different" documents are the tell.
+  (Same family as the #309 name-vs-source class: the artifact exists, but it
+  is not what its label says.)
+
+---
+
 ## 📌 CURRENT STATE SNAPSHOT (2026-07-19) — read this first after a long session
 
 **LATE-NIGHT UPDATE (2026-07-19, PRs #345–#347).**

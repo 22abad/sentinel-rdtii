@@ -1080,6 +1080,39 @@ def test_names_without_statute_words_are_dropped():
     # foreign-jurisdiction gate, exactly as designed.)
 
 
+def test_decision_resolution_instruction_are_statutory_instruments():
+    """LAO ministries legislate via 'Decision No. X/MPT', MNG/RUS governments via
+    'Resolution No. X', IDN/LAO via 'Instruction No. X' — all are official
+    Round-2 inventory instrument types (found the hard way: 3 in-scope LAO
+    Decision rows died at this gate on 2026-07-31). Garbage names still drop."""
+    from submission.schema import SubmissionRow, validate_submission_rows
+
+    def row(economy, law):
+        return SubmissionRow(
+            economy=economy, law_name=law, indicator_id="P7-I5",
+            article="Article 12",
+            verbatim_snippet=("The service provider must obtain approval from the "
+                              "ministry before disclosing subscriber information."),
+            source_url="https://official.example/x",
+        )
+
+    kept = validate_submission_rows(
+        [row("Lao PDR", "Decision on Electronic Signatures No. 1101/MPT 2020"),
+         row("Mongolia", "Resolution of the Government of Mongolia No. 90 on the Update and Approval of the List"),
+         row("Russian Federation", "Resolution of the Government of the Russian Federation No. 2463"),
+         row("Indonesia", "Instruction No. 22/2022 on Accelerating the Increase in the Use of Domestic Products"),
+         row("Lao PDR", "Annual Report of the Ministry of Technology"),
+         row("Mongolia", "Executive Summary")],
+        allow_empty=True,
+    )
+    assert [r.law_name.split(" No")[0] for r in kept] == [
+        "Decision on Electronic Signatures",
+        "Resolution of the Government of Mongolia",
+        "Resolution of the Government of the Russian Federation",
+        "Instruction",
+    ]
+
+
 def test_drop_zero_confidence_rows_removes_unscoreable_noise():
     """Final-assembly guard: rows the extractor scored 0.00 confidence are noise.
 

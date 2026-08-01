@@ -313,6 +313,18 @@ class LLMProvider(ABC):
             feature_lines.append(f'  - "{fname}" ({ftype}): {fdesc}')
         feature_block = "\n".join(feature_lines) if feature_lines else "  (none)"
 
+        # Official criteria injection: tell the LLM WHAT the indicator is looking
+        # for, so abstract "framework existence" indicators (7.1/7.2/8.1/…) are
+        # not skipped for being too general. From the official methodology.
+        criteria_block = ""
+        try:
+            from methodology import get_rule
+            rule = get_rule(indicator_id)
+            if rule is not None and rule.criteria:
+                criteria_block = f"\nOFFICIAL CRITERIA for {indicator_id} (what to look for):\n{rule.criteria}\n"
+        except Exception:
+            pass
+
         schema_keys = list(feature_spec.keys()) + [
             "verbatim_quote",
             "article_clause",
@@ -330,6 +342,7 @@ class LLMProvider(ABC):
 data from legal text for the RDTII 2.1 framework.
 
 You are evaluating ONE specific indicator: {indicator_id}.
+{criteria_block}
 You MUST extract the following features by reading the article below:
 
 {feature_block}
