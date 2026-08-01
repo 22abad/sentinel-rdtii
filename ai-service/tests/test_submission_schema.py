@@ -1113,6 +1113,63 @@ def test_decision_resolution_instruction_are_statutory_instruments():
     ]
 
 
+def test_notification_circular_announcement_are_statutory_instruments():
+    """IND Notification No.X, CHN Announcement/Circular, IND Circular/Direction/
+    Guideline/Policy/Framework are official Round-2 inventory instrument types.
+    scan_gate_misses.py 2026-08-01: 125→59 after word-list extension; the 66
+    saved names are real legislation (Notification, Circular, Direction, etc.).
+    Garbage (Annual Report, Court, Press Release, FIR) still drops."""
+    from submission.schema import SubmissionRow, validate_submission_rows
+
+    def row(economy, law):
+        return SubmissionRow(
+            economy=economy, law_name=law, indicator_id="P7-I5",
+            article="s 1",
+            verbatim_snippet=("The service provider must comply with the "
+                              "requirements prescribed under this regulation."),
+            source_url="https://official.example/x",
+        )
+
+    kept = validate_submission_rows(
+        [row("India", "Government of India, Ministry of Finance, Notification No. 15/2023-Customs (ADD)"),
+         row("India", "Reserve Bank of India Master Direction on Issuance and Operation of Prepaid Payment Instruments"),
+         row("India", "Reserve Bank of India (Know Your Customer (KYC)) Directions 2016"),
+         row("India", "Government of India, Ministry of Commerce and Industry, FDI Policy 2020"),
+         row("India", "Comprehensive Cyber Security Framework for Primary (Urban) Cooperative Banks"),
+         row("India", "Guidelines on Information security, Electronic Banking, Technology Risk Management"),
+         row("India", "Procedure for Mandatory Testing and Certification of Telecommunication Equipment"),
+         row("India", "Government of India, Ministry of Corporate Affairs, General Circular No. 25/2014"),
+         row("China", "Announcement No. 37 of 2022 by the Ministry of Commerce"),
+         row("China", "Circular on Clearing up and Regulating the Internet Access Service Market"),
+         row("China", "Catalogue for the Administration of Import and Export Licenses for Dual-Use Items"),
+         row("China", "Special Management Measures for Foreign Investment Access (Negative list), 2024"),
+         row("China", "2008 State Council Institutional Reform Plan"),
+         row("China", "National Emergency Response Plan for Cybersecurity Incidents"),
+         row("China", "Personal Financial Information Protection Technical Specification"),
+         # Garbage that must still drop
+         row("India", "Annual Report of the RBI for the Year 2023-24"),
+         row("India", "Delhi High Court, Burlington Home Shopping Pvt. vs Rajnish Chibber"),
+         row("India", "Press release: DoT Simplifies Approval Processes"),
+         row("India", "BSNL (Bharat Sanchar Nigam Limited) website"),
+         row("India", "Writ Petition Civil No. 645/2022-IMA & Anr. Vs. UOI & Ors")],
+        allow_empty=True,
+    )
+    kept_names = [r.law_name for r in kept]
+    # Statutory instruments survive
+    assert "Government of India, Ministry of Finance, Notification No. 15/2023-Customs (ADD)" in kept_names
+    assert "Comprehensive Cyber Security Framework for Primary (Urban) Cooperative Banks" in kept_names
+    assert "Announcement No. 37 of 2022 by the Ministry of Commerce" in kept_names
+    # (Catalogue correctly dropped by off-topic gate — not a statute-word failure)
+    assert "2008 State Council Institutional Reform Plan" in kept_names
+    assert "Personal Financial Information Protection Technical Specification" in kept_names
+    # Garbage still drops
+    assert "Annual Report of the RBI for the Year 2023-24" not in kept_names
+    assert "Delhi High Court, Burlington Home Shopping Pvt. vs Rajnish Chibber" not in kept_names
+    assert "Press release: DoT Simplifies Approval Processes" not in kept_names
+    assert "BSNL (Bharat Sanchar Nigam Limited) website" not in kept_names
+    assert "Writ Petition Civil No. 645/2022-IMA & Anr. Vs. UOI & Ors" not in kept_names
+
+
 def test_drop_zero_confidence_rows_removes_unscoreable_noise():
     """Final-assembly guard: rows the extractor scored 0.00 confidence are noise.
 

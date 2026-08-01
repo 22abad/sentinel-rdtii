@@ -855,14 +855,28 @@ def _is_nonsubstantive_quote(law_name: str, quote: str) -> bool:
 # English translation was not), IDN/LAO via "Instruction No. X". No historical
 # garbage name ("Executive Summary", "MOU...", "Annual Report", FIR) contains
 # any of the three.
+# 2026-08-01 2nd pass: scan_gate_misses.py revealed 125/684 official inventory
+# names would be dropped. The biggest gaps: CHN 公告(announcement)/目录(catalogue)/
+# 方案(plan)/规范(specification)/措施(measures)/通知(notification), IND
+# Notification/Circular/Direction/Policy/Guideline/Framework/Procedure. Words
+# below are intentionally the conservative subset that unblocks real legislation
+# while still dropping Annual Report/Court/Writ Petition/Press Release/Website/
+# Consultation Paper/FIR — none of which contain any added term.
 _STATUTE_INSTRUMENT_WORD = re.compile(
     r"(act|law|regulation|code|ordinance|decree|rule|order|constitution|"
-    r"notice|principle|bill|standard|amendment|schedule|"
+    r"notice|notification|announcement|principle|bill|standard|amendment|schedule|"
     r"decision|resolution|instruction|"
+    r"circular|measures|catalogue|specification|plan|policy|procedure|"
+    r"guideline|guidelines|direction|directive|framework|"
     # Malay statutory-instrument words (Akta 709, Peraturan-Peraturan,
     # Pekeliling = official circular, Perintah = order)
     r"akta|peraturan|pekeliling|perintah|kanun|undang-undang|"
-    r"กฎหมาย|พระราช|ประกาศ|закон|кодекс|указ|постановление|хууль|法|条例|办法|规定)",
+    # Thai / Russian / Mongolian
+    r"กฎหมาย|พระราช|ประกาศ|закон|кодекс|указ|постановление|хууль|"
+    # Chinese: 法(law) 条例(regulations) 办法(measures) 规定(provisions)
+    # 公告(announcement) 目录(catalogue) 方案(plan) 规范(specification)
+    # 通知(notification/circular) 计划(plan) 预案(emergency plan) 措施(measures)
+    r"法|条例|办法|规定|公告|目录|方案|规范|通知|计划|预案|措施)",
     re.IGNORECASE,
 )
 
