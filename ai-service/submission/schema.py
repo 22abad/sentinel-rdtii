@@ -848,9 +848,17 @@ def _is_nonsubstantive_quote(law_name: str, quote: str) -> bool:
 # Empirically validated against all law names across three economies' judge
 # runs + the full library + the golden set: exactly the garbage drops, all 46
 # legitimate names keep (Acts, Regulations, Decrees, Notices, Principles...).
+# Round-2 re-validation against the official inventory (2026-08-01) added
+# decision/resolution/instruction: LAO ministries legislate via "Decision
+# No. X/MPT" (12+ inventory instruments), MNG/RUS via "Resolution of the
+# Government No. X" (the Russian original постановление was covered but its
+# English translation was not), IDN/LAO via "Instruction No. X". No historical
+# garbage name ("Executive Summary", "MOU...", "Annual Report", FIR) contains
+# any of the three.
 _STATUTE_INSTRUMENT_WORD = re.compile(
     r"(act|law|regulation|code|ordinance|decree|rule|order|constitution|"
     r"notice|principle|bill|standard|amendment|schedule|"
+    r"decision|resolution|instruction|"
     # Malay statutory-instrument words (Akta 709, Peraturan-Peraturan,
     # Pekeliling = official circular, Perintah = order)
     r"akta|peraturan|pekeliling|perintah|kanun|undang-undang|"
