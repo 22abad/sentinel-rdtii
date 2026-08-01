@@ -21,6 +21,12 @@ if str(_AI_SERVICE) not in sys.path:
 os.environ["DISCOVERY_REGISTRY_BACKEND"] = "file"
 # Don't let the search-engine per-host politeness delay slow the test suite.
 os.environ.setdefault("DISCOVERY_SEARCH_MIN_INTERVAL", "0")
+# Trajectory logging is ON by default in the pipeline, so a test run would
+# append fixture candidates ("fake-provider", "fake-liar") to the same file real
+# extractions write to. That file is the input to the review-join dataset — a
+# reader cannot tell a fixture row from a real one, so the contamination is
+# silent and permanent. Tests that exercise the writer set their own tmp path.
+os.environ["RDTII_TRAJECTORY_LOG"] = "off"
 
 
 @pytest.fixture(autouse=True)

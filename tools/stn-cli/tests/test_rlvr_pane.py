@@ -57,12 +57,43 @@ _REPORT = {
 }
 
 
+_LIVE = {
+    "runs": [{
+        "run_id": "20260801T012511-1c07a227", "provider": "deepseek",
+        "model": "deepseek-v4-flash", "records": 2, "documents": 1,
+        "mean_proxy": 0.7, "gate_failures": 1, "indicators": ["6.4", "7.3"],
+        "last_at": "2026-08-01T01:25:12+00:00",
+    }],
+    "records": [
+        {"run_id": "20260801T012511-1c07a227", "provider": "deepseek",
+         "model": "deepseek-v4-flash", "document_id": "884e2c79fc784faa",
+         "chunk_index": 2, "indicator_id": "6.4", "quote_hash": "cb4b" + "0" * 60,
+         "logged_at": "2026-08-01T01:25:12+00:00",
+         "candidate": {"verbatim_quote": "An organisation must not transfer personal data",
+                       "article_clause": "Section 26"},
+         "proxy": {"total": 0.7636, "passed_gates": True, "components": {
+             "citation_exactness": {"value": 1.0, "weight": 3.0, "detail": "strict substring"}}}},
+        {"run_id": "20260801T012511-1c07a227", "provider": "deepseek",
+         "model": "deepseek-v4-flash", "document_id": "884e2c79fc784faa",
+         "chunk_index": 5, "indicator_id": "7.3", "quote_hash": "ffff" + "0" * 60,
+         "logged_at": "2026-08-01T01:25:13+00:00",
+         "candidate": {"verbatim_quote": "Records shall be retained"},
+         "proxy": {"total": 0.0, "passed_gates": False,
+                   "failed_gates": ["quote_not_a_page_dump"], "components": {}}},
+    ],
+    "total": 2, "matched": 2, "returned": 2,
+    "path": "/repo/evaluation/trajectories/trajectory.jsonl",
+    "note": "Live extraction candidates (k=1, greedy). Not the golden-set measurement.",
+}
+
+
 class _StubClient:
     """Minimal async-context httpx stand-in for the two endpoints used."""
 
-    def __init__(self, report=_REPORT, status=200):
+    def __init__(self, report=_REPORT, status=200, live_status=200):
         self._report = report
         self._status = status
+        self._live_status = live_status
 
     async def __aenter__(self):
         return self
@@ -76,6 +107,12 @@ class _StubClient:
                 200,
                 json={"runs": [{"generated_at": "2026-07-31T23:10:36",
                                 "hygiene_top1_rate": 0.8125}]},
+                request=httpx.Request("GET", url),
+            )
+        if url.endswith("/trajectories"):
+            return httpx.Response(
+                self._live_status,
+                json=_LIVE if self._live_status == 200 else {"detail": "nothing logged yet"},
                 request=httpx.Request("GET", url),
             )
         return httpx.Response(
@@ -249,5 +286,147 @@ def test_detail_screen_shows_every_section(monkeypatch):
             body = str(app.screen.query_one("#rlvr-detail").render())
             assert "Per distractor type" in body
             assert "Run history" in body
+
+    asyncio.run(scenario())
+
+
+# ── live runs view (the trajectory log) ──────────────────────────────────
+
+
+def test_toggle_switches_to_live_runs(monkeypatch):
+    async def scenario():
+        app = _app()
+        async with app.run_test() as pilot:
+            monkeypatch.setattr(app, "_client", lambda **kw: _StubClient())
+            app.action_pane("rlvr")
+            await app._load_rlvr().wait()
+            assert app._rlvr_view == "study"
+
+            app.action_rlvr_toggle()
+            await app._load_rlvr_live().wait()
+            await pilot.pause()
+
+            assert app._rlvr_view == "runs"
+            assert len(app._rlvr_records) == 2
+            body = str(app.query_one("#rlvr-summary").render())
+            assert "live extraction candidates" in body
+            assert "deepseek" in body
+
+    asyncio.run(scenario())
+
+
+def test_live_view_never_shows_a_golden_top1_rate(monkeypatch):
+    """The two artifacts must stay distinguishable.
+
+    Live candidates are a single greedy draw with no answer key; showing the
+    study's 93.75% beside them would read as if they had been scored against one.
+    """
+    async def scenario():
+        app = _app()
+        async with app.run_test() as pilot:
+            monkeypatch.setattr(app, "_client", lambda **kw: _StubClient())
+            app.action_pane("rlvr")
+            await app._load_rlvr().wait()
+            app.action_rlvr_toggle()
+            await app._load_rlvr_live().wait()
+            await pilot.pause()
+
+            body = str(app.query_one("#rlvr-summary").render())
+            assert "93.75%" not in body
+            assert "Hygiene top-1" not in body
+
+    asyncio.run(scenario())
+
+
+def test_toggle_rebuilds_the_columns(monkeypatch):
+    """Both views share one table; stale headers would mislabel every cell."""
+    async def scenario():
+        app = _app()
+        async with app.run_test() as pilot:
+            monkeypatch.setattr(app, "_client", lambda **kw: _StubClient())
+            app.action_pane("rlvr")
+            await app._load_rlvr().wait()
+            await pilot.pause()
+            table = app.query_one("#rlvr-cases")
+            study_cols = [str(c.label) for c in table.columns.values()]
+            assert "Case" in study_cols
+
+            app.action_rlvr_toggle()
+            await app._load_rlvr_live().wait()
+            await pilot.pause()
+            live_cols = [str(c.label) for c in table.columns.values()]
+            assert "Quote" in live_cols
+            assert "Case" not in live_cols
+
+    asyncio.run(scenario())
+
+
+def test_toggle_back_restores_the_study(monkeypatch):
+    async def scenario():
+        app = _app()
+        async with app.run_test() as pilot:
+            monkeypatch.setattr(app, "_client", lambda **kw: _StubClient())
+            app.action_pane("rlvr")
+            await app._load_rlvr().wait()
+            app.action_rlvr_toggle()
+            await app._load_rlvr_live().wait()
+            app.action_rlvr_toggle()
+            await pilot.pause()
+
+            assert app._rlvr_view == "study"
+            body = str(app.query_one("#rlvr-summary").render())
+            assert "93.75%" in body
+
+    asyncio.run(scenario())
+
+
+def test_selecting_a_live_candidate_opens_its_drill_down(monkeypatch):
+    async def scenario():
+        app = _app()
+        async with app.run_test() as pilot:
+            monkeypatch.setattr(app, "_client", lambda **kw: _StubClient())
+            app.action_pane("rlvr")
+            await app._load_rlvr().wait()
+            app.action_rlvr_toggle()
+            await app._load_rlvr_live().wait()
+            await pilot.pause()
+
+            table = app.query_one("#rlvr-cases")
+            table.focus()
+            await pilot.press("enter")
+            await pilot.pause()
+            assert isinstance(app.screen, tui_mod.RlvrDetailScreen)
+            body = str(app.screen.query_one("#rlvr-detail").render())
+            assert "quote_hash" in body  # the join key is visible for debugging
+
+    asyncio.run(scenario())
+
+
+def test_empty_trajectory_log_is_an_empty_state(monkeypatch):
+    async def scenario():
+        app = _app()
+        async with app.run_test() as pilot:
+            monkeypatch.setattr(app, "_client", lambda **kw: _StubClient(live_status=404))
+            app.action_pane("rlvr")
+            await app._load_rlvr().wait()
+            app.action_rlvr_toggle()
+            await app._load_rlvr_live().wait()
+            await pilot.pause()
+
+            body = str(app.query_one("#rlvr-summary").render())
+            assert "No extraction candidates logged yet" in body
+            assert app._rlvr_records == []
+
+    asyncio.run(scenario())
+
+
+def test_toggle_is_ignored_outside_the_lab(monkeypatch):
+    async def scenario():
+        app = _app()
+        async with app.run_test() as pilot:
+            app.action_pane("docs")
+            await pilot.pause()
+            app.action_rlvr_toggle()
+            assert app._rlvr_view == "study"
 
     asyncio.run(scenario())

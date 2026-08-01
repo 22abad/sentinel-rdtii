@@ -204,6 +204,40 @@ def test_writer_factory_honours_an_explicit_path(monkeypatch, tmp_path):
     assert writer.model == "deepseek-v4-flash"
 
 
+def test_run_id_is_per_process_not_per_orchestrator(monkeypatch):
+    """Callers build one orchestrator per document.
+
+    An instance-scoped id split a single `python main.py ...` into one "run" per
+    document — 10 runs for one invocation — which makes the run rollup useless
+    for the only question it answers: what did the thing I just ran produce?
+    """
+    import agents.orchestrator as orch
+
+    class _Provider:
+        name = "fake"
+        model_name = "fake-1"
+
+    monkeypatch.setattr(orch, "_RUN_ID", None)
+    monkeypatch.delenv("RDTII_RUN_ID", raising=False)
+    monkeypatch.delenv("RDTII_TRAJECTORY_LOG", raising=False)
+    first = orch._make_trajectory_writer(_Provider())
+    second = orch._make_trajectory_writer(_Provider())
+    assert first.run_id == second.run_id
+
+
+def test_run_id_is_overridable(monkeypatch):
+    import agents.orchestrator as orch
+
+    class _Provider:
+        name = "fake"
+        model_name = "fake-1"
+
+    monkeypatch.setattr(orch, "_RUN_ID", None)
+    monkeypatch.setenv("RDTII_RUN_ID", "submission-2026-08-01")
+    monkeypatch.delenv("RDTII_TRAJECTORY_LOG", raising=False)
+    assert orch._make_trajectory_writer(_Provider()).run_id == "submission-2026-08-01"
+
+
 def test_writer_factory_is_on_by_default(monkeypatch):
     from agents.orchestrator import _make_trajectory_writer
 

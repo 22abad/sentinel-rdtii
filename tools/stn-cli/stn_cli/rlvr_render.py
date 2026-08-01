@@ -453,6 +453,154 @@ def render_summary(report: dict) -> str:
     )
 
 
+# ── live runs (trajectory log) ────────────────────────────────────────────
+#
+# A DIFFERENT artifact from everything above. The golden study measures a frozen
+# 16-case set with manufactured distractors and reports top-1 rates; this is what
+# the extractor actually produced on real documents. With best-of-N unwired every
+# record is a single greedy draw (k=1), so there is no top-1 rate to compute here
+# and none is shown — only the distribution of proxy scores over real output, and
+# the gate failures, which are the rows worth looking at first.
+
+RUN_COLUMNS = ["Run", "Provider", "Recs", "Docs", "Mean proxy", "Gate fails"]
+CANDIDATE_COLUMNS = ["Indicator", "Proxy", "Gates", "Chunk", "Quote"]
+
+
+def run_row(entry: dict) -> tuple[str, str, str, str, str, str]:
+    failures = entry.get("gate_failures") or 0
+    return (
+        str(entry.get("run_id") or "–")[:24],
+        str(entry.get("provider") or "–")[:14],
+        str(entry.get("records", "–")),
+        str(entry.get("documents", "–")),
+        num(entry.get("mean_proxy"), 4),
+        str(failures) if failures else "–",
+    )
+
+
+def candidate_row(record: dict) -> tuple[str, str, str, str, str]:
+    proxy = record.get("proxy") or {}
+    quote = str((record.get("candidate") or {}).get("verbatim_quote") or "")
+    return (
+        str(record.get("indicator_id") or "–"),
+        num(proxy.get("total"), 4),
+        "ok" if proxy.get("passed_gates") else "FAIL",
+        str(record.get("chunk_index", "–")),
+        " ".join(quote.split())[:70],
+    )
+
+
+def render_live_summary(payload: dict) -> str:
+    """Header + distribution for the live extraction log."""
+    runs = payload.get("runs") or []
+    records = payload.get("records") or []
+    total = payload.get("total", 0)
+    totals = [
+        (r.get("proxy") or {}).get("total")
+        for r in records
+        if isinstance((r.get("proxy") or {}).get("total"), (int, float))
+    ]
+    gate_fails = sum(
+        1 for r in records if (r.get("proxy") or {}).get("passed_gates") is False
+    )
+    lines = [
+        f"[b {_ACCENT}]live extraction candidates[/] [dim]· k=1 greedy · not the golden study[/]",
+        f"[dim]{total} record(s) across {len(runs)} run(s)[/]   "
+        f"[dim]{escape(str(payload.get('path') or ''))}[/]",
+        "",
+        _h("Distribution"),
+    ]
+    if totals:
+        ordered = sorted(totals)
+        mid = len(ordered) // 2
+        median = (
+            ordered[mid] if len(ordered) % 2 else (ordered[mid - 1] + ordered[mid]) / 2
+        )
+        lines += [
+            f"  [dim]{'mean proxy':<20}[/] [b {_HILITE}]{sum(totals) / len(totals):>8.4f}[/]",
+            f"  [dim]{'median':<20}[/] [b {_HILITE}]{median:>8.4f}[/]",
+            f"  [dim]{'min / max':<20}[/] [b {_HILITE}]{min(totals):>8.4f}[/] [dim]/[/] "
+            f"[b {_HILITE}]{max(totals):.4f}[/]",
+        ]
+    else:
+        lines.append("  [dim]no scored candidates yet[/]")
+    tone = _BAD if gate_fails else _GOOD
+    lines.append(
+        f"  [dim]{'gate failures':<20}[/] [b {tone}]{gate_fails:>8}[/]  "
+        "[dim]reward collapses to 0 — returned but unusable as evidence[/]"
+    )
+    return "\n".join(lines)
+
+
+def render_runs(payload: dict) -> str:
+    runs = payload.get("runs") or []
+    if not runs:
+        return _h("Runs") + "\n  [dim]No extraction runs logged yet.[/]"
+    lines = [
+        _h("Runs") + "  [dim]newest first[/]",
+        f"  [dim]{'Run':<26}{'Provider':<16}{'Recs':>6}{'Docs':>6}{'Mean proxy':>12}{'Gate fails':>12}[/]",
+    ]
+    for entry in runs:
+        failures = entry.get("gate_failures") or 0
+        lines.append(
+            f"  {escape(str(entry.get('run_id') or '–'))[:25]:<26}"
+            f"[dim]{escape(str(entry.get('provider') or '–'))[:15]:<16}[/]"
+            f"{str(entry.get('records', '–')):>6}"
+            f"{str(entry.get('documents', '–')):>6}"
+            f"{num(entry.get('mean_proxy'), 4):>12}"
+            + (f"[{_BAD}]{failures:>12}[/]" if failures else f"[dim]{'–':>12}[/]")
+        )
+        indicators = entry.get("indicators") or []
+        if indicators:
+            lines.append(f"      [dim]{escape(', '.join(map(str, indicators)))}[/]")
+    return "\n".join(lines)
+
+
+def render_candidate(record: dict) -> str:
+    """Drill-down for one logged candidate."""
+    candidate = record.get("candidate") or {}
+    proxy = record.get("proxy") or {}
+    failed = proxy.get("failed_gates") or []
+    head = (
+        f"[b {_ACCENT}]{escape(str(record.get('indicator_id') or '–'))}[/]  "
+        f"[dim]{escape(str(record.get('provider') or '–'))} · "
+        f"{escape(str(record.get('model') or '–'))} · "
+        f"doc {escape(str(record.get('document_id') or '–'))} · "
+        f"chunk {record.get('chunk_index', '–')}[/]\n"
+        f"  [dim]logged[/] {escape(str(record.get('logged_at') or '–'))}\n"
+        f"  [dim]run[/] {escape(str(record.get('run_id') or '–'))}\n"
+        f"  [dim]quote_hash[/] {escape(str(record.get('quote_hash') or '–'))}"
+        "  [dim](join key to a human verdict)[/]"
+    )
+    gates = (
+        f"[{_GOOD}]all gates passed[/]"
+        if proxy.get("passed_gates")
+        else f"[{_BAD}]failed: {escape(', '.join(map(str, failed)) or 'unknown')}[/]"
+    )
+    score = (
+        f"{_h('Proxy reward')}\n"
+        f"  [b {_HILITE}]{num(proxy.get('total'), 6)}[/]   {gates}"
+    )
+    quote = str(candidate.get("verbatim_quote") or "")
+    evidence = [
+        _h("Candidate"),
+        f"  [dim]{'article_clause':<22}[/] {escape(str(candidate.get('article_clause') or '–'))}",
+        f"  [dim]{'source_legislation':<22}[/] {escape(str(candidate.get('source_legislation') or '–'))}",
+        f"  [dim]{'scope':<22}[/] {escape(str(candidate.get('scope') or '–'))}",
+        f"  [dim]{'source_url':<22}[/] {escape(str(candidate.get('source_url') or '–'))}",
+        "",
+        f"  [dim]{escape(quote[:600])}[/]",
+    ]
+    return "\n\n".join(
+        [
+            head,
+            score,
+            "\n".join(evidence),
+            _h("Proxy components") + "\n" + _components_markup(proxy),
+        ]
+    )
+
+
 def render_sections(report: dict, history: list[dict] | None = None) -> str:
     """Everything below the fold, in the browser view's order."""
     parts = [

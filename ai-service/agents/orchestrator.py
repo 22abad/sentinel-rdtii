@@ -52,6 +52,25 @@ from agents.eligibility import EligibilityVerifier, rejected_from_eligibility
 logger = logging.getLogger(__name__)
 
 
+#: One id per PROCESS, not per orchestrator. Callers build an orchestrator per
+#: document (the golden evaluator and the submission pipeline both do), so an
+#: instance-scoped id split a single `python main.py ...` into one "run" per
+#: document — which made the run rollup useless for the question it exists to
+#: answer, "what did the thing I just ran produce?". A long-lived API server is
+#: the trade-off: everything since boot shares an id there, and analysis should
+#: group by document_id instead. RDTII_RUN_ID overrides it.
+_RUN_ID: str | None = None
+
+
+def _run_id() -> str:
+    global _RUN_ID
+    if _RUN_ID is None:
+        _RUN_ID = os.getenv("RDTII_RUN_ID", "").strip() or (
+            f"{datetime.now(timezone.utc):%Y%m%dT%H%M%S}-{uuid.uuid4().hex[:8]}"
+        )
+    return _RUN_ID
+
+
 def _make_trajectory_writer(provider: LLMProvider):
     """Build the append-only candidate log, or a disabled stub.
 
@@ -79,7 +98,7 @@ def _make_trajectory_writer(provider: LLMProvider):
         else:
             root = Path(__file__).resolve().parents[2]
             path = root / "evaluation" / "trajectories" / "trajectory.jsonl"
-        run_id = f"{datetime.now(timezone.utc):%Y%m%dT%H%M%S}-{uuid.uuid4().hex[:8]}"
+        run_id = _run_id()
         writer = TrajectoryWriter(
             path=path,
             run_id=run_id,
