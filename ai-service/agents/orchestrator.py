@@ -148,12 +148,21 @@ class MASOrchestrator:
         indicator_id: str,
         mapping: IndicatorMapping,
         raw_score: float | None,
+        eligibility=None,
     ) -> None:
         """Append one candidate + its proxy reward. Never raises.
 
         The proxy is computed here rather than read from anywhere: it is sync,
         label-free and free of API calls by construction, which is exactly what
         makes it safe to run inline on a real extraction.
+
+        ``eligibility`` MUST be the verdict the pipeline already reached. Without
+        it score_candidate falls back to the deterministic arm and re-derives the
+        answer from the candidate dict — which carries no ``features``, so the
+        feature-driven branches return "not supported" for nearly every
+        indicator. That understated every logged score by ~0.16 (the term is 2.0
+        of 12.0 total weight) and made the log look like the extractor was
+        producing ineligible evidence when it was not.
         """
         if self._trajectory is None:
             return
@@ -168,11 +177,30 @@ class MASOrchestrator:
                 "last_update": mapping.last_update,
                 "scope": mapping.scope,
             }
+            override = None
+            if eligibility is not None:
+                # A verifier that RAISED is not a verdict — abstain (None) so the
+                # term is dropped from the objective rather than scored 0.0.
+                # Same rule the measurement harness follows.
+                override = (
+                    (None, f"[{eligibility.verifier_mode}] verifier failed")
+                    if getattr(eligibility, "verifier_failed", False)
+                    else (
+                        1.0 if eligibility.supported else 0.0,
+                        f"[{eligibility.verifier_mode}] "
+                        + (
+                            "eligible for this indicator"
+                            if eligibility.supported
+                            else "; ".join(eligibility.exclusion_reasons) or "not supported"
+                        ),
+                    )
+                )
             proxy = score_candidate(
                 candidate,
                 chunk_text=chunk_text,
                 indicator_id=indicator_id,
                 raw_score=raw_score,
+                eligibility_override=override,
             )
             self._trajectory.log_candidate(
                 document_id=document_id,
@@ -608,6 +636,7 @@ class MASOrchestrator:
                         indicator_id=ind_id,
                         mapping=mapping_obj,
                         raw_score=raw_score,
+                        eligibility=eligibility,
                     )
 
                     results_list.append((mapping_obj, None))

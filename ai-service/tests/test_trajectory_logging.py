@@ -160,6 +160,79 @@ def test_orchestrator_log_helper_swallows_a_broken_writer():
     )
 
 
+def test_pipeline_eligibility_verdict_is_used_not_recomputed():
+    """The single most consequential wiring detail in the logger.
+
+    score_candidate falls back to the deterministic eligibility arm when given
+    no override, and re-derives the answer from the candidate dict — which
+    carries no `features`. The feature-driven branches then return "not
+    supported" for nearly every indicator, scoring 0.0 on a 2.0-weight term.
+    Measured on the golden set that understated every logged score by ~0.16
+    (mean 0.7288 instead of 0.8806) and made a healthy extractor look like it
+    was emitting ineligible evidence.
+    """
+    from agents.orchestrator import MASOrchestrator
+    from schemas import IndicatorMapping
+
+    captured = {}
+
+    class _Writer:
+        def log_candidate(self, **kw):
+            captured.update(kw)
+
+    class _Elig:
+        supported = True
+        verifier_mode = "deterministic"
+        verifier_failed = False
+        exclusion_reasons: list = []
+
+    orch = MASOrchestrator.__new__(MASOrchestrator)
+    orch._trajectory = _Writer()
+    mapping = IndicatorMapping(
+        pillar=6, indicator="6.4", score=1.0,
+        verbatim_quote=_QUOTE, quote_start=0, quote_end=len(_QUOTE),
+        source_legislation="PDPA", source_url="https://example.gov/pdpa",
+        last_update="2012", article_clause="Section 26", scope="horizontal",
+    )
+    orch._log_trajectory(
+        document_id="d", chunk_index=0, chunk_text=_QUOTE,
+        indicator_id="6.4", mapping=mapping, raw_score=1.0, eligibility=_Elig(),
+    )
+    components = captured["proxy"]["components"]
+    assert components["eligibility_supported"]["value"] == 1.0
+    assert "deterministic" in components["eligibility_supported"]["detail"]
+
+
+def test_a_failed_verifier_abstains_rather_than_scoring_zero():
+    from agents.orchestrator import MASOrchestrator
+    from schemas import IndicatorMapping
+
+    captured = {}
+
+    class _Writer:
+        def log_candidate(self, **kw):
+            captured.update(kw)
+
+    class _Broken:
+        supported = False
+        verifier_mode = "independent_llm"
+        verifier_failed = True
+        exclusion_reasons = ["Independent eligibility verifier failed: ExtractionError"]
+
+    orch = MASOrchestrator.__new__(MASOrchestrator)
+    orch._trajectory = _Writer()
+    mapping = IndicatorMapping(
+        pillar=7, indicator="7.5", score=1.0,
+        verbatim_quote=_QUOTE, quote_start=0, quote_end=len(_QUOTE),
+    )
+    orch._log_trajectory(
+        document_id="d", chunk_index=0, chunk_text=_QUOTE,
+        indicator_id="7.5", mapping=mapping, raw_score=1.0, eligibility=_Broken(),
+    )
+    # Dropped from the objective, not scored 0.0 against the candidate.
+    assert "eligibility_supported" not in captured["proxy"]["components"]
+
+
 def test_orchestrator_log_helper_is_a_noop_when_disabled():
     from agents.orchestrator import MASOrchestrator
     from schemas import IndicatorMapping
