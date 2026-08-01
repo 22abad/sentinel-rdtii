@@ -1201,7 +1201,7 @@ async def test_generic_site_search_retries_zero_hit_phrase_with_core_term():
     assert rows and rows[0].url == "https://nacsa.gov.my/csa"
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_ddg_lite_parses_direct_hrefs(monkeypatch):
     """The lite endpoint (POST) returns <a href="<direct>" class='result-link'>
     — href BEFORE class, single-quoted class, direct URL (no /l/?uddg redirect).
@@ -1232,7 +1232,7 @@ async def test_ddg_lite_parses_direct_hrefs(monkeypatch):
     assert not any("duckduckgo.com" in u for u in urls)  # ddg-internal skipped
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_ddg_lite_still_surfaces_202_challenge(monkeypatch):
     from discovery.adapters.search_engine import DuckDuckGoSearchBackend
 
@@ -1244,7 +1244,7 @@ async def test_ddg_lite_still_surfaces_202_challenge(monkeypatch):
         await DuckDuckGoSearchBackend().search("x", 5)
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_bing_backend_decodes_ck_redirect(monkeypatch):
     """Bing organic results are bing.com/ck/a?...&u=a1<b64url> click-redirects;
     the backend must base64url-decode the real destination and skip bing-internal."""
@@ -1280,7 +1280,7 @@ async def test_bing_backend_decodes_ck_redirect(monkeypatch):
     assert [h.url for h in hits] == [real]
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_multitier_falls_through_on_rate_limit():
     """If the first free engine rate-limits (raises), the cascade tries the next
     and returns its results — key-free resilience, no paid backend."""
@@ -1300,7 +1300,7 @@ async def test_multitier_falls_through_on_rate_limit():
     assert len(hits) == 1 and hits[0].url == "https://legalinfo.mn/x"
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_politeness_gate_spaces_calls_and_respects_zero(monkeypatch):
     """The per-host politeness gate waits the configured interval between calls
     to the same host, and is a no-op when the interval is 0 (test/CI default)."""
