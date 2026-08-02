@@ -72,7 +72,9 @@ python main.py --economy China --pillar 6 --from-corpus --provider ollama
 ## Slide 5: Results — By the Numbers (60s)
 | Metric | Value |
 |---|---|
-| **Official cell coverage** | **297/427 (69.6%)** — all cells with official scores |
+| **Official cell coverage** | **297/427 (69.6%)** |
+| **Score>0 cells (measure exists)** | **171/229 (74.7%)** |
+| **Score=0 cells (measure absent)** | **126/198 (63.6%)** |
 | **Verbatim grounding** | **96.2%** (quote in source, char-for-char) |
 | **Blind-verifier override** | **29%** (independent checker catches over-scores) |
 | **Deployment cost** | **$12.96 full submission (27.7K calls) / $0 open-weight** |
@@ -82,9 +84,10 @@ python main.py --economy China --pillar 6 --from-corpus --provider ollama
 | **Languages** | EN/ZH/HI/ID/LO/MN/RU/TH |
 | **Key-free** | Yes (DuckDuckGo Lite → Bing cascade) |
 
-> Spoken: "The official database scores 427 economy-by-indicator cells. We have
-> evidence for 297 — 69.6%. That includes 126 cells where we proved the
-> restriction doesn't exist — not that we didn't look. 96.2% of our
+> Spoken: "The official database scores 427 cells. We have evidence for 297 —
+> 69.6% overall. Where a measure should exist, we find it 74.7% of the time.
+> Where the answer should be zero — no restriction — we confirm that 63.6% of
+> the time. Two different tasks, and we report both. 96.2% of our
 > quotes are verified character-for-character in the source text. An independent
 > blind checker overturns 29% of over-scores before anything ships. And the
 > entire 7-economy submission costs under thirteen dollars on a cloud model — or zero dollars
