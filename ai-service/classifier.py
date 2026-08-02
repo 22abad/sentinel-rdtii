@@ -64,7 +64,12 @@ _BASE_PHRASES = {
             "商业秘密披露", "源代码披露", "算法强制披露",
             "pengungkapan rahasia dagang", "pengungkapan kode sumber",
             "разглашение коммерческой тайны", "раскрытие исходного кода",
-            "การเปิดเผยความลับทางการค้า"],
+            "การเปิดเผยความลับทางการค้า",
+            # Counter-terrorism / communications interception (374-FZ Yarovaya)
+            "терроризм", "террористической", "перехват", "переписка",
+            "содержание сообщений", "операторы связи",
+            "反恐", "恐怖主义", "拦截通信", "通信运营商",
+            "counter-terrorism", "counterterrorism", "interception"],
     "4.10": ["trade secret protection", "trade secret law",
              "商业秘密保护", "商业秘密法律",
              "perlindungan rahasia dagang", "undang-undang rahasia dagang",
