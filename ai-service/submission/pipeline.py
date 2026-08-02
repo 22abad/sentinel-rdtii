@@ -1075,6 +1075,16 @@ async def run_corpus(
             pth = _norm_index.get(_norm_law(_part))
             if pth is not None:
                 return pth
+            # Fallback: an inventory title may carry a translated/annotated
+            # suffix (e.g. "…Dramas《关于进一步落实…》") that its manifest
+            # record lacks. Match when one normalized form CONTAINS the other
+            # (both directions), preferring the longer manifest key so a
+            # genuine "Act" never absorbs an unrelated "Act" sub-name.
+            nk = _norm_law(_part)
+            if nk:
+                for _k, _p in _norm_index.items():
+                    if len(_k) >= 40 and (nk in _k or _k in nk):
+                        return _p
         return None
 
     laws: dict[str, dict] = {}

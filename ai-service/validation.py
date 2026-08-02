@@ -238,6 +238,18 @@ _SUBSTANTIVE_SIGNALS: list[re.Pattern] = [
     re.compile(r"जुर्माना"),
     re.compile(r"सहमति"),
     re.compile(r"अधिकार"),
+    # Chinese operative markers (as substring matches, like Hindi): 不得 =
+    # shall not, 应当/应 = shall, 必须 = must, 禁止 = prohibited,
+    # 可以 = may, 有权 = entitled, 义务 = obligation, 罚款 = fine,
+    # 处...罚 = penalty, 要求 = required.
+    re.compile(r"不得"),
+    re.compile(r"应当"),
+    re.compile(r"必须"),
+    re.compile(r"禁止"),
+    re.compile(r"有权"),
+    re.compile(r"义务"),
+    re.compile(r"罚款"),
+    re.compile(r"要求"),
 ]
 
 _PROCEDURAL_ONLY_SIGNALS: list[re.Pattern] = [

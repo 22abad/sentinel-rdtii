@@ -33,20 +33,96 @@ class EligibilityResult:
         return self.decision == "supported" and self.candidate_indicator in self.supported_indicators
 
 
-_P6_P7_CRITERIA = {
+_ALL_CRITERIA = {
+    # ── Pillar 1: Tariffs & Trade Defence ──
+    "1.4": "anti-dumping or countervailing duty measure on ICT goods",
+    # ── Pillar 2: Public Procurement ──
+    "2.1": "general public procurement framework or law",
+    "2.2": "ICT-specific procurement preferences or domestic preference rules",
+    "2.3": "procurement rules for services including ICT/digital services",
+    # ── Pillar 3: Foreign Investment ──
+    "3.1": "foreign-investment screening or review mechanism for ICT/digital sectors",
+    "3.2": "foreign-equity limits in ICT/digital sectors",
+    "3.3": "licensing or approval requirement for foreign investors in ICT",
+    "3.4": "investment restrictions targeting specific countries or sectors",
+    "3.5": "local presence or joint-venture requirement for foreign digital firms",
+    # ── Pillar 4: IPR ──
+    "4.1": "copyright or related-rights protection for digital content",
+    "4.2": "patent protection for software or computer-implemented inventions",
+    "4.3": "trademark protection applicable to digital goods/services",
+    "4.5": "IP enforcement mechanisms including online/digital infringement",
+    "4.6": "trade-secrets or confidential-information protection for digital assets",
+    "4.9": "IP-related border measures for digital/ICT goods",
+    "4.10": "ISDS or investment-dispute provisions affecting IP in digital trade",
+    # ── Pillar 5: Telecom Competition & SOEs ──
+    "5.1": "telecom regulatory authority existence and independence",
+    "5.2": "foreign-ownership limits in telecom operators",
+    "5.3": "state ownership or control of telecom operators",
+    "5.4": "accounting-separation or structural-separation requirements for telecom",
+    "5.5": "telecom infrastructure-sharing or access obligations",
+    "5.7": "independent telecom regulator with rule-making and enforcement powers",
+    # ── Pillar 6: Cross-Border Data ──
     "6.1": "ban on taking/processing data abroad or domestic-processing requirement",
     "6.2": "requirement to hold/store/retain a copy of data domestically",
     "6.3": "requirement, or explicit confirmed absence of a requirement, for local data-centre/server infrastructure",
     "6.4": "condition on cross-border data transfer such as consent, adequacy, approval or safeguards",
     "6.5": "binding cross-border data-flow agreement (legacy/non-regulatory evidence only)",
+    # ── Pillar 7: Domestic Data Protection ──
     "7.1": "existence or absence of a comprehensive/sectoral personal-data protection framework",
     "7.2": "existence or absence of a dedicated/sectoral cybersecurity legal framework",
     "7.3": "mandatory minimum retention period with an explicit duration; not deletion/minimisation",
     "7.4": "mandatory appointment/designation of a DPO or equivalent responsible individual",
     "7.5": "government/police access to personal data or records without independent judicial authorisation",
+    # ── Pillar 8: Intermediary Liability ──
+    "8.1": "safe-harbour or liability exemption for internet intermediaries",
+    "8.2": "notice-and-takedown or notice-and-action regime for online content",
+    "8.3": "mandatory user-identification or SIM-card registration requirements",
+    "8.4": "content-moderation or monitoring obligations on internet platforms",
+    # ── Pillar 9: Online Content Access ──
+    "9.1": "website/social-media blocking or content-restriction orders",
+    "9.3": "online advertising restrictions or disclosure requirements",
+    "9.4": "internet-shutdown or network-disruption authority",
+    # ── Pillar 10: Technology Import/Export ──
+    "10.1": "import licensing or restrictions on ICT goods",
+    "10.2": "technology-import catalogue or prohibited/restricted technology list",
+    "10.3": "local-content or domestic-production requirements for ICT goods; content quotas favouring domestic media (e.g. limits on foreign film/TV imports)",
+    "10.4": "export controls on dual-use or encryption technology",
+    # ── Pillar 11: Standards & Conformity ──
+    "11.1": "mandatory national standards for ICT equipment or services",
+    "11.2": "conformity-assessment or certification requirements for ICT products",
+    "11.3": "mutual-recognition agreements for ICT conformity assessment",
+    "11.4": "encryption or cryptographic standards and certification requirements",
+    # ── Pillar 12: E-Commerce ──
+    "12.1": "e-commerce law or framework establishing online-transaction validity",
+    "12.2": "cross-border e-commerce customs or tax facilitation measures",
+    "12.3": "online-consumer-protection or e-commerce dispute-resolution rules",
+    "12.4.1": "electronic-signature legal recognition",
+    "12.4.2": "electronic-contract formation and validity rules",
+    "12.4.3": "online-payment or electronic-money regulatory framework",
+    "12.4.4": "paperless-trade facilitation or electronic-documents recognition",
+    "12.4.5": "cross-border electronic-payments access for foreign providers",
+    "12.4.6": "digital-authentication or identity-verification framework",
+    "12.4.7": "electronic-transactions or e-government service legal basis",
+    "12.5": "restrictions on online sales of specific goods or services",
+    "12.7": "geo-blocking or territorial restrictions on online services",
+    "12.8": "data-portability or interoperability requirements for digital platforms",
+    "12.9": "source-code or algorithm-disclosure requirements",
 }
 
-_PROVISION_INDICATORS = {"6.1", "6.2", "6.4", "7.3", "7.4", "7.5"}
+# For backward compatibility
+_P6_P7_CRITERIA = _ALL_CRITERIA
+
+_PROVISION_INDICATORS = {
+    # P6/P7: requiring operative provisions (not existence statements)
+    "6.1", "6.2", "6.4", "7.3", "7.4", "7.5",
+    # P8-P12: provision-level indicators
+    "8.2", "8.3", "8.4",  # notice-takedown, SIM reg, content moderation
+    "9.1", "9.3",         # site blocking, online ad restrictions
+    "10.1", "10.2", "10.3", "10.4",  # import/export controls
+    "11.1", "11.2", "11.4",         # standards, certification, encryption
+    "12.1", "12.2", "12.3", "12.5", "12.7", "12.8", "12.9",
+    "12.4.1", "12.4.2", "12.4.3", "12.4.5",  # e-commerce provisions
+}
 _DURATION = re.compile(
     r"\b(?:at least|not less than|minimum(?: period)? of|for (?:a period of )?)\s*"
     r"(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s*"
@@ -172,6 +248,44 @@ def deterministic_eligibility(
         for label, pattern in (("government actor", _GOV_ACTOR), ("access power", _ACCESS), ("data/record object", _DATA_OBJECT)):
             if not pattern.search(quote):
                 reasons.append(f"Quote does not identify the required {label}")
+    # ── Pillar 8-12 deterministic checks (Round-2 expansion) ──
+    elif indicator_id == "10.3":
+        # Local content / content-quota measures (e.g. foreign audiovisual
+        # import caps, domestic-purchase quotas, local-sourcing rules).
+        _CONTENT_QUOTA = re.compile(
+            r"不得超过|不得低于|must not exceed|shall not exceed|"
+            r"总量不超过|占比|配额|quota|%", re.IGNORECASE)
+        if _CONTENT_QUOTA.search(quote):
+            spans["content_quota"] = [_CONTENT_QUOTA.search(quote).group(0)]
+        if not features.get("has_local_content_requirement") and not _CONTENT_QUOTA.search(quote):
+            reasons.append("No local-content or content-quota requirement is evidenced")
+    elif indicator_id == "10.4":
+        # Export controls on dual-use / encryption technology.
+        _EXPORT_CTRL = re.compile(
+            r"禁止出口|限制出口|不得出口|出口许可|export control|export licence|"
+            r"экспортный контроль|запрет экспорта|dilarang ekspor|ห้ามส่งออก", re.IGNORECASE)
+        if _EXPORT_CTRL.search(quote):
+            spans["export_control"] = [_EXPORT_CTRL.search(quote).group(0)]
+        if not features.get("has_export_restriction") and not _EXPORT_CTRL.search(quote):
+            reasons.append("No export-restriction/control requirement is evidenced")
+    elif indicator_id == "8.4":
+        # Content moderation / monitoring obligations on internet platforms.
+        _MODERATION = re.compile(
+            r"应当删除|应当下架|不得发布|内容审核|及时删除|remove.*content|moderat|"
+            r"take.?down|삭제|นำออก", re.IGNORECASE)
+        if _MODERATION.search(quote):
+            spans["moderation"] = [_MODERATION.search(quote).group(0)]
+        if not features.get("has_content_moderation") and not _MODERATION.search(quote):
+            reasons.append("No content-moderation or takedown obligation is evidenced")
+    elif indicator_id == "9.1":
+        # Website / social-media blocking orders.
+        _BLOCKING = re.compile(
+            r"关闭网站|屏蔽|停止接入|封禁|block(?:ing|ed)?|shut down|suspend.*site|"
+            r"закрыть сайт|блокировк", re.IGNORECASE)
+        if _BLOCKING.search(quote):
+            spans["blocking"] = [_BLOCKING.search(quote).group(0)]
+        if not features.get("has_blocking_order") and not _BLOCKING.search(quote):
+            reasons.append("No website/social-media blocking order is evidenced")
 
     # A clipped sub-clause may inherit its modal from immediately preceding
     # source context (the exact-quote fixtures include one such 6.2 item), so
@@ -207,7 +321,7 @@ class EligibilityVerifier:
     @staticmethod
     def _prompt(quote: str) -> str:
         criteria = "\n".join(f"- {iid}: {text}" for iid, text in _P6_P7_CRITERIA.items())
-        return f"""Independently classify this exact legal quote against RDTII Pillars 6 and 7.
+        return f"""Independently classify this exact legal quote against the RDTII 2.1 indicators (all 12 pillars).
 You are not given any prior label, rationale or score. Select only indicators
 whose legal elements are explicitly established by the quote. Otherwise select NONE.
 
@@ -217,6 +331,8 @@ Indicators:
 Rules:
 - Topic words alone are insufficient.
 - Principles, objectives, general powers and definitions are not provision-level measures.
+- 10.3 (local content requirements) includes content quotas that favour domestic media,
+  such as limits on foreign film/TV imports or foreign-content quotas.
 - Distinguish minimum retention from deletion/data minimisation.
 - Distinguish warrantless government access from consent- or court-gated access.
 - Every evidence span must be copied exactly from the quote.

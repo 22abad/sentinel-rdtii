@@ -215,6 +215,7 @@ _BASE_PHRASES = {
              "ограничение импорта", "импорт ICT"],
     "10.3": ["local content requirement", "domestic content", "local sourcing",
              "本地含量要求", "国产化", "本地采购",
+             "境外影视剧", "引进境外", "进口影片", "境外剧",  # content-import quotas (CHN 10.3)
              "persyaratan konten lokal", "sumber daya lokal",
              "требование локального содержания",
              "ข้อกำหนดเนื้อหาในประเทศ"],

@@ -1,0 +1,8 @@
+# Local-only override (gitignored). Enables Vertex AI for this machine.
+# See docker-compose.override.yaml.example for details.
+services:
+  ai-service:
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp-vertex-key.json
+    volumes:
+      - ~/.config/opencode/gcp-vertex-key.json:/etc/gcp-vertex-key.json
