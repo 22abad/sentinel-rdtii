@@ -7,6 +7,30 @@ link every claim to code._
 
 ---
 
+## 2026-08-03 — EAEU Treaty killed by a Round-1 rule that Round 2 outgrew (12b6c9b)
+
+- **What happened:** RUS 11.2/11.3 sat in the gap list as EXTRACTION /
+  CORPUS_QUALITY, yet the official inventory's source for both — the
+  "Eurasian Economic Union Treaty" — was already in the corpus at 1.33M chars.
+  scan_gate_misses.py (the 684-name ground-truth scan) showed the name still
+  dropping after the 08-01 word-list extension.
+- **Root cause:** two independent gates both killed it. (1) The statute-word
+  list had no `treaty`/`agreement`. (2) `_OUT_OF_SCOPE_INSTRUMENT` — added in
+  Round 1 with good evidence (13/26 SGP rows were FTA-chapter over-extraction)
+  — blanket-drops `treaty|convention|protocol`. Right for FTAs; wrong for EAEU
+  law, which has direct effect in member states (like EU regulations) and is
+  what the official inventory actually cites for RUS 11.2/11.3.
+- **Fix:** statute-word list gains `treaty|agreement`; narrow
+  `_SUPRANATIONAL_DIRECT_EFFECT` carve-out (EAEU/EEC names only) on the
+  out-of-scope gate. Regression test proves CPTPP/RCEP/FTA rows still drop.
+  Suite 888 green.
+- **Lesson:** an empirically-validated rule carries the date of its evidence.
+  When the scope changes (new economies, new inventory), re-run the rule
+  against the new ground truth before trusting it — same discipline as the
+  word-list scan, which is exactly what surfaced this.
+
+---
+
 ## 2026-07-31 (night) — auto_fix_corpus Wayback-garbage incident (caught by verify-before-presenting)
 
 - **What happened:** the overnight corpus auto-fixer reported "50 fixed, 11
