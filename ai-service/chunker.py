@@ -40,6 +40,17 @@ _MIN_CHARS = int(os.getenv("CHUNK_MIN_CHARS", "200"))
 # the original document. Verbatim-vs-source integrity outranks tidy chunking.
 _HYPHEN_WRAP_RE = re.compile(r"(\w)-\n(\w)")
 _WRAPPED_LINE_RE = re.compile(r"(?<=[^\n.;:!?])\n(?=[a-z(])")
+# A newline BETWEEN two CJK characters is a PDF visual wrap, never semantics —
+# CJK text has no spaces, so a wrapped word ("视\n频") reads as broken to the
+# LLM, which silently repairs it when quoting; the repaired quote then fails
+# the exact-substring verify (found on the MOFCOM 37/2021 catalogue, CHN 10.2).
+# Headings (第X条/第X章) keep their line start so the chunker still anchors on
+# them at ^.
+_CJK = "㐀-䶿一-鿿"
+_CJK_WRAP_RE = re.compile(
+    rf"(?<=[{_CJK}，、；：）])\n"
+    rf"(?=(?!第[\d一二三四五六七八九十百千]{{1,6}}[条章])[{_CJK}（])"
+)
 
 
 def reflow_legal_text(text: str) -> str:
@@ -57,6 +68,7 @@ def reflow_legal_text(text: str) -> str:
         return text
     text = _HYPHEN_WRAP_RE.sub(r"\1\2", text)
     text = _WRAPPED_LINE_RE.sub(" ", text)
+    text = _CJK_WRAP_RE.sub("", text)
     return text
 
 # Structural heading patterns — used as preferred break points, not required.

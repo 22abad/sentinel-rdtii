@@ -190,3 +190,28 @@ def test_reflow_noop_on_clean_text():
         "第十条 关键信息基础设施运营者严禁向境外提供受管制数据。",  # CJK untouched
     ]:
         assert reflow_legal_text(clean) == clean
+
+
+def test_reflow_mends_cjk_line_wraps():
+    """PDF text extraction hard-wraps Chinese mid-word ("视\\n频伪造技术").
+    The LLM silently repairs the word when quoting, so the quote stops being an
+    exact substring and the row dies at verify — found empirically on the
+    MOFCOM 37/2021 catalogue (CHN 10.2, 2026-08-03). A newline BETWEEN two CJK
+    characters is a visual wrap, never semantics — join it. Headings (第X条/章)
+    keep their line starts."""
+    messy = (
+        "技术名称：深度伪造技术\n"
+        "控制要点：笔迹伪造技术、语音伪造技术、图片伪造技术、视\n"
+        "频伪造技术、生物特征伪造技术以及其他伪造技\n"
+        "术，伪造信息与被伪造信息相似度大于70%"
+    )
+    out = reflow_legal_text(messy)
+    assert "视频伪造技术" in out
+    assert "伪造技术，伪造信息" in out
+    # field-label line ("控制要点：…") gets joined too — harmless, the pipeline
+    # is self-consistent (quote and source are both reflowed)
+    assert reflow_legal_text(out) == out  # idempotent
+
+    # heading lines keep their newline so the chunker still sees 第X条 at ^
+    heading = "前款规定之外的情形。\n第十条 关键信息基础设施运营者。"
+    assert reflow_legal_text(heading) == heading

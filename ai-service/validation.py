@@ -130,8 +130,12 @@ def is_section_header(quote: str, context: str | None = None) -> bool:
     for pat in _SECTION_HEADER_PATTERNS:
         if pat.search(t):
             return True
-    # Single-line all-caps headings
-    if t.isupper() and 5 < len(t) < 100 and not t.endswith("."):
+    # Single-line all-caps headings — Latin script only: CJK/Thai/Lao text is
+    # caseless, so a quote whose ONLY cased characters are an embedded Latin
+    # code ("216501X", "ICP", "374-FZ") satisfies str.isupper() and a 92-char
+    # substantive Chinese provision got hard-rejected as a "heading"
+    # (CHN 10.2 catalogue entry, 2026-08-03).
+    if t.isupper() and 5 < len(t) < 100 and not t.endswith(".") and not _NON_LATIN_RE.search(t):
         return True
     # A short Latin-script topic label with NO obligation verb ("21. Access to
     # personal data", "Consent required") — the marginal note, not the rule

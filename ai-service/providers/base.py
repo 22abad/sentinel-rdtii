@@ -497,6 +497,11 @@ Repair rules:
 - Output ONLY valid JSON. No prose, no markdown fences, no explanations.
 - Do NOT include a score, pillar, or indicator field.
 - "verbatim_quote" MUST be an exact substring of the input article.
+- If the article is a CATALOGUE/LIST instrument (catalogue, list, schedule,
+  annex, 目录, 清单), a specific entry (number + item name + control scope) IS
+  substantive evidence — quote the most relevant ENTIRE entry, never the
+  catalogue's title or a bare heading, and put the entry number in
+  "article_clause".
 - If no valid substantive evidence for this indicator exists in the article, set "verbatim_quote" to "" and set feature values to their type defaults.
 - Correct only evidence, feature values, and source metadata.
 - Use only keys in this schema:

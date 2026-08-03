@@ -78,3 +78,20 @@ def test_hindi_provision_is_not_flagged_as_section_header():
     # be skipped (via _NON_LATIN_RE) so it is not hard-rejected as a heading.
     quote = "डेटा प्रत्ययी सहमति प्राप्त करेगा।"
     assert is_section_header(quote) is False
+
+
+def test_cjk_quote_with_latin_code_is_not_an_allcaps_heading():
+    # A Chinese catalogue entry whose ONLY cased characters are the Latin
+    # letters in its entry code ("216501X") made str.isupper() return True, so
+    # the ALL-CAPS-heading heuristic hard-rejected a 92-char substantive quote
+    # (CHN 10.2, found 2026-08-03). Any CJK/Thai/Lao quote embedding an
+    # uppercase acronym or law number ("GB", "ICP", "374-FZ") hits the same
+    # branch. The all-caps heuristic is Latin-script-only.
+    quote = (
+        "编号：216501X\n技术名称：深度伪造技术\n\n控制要点：笔迹伪造技术、语音伪造技术、"
+        "图片伪造技术、视频伪造技术、生物特征伪造技术以及其他伪造技术，"
+        "伪造信息与被伪造信息相似度大于70%"
+    )
+    assert is_section_header(quote) is False
+    # a REAL all-caps Latin heading still rejects
+    assert is_section_header("PART IV OBLIGATIONS OF DATA USERS") is True
