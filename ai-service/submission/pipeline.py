@@ -1130,6 +1130,9 @@ async def run_corpus(
     if max_documents is not None and len(laws) > max_documents:
         laws = dict(list(laws.items())[:max_documents])
 
+    _covered_inds: set[str] = set()
+    _cap_per_indicator = int(os.getenv("RDTII_MAX_PROVISIONS_PER_INDICATOR", "3") or 3)
+
     for position, (law_name, info) in enumerate(laws.items(), start=1):
         say(f"extracting: {law_name[:50]}", position, len(laws))
         try:
@@ -1172,7 +1175,6 @@ async def run_corpus(
             if wanted is not None and code_id not in wanted:
                 continue
             _by_indicator.setdefault(code_id, []).append(mapping)
-        _cap_per_indicator = int(os.getenv("RDTII_MAX_PROVISIONS_PER_INDICATOR", "3") or 3)
         for _maps in _by_indicator.values():
             _maps.sort(key=lambda m: len(getattr(m, "verbatim_quote", "") or ""), reverse=True)
             for mapping in _maps[: _cap_per_indicator]:
@@ -1182,6 +1184,81 @@ async def run_corpus(
                         source_text=text, doc_meta=doc_meta,
                     )
                 )
+        _covered_inds.update(_by_indicator.keys())
+
+    # Focused gap backfill — batch extraction distributes evidence to the
+    # best-fitting sibling indicator, so a law hinted for BOTH 6.1 and 6.3 can
+    # leave 6.3 empty even though a single-target pass surfaces the provision
+    # (found empirically 2026-08-03: RUS 6.3 on 152-FZ and IDN 7.1 both map in
+    # a single-target replay after the batch pass produced nothing). One
+    # focused re-extraction per still-empty hinted indicator; a few extra LLM
+    # calls only where the batch pass came back empty. RDTII_GAP_BACKFILL=0
+    # opts out.
+    if laws and os.getenv("RDTII_GAP_BACKFILL", "1").strip().lower() not in ("0", "false", "no"):
+        for law_name, info in laws.items():
+            for ind in sorted(info["inds"]):
+                try:
+                    code_id = indicator_to_rdtii_code(ind)
+                except Exception:  # noqa: BLE001
+                    continue
+                if code_id in _covered_inds:
+                    continue
+                if wanted is not None and code_id not in wanted:
+                    continue
+                law_path = _resolve_law_path(law_name)
+                if law_path is None:
+                    continue
+                try:
+                    text = law_path.read_text(encoding="utf-8")
+                except Exception:  # noqa: BLE001
+                    continue
+                if _cap and len(text) > _cap:
+                    from rag.retriever import select_relevant_text
+
+                    text = select_relevant_text(text, [ind], _cap, country_code=code)
+                say(f"backfill {code_id}: {law_name[:40]}", 0, 0)
+                candidate = SimpleNamespace(
+                    url=info["url"], title=law_name, authoritative_law_name=law_name,
+                    last_update="",
+                    discovery_method="known_mapping",
+                    confidence=1.0, legal_review_approved=True, warnings=[],
+                )
+                doc_meta = {
+                    "quality": "good", "retrieval_method": "round2_corpus",
+                    "pdf_is_scanned": False, "location_reference": info["url"],
+                }
+                try:
+                    result = await run_extraction(
+                        text, provider, target_indicators=[ind]
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    warnings.append(f"backfill failed for {code_id}: {exc}")
+                    continue
+                _merge_usage(usage_totals, getattr(result, "usage", None))
+                _bf = [
+                    m for m in result.mappings
+                    if m.pillar == pillar
+                    and indicator_to_rdtii_code(m.indicator) == code_id
+                ]
+                _bf.sort(key=lambda m: len(getattr(m, "verbatim_quote", "") or ""), reverse=True)
+                for mapping in _bf[:_cap_per_indicator]:
+                    rows.append(
+                        build_row(
+                            mapping, economy_display=display, candidate=candidate,
+                            source_text=text, doc_meta=doc_meta,
+                        )
+                    )
+                if _bf:
+                    _covered_inds.add(code_id)
+                else:
+                    # surface WHY a focused pass came back empty — the corpus
+                    # path otherwise discards result.rejected silently
+                    warnings.append(
+                        f"backfill {code_id} empty: {len(result.mappings)} raw "
+                        f"mappings, {len(result.rejected)} rejected "
+                        f"({'; '.join(sorted({str(getattr(r, 'reason', ''))[:80] for r in result.rejected})) or 'no reasons'}) "
+                        f"[file={law_path.name}, fed={len(text)} chars, ind={ind!r}]"
+                    )
 
     if not laws:
         warnings.append(
