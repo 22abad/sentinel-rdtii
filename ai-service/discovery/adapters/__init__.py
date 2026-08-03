@@ -10,6 +10,7 @@ from .indonesia_bpk import IndonesiaBpkAdapter
 from .malaysia import MalaysiaLomAdapter
 from .mekong_ckan import MekongCkanAdapter
 from .official_index import OfficialIndexAdapter
+from .russia_pravo import RussiaPravoAdapter
 from .search_engine import FixtureSearchAdapter, SearchEngineAdapter
 from .singapore import SingaporeSsoAdapter
 from .thailand import ThailandOcsAdapter
@@ -24,6 +25,7 @@ def get_adapter(name: str) -> DiscoveryAdapter:
         "malaysia_lom": MalaysiaLomAdapter(),
         "mekong_ckan": MekongCkanAdapter(),
         "official_index": OfficialIndexAdapter(),
+        "russia_pravo": RussiaPravoAdapter(),
         "search_engine": SearchEngineAdapter(),
         "singapore_sso": SingaporeSsoAdapter(),
         "thailand_ocs": ThailandOcsAdapter(),
@@ -41,6 +43,7 @@ __all__ = [
     "MalaysiaLomAdapter",
     "MekongCkanAdapter",
     "OfficialIndexAdapter",
+    "RussiaPravoAdapter",
     "SearchEngineAdapter",
     "SingaporeSsoAdapter",
     "ThailandOcsAdapter",

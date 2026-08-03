@@ -1332,3 +1332,87 @@ def test_optional_proxy_env(monkeypatch):
     assert se._proxies() is None
     monkeypatch.setenv("RDTII_HTTP_PROXY", "socks5://127.0.0.1:9050")
     assert se._proxies() == {"http": "socks5://127.0.0.1:9050", "https": "socks5://127.0.0.1:9050"}
+
+
+# ---------------------------------------------------------------------------
+# Russia — publication.pravo.gov.ru official JSON API
+# ---------------------------------------------------------------------------
+
+def test_russia_pravo_localizes_pillar_queries_to_law_names():
+    from discovery.adapters.russia_pravo import _localize_query
+
+    # Name= searches instrument NAMES — topics must map to law-title terms
+    assert _localize_query("personal data protection act") == "персональных данных"
+    assert _localize_query("cross-border data transfer restrictions") == "персональных данных"
+    assert _localize_query("data retention interception") == "противодействии терроризму"
+    assert _localize_query("critical infrastructure cybersecurity") == (
+        "безопасности критической информационной инфраструктуры"
+    )
+    # unknown concepts pass through unchanged
+    assert _localize_query("совершенно другой запрос") == "совершенно другой запрос"
+
+
+@pytest.mark.anyio
+async def test_russia_pravo_parses_api_items_and_keeps_instruments_only(monkeypatch):
+    from urllib.parse import quote
+    from discovery.adapters.russia_pravo import RussiaPravoAdapter
+
+    api_url = (
+        "http://publication.pravo.gov.ru/api/Documents?PageSize=30&Index=1&Name="
+        + quote("персональных данных")
+    )
+    payload = {
+        "items": [
+            {
+                "eoNumber": "0001202608030001",
+                "complexName": 'Федеральный закон от 27.07.2006 № 152-ФЗ\n "О персональных данных"',
+                "documentDate": "2006-07-27T00:00:00",
+                "pagesCount": 30,
+            },
+            {   # non-statutory stream item must be dropped
+                "eoNumber": "0001202608030002",
+                "complexName": "Информационное сообщение о персональных данных",
+                "documentDate": "2026-08-03T00:00:00",
+                "pagesCount": 1,
+            },
+            {   # regional publication stream (non-0001 prefix) must be dropped
+                "eoNumber": "5101202607300002",
+                "complexName": 'Федеральный закон от 01.01.2026 № 1-ФЗ "О персональных данных региона"',
+                "documentDate": "2026-01-01T00:00:00",
+                "pagesCount": 2,
+            },
+        ]
+    }
+    monkeypatch.setattr(
+        "discovery.adapters.russia_pravo._open_client",
+        lambda: FakeUrlClient({api_url: payload}),
+    )
+
+    hits = await RussiaPravoAdapter().search(
+        country_code="RUS",
+        source=LegalSourceConfig(name="pravo.gov.ru", base_url="http://publication.pravo.gov.ru", domains=["publication.pravo.gov.ru"]),
+        queries=["personal data protection"],
+        limit=10,
+    )
+
+    assert len(hits) == 1
+    hit = hits[0]
+    assert hit.retrieval_mode == "live"
+    assert hit.discovery_method == "official_search"
+    assert hit.external_id == "0001202608030001"
+    assert hit.url.endswith("/Document/View/0001202608030001")
+    assert hit.raw["pdf_url"].endswith("file/pdf?eoNumber=0001202608030001")
+    assert "152-ФЗ" in hit.title and "\n" not in hit.title
+
+
+@pytest.mark.anyio
+async def test_russia_pravo_ignores_other_economies():
+    from discovery.adapters.russia_pravo import RussiaPravoAdapter
+
+    hits = await RussiaPravoAdapter().search(
+        country_code="THA",
+        source=LegalSourceConfig(name="x", base_url="http://x", domains=["x"]),
+        queries=["personal data"],
+        limit=5,
+    )
+    assert hits == []

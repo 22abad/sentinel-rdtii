@@ -484,14 +484,19 @@ RUS:
   languages: [ru]
   sources:
     - name: Official Internet Portal of Legal Information
-      base_url: http://pravo.gov.ru
+      base_url: http://publication.pravo.gov.ru
       domains: [pravo.gov.ru, publication.pravo.gov.ru]
-      adapter: search_engine
+      adapter: russia_pravo
       source_grade: primary
       source_type: statute_portal
       languages: [ru]
       pillars: [6, 7]
       priority: 100
+      notes: >-
+        Official state publication of record. russia_pravo uses the portal's
+        own JSON API (/api/Documents?Name=..., federal stream 0001 only);
+        consolidated current texts via the sibling IPS endpoint
+        (proxy/ips/?doc_itself=&nd=..., cp1251, no rdk = latest redaction).
 
     - name: Roskomnadzor
       base_url: https://rkn.gov.ru
