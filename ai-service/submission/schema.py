@@ -117,6 +117,8 @@ ECONOMY_NAMES: dict[str, str] = {
     "MNG": "Mongolia",
     "RUS": "Russian Federation",
     "NIU": "Niue",
+    # Final-round bonus economy (20 pts, the designated "hard challenge").
+    "TLS": "Timor-Leste",
 }
 
 # Reverse lookup accepting common spellings/casing.
@@ -126,6 +128,8 @@ _NAME_TO_CODE.update({
     "laos": "LAO",
     "lao people's democratic republic": "LAO",
     "russia": "RUS",
+    "east timor": "TLS",
+    "timor leste": "TLS",
 })
 
 

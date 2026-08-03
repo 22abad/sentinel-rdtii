@@ -1486,3 +1486,86 @@ async def test_mongolia_legalinfo_ignores_other_economies():
         limit=5,
     )
     assert hits == []
+
+
+# ---------------------------------------------------------------------------
+# Timor-Leste — Jornal da República Drupal gazette
+# ---------------------------------------------------------------------------
+
+def test_timor_gazette_localizes_queries_to_portuguese():
+    from discovery.adapters.timor_gazette import _localize_query
+
+    assert _localize_query("personal data protection act") == "dados pessoais"
+    assert _localize_query("telecom licensing regime") == "telecomunicações"
+    assert _localize_query("electronic commerce law") == "comércio eletrónico"
+    assert _localize_query("termo desconhecido") == "termo desconhecido"
+
+
+def test_timor_gazette_instrument_headline_regex():
+    from discovery.adapters.timor_gazette import _INSTRUMENT_RE
+
+    for text, want in [
+        ("... DECRETO-LEI N.º 25/2016 de 29 de Junho ...", "DECRETO-LEI N.º 25/2016"),
+        ("LEI N.º 5/2020 REGIME ...", "LEI N.º 5/2020"),
+        ("RESOLUÇÃO DO GOVERNO N.º 12/2021 sobre ...", "RESOLUÇÃO DO GOVERNO N.º 12/2021"),
+    ]:
+        m = _INSTRUMENT_RE.search(text)
+        assert m and " ".join(m.group(1).split()) == want, text
+
+
+@pytest.mark.anyio
+async def test_timor_gazette_search_parses_nodes_and_names_instruments(monkeypatch):
+    from urllib.parse import quote
+    from discovery.adapters.timor_gazette import TimorGazetteAdapter
+
+    search_url = "https://mj.gov.tl/jornal/?q=search/node/" + quote("dados pessoais")
+    node_url = "https://mj.gov.tl/jornal/?q=node/1431"
+    monkeypatch.setattr(
+        "discovery.adapters.timor_gazette._open_client",
+        lambda: FakeUrlClient({
+            search_url: (
+                '<h3 class="title"><a href="https://mj.gov.tl/jornal/?q=node/1431">'
+                "REPÚBLICA DEMOCRÁTICA DE TIMOR-LESTE</a></h3>"
+            ),
+            node_url: (
+                "<html><body><p>DECRETO-LEI N.º 25/2016 Protecção de Dados</p>"
+                '<a href="/jornal/files/DL_25_2016.pdf">PDF</a></body></html>'
+            ),
+        }),
+    )
+
+    hits = await TimorGazetteAdapter().search(
+        country_code="TLS",
+        source=LegalSourceConfig(name="jornal", base_url="https://mj.gov.tl/jornal", domains=["mj.gov.tl"]),
+        queries=["personal data protection"],
+        limit=5,
+    )
+
+    assert len(hits) == 1
+    hit = hits[0]
+    assert hit.retrieval_mode == "live"
+    assert hit.discovery_method == "official_search"
+    assert hit.external_id == "1431"
+    assert hit.title == "DECRETO-LEI N.º 25/2016"
+    assert hit.raw["pdf_links"] == ["/jornal/files/DL_25_2016.pdf"]
+
+
+@pytest.mark.anyio
+async def test_timor_gazette_ignores_other_economies():
+    from discovery.adapters.timor_gazette import TimorGazetteAdapter
+
+    hits = await TimorGazetteAdapter().search(
+        country_code="MNG",
+        source=LegalSourceConfig(name="x", base_url="http://x", domains=["x"]),
+        queries=["dados pessoais"],
+        limit=5,
+    )
+    assert hits == []
+
+
+def test_timor_leste_is_a_registered_economy():
+    from submission.schema import economy_code, economy_display_name
+
+    assert economy_code("Timor-Leste") == "TLS"
+    assert economy_code("east timor") == "TLS"
+    assert economy_display_name("TLS") == "Timor-Leste"

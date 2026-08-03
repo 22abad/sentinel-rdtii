@@ -15,6 +15,7 @@ from .russia_pravo import RussiaPravoAdapter
 from .search_engine import FixtureSearchAdapter, SearchEngineAdapter
 from .singapore import SingaporeSsoAdapter
 from .thailand import ThailandOcsAdapter
+from .timor_gazette import TimorGazetteAdapter
 
 
 def get_adapter(name: str) -> DiscoveryAdapter:
@@ -31,6 +32,7 @@ def get_adapter(name: str) -> DiscoveryAdapter:
         "search_engine": SearchEngineAdapter(),
         "singapore_sso": SingaporeSsoAdapter(),
         "thailand_ocs": ThailandOcsAdapter(),
+        "timor_gazette": TimorGazetteAdapter(),
     }
     return adapters.get(name, SearchEngineAdapter())
 
@@ -50,5 +52,6 @@ __all__ = [
     "SearchEngineAdapter",
     "SingaporeSsoAdapter",
     "ThailandOcsAdapter",
+    "TimorGazetteAdapter",
     "get_adapter",
 ]

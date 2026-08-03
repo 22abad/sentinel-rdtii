@@ -512,3 +512,22 @@ RUS:
       languages: [ru]
       pillars: [6, 7]
       priority: 85
+
+TLS:
+  label: Timor-Leste
+  languages: [pt, tet]
+  sources:
+    - name: Jornal da República (Official Gazette)
+      base_url: https://mj.gov.tl/jornal
+      domains: [mj.gov.tl]
+      adapter: timor_gazette
+      source_grade: primary
+      source_type: statute_portal
+      languages: [pt, tet]
+      pillars: [6, 7]
+      priority: 100
+      notes: >-
+        Final-round bonus economy (20 pts). Plain-HTTP Drupal gazette;
+        ?q=search/node/<pt-term> is server-rendered (probed 2026-08-03).
+        Node pages carry 25K+ chars of text plus official PDF links.
+        Legacy /jornal/lawsTL mirror is stale with junk links — not used.
