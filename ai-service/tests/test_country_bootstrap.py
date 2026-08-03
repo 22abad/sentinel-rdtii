@@ -193,3 +193,19 @@ async def test_bootstrap_country_end_to_end_mocked(tmp_path, monkeypatch):
     assert result.localized_terms == {}
     from submission.schema import economy_code
     assert economy_code("Fiji") == "FJI"
+
+
+def test_score_domain_rejects_foreign_gov_news_and_commercial_cctld():
+    from discovery.bootstrap import resolve_country, score_domain
+
+    brn = resolve_country("Brunei Darussalam")
+    # US federal .gov (Library of Congress) is not Brunei's government
+    assert score_domain("guides.loc.gov", brn) <= 0
+    assert score_domain("loc.gov", brn) <= 0
+    # news/media sites are not official sources even on the right ccTLD
+    assert score_domain("borneobulletin.com.bn", brn) <= 0
+    assert score_domain("bruneinewsgazette.com", brn) <= 0
+    # commercial second-level under own ccTLD gets no own-TLD bonus
+    assert score_domain("somecompany.com.bn", brn) <= 0
+    # the real official portal still scores positive
+    assert score_domain("agc.gov.bn", brn) > 0

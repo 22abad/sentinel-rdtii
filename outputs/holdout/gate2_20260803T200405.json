@@ -1,0 +1,58 @@
+{
+ "gate": 2,
+ "criterion": ">=4/5 countries: bootstrap finds >=1 allowlisted official domain",
+ "hits": 1,
+ "total": 5,
+ "passed": false,
+ "results": [
+  {
+   "country": "Vietnam",
+   "iso3": "VNM",
+   "discovered_domains": [
+    "lawnet.vn",
+    "phapluat.gov.vn",
+    "vietnam.gov.vn",
+    "vietnamlaw.gov.vn"
+   ],
+   "allowlist_matches": [
+    "phapluat.gov.vn",
+    "vietnam.gov.vn",
+    "vietnamlaw.gov.vn"
+   ],
+   "hit": true,
+   "seconds": 42.1
+  },
+  {
+   "country": "Kazakhstan",
+   "iso3": "KAZ",
+   "discovered_domains": [],
+   "allowlist_matches": [],
+   "hit": false,
+   "seconds": 17.8
+  },
+  {
+   "country": "Cambodia",
+   "iso3": "KHM",
+   "discovered_domains": [],
+   "allowlist_matches": [],
+   "hit": false,
+   "seconds": 14.3
+  },
+  {
+   "country": "Brunei Darussalam",
+   "iso3": "BRN",
+   "discovered_domains": [],
+   "allowlist_matches": [],
+   "hit": false,
+   "seconds": 28.7
+  },
+  {
+   "country": "Fiji",
+   "iso3": "FJI",
+   "discovered_domains": [],
+   "allowlist_matches": [],
+   "hit": false,
+   "seconds": 26.2
+  }
+ ]
+}

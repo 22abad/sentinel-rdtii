@@ -1,0 +1,98 @@
+{
+ "gate": 2,
+ "criterion": ">=4/5 countries: bootstrap finds >=1 allowlisted official domain",
+ "hits": 5,
+ "total": 5,
+ "passed": true,
+ "results": [
+  {
+   "country": "Vietnam",
+   "iso3": "VNM",
+   "discovered_domains": [
+    "moj.gov.vn",
+    "phapluat.gov.vn",
+    "vietnam.gov.vn",
+    "vietnamlaw.gov.vn"
+   ],
+   "allowlist_matches": [
+    "moj.gov.vn",
+    "phapluat.gov.vn",
+    "vietnam.gov.vn",
+    "vietnamlaw.gov.vn"
+   ],
+   "hit": true,
+   "seconds": 0.0
+  },
+  {
+   "country": "Kazakhstan",
+   "iso3": "KAZ",
+   "discovered_domains": [
+    "akorda.kz",
+    "egov.kz",
+    "gov.kz",
+    "testbot.adilet.zan.kz"
+   ],
+   "allowlist_matches": [
+    "egov.kz",
+    "gov.kz",
+    "testbot.adilet.zan.kz"
+   ],
+   "hit": true,
+   "seconds": 42.9
+  },
+  {
+   "country": "Cambodia",
+   "iso3": "KHM",
+   "discovered_domains": [
+    "cambodiaip.gov.kh",
+    "cdc.gov.kh",
+    "db.ncdd.gov.kh",
+    "moj.gov.kh"
+   ],
+   "allowlist_matches": [
+    "cambodiaip.gov.kh",
+    "cdc.gov.kh",
+    "db.ncdd.gov.kh",
+    "moj.gov.kh"
+   ],
+   "hit": true,
+   "seconds": 47.3
+  },
+  {
+   "country": "Brunei Darussalam",
+   "iso3": "BRN",
+   "discovered_domains": [
+    "agc.gov.bn",
+    "bruneitrade.mofe.gov.bn",
+    "meti.gov.bn",
+    "mpabd.gov.bn"
+   ],
+   "allowlist_matches": [
+    "agc.gov.bn",
+    "bruneitrade.mofe.gov.bn",
+    "meti.gov.bn",
+    "mpabd.gov.bn"
+   ],
+   "hit": true,
+   "seconds": 58.0
+  },
+  {
+   "country": "Fiji",
+   "iso3": "FJI",
+   "discovered_domains": [
+    "ag.gov.fj",
+    "justice.gov.fj",
+    "laws.gov.fj",
+    "parliament.gov.fj"
+   ],
+   "allowlist_matches": [
+    "ag.gov.fj",
+    "justice.gov.fj",
+    "laws.gov.fj",
+    "parliament.gov.fj"
+   ],
+   "hit": true,
+   "seconds": 39.9
+  }
+ ]
+}
