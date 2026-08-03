@@ -1416,3 +1416,73 @@ async def test_russia_pravo_ignores_other_economies():
         limit=5,
     )
     assert hits == []
+
+
+# ---------------------------------------------------------------------------
+# Mongolia — legalinfo.mn curated seeds with live title self-verification
+# ---------------------------------------------------------------------------
+
+@pytest.mark.anyio
+async def test_mongolia_legalinfo_live_title_verification(monkeypatch):
+    from discovery.adapters.mongolia_legalinfo import MongoliaLegalinfoAdapter
+
+    detail_url = "https://legalinfo.mn/mn/detail?lawId=16390288615991"
+    monkeypatch.setattr(
+        "discovery.adapters.mongolia_legalinfo._open_client",
+        lambda: FakeUrlClient({detail_url: (
+            "<html><head><title>ХҮНИЙ ХУВИЙН МЭДЭЭЛЭЛ\nХАМГААЛАХ ТУХАЙ</title></head></html>"
+        )}),
+    )
+
+    hits = await MongoliaLegalinfoAdapter().search(
+        country_code="MNG",
+        source=LegalSourceConfig(name="legalinfo.mn", base_url="https://legalinfo.mn", domains=["legalinfo.mn"]),
+        queries=["personal data protection law"],
+        limit=5,
+    )
+
+    assert len(hits) == 1
+    hit = hits[0]
+    # the portal itself confirmed the statute name -> live
+    assert hit.retrieval_mode == "live"
+    assert hit.discovery_method == "official_portal_seed"
+    assert hit.external_id == "16390288615991"
+    assert "ХҮНИЙ ХУВИЙН МЭДЭЭЛЭЛ" in hit.title
+    assert not hit.warnings
+
+
+@pytest.mark.anyio
+async def test_mongolia_legalinfo_mismatch_downgrades_to_fallback(monkeypatch):
+    from discovery.adapters.mongolia_legalinfo import MongoliaLegalinfoAdapter
+
+    detail_url = "https://legalinfo.mn/mn/detail?lawId=16390365491061"
+    monkeypatch.setattr(
+        "discovery.adapters.mongolia_legalinfo._open_client",
+        lambda: FakeUrlClient({detail_url: (
+            "<html><head><title>ӨӨР ХУУЛЬ</title></head></html>"
+        )}),
+    )
+
+    hits = await MongoliaLegalinfoAdapter().search(
+        country_code="MNG",
+        source=LegalSourceConfig(name="legalinfo.mn", base_url="https://legalinfo.mn", domains=["legalinfo.mn"]),
+        queries=["cybersecurity framework"],
+        limit=5,
+    )
+
+    assert len(hits) == 1
+    assert hits[0].retrieval_mode == "fallback"
+    assert hits[0].warnings  # says why it was not confirmed
+
+
+@pytest.mark.anyio
+async def test_mongolia_legalinfo_ignores_other_economies():
+    from discovery.adapters.mongolia_legalinfo import MongoliaLegalinfoAdapter
+
+    hits = await MongoliaLegalinfoAdapter().search(
+        country_code="RUS",
+        source=LegalSourceConfig(name="x", base_url="http://x", domains=["x"]),
+        queries=["personal data"],
+        limit=5,
+    )
+    assert hits == []

@@ -9,6 +9,7 @@ from .india_code import IndiaCodeAdapter
 from .indonesia_bpk import IndonesiaBpkAdapter
 from .malaysia import MalaysiaLomAdapter
 from .mekong_ckan import MekongCkanAdapter
+from .mongolia_legalinfo import MongoliaLegalinfoAdapter
 from .official_index import OfficialIndexAdapter
 from .russia_pravo import RussiaPravoAdapter
 from .search_engine import FixtureSearchAdapter, SearchEngineAdapter
@@ -24,6 +25,7 @@ def get_adapter(name: str) -> DiscoveryAdapter:
         "indonesia_bpk": IndonesiaBpkAdapter(),
         "malaysia_lom": MalaysiaLomAdapter(),
         "mekong_ckan": MekongCkanAdapter(),
+        "mongolia_legalinfo": MongoliaLegalinfoAdapter(),
         "official_index": OfficialIndexAdapter(),
         "russia_pravo": RussiaPravoAdapter(),
         "search_engine": SearchEngineAdapter(),
@@ -42,6 +44,7 @@ __all__ = [
     "IndonesiaBpkAdapter",
     "MalaysiaLomAdapter",
     "MekongCkanAdapter",
+    "MongoliaLegalinfoAdapter",
     "OfficialIndexAdapter",
     "RussiaPravoAdapter",
     "SearchEngineAdapter",

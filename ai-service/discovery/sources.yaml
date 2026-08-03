@@ -462,12 +462,17 @@ MNG:
     - name: Legalinfo (Unified Legal Information System)
       base_url: https://legalinfo.mn
       domains: [legalinfo.mn, www.legalinfo.mn]
-      adapter: search_engine
+      adapter: mongolia_legalinfo
       source_grade: primary
       source_type: statute_portal
       languages: [mn]
       pillars: [6, 7]
       priority: 100
+      notes: >-
+        Full consolidated texts server-rendered at /mn/detail?lawId=…; portal
+        search is a POST-only middleware, so mongolia_legalinfo uses curated
+        seeds live-verified against each page's own <title> (china_flk
+        precedent). Seed lawIds verified 2026-08-03.
 
     - name: Communications Regulatory Commission
       base_url: https://crc.gov.mn
