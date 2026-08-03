@@ -1170,6 +1170,44 @@ def test_notification_circular_announcement_are_statutory_instruments():
     assert "Writ Petition Civil No. 645/2022-IMA & Anr. Vs. UOI & Ors" not in kept_names
 
 
+def test_treaty_and_agreement_are_statutory_instruments():
+    """RUS P11/P12 cells cite the 'Eurasian Economic Union Treaty' (1.33M chars
+    in corpus) — a binding international instrument the official inventory
+    lists, killed at this gate until 2026-08-03. 'Agreement' covers EAEU/ASEAN
+    framework agreements in the same inventory. No historical garbage name
+    (Annual Report, Press Release, website, Writ Petition) contains either."""
+    from submission.schema import SubmissionRow, validate_submission_rows
+
+    def row(economy, law):
+        return SubmissionRow(
+            economy=economy, law_name=law, indicator_id="P7-I5",
+            article="Article 23",
+            verbatim_snippet=("Member States shall ensure the protection of "
+                              "information transmitted within the integrated system."),
+            source_url="https://official.example/x",
+        )
+
+    kept = validate_submission_rows(
+        [row("Russian Federation", "Eurasian Economic Union Treaty"),
+         row("Russian Federation", "Decision of the Board of the Eurasian Economic Commission No. 30"),
+         row("Thailand", "ASEAN Framework Agreement on Electronic Commerce"),
+         # FTA over-extraction protection must stay intact (13/26 SGP rows once)
+         row("Russian Federation", "Comprehensive and Progressive Agreement for Trans-Pacific Partnership"),
+         row("Thailand", "Regional Comprehensive Economic Partnership (RCEP) Chapter 12"),
+         row("Russian Federation", "Annual Report of the Ministry of Digital Development"),
+         row("Mongolia", "Executive Summary")],
+        allow_empty=True,
+    )
+    kept_names = [r.law_name for r in kept]
+    assert "Eurasian Economic Union Treaty" in kept_names
+    assert "Decision of the Board of the Eurasian Economic Commission No. 30" in kept_names
+    assert "ASEAN Framework Agreement on Electronic Commerce" in kept_names
+    assert "Comprehensive and Progressive Agreement for Trans-Pacific Partnership" not in kept_names
+    assert "Regional Comprehensive Economic Partnership (RCEP) Chapter 12" not in kept_names
+    assert "Annual Report of the Ministry of Digital Development" not in kept_names
+    assert "Executive Summary" not in kept_names
+
+
 def test_drop_zero_confidence_rows_removes_unscoreable_noise():
     """Final-assembly guard: rows the extractor scored 0.00 confidence are noise.
 

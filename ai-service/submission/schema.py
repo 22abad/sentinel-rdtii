@@ -433,6 +433,13 @@ _OUT_OF_SCOPE_INSTRUMENT = re.compile(
     r"treaty|convention|protocol)\b",
     re.IGNORECASE,
 )
+# Exception: EAEU law has direct effect in member states (like EU regulations)
+# and the official Round-2 inventory cites the "Eurasian Economic Union Treaty"
+# as the source for RUS 11.2 and 11.3 — it is a scored domestic-level measure,
+# not an FTA. FTAs/CPTPP/RCEP stay dropped.
+_SUPRANATIONAL_DIRECT_EFFECT = re.compile(
+    r"eurasian economic (union|commission)|\beaeu\b|\beec\b", re.IGNORECASE
+)
 # A blog / news / press page is not authoritative legal text even on an official
 # domain (e.g. an IMDA blog article surfaced as a "law"). Matches by URL path.
 _NON_AUTHORITATIVE_URL = re.compile(
@@ -868,6 +875,10 @@ _STATUTE_INSTRUMENT_WORD = re.compile(
     r"decision|resolution|instruction|"
     r"circular|measures|catalogue|specification|plan|policy|procedure|"
     r"guideline|guidelines|direction|directive|framework|"
+    # 2026-08-03 3rd pass: binding international instruments — the EAEU Treaty
+    # (1.33M chars, in corpus, feeds RUS P11/P12) died here; "agreement" covers
+    # EAEU/ASEAN framework agreements in the official inventory.
+    r"treaty|agreement|"
     # Malay statutory-instrument words (Akta 709, Peraturan-Peraturan,
     # Pekeliling = official circular, Perintah = order)
     r"akta|peraturan|pekeliling|perintah|kanun|undang-undang|"
@@ -903,7 +914,8 @@ def _is_out_of_scope_source(law_name: str, source_url: str) -> bool:
     """
 
     if _OUT_OF_SCOPE_INSTRUMENT.search(law_name or ""):
-        return True
+        if not _SUPRANATIONAL_DIRECT_EFFECT.search(law_name or ""):
+            return True
     if _FOREIGN_JURISDICTION.search(law_name or ""):
         return True
     if _NON_AUTHORITATIVE_URL.search(source_url or ""):
