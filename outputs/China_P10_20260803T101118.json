@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "economy": "China",
+    "pillars": [
+      10
+    ],
+    "retrieval_mode": "seed_first",
+    "evidence_counts": {
+      "seed": 1,
+      "live_discovered": 0,
+      "fixture": 0
+    },
+    "runs": [
+      {
+        "economy": "China",
+        "economy_code": "CHN",
+        "pillar": 10,
+        "provider": "deepseek-v4-flash->qwen2.5:14b",
+        "source": "round2_corpus",
+        "retrieval_mode": "corpus",
+        "offline": true,
+        "laws_available": 2,
+        "documents_processed": 2,
+        "usage": {
+          "llm_calls": 10,
+          "input_tokens": 21233,
+          "output_tokens": 2009,
+          "cache_hit_tokens": 20352,
+          "cache_miss_tokens": 881,
+          "cost_usd": 0.007942
+        },
+        "provisions_mapped": 1,
+        "evidence_counts": {
+          "seed": 1,
+          "live_discovered": 0,
+          "fixture": 0
+        },
+        "blind_verifier": {
+          "blind_checks": 1,
+          "overturned": 1,
+          "override_rate": 1.0
+        },
+        "warnings": []
+      }
+    ]
+  },
+  "provisions": [
+    {
+      "economy": "China",
+      "law_name": "Notice concerning Further Implementing Regulations on the Management of Online Foreign Film and Television Dramas 《关于进一步落实网上境外影视剧管理有关规定的通知》",
+      "law_number_ref": "",
+      "last_amended": "Not stated in source",
+      "indicator_id": "P10-I3",
+      "article": "三",
+      "discovery_tag": "KNOWN",
+      "location_reference": "https://www.chinafilm.gov.cn/xxgk/zcfg/gfxwj/dyfxfyjck/201409/t20140902_1508.html (三)",
+      "verbatim_snippet": "单个网站年度引进播出境外影视剧的总量，不得超过该网站上一年度购买播出国产影视剧总量的30%。",
+      "mapping_rationale": "[三] The legal subject is a single online video website, the action is the annual import and broadcast of foreign films/TV dramas, and the object is the total volume of such foreign content. The condition sets a precise cap: this volume must not exceed 30% of the domestic content purchased and…",
+      "source_url": "https://www.chinafilm.gov.cn/xxgk/zcfg/gfxwj/dyfxfyjck/201409/t20140902_1508.html",
+      "confidence": 0.75,
+      "notes": "requires human review; Cross-model checker read the quote as criterion 3 (score 0.0) against the extractor's 1.0; conservative minimum applied and flagged for human review.",
+      "novelty_type": "NEW_LAW",
+      "canonical_law_id": "CHN:notice-concerning-further-implementing-regulations-on-the-management-of-online-foreign-film-and-television-dramas-关于进一步落实网上境外影视剧管理有关规定的通知",
+      "amendment_version_date": "Not stated in source",
+      "normalized_article": "三",
+      "normalized_quote_hash": "ff38a9af333945573ec354d0401150ebf394c9d1b4b2e72259fdd06919137f9b",
+      "ocr_quality_cer": null,
+      "processing_time_seconds": null,
+      "raw_context_before": "有“第二类互联网视听节目服务第五项：电影、电视剧、动画片类视听节目的汇集、播出业务”的网站，可以引进专门用于信息网络传播的境外影视剧。\n各网站只能引进用于本网站播放的境外影视剧，也可在本网站播放的同时，在符合版权要求的情况下，销售给其他具有影视剧播放资质的持证网站播放。各网站不能引进境外影视剧专门销售给其他网站播放。\n",
+      "raw_context_after": "\n四、各网站引进境外影视剧的内容、格调应当健康向上，符合《境外电视节目引进、播出管理规定》（广电总局令第42号）第十五条规定，不得载有以下内容：1、反对中国宪法确定的基本原则的；2、危害中国国家统一、主权和领土完整的；3、泄露中国国家秘密、危害中国国家安全或者损害中国荣誉和利益的；4、煽动中国民族仇恨、民族歧视，破坏中",
+      "pdf_is_scanned": false,
+      "retrieval_method": "known_mapping",
+      "retrieval_mode": "unknown",
+      "final_url": "",
+      "http_status": null,
+      "fetch_method": "",
+      "model_version": "",
+      "source_file_sha256": "",
+      "source_pdf_path": "",
+      "pdf_type": "unknown",
+      "confidence_type": "human_review_approved",
+      "source_confidence": 1.0,
+      "mapping_decision": "supported",
+      "mapping_confidence_type": "human_review_approved",
+      "eligibility_evidence_spans": {
+        "10.3": [
+          "单个网站年度引进播出境外影视剧的总量，不得超过该网站上一年度购买播出国产影视剧总量的30%。"
+        ]
+      },
+      "eligibility_verifier_mode": "independent_llm",
+      "requires_human_review": true
+    }
+  ]
+}

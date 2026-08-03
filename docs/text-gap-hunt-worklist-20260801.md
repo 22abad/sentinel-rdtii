@@ -1,5 +1,10 @@
 # 补文本作战清单 — 25 个 text-gap 格(2026-08-01)
 
+## ⚡ 2026-08-03 战果更新
+- **RUS 11.2 + 11.3 ✅ 拿下**:EAEU Treaty(1.33M 字符)一直在 corpus,被 Round-1 反 FTA 规则误杀。gate 开 EAEU 豁免(12b6c9b)重跑即中。coverage 174→176/229 (76.9%)。
+- **CHN 10.2 半程**:MOFCOM 37/2021 目录 PDF 官方双镜像拿到(sha256 一致,10 页原生文本 2,361 字,含深度伪造/加密技术进口限制条目),已入 corpus。但 catalogue 式列表无操作性语句,抽取 0 行 → 根因转 EXTRACTION。类似问题会波及 CHN 10.4(出口目录)。后续方向:extractor 对 目录/清单 类文书需要专门的"条目即证据"抽取模式。
+- **LAO 5.4 半程**:电信法 09/NA 文本复用入 5.4(109K)。官方 inventory 另一法源 Decision on Competition No.019/MPT 2015 公网无全文(laotradeportal 索引无、gazette 仅 POST 搜索、全网 PDF 无)→ 该文书如实 FETCH_GAP。
+
 依据:`round2_gap_worklist.csv`(FETCH_GAP 11 + CORPUS_QUALITY 14)× `round2_inventory.jsonl` 法名/URL。
 按**成功率从高到低**排序;每条给主源 + 备源。爬不动大声报告,绝不造假。
 
