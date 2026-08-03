@@ -1104,3 +1104,27 @@ def test_build_prompt_criteria_unknown_indicator_still_works():
         feature_spec={"f": {"type": "bool", "description": "d"}},
     )
     assert "You are evaluating ONE specific indicator: 99.9" in prompt
+
+
+def test_build_prompt_carries_catalogue_entry_rule():
+    """Catalogue-style instruments (MOFCOM import/export catalogues) have no
+    operative "shall" sentences — the entry IS the measure. Found empirically
+    2026-08-03: CHN 10.2 extraction quoted only the catalogue TITLE (14 chars,
+    no article) and died at the missing-article gate. The prompt rule makes the
+    model quote the specific entry and use the entry number as article_clause.
+    Applies to both single and batch prompts."""
+    from providers.base import LLMProvider
+
+    single = LLMProvider.build_prompt(
+        article_text="编号：216502X 技术名称：数据加密技术",
+        indicator_id="10.2",
+        feature_spec={"measure_present": {"type": "bool", "description": "d"}},
+    )
+    batch = LLMProvider.build_batch_prompt(
+        article_text="编号：216502X 技术名称：数据加密技术",
+        indicators=[("10.2", {"measure_present": {"type": "bool", "description": "d"}})],
+    )
+    for prompt in (single, batch):
+        assert "CATALOGUE/LIST instruments" in prompt
+        assert "SPECIFIC ENTRY" in prompt
+        assert "entry number" in prompt

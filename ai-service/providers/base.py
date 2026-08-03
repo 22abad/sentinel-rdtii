@@ -354,6 +354,13 @@ ABSOLUTE RULES:
 - A keyword or general topic reference is NOT evidence that this indicator is
   satisfied. If the article does not itself establish or negate the indicator's
   legal measure, set "verbatim_quote" to "" and all feature values to defaults.
+- CATALOGUE/LIST instruments (catalogue, list, schedule, annex, 目录, 清单): an
+  entry in a catalogue of prohibited/restricted/controlled items IS itself the
+  operative legal measure — there is no "shall/must" sentence to find. Quote the
+  most relevant SPECIFIC ENTRY verbatim (its number + item name + control
+  scope, e.g. "编号：216502X 技术名称：数据加密技术 控制要点：…"), NOT the
+  catalogue's title alone, and put the entry number (e.g. "216502X") in
+  "article_clause".
 - "article_clause" MUST be the specific article, clause, or section number (e.g. "Article 18", "Section 5(2)", "Paragraph 10"). Output an empty string if not explicitly mentioned in the text.
 - "source_legislation" MUST be the official title of the law/regulation, EXCLUDING any article, section, or clause numbers. Format it exactly as: [Country/Economy Name] [Law Name] ([Optional Abbreviation]), [Year], [Law Number] (e.g., "Singapore Personal Data Protection Act (PDPA), 2012, No. 26", "Malaysia Personal Data Protection Act (PDPA), 2010, No. 709").
 - If a feature cannot be determined from the text, set it to its type's default (false / 0 / "").
@@ -419,6 +426,11 @@ ABSOLUTE RULES:
 - If an indicator has no qualifying evidence, return it with
   "verbatim_quote": "" and default feature values. Never select a merely topical
   sentence just to fill the schema.
+- CATALOGUE/LIST instruments (catalogue, list, schedule, annex, 目录, 清单): an
+  entry in a catalogue of prohibited/restricted/controlled items IS itself the
+  operative legal measure. Quote the most relevant SPECIFIC ENTRY verbatim
+  (number + item name + control scope), NOT the catalogue's title alone, and
+  put the entry number in "article_clause".
 - "article_clause" MUST be the specific article, clause, or section number (e.g. "Article 18", "Section 5(2)", "Paragraph 10"). Output an empty string if not explicitly mentioned in the text.
 - "source_legislation" MUST be the official title of the law/regulation, EXCLUDING any article, section, or clause numbers. Format it exactly as: [Country/Economy Name] [Law Name] ([Optional Abbreviation]), [Year], [Law Number] (e.g., "Singapore Personal Data Protection Act (PDPA), 2012, No. 26", "Malaysia Personal Data Protection Act (PDPA), 2010, No. 709").
 - If a feature cannot be determined, set to its type default (false / 0 / "").
