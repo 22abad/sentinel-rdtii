@@ -1133,6 +1133,15 @@ async def run_corpus(
     _covered_inds: set[str] = set()
     _cap_per_indicator = int(os.getenv("RDTII_MAX_PROVISIONS_PER_INDICATOR", "3") or 3)
 
+    def _row_survives_validation(row) -> bool:
+        """Deterministic write-time-gate preflight for ONE row (no LLM)."""
+        try:
+            from submission.schema import validate_submission_rows
+
+            return bool(validate_submission_rows([row], allow_empty=True))
+        except Exception:  # noqa: BLE001 — preflight must never break the run
+            return True
+
     for position, (law_name, info) in enumerate(laws.items(), start=1):
         say(f"extracting: {law_name[:50]}", position, len(laws))
         try:
@@ -1175,16 +1184,20 @@ async def run_corpus(
             if wanted is not None and code_id not in wanted:
                 continue
             _by_indicator.setdefault(code_id, []).append(mapping)
-        for _maps in _by_indicator.values():
+        for _code_id, _maps in _by_indicator.items():
             _maps.sort(key=lambda m: len(getattr(m, "verbatim_quote", "") or ""), reverse=True)
             for mapping in _maps[: _cap_per_indicator]:
-                rows.append(
-                    build_row(
-                        mapping, economy_display=display, candidate=candidate,
-                        source_text=text, doc_meta=doc_meta,
-                    )
+                row = build_row(
+                    mapping, economy_display=display, candidate=candidate,
+                    source_text=text, doc_meta=doc_meta,
                 )
-        _covered_inds.update(_by_indicator.keys())
+                rows.append(row)
+                # "covered" must mean SURVIVES write-time validation — a mapping
+                # whose rows all die at the final gates left the cell empty
+                # while blocking its backfill (THA 11.2 / IDN 10.3 class,
+                # 2026-08-03). Preflight is deterministic and cheap.
+                if _row_survives_validation(row):
+                    _covered_inds.add(_code_id)
 
     # Focused gap backfill — batch extraction distributes evidence to the
     # best-fitting sibling indicator, so a law hinted for BOTH 6.1 and 6.3 can
@@ -1242,14 +1255,13 @@ async def run_corpus(
                 ]
                 _bf.sort(key=lambda m: len(getattr(m, "verbatim_quote", "") or ""), reverse=True)
                 for mapping in _bf[:_cap_per_indicator]:
-                    rows.append(
-                        build_row(
-                            mapping, economy_display=display, candidate=candidate,
-                            source_text=text, doc_meta=doc_meta,
-                        )
+                    row = build_row(
+                        mapping, economy_display=display, candidate=candidate,
+                        source_text=text, doc_meta=doc_meta,
                     )
-                if _bf:
-                    _covered_inds.add(code_id)
+                    rows.append(row)
+                    if _row_survives_validation(row):
+                        _covered_inds.add(code_id)
                 else:
                     # surface WHY a focused pass came back empty — the corpus
                     # path otherwise discards result.rejected silently
