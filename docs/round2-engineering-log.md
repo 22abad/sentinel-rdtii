@@ -7,6 +7,38 @@ link every claim to code._
 
 ---
 
+## 2026-08-03 — RUS 6.3: the evidence didn't exist in our file (b994d9b)
+
+- **Symptom:** single-target replay of 6.3 on "our 152-FZ text" mapped fine in
+  isolation, yet every pipeline run produced nothing — and a new focused
+  backfill pass ALSO came back empty, silently.
+- **Layer 1 — batch competition:** a law hinted for both 6.1 and 6.3 gets one
+  batch extraction; the model routes the evidence to the best-fitting sibling
+  and 6.3 starves. Fix: focused gap-backfill pass in run_corpus (single-target
+  re-extraction for every still-empty hinted indicator; empty results now
+  surface raw/rejected counts in warnings instead of vanishing).
+- **Layer 2 — corpus currency:** the 6.3-hinted file was the 2006 ORIGINAL
+  152-FZ. Art 18(5) data localization was inserted by 242-FZ in July 2014 —
+  the provision literally did not exist in our text; the extractor was
+  honestly right to find nothing. Fix: current consolidated redaction from
+  the official pravo.gov.ru IPS (rdk=60, 134K chars; the publication PDF is a
+  scan — Russian tesseract installed as the fallback path).
+- **Layer 3 — exact-match shadow:** backfill STILL read a 12K file. The
+  diagnostic warning (added in the same commit) named the culprit: the 6.1
+  entry's curly-quoted law name `“On Personal Data”` matches the inventory
+  string EXACTLY, so name resolution short-circuits before the
+  largest-text-wins logic — and that 12K file is an ANNOTATION, not the law
+  (its "quotes" are summary sentences). Fix: consolidated entry renamed to
+  the same exact name; largest char_count now wins for every 152-FZ read.
+- **Result:** P6 rerun = 9 provisions incl. 2× P6-I3; the P6-I1 rows now
+  quote statute text instead of annotation prose.
+- **Lessons:** (1) when an extractor "fails", first prove the evidence exists
+  in the text you actually feed it; (2) an exact-name match is a stronger
+  trap than a fuzzy one — it never reaches your tie-breakers; (3) silent
+  empty results deserve a diagnostic path of their own.
+
+---
+
 ## 2026-08-03 — one cell, three independent kill-layers (CHN 10.2) (001a0fb, 5c3e699)
 
 - **Method:** `scripts/replay_one_cell.py` + direct `run_extraction` replays —
