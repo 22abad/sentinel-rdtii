@@ -7,6 +7,35 @@ link every claim to code._
 
 ---
 
+## 2026-08-03 — one cell, three independent kill-layers (CHN 10.2) (001a0fb, 5c3e699)
+
+- **Method:** `scripts/replay_one_cell.py` + direct `run_extraction` replays —
+  peel the pipeline stage by stage on ONE failing cell instead of guessing.
+  Each replay exposed the next bug once the previous one was fixed.
+- **Bug 1 — prompt:** a catalogue has no "shall/must" sentence, so the model
+  quoted the TITLE (14 chars, no article) and the missing-article gate dropped
+  the row. Fix: catalogue-entry rule in build_prompt/build_batch_prompt
+  (entry = the measure; entry number = article_clause).
+- **Bug 2 — reflow:** PDF extraction hard-wraps Chinese mid-word (视\n频);
+  the model silently repairs the word when quoting, so the quote fails the
+  exact-substring verify. Fix: CJK wrap join in reflow_legal_text (第X条/章
+  heading starts preserved). Benefits every Chinese corpus text.
+- **Bug 2b — repair prompt:** after a heading-reject, the repair call knew
+  nothing about catalogues and returned an empty quote — a SILENT skip (the
+  corpus path records no rejection). Fix: catalogue rule in
+  build_repair_prompt.
+- **Bug 3 — validation:** `str.isupper()` is True for a caseless CJK quote
+  whose only cased characters are a Latin entry code ("216501X") — the
+  ALL-CAPS-heading heuristic hard-rejected a 92-char substantive provision.
+  Same class hits any CJK/Thai/Lao quote embedding GB/ICP/374-FZ-style codes.
+  Fix: heuristic now Latin-script-only.
+- **Result:** run_extraction replay 0/3 → 3/3 stable mappings. Suite 891.
+- **Lesson:** "no output" is not one bug. Replay the pipeline layer by layer
+  and each silent gate confesses separately. Also: every text-quality gate
+  written for English needs a caseless-script audit.
+
+---
+
 ## 2026-08-03 — EAEU Treaty killed by a Round-1 rule that Round 2 outgrew (12b6c9b)
 
 - **What happened:** RUS 11.2/11.3 sat in the gap list as EXTRACTION /
