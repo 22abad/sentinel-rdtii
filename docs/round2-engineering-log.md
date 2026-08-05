@@ -2145,3 +2145,67 @@ Playwright → OpenCLI → Wayback → Google Cache, all tried). nbtc.go.th
 timeouts, chinafilm.gov.cn 404. So the 8 fetch gaps stay honest FETCH_GAP —
 the reclassification earlier proved 6 of the original 14 were never blocked,
 but these 8 genuinely are.
+
+## 2026-08-01 — the human-feedback loop was never connected (three silent breaks)
+
+Approve/reject in the Workbench was supposed to shape future extractions.
+`providers.base._get_recent_corrections()` injects recent rejections into the
+prompt as negative few-shot examples. It has never returned a single row.
+
+Three independent breaks, each failing silently:
+1. `api/review.py` inserted into `audit_trail` WITHOUT `reviewer_notes`, while
+   the reader's WHERE required that column non-empty. `ReviewRequest.
+   reviewer_notes` existed and was documented "for fine-tuning" — nothing wrote
+   it, and no UI collects it.
+2. Gating on a note keeps the loop dead regardless: a REJECTION is the signal,
+   the note is colour. WHERE now selects every non-compliant mapping.
+3. The reader hardcoded `host=postgres port=5432`, ignoring `DATABASE_URL`. The
+   writer uses `auth._db_connect` (DATABASE_URL first), so from the host they
+   addressed different databases and the reader could not resolve its hostname.
+
+A bare `except: return ""` made all three look identical to "no rejections
+yet". Failures now log a warning that says the loop is not contributing. The
+"" fallback stays — a missing DB must never break extraction (judge CLI ships
+no psycopg2). +10 tests.
+
+## 2026-08-01 — RLVR: a broken verifier was being scored as a "no" (81.25% → 93.75%)
+
+The `--with-llm` measurement gates whether best-of-N gets wired. Measured from
+committed code at 708976b it read **81.25%**, stable over three runs — below
+the harness's own ~90% bar. Every loss was a `page_dump` beating the real
+provision. Three causes:
+
+- **An errored verifier is not a verdict.** `EligibilityVerifier` swallows its
+  own LLM/parse errors and abstains (right for the pipeline — precision-first).
+  The reward read that as "ineligible" and scored 0.0, penalising whichever
+  candidate hit the error. In `sgp-cpc-7-5-section-20` that alone lost it.
+  `EligibilityResult.verifier_failed` now marks it; the reward drops the term
+  from the DENOMINATOR (a neutral 1.0 would still move the weighted mean).
+- **This falsified the harness's "failures are reported loudly" promise** — the
+  inner handler meant the loud path counted zero. Now honest, and the first
+  such run shows **7 of 69 eligibility calls failing with ExtractionError**
+  (~10%), all previously scored as real negatives. The old 87.5% and the
+  81.25% were both polluted by it.
+- **Existence indicators must exempt eligibility under the LLM arm.** 7.1/7.2
+  score an instrument's existence, so a bare title IS the answer.
+  `single_provision` was already exempt; eligibility was kept because the
+  deterministic branches apply no objectives-clause check. True of that arm,
+  false of the LLM arm, which called the correct evidence "a statement of
+  legislative purpose, not a provision-level measure"
+  (`sgp-cybersecurity-7-2-framework`) and blessed the dump around it. **Fifth**
+  instance of a provision-shape prior inverting on 7.1/7.2.
+
+Also: `render_markdown` hardcoded "(no API calls, no network)" onto EVERY
+report, so `--with-llm` runs claimed they had stayed offline while billing per
+candidate. And the stale 87.5% baseline was stamped `fd0949b` — the commit
+BEFORE the seam merged (#381), i.e. produced from an uncommitted working tree.
+It was never reproducible from committed code.
+
+Offline run unchanged at 100% / 0.9360; none of this touches the deterministic
+path. Full suite 903 green.
+
+**Open lead:** the eligibility call goes through `provider.query`, which uses
+`temperature=0.3` and no `response_format=json_object` — unlike the structured
+extraction path (`temperature=0`, JSON mode). That is the likely source of the
+~10% `ExtractionError` parse failures, and it also means the gating measurement
+is not reproducible by construction.

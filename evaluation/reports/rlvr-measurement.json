@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-31T19:03:59.389006+00:00",
-  "commit": "fd0949b791e7395d87f9491fa3420d2f57c524c6",
+  "generated_at": "2026-07-31T23:22:39.379984+00:00",
+  "commit": "708976b2356fba021b3514a58ef52f0beab67abd",
   "case_set_sha256": "499cce05e40aed671202dd9be8189785d87a5700fdf5627e330e465a82d6fe25",
   "mode": "offline-synthetic-distractors",
   "llm_provider": null,
@@ -32,8 +32,10 @@
         "7.2"
       ],
       "existence_exempt_components": [
-        "single_provision"
-      ]
+        "single_provision",
+        "eligibility_supported (only when an external verdict is supplied \u2014 the deterministic branches are safe for a bare title, the LLM arm is not)"
+      ],
+      "eligibility_abstain_policy": "a verifier that raises yields no verdict; the term is dropped from the objective rather than scored 0.0"
     },
     "oracle": {
       "evidence_threshold": 0.8,

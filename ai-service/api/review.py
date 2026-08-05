@@ -70,10 +70,22 @@ def review_mapping(req: ReviewRequest):
         )
         mapping_id = cur.fetchone()[0]
 
+        # reviewer_notes closes the human-feedback loop: providers.base
+        # ._get_recent_corrections() reads these rows back as negative few-shot
+        # examples. Omitting the column (as this INSERT used to) left the
+        # reader with nothing to find, so expert rejections never reached the
+        # model.
         cur.execute(
-            "INSERT INTO audit_trail (mapping_id, source_section_id, highlight_start, highlight_end) "
-            "VALUES (%s, %s, %s, %s)",
-            (mapping_id, section_id, req.mapping.quote_start, req.mapping.quote_end),
+            "INSERT INTO audit_trail "
+            "(mapping_id, source_section_id, highlight_start, highlight_end, reviewer_notes) "
+            "VALUES (%s, %s, %s, %s, %s)",
+            (
+                mapping_id,
+                section_id,
+                req.mapping.quote_start,
+                req.mapping.quote_end,
+                (req.reviewer_notes or "").strip() or None,
+            ),
         )
 
         conn.commit()
@@ -107,24 +119,32 @@ def _bank_and_log(req: ReviewRequest, mapping_id: str) -> None:
     except (TypeError, ValueError):
         score = None
 
-    if req.decision == "approved":
-        try:
-            from services.evidence_store import save_evidence
+    # Bank BOTH verdicts, not just approvals. verified_evidence already allows
+    # review_status='rejected', and its (economy, indicator_id, quote_hash) is
+    # the join key the trajectory log writes. Banking only approvals gave the
+    # dataset a positive half and no negative one — and a preference signal
+    # needs both sides of the comparison to exist.
+    #
+    # Only the approved rows are ever SERVED as reusable evidence
+    # (evidence_store.find_evidence filters on review_status), so this changes
+    # what we can learn from, not what a later run would reuse.
+    try:
+        from services.evidence_store import save_evidence
 
-            save_evidence(
-                req.country_code,
-                [{
-                    "indicator_id": indicator,
-                    "law_name": m.source_legislation or "",
-                    "verbatim_quote": m.verbatim_quote or "",
-                    "article": getattr(m, "article_clause", None),
-                    "source_url": m.source_url or None,
-                    "score": score,
-                }],
-                review_status="approved",
-            )
-        except Exception:  # noqa: BLE001 — banking must never break the review
-            pass
+        save_evidence(
+            req.country_code,
+            [{
+                "indicator_id": indicator,
+                "law_name": m.source_legislation or "",
+                "verbatim_quote": m.verbatim_quote or "",
+                "article": getattr(m, "article_clause", None),
+                "source_url": m.source_url or None,
+                "score": score,
+            }],
+            review_status="approved" if req.decision == "approved" else "rejected",
+        )
+    except Exception:  # noqa: BLE001 — banking must never break the review
+        pass
     try:
         from services.activity_log import record_activity
 

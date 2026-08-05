@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-31T19:16:54.281328+00:00",
-  "commit": "fd0949b791e7395d87f9491fa3420d2f57c524c6",
+  "generated_at": "2026-07-31T23:22:17.383494+00:00",
+  "commit": "708976b2356fba021b3514a58ef52f0beab67abd",
   "case_set_sha256": "499cce05e40aed671202dd9be8189785d87a5700fdf5627e330e465a82d6fe25",
   "mode": "synthetic-distractors+llm-eligibility",
   "llm_provider": "deepseek",
@@ -32,8 +32,10 @@
         "7.2"
       ],
       "existence_exempt_components": [
-        "single_provision"
-      ]
+        "single_provision",
+        "eligibility_supported (only when an external verdict is supplied \u2014 the deterministic branches are safe for a bare title, the LLM arm is not)"
+      ],
+      "eligibility_abstain_policy": "a verifier that raises yields no verdict; the term is dropped from the objective rather than scored 0.0"
     },
     "oracle": {
       "evidence_threshold": 0.8,
@@ -54,11 +56,11 @@
     "cases_skipped": 0,
     "candidate_sets": 16,
     "total_pairs": 69,
-    "hygiene_top1_rate": 0.875,
-    "full_top1_rate": 0.875,
-    "hygiene_pairwise_win_rate": 0.967741935483871,
+    "hygiene_top1_rate": 0.9375,
+    "full_top1_rate": 0.9375,
+    "hygiene_pairwise_win_rate": 0.9838709677419355,
     "semantic_pairwise_win_rate": 0.8571428571428571,
-    "mean_reference_proxy": 0.8571460194542398,
+    "mean_reference_proxy": 0.9067783723954163,
     "mean_reference_oracle": 0.8499999999999999
   },
   "by_kind": {
@@ -66,35 +68,35 @@
       "pairs": 16,
       "reference_wins": 16,
       "win_rate": 1.0,
-      "mean_delta": 0.1915954242161446,
+      "mean_delta": 0.19430900965031825,
       "class": "hygiene"
     },
     "metadata_stripped": {
       "pairs": 16,
       "reference_wins": 16,
       "win_rate": 1.0,
-      "mean_delta": 0.24813988095238096,
+      "mean_delta": 0.26424632352941174,
       "class": "hygiene"
     },
     "neighbour_span": {
       "pairs": 7,
       "reference_wins": 6,
       "win_rate": 0.8571428571428571,
-      "mean_delta": 0.09268707482993198,
+      "mean_delta": 0.0654761904761905,
       "class": "semantic"
     },
     "page_dump": {
       "pairs": 14,
-      "reference_wins": 12,
-      "win_rate": 0.8571428571428571,
-      "mean_delta": 0.07900021270960744,
+      "reference_wins": 13,
+      "win_rate": 0.9285714285714286,
+      "mean_delta": 0.07173830794770268,
       "class": "hygiene"
     },
     "paraphrase": {
       "pairs": 16,
       "reference_wins": 16,
       "win_rate": 1.0,
-      "mean_delta": 0.8571460194542398,
+      "mean_delta": 0.9067783723954163,
       "class": "hygiene"
     }
   },
@@ -134,17 +136,17 @@
     "eligibility_supported": {
       "weight": 2.0,
       "weight_share": 0.16666666666666666,
-      "reference_mean": 0.5625,
-      "distractor_mean": 0.4057971014492754,
-      "discrimination": 0.1567028985507246,
-      "scored_on_candidates": 85,
+      "reference_mean": 0.8181818181818182,
+      "distractor_mean": 0.5681818181818182,
+      "discrimination": 0.25,
+      "scored_on_candidates": 55,
       "by_kind_mean": {
         "fragment": 0.0,
-        "metadata_stripped": 0.5625,
-        "neighbour_span": 0.14285714285714285,
-        "page_dump": 0.6428571428571429,
-        "paraphrase": 0.5625,
-        "reference": 0.5625
+        "metadata_stripped": 0.8181818181818182,
+        "neighbour_span": 0.2,
+        "page_dump": 0.875,
+        "paraphrase": 0.8888888888888888,
+        "reference": 0.8181818181818182
       }
     },
     "metadata_complete": {
@@ -316,7 +318,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Quote is truncated and only states 'An organisation must not transfer any'; it does not specify whether the transfer is cross-border, nor any conditions such as consent, adequacy, ap"
+                "detail": "[independent_llm] The quote only states a prohibition on transfer without specifying cross-border scope, data type, or conditions.; No explicit element of Pillar 6 or 7 is fully established by the quo"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1072,7 +1074,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] The quote is an incomplete fragment; 'must not: (a) hold the records, or take' does not explicitly specify any element of Pillars 6 or 7, such as domestic processing, local retention"
+                "detail": "[independent_llm] Quote is an incomplete fragment; no complete legal element is established.; Prohibition on holding records lacks domestic location, retention duration, transfer, or safeguards contex"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1114,14 +1116,14 @@
           "is_reference": false,
           "quote_chars": 1442,
           "quote_preview": "Section 77  Requirement not to hold or take records outside Australia\n\n(1) The System Operator, a registered repository operator, a registered portal operator o",
-          "proxy_total": 0.7083333333333334,
+          "proxy_total": 0.85,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.10694444444444444,
           "proxy": {
-            "total": 0.708333,
+            "total": 0.85,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -1134,11 +1136,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Section 77(1)"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
               },
               "single_provision": {
                 "value": 0.0,
@@ -1161,7 +1158,9 @@
                 "detail": "sectoral"
               }
             },
-            "notes": []
+            "notes": [
+              "eligibility verifier returned no judgement \u2014 the term is dropped from the objective rather than scored 0.0"
+            ]
           },
           "oracle": {
             "total": 0.0,
@@ -1205,11 +1204,6 @@
                 "weight": 2.0,
                 "detail": "Section 77(1)"
               },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Verifier did not ground the candidate indicator in an exact evidence span"
-              },
               "single_provision": {
                 "value": 1.0,
                 "weight": 1.5,
@@ -1231,7 +1225,9 @@
                 "detail": "sectoral"
               }
             },
-            "notes": []
+            "notes": [
+              "eligibility verifier returned no judgement \u2014 the term is dropped from the objective rather than scored 0.0"
+            ]
           },
           "oracle": {
             "total": 0.55,
@@ -1316,14 +1312,14 @@
           "is_reference": false,
           "quote_chars": 650,
           "quote_preview": "(2) Despite subsection (1), the System Operator is authorised, for the purposes of the operation or administration of the My Health Record system: (a) to hold a",
-          "proxy_total": 0.8333333333333334,
+          "proxy_total": 1.0,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.3233830845771144,
           "proxy": {
-            "total": 0.833333,
+            "total": 1.0,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -1336,11 +1332,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Section 77(1)"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1363,7 +1354,9 @@
                 "detail": "sectoral"
               }
             },
-            "notes": []
+            "notes": [
+              "eligibility verifier returned no judgement \u2014 the term is dropped from the objective rather than scored 0.0"
+            ]
           },
           "oracle": {
             "total": 0.0,
@@ -1389,9 +1382,9 @@
         {
           "kind": "page_dump",
           "reference_proxy": 1.0,
-          "distractor_proxy": 0.7083333333333334,
+          "distractor_proxy": 0.85,
           "reference_wins": true,
-          "delta": 0.29166666666666663
+          "delta": 0.15000000000000002
         },
         {
           "kind": "paraphrase",
@@ -1410,9 +1403,9 @@
         {
           "kind": "neighbour_span",
           "reference_proxy": 1.0,
-          "distractor_proxy": 0.8333333333333334,
+          "distractor_proxy": 1.0,
           "reference_wins": true,
-          "delta": 0.16666666666666663
+          "delta": 0.0
         }
       ],
       "hygiene_top1": true,
@@ -1457,7 +1450,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] The quote is an incomplete verb phrase about holding/taking records outside Australia and lacks normative language such as 'must', 'must not', or 'shall', so it does not explicitly e"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1523,7 +1516,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Quote does not establish domestic processing, storage, or infrastructure requirements.; Quote does not establish cross-border transfer conditions or agreements.; Quote does not estab"
+                "detail": "[independent_llm] Quote is a fragment and does not establish any domestic-processing, data-localisation, cross-border-transfer, retention-period, DPO, or government-access requirement.; \u2018hold the reco"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1589,7 +1582,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] not supported"
               },
               "single_provision": {
                 "value": 0.0,
@@ -1659,7 +1652,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] Quote is a fragment and does not explicitly state a prohibition or requirement; 'outside Australia' alone does not establish a ban on taking/processing data abroad.; No domestic-proc"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1725,7 +1718,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] The quote is an incomplete verb phrase about holding/taking records outside Australia and lacks normative language such as 'must', 'must not', or 'shall', so it does not explicitly e"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1791,7 +1784,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] 6.1 not supported: quote conditionally authorizes cross-border transfers rather than explicitly banning them or requiring domestic processing.; 6.2/6.3 no domestic storage, retention"
+                "detail": "[independent_llm] 6.2 not established: quote imposes no domestic copy/hold/storage requirement.; 6.3 not established: no local data-centre/server infrastructure requirement or explicit absence is stat"
               },
               "single_provision": {
                 "value": 1.0,
@@ -1974,7 +1967,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] The quote is a fragment and does not establish any provision-level measure.; Mere mention of 'personal' data without operative legal elements is insufficient.; No indicator's element"
+                "detail": "[independent_llm] The quote is only a fragment and does not establish any explicit requirement or prohibition.; No indicator's legal elements are present in the provided text."
               },
               "single_provision": {
                 "value": 1.0,
@@ -2016,14 +2009,14 @@
           "is_reference": false,
           "quote_chars": 549,
           "quote_preview": "Privacy Act 1988\n\nAustralian Privacy Principle 8\u2014cross-border disclosure of personal information\n\n8.1 Before an APP entity discloses personal information about ",
-          "proxy_total": 0.9249999999999999,
+          "proxy_total": 0.9099999999999999,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 0.8171846435100548,
           "proxy": {
-            "total": 0.925,
+            "total": 0.91,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -2036,11 +2029,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Australian Privacy Principle 8.1"
-              },
-              "eligibility_supported": {
-                "value": 1.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] eligible for this indicator"
               },
               "single_provision": {
                 "value": 0.4,
@@ -2063,7 +2051,9 @@
                 "detail": "horizontal"
               }
             },
-            "notes": []
+            "notes": [
+              "eligibility verifier returned no judgement \u2014 the term is dropped from the objective rather than scored 0.0"
+            ]
           },
           "oracle": {
             "total": 0.85,
@@ -2108,9 +2098,9 @@
                 "detail": "Australian Privacy Principle 8.1"
               },
               "eligibility_supported": {
-                "value": 0.0,
+                "value": 1.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] eligible for this indicator"
               },
               "single_provision": {
                 "value": 0.815301,
@@ -2225,9 +2215,9 @@
         {
           "kind": "page_dump",
           "reference_proxy": 0.9807377049180328,
-          "distractor_proxy": 0.9249999999999999,
+          "distractor_proxy": 0.9099999999999999,
           "reference_wins": true,
-          "delta": 0.05573770491803287
+          "delta": 0.07073770491803288
         },
         {
           "kind": "paraphrase",
@@ -2664,7 +2654,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Verifier did not ground the candidate indicator in an exact evidence span"
+                "detail": "[independent_llm] Quote establishes only an adequacy-of-protection condition, not a ban on processing abroad or a domestic-processing requirement.; No domestic storage, local infrastructure, or data-c"
               },
               "single_provision": {
                 "value": 1.0,
@@ -2730,7 +2720,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Quote is an incomplete fragment and does not establish any provision-level legal element.; The phrase 'adequate level of' is a topic reference to adequacy but does not explicitly est"
+                "detail": "[independent_llm] The quote is an incomplete fragment that does not establish any legal element.; Mention of 'adequate level of' is topic-level language, not a provision-level measure.; No indicator u"
               },
               "single_provision": {
                 "value": 1.0,
@@ -2772,14 +2762,14 @@
           "is_reference": false,
           "quote_chars": 717,
           "quote_preview": "Section 129  Transfer of personal data to places outside Malaysia\n\n(1) A data user shall not transfer any personal data of a data subject to a place outside Mal",
-          "proxy_total": 0.875,
+          "proxy_total": 0.85,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.24369747899159663,
           "proxy": {
-            "total": 0.875,
+            "total": 0.85,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -2792,11 +2782,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Section 129(2)"
-              },
-              "eligibility_supported": {
-                "value": 1.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] eligible for this indicator"
               },
               "single_provision": {
                 "value": 0.0,
@@ -2819,7 +2804,9 @@
                 "detail": "horizontal"
               }
             },
-            "notes": []
+            "notes": [
+              "eligibility verifier returned no judgement \u2014 the term is dropped from the objective rather than scored 0.0"
+            ]
           },
           "oracle": {
             "total": 0.0,
@@ -2863,11 +2850,6 @@
                 "weight": 2.0,
                 "detail": "Section 129(2)"
               },
-              "eligibility_supported": {
-                "value": 1.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] eligible for this indicator"
-              },
               "single_provision": {
                 "value": 1.0,
                 "weight": 1.5,
@@ -2889,7 +2871,9 @@
                 "detail": "horizontal"
               }
             },
-            "notes": []
+            "notes": [
+              "eligibility verifier returned no judgement \u2014 the term is dropped from the objective rather than scored 0.0"
+            ]
           },
           "oracle": {
             "total": 0.55,
@@ -2932,7 +2916,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Verifier did not ground the candidate indicator in an exact evidence span"
+                "detail": "[independent_llm] Quote establishes only an adequacy-of-protection condition, not a ban on processing abroad or a domestic-processing requirement.; No domestic storage, local infrastructure, or data-c"
               },
               "single_provision": {
                 "value": 1.0,
@@ -3047,9 +3031,9 @@
         {
           "kind": "page_dump",
           "reference_proxy": 0.8333333333333334,
-          "distractor_proxy": 0.875,
+          "distractor_proxy": 0.85,
           "reference_wins": false,
-          "delta": -0.04166666666666663
+          "delta": -0.016666666666666607
         },
         {
           "kind": "paraphrase",
@@ -3091,14 +3075,14 @@
           "is_reference": true,
           "quote_chars": 43,
           "quote_preview": "Personal Data Protection Act 2010 (Act 709)",
-          "proxy_total": 0.6190476190476191,
+          "proxy_total": 0.7647058823529411,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.619048,
+            "total": 0.764706,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -3111,11 +3095,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Act 709"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote is only the title of a statute and contains no substantive provisions, obligations, or prohibitions.; No indicators under Pillars 6 or 7 are explicitly established by the quote"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -3154,14 +3133,14 @@
           "is_reference": false,
           "quote_chars": 38,
           "quote_preview": "Personal Data Protection Act 2010 (Act",
-          "proxy_total": 0.6190476190476191,
+          "proxy_total": 0.7647058823529411,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 0.8837209302325582,
           "proxy": {
-            "total": 0.619048,
+            "total": 0.764706,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -3174,11 +3153,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Act 709"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote only names 'Personal Data Protection Act 2010 (Act' and contains no provision-level measures.; Topic words alone are insufficient to establish any indicator."
               },
               "not_truncated": {
                 "value": 1.0,
@@ -3242,11 +3216,6 @@
                 "weight": 2.0,
                 "detail": "Act 709"
               },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote only names the statute; it does not establish any provision-level requirement or prohibition.; Topic words such as 'Data Protection' are insufficient to establish any Pilla"
-              },
               "not_truncated": {
                 "value": 0.0,
                 "weight": 1.5,
@@ -3284,14 +3253,14 @@
           "is_reference": false,
           "quote_chars": 43,
           "quote_preview": "Personal Data Protection Act 2010 (Act 709)",
-          "proxy_total": 0.47619047619047616,
+          "proxy_total": 0.5882352941176471,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.6499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.47619,
+            "total": 0.588235,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -3304,11 +3273,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "(none)"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote is only the title of a statute and contains no substantive provisions, obligations, or prohibitions.; No indicators under Pillars 6 or 7 are explicitly established by the quote"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -3346,29 +3310,29 @@
       "pairs": [
         {
           "kind": "fragment",
-          "reference_proxy": 0.6190476190476191,
-          "distractor_proxy": 0.6190476190476191,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.7647058823529411,
           "reference_wins": true,
           "delta": 0.0
         },
         {
           "kind": "paraphrase",
-          "reference_proxy": 0.6190476190476191,
+          "reference_proxy": 0.7647058823529411,
           "distractor_proxy": 0.0,
           "reference_wins": true,
-          "delta": 0.6190476190476191
+          "delta": 0.7647058823529411
         },
         {
           "kind": "metadata_stripped",
-          "reference_proxy": 0.6190476190476191,
-          "distractor_proxy": 0.47619047619047616,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.5882352941176471,
           "reference_wins": true,
-          "delta": 0.1428571428571429
+          "delta": 0.17647058823529405
         }
       ],
       "hygiene_top1": true,
       "full_top1": true,
-      "reference_proxy": 0.6190476190476191,
+      "reference_proxy": 0.7647058823529411,
       "reference_oracle": 0.8499999999999999
     },
     {
@@ -3516,14 +3480,14 @@
           "is_reference": false,
           "quote_chars": 490,
           "quote_preview": "RDTII 2.1 Singapore economy assessment excerpt\n\nInfrastructure requirements: Singapore does not implement a local data centre, local server, or other physical i",
-          "proxy_total": 0.5916666666666667,
+          "proxy_total": 0.7583333333333333,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.22381930184804927,
           "proxy": {
-            "total": 0.591667,
+            "total": 0.758333,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -3538,9 +3502,9 @@
                 "detail": "Infrastructure requirements"
               },
               "eligibility_supported": {
-                "value": 0.0,
+                "value": 1.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] eligible for this indicator"
               },
               "single_provision": {
                 "value": 0.4,
@@ -3791,9 +3755,9 @@
         {
           "kind": "page_dump",
           "reference_proxy": 0.8333333333333334,
-          "distractor_proxy": 0.5916666666666667,
+          "distractor_proxy": 0.7583333333333333,
           "reference_wins": true,
-          "delta": 0.2416666666666667
+          "delta": 0.07500000000000007
         },
         {
           "kind": "paraphrase",
@@ -3835,14 +3799,14 @@
           "is_reference": true,
           "quote_chars": 140,
           "quote_preview": "Singapore has joined trade agreements with binding commitments to cross-border transfer and free flow of data, including the CPTPP and RCEP.",
-          "proxy_total": 0.6666666666666666,
+          "proxy_total": 0.8333333333333334,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.666667,
+            "total": 0.833333,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -3857,9 +3821,9 @@
                 "detail": "Binding data-transfer commitments"
               },
               "eligibility_supported": {
-                "value": 0.0,
+                "value": 1.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] eligible for this indicator"
               },
               "single_provision": {
                 "value": 1.0,
@@ -3925,7 +3889,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Quote does not establish any provision-level legal element for Pillar 6 or Pillar 7.; Merely states that Singapore joined trade agreements; no specific data protection, cybersecurity"
+                "detail": "[independent_llm] Quote does not specify any legal measure or requirement related to data localization, cross-border transfers, data protection, cybersecurity, retention, DPO appointment, or governmen"
               },
               "single_provision": {
                 "value": 1.0,
@@ -4103,14 +4067,14 @@
           "is_reference": false,
           "quote_chars": 140,
           "quote_preview": "Singapore has joined trade agreements with binding commitments to cross-border transfer and free flow of data, including the CPTPP and RCEP.",
-          "proxy_total": 0.5416666666666666,
+          "proxy_total": 0.7083333333333334,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.6499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.541667,
+            "total": 0.708333,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -4125,9 +4089,9 @@
                 "detail": "(none)"
               },
               "eligibility_supported": {
-                "value": 0.0,
+                "value": 1.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] Independent eligibility verifier failed: ExtractionError"
+                "detail": "[independent_llm] eligible for this indicator"
               },
               "single_provision": {
                 "value": 1.0,
@@ -4193,7 +4157,7 @@
               "eligibility_supported": {
                 "value": 0.0,
                 "weight": 2.0,
-                "detail": "[independent_llm] No evidence addressing data localisation or domestic processing (6.1-6.4) or cross-border data flow agreements (6.5).; No evidence addressing personal-data protection framework (7.1)"
+                "detail": "[independent_llm] No data localization, domestic processing, retention, or cross-border transfer conditions are mentioned.; No personal data protection framework is mentioned.; No retention period, DP"
               },
               "single_provision": {
                 "value": 1.0,
@@ -4234,43 +4198,43 @@
       "pairs": [
         {
           "kind": "fragment",
-          "reference_proxy": 0.6666666666666666,
+          "reference_proxy": 0.8333333333333334,
           "distractor_proxy": 0.5416666666666666,
           "reference_wins": true,
-          "delta": 0.125
+          "delta": 0.29166666666666674
         },
         {
           "kind": "page_dump",
-          "reference_proxy": 0.6666666666666666,
+          "reference_proxy": 0.8333333333333334,
           "distractor_proxy": 0.7583333333333333,
-          "reference_wins": false,
-          "delta": -0.09166666666666667
+          "reference_wins": true,
+          "delta": 0.07500000000000007
         },
         {
           "kind": "paraphrase",
-          "reference_proxy": 0.6666666666666666,
+          "reference_proxy": 0.8333333333333334,
           "distractor_proxy": 0.0,
           "reference_wins": true,
-          "delta": 0.6666666666666666
+          "delta": 0.8333333333333334
         },
         {
           "kind": "metadata_stripped",
-          "reference_proxy": 0.6666666666666666,
-          "distractor_proxy": 0.5416666666666666,
+          "reference_proxy": 0.8333333333333334,
+          "distractor_proxy": 0.7083333333333334,
           "reference_wins": true,
           "delta": 0.125
         },
         {
           "kind": "neighbour_span",
-          "reference_proxy": 0.6666666666666666,
+          "reference_proxy": 0.8333333333333334,
           "distractor_proxy": 0.6666666666666666,
           "reference_wins": true,
-          "delta": 0.0
+          "delta": 0.16666666666666674
         }
       ],
-      "hygiene_top1": false,
-      "full_top1": false,
-      "reference_proxy": 0.6666666666666666,
+      "hygiene_top1": true,
+      "full_top1": true,
+      "reference_proxy": 0.8333333333333334,
       "reference_oracle": 0.8499999999999999
     },
     {
@@ -4286,14 +4250,14 @@
           "is_reference": true,
           "quote_chars": 100,
           "quote_preview": "Singapore has a dedicated horizontal cybersecurity legal framework under the Cybersecurity Act 2018.",
-          "proxy_total": 0.8095238095238095,
+          "proxy_total": 0.7647058823529411,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.809524,
+            "total": 0.764706,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -4306,11 +4270,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Cybersecurity framework"
-              },
-              "eligibility_supported": {
-                "value": 1.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] eligible for this indicator"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -4349,14 +4308,14 @@
           "is_reference": false,
           "quote_chars": 36,
           "quote_preview": "Singapore has a dedicated horizontal",
-          "proxy_total": 0.47619047619047616,
+          "proxy_total": 0.5882352941176471,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.36,
           "proxy": {
-            "total": 0.47619,
+            "total": 0.588235,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -4369,11 +4328,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Cybersecurity framework"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote is an incomplete fragment ('Singapore has a dedicated horizontal') and does not establish any specific legal element for Pillars 6 or 7.; No indicator's required legal elem"
               },
               "not_truncated": {
                 "value": 0.0,
@@ -4412,14 +4366,14 @@
           "is_reference": false,
           "quote_chars": 490,
           "quote_preview": "RDTII 2.1 Singapore economy assessment excerpt\n\nInfrastructure requirements: Singapore does not implement a local data centre, local server, or other physical i",
-          "proxy_total": 0.8095238095238095,
+          "proxy_total": 0.7647058823529411,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.2053388090349076,
           "proxy": {
-            "total": 0.809524,
+            "total": 0.764706,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -4432,11 +4386,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Cybersecurity framework"
-              },
-              "eligibility_supported": {
-                "value": 1.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] eligible for this indicator"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -4500,11 +4449,6 @@
                 "weight": 2.0,
                 "detail": "Cybersecurity framework"
               },
-              "eligibility_supported": {
-                "value": 1.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] eligible for this indicator"
-              },
               "not_truncated": {
                 "value": 0.0,
                 "weight": 1.5,
@@ -4542,14 +4486,14 @@
           "is_reference": false,
           "quote_chars": 100,
           "quote_preview": "Singapore has a dedicated horizontal cybersecurity legal framework under the Cybersecurity Act 2018.",
-          "proxy_total": 0.6666666666666666,
+          "proxy_total": 0.5882352941176471,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.6499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.666667,
+            "total": 0.588235,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -4562,11 +4506,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "(none)"
-              },
-              "eligibility_supported": {
-                "value": 1.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] eligible for this indicator"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -4605,14 +4544,14 @@
           "is_reference": false,
           "quote_chars": 175,
           "quote_preview": "Binding data-transfer commitments: Singapore has joined trade agreements with binding commitments to cross-border transfer and free flow of data, including the ",
-          "proxy_total": 0.6190476190476191,
+          "proxy_total": 0.7647058823529411,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.4,
           "proxy": {
-            "total": 0.619048,
+            "total": 0.764706,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -4625,11 +4564,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Cybersecurity framework"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] No domestic processing prohibition or domestic-processing requirement (6.1).; No domestic data storage/retention requirement (6.2).; No local data-centre/server infrastructure requir"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -4667,43 +4601,43 @@
       "pairs": [
         {
           "kind": "fragment",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.47619047619047616,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.5882352941176471,
           "reference_wins": true,
-          "delta": 0.33333333333333337
+          "delta": 0.17647058823529405
         },
         {
           "kind": "page_dump",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.8095238095238095,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.7647058823529411,
           "reference_wins": true,
           "delta": 0.0
         },
         {
           "kind": "paraphrase",
-          "reference_proxy": 0.8095238095238095,
+          "reference_proxy": 0.7647058823529411,
           "distractor_proxy": 0.0,
           "reference_wins": true,
-          "delta": 0.8095238095238095
+          "delta": 0.7647058823529411
         },
         {
           "kind": "metadata_stripped",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.6666666666666666,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.5882352941176471,
           "reference_wins": true,
-          "delta": 0.1428571428571429
+          "delta": 0.17647058823529405
         },
         {
           "kind": "neighbour_span",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.6190476190476191,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.7647058823529411,
           "reference_wins": true,
-          "delta": 0.19047619047619047
+          "delta": 0.0
         }
       ],
       "hygiene_top1": true,
       "full_top1": true,
-      "reference_proxy": 0.8095238095238095,
+      "reference_proxy": 0.7647058823529411,
       "reference_oracle": 0.8499999999999999
     },
     {
@@ -5097,14 +5031,14 @@
           "is_reference": true,
           "quote_chars": 33,
           "quote_preview": "Personal Data Protection Act 2012",
-          "proxy_total": 0.8095238095238095,
+          "proxy_total": 1.0,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.809524,
+            "total": 1.0,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -5117,11 +5051,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Section 11"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote contains only the title of a statute, with no provision-level text establishing any indicator.; Principles, objectives, and general statutory references are insufficient withou"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -5160,14 +5089,14 @@
           "is_reference": false,
           "quote_chars": 28,
           "quote_preview": "Personal Data Protection Act",
-          "proxy_total": 0.8095238095238095,
+          "proxy_total": 1.0,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 0.8484848484848485,
           "proxy": {
-            "total": 0.809524,
+            "total": 1.0,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -5180,11 +5109,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Section 11"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote contains only the title of a law, with no provision-level measures or legal elements.; Topic words alone are insufficient to establish any Pillar 6 or 7 indicator."
               },
               "not_truncated": {
                 "value": 1.0,
@@ -5248,11 +5172,6 @@
                 "weight": 2.0,
                 "detail": "Section 11"
               },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote is only a fragment/title-like phrase and contains no provision-level measures.; No explicit requirement, prohibition, retention period, appointment, or access provision is "
-              },
               "not_truncated": {
                 "value": 0.0,
                 "weight": 1.5,
@@ -5290,14 +5209,14 @@
           "is_reference": false,
           "quote_chars": 33,
           "quote_preview": "Personal Data Protection Act 2012",
-          "proxy_total": 0.47619047619047616,
+          "proxy_total": 0.5882352941176471,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.6499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.47619,
+            "total": 0.588235,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -5310,11 +5229,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "(none)"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote contains only the title of a statute, with no provision-level text establishing any indicator.; Principles, objectives, and general statutory references are insufficient withou"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -5352,29 +5266,29 @@
       "pairs": [
         {
           "kind": "fragment",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.8095238095238095,
+          "reference_proxy": 1.0,
+          "distractor_proxy": 1.0,
           "reference_wins": true,
           "delta": 0.0
         },
         {
           "kind": "paraphrase",
-          "reference_proxy": 0.8095238095238095,
+          "reference_proxy": 1.0,
           "distractor_proxy": 0.0,
           "reference_wins": true,
-          "delta": 0.8095238095238095
+          "delta": 1.0
         },
         {
           "kind": "metadata_stripped",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.47619047619047616,
+          "reference_proxy": 1.0,
+          "distractor_proxy": 0.5882352941176471,
           "reference_wins": true,
-          "delta": 0.33333333333333337
+          "delta": 0.4117647058823529
         }
       ],
       "hygiene_top1": true,
       "full_top1": true,
-      "reference_proxy": 0.8095238095238095,
+      "reference_proxy": 1.0,
       "reference_oracle": 0.8499999999999999
     },
     {
@@ -5390,14 +5304,14 @@
           "is_reference": true,
           "quote_chars": 111,
           "quote_preview": "An Act to establish a legal framework for the oversight and maintenance of national cybersecurity in Singapore.",
-          "proxy_total": 0.6190476190476191,
+          "proxy_total": 0.7647058823529411,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.619048,
+            "total": 0.764706,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -5410,11 +5324,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Long title"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote only states the Act's purpose to establish a legal framework for national cybersecurity oversight; it contains no provision-level measures.; No explicit indicator elements for "
               },
               "not_truncated": {
                 "value": 1.0,
@@ -5453,14 +5362,14 @@
           "is_reference": false,
           "quote_chars": 37,
           "quote_preview": "An Act to establish a legal framework",
-          "proxy_total": 0.47619047619047616,
+          "proxy_total": 0.5882352941176471,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.3333333333333333,
           "proxy": {
-            "total": 0.47619,
+            "total": 0.588235,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -5473,11 +5382,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Long title"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote is a generic title/preamble and contains no specific legal provisions.; No elements related to data processing, storage, transfer, protection, cybersecurity, retention, DPO"
               },
               "not_truncated": {
                 "value": 0.0,
@@ -5516,14 +5420,14 @@
           "is_reference": false,
           "quote_chars": 135,
           "quote_preview": "Cybersecurity Act 2018\n\nAn Act to establish a legal framework for the oversight and maintenance of national cybersecurity in Singapore.",
-          "proxy_total": 0.6190476190476191,
+          "proxy_total": 0.7647058823529411,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 0.8283582089552238,
           "proxy": {
-            "total": 0.619048,
+            "total": 0.764706,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -5536,11 +5440,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "Long title"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote only establishes a legal framework for national cybersecurity; it contains no specific provisions on data localisation, cross-border transfers, data protection, retention, DPO,"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -5604,11 +5503,6 @@
                 "weight": 2.0,
                 "detail": "Long title"
               },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote is a purpose/object clause, not a provision-level measure.; It does not specify any data localisation, cross-border transfer, data protection, retention, DPO, or government"
-              },
               "not_truncated": {
                 "value": 0.0,
                 "weight": 1.5,
@@ -5646,14 +5540,14 @@
           "is_reference": false,
           "quote_chars": 111,
           "quote_preview": "An Act to establish a legal framework for the oversight and maintenance of national cybersecurity in Singapore.",
-          "proxy_total": 0.47619047619047616,
+          "proxy_total": 0.5882352941176471,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.6499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.47619,
+            "total": 0.588235,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -5666,11 +5560,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "(none)"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] Quote only states the Act's purpose to establish a legal framework for national cybersecurity oversight; it contains no provision-level measures.; No explicit indicator elements for "
               },
               "not_truncated": {
                 "value": 1.0,
@@ -5708,36 +5597,36 @@
       "pairs": [
         {
           "kind": "fragment",
-          "reference_proxy": 0.6190476190476191,
-          "distractor_proxy": 0.47619047619047616,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.5882352941176471,
           "reference_wins": true,
-          "delta": 0.1428571428571429
+          "delta": 0.17647058823529405
         },
         {
           "kind": "page_dump",
-          "reference_proxy": 0.6190476190476191,
-          "distractor_proxy": 0.6190476190476191,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.7647058823529411,
           "reference_wins": true,
           "delta": 0.0
         },
         {
           "kind": "paraphrase",
-          "reference_proxy": 0.6190476190476191,
+          "reference_proxy": 0.7647058823529411,
           "distractor_proxy": 0.0,
           "reference_wins": true,
-          "delta": 0.6190476190476191
+          "delta": 0.7647058823529411
         },
         {
           "kind": "metadata_stripped",
-          "reference_proxy": 0.6190476190476191,
-          "distractor_proxy": 0.47619047619047616,
+          "reference_proxy": 0.7647058823529411,
+          "distractor_proxy": 0.5882352941176471,
           "reference_wins": true,
-          "delta": 0.1428571428571429
+          "delta": 0.17647058823529405
         }
       ],
       "hygiene_top1": true,
       "full_top1": true,
-      "reference_proxy": 0.6190476190476191,
+      "reference_proxy": 0.7647058823529411,
       "reference_oracle": 0.8499999999999999
     },
     {
@@ -6204,14 +6093,14 @@
           "is_reference": true,
           "quote_chars": 16,
           "quote_preview": "Privacy Act 1988",
-          "proxy_total": 0.8095238095238095,
+          "proxy_total": 1.0,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.8499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.809524,
+            "total": 1.0,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -6224,11 +6113,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Australian Privacy Principle 8.1"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote contains only the statute title 'Privacy Act 1988' and no provision-level language establishing any indicator.; No explicit legal elements for Pillars 6 or 7 are present."
               },
               "not_truncated": {
                 "value": 1.0,
@@ -6267,14 +6151,14 @@
           "is_reference": false,
           "quote_chars": 11,
           "quote_preview": "Privacy Act",
-          "proxy_total": 0.8095238095238095,
+          "proxy_total": 1.0,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.6875,
           "proxy": {
-            "total": 0.809524,
+            "total": 1.0,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -6287,11 +6171,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Australian Privacy Principle 8.1"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote contains only the statute title 'Privacy Act', with no substantive legal provisions.; Topic words alone are insufficient to establish any indicator under Pillars 6 or 7."
               },
               "not_truncated": {
                 "value": 1.0,
@@ -6330,14 +6209,14 @@
           "is_reference": false,
           "quote_chars": 549,
           "quote_preview": "Privacy Act 1988\n\nAustralian Privacy Principle 8\u2014cross-border disclosure of personal information\n\n8.1 Before an APP entity discloses personal information about ",
-          "proxy_total": 0.8095238095238095,
+          "proxy_total": 1.0,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.0,
           "oracle_matched": false,
           "evidence_similarity": 0.029250457038391225,
           "proxy": {
-            "total": 0.809524,
+            "total": 1.0,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -6350,11 +6229,6 @@
                 "value": 1.0,
                 "weight": 2.0,
                 "detail": "Australian Privacy Principle 8.1"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] 6.1 not supported: no ban on overseas processing or domestic-processing requirement.; 6.2 not supported: no requirement to hold, store, or retain a copy of data domestically.; 6.3 no"
               },
               "not_truncated": {
                 "value": 1.0,
@@ -6373,7 +6247,8 @@
               }
             },
             "notes": [
-              "7.1 is an existence-type indicator \u2014 the instrument's title is valid evidence, so the provision-shape terms are not scored"
+              "7.1 is an existence-type indicator \u2014 the instrument's title is valid evidence, so the provision-shape terms are not scored",
+              "eligibility verifier returned no judgement \u2014 the term is dropped from the objective rather than scored 0.0"
             ]
           },
           "oracle": {
@@ -6420,11 +6295,6 @@
                 "weight": 2.0,
                 "detail": "Australian Privacy Principle 8.1"
               },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote contains only a statute title and does not establish any provision-level legal elements.; No indicators from Pillars 6 or 7 are explicitly addressed in the quoted text."
-              },
               "not_truncated": {
                 "value": 0.0,
                 "weight": 1.5,
@@ -6462,14 +6332,14 @@
           "is_reference": false,
           "quote_chars": 16,
           "quote_preview": "Privacy Act 1988",
-          "proxy_total": 0.47619047619047616,
+          "proxy_total": 0.5882352941176471,
           "proxy_gates_passed": true,
           "proxy_failed_gates": [],
           "oracle_total": 0.6499999999999999,
           "oracle_matched": true,
           "evidence_similarity": 1.0,
           "proxy": {
-            "total": 0.47619,
+            "total": 0.588235,
             "passed_gates": true,
             "failed_gates": [],
             "components": {
@@ -6482,11 +6352,6 @@
                 "value": 0.0,
                 "weight": 2.0,
                 "detail": "(none)"
-              },
-              "eligibility_supported": {
-                "value": 0.0,
-                "weight": 2.0,
-                "detail": "[independent_llm] The quote contains only the statute title 'Privacy Act 1988' and no provision-level language establishing any indicator.; No explicit legal elements for Pillars 6 or 7 are present."
               },
               "not_truncated": {
                 "value": 1.0,
@@ -6524,36 +6389,36 @@
       "pairs": [
         {
           "kind": "fragment",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.8095238095238095,
+          "reference_proxy": 1.0,
+          "distractor_proxy": 1.0,
           "reference_wins": true,
           "delta": 0.0
         },
         {
           "kind": "page_dump",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.8095238095238095,
+          "reference_proxy": 1.0,
+          "distractor_proxy": 1.0,
           "reference_wins": true,
           "delta": 0.0
         },
         {
           "kind": "paraphrase",
-          "reference_proxy": 0.8095238095238095,
+          "reference_proxy": 1.0,
           "distractor_proxy": 0.0,
           "reference_wins": true,
-          "delta": 0.8095238095238095
+          "delta": 1.0
         },
         {
           "kind": "metadata_stripped",
-          "reference_proxy": 0.8095238095238095,
-          "distractor_proxy": 0.47619047619047616,
+          "reference_proxy": 1.0,
+          "distractor_proxy": 0.5882352941176471,
           "reference_wins": true,
-          "delta": 0.33333333333333337
+          "delta": 0.4117647058823529
         }
       ],
       "hygiene_top1": true,
       "full_top1": true,
-      "reference_proxy": 0.8095238095238095,
+      "reference_proxy": 1.0,
       "reference_oracle": 0.8499999999999999
     }
   ],

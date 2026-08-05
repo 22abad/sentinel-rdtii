@@ -1,10 +1,14 @@
 """SENTINEL TUI — spotify-tui-style dashboard over the backend API.
 
-Launched via `stn tui`. Sidebar (1-4) switches panes:
+Launched via `stn tui`. Sidebar (1-5) switches panes:
   1 Documents — knowledge-base table (r to refresh)
   2 Discovery — type "SGP data localisation" and hit Enter
   3 Extract   — URL or pasted legal text -> indicator mappings (classic Source->Audit)
   4 RAG chat  — ask the knowledge base, answers land in the log
+  5 RLVR lab  — the proxy-reward measurement: headline rates, per-distractor
+                breakdown, component discrimination and a per-case drill-down.
+                Terminal twin of the browser view at /api/rlvr/ui; `d` opens the
+                detail sections, selecting a row opens that case.
 """
 
 from __future__ import annotations
@@ -44,6 +48,18 @@ from textual.widgets import (
 
 from .main import BANNER
 from .rag_render import render_answer
+from .rlvr_render import (
+    CANDIDATE_COLUMNS,
+    CASE_COLUMNS,
+    candidate_row,
+    case_row,
+    render_candidate,
+    render_case,
+    render_live_summary,
+    render_runs,
+    render_sections,
+    render_summary,
+)
 from .theme import load_config, rebind_bindings
 
 # Processors the extract pane can request; blank = backend default
@@ -56,6 +72,7 @@ PANES = [
     ("discovery", "Discovery"),
     ("extract", "Extract"),
     ("rag", "Chat"),
+    ("rlvr", "RLVR lab"),
 ]
 
 # SENTINEL palette — the app's emerald/teal by default, user-overridable via
@@ -417,6 +434,53 @@ class ReportScreen(ModalScreen):
             return
         self.app._copy(_row_plaintext(self._kind, self._mapping))
         self.app.notify("Report copied to clipboard", timeout=2)
+
+
+class RlvrDetailScreen(ModalScreen):
+    """Inner window for the RLVR lab — a case drill-down or the detail sections.
+
+    Deliberately a dumb viewer over pre-rendered markup: `rlvr_render` decides
+    what the numbers look like so the browser view and this one cannot drift,
+    and so the layout stays testable without a terminal.
+    """
+
+    BINDINGS = [
+        ("escape", "dismiss", "Close"),
+        ("q", "dismiss", "Close"),
+        ("c", "copy_detail", "Copy"),
+    ]
+
+    CSS = """
+    RlvrDetailScreen {
+        align: center middle;
+    }
+    #rlvr-window {
+        width: 90%;
+        height: 86%;
+        border: solid $primary;
+        background: $panel;
+        padding: 1 2;
+    }
+    #rlvr-window Static {
+        color: #bec7c3;
+    }
+    """
+
+    def __init__(self, title: str, markup: str) -> None:
+        super().__init__()
+        self._title = title
+        self._markup = markup
+
+    def compose(self) -> ComposeResult:
+        with VerticalScroll(id="rlvr-window"):
+            yield Static(
+                f"[b {_P}]{escape(self._title)}[/]\n\n{self._markup}", id="rlvr-detail"
+            )
+
+    def action_copy_detail(self) -> None:
+        text = Text.from_markup(self._markup).plain
+        self.app._copy(text)
+        self.app.notify("Copied to clipboard", timeout=2)
 
 
 class BlockBar(Widget):
@@ -793,10 +857,13 @@ class SentinelTUI(App):
         ("2", "pane('discovery')", "Discovery"),
         ("3", "pane('extract')", "Extract"),
         ("4", "pane('rag')", "Chat"),
+        ("5", "pane('rlvr')", "RLVR lab"),
         ("ctrl+r", "run_extract", "Run extract"),
         ("c", "copy_result", "Copy row"),
         ("s", "sort_extract", "Sort"),
         ("u", "sync_doc", "Save to DB"),
+        ("d", "rlvr_sections", "RLVR detail"),
+        ("t", "rlvr_toggle", "Study/Runs"),
     ]
     BINDINGS = rebind_bindings(DEFAULT_BINDINGS, THEME_CONFIG.key_direct)
     # action -> human label, for the which-key popup rows.
@@ -822,6 +889,19 @@ class SentinelTUI(App):
         # whole store and unrelated economies out-rank the answer).
         self._scope_doc_id: str | None = None
         self._scope_label: str = ""
+        # RLVR lab: the latest measurement, its run history, and the cases the
+        # table rows point at (row index -> case, same as _extract_rows).
+        self._rlvr_report: dict = {}
+        self._rlvr_history: list[dict] = []
+        self._rlvr_cases: list[dict] = []
+        # The lab shows one of two DIFFERENT artifacts. "study" is the frozen
+        # golden-set measurement; "runs" is what the extractor actually produced.
+        # Never merged into one table — a top-1 rate from the study next to live
+        # candidates would read as if the live rows had been scored against an
+        # answer key, and they have not been.
+        self._rlvr_view: str = "study"
+        self._rlvr_live: dict = {}
+        self._rlvr_records: list[dict] = []
 
     # ── page headers ─────────────────────────────────────────────────────
 
@@ -942,6 +1022,17 @@ class SentinelTUI(App):
                     )
                     yield VerticalScroll(id="rag-log")
                     yield Input(placeholder=self.RAG_PLACEHOLDER, id="rag-input")
+                with Vertical(id="rlvr"):
+                    yield Static(
+                        self._page_title(
+                            "RLVR lab",
+                            "t study/runs · r refresh · d detail · row = drill-down",
+                        ),
+                        classes="page-title",
+                        id="rlvr-title",
+                    )
+                    yield Static("[dim]loading measurement…[/]", id="rlvr-summary")
+                    yield DataTable(id="rlvr-cases")
         yield Footer()
 
     async def on_mount(self) -> None:
@@ -954,6 +1045,9 @@ class SentinelTUI(App):
         ext = self.query_one("#extract-table", DataTable)
         self._extract_col_keys = list(ext.add_columns(*[c[0] for c in EXTRACT_COLS]))
         ext.cursor_type = "row"  # row select opens the reasoning report
+        lab = self.query_one("#rlvr-cases", DataTable)
+        lab.add_columns(*CASE_COLUMNS)
+        lab.cursor_type = "row"  # row select opens the case drill-down
         await self.query_one("#rag-log", VerticalScroll).mount(
             Static(
                 "[dim]Select a document to scope the chat · /all clears scope"
@@ -1096,6 +1190,11 @@ class SentinelTUI(App):
 
     def action_pane(self, pane_id: str) -> None:
         self.query_one("#switcher", ContentSwitcher).current = pane_id
+        # Load the measurement on first visit, not at startup: it is a debug
+        # view most sessions never open, and it should not cost a request (or a
+        # visible error when the backend is down) for everyone else.
+        if pane_id == "rlvr" and not self._rlvr_report:
+            self._load_rlvr()
 
     async def action_run_extract(self) -> None:
         self.action_pane("extract")
@@ -1158,9 +1257,165 @@ class SentinelTUI(App):
             set_status("failed")
             self.notify(f"{filename}: {exc}", severity="error", timeout=4)
 
+    # ── RLVR dataset lab ─────────────────────────────────────────────────
+
+    @work(exclusive=True, group="load-rlvr")
+    async def _load_rlvr(self) -> None:
+        """Pull the latest measurement + run history from the backend.
+
+        Mirrors the browser view at /api/rlvr/ui. History is best-effort: a
+        first-ever run has a report but no prior runs, and that must render as
+        an empty history rather than an error over the whole pane.
+        """
+        summary = self.query_one("#rlvr-summary", Static)
+        table = self.query_one("#rlvr-cases", DataTable)
+        try:
+            async with self._client(timeout=20.0) as client:
+                response = await client.get("/api/rlvr/report")
+                if response.status_code == 404:
+                    # No report yet is a normal state, not a failure — say what
+                    # to run rather than showing a bare error.
+                    detail = ""
+                    try:
+                        detail = str(response.json().get("detail") or "")
+                    except Exception:  # noqa: BLE001 — non-JSON body
+                        pass
+                    self._rlvr_report = {}
+                    self._rlvr_cases = []
+                    table.clear()
+                    summary.update(
+                        "[yellow]No measurement report yet.[/]\n[dim]"
+                        + escape(detail or "Run `python3 scripts/rlvr_measure.py` (offline, free).")
+                        + "[/]"
+                    )
+                    return
+                response.raise_for_status()
+                report = response.json()
+                history: list[dict] = []
+                try:
+                    hist_res = await client.get("/api/rlvr/history")
+                    if hist_res.status_code == 200:
+                        history = hist_res.json().get("runs", []) or []
+                except httpx.HTTPError:
+                    pass  # history is optional context, never the headline
+        except httpx.HTTPError as exc:
+            summary.update(f"[red]backend unreachable[/] [dim]{escape(str(exc))}[/]")
+            return
+
+        self._rlvr_report = report
+        self._rlvr_history = history
+        self._rlvr_cases = list(report.get("cases") or [])
+        summary.update(render_summary(report))
+        table.clear()
+        for case in self._rlvr_cases:
+            table.add_row(*case_row(case))
+
+    @work(exclusive=True, group="load-rlvr-live")
+    async def _load_rlvr_live(self) -> None:
+        """Pull the LIVE extraction candidates (the trajectory log)."""
+        summary = self.query_one("#rlvr-summary", Static)
+        table = self.query_one("#rlvr-cases", DataTable)
+        try:
+            async with self._client(timeout=20.0) as client:
+                response = await client.get("/api/rlvr/trajectories", params={"limit": 300})
+                if response.status_code == 404:
+                    detail = ""
+                    try:
+                        detail = str(response.json().get("detail") or "")
+                    except Exception:  # noqa: BLE001 — non-JSON body
+                        pass
+                    self._rlvr_live = {}
+                    self._rlvr_records = []
+                    table.clear()
+                    summary.update(
+                        "[yellow]No extraction candidates logged yet.[/]\n[dim]"
+                        + escape(detail or "Run an extraction with trajectory logging on.")
+                        + "[/]"
+                    )
+                    return
+                response.raise_for_status()
+                payload = response.json()
+        except httpx.HTTPError as exc:
+            summary.update(f"[red]backend unreachable[/] [dim]{escape(str(exc))}[/]")
+            return
+
+        self._rlvr_live = payload
+        self._rlvr_records = list(payload.get("records") or [])
+        summary.update(
+            render_live_summary(payload) + "\n\n" + render_runs(payload)
+        )
+        table.clear()
+        for record in self._rlvr_records:
+            table.add_row(*candidate_row(record))
+
+    def _rlvr_columns(self) -> None:
+        """Rebuild the table's columns for the active view.
+
+        DataTable keeps its columns across clear(); the two views have different
+        shapes, so switching without this leaves live candidates rendered under
+        the golden study's headers.
+        """
+        table = self.query_one("#rlvr-cases", DataTable)
+        table.clear(columns=True)
+        table.add_columns(
+            *(CANDIDATE_COLUMNS if self._rlvr_view == "runs" else CASE_COLUMNS)
+        )
+
+    def action_rlvr_toggle(self) -> None:
+        """Swap between the golden study and the live extraction log."""
+        if self.query_one("#switcher", ContentSwitcher).current != "rlvr":
+            return
+        self._rlvr_view = "runs" if self._rlvr_view == "study" else "study"
+        self._rlvr_columns()
+        self.query_one("#rlvr-title", Static).update(
+            self._page_title(
+                "RLVR lab — live runs" if self._rlvr_view == "runs"
+                else "RLVR lab — golden study",
+                "t study/runs · r refresh · d detail · row = drill-down",
+            )
+        )
+        if self._rlvr_view == "runs":
+            self._load_rlvr_live()
+        else:
+            self.query_one("#rlvr-summary", Static).update(render_summary(self._rlvr_report))
+            table = self.query_one("#rlvr-cases", DataTable)
+            table.clear()
+            for case in self._rlvr_cases:
+                table.add_row(*case_row(case))
+
+    def action_rlvr_sections(self) -> None:
+        """The below-the-fold sections: distractors, components, config, history."""
+        if self.query_one("#switcher", ContentSwitcher).current != "rlvr":
+            return
+        if self._rlvr_view == "runs":
+            if not self._rlvr_live:
+                self.notify("No live candidates loaded yet.", severity="warning", timeout=3)
+                return
+            self.push_screen(
+                RlvrDetailScreen("Extraction runs", render_runs(self._rlvr_live))
+            )
+            return
+        if not self._rlvr_report:
+            self.notify("No measurement loaded yet.", severity="warning", timeout=3)
+            return
+        self.push_screen(
+            RlvrDetailScreen(
+                "RLVR measurement detail",
+                render_sections(self._rlvr_report, self._rlvr_history),
+            )
+        )
+
     async def action_refresh(self) -> None:
         self._load_status()
         self._load_docs()
+        if self.query_one("#switcher", ContentSwitcher).current == "rlvr":
+            # Live candidates change on every extraction, so `r` there means
+            # "show me what just ran" — the study only moves when someone reruns
+            # the measurement by hand.
+            if self._rlvr_view == "runs":
+                self._load_rlvr_live()
+            else:
+                self._load_rlvr()
 
     def _copy(self, text: str) -> None:
         """Copy to clipboard via OSC 52 AND the local OS tool.
@@ -1238,6 +1493,27 @@ class SentinelTUI(App):
             if 0 <= idx < len(self._extract_rows):
                 kind, payload = self._extract_rows[idx]
                 self.push_screen(ReportScreen(kind, payload))
+            return
+        if event.data_table.id == "rlvr-cases":
+            idx = event.cursor_row
+            if self._rlvr_view == "runs":
+                if 0 <= idx < len(self._rlvr_records):
+                    record = self._rlvr_records[idx]
+                    self.push_screen(
+                        RlvrDetailScreen(
+                            f"{record.get('indicator_id', '?')} · "
+                            f"{str(record.get('run_id') or '')[:24]}",
+                            render_candidate(record),
+                        )
+                    )
+                return
+            if 0 <= idx < len(self._rlvr_cases):
+                case = self._rlvr_cases[idx]
+                self.push_screen(
+                    RlvrDetailScreen(
+                        str(case.get("case_id") or "case"), render_case(case)
+                    )
+                )
             return
         if event.data_table.id == "docs":
             # Selecting a document scopes the chat to it.

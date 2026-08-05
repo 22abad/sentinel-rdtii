@@ -1,8 +1,8 @@
 # RLVR proxy-reward measurement
 
-- Generated: `2026-07-31T19:16:54.281328+00:00`
-- Commit: `fd0949b791e7395d87f9491fa3420d2f57c524c6`
-- Mode: `synthetic-distractors+llm-eligibility` (no API calls, no network)
+- Generated: `2026-07-31T23:22:17.383494+00:00`
+- Commit: `708976b2356fba021b3514a58ef52f0beab67abd`
+- Mode: `synthetic-distractors+llm-eligibility` (live LLM eligibility via `deepseek` — REAL API calls, billed)
 - Case-set SHA-256: `499cce05e40aed671202dd9be8189785d87a5700fdf5627e330e465a82d6fe25`
 - Candidate sets: 16 (skipped 0), pairs compared: 69
 
@@ -10,11 +10,11 @@
 
 | Metric | Result |
 | --- | ---: |
-| Hygiene top-1 (proxy picks the real extraction) | 87.50% |
-| Hygiene pairwise win rate | 96.77% |
-| Full top-1 (incl. wrong-provision control) | 87.50% |
+| Hygiene top-1 (proxy picks the real extraction) | 93.75% |
+| Hygiene pairwise win rate | 98.39% |
+| Full top-1 (incl. wrong-provision control) | 93.75% |
 | Semantic pairwise win rate (control) | 85.71% |
-| Mean proxy reward of the real extraction | 0.8571 |
+| Mean proxy reward of the real extraction | 0.9068 |
 | Mean oracle reward of the real extraction | 0.8500 |
 
 The semantic row is a CONTROL, not a target. `neighbour_span` is a real,
@@ -26,11 +26,11 @@ proxy's ceiling is visible rather than averaged away.
 
 | Distractor | Class | Pairs | Reference wins | Win rate | Mean margin |
 | --- | --- | ---: | ---: | ---: | ---: |
-| `fragment` | hygiene | 16 | 16 | 100.00% | +0.1916 |
-| `metadata_stripped` | hygiene | 16 | 16 | 100.00% | +0.2481 |
-| `neighbour_span` | semantic | 7 | 6 | 85.71% | +0.0927 |
-| `page_dump` | hygiene | 14 | 12 | 85.71% | +0.0790 |
-| `paraphrase` | hygiene | 16 | 16 | 100.00% | +0.8571 |
+| `fragment` | hygiene | 16 | 16 | 100.00% | +0.1943 |
+| `metadata_stripped` | hygiene | 16 | 16 | 100.00% | +0.2642 |
+| `neighbour_span` | semantic | 7 | 6 | 85.71% | +0.0655 |
+| `page_dump` | hygiene | 14 | 13 | 92.86% | +0.0717 |
+| `paraphrase` | hygiene | 16 | 16 | 100.00% | +0.9068 |
 
 ## Reward configuration that produced these numbers
 
@@ -59,7 +59,7 @@ proxy's ceiling is visible rather than averaged away.
 | `chunk_coverage_floor_value` | 0.4 |
 | `chunker` | regex_legal_chunker (deterministic regex + UAX#29) |
 | `existence_indicators` | 7.1, 7.2 |
-| `existence_exempt_components` | single_provision |
+| `existence_exempt_components` | single_provision, eligibility_supported (only when an external verdict is supplied — the deterministic branches are safe for a bare title, the LLM arm is not) |
 
 ### Oracle weights (labelled reward — never seen by the selector)
 
@@ -83,10 +83,10 @@ _raw_score is not supplied in this study — it measures EVIDENCE selection, whi
 | Component | Weight | Mean on real | Mean on distractors | Discrimination |
 | --- | ---: | ---: | ---: | ---: |
 | `not_truncated` | 1.5 | 1.000 | 0.580 | +0.420 |
+| `eligibility_supported` | 2.0 | 0.818 | 0.568 | +0.250 |
 | `scope_resolved` | 0.5 | 1.000 | 0.768 | +0.232 |
 | `single_provision` | 1.5 | 0.913 | 0.746 | +0.168 |
 | `article_clause_specific` | 2.0 | 0.688 | 0.522 | +0.166 |
-| `eligibility_supported` | 2.0 | 0.562 | 0.406 | +0.157 |
 | `citation_exactness` | 3.0 | 1.000 | 0.844 | +0.156 |
 | `metadata_complete` | 1.5 | 1.000 | 0.845 | +0.155 |
 
@@ -108,8 +108,7 @@ check that before moving any weight.
 
 | Case | Distractor | Margin |
 | --- | --- | ---: |
-| `mys-pdpa-6-4-section-129` | `page_dump` | -0.0417 |
-| `sgp-assessment-6-5-binding-commitments` | `page_dump` | -0.0917 |
+| `mys-pdpa-6-4-section-129` | `page_dump` | -0.0167 |
 
 ## How to read this
 

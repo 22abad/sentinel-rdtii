@@ -94,6 +94,13 @@ def find_evidence(
     if review_status:
         where.append("review_status = %s")
         params.append(review_status)
+    else:
+        # An UNFILTERED read is the reuse path — it must never serve a mapping a
+        # human threw out. Rejections are banked (they are the negative half of
+        # the review dataset) but are opt-in: ask for them by name with
+        # review_status='rejected'. Without this, banking rejections would
+        # silently turn "reuse verified evidence" into "reuse anything reviewed".
+        where.append("review_status <> 'rejected'")
     params.append(limit)
     try:
         with _db_connect() as conn:

@@ -11,10 +11,14 @@ Coordinates the MAS pipeline:
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import os
 import logging
 import sys
 import time
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Tuple, List, get_args
 
 from chunker import Chunk
@@ -48,6 +52,66 @@ from agents.eligibility import EligibilityVerifier, rejected_from_eligibility
 logger = logging.getLogger(__name__)
 
 
+#: One id per PROCESS, not per orchestrator. Callers build an orchestrator per
+#: document (the golden evaluator and the submission pipeline both do), so an
+#: instance-scoped id split a single `python main.py ...` into one "run" per
+#: document — which made the run rollup useless for the question it exists to
+#: answer, "what did the thing I just ran produce?". A long-lived API server is
+#: the trade-off: everything since boot shares an id there, and analysis should
+#: group by document_id instead. RDTII_RUN_ID overrides it.
+_RUN_ID: str | None = None
+
+
+def _run_id() -> str:
+    global _RUN_ID
+    if _RUN_ID is None:
+        _RUN_ID = os.getenv("RDTII_RUN_ID", "").strip() or (
+            f"{datetime.now(timezone.utc):%Y%m%dT%H%M%S}-{uuid.uuid4().hex[:8]}"
+        )
+    return _RUN_ID
+
+
+def _make_trajectory_writer(provider: LLMProvider):
+    """Build the append-only candidate log, or a disabled stub.
+
+    ON by default. This is the write-only half of the RLVR seam: it records what
+    the extractor produced and what the label-free proxy reward thought of it,
+    and it changes no output row — so a full submission run can carry it without
+    the result differing by a byte. Set ``RDTII_TRAJECTORY_LOG=off`` to disable,
+    or to a path to choose the file.
+
+    Nothing reads these records back during a run. They exist so a researcher's
+    later approve/reject can be joined to the candidate it judged, via
+    (indicator_id, quote_hash) against ``verified_evidence``.
+
+    Any failure here degrades to disabled rather than raising: a logging
+    side-channel must never be the reason an extraction fails.
+    """
+    raw = os.getenv("RDTII_TRAJECTORY_LOG", "").strip()
+    if raw.lower() in {"0", "off", "false", "no"}:
+        return None
+    try:
+        from rlvr.trajectory import TrajectoryWriter
+
+        if raw:
+            path = Path(raw)
+        else:
+            root = Path(__file__).resolve().parents[2]
+            path = root / "evaluation" / "trajectories" / "trajectory.jsonl"
+        run_id = _run_id()
+        writer = TrajectoryWriter(
+            path=path,
+            run_id=run_id,
+            provider=getattr(provider, "name", "unknown"),
+            model=str(getattr(provider, "model_name", "") or "unknown"),
+        )
+        logger.info("trajectory logging on: run_id=%s -> %s", run_id, path)
+        return writer
+    except Exception as exc:  # noqa: BLE001 — never break extraction to log it
+        logger.warning("trajectory logging unavailable (%s) — continuing without it", exc)
+        return None
+
+
 def _runtime_hook(name: str, default):
     """Keep legacy API monkeypatch points without importing the web app.
 
@@ -73,6 +137,84 @@ class MASOrchestrator:
         # Per-run cache for the cross-model generic-score check (keyed by
         # indicator + normalised quote) so a repeated provision costs one call.
         self._score_check_cache: dict = {}
+        self._trajectory = _make_trajectory_writer(provider)
+
+    def _log_trajectory(
+        self,
+        *,
+        document_id: str,
+        chunk_index: int,
+        chunk_text: str,
+        indicator_id: str,
+        mapping: IndicatorMapping,
+        raw_score: float | None,
+        eligibility=None,
+    ) -> None:
+        """Append one candidate + its proxy reward. Never raises.
+
+        The proxy is computed here rather than read from anywhere: it is sync,
+        label-free and free of API calls by construction, which is exactly what
+        makes it safe to run inline on a real extraction.
+
+        ``eligibility`` MUST be the verdict the pipeline already reached. Without
+        it score_candidate falls back to the deterministic arm and re-derives the
+        answer from the candidate dict — which carries no ``features``, so the
+        feature-driven branches return "not supported" for nearly every
+        indicator. That understated every logged score by ~0.16 (the term is 2.0
+        of 12.0 total weight) and made the log look like the extractor was
+        producing ineligible evidence when it was not.
+        """
+        if self._trajectory is None:
+            return
+        try:
+            from rlvr.reward import score_candidate
+
+            candidate = {
+                "verbatim_quote": mapping.verbatim_quote,
+                "article_clause": mapping.article_clause,
+                "source_legislation": mapping.source_legislation,
+                "source_url": mapping.source_url,
+                "last_update": mapping.last_update,
+                "scope": mapping.scope,
+            }
+            override = None
+            if eligibility is not None:
+                # A verifier that RAISED is not a verdict — abstain (None) so the
+                # term is dropped from the objective rather than scored 0.0.
+                # Same rule the measurement harness follows.
+                override = (
+                    (None, f"[{eligibility.verifier_mode}] verifier failed")
+                    if getattr(eligibility, "verifier_failed", False)
+                    else (
+                        1.0 if eligibility.supported else 0.0,
+                        f"[{eligibility.verifier_mode}] "
+                        + (
+                            "eligible for this indicator"
+                            if eligibility.supported
+                            else "; ".join(eligibility.exclusion_reasons) or "not supported"
+                        ),
+                    )
+                )
+            proxy = score_candidate(
+                candidate,
+                chunk_text=chunk_text,
+                indicator_id=indicator_id,
+                raw_score=raw_score,
+                eligibility_override=override,
+            )
+            self._trajectory.log_candidate(
+                document_id=document_id,
+                chunk_index=chunk_index,
+                indicator_id=indicator_id,
+                country_code=str((mapping.features or {}).get("_country_code") or ""),
+                sampling={"temperature": 0, "sample_index": 0, "k": 1, "greedy": True},
+                candidate=candidate,
+                proxy=proxy.as_record(),
+                selected=True,
+                fingerprint="",
+            )
+        except Exception as exc:  # noqa: BLE001 — logging must never break a run
+            logger.warning("trajectory log skipped for %s: %s", indicator_id, exc)
 
     async def run_pipeline(
         self,
@@ -95,13 +237,23 @@ class MASOrchestrator:
         from submission.pipeline import _document_self_title, _names_disagree
 
         _doc_self_title = _document_self_title(text)
+        # Stable per-document id for the trajectory join key. Content-addressed
+        # rather than a counter so the same document re-extracted in a later run
+        # lands under the same id, and so it survives a caller that supplies no
+        # filename (the CLI path and the offline evaluator both do).
+        _document_id = (
+            str((pdf_metadata or {}).get("source_sha256") or "")
+            or hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+        )
 
         t0 = time.time()
         from chunker import regex_legal_chunker
         chunks = regex_legal_chunker(text)
 
-        chunk_groups: list[tuple[Chunk, list[tuple[str, dict]]]] = []
-        for chunk in chunks:
+        # The chunk's ordinal is part of the trajectory join key, so it has to
+        # survive the filter below — a plain `for chunk in chunks` loses it.
+        chunk_groups: list[tuple[int, Chunk, list[tuple[str, dict]]]] = []
+        for chunk_index, chunk in enumerate(chunks):
             indicators: list[tuple[str, dict]] = []
             candidate_ids = (
                 target_indicators
@@ -119,11 +271,12 @@ class MASOrchestrator:
                 if spec:
                     indicators.append((indicator_id, spec))
             if indicators:
-                chunk_groups.append((chunk, indicators))
+                chunk_groups.append((chunk_index, chunk, indicators))
 
         semaphore = asyncio.Semaphore(int(os.getenv("RDTII_CHUNK_CONCURRENCY", "5")))
 
         async def _process_chunk_group(
+            chunk_index: int,
             chunk: Chunk,
             indicators: list[tuple[str, dict]],
         ) -> list[tuple[IndicatorMapping | None, RejectedExtraction | None]]:
@@ -344,6 +497,8 @@ class MASOrchestrator:
                         quote_start=chunk.start + local_start,
                         quote_end=chunk.start + local_end,
                         source_legislation=source_legislation_val,
+                        document_id=_document_id,
+                        chunk_index=chunk_index,
                         last_update=ts_verification.get("best_date") or last_update_val,
                         source_url=source_url_val,
                         scope=scope_value,
@@ -468,12 +623,30 @@ class MASOrchestrator:
                     mapping_obj.impact_or_comments = impact_comments_val
                     mapping_obj.impact_comments = impact_comments_val
 
+                    # Write-only: record the candidate the researcher is about
+                    # to see, with the label-free proxy's read of it. Logged
+                    # AFTER the mapping is final so the record matches what was
+                    # actually returned, not an intermediate. `selected=True`
+                    # for every row today — best-of-N is not wired, so this is
+                    # the single greedy draw and there is nothing it beat.
+                    self._log_trajectory(
+                        document_id=_document_id,
+                        chunk_index=chunk_index,
+                        chunk_text=chunk.text,
+                        indicator_id=ind_id,
+                        mapping=mapping_obj,
+                        raw_score=raw_score,
+                        eligibility=eligibility,
+                    )
+
                     results_list.append((mapping_obj, None))
 
             return results_list
 
         # Execute parallel processing of chunk groups
-        all_results = await asyncio.gather(*[_process_chunk_group(c, inds) for c, inds in chunk_groups])
+        all_results = await asyncio.gather(
+            *[_process_chunk_group(i, c, inds) for i, c, inds in chunk_groups]
+        )
 
         logger.debug("[MAS TIMING] total=%.1fs", time.time() - t0)
 

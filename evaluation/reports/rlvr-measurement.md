@@ -1,7 +1,7 @@
 # RLVR proxy-reward measurement
 
-- Generated: `2026-07-31T19:03:59.389006+00:00`
-- Commit: `fd0949b791e7395d87f9491fa3420d2f57c524c6`
+- Generated: `2026-07-31T23:22:39.379984+00:00`
+- Commit: `708976b2356fba021b3514a58ef52f0beab67abd`
 - Mode: `offline-synthetic-distractors` (no API calls, no network)
 - Case-set SHA-256: `499cce05e40aed671202dd9be8189785d87a5700fdf5627e330e465a82d6fe25`
 - Candidate sets: 16 (skipped 0), pairs compared: 69
@@ -59,7 +59,7 @@ proxy's ceiling is visible rather than averaged away.
 | `chunk_coverage_floor_value` | 0.4 |
 | `chunker` | regex_legal_chunker (deterministic regex + UAX#29) |
 | `existence_indicators` | 7.1, 7.2 |
-| `existence_exempt_components` | single_provision |
+| `existence_exempt_components` | single_provision, eligibility_supported (only when an external verdict is supplied — the deterministic branches are safe for a bare title, the LLM arm is not) |
 
 ### Oracle weights (labelled reward — never seen by the selector)
 
